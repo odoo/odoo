@@ -35,6 +35,26 @@ registry.category("web_tour.tours").add("invoicePoSOrderWithSelfInvocing", {
             run: "edit test@test.com",
         },
         {
+            trigger: ".o_portal_wrap input[name='company_name']",
+            run: function () {
+                const companyNameInput = document.querySelector("input[name='company_name']");
+                if (companyNameInput.hasAttribute("readonly")) {
+                    throw new Error("The company name input must not be readonly.");
+                }
+                companyNameInput.value = "TEST COMPANY NAME";
+            },
+        },
+        {
+            trigger: ".o_portal_wrap input[name='vat']",
+            run: function () {
+                const vatInput = document.querySelector("input[name='vat']");
+                if (vatInput.hasAttribute("readonly")) {
+                    throw new Error("The vat input must not be readonly.");
+                }
+                vatInput.value = "1234567890";
+            },
+        },
+        {
             trigger: ".o_portal_wrap input[name='street']",
             run: "edit 131, Satyamcity society",
         },
