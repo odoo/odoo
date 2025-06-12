@@ -38,6 +38,7 @@ class TestSnippets(HttpCase):
             's_instagram_page',  # avoid call to instagram.com
             's_image',  # Avoid specific case where the media dialog opens on drop
             's_video',  # Avoid specific case where the media dialog opens on drop
+            's_icon',  # Avoid specific case where the media dialog opens on drop
             's_snippet_group',  # Snippet groups are not snippets
             's_inline_text',
         ]
