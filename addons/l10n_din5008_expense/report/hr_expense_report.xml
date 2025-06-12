@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_expense_sheet" inherit_id="hr_expense.report_expense_sheet">
+        <xpath expr="//div[hasclass('page', 'o_content_pdf')]" position="before">
+            <t t-set="din5008_document_title">
+                <span t-if="o and o._name == 'hr.expense.sheet'">
+                        <t>Expenses Report</t>
+                </span>
+            </t>
+        </xpath>
+    </template>
+</odoo>
