@@ -54,6 +54,8 @@ registry.category("web_tour.tours").add("self_kiosk_each_counter_takeaway_in", {
         ProductPage.clickKioskCategory("Uncategorised"),
         ProductPage.clickKioskProduct("Yummy Burger"),
         ProductPage.clickKioskProduct("Taxi Burger"),
+        Utils.checkDescription("Nice Product"),
+        Utils.clickBtn("Add to cart"),
         Utils.clickBtn("Checkout"),
         CartPage.checkKioskProduct("Coca-Cola", "2.53"),
         CartPage.checkKioskProduct("Yummy Burger", "10"),

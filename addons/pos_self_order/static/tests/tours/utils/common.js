@@ -104,3 +104,10 @@ export function increaseComboItemQty(productName, qty) {
 
     return steps;
 }
+
+export function checkDescription(descriptionText) {
+    return {
+        content: `Check product has description: "${descriptionText}"`,
+        trigger: `.scroll-container div:contains("${descriptionText}")`,
+    };
+}
