@@ -51,7 +51,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
             "/im_livechat/get_session",
             {
                 "anonymous_name": "Test Visitor",
-                "chatbot_script_id": self.chatbot_script.id,
+                "operator_params": {"chatbot_script_id": self.chatbot_script.id},
                 "channel_id": self.livechat_channel.id,
             },
         )

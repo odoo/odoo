@@ -63,7 +63,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             {
                 "anonymous_name": "Visitor",
                 "channel_id": self.livechat_channel.id,
-                "chatbot_script_id": self.chatbot_script.id,
+                "operator_params": {'chatbot_script_id': self.chatbot_script.id},
                 "persisted": True,
             },
         )
@@ -131,7 +131,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 "/im_livechat/get_session",
                 {
                     "anonymous_name": "anon 1",
-                    "previous_operator_id": self.users[0].partner_id.id,
+                    "operator_params": {"previous_operator_id": self.users[0].partner_id.id},
                     "channel_id": im_livechat_channel.id,
                 },
             )["channel_id"]
@@ -239,7 +239,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 "/im_livechat/get_session",
                 {
                     "anonymous_name": "anon 1",
-                    "previous_operator_id": self.users[0].partner_id.id,
+                    "operator_params": {"previous_operator_id": self.users[0].partner_id.id},
                     "channel_id": im_livechat_channel.id,
                 },
             )["channel_id"]

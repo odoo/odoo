@@ -67,7 +67,7 @@ class TestFwOperator(ChatbotCase, HttpCase, TestLivechatCommon):
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
             "anonymous_name": "Visitor #1",
             "channel_id": self.livechat_channel.id,
-            "chatbot_script_id": self.chatbot_fw_script.id
+            "operator_params": {"chatbot_script_id": self.chatbot_fw_script.id}
         })
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertEqual(channel.chatbot_current_step_id.step_type, "question_selection")

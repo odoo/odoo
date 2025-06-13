@@ -36,7 +36,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 "/im_livechat/get_session",
                 {
                     "anonymous_name": "Visitor 22",
-                    "previous_operator_id": operator.partner_id.id,
+                    "operator_params": {'previous_operator_id': operator.partner_id.id},
                     "channel_id": self.livechat_channel.id,
                 },
             )["store_data"]
@@ -97,7 +97,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.authenticate(test_user.login, self.password)
         data = self.make_jsonrpc_request('/im_livechat/get_session', {
             'anonymous_name': 'whatever',
-            'previous_operator_id': operator.partner_id.id,
+            "operator_params": {'previous_operator_id': operator.partner_id.id},
             'channel_id': self.livechat_channel.id,
         })["store_data"]
         channel_info = data["discuss.channel"][0]
@@ -197,7 +197,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.authenticate(operator.login, self.password)
         data = self.make_jsonrpc_request('/im_livechat/get_session', {
             'anonymous_name': 'whatever',
-            'previous_operator_id': operator.partner_id.id,
+            "operator_params": {'previous_operator_id': operator.partner_id.id},
             'channel_id': self.livechat_channel.id,
         })["store_data"]
         channel_info = data["discuss.channel"][0]
@@ -285,7 +285,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         params = {
             "anonymous_name": "whatever",
             "channel_id": self.livechat_channel.id,
-            "previous_operator_id": operator.partner_id.id
+            "operator_params": {'previous_operator_id': operator.partner_id.id},
         }
         channel_id = self.make_jsonrpc_request("/im_livechat/get_session", params)["channel_id"]
         member_domain = [("channel_id", "=", channel_id), ("is_self", "=", True)]
