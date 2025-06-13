@@ -136,10 +136,10 @@
                         <ul t-att-data-attribute_id="attribute.id" t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}">
                             <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-1">
                                 <label t-attf-style="#{'background:url(/web/image/product.template.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''}"
-                                       t-attf-class="css_attribute_image #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
+                                       t-attf-class="css_attribute_image position-relative d-inline-block rounded-3 text-center #{'active border-2 border-primary' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
                                 >
                                     <input type="radio"
-                                           t-attf-class="js_variant_change  #{attribute.create_variant}"
+                                           t-attf-class="js_variant_change m-2 opacity-0 #{attribute.create_variant}"
                                            t-att-checked="ptav in combination"
                                            t-att-name="'ptal-%s' % ptal.id"
                                            t-att-value="ptav.id"

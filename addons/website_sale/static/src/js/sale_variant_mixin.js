@@ -556,9 +556,9 @@ var VariantMixin = {
     _onChangeImageAttribute: function (ev) {
         var $parent = $(ev.target).closest('.js_product');
         $parent.find('.css_attribute_image')
-            .removeClass("active")
+            .removeClass("active border-2 border-primary")
             .filter(':has(input:checked)')
-            .addClass("active");
+            .addClass("active border-2 border-primary");
     },
 
     _onChangePillsAttribute: function (ev) {

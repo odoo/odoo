@@ -857,13 +857,14 @@
     <template id="website_sale.filter_image_attributes" name="Image attributes in Filter">
         <t t-foreach="a.value_ids" t-as="v">
             <label t-attf-style="#{'background:url(/web/image/product.attribute.value/%s/image); background-size:cover;' % v.id if v.image else ''}"
-                   t-attf-class="css_attribute_image mb-1 #{'active' if v.id in attrib_set else ''}"
+                   t-attf-class="css_attribute_image position-relative d-inline-block mb-1 rounded-3 text-center #{'active border-2 border-primary' if v.id in attrib_set else ''}"
             >
                 <input type="checkbox"
                        name="attribute_value"
                        t-att-value="'%s-%s' % (a.id, v.id)"
                        t-att-checked="'checked' if v.id in attrib_set else None"
                        t-att-title="v.name"
+                       class="m-2 opacity-0"
                 />
             </label>
         </t>

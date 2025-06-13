@@ -38,37 +38,32 @@
 }
 
 .css_attribute_image {
-    position: relative;
-    display: inline-block;
-    border: 2px solid $input-border-color;
-    border-radius: 8px;
-    box-shadow: inset 0 0 0 5px white;
-    text-align: center;
-    transition: $input-transition;
-
     @include o-field-pointer();
 
+    border: $border-width * 2 solid $input-border-color;
+    box-shadow: inset 0 0 0 $border-width * 5 $body-bg;
+    transition: $input-transition;
+
     &:before {
+        @include o-position-absolute(1px, 1px, 1px, 1px);
+
         content: "";
         display: block;
-        @include o-position-absolute(1px, 1px, 1px, 1px);
-        border: 5px solid white;
-        border-radius: 10px;
+        border: $border-width * 5 solid $body-bg;
+        border-radius: $border-radius-lg;
     }
 
     input {
-        margin: 8px;
-        height: 52px;
-        width: 52px;
-        opacity: 0;
+        height: map-get($spacers, 5);
+        aspect-ratio: 1;
     }
 
     &.active {
-        border: 2px solid map-get($theme-colors, 'primary');
-        box-shadow: inset 0 0 0 5px rgb(235, 235, 235);
+        box-shadow: inset 0 0 0 $border-width * 5 $light;
+
         &:before {
             background: rgba(map-get($theme-colors, 'primary'), 0.1);
-            border: 5px solid rgb(235, 235, 235);
+            border: $border-width * 5 solid $light;
         }
     }
 
