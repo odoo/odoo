@@ -89,7 +89,7 @@ test("press escape to close media dialog", async () => {
     onRpc("ir.attachment", "search_read", () => []);
     const env = await makeMockEnv();
     const { editor, el } = await setupEditor("<p>a[]bc</p>", { env });
-    insertText(editor, "/image");
+    await insertText(editor, "/image");
     await waitFor(".o-we-powerbox");
     await press("Enter");
     await animationFrame();
@@ -104,14 +104,14 @@ test("press escape to close media dialog", async () => {
 describe("Powerbox search keywords", () => {
     test("Image and Icon are keywords for the Media command", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
-        insertText(editor, "/");
+        await insertText(editor, "/");
         for (const word of ["image", "icon"]) {
-            insertText(editor, word);
+            await insertText(editor, word);
             await animationFrame();
             expect(".active .o-we-command-name").toHaveText("Media");
             // delete the keyword to try the next one
             for (let i = 0; i < word.length; i++) {
-                press("backspace");
+                await press("backspace");
             }
         }
     });
