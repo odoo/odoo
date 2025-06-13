@@ -20,8 +20,10 @@ export class CarouselSlider extends Interaction {
                 "min-height": this.maxHeight ? `${this.maxHeight}px` : "",
             }),
         },
+        ".slide-link": { "t-att-class": () => ({ "d-none": !this.showClickableSlideLinks }) },
     };
     carouselOptions = undefined;
+    showClickableSlideLinks = true;
 
     static OLD_AUTO_SLIDING_SNIPPETS = ["s_image_gallery"];
     setup() {

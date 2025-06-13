@@ -5,6 +5,7 @@ import {
     insertSnippet,
     clickOnSnippet,
     changeOption,
+    clickOnEditAndWaitEditMode,
     clickOnSave,
     registerWebsitePreviewTour,
     goBackToBlocks,
@@ -138,3 +139,92 @@ registerWebsitePreviewTour("snippet_carousel_autoplay", {
         trigger: `${carouselInnerSelector} > div.active:nth-child(2)`,
     },
 ]);
+
+const setSlideUrl = (urlText, matchText) => [
+    {
+        content: "Enter the URL to be linked with the slide",
+        trigger: "div[data-action-id='setSlideAnchorUrl'] input[title='Your URL']",
+        run: `edit ${urlText}`,
+    },
+    {
+        content: "Select the URL from autocomplete dropdown",
+        trigger: `ul.ui-autocomplete li div:contains('${matchText}')`,
+        run: "click",
+    },
+];
+
+const checkSlideNotClickable = () => ({
+    content: "Check that the 'clickable-slide' class and anchor tag are removed",
+    trigger: ":iframe .carousel-item.active:not(.clickable-slide):not(:has(a.slide-link))",
+});
+
+registerWebsitePreviewTour(
+    "snippet_carousel_clickable_slides",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({ id: "s_carousel", name: "Carousel", groupName: "Intro" }),
+        ...clickOnSnippet(".carousel .carousel-item.active"),
+
+        // Make the Slide clickable
+        changeOption("Slide (1/3)", "[data-action-id='makeSlideClickable'] input"),
+
+        {
+            content: "Check that the 'clickable-slide' class is added to the carousel item",
+            trigger: ":iframe .carousel-item.active.clickable-slide",
+        },
+        ...setSlideUrl("/contactus", "/contactus-thank-you"),
+        {
+            content: "Check that the anchor tag is added to the carousel item",
+            trigger:
+                ":iframe .carousel-item.active.clickable-slide a.slide-link[href='/contactus-thank-you']:not(:visible)",
+        },
+
+        // Enable the option to open the link in a new tab
+        changeOption(
+            "Slide (1/3)",
+            "[data-label='Open in New Tab'] [data-attribute-action='target'] input"
+        ),
+
+        ...clickOnSave(),
+        {
+            content: "Check that the anchor tag is added to the carousel item",
+            trigger:
+                ":iframe .carousel-item.active.clickable-slide a.slide-link[href='/contactus-thank-you'][target='_blank']",
+        },
+        ...clickOnEditAndWaitEditMode(),
+        ...clickOnSnippet(".carousel .carousel-item.active"),
+        {
+            content: "Check that the entered URL is correctly shown in the option and remove it",
+            trigger: "div[data-action-id='setSlideAnchorUrl'] input:value(/contactus-thank-you)",
+            run: "edit ",
+        },
+        {
+            content: "Press Enter in the URL input",
+            trigger: "div[data-action-id='setSlideAnchorUrl'] input",
+            run: "press Enter",
+        },
+        {
+            content: "Check that the anchor tag is removed",
+            trigger: ":iframe .carousel-item.active.clickable-slide:not(:has(a.slide-link))",
+        },
+        {
+            content: "Check that the 'Open in New Tab' option is no longer visible",
+            trigger: "[data-label='Open in New Tab']:not(:visible)",
+        },
+        ...setSlideUrl("/contactus", "/contactus-thank-you"),
+
+        // Turn off the 'Make Slide Clickable' option
+        changeOption("Slide (1/3)", "[data-action-id='makeSlideClickable'] input"),
+
+        checkSlideNotClickable(),
+
+        // Make the slide clickable again
+        changeOption("Slide (1/3)", "[data-action-id='makeSlideClickable'] input"),
+
+        ...clickOnSave(),
+        checkSlideNotClickable(),
+    ]
+);
