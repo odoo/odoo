@@ -923,6 +923,7 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
         due_datetime = fields.Attr(undefined, { type: "datetime" });
         messages = fields.Many("Message");
         team = fields.One("Team");
+        signature = fields.Html("");
     }).register(localRegistry);
     (class Message extends Record {
         static id = "body";
@@ -939,10 +940,13 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
         names: ["John", "Marc"],
         messages: [{ body: "1" }, { body: "2" }],
         team: "Discuss",
+        signature: ["markup", "<p>-- John</p>"],
     });
     expect(p.names).toEqual(["John", "Marc"]);
     expect(p.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
     expect(p.team.name).toBe("Discuss");
+    expect(p.signature.toString()).toBe("<p>-- John</p>");
+    expect(p.signature).toBeInstanceOf(Markup);
     expect(toRaw(store.Person.records[p.localId])).toBe(toRaw(p));
     expect(serializeDateTime(p.due_datetime)).toBe("2024-08-28 10:19:44");
     // export data, delete, then insert back
@@ -960,6 +964,8 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     expect(p2.team.name).toBe("Discuss");
     expect(toRaw(store.Person.records[p2.localId])).toBe(toRaw(p2));
     expect(serializeDateTime(p2.due_datetime)).toBe("2024-08-28 10:19:44");
+    expect(p2.signature.toString()).toBe("<p>-- John</p>");
+    expect(p.signature).toBeInstanceOf(Markup);
 });
 
 test("record.toData() returns flat data", async () => {
