@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="s_dynamic_category" name="Category List">
+        <section
+            t-attf-class="s_dynamic_category pt32 pb32"
+            t-att-data-snippet="s_dynamic_category"
+            data-all-products="true"
+        >
+            <div class="container">
+                <div>
+                    <section class="s_dynamic_snippet_title oe_unremovable oe_unmovable d-flex flex-column flex-md-row justify-content-between mb-lg-0 pb-3 pb-md-0">
+                        <div>
+                            <h4>Crafting Beautiful Spaces</h4>
+                        </div>
+                    </section>
+                    <div class="s_category_container d-grid gap-3">
+                        <div class="all_products rounded position-relative">
+                            <img
+                                src="/website_sale/static/src/img/all_products.jpeg"
+                                alt="All Products"
+                                class="s_category_image img-fluid w-100 h-100 position-absolute"
+                            />
+                            <div t-attf-class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column">
+                                <h4 class="text-light all_products_heading">All Collections</h4>
+                                <a
+                                    role="button"
+                                    href="/shop"
+                                    class="o_not_editable btn btn-primary align-self-start"
+                                >
+                                    Explore Now
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="s_dynamic_category_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div
+                data-js="dynamic_snippet_category"
+                data-selector="section.s_dynamic_category"
+                data-no-preview="true"
+            >
+                <we-range
+                    data-min="2" data-max="5"
+                    string="Columns"
+                    data-attribute-name="columns"
+                    data-select-data-attribute=""
+                />
+                <we-select
+                    string="Height"
+                    data-attribute-name="height"
+                    data-set-height=""
+                >
+                    <we-button data-select-data-attribute="small">Small</we-button>
+                    <we-button data-select-data-attribute="medium">Medium</we-button>
+                    <we-button data-select-data-attribute="large">Large</we-button>
+                </we-select>
+                <we-button-group string="Alignment" data-attribute-name="alignment">
+                    <we-button
+                        class="fa fa-fw fa-align-left"
+                        title="Left"
+                        data-select-data-attribute="left"
+                    />
+                    <we-button
+                        class="fa fa-fw fa-align-center"
+                        title="Center"
+                        data-select-data-attribute="center"
+                    />
+                    <we-button
+                        class="fa fa-fw fa-align-right"
+                        title="Right"
+                        data-select-data-attribute="right"
+                    />
+                </we-button-group>
+                <we-select
+                    string="Filter"
+                    data-name="filter_opt"
+                    data-attribute-name="filterId"
+                    data-no-preview="true"
+                >
+                    <we-button data-select-data-attribute="0">All Categories</we-button>
+                    <!-- Filled using JS -->
+                </we-select>
+                <we-checkbox
+                    string="All Products"
+                    data-select-data-attribute="false|true"
+                    data-attribute-name="allProducts"
+                    data-no-preview="true"
+                />
+                <we-input
+                    class="o_we_large"
+                    string="Button"
+                    data-attribute-name="button"
+                    data-select-data-attribute=""
+                />
+            </div>
+            <div
+                data-js="dynamic_snippet_category_item"
+                data-selector=".category_item"
+                string="Category"
+            >
+            </div>
+        </xpath>
+        <xpath expr="//div[@data-js='ReplaceMedia']" position="attributes">
+            <attribute name="data-selector" add=".s_category_container > div" separator=", "/>
+        </xpath>
+    </template>
+</odoo>

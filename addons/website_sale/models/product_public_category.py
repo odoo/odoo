@@ -26,7 +26,7 @@ class ProductPublicCategory(models.Model):
     sequence = fields.Integer(default=_default_sequence, index=True)
 
     parent_id = fields.Many2one(
-        string="Parent Category",
+        string="Parent",
         comodel_name='product.public.category',
         ondelete='cascade',
         index=True,
@@ -54,7 +54,7 @@ class ProductPublicCategory(models.Model):
     )
 
     website_description = fields.Html(
-        string="Category Description",
+        string="Description",
         sanitize_attributes=False,
         sanitize_form=False,
         sanitize_overridable=True,
@@ -66,6 +66,10 @@ class ProductPublicCategory(models.Model):
         sanitize_attributes=False,
         sanitize_form=False,
         translate=html_translate,
+    )
+
+    cover_image = fields.Image(
+        string="Cover Image"
     )
 
     # === COMPUTE METHODS === #
@@ -146,3 +150,28 @@ class ProductPublicCategory(models.Model):
         for data in results_data:
             data['url'] = '/shop/category/%s' % data['id']
         return results_data
+
+    @api.model
+    def get_snippet_categories(self):
+        """
+        Return categories that are to be displayed in category list snippet.
+        :rtype: dict
+        :return: list of dictionaries with the following structure:
+            {
+                'id': int,
+                'name': string,
+            }
+        """
+        result = []
+        allowed_categories = self.search([('has_published_products', '=', True)])
+        for category in allowed_categories:
+            num_child_categories = len(category.child_id & allowed_categories)
+            result.append({
+                'id': category.id,
+                'name': self.env._(
+                    "%(name)s (%(children)d)",
+                    name=category.name,
+                    children=num_child_categories,
+                ) if num_child_categories else category.name,
+            })
+        return result
