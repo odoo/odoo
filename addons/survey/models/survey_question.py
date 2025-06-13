@@ -85,16 +85,18 @@ class SurveyQuestion(models.Model):
     # question specific
     page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
     question_type = fields.Selection([
-        ('simple_choice', 'Multiple choice: only one answer'),
+        ('simple_choice', 'Multiple choice'),
         ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-        ('text_box', 'Multiple Lines Text Box'),
-        ('char_box', 'Single Line Text Box'),
-        ('numerical_box', 'Numerical Value'),
+        ('text_box', 'Long Text'),
+        ('char_box', 'Short Text'),
+        ('numerical_box', 'Number'),
         ('scale', 'Scale'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
+        ('time', 'Time'),
         ('matrix', 'Matrix')], string='Question Type',
         compute='_compute_question_type', readonly=False, store=True)
+    allowed_question_types = fields.Json(string="Allowed types", compute="_compute_allowed_question_types")
     is_scored_question = fields.Boolean(
         'Scored', compute='_compute_is_scored_question',
         readonly=False, store=True, copy=True,
@@ -105,6 +107,8 @@ class SurveyQuestion(models.Model):
     answer_numerical_box = fields.Float('Correct numerical answer', help="Correct number answer for this question.")
     answer_date = fields.Date('Correct date answer', help="Correct date answer for this question.")
     answer_datetime = fields.Datetime('Correct datetime answer', help="Correct date and time answer for this question.")
+    answer_time = fields.Datetime('Correct time answer', help="Correct time answer for this question.")
+    formatted_answer_time = fields.Char('Correct formatted time answer', help="Correct formatted time answer for this question.", compute="_compute_formatted_answer_time", inverse="_inverse_formatted_answer_time")
     answer_score = fields.Float('Score', help="Score value for a correct answer to this question.")
     # -- char_box
     save_as_email = fields.Boolean(
@@ -327,7 +331,7 @@ class SurveyQuestion(models.Model):
     @api.depends('question_type')
     def _compute_validation_required(self):
         for question in self:
-            if not question.validation_required or question.question_type not in ['char_box', 'numerical_box', 'date', 'datetime']:
+            if not question.validation_required or question.question_type not in ['char_box', 'numerical_box', 'date', 'datetime', 'time']:
                 question.validation_required = False
 
     @api.depends('survey_id', 'survey_id.question_ids', 'triggering_answer_ids')
@@ -380,7 +384,7 @@ class SurveyQuestion(models.Model):
         """ Computes whether a question "is scored" or not. Handles following cases:
           - inconsistent Boolean=None edge case that breaks tests => False
           - survey is not scored => False
-          - 'date'/'datetime'/'numerical_box' question types w/correct answer => True
+          - 'date'/'datetime'/'time'/'numerical_box' question types w/correct answer => True
             (implied without user having to activate, except for numerical whose correct value is 0.0)
           - 'simple_choice / multiple_choice': set to True if any of suggested answers are marked as correct
           - question_type isn't scoreable (note: choice questions scoring logic handled separately) => False
@@ -392,6 +396,8 @@ class SurveyQuestion(models.Model):
                 question.is_scored_question = bool(question.answer_date)
             elif question.question_type == 'datetime':
                 question.is_scored_question = bool(question.answer_datetime)
+            elif question.question_type == 'time':
+                question.is_scored_question = bool(question.answer_time)
             elif question.question_type == 'numerical_box' and question.answer_numerical_box:
                 question.is_scored_question = True
             elif question.question_type in ['simple_choice', 'multiple_choice']:
@@ -412,6 +418,19 @@ class SurveyQuestion(models.Model):
         self.validation_max_datetime = False
         self.validation_min_float_value = 0
         self.validation_max_float_value = 0
+
+    def _compute_allowed_question_types(self):
+        self.allowed_question_types = [
+            value for value, _ in self._fields['question_type'].selection if value != "multiple_choice"]
+
+    @api.depends("answer_time")
+    def _compute_formatted_answer_time(self):
+        for question in self.filtered(lambda q: q.answer_time):
+            question.formatted_answer_time = question.answer_time.strftime("%H:%M")
+
+    def _inverse_formatted_answer_time(self):
+        for question in self.filtered(lambda q: q.formatted_answer_time):
+            question.answer_time = fields.Datetime.to_datetime(f"9999-01-01 {question.formatted_answer_time}:00")
 
     # ------------------------------------------------------------
     # CRUD
@@ -632,7 +651,7 @@ class SurveyQuestion(models.Model):
             table_data, graph_data = question._get_stats_data(answer_lines)
             question_data['table_data'] = table_data
             question_data['graph_data'] = json.dumps(graph_data)
-            if question.question_type in ["text_box", "char_box", "numerical_box", "date", "datetime"]:
+            if question.question_type in ["text_box", "char_box", "numerical_box", "date", "datetime", "time"]:
                 answers_data = [
                     [input_line.id, input_line._get_answer_value(), input_line.user_input_id.get_print_url()]
                     for input_line in table_data if not input_line.skipped
@@ -744,7 +763,7 @@ class SurveyQuestion(models.Model):
         elif self.question_type == 'scale':
             stats.update(self._get_stats_summary_data_numerical(user_input_lines, 'value_scale'))
 
-        if self.question_type in ['numerical_box', 'date', 'datetime', 'scale']:
+        if self.question_type in ['numerical_box', 'date', 'datetime', 'time', 'scale']:
             stats.update(self._get_stats_summary_data_scored(user_input_lines))
         return stats
 
@@ -808,7 +827,7 @@ class SurveyQuestion(models.Model):
 
         # Numerical box, date, datetime
         for question in self - choices_questions:
-            if question.question_type not in ['numerical_box', 'date', 'datetime']:
+            if question.question_type not in ['numerical_box', 'date', 'datetime', 'time']:
                 continue
             answer = question[f'answer_{question.question_type}']
             if question.question_type == 'date':

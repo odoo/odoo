@@ -753,6 +753,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             switch ($(this).data('questionType')) {
                 case 'text_box':
                 case 'char_box':
+                case 'time':
                     params[this.name] = this.value;
                     break;
                 case 'numerical_box':

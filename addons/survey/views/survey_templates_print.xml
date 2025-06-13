@@ -52,7 +52,7 @@
                                             <span t-if="scoring_display_correction" class="badge rounded-pill" t-att-data-score-question="question.id"></span>
                                         </h2>
                                         <div class="text-muted oe_no_empty mt-1 text-break" t-if="not is_html_empty(question.description)" t-field='question.description'/>
-                                        <t t-if="question.question_type in ['numerical_box', 'date', 'datetime', 'text_box', 'char_box']">
+                                        <t t-if="question.question_type in ['numerical_box', 'date', 'datetime', 'text_box', 'char_box', 'time']">
                                             <t t-if="answer_lines">
                                                 <t t-set="answer_line" t-value="answer_lines[0]"/>
                                                 <t t-if="answer_line.skipped">
@@ -64,12 +64,13 @@
                                                         </div>
                                                     </div>
                                                 </t>
-                                                <t t-elif="answer_line.survey_id.scoring_type != 'no_scoring' and question.question_type in ['numerical_box', 'date', 'datetime'] and question['answer_%s' % question.question_type]">
+                                                <t t-elif="answer_line.survey_id.scoring_type != 'no_scoring' and question.question_type in ['numerical_box', 'date', 'datetime', 'time'] and question['answer_%s' % question.question_type]">
                                                     <div class="row g-0">
                                                         <div t-attf-class="col-12 col-md-6 col-lg-4 rounded ps-4 #{'bg-success' if answer_line.answer_is_correct else 'bg-danger'}">
                                                             <t t-if="question.question_type == 'numerical_box'" t-call="survey.question_numerical_box"/>
                                                             <t t-if="question.question_type == 'date'" t-call="survey.question_date"/>
                                                             <t t-if="question.question_type == 'datetime'" t-call="survey.question_datetime"/>
+                                                            <t t-if="question.question_type == 'time'" t-call="survey.question_time"/>
                                                         </div>
                                                     </div>
                                                 </t>
@@ -81,9 +82,10 @@
                                                     <t t-if="question.question_type == 'numerical_box'" t-call="survey.question_numerical_box"/>
                                                     <t t-if="question.question_type == 'date'" t-call="survey.question_date"/>
                                                     <t t-if="question.question_type == 'datetime'" t-call="survey.question_datetime"/>
+                                                    <t t-if="question.question_type == 'time'" t-call="survey.question_time"/>
                                                 </t>
                                                 <t t-if="answer_lines.survey_id.scoring_type != 'no_scoring'
-                                                    and question.question_type in ['numerical_box', 'date', 'datetime']
+                                                    and question.question_type in ['numerical_box', 'date', 'datetime', 'time']
                                                     and question['answer_%s' % question.question_type]
                                                     and not answer_line.answer_is_correct">
                                                     <div class="row g-0">
@@ -93,6 +95,7 @@
                                                             <strong t-esc="correct_answer" t-if="question.question_type == 'numerical_box'"/>
                                                             <strong t-esc="format_date(correct_answer)" t-if="question.question_type == 'date'"/>
                                                             <strong t-esc="format_datetime(correct_answer)" t-if="question.question_type == 'datetime'"/>
+                                                            <input type="time" class="bg-transparent border-0 text-success fw-bold" t-att-value="question['formatted_answer_time']" t-if="question.question_type == 'time'"/>
                                                         </div>
                                                     </div>
                                                 </t>
@@ -103,6 +106,7 @@
                                                 <t t-if="question.question_type == 'numerical_box'" t-call="survey.question_numerical_box"/>
                                                 <t t-if="question.question_type == 'date'" t-call="survey.question_date"/>
                                                 <t t-if="question.question_type == 'datetime'" t-call="survey.question_datetime"/>
+                                                <t t-if="question.question_type == 'time'" t-call="survey.question_time"/>
                                             </t>
                                         </t>
                                         <t t-if="question.question_type == 'simple_choice'" t-call="survey.question_simple_choice"/>
