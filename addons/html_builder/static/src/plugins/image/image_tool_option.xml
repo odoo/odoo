@@ -19,7 +19,7 @@
     <BuilderRow label.translate="Transform" preview="false">
         <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
         <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')">Reset</BuilderButton>
-        <ImageTransformOption />
+        <ImageTransformOption t-if="!state.isImageAnimated" />
     </BuilderRow>
     <ImageFilterOption />
     <BuilderRow label.translate="Size">
