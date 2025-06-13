@@ -7,6 +7,7 @@ import { getContent } from "./_helpers/selection";
 import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
 import { cleanHints } from "./_helpers/dispatch";
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "./_helpers/placeholder_block";
 
 test("Can replace an image", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
@@ -143,7 +144,11 @@ describe("(non-)editable media", () => {
             await animationFrame();
             expect(".o-we-toolbar").toHaveCount(0);
             expect(getContent(editor.editable)).toBe(
-                `<div contenteditable="false">[<img src="${base64Img}">]</div>`
+                `${PLACEHOLDER_BLOCK_CONTAINER(
+                    "top"
+                )}<div contenteditable="false">[<img src="${base64Img}">]</div>${PLACEHOLDER_BLOCK_CONTAINER(
+                    "bottom"
+                )}`
             );
         });
         test("toolbar should open when clicking on an editable image in a non-editable context", async () => {

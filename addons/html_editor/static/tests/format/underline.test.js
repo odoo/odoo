@@ -12,6 +12,7 @@ import {
     underline,
 } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 test("should make a few characters underline", async () => {
     await testEditor({
@@ -197,6 +198,7 @@ test("should make a few characters underline inside table (underline)", async ()
             </table>`),
         stepFunction: underline,
         contentAfterEdit: unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -215,7 +217,8 @@ test("should make a few characters underline inside table (underline)", async ()
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`),
+            </table>
+            ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
     });
 });
 

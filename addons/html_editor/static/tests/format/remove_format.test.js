@@ -6,6 +6,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
 import { expandToolbar } from "../_helpers/toolbar";
 import { unformat } from "../_helpers/format";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 test("should do nothing if no format is set", async () => {
     await testEditor({
@@ -856,7 +857,9 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
         );
     });
 
@@ -890,6 +893,7 @@ describe("Toolbar", () => {
         await removeFormatClick();
         expect(getContent(el)).toBe(
             unformat(`
+                ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                 <table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr style="height: 100px;">
@@ -902,6 +906,7 @@ describe("Toolbar", () => {
                         </tr>
                     </tbody>
                 </table>
+                ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}
             `)
         );
     });

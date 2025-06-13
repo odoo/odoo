@@ -3,6 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { CORE_PLUGINS } from "@html_editor/plugin_sets";
 import { getContent, setSelection } from "../_helpers/selection";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 async function testCoreEditor(testConfig) {
     return testEditor({ ...testConfig, config: { Plugins: CORE_PLUGINS } });
@@ -242,10 +243,12 @@ describe("deleteRange method", () => {
             */
             deleteRange(editor);
             const contentAfter = unformat(
-                `[<table><tbody>
+                `[${PLACEHOLDER_BLOCK_CONTAINER("top")}
+                <table><tbody>
                     <tr><td><br></td><td><br></td></tr>
                     <tr><td>]<br></td><td><br></td></tr>
-                </tbody></table>`
+                </tbody></table>
+                ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
             );
             expect(getContent(el)).toBe(contentAfter);
         });
