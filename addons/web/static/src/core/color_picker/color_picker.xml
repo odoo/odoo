@@ -31,6 +31,7 @@
                     t-on-focusin="onColorFocusin"
                     t-on-focusout="onColorHoverOut"/>
         </div>
+        <!-- TODO: move the theme tab to html_builder. It shouldn't be in web. -->
         <t t-if="state.activeTab==='theme'">
             <div class="pt-2 px-2 pb-3 d-flex flex-column gap-1 o_cc_preview_wrapper"
                 t-on-click="onColorApply"
@@ -46,7 +47,7 @@
                     <t t-set="activeClass" t-value="this.props.state.selectedColorCombination === className ? 'selected' : ''"/>
                     <button
                             type="button"
-                            class="w-100 p-0 border-0 bg-transparent color-combination-button"
+                            class="w-100 p-0 border-0 color-combination-button"
                             t-att-class="[className, activeClass].join(' ')"
                             t-att-data-color="className"
                             t-attf-title="Preset {{number}}">
