@@ -370,7 +370,7 @@ class TestFormatLang(TransactionCase):
         self.env['res.lang']._activate_lang('fLT')
 
         self.assertEqual(misc.formatLang(self.env['res.lang'].with_context(lang='fLT').env, 1000000000, grouping=True), '10000?00?000!00')
-        self.assertEqual(misc.formatLang(self.env['res.lang'].with_context(lang='fLT').env, 1000000000, grouping=False), '1000000000.00')
+        self.assertEqual(misc.formatLang(self.env['res.lang'].with_context(lang='fLT').env, 1000000000, grouping=False), '1000000000!00')
 
     def test_decimal_precision(self):
         decimal_precision = self.env['decimal.precision'].create({
@@ -431,6 +431,24 @@ class TestFormatLang(TransactionCase):
         self.assertEqual(misc.formatLang(self.env, 1822060000, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,221')
         self.assertEqual(misc.formatLang(self.env, 1822050000, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,221')
         self.assertEqual(misc.formatLang(self.env, 1822049900, rounding_method='HALF-UP', rounding_unit='lakhs'), '18,220')
+
+    def test_format_decimal_point_without_grouping(self):
+        lang = self.env['res.lang'].browse(misc.get_lang(self.env).id)
+        self.assertEqual(lang.format(f'%.{1}f', 1200.50, grouping=True), '1,200.5')
+        self.assertEqual(lang.format(f'%.{1}f', 1200.50, grouping=False), '1200.5')
+
+        comma_lang = self.env['res.lang'].create({
+            'name': 'Comma (CM)',
+            'code': 'co_MA',
+            'iso_code': 'co_MA',
+            'thousands_sep': ' ',
+            'decimal_point': ',',
+            'grouping': '[3,0]',
+            'active': True,
+        })
+
+        self.assertEqual(comma_lang.format(f'%.{1}f', 1200.50, grouping=True), '1 200,5')
+        self.assertEqual(comma_lang.format(f'%.{1}f', 1200.50, grouping=False), '1200,5')
 
 
 class TestUrlValidate(BaseCase):
