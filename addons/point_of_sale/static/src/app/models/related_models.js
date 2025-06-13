@@ -297,7 +297,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         const inverse = inverseMap.get(field);
         if (field.type === "many2one") {
             const prevConnectedRecord = ownerRecord[field.name];
-            if (prevConnectedRecord?.isEqual(recordToConnect)) {
+            if (prevConnectedRecord?.isEqual?.(recordToConnect)) {
                 return;
             }
             if (recordToConnect && inverse.name in recordToConnect) {
