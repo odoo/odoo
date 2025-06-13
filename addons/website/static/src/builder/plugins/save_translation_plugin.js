@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
 
 export class SaveTranslationPlugin extends Plugin {
     static id = "saveTranslation";
@@ -66,5 +65,3 @@ export class SaveTranslationPlugin extends Plugin {
         return escapedEl;
     }
 }
-
-registry.category("translation-plugins").add(SaveTranslationPlugin.id, SaveTranslationPlugin);

@@ -172,3 +172,14 @@ export function isEditable(node) {
     }
     return false;
 }
+
+/**
+ * Removes the specified plugins from a given list of plugins.
+ *
+ * @param {Array<Plugin>} plugins the list of plugins
+ * @param {Array<string>} pluginsToRemove the names of the plugins to remove
+ * @returns {Array<Plugin>}
+ */
+export function removePlugins(plugins, pluginsToRemove) {
+    return plugins.filter((p) => !pluginsToRemove.includes(p.name));
+}
