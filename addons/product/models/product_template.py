@@ -557,12 +557,17 @@ class ProductTemplate(models.Model):
         return res
 
     @api.depends('name', 'default_code')
+    @api.depends_context('formatted_display_name')
     def _compute_display_name(self):
         for template in self:
-            template.display_name = False if not template.name else (
-                '{}{}'.format(
-                    template.default_code and '[%s] ' % template.default_code or '', template.name
-                ))
+            if not template.name:
+                template.display_name = False
+            elif self.env.context.get('formatted_display_name'):
+                code_prefix = f'\t--{template.default_code}--' if template.default_code else ''
+                template.display_name = f'{template.name}{code_prefix}'
+            else:
+                code_prefix = f'[{template.default_code}] ' if template.default_code else ''
+                template.display_name = f'{code_prefix}{template.name}'
 
     @api.model
     def _search_display_name(self, operator, value):
