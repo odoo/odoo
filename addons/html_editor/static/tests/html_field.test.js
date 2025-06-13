@@ -2269,3 +2269,39 @@ describe("translatable", () => {
         expect(".o_field_html .btn.o_field_translate").not.toBeVisible();
     });
 });
+
+describe("codeview enabled", () => {
+    test("Code view command should be available", async () => {
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="txt" widget="html" options="{'codeview': True}"/>
+                </form>`,
+        });
+        const anchorNode = queryOne(`[name='txt'] .odoo-editor-editable p`);
+        setSelection({ anchorNode, anchorOffset: 0 });
+        await insertText(htmlEditor, "/code");
+        await waitFor(".o-we-powerbox");
+        expect(queryAllTexts(".o-we-command-name")).toEqual(["Code"]);
+    });
+
+    test("Video command should be available when codeview enabled", async () => {
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="txt" widget="html" options="{'codeview': True}"/>
+                </form>`,
+        });
+        const anchorNode = queryOne(`[name='txt'] .odoo-editor-editable p`);
+        setSelection({ anchorNode, anchorOffset: 0 });
+        await insertText(htmlEditor, "/video");
+        await waitFor(".o-we-powerbox");
+        expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
+    });
+});
