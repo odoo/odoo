@@ -3,8 +3,9 @@ from datetime import date
 from freezegun import freeze_time
 
 from odoo.exceptions import ValidationError
-from odoo.fields import Date
+from odoo.fields import Date, Datetime
 from odoo.tests import Form, tagged, users
+from odoo.tools import format_date
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -472,7 +473,7 @@ class TestAllocations(TestHrHolidaysCommon):
                 allocation_form.name_validity,
                 "%(allocation_name)s (from %(date_from)s to No Limit)" % {
                     'allocation_name': allocation_form.name,
-                    'date_from': allocation_form.date_from.strftime("%b %d %Y"),
+                    'date_from': format_date(allocation.env, Date.context_today(allocation, Datetime.to_datetime(allocation_form.date_from))),
                 },
                 "The name_validity field was not set correctly."
             )
