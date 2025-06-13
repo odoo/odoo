@@ -138,3 +138,42 @@ registerWebsitePreviewTour("snippet_carousel_autoplay", {
         trigger: `${carouselInnerSelector} > div.active:nth-child(2)`,
     },
 ]);
+
+registerWebsitePreviewTour(
+    "snippet_carousel_linkable_slides",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({ id: "s_carousel", name: "Carousel", groupName: "Intro" }),
+        ...clickOnSnippet(".carousel .carousel-item.active"),
+        {
+            content: "Make the Slide linkable",
+            trigger: "div[data-action-id='makeSlideClickable'] input",
+            run: "click",
+        },
+        {
+            content: "Enter the URL to be linked with slide",
+            trigger: "div[data-action-id='setSlideAnchorUrl'] input[title='Your URL']",
+            run: "edit /contactus",
+        },
+        {
+            content: "Select the URL from autocomplete dropdown",
+            trigger:
+                "ul.ui-autocomplete li div:contains('/contactus-thank-you (Thanks (Contact us))')",
+            run: "click",
+        },
+        {
+            content: "Enable opening the link in a new tab",
+            trigger: "div[data-label='Open in New Tab'] div[data-attribute-action='target'] input",
+            run: "click",
+        },
+        ...clickOnSave(),
+        {
+            content: "Check that the anchor tag is added to the carousel item",
+            trigger:
+                ":iframe .carousel-item.clickable-slide div.slide-link-wrapper a.slide-link[href='/contactus-thank-you'][target='_blank']",
+        },
+    ]
+);
