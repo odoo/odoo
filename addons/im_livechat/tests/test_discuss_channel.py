@@ -19,7 +19,7 @@ class TestDiscussChannel(TestImLivechatCommon):
         self.assertTrue(chat.livechat_active)
         chat.with_user(bob_user).action_unfollow()
         self.assertTrue(chat.livechat_active)
-        chat.with_user(chat.livechat_operator_id.user_ids[0]).action_unfollow()
+        chat.with_user(chat.livechat_operator_id.main_user_id).action_unfollow()
         self.assertFalse(chat.livechat_active)
 
     def test_human_operator_failure_states(self):
@@ -33,7 +33,7 @@ class TestDiscussChannel(TestImLivechatCommon):
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertFalse(chat.chatbot_current_step_id)  # assert there is no chatbot
         self.assertEqual(chat.livechat_failure, "no_answer")
-        chat.with_user(chat.livechat_operator_id.user_ids[0]).message_post(
+        chat.with_user(chat.livechat_operator_id.main_user_id).message_post(
             body="I am here to help!",
             message_type="comment",
             subtype_xmlid="mail.mt_comment",

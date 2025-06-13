@@ -1253,8 +1253,8 @@ class MailCase(common.TransactionCase, MockEmail):
              'name': partner.name,
              'notif': partner.user_ids.notification_type or 'email',
              'share': partner.partner_share,
-             'type': 'user' if partner.user_ids and not partner.partner_share else partner.user_ids and 'portal' or 'customer',
-             'uid': partner.user_ids[0].id if partner.user_ids else False,
+             'type': 'user' if partner.main_user_id and partner.main_user_id._is_internal() else 'customer',
+             'uid': partner.main_user_id.id,
              'ushare': all(user.share for user in partner.user_ids) if partner.user_ids else False,
             } for partner in partners
         ]

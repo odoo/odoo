@@ -339,7 +339,6 @@ class ResUsers(models.Model):
                         "signature",
                         "user",
                     ],
-                    main_user_by_partner={self.env.user.partner_id: self.env.user},
                 ),
                 settings=settings._res_users_settings_format(),
             )

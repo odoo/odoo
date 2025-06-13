@@ -2088,7 +2088,7 @@ class MailThread(models.AbstractModel):
             record_su = record_su if hasattr(record_su, '_partner_find_from_emails_single') else self.env['mail.thread'].sudo()
 
         partner = record_su._partner_find_from_emails_single([email_value], filter_found=lambda p: p.user_ids, no_create=True)
-        return partner.user_ids and partner.user_ids[0] or self.env['res.users']
+        return partner.main_user_id
 
     @api.model
     def _mail_find_partner_from_emails(self, emails, records=None, force_create=False, extra_domain=False):
@@ -3573,10 +3573,8 @@ class MailThread(models.AbstractModel):
         lang = force_email_lang if force_email_lang else self.env.lang
         record_wlang = self.with_context(lang=lang)
 
-        # compute send user and its related signature; try to use self.env.user instead of browsing
-        # user_ids if they are the author will give a sudo user, improving access performances and cache usage.
         author = message.env['res.partner'].browse(msg_vals.get('author_id')) if 'author_id' in msg_vals else message.author_id
-        author_user = self.env.user if self.env.user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
+        author_user = author.main_user_id
         signature, email_add_signature = '', False
 
         if author_user:

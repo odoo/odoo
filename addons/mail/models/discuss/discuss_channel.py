@@ -876,13 +876,8 @@ class DiscussChannel(models.Model):
             :param partner_ids : the partner to notify
         """
         for partner in self.env['res.partner'].browse(partner_ids):
-            user_id = partner.user_ids and partner.user_ids[0] or False
-            if user_id:
-                user_channels = self.with_user(user_id).with_context(
-                    # sudo: res.company - context is required by ir.rules
-                    allowed_company_ids=user_id.sudo().company_ids.ids
-                )
-                partner._bus_send_store(user_channels)
+            if user := partner.main_user_id:
+                partner._bus_send_store(self.with_user(user).with_context(allowed_company_ids=[]))
 
     # ------------------------------------------------------------
     # INSTANT MESSAGING API

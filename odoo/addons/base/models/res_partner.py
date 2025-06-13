@@ -1,15 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
 import base64
 import collections
 import datetime
-import hashlib
 import pytz
-import re
 
-import requests
 from collections import defaultdict
 from random import randint
 from werkzeug import urls
@@ -228,6 +224,8 @@ class ResPartner(models.Model):
                                "Anywhere else, time values are computed according to the time offset of your web client.")
 
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
+    # Warning: user_id is a Salesperson, not the inverse of partner_id in res.users.
+    # For the latter, see user_ids and main_user_id.
     user_id: ResUsers = fields.Many2one(
         'res.users', string='Salesperson',
         compute='_compute_user_id',
@@ -285,6 +283,13 @@ class ResPartner(models.Model):
     company_id: ResCompany = fields.Many2one('res.company', 'Company', index=True)
     color = fields.Integer(string='Color Index', default=0)
     user_ids: ResUsers = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
+    main_user_id: ResUsers = fields.Many2one(
+        "res.users",
+        string="Main User",
+        compute="_compute_main_user_id",
+        help="There can be several users related to the same partner. "
+        "When a single user is needed, this field attempts to find the most appropriate one.",
+    )
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
         help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
@@ -410,6 +415,22 @@ class ResPartner(models.Model):
         """ Synchronize sales rep with parent if partner is a person """
         for partner in self.filtered(lambda partner: not partner.user_id and partner.company_type == 'person' and partner.parent_id.user_id):
             partner.user_id = partner.parent_id.user_id
+
+    @api.depends_context("uid")
+    @api.depends("user_ids.active", "user_ids.share")
+    def _compute_main_user_id(self):
+        for partner in self:
+            if self.env.user.partner_id == partner:
+                partner.main_user_id = self.env.user
+                continue
+            users = partner.user_ids.filtered(lambda u: u.active).with_prefetch(self.user_ids.ids)
+            # Special case for OdooBot as its user might be archived.
+            if not users and partner.id == self.env["ir.model.data"]._xmlid_to_res_id("base.partner_root"):
+                partner.main_user_id = self.env["ir.model.data"]._xmlid_to_res_id("base.user_root")
+                continue
+            partner.main_user_id = users.sorted(
+                lambda u: (not u.share, -u.id), reverse=True,
+            )[:1]
 
     @api.depends('user_ids.share', 'user_ids.active')
     def _compute_partner_share(self):
