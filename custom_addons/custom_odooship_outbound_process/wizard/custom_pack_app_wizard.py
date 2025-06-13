@@ -167,6 +167,20 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ("state", "=", "assigned"),
             ])
 
+            # ========== VALIDATE CURRENT STATE (must be 'pick') ==========
+            not_pick = so_pickings.filtered(lambda p: p.current_state != 'pick')
+            if not_pick:
+                lines = []
+                for p in not_pick:
+                    lines.append(
+                        f"Pick Number: {p.name}, SO: {sale_order.name}, Current State: {p.current_state}"
+                    )
+                raise ValidationError(
+                    f"The following discrete picks are not in current_state 'pick':\n" +
+                    "\n".join(lines) +
+                    "\nAll picks must be in 'pick' state to proceed."
+                )
+
             for picking in so_pickings:
                 totes = picking.move_ids_without_package.mapped("pc_container_code")
                 if not any(totes):
@@ -221,6 +235,21 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ("site_code_id", "=", self.site_code_id.id),
                 ("state", "=", "assigned"),
             ])
+
+            # ========== VALIDATE CURRENT STATE (must be 'pick') ==========
+            not_pick = pickings_to_load.filtered(lambda p: p.current_state != 'pick')
+            if not_pick:
+                lines = []
+                for p in not_pick:
+                    so = p.sale_id.name if p.sale_id else "-"
+                    lines.append(
+                        f"Pick Number: {p.name}, SO: {so}, Current State: {p.current_state}"
+                    )
+                raise ValidationError(
+                    f"The following picks are not in current_state 'pick':\n" +
+                    "\n".join(lines) +
+                    "\nAll picks must be in 'pick' state to proceed."
+                )
 
             discrete_pickings = pickings_to_load.filtered(lambda p: p.discrete_pick)
             if discrete_pickings:
