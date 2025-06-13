@@ -20,8 +20,11 @@ export class CompositeActionPlugin extends Plugin {
 
 class CompositeAction extends BuilderAction {
     static id = "composite";
-    static dependencies = ["builderActions", "history"];
+    static dependencies = ["builderActions"];
+
+    suppressPreviewableAsyncWarning = true;
     loadOnClean = true;
+
     async prepare({ actionParam: { mainParam: actions }, actionValue }) {
         const proms = [];
         for (const actionDef of actions) {
@@ -85,8 +88,7 @@ class CompositeAction extends BuilderAction {
         }
         return !!results.length && results.every((result) => result);
     }
-    async load({ editingElement, params: { mainParam: actions }, value }) {
-        const isPreviewing = this.dependencies.history.getIsPreviewing();
+    async load({ isPreviewing, editingElement, params: { mainParam: actions }, value }) {
         const loadActions = [];
         const loadResults = [];
         for (const actionDef of actions) {
@@ -111,6 +113,7 @@ class CompositeAction extends BuilderAction {
         }, {});
     }
     async apply({
+        isPreviewing,
         editingElement,
         params: { mainParam: actions },
         value,
@@ -118,7 +121,6 @@ class CompositeAction extends BuilderAction {
         dependencyManager,
         selectableContext,
     }) {
-        const isPreviewing = this.dependencies.history.getIsPreviewing();
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
             if (action.apply && (!isPreviewing || isActionPreviewable(action))) {
@@ -135,6 +137,7 @@ class CompositeAction extends BuilderAction {
         }
     }
     async clean({
+        isPreviewing,
         editingElement,
         params: { mainParam: actions },
         value,
@@ -143,7 +146,6 @@ class CompositeAction extends BuilderAction {
         selectableContext,
         nextAction,
     }) {
-        const isPreviewing = this.dependencies.history.getIsPreviewing();
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
             const actionDescr = this._getActionDescription({
