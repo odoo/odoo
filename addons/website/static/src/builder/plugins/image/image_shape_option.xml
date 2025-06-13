@@ -3,8 +3,23 @@
 
 <t t-name="website.ImageShapeOption">
     <BuilderRow label.translate="Shape">
-        <div class="btn btn-secondary o-dropdown dropdown-toggle dropdown" t-on-click="this.showImageShapes" t-out="state.shapeLabel"/>
-        <BuilderButton action="'setImageShape'" actionValue="" preview="false" icon="'fa-times'" t-if="state.hasShape"/>
+        <div class="btn-group o-hb-button-group">
+            <div
+                class="o-hb-btn btn btn-secondary o-dropdown dropdown-toggle dropdown"
+                t-att-class="{'border-end-0 rounded-end-0': state.hasShape}"
+                role="button"
+                tabindex="0"
+                t-on-click="this.showImageShapes"
+                t-out="state.shapeLabel"
+            />
+            <BuilderButton
+                action="'setImageShape'"
+                actionValue=""
+                preview="false"
+                icon="'oi-close'"
+                className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'"
+                t-if="state.hasShape"/>
+        </div>
     </BuilderRow>
     <t t-if="this.state.hasShape">
         <t t-set="enabledTabs" t-value="['solid', 'custom']" />
