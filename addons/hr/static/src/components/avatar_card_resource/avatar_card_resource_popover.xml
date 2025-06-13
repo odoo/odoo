@@ -17,7 +17,7 @@
     </t>
 
     <t t-name="hr.avatarCardResourceInfos">
-        <small class="text-muted" t-if="record.job_id" t-esc="record.job_id[1]"/>
+        <small class="text-muted" t-if="record.job_title" t-esc="record.job_title"/>
         <span class="text-muted" t-if="record.department_id" data-tooltip="Department" t-esc="record.department_id[1]"/>
     </t>
 </templates>

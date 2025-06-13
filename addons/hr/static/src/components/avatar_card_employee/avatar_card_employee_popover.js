@@ -11,7 +11,13 @@ export class AvatarCardEmployeePopover extends AvatarCardResourcePopover {
     }
 
     get fieldNames() {
-        const excludedFields = ["employee_id", "resource_type"];
+        let excludedFields = ["employee_id", "resource_type"];
+        /* if user is not hr_user, record model is employee.public, then, exclude email and phone
+           and share because no idea why we need it.
+         */
+        if (this.props.recordModel === 'hr.employee.public') {
+            excludedFields = excludedFields.concat(["email", "phone"]);
+        }
         return super.fieldNames.filter((field) => !excludedFields.includes(field));
     }
 }
