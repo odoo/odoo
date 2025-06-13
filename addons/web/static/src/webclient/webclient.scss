@@ -171,7 +171,9 @@ select {
   width: 100%;
   display: block;
   outline: none;
+  border-radius: 0; // webkit OSX browsers have a border-radius on select, input and textarea
 }
+
 select {
 
   // FIXME buggy 'padding-left'
@@ -180,7 +182,6 @@ select {
 
   appearance: none;
   background: transparent $o-caret-down no-repeat right center;
-  border-radius: 0; // webkit OSX browsers have a border-radius on select
 
   color: $o-main-text-color;
 
