@@ -289,3 +289,18 @@ registry.category("web_tour.tours").add("self_order_mobile_special_products_cate
         },
     ],
 });
+
+registry.category("web_tour.tours").add("self_mobile_auto_table_selection_takeaway_in", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Pay"),
+        CartPage.checkNoTableSelector(),
+        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Order Now"),
+    ],
+});
