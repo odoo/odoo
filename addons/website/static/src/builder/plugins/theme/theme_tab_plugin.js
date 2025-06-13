@@ -3,7 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { ThemeColorsOption } from "./theme_colors_option";
 import { ThemeAdvancedOption } from "./theme_advanced_option";
-import { getCSSVariableValue } from "@html_builder/utils/utils_css";
+import { getCSSVariableValue, setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -278,6 +278,7 @@ class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
             return;
         }
         await super.apply(context);
+        setBuilderCSSVariables();
     }
 }
 

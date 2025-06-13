@@ -1,3 +1,4 @@
+import { EDITOR_COLOR_CSS_VARIABLES } from "@html_editor/utils/color";
 import { backgroundImageCssToParts, getBgImageURLFromURL } from "@html_editor/utils/image";
 import { normalizeCSSColor, isCSSColor, isColorGradient } from "@web/core/utils/colors";
 
@@ -6,48 +7,6 @@ export const setEditableWindow = (ew) => (editableWindow = ew);
 let editableDocument = document;
 export const setEditableDocument = (ed) => (editableDocument = ed);
 
-export const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = [
-    "primary",
-    "secondary",
-    "alpha",
-    "beta",
-    "gamma",
-    "delta",
-    "epsilon",
-    "success",
-    "info",
-    "warning",
-    "danger",
-];
-
-/**
- * These constants are colors that can be edited by the user when using
- * web_editor in a website context. We keep track of them so that color
- * palettes and their preview elements can always have the right colors
- * displayed even if website has redefined the colors during an editing
- * session.
- *
- * @type {string[]}
- */
-export const EDITOR_COLOR_CSS_VARIABLES = [...COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES];
-// o-cc and o-colors
-for (let i = 1; i <= 5; i++) {
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-color-${i}`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-bg`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-bg-gradient`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-headings`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-text`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary-text`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary-text`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary-border`);
-    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary-border`);
-}
-// Grays
-for (let i = 100; i <= 900; i += 100) {
-    EDITOR_COLOR_CSS_VARIABLES.push(`${i}`);
-}
 /**
  * window.getComputedStyle cannot work properly with CSS shortcuts (like
  * 'border-width' which is a shortcut for the top + right + bottom + left border
@@ -346,7 +305,7 @@ export function computeColorClasses(colorNames, prefix = "bg-") {
  */
 export function getCSSVariableValue(key, htmlStyle) {
     if (htmlStyle === undefined) {
-        htmlStyle = editableWindow.getComputedStyle(editableWindow.document.documentElement);
+        htmlStyle = editableWindow.getComputedStyle(editableDocument.documentElement);
     }
     // Get trimmed value from the HTML element
     let value = htmlStyle.getPropertyValue(`--${key}`).trim();
@@ -550,4 +509,16 @@ export function applyNeededCss(
         return true;
     }
     return false;
+}
+
+export function setBuilderCSSVariables() {
+    for (const style of EDITOR_COLOR_CSS_VARIABLES) {
+        let value = getCSSVariableValue(style);
+        if (value.startsWith("'") && value.endsWith("'")) {
+            // Gradient values are recovered within a string.
+            value = value.substring(1, value.length - 1);
+        }
+        const builderEl = editableWindow.top.document.querySelector(".o-snippets-menu");
+        builderEl.style.setProperty(`--hb-cp-${style}`, value);
+    }
 }
