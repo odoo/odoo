@@ -113,7 +113,10 @@ export class BlockTab extends Component {
                 this.state.ongoingInsertion = false;
                 delete this.cancelDragAndDrop;
             },
-            { withLoadingEffect: false }
+            {
+                withLoadingEffect: false,
+                shouldInterceptClick: true,
+            }
         );
     }
 
@@ -385,7 +388,10 @@ export class BlockTab extends Component {
                             async () => {
                                 await this.onSnippetGroupDrop(snippet, snippetEl);
                             },
-                            { withLoadingEffect: false }
+                            {
+                                withLoadingEffect: false,
+                                shouldInterceptClick: true,
+                            }
                         );
                     }
                 } else {

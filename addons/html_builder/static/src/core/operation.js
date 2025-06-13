@@ -11,10 +11,13 @@ import { Mutex } from "@web/core/utils/concurrency";
  *   is a preview for example)
  * @property {Function} cancelPrevious the function to run when cancelling
  * @property {Number} [cancelTime=50] TODO
- * @property {Boolean} [withLoadingEffect=true] specifes if a spinner should
+ * @property {Boolean} [withLoadingEffect=true] specifies if a spinner should
  *   appear on the editable during the operation
  * @property {Number} [loadingEffectDelay=500] the delay after which the
  *   spinner should appear
+ * @property {Boolean} [shouldInterceptClick=false] whether clicking while the
+ *   loading screen is present should retarget the click at the end of the
+ *   loading time.
  */
 
 export class Operation {
@@ -40,6 +43,7 @@ export class Operation {
             cancelTime = 50,
             withLoadingEffect = true,
             loadingEffectDelay = 500,
+            shouldInterceptClick = false,
         } = {}
     ) {
         this.cancelPrevious?.();
@@ -70,7 +74,8 @@ export class Operation {
 
             const removeLoadingElement = this.addLoadingElement(
                 withLoadingEffect,
-                loadingEffectDelay
+                loadingEffectDelay,
+                shouldInterceptClick
             );
             const applyOperation = async () => {
                 const loadResult = await load();
@@ -108,9 +113,11 @@ export class Operation {
      * @param {Boolean} withLoadingEffect if true, adds a loading effect
      * @param {Number} loadingEffectDelay delay after which the loading effect
      *   should appear
+     * @param {Boolean} shouldInterceptClick - whether to redispatch the click
+     *   under the loading element after the end of the current operation
      * @returns {Function}
      */
-    addLoadingElement(withLoadingEffect, loadingEffectDelay) {
+    addLoadingElement(withLoadingEffect, loadingEffectDelay, shouldInterceptClick) {
         const loadingScreenEl = document.createElement("div");
         loadingScreenEl.classList.add(
             ...["o_loading_screen", "d-flex", "justify-content-center", "align-items-center"]
@@ -118,6 +125,22 @@ export class Operation {
         const spinnerEl = document.createElement("img");
         spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
         loadingScreenEl.appendChild(spinnerEl);
+
+        let removeClickListener = () => {};
+        if (shouldInterceptClick) {
+            const onClick = (ev) => {
+                const trueTargetEl = this.editableDocument.elementsFromPoint(
+                    ev.clientX,
+                    ev.clientY
+                )[1];
+                this.next(() => {
+                    trueTargetEl.click();
+                });
+            };
+            this.editableDocument.addEventListener("click", onClick);
+            removeClickListener = () => this.editableDocument.removeEventListener("click", onClick);
+        }
+
         this.editableDocument.body.appendChild(loadingScreenEl);
 
         // If specified, add a loading effect on that element after a delay.
@@ -133,6 +156,7 @@ export class Operation {
             if (loadingTimeout) {
                 clearTimeout(loadingTimeout);
             }
+            removeClickListener();
             loadingScreenEl.remove();
         };
     }
