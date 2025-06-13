@@ -22,13 +22,13 @@
                     'o-highlight-theme': state.activeTab === 'theme',
                 }"
             />
-            <button data-name="blocks" data-hotkey="1" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="props.isTranslation">
+            <button data-name="blocks" data-hotkey="1" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="displayOnlyCustomizeTab">
                 <i class="oi oi-plus me-1" role="img"/>Add
             </button>
             <button data-name="customize" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'customize'}" t-on-click="() => this.onTabClick('customize')">
                 <i class="oi oi-settings-adjust me-1" role="img"/>Edit
             </button>
-            <button data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="props.isTranslation">
+            <button data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="displayOnlyCustomizeTab">
                 <i class="fa fa-cog me-1" role="img"/>Theme
             </button>
         </div>
@@ -37,7 +37,7 @@
                 <BlockTab />
             </t>
             <t t-if="state.activeTab === 'customize'">
-                <t t-if="props.isTranslation" t-call="html_builder.CustomizeTranslationTab"/>
+                <t t-if="!!props.config.customizeTab" t-call="{{props.config.customizeTab}}"/>
                 <CustomizeTab t-else="" currentOptionsContainers="state.currentOptionsContainers" snippetModel="snippetModel"/>
             </t>
             <t t-if="state.activeTab === 'theme'">

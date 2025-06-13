@@ -164,18 +164,19 @@ export class WebsiteBuilder extends Component {
             snippetsName: "website.snippets",
             toggleMobile: this.toggleMobile.bind(this),
             overlayRef: this.overlayRef,
-            isTranslation: this.translation,
             iframeLoaded: this.iframeLoaded,
             isMobile: this.websiteContext.isMobile,
             Plugins: websitePlugins,
+            instantiateCorePlugins : !this.translation,
             config: {
                 initialTarget: this.target,
-                initialTab: this.initialTab,
+                initialTab: this.initialTab || this.translation ? "customize" : "blocks",
                 builderSidebar: {
                     toggle: (show) => {
                         this.state.showSidebar = show ?? !this.state.showSidebar;
                     },
                 },
+                customizeTab: this.translation ? "website.CustomizeTranslationTab" : "",
              },
             getThemeTab: () =>
                 odoo.loader.modules.get("@website/builder/plugins/theme/theme_tab").ThemeTab,

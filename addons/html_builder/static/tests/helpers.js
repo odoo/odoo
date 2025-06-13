@@ -107,7 +107,6 @@ class BuilderContainer extends Component {
                 this.state.isMobile = !this.state.isMobile;
             },
             overlayRef: () => {},
-            isTranslation: false,
             iframeLoaded: this.iframeLoaded,
             isMobile: this.state.isMobile,
             Plugins: this.props.Plugins,

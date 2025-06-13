@@ -57,19 +57,17 @@ export class TranslationPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),
         after_setup_editor_handlers: () => {
-            if (this.config.isTranslation) {
-                const translationSavableEls = getTranslationEditableEls(
-                    this.services.website.pageDocument
-                );
-                for (const translationSavableEl of translationSavableEls) {
-                    if (!translationSavableEl.hasAttribute("data-oe-readonly")) {
-                        translationSavableEl.classList.add("o_editable");
-                    }
+            const translationSavableEls = getTranslationEditableEls(
+                this.services.website.pageDocument
+            );
+            for (const translationSavableEl of translationSavableEls) {
+                if (!translationSavableEl.hasAttribute("data-oe-readonly")) {
+                    translationSavableEl.classList.add("o_editable");
                 }
-                this.setupServicesIfNotSet();
-                this.prepareTranslation();
-                return true;
             }
+            this.setupServicesIfNotSet();
+            this.prepareTranslation();
+            return true;
         },
     };
 

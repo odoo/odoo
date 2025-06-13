@@ -35,15 +35,16 @@ export class Builder extends Component {
         snippetsName: { type: String },
         toggleMobile: { type: Function },
         overlayRef: { type: Function },
-        isTranslation: { type: Boolean },
         iframeLoaded: { type: Object },
         isMobile: { type: Boolean },
         Plugins: { type: Array, optional: true },
         config: { type: Object, optional: true },
         getThemeTab: { type: Function, optional: true },
+        instantiateCorePlugins: { type: Boolean, optional: true },
     };
     static defaultProps = {
         config: {},
+        instantiateCorePlugins: true,
     };
 
     setup() {
@@ -53,8 +54,7 @@ export class Builder extends Component {
         this.state = useState({
             canUndo: false,
             canRedo: false,
-            activeTab:
-                this.props.config.initialTab || (this.props.isTranslation ? "customize" : "blocks"),
+            activeTab: this.props.config.initialTab || "blocks",
             currentOptionsContainers: undefined,
             invisibleEls: [],
         });
@@ -78,14 +78,13 @@ export class Builder extends Component {
                 "BannerPlugin",
             ]
         );
-        const corePlugins = this.props.isTranslation ? [] : CORE_PLUGINS;
+        const corePlugins = this.props.instantiateCorePlugins ? CORE_PLUGINS : [];
         const Plugins = [...mainPlugins, ...corePlugins, ...(this.props.Plugins || [])];
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
         this.editor = new Editor(
             {
                 Plugins,
-                isTranslation: this.props.isTranslation,
                 ...this.props.config,
                 onChange: ({ isPreviewing }) => {
                     if (!isPreviewing) {
@@ -214,6 +213,10 @@ export class Builder extends Component {
         this.noSelectionTab = "blocks";
     }
 
+    get displayOnlyCustomizeTab() {
+        return !!this.props.config.customizeTab;
+    }
+
     setCSSVariables() {
         const el = this.builder_sidebarRef.el;
         for (const style of EDITOR_COLOR_CSS_VARIABLES) {
@@ -256,7 +259,7 @@ export class Builder extends Component {
         for (const actionButtonEl of actionButtonEls) {
             actionButtonEl.disabled = true;
         }
-        await this.editor.shared.savePlugin.save(this.props.isTranslation);
+        await this.editor.shared.savePlugin.save();
         this.props.closeEditor();
     }
 
