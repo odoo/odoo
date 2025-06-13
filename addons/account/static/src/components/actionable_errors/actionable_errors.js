@@ -12,6 +12,7 @@ export class ActionableErrors extends Component {
     setup() {
         super.setup();
         this.actionService = useService("action");
+        this.orm = useService("orm");
     }
 
     get errorData() {
@@ -24,7 +25,13 @@ export class ActionableErrors extends Component {
             errorData.action['views'] = errorData.action.view_mode.split(',').map(mode => [false, mode]);
             delete errorData.action['view_mode'];
         }
-        this.env.model.action.doAction(errorData.action);
+        if (errorData.action_call) {
+            const [model, method, args] = errorData.action_call;
+            await this.orm.call(model, method, [args]);
+            this.env.model.action.doAction("soft_reload");
+        } else {
+            this.env.model.action.doAction(errorData.action);
+        }
     }
 
     get sortedActionableErrors() {
