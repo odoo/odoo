@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { AttributeTranslateDialog } from "../translation_components/attributeTranslateDialog";
 import { SelectTranslateDialog } from "../translation_components/selectTranslateDialog";
 import {
@@ -57,19 +56,17 @@ export class TranslationPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),
         after_setup_editor_handlers: () => {
-            if (this.config.isTranslation) {
-                const translationSavableEls = getTranslationEditableEls(
-                    this.services.website.pageDocument
-                );
-                for (const translationSavableEl of translationSavableEls) {
-                    if (!translationSavableEl.hasAttribute("data-oe-readonly")) {
-                        translationSavableEl.classList.add("o_editable");
-                    }
+            const translationSavableEls = getTranslationEditableEls(
+                this.services.website.pageDocument
+            );
+            for (const translationSavableEl of translationSavableEls) {
+                if (!translationSavableEl.hasAttribute("data-oe-readonly")) {
+                    translationSavableEl.classList.add("o_editable");
                 }
-                this.setupServicesIfNotSet();
-                this.prepareTranslation();
-                return true;
             }
+            this.setupServicesIfNotSet();
+            this.prepareTranslation();
+            return true;
         },
     };
 
@@ -356,5 +353,3 @@ export class TranslationPlugin extends Plugin {
         }
     }
 }
-
-registry.category("translation-plugins").add(TranslationPlugin.id, TranslationPlugin);

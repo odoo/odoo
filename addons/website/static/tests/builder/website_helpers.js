@@ -3,7 +3,7 @@ import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { VersionControlPlugin } from "@html_builder/core/version_control_plugin";
 import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
 import { WebsiteSessionPlugin } from "@website/builder/plugins/website_session_plugin";
-import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
+import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
@@ -123,7 +123,7 @@ export async function setupWebsiteBuilder(
         resolveEditAssetsLoaded = () => resolve();
     });
 
-    patchWithCleanup(WebsiteBuilder.prototype, {
+    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         setIframeLoaded() {
             super.setIframeLoaded();
             this.publicRootReady.resolve();
@@ -165,7 +165,8 @@ export async function setupWebsiteBuilder(
     patchWithCleanup(EditInteractionPlugin.prototype, {
         setup() {
             super.setup();
-            // See loadAssetsEditBundle override in WebsiteBuilder patch.
+            // See loadAssetsEditBundle override in WebsiteBuilderClientAction
+            // patch.
             this.websiteEditService = {
                 update: () => {},
                 refresh: () => {},
@@ -241,13 +242,14 @@ async function openBuilderSidebar(editAssetsLoaded) {
 
     await click(".o-website-btn-custo-primary");
     await editAssetsLoaded;
-    // animationFrame linked to state.isEditing rendering the WebsiteBuilder.
+    // animationFrame linked to state.isEditing rendering the
+    // WebsiteBuilderClientAction.
     await animationFrame();
-    // tick needed to wait for the timeout in the WebsiteBuilder useEffect to be
-    // called before advancing time.
+    // tick needed to wait for the timeout in the WebsiteBuilderClientAction
+    // useEffect to be called before advancing time.
     await tick();
-    // advanceTime linked to the setTimeout in the WebsiteBuilder component that
-    // removes the systray items.
+    // advanceTime linked to the setTimeout in the WebsiteBuilderClientAction
+    // component that removes the systray items.
     await advanceTime(200);
     await animationFrame();
 }

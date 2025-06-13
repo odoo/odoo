@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 
 export class SetupEditorPlugin extends Plugin {
@@ -100,4 +99,3 @@ export class SetupEditorPlugin extends Plugin {
         return editablesAreaEls;
     }
 }
-registry.category("translation-plugins").add(SetupEditorPlugin.id, SetupEditorPlugin);

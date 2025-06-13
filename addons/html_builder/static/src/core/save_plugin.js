@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 
@@ -213,5 +212,3 @@ export class SavePlugin extends Plugin {
         }
     }
 }
-
-registry.category("translation-plugins").add(SavePlugin.id, SavePlugin);

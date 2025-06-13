@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website.WebsiteBuilder">
+<t t-name="website.WebsiteBuilderClientAction">
     <div class="d-flex h-100 w-100" t-ref="container">
         <div class="o_website_preview border-top flex-grow-1" t-ref="website_preview">
             <div class="o_iframe_container">
@@ -17,7 +17,7 @@
         <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
         <div t-att-class="{'o_builder_sidebar_open': state.isEditing and state.showSidebar, 'o_is_microsoft_edge': isMicrosoftEdge}"
             class="o-website-builder_sidebar border-start border-dark">
-            <LazyComponent  t-if="state.isEditing" Component="'website.Builder'" props="() => this.menuProps" bundle="'html_builder.assets'" t-key="state.key"/>
+            <LazyComponent  t-if="state.isEditing" Component="'website.WebsiteBuilder'" props="() => this.websiteBuilderProps" bundle="'html_builder.assets'" t-key="state.key"/>
         </div>
     </div>
 </t>

@@ -6,7 +6,7 @@ import {
     VISIBILITY_OPTION_SELECTOR,
 } from "./options/visibility_option_plugin";
 
-class WebsiteVisibilityPlugin extends Plugin {
+export class WebsiteVisibilityPlugin extends Plugin {
     static id = "websiteVisibilityPlugin";
 
     resources = {
@@ -46,4 +46,3 @@ class WebsiteVisibilityPlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(WebsiteVisibilityPlugin.id, WebsiteVisibilityPlugin);
-registry.category("translation-plugins").add(WebsiteVisibilityPlugin.id, WebsiteVisibilityPlugin);

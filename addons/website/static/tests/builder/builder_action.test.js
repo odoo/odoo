@@ -4,7 +4,7 @@ import { useState, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
+import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import {
     addBuilderAction,
     addBuilderOption,
@@ -24,7 +24,7 @@ describe("website tests", () => {
 
     test("top window url in action context parameter", async () => {
         let websiteBuilder;
-        patchWithCleanup(WebsiteBuilder.prototype, {
+        patchWithCleanup(WebsiteBuilderClientAction.prototype, {
             setup() {
                 websiteBuilder = this;
                 this.props.action.context = {

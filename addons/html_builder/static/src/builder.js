@@ -1,5 +1,4 @@
 import { Editor } from "@html_editor/editor";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import {
     Component,
@@ -15,15 +14,17 @@ import {
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { useSetupAction } from "@web/search/action_hook";
 import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { BlockTab } from "@html_builder/sidebar/block_tab";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
-import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
-import { EDITOR_COLOR_CSS_VARIABLES, getCSSVariableValue, setEditableWindow } from "@html_builder/utils/utils_css";
+import {
+    EDITOR_COLOR_CSS_VARIABLES,
+    getCSSVariableValue,
+    setEditableWindow,
+} from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 
 export class Builder extends Component {
@@ -35,7 +36,6 @@ export class Builder extends Component {
         snippetsName: { type: String },
         toggleMobile: { type: Function },
         overlayRef: { type: Function },
-        isTranslation: { type: Boolean },
         iframeLoaded: { type: Object },
         isMobile: { type: Boolean },
         Plugins: { type: Array, optional: true },
@@ -53,8 +53,7 @@ export class Builder extends Component {
         this.state = useState({
             canUndo: false,
             canRedo: false,
-            activeTab:
-                this.props.config.initialTab || (this.props.isTranslation ? "customize" : "blocks"),
+            activeTab: this.props.config.initialTab || "blocks",
             currentOptionsContainers: undefined,
             invisibleEls: [],
         });
@@ -68,25 +67,11 @@ export class Builder extends Component {
 
         const editorBus = new EventBus();
 
-        const mainPlugins = removePlugins(
-            [...MAIN_PLUGINS],
-            [
-                "PowerButtonsPlugin",
-                "DoubleClickImagePreviewPlugin",
-                "SeparatorPlugin",
-                "StarPlugin",
-                "BannerPlugin",
-                "MoveNodePlugin",
-            ]
-        );
-        const corePlugins = this.props.isTranslation ? [] : CORE_PLUGINS;
-        const Plugins = [...mainPlugins, ...corePlugins, ...(this.props.Plugins || [])];
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
         this.editor = new Editor(
             {
-                Plugins,
-                isTranslation: this.props.isTranslation,
+                Plugins: this.props.Plugins,
                 ...this.props.config,
                 onChange: ({ isPreviewing }) => {
                     if (!isPreviewing) {
@@ -216,6 +201,10 @@ export class Builder extends Component {
         this.noSelectionTab = "blocks";
     }
 
+    get displayOnlyCustomizeTab() {
+        return !!this.props.config.customizeTab;
+    }
+
     setCSSVariables() {
         const el = this.builder_sidebarRef.el;
         for (const style of EDITOR_COLOR_CSS_VARIABLES) {
@@ -258,7 +247,7 @@ export class Builder extends Component {
         for (const actionButtonEl of actionButtonEls) {
             actionButtonEl.disabled = true;
         }
-        await this.editor.shared.savePlugin.save(this.props.isTranslation);
+        await this.editor.shared.savePlugin.save();
         this.props.closeEditor();
     }
 
@@ -326,16 +315,3 @@ export class Builder extends Component {
         ];
     }
 }
-
-/**
- * Removes the specified plugins from a given list of plugins.
- *
- * @param {Array<Plugin>} plugins the list of plugins
- * @param {Array<string>} pluginsToRemove the names of the plugins to remove
- * @returns {Array<Plugin>}
- */
-function removePlugins(plugins, pluginsToRemove) {
-    return plugins.filter((p) => !pluginsToRemove.includes(p.name));
-}
-
-registry.category("lazy_components").add("website.Builder", Builder);

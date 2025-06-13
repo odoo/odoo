@@ -1,7 +1,9 @@
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
+import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import {
     defineWebsiteModels,
     exampleWebsiteContent,
@@ -9,8 +11,6 @@ import {
     setupWebsiteBuilder,
     wrapExample,
 } from "./website_helpers";
-import { setSelection } from "@html_editor/../tests/_helpers/selection";
-import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 
 defineWebsiteModels();
 
@@ -55,7 +55,7 @@ test("discard modified elements", async () => {
 });
 
 test("discard without any modifications", async () => {
-    patchWithCleanup(WebsiteBuilder.prototype, {
+    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         async reloadIframeAndCloseEditor() {
             this.websiteContent.el.contentDocument.body.innerHTML = wrapExample;
         },
@@ -97,7 +97,7 @@ function setupSaveAndReloadIframe() {
         resultSave.push(args[1]);
         return true;
     });
-    patchWithCleanup(WebsiteBuilder.prototype, {
+    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         async reloadIframeAndCloseEditor() {
             this.websiteContent.el.contentDocument.body.innerHTML =
                 resultSave.at(-1) || wrapExample;
