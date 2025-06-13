@@ -8,7 +8,7 @@
             <BuilderSelectItem t-props="forwardProps(font)">
                 <div class="d-flex justify-content-between">
                     <span t-attf-style="font-family: {{font.fontFamily}};">
-                        <i t-if="font.type === 'cloud'" role="button" class="text-info me-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"></i>
+                        <i t-if="font.type === 'cloud'" role="button" class="me-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"></i>
                         <t t-out="font.string"/>
                     </span>
                     <div class="text-end o_select_item_only">

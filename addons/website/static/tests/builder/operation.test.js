@@ -165,7 +165,7 @@ describe("Async operations", () => {
 
         await setupWebsiteBuilder(`<div class="test-options-target">TEST</div>`);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container [data-label='Type'] .btn-primary ").click();
+        await contains(".options-container [data-label='Type'] .btn-secondary ").click();
         await hover(".options-container [data-action-value='first']");
         await hover(".options-container [data-action-value='second']");
         await advanceTime(applyDelay + 50);

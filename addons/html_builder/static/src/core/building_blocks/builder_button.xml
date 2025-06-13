@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BuilderButton">
     <BuilderComponent>
-        <button type="button" class="btn" t-att-style="this.props.style"
+        <button type="button" class="o-hb-btn btn" t-att-style="this.props.style"
             t-att-data-action-id="info.actionId"
             t-att-data-action-param="info.actionParam"
             t-att-data-action-value="info.actionValue"
@@ -19,6 +19,7 @@
             t-on-mouseenter="() => this.onMouseenter(props.id)"
             t-on-mouseleave="() => this.onMouseleave(props.id)">
             <Img t-if="props.iconImg" src="props.iconImg" attrs="{alt:props.iconImgAlt}"/>
+            <i t-if="props.icon" t-att-class="iconClassName" role="img"/>
             <t t-if="props.label"  t-out="props.label"/>
             <t t-slot="default"/>
         </button>

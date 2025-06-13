@@ -3,7 +3,7 @@
 
 <t t-name="website.ImageShapeOption">
     <BuilderRow label.translate="Shape">
-        <div class="btn btn-primary o-dropdown dropdown-toggle dropdown" t-on-click="this.showImageShapes" t-out="state.shapeLabel"/>
+        <div class="btn btn-secondary o-dropdown dropdown-toggle dropdown" t-on-click="this.showImageShapes" t-out="state.shapeLabel"/>
         <BuilderButton action="'setImageShape'" actionValue="" preview="false" icon="'fa-times'" t-if="state.hasShape"/>
     </BuilderRow>
     <t t-if="this.state.hasShape">

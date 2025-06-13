@@ -5,13 +5,11 @@
     <div t-if="props.options.length"
          class="options-container" t-ref="root" t-att-data-container-title="title"
          t-on-mouseenter="onMouseEnter" t-on-mouseleave="onMouseLeave">
-        <div class="we-bg-darker p-2">
-                <!-- TODO change the structure so the clickable surface is bigger -->
-            <span class="ps-2 text-white" t-out="title" role="button" t-on-click="selectElement"/>
-                <!-- TODO CSS + remove temporary BS classes -->
-            <div class="float-end">
-                <div class="me-3 d-inline">
-                    <t t-if="props.headerMiddleButtons" t-foreach="props.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
+        <div class="we-bg-darker d-flex align-items-center justify-content-between">
+            <span class="options-container-label flex-grow-1 ps-2 py-2 cursor-pointer" t-out="title" role="button" t-on-click="selectElement"/>
+            <div class="d-flex align-items-center gap-1 p-2">
+                <div t-if="props.headerMiddleButtons" class="me-3 d-inline">
+                    <t t-foreach="props.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
                         <BuilderContext applyTo="headerMiddleButton.applyTo">
                             <t t-if="headerMiddleButton.Component"
                                 t-component="headerMiddleButton.Component"
@@ -21,14 +19,14 @@
                     </t>
                 </div>
                 <t t-foreach="props.containerTopButtons" t-as="button" t-key="button_index">
-                    <button class="o_we_link border-0 px-0 me-1" t-att-class="button.class"
+                    <button class="o-hb-btn" t-att-class="button.class"
                             t-att-title="button.title" t-att-aria-label="button.title"
                             t-on-click="() => button.handler(props.editingElement)"/>
                 </t>
                 <t t-if="props.isClonable || props.cloneDisabledReason">
                     <!-- Disabled buttons do not display their title -->
                     <span t-att-title="props.cloneDisabledReason" t-att-aria-label="props.cloneDisabledReason">
-	                    <button class="fa fa-fw fa-clone oe_snippet_clone o_we_link o_we_hover_success btn btn-outline-success border-0 px-0 me-1"
+	                    <button class="fa fa-fw fa-clone oe_snippet_clone o-hb-btn btn btn-success-color-hover"
 	                            title="Duplicate this block"
 	                            aria-label="Duplicate this block"
                                 t-att-disabled="!!props.cloneDisabledReason"
@@ -38,7 +36,7 @@
                 <t t-if="props.isRemovable || props.removeDisabledReason">
                     <!-- Disabled buttons do not display their title -->
                     <span t-att-title="props.removeDisabledReason" t-att-aria-label="props.removeDisabledReason">
-	                    <button class="fa fa-fw fa-trash oe_snippet_remove o_we_link o_we_hover_danger btn btn-outline-danger border-0 px-0 me-1 "
+	                    <button class="fa fa-fw fa-trash oe_snippet_remove o-hb-btn btn btn-danger-color-hover"
 	                            title="Remove this block"
 	                            aria-label="Remove this block"
 	                            t-att-disabled="!!props.removeDisabledReason"

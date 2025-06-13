@@ -27,7 +27,7 @@ export class BuilderButton extends Component {
     };
 
     static defaultProps = {
-        type: "primary",
+        type: "secondary",
     };
 
     setup() {
@@ -48,14 +48,20 @@ export class BuilderButton extends Component {
                 className += ` ${this.props.classActive}`;
             }
         }
-        if (!this.props.icon) {
-            return className;
+        if (this.props.icon) {
+            className += ` o-hb-btn-has-icon`;
         }
-        if (this.props.icon.startsWith("fa-")) {
-            return className + ` fa fa-fw ${this.props.icon}`;
-        } else if (this.props.icon.startsWith("oi-")) {
-            return className + ` oi oi-fw ${this.props.icon}`;
+        if (this.props.iconImg) {
+            className += ` o-hb-btn-has-img-icon`;
         }
         return className;
+    }
+
+    get iconClassName() {
+        if (this.props.icon.startsWith("fa-")) {
+            return `fa ${this.props.icon}`;
+        } else if (this.props.icon.startsWith("oi-")) {
+            return `oi ${this.props.icon}`;
+        }
     }
 }

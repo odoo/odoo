@@ -10,3 +10,34 @@
 .dropdown-toggle .o_select_item_only {
     display: none; 
 }
+
+.o-hb-select-wrapper {
+    flex: 1 0 auto;
+    min-width: 7ch; // Approx 4 characters + caret
+    max-width: 100%;
+    display: flex;
+
+    .o-hb-select-toggle.o-hb-btn.btn.o-dropdown.dropdown-toggle {
+        display: block;
+        flex: 1;
+        min-width: 0;
+        padding-right: 0.75rem;
+        transition: none;
+
+        > img {
+            max-width: 100%;
+        }
+
+        &:after {
+            @include o-position-absolute(50%, map-get($spacers, 1));
+            transform: translate(-50%, -50%);
+            font-size: .5rem;
+        }
+    }
+
+    &:first-child:last-child {
+        .o-hb-select-toggle {
+            --btn-padding-x: #{map-get($spacers , 2)};
+        }
+    }
+}

@@ -79,7 +79,9 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
                 cursor: inherit;
 
                 &:focus-visible {
-                    border: 2px solid $o-brand-primary;
+                    border: $o-we-border-width * 2 solid $o-we-color-success;
+                    outline: none;
+                    box-shadow: none;
                 }
             }
 
@@ -88,13 +90,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
                 .o_snippet_undroppable {
                     @include o-position-absolute(8px, 6px, auto, auto);
-                }
-            }
-
-            &.o_to_install {
-                .o_install_btn {
-                    @include o-position-absolute($top: 10px);
-                    z-index: 1;
                 }
             }
 
