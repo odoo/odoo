@@ -13,13 +13,16 @@ import {
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import {
     asyncStep,
+    getService,
     mockService,
     onRpc,
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
-import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
+import { deserializeDateTime, serializeDate, serializeDateTime, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
+
+const { DateTime } = luxon;
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -622,4 +625,50 @@ test("activity with a channel mention", async () => {
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Activity-note a", { text: "#Channel" });
     await contains(".o-mail-ChatWindow-header", { text: "Channel" });
+});
+
+test("broadcast channel of activity data accept real-time data (ignore old data)", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner" });
+    const activityId = pyEnv["mail.activity"].create({
+        note: `<p>initial</p>`,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    await start();
+    const store = getService("mail.store");
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Activity-note:contains('initial')");
+    const activity = store["mail.activity"].get(activityId);
+    expect(activity.note.toString()).toBe("<p>initial</p>");
+    // simulate recent edited activity from another tab
+    const serializedData1 = activity.serialize();
+    serializedData1["mail.activity"][0].note = ["markup", "<p>edited-1</p>"];
+    const data1 = {
+        ts: serializeDateTime(DateTime.now()),
+        type: "INSERT",
+        payload: serializedData1,
+    };
+    store._onActivityBroadcastChannelMessage({ data: data1 });
+    expect(activity.note.toString()).toBe("<p>edited-1</p>");
+    // simulate very old edited activity from another tab
+    const serializedData2 = activity.serialize();
+    serializedData2["mail.activity"][0].note = ["markup", "<p>edited-2</p>"];
+    const data2 = {
+        ts: serializeDateTime(DateTime.now().minus({ seconds: 30 })),
+        type: "INSERT",
+        payload: serializedData2,
+    };
+    store._onActivityBroadcastChannelMessage({ data: data2 });
+    expect(activity.note.toString()).toBe("<p>edited-1</p>"); // unchanged because old change ignored
+    // simulate edited activity from the future of another tab
+    const serializedData3 = activity.serialize();
+    serializedData3["mail.activity"][0].note = ["markup", "<p>edited-3</p>"];
+    const data3 = {
+        ts: serializeDateTime(DateTime.now().plus({ seconds: 30 })),
+        type: "INSERT",
+        payload: serializedData3,
+    };
+    store._onActivityBroadcastChannelMessage({ data: data3 });
+    expect(activity.note.toString()).toBe("<p>edited-1</p>"); // unchanged because future change ignored
 });
