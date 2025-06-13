@@ -3,7 +3,7 @@
 
 <t t-name="website.DynamicSnippetOption">
     <t t-set="dynamicFilters" t-value="Object.values(dynamicOptionParams.dynamicFilters)"/>
-    <BuilderRow label.translate="Filter" t-if="dynamicOptionParams.showFilterOption()">
+    <BuilderRow id="filter_opt_row" label.translate="Filter" t-if="dynamicOptionParams.showFilterOption()">
         <BuilderSelect action="'dynamicFilter'" preview="false" id="'filter_opt'">
             <t t-foreach="dynamicFilters" t-as="filter" t-key="filter.id">
                 <BuilderSelectItem actionParam="filter" t-out="filter.name" title="filter.help || ''"/>
@@ -11,7 +11,7 @@
         </BuilderSelect>
     </BuilderRow>
     <t t-set="filteredTemplates" t-value="dynamicOptionParams.getFilteredTemplates()"/>
-    <BuilderRow label.translate="Template" t-if="filteredTemplates.length > 1">
+    <BuilderRow id="template_opt_row" label.translate="Template" t-if="filteredTemplates.length > 1">
         <BuilderSelect action="'dynamicFilterTemplate'" preview="false" id="'template_opt'">
             <t t-foreach="filteredTemplates" t-as="template" t-key="template.key">
                 <t t-if="template.thumb">
@@ -25,7 +25,7 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Fetched Elements" t-if="!!this.dynamicOptionParams.domState.filterId">
+    <BuilderRow id="number_of_records_opt_row" label.translate="Fetched Elements" t-if="!!this.dynamicOptionParams.domState.filterId">
         <BuilderSelect dataAttributeAction="'numberOfRecords'" preview="false" id="'number_of_records_opt'">
             <t t-foreach="['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']" t-as="value" t-key="value">
                 <BuilderSelectItem dataAttributeActionValue="value" t-out="value"/>
