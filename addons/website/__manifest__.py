@@ -481,8 +481,6 @@
             'website/static/src/components/navbar/navbar.scss',
             'website/static/src/components/navbar/navbar.xml',
             'website/static/src/components/burger_menu/burger_menu.js',
-            'website/static/src/components/switch/switch.js',
-            'website/static/src/components/switch/switch.scss',
             'website/static/src/components/wysiwyg_adapter/page_options.js',
             'website/static/src/components/translator/translator.js',
             'website/static/src/components/translator/translator.scss',
