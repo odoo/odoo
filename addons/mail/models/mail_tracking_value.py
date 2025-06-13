@@ -138,16 +138,29 @@ class MailTrackingValue(models.Model):
             # - False value
             # - recordset, in case of standard field
             # - [(id, display name), ...], in case of properties (read format)
+            model_name = self.env['ir.model']._get(field.relation).display_name
             if not initial_value:
                 old_value_char = ''
             elif isinstance(initial_value, models.BaseModel):
-                old_value_char = ', '.join(initial_value.mapped('display_name'))
+                old_value_char = ', '.join(
+                    value.display_name or self.env._(
+                        'Unnamed %(record_model_name)s (%(record_id)s)',
+                        record_model_name=model_name, record_id=value.id
+                    )
+                    for value in initial_value
+                )
             else:
                 old_value_char = ', '.join(value[1] for value in initial_value)
             if not new_value:
                 new_value_char = ''
             elif isinstance(new_value, models.BaseModel):
-                new_value_char = ', '.join(new_value.mapped('display_name'))
+                new_value_char = ', '.join(
+                    value.display_name or self.env._(
+                        'Unnamed %(record_model_name)s (%(record_id)s)',
+                        record_model_name=model_name, record_id=value.id
+                    )
+                    for value in new_value
+                )
             else:
                 new_value_char = ', '.join(value[1] for value in new_value)
 
