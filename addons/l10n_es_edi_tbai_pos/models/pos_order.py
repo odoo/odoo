@@ -26,11 +26,11 @@ class PosOrder(models.Model):
 
     l10n_es_tbai_post_file = fields.Binary(
         string="TicketBAI Post File",
-        related='l10n_es_tbai_post_document_id.xml_attachment_id.datas',
+        related='l10n_es_tbai_post_document_id.xml_attachment_bin',
     )
     l10n_es_tbai_post_file_name = fields.Char(
         string="TicketBAI Post Attachment Name",
-        related="l10n_es_tbai_post_document_id.xml_attachment_id.name",
+        related="l10n_es_tbai_post_document_id.xml_attachment_bin_filename",
     )
 
     l10n_es_tbai_is_required = fields.Boolean(

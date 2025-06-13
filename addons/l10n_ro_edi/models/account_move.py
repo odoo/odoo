@@ -1,3 +1,4 @@
+import base64
 import requests
 
 from odoo import models, fields, _, api, modules, tools
@@ -22,7 +23,6 @@ class AccountMove(models.Model):
                 - Validated: Sent & validated by the SPV
                 - Error: Sending error or validation error from the SPV""",
     )
-    l10n_ro_edi_attachment_id = fields.Many2one(comodel_name='ir.attachment')
     l10n_ro_edi_index = fields.Char(string='E-Factura Index', readonly=True)
 
     ################################################################################
@@ -52,20 +52,6 @@ class AccountMove(models.Model):
     # Romanian Document Shorthands & Helpers
     ################################################################################
 
-    def _l10n_ro_edi_create_attachment_values(self, raw, res_model=None, res_id=None):
-        """ Shorthand for creating the attachment_id values on the invoice's document """
-        self.ensure_one()
-        res_model = res_model or self._name
-        res_id = res_id or self.id
-        return {
-            'name': f"ciusro_signature_{self.name.replace('/', '_')}.xml",
-            'res_model': res_model,
-            'res_id': res_id,
-            'raw': raw,
-            'type': 'binary',
-            'mimetype': 'application/xml',
-        }
-
     def _l10n_ro_edi_create_document_invoice_sent(self, values: dict):
         """ Shorthand for creating a ``l10n_ro_edi.document`` of state ``invoice_sent``.
 
@@ -76,13 +62,10 @@ class AccountMove(models.Model):
             'invoice_id': self.id,
             'state': 'invoice_sent',
             'key_loading': values['key_loading'],
+            'attachment_bin': base64.b64encode(values['attachment_raw'])
         })
-        attachment_values = self._l10n_ro_edi_create_attachment_values(
-            raw=values['attachment_raw'],
-            res_model=document._name,
-            res_id=document.id,
-        )
-        document.attachment_id = self.env['ir.attachment'].sudo().create(attachment_values)
+        document._set_attachment_name(f"ciusro_signature_{self.name.replace('/', '_')}.xml")
+
         return document
 
     def _l10n_ro_edi_create_document_invoice_sending_failed(self, values: dict):
@@ -104,12 +87,9 @@ class AccountMove(models.Model):
         if values.get('key_loading'):
             document.key_loading = values['key_loading']
         if values.get('attachment_raw'):
-            attachment_values = self._l10n_ro_edi_create_attachment_values(
-                raw=values['attachment_raw'],
-                res_model=document._name,
-                res_id=document.id,
-            )
-            document.attachment_id = self.env['ir.attachment'].sudo().create(attachment_values)
+            document.attachment_bin = base64.b64encode(values['attachment_raw'])
+            document._set_attachment_name(f"ciusro_signature_{self.name.replace('/', '_')}.xml")
+
         return document
 
     def _l10n_ro_edi_create_document_invoice_validated(self, values: dict):
@@ -125,9 +105,10 @@ class AccountMove(models.Model):
             'key_loading': values['key_loading'],
             'key_signature': values['key_signature'],
             'key_certificate': values['key_certificate'],
+            'attachment_bin': base64.b64encode(values['attachment_raw']),
         })
-        attachment = self.env['ir.attachment'].sudo().create(self._l10n_ro_edi_create_attachment_values(values['attachment_raw']))
-        document.attachment_id = self.l10n_ro_edi_attachment_id = attachment
+        document._set_attachment_name(f"ciusro_signature_{self.name.replace('/', '_')}.xml")
+
         return document
 
     def _l10n_ro_edi_get_attachment_file_name(self):
@@ -228,7 +209,7 @@ class AccountMove(models.Model):
                 continue
 
             active_sending_document = invoice.l10n_ro_edi_document_ids.filtered(lambda d: d.state == 'invoice_sent')[0]
-            previous_raw = active_sending_document.attachment_id.sudo().raw
+            previous_raw = base64.b64decode(active_sending_document.attachment_bin)
             self.env['res.company']._with_locked_records(invoices_to_fetch)
             result = self.env['l10n_ro_edi.document']._request_ciusro_fetch_status(
                 company=invoice.company_id,

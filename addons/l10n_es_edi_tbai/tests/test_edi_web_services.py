@@ -58,8 +58,8 @@ class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
 
         self._get_invoice_send_wizard(self.out_invoice).action_send_and_print()
         self.assertEqual(self.out_invoice.l10n_es_tbai_state, 'sent')
-        self.assertTrue(self.out_invoice.l10n_es_tbai_post_document_id.xml_attachment_id)
+        self.assertTrue(self.out_invoice.l10n_es_tbai_post_document_id.xml_attachment_bin)
 
         self.in_invoice.l10n_es_tbai_send_bill()
         self.assertEqual(self.in_invoice.l10n_es_tbai_state, 'sent')
-        self.assertTrue(self.in_invoice.l10n_es_tbai_post_document_id.xml_attachment_id)
+        self.assertTrue(self.in_invoice.l10n_es_tbai_post_document_id.xml_attachment_bin)

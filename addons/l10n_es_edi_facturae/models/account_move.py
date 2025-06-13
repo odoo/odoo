@@ -54,12 +54,6 @@ REVERSED_COUNTRY_CODE = {v: k for k, v in COUNTRY_CODE_MAP.items()}
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_es_edi_facturae_xml_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="Facturae Attachment",
-        compute=lambda self: self._compute_linked_attachment_id('l10n_es_edi_facturae_xml_id', 'l10n_es_edi_facturae_xml_file'),
-        depends=['l10n_es_edi_facturae_xml_file']
-    )
     l10n_es_edi_facturae_xml_file = fields.Binary(
         attachment=True,
         string="Facturae File",
@@ -124,7 +118,7 @@ class AccountMove(models.Model):
     def _l10n_es_edi_facturae_get_default_enable(self):
         self.ensure_one()
         return not self.invoice_pdf_report_id \
-            and not self.l10n_es_edi_facturae_xml_id \
+            and not self.l10n_es_edi_facturae_xml_file \
             and not self.l10n_es_is_simplified \
             and self.is_invoice(include_receipts=True) \
             and (self.partner_id.is_company or self.partner_id.vat) \

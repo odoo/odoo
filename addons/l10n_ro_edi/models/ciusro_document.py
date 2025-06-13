@@ -66,7 +66,7 @@ class L10n_Ro_EdiDocument(models.Model):
                 Error -> Sending error or validation error from the SPV.""",
     )
     datetime = fields.Datetime(default=fields.Datetime.now, required=True)
-    attachment_id = fields.Many2one(comodel_name='ir.attachment')
+    attachment_bin = fields.Binary(attachment=True)
     message = fields.Char()
     key_loading = fields.Char(string="E-Factura Index")  # To be used to fetch the status of previously sent XML
     key_signature = fields.Char()    # Received from a successful response: to be saved for government purposes
@@ -197,7 +197,26 @@ class L10n_Ro_EdiDocument(models.Model):
     def action_l10n_ro_edi_download_signature(self):
         """ Download the received successful signature XML file from E-Factura """
         self.ensure_one()
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.id),
+            ('res_field', '=', 'attachment_bin')
+        ])
         return {
             'type': 'ir.actions.act_url',
-            'url': f'/web/content/{self.attachment_id.id}?download=true',
+            'url': f'/web/content/{attachment.id}?download=true',
         }
+
+    #########################################################################
+    # Helper Methods
+    #########################################################################
+
+    def _set_attachment_name(self,name):
+        attachment = self.env['ir.attachment'].sudo().search([
+            ('res_model', '=', self._name),
+            ('res_id', '=', self.id),
+            ('res_field', '=', 'attachment_bin'),
+        ])
+        attachment.sudo().write({
+            'name': name
+        })
