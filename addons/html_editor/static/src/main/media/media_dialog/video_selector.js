@@ -4,9 +4,13 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
 import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
+import { Switch } from "@html_editor/components/switch/switch";
 
 class VideoOption extends Component {
     static template = "html_editor.VideoOption";
+    static components = {
+        Switch,
+    };
     static props = {
         description: { type: String, optional: true },
         label: { type: String, optional: true },
