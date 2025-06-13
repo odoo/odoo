@@ -50,6 +50,14 @@ class HrEmployeePublic(models.Model):
     resource_calendar_id = fields.Many2one('resource.calendar', readonly=True)
     country_code = fields.Char(compute='_compute_country_code')
 
+    share = fields.Boolean(related='user_id.share')
+    im_status = fields.Char(related="user_id.im_status")
+    job_title = fields.Char(readonly=False)
+    work_location_type = fields.Selection([
+        ("home", "Home"),
+        ("office", "Office"),
+        ("other", "Other")], compute='_compute_work_location_type')
+
     # Manager-only fields
     is_manager = fields.Boolean(compute='_compute_is_manager')
 
@@ -102,6 +110,9 @@ class HrEmployeePublic(models.Model):
 
     def _compute_country_code(self):
         self._compute_from_employee('country_code')
+
+    def _compute_work_location_type(self):
+        self._compute_from_employee('work_location_type')
 
     @api.depends_context('uid')
     @api.depends('parent_id')
