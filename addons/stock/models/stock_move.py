@@ -1482,6 +1482,10 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move.product_id, quantity, move.product_uom,
                 move.location_id, move.rule_id and move.rule_id.name or "/",
                 origin, move.company_id, values))
+        if 'default_product_qty' in self._context:
+            new_ctx = self._context.copy()
+            new_ctx.pop('default_product_qty')
+            self = self.with_context(new_ctx)  # noqa: PLW0642
         self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
 
         move_to_confirm, move_waiting = self.browse(move_to_confirm).filtered(lambda m: m.state != 'cancel'), self.browse(move_waiting).filtered(lambda m: m.state != 'cancel')
