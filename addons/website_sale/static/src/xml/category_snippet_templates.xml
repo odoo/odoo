@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="website_sale.dynamic_filter_template_categories">
+        <t t-foreach="data" t-as="category" t-key="category.id">
+            <div
+                class="o_not_editable category_item rounded position-relative"
+                t-att-data-category-id="category.id"
+                t-attf-style="grid-row: span {{height}};"
+            >
+                <img
+                    t-attf-src="/web/image/product.public.category/{{category.id}}/cover_image"
+                    alt="Category Image"
+                    class="s_category_image img-fluid position-absolute w-100 h-100"
+                />
+                <div t-attf-class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between {{alignmentClass}}">
+                    <h4 class="text-light" t-out="category.name"/>
+                    <a
+                        role="button"
+                        t-attf-href="/shop/category/{{category.id}}"
+                        class="btn btn-primary align-self-start"
+                        t-out="buttonText"
+                    />
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>
