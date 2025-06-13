@@ -387,6 +387,11 @@ class StockMove(models.Model):
                 values['date_deadline'] = mo.date_deadline
                 if not values.get('location_dest_id'):
                     values['location_dest_id'] = mo.location_dest_id.id
+
+                if 'default_product_qty' in self._context:
+                    new_ctx = self._context.copy()
+                    new_ctx.pop('default_product_qty')
+                    self = self.with_context(new_ctx)  # noqa: PLW0642
         return super().create(vals_list)
 
     def write(self, vals):
