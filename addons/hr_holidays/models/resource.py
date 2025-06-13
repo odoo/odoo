@@ -93,22 +93,6 @@ class ResourceCalendarLeaves(models.Model):
                 leave._notify_change(message)
         leaves_to_recreate.sudo()._create_resource_leave()
 
-    def _convert_timezone(self, utc_naive_datetime, tz_from, tz_to):
-        """
-            Convert a naive date to another timezone that initial timezone
-            used to generate the date.
-            :param utc_naive_datetime: utc date without tzinfo
-            :type utc_naive_datetime: datetime
-            :param tz_from: timezone used to obtained `utc_naive_datetime`
-            :param tz_to: timezone in which we want the date
-            :return: datetime converted into tz_to without tzinfo
-            :rtype: datetime
-        """
-        naive_datetime_from = utc_naive_datetime.astimezone(tz_from).replace(tzinfo=None)
-        aware_datetime_to = naive_datetime_from.replace(tzinfo=tz_to)
-        utc_naive_datetime_to = aware_datetime_to.astimezone(UTC).replace(tzinfo=None)
-        return utc_naive_datetime_to
-
     def _ensure_datetime(self, datetime_representation, date_format=None):
         """
             Be sure to get a datetime object if we have the necessary information.
