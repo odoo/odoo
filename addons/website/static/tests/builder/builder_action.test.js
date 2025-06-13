@@ -177,6 +177,18 @@ describe("HTML builder tests", () => {
         expect.verifySteps(["prepare"]);
     });
 
+    test("Data Attribute action works with non string values", async () => {
+        addBuilderOption({
+            selector: ".s_test",
+            template: xml`<BuilderButton dataAttributeAction="'customerOrderIds'" dataAttributeActionValue="[100, 200]">Click</BuilderButton>`,
+        });
+        await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+        await contains(":iframe .s_test").click();
+        await contains(".we-bg-options-container button:contains('Click')").click();
+        expect(".we-bg-options-container button:contains('Click')").toHaveClass("active");
+        expect(":iframe .s_test").toHaveAttribute("data-customer-order-ids", "100,200");
+    });
+
     describe("isPreviewing is passed to action's apply and clean", () => {
         beforeEach(async () => {
             addBuilderAction({
