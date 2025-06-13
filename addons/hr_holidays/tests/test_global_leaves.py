@@ -210,8 +210,8 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
 
         global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
             'name': 'Public holiday',
-            'date_from': "2024-12-4 06:00:00",
-            'date_to': "2024-12-4 23:00:00",
+            'date_from': "2024-12-04 06:00:00",
+            'date_to': "2024-12-04 23:00:00",
             'calendar_id': self.calendar_1.id,
         })
 

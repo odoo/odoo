@@ -1173,7 +1173,7 @@ class TestTimezones(TestResourceCommon):
         self.assertEqual(count, 0)
 
         # Using two different timezones
-        # 2018-4-10 06:00:00 - 2018-4-10 22:00:00
+        # 2018-04-10 06:00:00 - 2018-04-10 22:00:00
         count = self.calendar_jean.get_work_hours_count(
             datetime_tz(2018, 4, 10, 8, 0, 0, tzinfo=self.tz2),
             datetime_tz(2018, 4, 10, 12, 0, 0, tzinfo=self.tz4),

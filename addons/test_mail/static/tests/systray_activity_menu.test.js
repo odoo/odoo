@@ -9,7 +9,7 @@ import { serializeDate, today } from "@web/core/l10n/dates";
 describe.current.tags("desktop");
 defineTestMailModels();
 // Avoid problem around midnight (Ex.: tomorrow activities become today activities when reaching midnight)
-beforeEach(() => mockDate("2023-4-8 10:00:00", 0));
+beforeEach(() => mockDate("2023-04-08 10:00:00", 0));
 
 test("menu with no records", async () => {
     await start();

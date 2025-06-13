@@ -129,8 +129,8 @@ class TestHolidaysOvertime(TransactionCase):
             'name': 'no overtime',
             'employee_id': self.employee.id,
             'holiday_status_id': self.leave_type_no_alloc.id,
-            'request_date_from': '2021-1-4',
-            'request_date_to': '2021-1-4',
+            'request_date_from': '2021-01-04',
+            'request_date_to': '2021-01-04',
         })
         self.assertEqual(self.employee.total_overtime, 8)
 
@@ -152,7 +152,7 @@ class TestHolidaysOvertime(TransactionCase):
                     'employee_id': self.employee.id,
                     'number_of_days': 1,
                     'state': 'confirm',
-                    'date_from': time.strftime('%Y-1-1'),
+                    'date_from': time.strftime('%Y-01-01'),
                     'date_to': time.strftime('%Y-12-31'),
                 })
 
@@ -165,7 +165,7 @@ class TestHolidaysOvertime(TransactionCase):
                 'employee_id': self.employee.id,
                 'number_of_days': 1,
                 'state': 'confirm',
-                'date_from': time.strftime('%Y-1-1'),
+                'date_from': time.strftime('%Y-01-01'),
                 'date_to': time.strftime('%Y-12-31'),
             })
             self.assertEqual(self.employee.total_overtime, 0)
@@ -186,7 +186,7 @@ class TestHolidaysOvertime(TransactionCase):
                 'employee_id': self.employee.id,
                 'number_of_days': 1,
                 'state': 'confirm',
-                'date_from': time.strftime('%Y-1-1'),
+                'date_from': time.strftime('%Y-01-01'),
                 'date_to': time.strftime('%Y-12-31'),
             })
 
@@ -201,7 +201,7 @@ class TestHolidaysOvertime(TransactionCase):
             'employee_id': self.employee.id,
             'number_of_days': 1,
             'state': 'confirm',
-            'date_from': time.strftime('%Y-1-1'),
+            'date_from': time.strftime('%Y-01-01'),
             'date_to': time.strftime('%Y-12-31'),
         })
         self.assertEqual(self.employee.total_overtime, 8)
@@ -212,7 +212,7 @@ class TestHolidaysOvertime(TransactionCase):
         alloc.number_of_days = 2
         self.assertEqual(self.employee.total_overtime, 0)
 
-    @freeze_time('2022-1-1')
+    @freeze_time('2022-01-01')
     def test_leave_check_cancel(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
         self.new_attendance(check_in=datetime(2021, 1, 3, 8), check_out=datetime(2021, 1, 3, 16))
@@ -222,8 +222,8 @@ class TestHolidaysOvertime(TransactionCase):
             'name': 'no overtime',
             'employee_id': self.employee.id,
             'holiday_status_id': self.leave_type_no_alloc.id,
-            'request_date_from': '2022-1-6',
-            'request_date_to': '2022-1-6',
+            'request_date_from': '2022-01-06',
+            'request_date_to': '2022-01-06',
         })
         leave.with_user(self.user_manager).action_approve()
         self.assertEqual(self.employee.total_overtime, 8)

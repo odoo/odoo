@@ -1349,17 +1349,8 @@ def _value_to_date(value):
     if isinstance(value, (SQL, date)) or value is False:
         return value
     if isinstance(value, str):
-        # TODO can we use fields.Date.to_date? same for datetime
-        if len(value) == 10:
+        if len(value) <= 10:
             return date.fromisoformat(value)
-        if len(value) < 10:
-            # TODO deprecate or raise error
-            # probably the value is missing zeroes
-            try:
-                parts = value.split('-')
-                return date(*[int(part) for part in parts])
-            except (ValueError, TypeError):
-                raise ValueError(f"Invalid isoformat string {value!r}")
         return datetime.fromisoformat(value).date()
     if isinstance(value, COLLECTION_TYPES):
         return OrderedSet(_value_to_date(v) for v in value)

@@ -47,7 +47,7 @@ class TestPaymentToken(PaymentCommon):
         token = self._create_token()
         self.assertEqual(token._build_display_name(), '•••• 1234')
 
-    @freeze_time('2024-1-31 10:00:00')
+    @freeze_time('2024-01-31 10:00:00')
     def test_display_name_for_empty_payment_details(self):
         """ Test that the display name is still built for token without payment details. """
         token = self._create_token(payment_details='')

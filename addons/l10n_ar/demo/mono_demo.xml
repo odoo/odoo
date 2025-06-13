@@ -21,7 +21,7 @@
         <field name="partner_id" ref="base.partner_mono"/>
         <field name="name">(AR) Monotributista</field>
         <field name="l10n_ar_gross_income_type">exempt</field>
-        <field name="l10n_ar_afip_start_date" eval="time.strftime('%Y-%m')+'-1'"/>
+        <field name="l10n_ar_afip_start_date" eval="time.strftime('%Y-%m')+'-01'"/>
     </record>
 
     <function model="res.users" name="write">
