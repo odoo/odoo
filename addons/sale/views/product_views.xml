@@ -117,6 +117,11 @@
             <xpath expr="//t[@t-name='menu']" position="attributes">
                 <attribute name="groups">sales_team.group_sale_manager</attribute>
             </xpath>
+            <xpath expr="//div[@name='product_fields']" position="inside">
+                <div name="last_invoice_since" invisible="not last_invoice_date" class="text-muted">
+                    <field name="last_invoice_since"/> ago
+                </div>
+            </xpath>
         </field>
     </record>
 
