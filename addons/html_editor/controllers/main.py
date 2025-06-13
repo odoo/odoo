@@ -494,7 +494,7 @@ class HTML_Editor(http.Controller):
 
         return attachments
 
-    @http.route(['/web_editor/shape/<module>/<path:filename>', '/html_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True)
+    @http.route(['/web_editor/shape/<module>/<path:filename>', '/html_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True, readonly=True)
     def shape(self, module, filename, **kwargs):
         """
         Returns a color-customized svg (background shape or illustration).
