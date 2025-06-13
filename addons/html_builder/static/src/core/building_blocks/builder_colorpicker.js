@@ -72,6 +72,7 @@ export function useColorPickerBuilderComponent() {
         }
         preventNextPreview = true;
         callOperation(applyOperation.preview, {
+            preview: true,
             userInputValue: getColor(colorValue),
             operationParams: {
                 cancellable: true,

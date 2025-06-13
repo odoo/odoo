@@ -490,6 +490,7 @@ export function useClickableBuilderComponent() {
             }
             preventNextPreview = true;
             callOperation(applyOperation.preview, {
+                preview: true,
                 operationParams: {
                     cancellable: true,
                     cancelPrevious: () => applyOperation.revert(),
@@ -508,11 +509,12 @@ export function useClickableBuilderComponent() {
         operation.preview = () => {};
     }
 
-    function clean(nextApplySpecs) {
+    function clean(nextApplySpecs, isPreviewing) {
         for (const { actionId, actionParam, actionValue } of getAllActions()) {
             for (const editingElement of comp.env.getEditingElements()) {
                 let nextAction;
                 getAction(actionId).clean?.({
+                    isPreviewing,
                     editingElement,
                     params: actionParam,
                     value: actionValue,
@@ -531,13 +533,13 @@ export function useClickableBuilderComponent() {
         }
     }
 
-    async function callApply(applySpecs) {
-        comp.env.selectableContext?.cleanSelectedItem(applySpecs);
+    async function callApply(applySpecs, isPreviewing) {
+        comp.env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
         const cleans = inheritedActionIds
             .map((actionId) => comp.env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
         for (const clean of new Set(cleans)) {
-            clean(applySpecs);
+            clean(applySpecs, isPreviewing);
         }
         const proms = [];
         const isAlreadyApplied = isApplied();
@@ -547,6 +549,7 @@ export function useClickableBuilderComponent() {
             if (shouldClean) {
                 proms.push(
                     applySpec.clean({
+                        isPreviewing,
                         editingElement: applySpec.editingElement,
                         params: applySpec.actionParam,
                         value: applySpec.actionValue,
@@ -558,6 +561,7 @@ export function useClickableBuilderComponent() {
             } else {
                 proms.push(
                     applySpec.apply({
+                        isPreviewing,
                         editingElement: applySpec.editingElement,
                         params: applySpec.actionParam,
                         value: applySpec.actionValue,
@@ -619,11 +623,12 @@ export function useInputBuilderComponent({
 
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
 
-    async function callApply(applySpecs) {
+    async function callApply(applySpecs, isPreviewing) {
         const proms = [];
         for (const applySpec of applySpecs) {
             proms.push(
                 applySpec.apply({
+                    isPreviewing,
                     editingElement: applySpec.editingElement,
                     params: applySpec.actionParam,
                     value: applySpec.actionValue,
@@ -675,6 +680,7 @@ export function useInputBuilderComponent({
     function preview(userInputValue) {
         if (shouldPreview) {
             callOperation(applyOperation.preview, {
+                preview: true,
                 userInputValue: parseDisplayValue(userInputValue),
                 operationParams: {
                     cancellable: true,
@@ -861,8 +867,10 @@ export function getAllActionsAndOperations(comp) {
         return actions.concat(inheritedActions || []);
     }
     function callOperation(fn, params = {}) {
+        const isPreviewing = !!params.preview;
         const actionsSpecs = getActionsSpecs(getAllActions(), params.userInputValue);
-        comp.env.editor.shared.operation.next(() => fn(actionsSpecs), {
+
+        comp.env.editor.shared.operation.next(() => fn(actionsSpecs, isPreviewing), {
             load: async () =>
                 Promise.all(
                     actionsSpecs.map(async (applySpec) => {
