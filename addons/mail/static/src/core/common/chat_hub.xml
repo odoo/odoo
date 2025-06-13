@@ -17,7 +17,7 @@
                             <DropdownItem class="'o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal px-2'" onSelected="() => chatHub.hideAll()"><i class="fa fa-fw fa-eye-slash"></i>Hide all conversations</DropdownItem>
                             <DropdownItem class="'o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal px-2'" onSelected="() => chatHub.closeAll()"><i class="oi fa-fw oi-close"></i>Close all conversations</DropdownItem>
                         </t>
-                        <DropdownItem t-if="position.dragged" class="'o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal px-2'" onSelected="resetPosition"><i class="fa fa-fw fa-undo"></i>Reset initial position</DropdownItem>
+                        <DropdownItem t-if="position.dragged" class="'o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal px-2'" onSelected.bind="resetPosition"><i class="fa fa-fw fa-undo"></i>Reset initial position</DropdownItem>
                     </t>
                 </Dropdown>
                 <t t-if="store.chatHub.compact" t-call="mail.ChatHub.compactButton"/>
