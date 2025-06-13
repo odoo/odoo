@@ -53,6 +53,7 @@ Featuring
         'views/slide_channel_add.xml',
         'wizard/slide_channel_invite_views.xml',
         'data/gamification_data.xml',
+        'data/ir_cron_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
         'data/mail_templates.xml',

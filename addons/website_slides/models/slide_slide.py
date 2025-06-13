@@ -57,6 +57,14 @@ class SlideSlide(models.Model):
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
     is_new_slide = fields.Boolean('Is New Slide', compute='_compute_is_new_slide')
     completion_time = fields.Float('Duration', digits=(10, 4), compute='_compute_category_completion_time', recursive=True, readonly=False, store=True)
+    # publish
+    publish_status = fields.Selection(
+        [('ongoing', 'Ongoing'), ('done', 'Done')],
+    )
+    publish_attendee_id = fields.Many2one(
+        'slide.channel.partner', 'Last Contacted',
+        ondelete='restrict',  # avoid loosing info
+    )
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
     category_id = fields.Many2one('slide.slide', string="Section", compute="_compute_category_id", store=True, index='btree_not_null')
@@ -661,6 +669,17 @@ class SlideSlide(models.Model):
     # Mail/Rating
     # ---------------------------------------------------------
 
+    def cron_run_mailing(self):
+        todo = self.env['slide.slide'].search([
+            ('active', '=', True),
+            ('channel_id.active', '=', True),
+            ('is_published', '=', True),
+            ('publish_status', '=', 'ongoing'),
+        ])
+        for slide in todo:
+            slide._post_publication_iterative()
+            # check commit, blahblah
+
     def message_post(self, *, message_type='notification', **kwargs):
         self.ensure_one()
         if message_type == 'comment' and not self.channel_id.can_comment:  # user comments have a restriction on karma
@@ -694,6 +713,54 @@ class SlideSlide(models.Model):
 
         return groups
 
+    def _post_publication(self):
+        self.publish_status = 'ongoing'
+        batch_size = 2
+        for slide in self:
+            base_domain = [
+                ('channel_id', '=', slide.channel_id.id),
+            ]
+            count = self.env['slide.channel.partner'].search_count(base_domain)
+        if count <= batch_size:
+            self._post_publication_iterative()
+        else:
+            self.env.ref('website_slides.ir_cron_slide_slide_mailing')._trigger()
+
+    def _post_publication_iterative(self):
+        batch_size = 2
+        for slide in self.filtered(
+            lambda slide: slide.website_published and slide.channel_id.publish_template_id and slide.publish_status != 'done'
+        ):
+            slide.publish_status = 'ongoing'
+            # fetch interested attendees
+            base_domain = [
+                ('channel_id', '=', slide.channel_id.id),
+            ]
+            if slide.publish_attendee_id:
+                base_domain += [('id', '>', slide.publish_attendee_id.id)]
+            todo = self.env['slide.channel.partner'].search(base_domain, order='id ASC', limit=(batch_size + 1))
+            todo_valid = todo[:-1].filtered(lambda a: a.partner_id.email_normalized)
+            # send template directly to attendees (don't post on slide, not necessary)
+            template = slide.channel_id.publish_template_id
+            for attendee in todo_valid:
+                template.send_mail(
+                    slide.id,
+                    force_send=True,
+                    email_layout_xmlid=template.email_layout_xmlid or 'mail.mail_notification_light',
+                    email_values={
+                        'email_cc': False,
+                        'email_to': attendee.partner_id.email_formatted,
+                    },
+                )
+            # update status, either plan a retry, either set as done
+            if todo:
+                slide.publish_attendee_id = todo[-1].id
+            if len(todo) > batch_size:
+                self.env.ref('website_slides.ir_cron_slide_slide_mailing')._trigger()
+            else:
+                slide.publish_status = 'done'
+        return True
+
     # ---------------------------------------------------------
     # Business Methods
     # ---------------------------------------------------------
@@ -723,27 +790,6 @@ class SlideSlide(models.Model):
             })
 
         return embed_entry
-
-    def _post_publication(self):
-        for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
-            publish_template = slide.channel_id.publish_template_id
-            html_body = publish_template.with_context(base_url=slide.get_base_url())._render_field('body_html', slide.ids)[slide.id]
-            subject = publish_template._render_field('subject', slide.ids)[slide.id]
-            # We want to use the 'reply_to' of the template if set. However, `mail.message` will check
-            # if the key 'reply_to' is in the kwargs before calling _get_reply_to. If the value is
-            # falsy, we don't include it in the 'message_post' call.
-            kwargs = {}
-            reply_to = publish_template._render_field('reply_to', slide.ids)[slide.id]
-            if reply_to:
-                kwargs['reply_to'] = reply_to
-            slide.channel_id.with_context(mail_post_autofollow_author_skip=True).message_post(
-                subject=subject,
-                body=html_body,
-                subtype_xmlid='website_slides.mt_channel_slide_published',
-                email_layout_xmlid='mail.mail_notification_light',
-                **kwargs,
-            )
-        return True
 
     def _send_share_email(self, email, fullscreen):
         courses_without_templates = self.channel_id.filtered(lambda channel: not channel.share_slide_template_id)

@@ -1,10 +1,13 @@
+import contextlib
+
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.website_slides.tests.common import SlidesCase
 from odoo.tests import tagged, users
 
 
 @tagged('mail_thread')
-class TestSlidesNotifications(SlidesCase):
+class TestSlidesNotifications(SlidesCase, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -30,19 +33,48 @@ class TestSlidesNotifications(SlidesCase):
             } for user_idx in range(10)
         ])
         cls.channel._action_add_members(cls.test_users.partner_id, member_status='joined')
+        cls.attendee_ids_asc = cls.channel.channel_partner_all_ids.sorted('id')
+        cls.mailing_cron = cls.env.ref('website_slides.ir_cron_slide_slide_mailing')
+
+    def _execute_slide_mailing_cron(self, freeze_date=None):
+        cron = self.mailing_cron.sudo()
+        with contextlib.ExitStack() as stack:
+            if freeze_date:
+                stack.enter_context(self.mock_datetime_and_now(freeze_date))
+            stack.enter_context(self.mock_mail_gateway())
+            stack.enter_context(self.mock_mail_app())
+            capture = stack.enter_context(self.capture_triggers('website_slides.ir_cron_slide_slide_mailing'))
+            cron.method_direct_trigger()
+            return capture
+
+    def test_assert_initial_values(self):
+        self.assertEqual(len(self.attendee_ids_asc), 11, 'Should have 10 test users + creator (officer)')
 
     @users('user_officer')
     def test_publish_notification(self):
         test_channel = self.channel.with_env(self.env)
-        with self.mock_mail_gateway(), self.mock_mail_app():
+        test_batch_size = 2
+
+        with self.capture_triggers('website_slides.ir_cron_slide_slide_mailing'), \
+             self.mock_mail_gateway(), self.mock_mail_app():
             self.env['slide.slide'].create({
                 'channel_id': test_channel.id,
                 'is_published': True,
                 'name': 'Test Publish',
             })
-        new_msg = self._new_msgs.filtered(lambda m: m.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'))
-        self.assertEqual(len(new_msg), 1)
-        self.assertFalse(new_msg.notified_partner_ids)
+        # should have a cron trigger, as iterative mode should be used (too much attendees)
+        self.assertNotSentEmail()
+
+        self._execute_slide_mailing_cron()
+        # should have sent one email / attendee until the iteration max
+        self.assertEqual(len(self._new_mails), test_batch_size)
+        contacted = self.attendee_ids_asc[:test_batch_size]
+        for contact in contacted:
+            self.assertMailMailWEmails(
+                [contact.partner_id.email_formatted],
+                'sent',
+                author=self.env.user.partner_id,
+            )
 
 
 class TestSlidesMail(SlidesCase):
