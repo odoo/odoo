@@ -297,6 +297,15 @@ class Website(models.Model):
             if not website.homepage_url.startswith('/'):
                 raise ValidationError(_("The homepage URL should be relative and start with '/'."))
 
+    @api.constrains('name')
+    def _check_name(self):
+        allowed_pattern = re.compile(r'^[A-Za-z0-9\s,-_]+$')
+        for website in self:
+            if website.name and not allowed_pattern.fullmatch(website.name):
+                raise ValidationError(_
+                    ("Website name can only contain letters, digits, spaces, commas, underscore and hyphens.")
+                )
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_website(self):
         default_website = self.env.ref('website.default_website', raise_if_not_found=False)

@@ -4,6 +4,7 @@ import re
 
 import odoo.tests
 
+from odoo.exceptions import ValidationError
 from odoo.tools import config, mute_logger
 
 
@@ -273,3 +274,16 @@ class TestWebAssets(odoo.tests.HttpCase):
         })
         with mute_logger('odoo.addons.base.models.assetsbundle'):
             self.start_tour('/', 'css_error_tour_frontend', login='admin')
+
+    def test_website_name_validation(self):
+        """Test that only valid website names are accepted."""
+        valid_name = "new_website-123"
+        invalid_name = "new#website\1"
+
+        # Should not raise an error for valid name
+        website = self.env['website'].create({'name': valid_name})
+        self.assertEqual(website.name, valid_name)
+
+        # Should raise a ValidationError for invalid name
+        with self.assertRaises(ValidationError, msg="Website name is not valid."):
+            website.write({'name': invalid_name})
