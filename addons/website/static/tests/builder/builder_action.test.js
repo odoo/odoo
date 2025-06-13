@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, Deferred, waitFor } from "@odoo/hoot-dom";
 import { useState, xml } from "@odoo/owl";
@@ -13,7 +14,6 @@ import {
     addBuilderOption,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
 
 describe("website tests", () => {
     beforeEach(defineWebsiteModels);
@@ -175,5 +175,66 @@ describe("HTML builder tests", () => {
         prepareDeferred.resolve();
         await animationFrame();
         expect.verifySteps(["prepare"]);
+    });
+
+    describe("isPreviewing is passed to action's apply and clean", () => {
+        beforeEach(async () => {
+            addBuilderAction({
+                IsPreviewingAction: class extends BuilderAction {
+                    static id = "isPreviewing";
+                    isApplied({ editingElement }) {
+                        return editingElement.classList.contains("o_applied");
+                    }
+
+                    getValue({ editingElement }) {
+                        return editingElement.dataset.value;
+                    }
+
+                    apply({ isPreviewing, editingElement, value }) {
+                        expect.step(`apply ${isPreviewing}`);
+                        editingElement.classList.add("o_applied");
+                        editingElement.dataset.value = value;
+                    }
+
+                    clean({ isPreviewing, editingElement }) {
+                        expect.step(`clean ${isPreviewing}`);
+                        editingElement.classList.remove("o_applied");
+                    }
+                },
+            });
+        });
+
+        test("useClickableBuilderComponent", async () => {
+            addBuilderOption({
+                selector: ".test-options-target",
+                template: xml`<BuilderButton action="'isPreviewing'" actionValue="true">Toggle</BuilderButton>`,
+            });
+            await setupHTMLBuilder(`<section class="test-options-target">Homepage</section>`);
+            await contains(":iframe .test-options-target").click();
+
+            // apply
+            await contains("[data-action-id='isPreviewing']").click();
+            expect.verifySteps(["apply true", "apply false"]);
+
+            // Hover something else, making sure we have a preview on next click
+            await contains(":iframe .test-options-target").click();
+
+            // clean
+            await contains("[data-action-id='isPreviewing']").click();
+            expect.verifySteps(["clean true", "clean false"]);
+        });
+
+        test("useInputBuilderComponent", async () => {
+            addBuilderOption({
+                selector: ".test-options-target",
+                template: xml`<BuilderTextInput action="'isPreviewing'"/>`,
+            });
+            await setupHTMLBuilder(`<section class="test-options-target">Homepage</section>`);
+            await contains(":iframe .test-options-target").click();
+
+            // apply
+            await contains("[data-action-id='isPreviewing'] input").edit("truthy");
+            expect.verifySteps(["apply true", "apply false"]);
+        });
     });
 });
