@@ -139,51 +139,35 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not scanned_tote:
             return
 
-        # ==== New: Find all pickings with this tote at this site ====
+        # ==== Only look at pickings in assigned state ====
         tote_pickings = self.env["stock.picking"].search([
             ("move_ids_without_package.pc_container_code", "=", scanned_tote),
             ("site_code_id", "=", self.site_code_id.id),
+            ("state", "=", "assigned"),
         ])
 
         if not tote_pickings:
             raise ValidationError(
-                f"No picking found for scanned tote: {scanned_tote} at this site. Please check the tote code."
+                f"No picking found for scanned tote: {scanned_tote} at this site with state='assigned'. Please check the tote code or picking state."
             )
 
-        # ==== Filter for state='assigned' and current_state in ['pick', 'draft'] ====
-        valid_pickings = tote_pickings.filtered(
-            lambda p: p.state == 'assigned' and (p.current_state in ['pick', 'draft'])
-        )
-
-        if not valid_pickings:
-            pick_info = "\n".join(
-                f"- {p.name}: state={p.state}, current_state={p.current_state}" for p in tote_pickings
-            )
-            raise ValidationError(
-                f"Tote '{scanned_tote}' found, but no valid picking available!\n"
-                f"Found picking(s):\n{pick_info}\n"
-                "A pick must have state='assigned' and current_state='pick' or 'draft' to proceed."
-            )
-
-        # === Use the first valid picking for the rest of the flow ===
-        first_picking = valid_pickings[0]
+        # Use first assigned picking for logic
+        first_picking = tote_pickings[0]
         is_discrete = bool(first_picking and first_picking.discrete_pick)
 
         if is_discrete:
             sale_order = first_picking.sale_id
             sale_order_id = sale_order.id
 
+            # Only assigned discrete picks for this SO
             so_pickings = self.env["stock.picking"].search([
                 ("sale_id", "=", sale_order_id),
                 ("discrete_pick", "=", True),
                 ("site_code_id", "=", self.site_code_id.id),
+                ("state", "=", "assigned"),
             ])
 
             for picking in so_pickings:
-                if picking.current_state != "pick":
-                    raise ValidationError(
-                        f"Picking is not done yet for Pick Number: {picking.name}, SO Number: {sale_order.name} (current state: {picking.current_state})"
-                    )
                 totes = picking.move_ids_without_package.mapped("pc_container_code")
                 if not any(totes):
                     raise ValidationError(
@@ -236,7 +220,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ("move_ids_without_package.pc_container_code", "in", tote_codes),
                 ("site_code_id", "=", self.site_code_id.id),
                 ("state", "=", "assigned"),
-                ("current_state", "in", ["pick", "draft"]),
             ])
 
             discrete_pickings = pickings_to_load.filtered(lambda p: p.discrete_pick)
@@ -292,7 +275,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         # === No pick found after all logic ===
         if not pickings_to_load:
             raise ValidationError(
-                "No pick found for the scanned tote(s) at this site. Please check tote code and picking state."
+                "No pick found for the scanned tote(s) at this site in state='assigned'. Please check tote code and picking state."
             )
 
         self.picking_ids = [(6, 0, pickings_to_load.ids)]
