@@ -1,21 +1,24 @@
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
-odoo.loader.bus.addEventListener("module-started", (e) => {
-    if (e.detail.moduleName === "@website_sale/js/website_sale_tracking") {
-        //import websiteSaleTracking from "@website_sale/js/website_sale_tracking";
-        e.detail.module[Symbol.for("default")].include({
-            // Purposely don't call super to avoid call to third party (GA) during tests
-            _onViewItem(event, data) {
-                document.body.setAttribute("view-event-id", data.item_id);
-            },
-            _onAddToCart(event) {
-                const productsTrackingInfo = event.detail;
-                document.body.setAttribute("cart-event-id", productsTrackingInfo[0].item_id);
-            },
-        });
-    }
-});
+/**
+ * Patch tracking to avoid third party calls during tests.
+ */
+function patchTracking() {
+    const { Tracking } = odoo.loader.modules.get('@website_sale/interactions/tracking');
+    patch(Tracking.prototype, {
+        // Don't call super to avoid third party calls (GA).
+        onViewItem(event) {
+            const productTrackingInfo = event.detail;
+            document.body.setAttribute("view-event-id", productTrackingInfo.item_id);
+        },
+        onAddToCart(event) {
+            const productsTrackingInfo = event.detail;
+            document.body.setAttribute("cart-event-id", productsTrackingInfo[0].item_id);
+        },
+    });
+}
 
 let itemId;
 
@@ -23,6 +26,11 @@ let itemId;
 registry.category("web_tour.tours").add('google_analytics_view_item', {
     url: '/shop?search=Colored T-Shirt',
     steps: () => [
+    {
+        content: "Patch the tracking widget",
+        trigger: 'body',
+        run: () => patchTracking(),
+    },
     {
         content: "select Colored T-Shirt",
         trigger: '.oe_product_cart a:contains("Colored T-Shirt")',
@@ -53,6 +61,11 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
 registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
     url: '/shop?search=Basic Shirt',
     steps: () => [
+    {
+        content: "Patch the tracking widget",
+        trigger: 'body',
+        run: () => patchTracking(),
+    },
     ...tourUtils.addToCart({productName: 'Basic Shirt', search: false}),
     {
         trigger: "body[cart-event-id]",

@@ -1,20 +1,16 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from '@web/public/interaction';
+import { registry } from '@web/core/registry';
 
-publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
-    selector: '.o_wsale_products_page',
-    events: {
-        'newRangeValue #o_wsale_price_range_option input[type="range"]': '_onPriceRangeSelected',
-    },
-
-    //----------------------------------------------------------------------
-    // Handlers
-    //----------------------------------------------------------------------
+export class PriceRange extends Interaction {
+    static selector = '#o_wsale_price_range_option';
+    dynamicContent = {
+        'input[type="range"]': { 't-on-newRangeValue': this.onPriceRangeSelected },
+    };
 
     /**
-     * @private
      * @param {Event} ev
      */
-    _onPriceRangeSelected(ev) {
+    onPriceRangeSelected(ev) {
         const range = ev.currentTarget;
         const url = new URL(range.dataset.url, window.location.origin);
         const searchParams = url.searchParams;
@@ -24,10 +20,14 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
         if (parseFloat(range.max) !== range.valueHigh) {
             searchParams.set("max_price", range.valueHigh);
         }
-        let product_list_div = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
+        const product_list_div = document.querySelector('.o_wsale_products_grid_table_wrapper');
         if (product_list_div) {
             product_list_div.classList.add('opacity-50');
         }
         window.location.href = `${url.pathname}?${searchParams.toString()}`;
-    },
-});
+    }
+}
+
+registry
+    .category('public.interactions')
+    .add('website_sale.price_range', PriceRange);
