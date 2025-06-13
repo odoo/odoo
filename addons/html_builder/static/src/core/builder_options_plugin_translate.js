@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
@@ -8,5 +7,3 @@ export class BuilderOptionsPlugin extends Plugin {
     deactivateContainers() {}
     getTarget() {}
 }
-
-registry.category("translation-plugins").add(BuilderOptionsPlugin.id, BuilderOptionsPlugin);
