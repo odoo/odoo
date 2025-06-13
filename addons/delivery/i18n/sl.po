@@ -575,14 +575,14 @@ msgstr "Naziv"
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "New Providers"
-msgstr ""
+msgstr "Novi ponudniki"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Not available for current order"
-msgstr ""
+msgstr "Ni na voljo za trenutno naročilo"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -597,7 +597,7 @@ msgstr "Naroči"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
-msgstr ""
+msgstr "Preden izberete zvezno državo ali poštno številko, izberite državo."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -607,7 +607,7 @@ msgstr "Predpona"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "Predpona že obstaja!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -617,6 +617,11 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Predpone poštnih številk, za katere velja ta operater. Upoštevajte, da se "
+"lahko regularni izrazi uporabljajo za podporo državam z različnimi dolžinami"
+" poštnih številk, tj. na konec predpone se lahko doda '€', da se ujema z "
+"natančno poštno številko (npr. '100€' se bo ujemalo le z '100' in ne z "
+"'1000')."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -638,7 +643,7 @@ msgstr "Določanje cen"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
-msgstr ""
+msgstr "Pravila za oblikovanje cen"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category
@@ -703,6 +708,7 @@ msgstr "Storitev izdelka"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
+"Nastavite na \"Res je\", če so vaše poverilnice certificirane za produkcijo."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
@@ -729,6 +735,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+"Zavarovanje pošiljk je storitev, ki lahko povrne stroške pošiljateljem, "
+"katerih paketi so med prevozom izgubljeni, ukradeni in/ali poškodovani."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -736,6 +744,9 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Podrobnosti o načinu dostave, ki jih je treba vključiti v spodnja prodajna "
+"naročila in njihova potrditvena e-poštna sporočila. Npr. navodila, ki jih "
+"morajo stranke upoštevati."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -757,23 +768,23 @@ msgstr "Podpira zavarovanje prevoza"
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
-msgstr ""
+msgstr "Pošta"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
-msgstr ""
+msgstr "Nalepko za vračilo lahko stranka prenese s portala za stranke."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr ""
+msgstr "Nalepka za vračilo se samodejno ustvari ob dostavi."
 
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr ""
+msgstr "Zavarovanje ladijskega prometa mora biti v odstotkih med 0 in 100."
 
 #. module: delivery
 #. odoo-python
@@ -789,11 +800,14 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Te metode omogočajo samodejni izračun cene dostave\n"
+"            glede na vaše nastavitve; na prodajnem naročilu (na podlagi\n"
+"            ponudbe) ali računa (na podlagi dobavnih nalogov)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
 msgid "This fixed amount will be added to the shipping price."
-msgstr ""
+msgstr "Ta fiksni znesek bo dodan ceni pošiljanja."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -803,7 +817,7 @@ msgstr "Odstotek, ki bo dodan ceni dostave."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "Skupna teža naročila"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -849,7 +863,7 @@ msgstr "Teža * prostornina"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "Teža Enota Ime"
 
 #. module: delivery
 #. odoo-python
@@ -861,6 +875,9 @@ msgid ""
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
 msgstr ""
+"Stroškov pošiljanja ni mogoče posodobiti za naročilo, za katero je bil že izdan račun!\n"
+"Naslednje vrstice dobave (izdelek, fakturirana količina in cena) so že obdelane:\n"
+"\n"
 
 #. module: delivery
 #. odoo-python
@@ -870,6 +887,8 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
+"Kategorije izdelkov za dostavo ni mogoče izbrisati, saj se uporablja za "
+"izdelke dostavljavcev."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

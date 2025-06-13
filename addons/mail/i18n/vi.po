@@ -78,7 +78,7 @@ msgstr "\"%(hostname)s\" yêu cầu quyền truy cập micrô"
 #, python-format
 msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
 msgstr ""
-"%(activity)s, được phân công cho %(name)s, có hạn chót vào %(deadline)s"
+"%(activity)s, được phân công cho %(name)s, có thời hạn vào %(deadline)s"
 
 #. module: mail
 #. odoo-javascript
@@ -2411,12 +2411,12 @@ msgstr "Nội dung"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fold_state
 msgid "Conversation Fold State"
-msgstr "Trạng thái Gom/Đóng hội thoại"
+msgstr "Trạng thái thu gọn/đóng cuộc trò chuyện"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_minimized
 msgid "Conversation is minimized"
-msgstr "Hội thoại được thu nhỏ"
+msgstr "Cuộc trò chuyện được thu nhỏ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -2707,19 +2707,19 @@ msgstr "Ngày"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Deadline"
-msgstr "Hạn chót"
+msgstr "Thời hạn"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Deadline:"
-msgstr "Hạn chót:"
+msgstr "Thời hạn:"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Deadline: %s"
-msgstr "Hạn chót: %s"
+msgstr "Thời hạn: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -4157,7 +4157,7 @@ msgstr "Cổng"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Go to conversation"
-msgstr "Đi đến cuộc hội thoại"
+msgstr "Đi đến cuộc trò chuyện"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -6276,7 +6276,7 @@ msgstr "Tắt thông báo cho đến"
 #: model:ir.model.fields,field_description:mail.field_res_partner__my_activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_users__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động của tôi"
+msgstr "Thời hạn hoạt động của tôi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -6385,7 +6385,7 @@ msgstr "Hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hoạt động tiếp theo"
+msgstr "Thời hạn cho hoạt động tiếp theo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_summary
@@ -6458,7 +6458,7 @@ msgstr "Không tìm thấy kênh"
 #: code:addons/mail/static/src/core/common/discuss.xml:0
 #, python-format
 msgid "No conversation selected."
-msgstr "Không có hội thoại được chọn."
+msgstr "Không có cuộc trò chuyện nào được chọn."
 
 #. module: mail
 #. odoo-javascript
@@ -7616,9 +7616,9 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
-"Xử lý từng email đến như là một phần của một cuộc hội thoại ứng với kiểu tài"
-" liệu này. Việc này sẽ tạo các tài liệu mới cho các cuộc hội thoại mới, hoặc"
-" đính kèm các follow-up email và cuộc hội thoại (tài liệu) hiện có."
+"Xử lý từng email đến như là một phần của một cuộc trò chuyện ứng với kiểu "
+"tài liệu này. Việc này sẽ tạo các tài liệu mới cho các cuộc trò chuyện mới, "
+"hoặc đính kèm các follow-up email và cuộc trò chuyện (tài liệu) hiện có."
 
 #. module: mail
 #. odoo-javascript
@@ -8908,7 +8908,7 @@ msgstr "Bắt đầu cuộc gọi"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Start a Conversation"
-msgstr "Bắt đầu một cuộc hội thoại"
+msgstr "Bắt đầu một cuộc trò chuyện"
 
 #. module: mail
 #. odoo-javascript
@@ -8916,7 +8916,7 @@ msgstr "Bắt đầu một cuộc hội thoại"
 #: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
 #, python-format
 msgid "Start a conversation"
-msgstr "Bắt đầu cuộc hội thoại"
+msgstr "Bắt đầu cuộc trò chuyện"
 
 #. module: mail
 #. odoo-javascript
@@ -9533,7 +9533,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #, python-format
 msgid "There are no messages in this conversation."
-msgstr "Không có tin nhắn trong cuộc hội thoại này."
+msgstr "Không có tin nhắn trong cuộc trò chuyện này."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_rtc_session_channel_member_unique
@@ -9592,7 +9592,7 @@ msgstr "Cuộc trò chuyện này không có bất kỳ tệp đính kèm nào."
 #: code:addons/mail/static/src/discuss/message_pin/common/pinned_messages_panel.js:0
 #, python-format
 msgid "This conversation doesn't have any pinned messages."
-msgstr "Cuộc hội thoại này không có bất kỳ tin nhắn nào được ghim."
+msgstr "Cuộc trò chuyện này không có bất kỳ tin nhắn nào được ghim."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -10108,7 +10108,7 @@ msgstr "Bỏ ghim"
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories.xml:0
 #, python-format
 msgid "Unpin Conversation"
-msgstr "Hủy ghim cuộc hội thoại"
+msgstr "Hủy ghim cuộc trò chuyện"
 
 #. module: mail
 #. odoo-javascript
