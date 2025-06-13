@@ -67,8 +67,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - _get_on_leave_ids (_compute_im_status override)
     #                   - search hr_employee (_compute_im_status override)
     #                   - fetch hr_employee (_compute_im_status override)
+    #                   - fetch res_users (_compute_main_user_id)
     #                   - search hr_leave (leave_date_to)
-    #                   - fetch res_users (internal user)
     #           - search bus_bus (_bus_last_id)
     #           - search ir_attachment (_compute_avatar_128)
     #           - count discuss_channel_member (member_count)
@@ -103,10 +103,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - _get_on_leave_ids (_compute_im_status override)
     #               - search hr_employee (_compute_im_status override)
     #               - fetch hr_employee (_compute_im_status override)
+    #               - fetch res_users (_compute_main_user_id)
     #               - search hr_leave (leave_date_to)
     #               - search res_users_settings (livechat username)
     #               - fetch res_users_settings (livechat username)
-    #               - fetch res_users (internal user)
     #               - fetch res_country (livechat override)
     #           3: guest _to_store:
     #               - fetch mail_guest
