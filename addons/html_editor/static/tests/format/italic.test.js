@@ -5,6 +5,7 @@ import { em, span } from "../_helpers/tags";
 import { italic, tripleClick, simulateArrowKeyPress } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 import { tick } from "@odoo/hoot-mock";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 test("should make a few characters italic", async () => {
     await testEditor({
@@ -205,6 +206,7 @@ test("should make a few characters italic inside table (italic)", async () => {
             </table>`),
         stepFunction: italic,
         contentAfterEdit: unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -223,6 +225,7 @@ test("should make a few characters italic inside table (italic)", async () => {
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`),
+            </table>
+            ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
     });
 });

@@ -9,6 +9,7 @@ import { getContent } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
 import { MAIN_PLUGINS, NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS } from "@html_editor/plugin_sets";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "./_helpers/placeholder_block";
 
 test("Can replace an image", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -175,7 +176,11 @@ describe("(non-)editable media", () => {
             await animationFrame();
             await expectElementCount(".o-we-toolbar", 0);
             expect(getContent(editor.editable)).toBe(
-                `<div contenteditable="false">[<img src="${base64Img}">]</div>`
+                `${PLACEHOLDER_BLOCK_CONTAINER(
+                    "top"
+                )}<div contenteditable="false">[<img src="${base64Img}">]</div>${PLACEHOLDER_BLOCK_CONTAINER(
+                    "bottom"
+                )}`
             );
         });
         test("toolbar should open when clicking on an editable image in a non-editable context", async () => {
@@ -187,7 +192,11 @@ describe("(non-)editable media", () => {
             await expectElementCount(".o-we-toolbar", 1);
             // Now pressing the delete button should remove the image.
             await click(".o-we-toolbar button[name='image_delete']");
-            expect(getContent(editor.editable)).toBe(`<div contenteditable="false">[]<br></div>`);
+            expect(getContent(editor.editable)).toBe(
+                `${PLACEHOLDER_BLOCK_CONTAINER(
+                    "top"
+                )}<div contenteditable="false">[]<br></div>${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
+            );
         });
     });
     describe("delete", () => {
@@ -233,7 +242,7 @@ describe("(non-)editable media", () => {
                     deleteBackward(editor);
                 },
                 // TODO: there should be no difference between forward and backward.
-                contentAfter: `<div contenteditable="false">[]<img src="${base64Img}"></div>`,
+                contentAfter: `[]<div contenteditable="false"><img src="${base64Img}"></div>`,
             });
         });
         test("delete should remove an editable image in a non-editable context", async () => {

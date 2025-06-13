@@ -724,9 +724,11 @@ export class HistoryPlugin extends Plugin {
         this.dispatchTo("before_filter_mutation_record_handlers", records);
         const savableRecordPredicates = this.getResource("savable_mutation_record_predicates");
         const isRecordSavable = (record) => savableRecordPredicates.every((p) => p(record));
+        const ignoredRecordPredicates = this.getResource("ignored_mutation_record_predicates");
+        const isRecordIgnored = (record) => ignoredRecordPredicates.some((p) => p(record));
         const result = [];
         for (const record of records) {
-            if (!this.isObservedNode(record.target)) {
+            if (!this.isObservedNode(record.target) || isRecordIgnored(record)) {
                 continue;
             }
             if (this.isObserverDisabled || !isRecordSavable(record)) {

@@ -4,6 +4,7 @@ import { animationFrame, pointerDown, pointerUp, waitForNone } from "@odoo/hoot-
 import { tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 /**
  * Simulates placing the cursor at the editable root after a mouse click.
@@ -93,7 +94,9 @@ test("should insert a paragraph before the table, then one after it", async () =
     const table = el.querySelector("table");
     await simulateMouseClick(table, true);
     expect(getContent(el)).toBe(
-        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><table></table>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><table></table>${PLACEHOLDER_BLOCK_CONTAINER(
+            "bottom"
+        )}`
     );
     await simulateMouseClick(table);
     expect(getContent(el)).toBe(

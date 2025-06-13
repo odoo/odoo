@@ -7,6 +7,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
 import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 /**
  * content of the "deleteBackward" sub suite in editor.test.js
@@ -1873,10 +1874,12 @@ describe("Selection not collapsed", () => {
                 </tbody></table>`
             ),
             contentBeforeEdit: unformat(
-                `[<table class="o_selected_table"><tbody>
+                `[${PLACEHOLDER_BLOCK_CONTAINER("top")}
+                <table class="o_selected_table"><tbody>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
-                </tbody></table>`
+                </tbody></table>
+                ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`
             ),
             stepFunction: deleteBackward,
             contentAfter: unformat("<p>[]<br></p>"),

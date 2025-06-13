@@ -8,6 +8,7 @@ import { cleanHints } from "../_helpers/dispatch";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { addStep } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 function span(text) {
     const span = document.createElement("span");
@@ -42,8 +43,9 @@ describe("collapsed selection", () => {
                 );
                 editor.shared.history.addStep();
             },
-            contentAfterEdit:
-                '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
+            contentAfterEdit: `<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]${PLACEHOLDER_BLOCK_CONTAINER(
+                "bottom"
+            )}`,
             contentAfter: '<p><br></p><i class="fa fa-pastafarianism"></i>[]',
             config: { allowInlineAtRoot: true },
         });
