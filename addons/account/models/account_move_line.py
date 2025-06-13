@@ -2575,6 +2575,14 @@ class AccountMoveLine(models.Model):
         # ==== Track the invoice's state to call the hook when they become paid ====
         pre_hook_data = all_amls._reconcile_pre_hook()
 
+        # ==== Set author for tracking messages ====
+        # For tracking messages, if the reconciliation is done automatically, we set the root user as author.
+        # Only invoices are concerned by this.
+        if self.env.user.id == self.env.ref('base.user_root').id:
+            for aml in all_amls:
+                if aml.move_id.is_invoice():
+                    aml.move_id._track_set_author(self.env.user.partner_id)
+
         # ==== Collect amls data ====
         # All residual amounts are collected and updated until the creation of partials in batch.
         # This is done that way to minimize the orm time for fields invalidation/mark as recompute and
