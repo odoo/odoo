@@ -478,12 +478,18 @@ def check_version(version: str, should_raise: bool = True) -> bool:
     return False
 
 
+class MissingDependency(Exception):
+    def __init__(self, msg_template: str, dependency: str):
+        self.dependency = dependency
+        super().__init__(msg_template.format(dependency=dependency))
+
+
 def check_python_external_dependency(pydep: str) -> None:
     try:
         requirement = Requirement(pydep)
     except InvalidRequirement as e:
         msg = f"{pydep} is an invalid external dependency specification: {e}"
-        raise Exception(msg) from e
+        raise ValueError(msg) from e
     if requirement.marker and not requirement.marker.evaluate():
         _logger.debug(
             "Ignored external dependency %s because environment markers do not match",
@@ -500,11 +506,11 @@ def check_python_external_dependency(pydep: str) -> None:
             return
         except ImportError:
             pass
-        msg = f"External dependency {pydep} not installed: {e}"
-        raise Exception(msg) from e
+        msg = "External dependency {dependency!r} not installed: %s" % (e,)
+        raise MissingDependency(msg, pydep) from e
     if requirement.specifier and not requirement.specifier.contains(version):
-        msg = f"External dependency version mismatch: {pydep} (installed: {version})"
-        raise Exception(msg)
+        msg = f"External dependency version mismatch: {{dependency}} (installed: {version})"
+        raise MissingDependency(msg, pydep)
 
 
 def check_manifest_dependencies(manifest: dict) -> None:
@@ -525,7 +531,8 @@ def check_manifest_dependencies(manifest: dict) -> None:
         try:
             tools.find_in_path(binary)
         except OSError:
-            raise Exception('Unable to find %r in path' % (binary,))
+            msg = "Unable to find {dependency!r} in path"
+            raise MissingDependency(msg, binary)
 
 
 def load_script(path: str, module_name: str):

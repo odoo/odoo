@@ -12,7 +12,6 @@ Integrates with the ETA portal to automatically send and sign the Invoices to th
     'author': 'Odoo S.A., Plementus',
     'category': 'account',
     'version': '0.2',
-    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'depends': ['account_edi', 'l10n_eg'],
     'icon': '/account/static/description/l10n.png',
@@ -40,5 +39,8 @@ Integrates with the ETA portal to automatically send and sign the Invoices to th
     },
     'external_dependencies': {
         'python': ['asn1crypto'],
+        'apt': {
+            'asn1crypto': 'python3-asn1crypto',
+        },
     },
 }

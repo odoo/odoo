@@ -6,6 +6,7 @@ from decorator import decorator
 from textwrap import dedent
 import logging
 import os
+import platform
 import shutil
 
 from docutils import nodes
@@ -24,7 +25,7 @@ from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort, get_flag
 from odoo.tools.translate import TranslationImporter, get_po_paths, get_datafile_translation_path
 from odoo.http import request
-from odoo.modules import get_module_path
+from odoo.modules import MissingDependency, get_module_path
 
 _logger = logging.getLogger(__name__)
 
@@ -326,14 +327,26 @@ class IrModuleModule(models.Model):
         terp = self.get_module_info(module_name)
         try:
             modules.check_manifest_dependencies(terp)
-        except Exception as e:
+        except MissingDependency as e:
             if newstate == 'to install':
-                msg = _('Unable to install module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.args[0])
+                msg = _('Unable to install module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.dependency)
             elif newstate == 'to upgrade':
-                msg = _('Unable to upgrade module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.args[0])
+                msg = _('Unable to upgrade module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.dependency)
             else:
-                msg = _('Unable to process module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.args[0])
-            raise UserError(msg)
+                msg = _('Unable to process module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.dependency)
+
+            install_package = None
+            if platform.system() == 'Linux':
+                distro = platform.freedesktop_os_release()
+                id_likes = {distro['ID'], *distro.get('ID_LIKE').split()}
+                if 'debian' in id_likes or 'ubuntu' in id_likes:
+                    if package := terp['external_dependencies'].get('apt', {}).get(e.dependency):
+                        install_package = f'apt install {package}'
+
+            if install_package:
+                msg += _("\nIt can be installed running: %s", install_package)
+
+            raise UserError(msg) from e
 
     def _state_update(self, newstate, states_to_update, level=100):
         if level < 1:
