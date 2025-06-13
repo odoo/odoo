@@ -438,6 +438,20 @@ function useWithLoadingEffect(getAllActions) {
     return withLoadingEffect;
 }
 
+/**
+ * @param {[[string, Object, any]]} actionResults - Entries of action and the return value to check for a promise
+ */
+export function checkAndWarnForActionAsyncApplyInPreview(actionResults) {
+    for (const [actionId, action, result] of actionResults) {
+        // If result is a promise, this means apply or clean is async. If we're previewing, this is bad practice.
+        // We discourage this practice with a warning.
+        const isPromise = typeof result?.then === "function";
+        if (!action.suppressPreviewableAsyncWarning && isPromise) {
+            console.warn(`${actionId} is previewable => apply or clean should not be async.`);
+        }
+    }
+}
+
 export function useClickableBuilderComponent() {
     useBuilderComponent();
     const comp = useComponent();
@@ -510,12 +524,15 @@ export function useClickableBuilderComponent() {
     }
 
     async function clean(nextApplySpecs, isPreviewing) {
-        const proms = [];
+        const actionProms = [];
         for (const { actionId, actionParam, actionValue } of getAllActions(isPreviewing)) {
             for (const editingElement of comp.env.getEditingElements()) {
                 let nextAction;
-                proms.push(
-                    getAction(actionId).clean?.({
+                const action = getAction(actionId);
+                actionProms.push([
+                    actionId,
+                    action,
+                    action.clean?.({
                         isPreviewing,
                         editingElement,
                         params: actionParam,
@@ -532,11 +549,14 @@ export function useClickableBuilderComponent() {
                                 value: nextAction.actionValue,
                             };
                         },
-                    })
-                );
+                    }),
+                ]);
             }
         }
-        return Promise.all(proms);
+        if (isPreviewing) {
+            checkAndWarnForActionAsyncApplyInPreview(actionProms);
+        }
+        return Promise.all(actionProms.map(([actionId, action, prom]) => prom));
     }
 
     async function callApply(applySpecs, isPreviewing) {
@@ -551,13 +571,15 @@ export function useClickableBuilderComponent() {
         }
         await Promise.all(cleanProms);
 
-        const proms = [];
+        const actionProms = [];
         const isAlreadyApplied = isApplied();
         for (const applySpec of applySpecs) {
             const hasClean = !!applySpec.clean;
             const shouldClean = _shouldClean(comp, hasClean, isAlreadyApplied);
             if (shouldClean) {
-                proms.push(
+                actionProms.push([
+                    applySpec.actionId,
+                    applySpec.action,
                     applySpec.action.clean({
                         isPreviewing,
                         editingElement: applySpec.editingElement,
@@ -566,10 +588,12 @@ export function useClickableBuilderComponent() {
                         loadResult: applySpec.loadOnClean ? applySpec.loadResult : null,
                         dependencyManager: comp.env.dependencyManager,
                         selectableContext: comp.env.selectableContext,
-                    })
-                );
+                    }),
+                ]);
             } else {
-                proms.push(
+                actionProms.push([
+                    applySpec.actionId,
+                    applySpec.action,
                     applySpec.action.apply({
                         isPreviewing,
                         editingElement: applySpec.editingElement,
@@ -578,11 +602,14 @@ export function useClickableBuilderComponent() {
                         loadResult: applySpec.loadResult,
                         dependencyManager: comp.env.dependencyManager,
                         selectableContext: comp.env.selectableContext,
-                    })
-                );
+                    }),
+                ]);
             }
         }
-        await Promise.all(proms);
+        if (isPreviewing) {
+            checkAndWarnForActionAsyncApplyInPreview(actionProms);
+        }
+        await Promise.all(actionProms.map(([actionId, action, prom]) => prom));
     }
     function getPriority() {
         return (
@@ -636,9 +663,11 @@ export function useInputBuilderComponent({
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
 
     async function callApply(applySpecs, isPreviewing) {
-        const proms = [];
+        const actionProms = [];
         for (const applySpec of applySpecs) {
-            proms.push(
+            actionProms.push([
+                applySpec.actionId,
+                applySpec.action,
                 applySpec.action.apply({
                     isPreviewing,
                     editingElement: applySpec.editingElement,
@@ -646,10 +675,13 @@ export function useInputBuilderComponent({
                     value: applySpec.actionValue,
                     loadResult: applySpec.loadResult,
                     dependencyManager: comp.env.dependencyManager,
-                })
-            );
+                }),
+            ]);
         }
-        await Promise.all(proms);
+        if (isPreviewing) {
+            checkAndWarnForActionAsyncApplyInPreview(actionProms);
+        }
+        await Promise.all(actionProms.map(([actionId, action, prom]) => prom));
     }
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(callApply);

@@ -1,4 +1,8 @@
-import { convertParamToObject, isActionPreviewable } from "@html_builder/core/utils";
+import {
+    checkAndWarnForActionAsyncApplyInPreview,
+    convertParamToObject,
+    isActionPreviewable,
+} from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -21,7 +25,10 @@ export class CompositeActionPlugin extends Plugin {
 export class CompositeAction extends BuilderAction {
     static id = "composite";
     static dependencies = ["builderActions"];
+
+    suppressPreviewableAsyncWarning = true;
     loadOnClean = true;
+
     async prepare({ actionParam: { mainParam: actions }, actionValue }) {
         const proms = [];
         for (const actionDef of actions) {
@@ -118,6 +125,7 @@ export class CompositeAction extends BuilderAction {
         dependencyManager,
         selectableContext,
     }) {
+        const actionProms = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
             if (action.has("apply") && (!isPreviewing || isActionPreviewable(action))) {
@@ -129,9 +137,13 @@ export class CompositeAction extends BuilderAction {
                     dependencyManager,
                     selectableContext,
                 });
-                await action.apply(actionDescr);
+                actionProms.push([actionDef.action, action, action.apply(actionDescr)]);
             }
         }
+        if (isPreviewing) {
+            checkAndWarnForActionAsyncApplyInPreview(actionProms);
+        }
+        return Promise.all(actionProms.map(([actionId, action, prom]) => prom));
     }
     async clean({
         isPreviewing,
@@ -143,6 +155,7 @@ export class CompositeAction extends BuilderAction {
         selectableContext,
         nextAction,
     }) {
+        const actionProms = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
             const actionDescr = this._getActionDescription({
@@ -155,16 +168,22 @@ export class CompositeAction extends BuilderAction {
                 nextAction,
             });
             if (!isPreviewing || isActionPreviewable(action)) {
+                let prom;
                 if (action.has("clean")) {
-                    await action.clean(actionDescr);
+                    prom = action.clean(actionDescr);
                 } else if (action.has("apply")) {
                     if (loadResult && loadResult[actionDef.action]) {
                         actionDescr.loadResult = loadResult[actionDef.action];
                     }
-                    await action.apply(actionDescr);
+                    prom = action.apply(actionDescr);
                 }
+                actionProms.push([actionDef.action, action, prom]);
             }
         }
+        if (isPreviewing) {
+            checkAndWarnForActionAsyncApplyInPreview(actionProms);
+        }
+        return Promise.all(actionProms.map(([actionId, action, prom]) => prom));
     }
     _getActionDescription(action) {
         const { action: actionId, actionParam, actionValue, value, loadResult } = action;
