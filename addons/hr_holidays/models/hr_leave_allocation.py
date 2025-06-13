@@ -152,7 +152,7 @@ class HrLeaveAllocation(models.Model):
         return _(
             '%(name)s (%(duration)s day(s))',
             name=self.holiday_status_id.name,
-            duration=self.number_of_days,
+            duration=float_round(self.number_of_days, precision_digits=2),
         )
 
     @api.onchange('name')
@@ -970,8 +970,8 @@ class HrLeaveAllocation(models.Model):
                         note = _(
                             'New Allocation Request created by %(user)s: %(count)s Days of %(allocation_type)s',
                             user=allocation.create_uid.name,
-                            count=allocation.number_of_days,
-                            allocation_type=allocation.holiday_status_id.name
+                            count=float_round(allocation.number_of_days, precision_digits=2),
+                            allocation_type=allocation.holiday_status_id.name,
                         )
                     else:
                         activity_type = approval_activity

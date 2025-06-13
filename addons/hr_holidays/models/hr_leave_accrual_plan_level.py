@@ -339,7 +339,7 @@ class HrLeaveAccrualLevel(models.Model):
             date = last_call + relativedelta(day=int(self.first_day))
             if last_call >= date:
                 return date
-            return last_call + relativedelta(day=int(self.first_day), months=-1)
+            return last_call + relativedelta(day=int(self.first_day), months=-1, days=1)
 
         if self.frequency == 'biyearly':
             first_date = last_call + relativedelta(month=int(self.first_month), day=int(self.first_month_day))
