@@ -92,3 +92,17 @@ class TestUi(TestPointOfSaleHttpCommon):
         event_answer_name = event_registration.registration_answer_ids.value_answer_id.mapped('name')
         self.assertEqual(len(event_registration.registration_answer_ids), 3)
         self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1'])
+
+    def test_orderline_price_remain_same_as_ticket_price(self):
+        """ Test that the order line price remains the same as the ticket price when the customer added to the order. """
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('event.group_event_user').id),
+            ]
+        })
+        self.main_pos_config.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, [self.event_category.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('OrderLinePriceRemainSameAsTicketPrice')
