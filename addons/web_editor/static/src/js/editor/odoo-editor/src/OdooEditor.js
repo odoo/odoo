@@ -3886,8 +3886,23 @@ export class OdooEditor extends EventTarget {
                     this.deselectTable();
                     setSelection(anchorTD.firstChild, 0, anchorTD.lastChild, nodeSize(anchorTD.lastChild));
                 }
-                if (ev.inputType === 'insertLineBreak' || this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
-                    this._applyCommand('oShiftEnter');
+                const { anchorNode, anchorOffset, focusNode, focusOffset } = newSelection;
+
+                const anchorButton = closestElement(anchorNode, "a.btn");
+                const focusButton = closestElement(focusNode, "a.btn");
+
+                const isSameButton = anchorButton && focusButton && anchorButton === focusButton;
+                const isSelectionWithinButton =
+                    isSameButton &&
+                    anchorOffset >= 0 &&
+                    focusOffset <= anchorButton.textContent.length - 1;
+
+                if (
+                    (ev.inputType === "insertParagraph" && isSelectionWithinButton) ||
+                    ev.inputType === "insertLineBreak" ||
+                    this._applyCommand("oEnter") === UNBREAKABLE_ROLLBACK_CODE
+                ) {
+                    this._applyCommand("oShiftEnter");
                 }
             } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
                 const selection = this.document.getSelection();

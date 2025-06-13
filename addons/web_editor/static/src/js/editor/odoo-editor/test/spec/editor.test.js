@@ -4102,6 +4102,15 @@ X[]
                         contentAfter: '<p><a class="btn btn-primary" href="#" role="button">Ho<br>[]me</a></p>',
                     });
                 });
+                it("should insert a line break inside a link with the btn class", async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><a class="btn btn-primary" href="#" role="button">Ho<br>[]me</a></p>',
+                        stepFunction: async editor => {
+                            await triggerEvent(editor.editable, 'input', { data: 'Enter', inputType: 'insertParagraph' });
+                        },
+                        contentAfter: '<p><a class="btn btn-primary" href="#" role="button">Ho<br><br>[]me</a></p>',
+                    });
+                });
                 it("should insert a linebreak on the list with nav-item class", async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<ul><li class="nav-item"><a class="nav-link" href="#" role="tab">Home[]</a></li></ul>',
