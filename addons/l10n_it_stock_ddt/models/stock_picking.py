@@ -40,8 +40,8 @@ class StockPicking(models.Model):
                 and picking.is_locked
                 and (picking.picking_type_code == 'outgoing'
                      or (
-                         picking.move_ids_without_package
-                         and picking.move_ids_without_package[0].partner_id
+                         picking.move_ids
+                         and picking.move_ids[0].partner_id
                          and picking.location_id.usage == 'supplier'
                          and picking.location_dest_id.usage == 'customer'
                          )

@@ -336,7 +336,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         sale_order.action_confirm()
         delivery = sale_order.picking_ids[0]
         with Form(delivery) as delivery_form:
-            with delivery_form.move_ids_without_package.new() as move:
+            with delivery_form.move_ids.new() as move:
                 move.product_id = products[1]
                 move.product_uom_qty = 10
         delivery.move_ids.quantity = 10
@@ -371,7 +371,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         sale_order.action_confirm()
         delivery = sale_order.picking_ids[0]
         with Form(delivery) as delivery_form:
-            with delivery_form.move_ids_without_package.new() as move:
+            with delivery_form.move_ids.new() as move:
                 move.product_id = product2
                 move.product_uom_qty = 10
         delivery.move_ids.quantity = 10
@@ -403,7 +403,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         sale_order.action_confirm()
         delivery = sale_order.picking_ids[0]
         with Form(delivery) as delivery_form:
-            with delivery_form.move_ids_without_package.new() as move:
+            with delivery_form.move_ids.new() as move:
                 move.product_id = product2
                 move.product_uom_qty = 10
         delivery.move_ids.quantity = 10
