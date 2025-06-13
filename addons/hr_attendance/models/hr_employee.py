@@ -32,8 +32,7 @@ class HrEmployee(models.Model):
         string="Attendance Status", compute='_compute_attendance_state',
         selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")],
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
-    hours_last_month = fields.Float(
-        compute='_compute_hours_last_month', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+    hours_last_month = fields.Float(compute='_compute_hours_last_month')
     hours_today = fields.Float(
         compute='_compute_hours_today',
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
@@ -47,8 +46,7 @@ class HrEmployee(models.Model):
         compute='_compute_hours_last_month', groups="hr.group_hr_user")
     overtime_ids = fields.One2many(
         'hr.attendance.overtime', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
-    total_overtime = fields.Float(
-        compute='_compute_total_overtime', compute_sudo=True, groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+    total_overtime = fields.Float(compute='_compute_total_overtime', compute_sudo=True)
 
     @api.model_create_multi
     def create(self, vals_list):
