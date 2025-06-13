@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { click, edit, queryOne } from "@odoo/hoot-dom";
-import { Command, mountView, MockServer, onRpc } from "@web/../tests/web_test_helpers";
+import { Command, mountView, MockServer, mockService, onRpc } from "@web/../tests/web_test_helpers";
 
 import { defineProjectModels, ProjectTask } from "./project_models";
 
@@ -110,8 +110,10 @@ beforeEach(() => {
         `,
         form: `
             <form>
-                <field name="child_ids" widget="subtasks_one2many">
-                    <list editable="bottom">
+                <field name="project_id"/>
+                <field name="parent_id"/>
+                <field name="child_ids" context="{'default_project_id': project_id,'default_parent_id': id}" widget="subtasks_one2many">
+                    <list editable="bottom" open_form_view="True">
                         <field name="project_id" widget="project"/>
                         <field name="name"/>
                     </list>
@@ -312,4 +314,37 @@ test("project.task (kanban): check subtask creation when input is empty", async 
     expect(".o_notification_bar").toHaveClass("bg-danger", {
         message: "The notification bar should have type 'danger'.",
     });
+});
+
+test("project.task:  Parent id is set when creating new task from subtask form's 'View' button", async () => {
+    let doActionCalledForSubtask = false;
+
+    mockService("action", {
+        doAction(params) {
+            doActionCalledForSubtask = true;
+            return mountView({
+                resModel: params.res_model,
+                resId: params.res_id,
+                type: "form",
+                context: params.context,
+            })
+        },
+    });
+
+    await mountView({
+        resModel: "project.task",
+        resId: 1,
+        type: "form",
+    });
+
+    await click("tbody .o_data_row:nth-child(1) .o_list_record_open_form_view button.btn-link");
+    await animationFrame();
+
+    expect(doActionCalledForSubtask).toBe(true);
+
+    await click(document.querySelectorAll(".o_form_view")[1].querySelector(".o_form_button_create"));
+    await animationFrame();
+    const newEmptyTaskForm = document.querySelectorAll(".o_form_view")[document.querySelectorAll(".o_form_view").length - 1];
+    expect(newEmptyTaskForm.querySelector(".o_field_widget[name='parent_id'] input.o_input")).not.toBe(null);
+    expect(newEmptyTaskForm.querySelector(".o_field_widget[name='parent_id'] input.o_input").value.includes("Task 1 (Project 1)")).toBe(true);
 });
