@@ -34,6 +34,7 @@ export class BuilderAction {
     /**
      * Apply the action on the editing element.
      * @param {Object} context
+     * @param {boolean} context.isPreviewing
      * @param {HTMLElement} context.editingElement
      * @param {any} context.value
      * @param {Object} [context.params]
@@ -60,6 +61,7 @@ export class BuilderAction {
     /**
      * Clean/reset the value if needed.
      * @param {Object} context
+     * @param {boolean} context.isPreviewing
      * @param {HTMLElement} context.editingElement
      */
     clean(context) {}
