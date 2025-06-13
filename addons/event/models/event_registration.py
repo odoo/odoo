@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import os
+import pytz
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.osv import expression
-from odoo.tools import email_normalize, email_normalize_all, formataddr
+from odoo.tools import email_normalize, format_date, formataddr
 from odoo.exceptions import AccessError, ValidationError
 _logger = logging.getLogger(__name__)
 
@@ -288,6 +289,10 @@ class EventRegistration(models.Model):
         if confirming:
             to_confirm._update_mail_schedulers()
 
+        if vals.get('state') == 'done':
+            message = _("Attended on %(attended_date)s", attended_date=format_date(env=self.env, value=fields.Datetime.now(), date_format='short'))
+            self._message_log_batch(bodies={registration.id: message for registration in self})
+
         return ret
 
     def _compute_display_name(self):
@@ -439,6 +444,14 @@ class EventRegistration(models.Model):
 
     def _get_registration_summary(self):
         self.ensure_one()
+
+        is_date_closed_today = False
+        if self.date_closed:
+            event_tz = pytz.timezone(self.event_id.date_tz)
+            now = fields.Datetime.now(pytz.UTC).astimezone(event_tz)
+            closed_date = self.date_closed.astimezone(event_tz)
+            is_date_closed_today = now.date() == closed_date.date()
+
         return {
             'id': self.id,
             'name': self.name,
@@ -449,5 +462,7 @@ class EventRegistration(models.Model):
             'event_display_name': self.event_id.display_name,
             'registration_answers': self.registration_answer_ids.filtered('value_answer_id').mapped('display_name'),
             'company_name': self.company_name,
-            'badge_format': self.event_id.badge_format
+            'badge_format': self.event_id.badge_format,
+            'date_closed_formatted': format_date(env=self.env, value=self.date_closed, date_format='short') if self.date_closed else False,
+            'is_date_closed_today': is_date_closed_today,
         }
