@@ -202,12 +202,17 @@ export class FormOptionPlugin extends Plugin {
             this._fetchAuthorizedFields.bind(this),
             ({ cacheKey }) => cacheKey
         );
+        this.visibilityConditionCachedRecords = new Cache(
+            this._getVisibilityConditionCachedRecords.bind(this),
+            JSON.stringify
+        );
     }
     destroy() {
         super.destroy();
         this.modelsCache.invalidate();
         this.fieldRecordsCache.invalidate();
         this.authorizedFieldsCache.invalidate();
+        this.visibilityConditionCachedRecords.invalidate();
     }
     getModelsCache(formEl) {
         // Through a method so that it can be overridden.
@@ -273,7 +278,7 @@ export class FormOptionPlugin extends Plugin {
         return field.records;
     }
     async prepareFormModel(el, activeForm) {
-        const formKey = activeForm.website_form_key;
+        const formKey = activeForm?.website_form_key;
         const formInfo = registry.category("website.form_editor_actions").get(formKey, null);
         if (formInfo) {
             const formatInfo = getDefaultFormat(el);
@@ -404,6 +409,12 @@ export class FormOptionPlugin extends Plugin {
             model,
             propertyOrigins,
         ]);
+    }
+    async _getVisibilityConditionCachedRecords(model, domain, fields, kwargs = {}) {
+        return this.services.orm.searchRead(model, domain, fields, {
+            ...kwargs,
+            limit: 1000, // Safeguard to not crash DBs
+        });
     }
     async whitelistForms(el) {
         for (const sigEl of el.querySelectorAll("input[name=website_form_signature]")) {
@@ -552,9 +563,7 @@ export class FormOptionPlugin extends Plugin {
         // Update available visibility dependencies
         const existingDependencyNames = [];
         const conditionInputs = [];
-        for (const el of formEl.querySelectorAll(
-            ".s_website_form_field:not(.s_website_form_dnone)"
-        )) {
+        for (const el of formEl.querySelectorAll(".s_website_form_field")) {
             const inputEl = el.querySelector(".s_website_form_input");
             if (
                 el.querySelector(".s_website_form_label_content") &&
@@ -576,9 +585,12 @@ export class FormOptionPlugin extends Plugin {
         const dependencyEl = getDependencyEl(fieldEl);
         const conditionValueList = [];
         if (dependencyEl) {
+            const containerEl = dependencyEl.closest(".s_website_form_field");
+            const fieldType = containerEl?.dataset.type;
             if (
                 ["radio", "checkbox"].includes(dependencyEl.type) ||
-                dependencyEl.nodeName === "SELECT"
+                dependencyEl.nodeName === "SELECT" ||
+                fieldType === "record"
             ) {
                 // Update available visibility options
                 const inputContainerEl = fieldEl;
@@ -592,6 +604,26 @@ export class FormOptionPlugin extends Plugin {
                     if (!inputContainerEl.dataset.visibilityCondition) {
                         inputContainerEl.dataset.visibilityCondition =
                             dependencyEl.querySelector("option").value;
+                    }
+                } else if (fieldType === "record") {
+                    const model = containerEl.dataset.model;
+                    const idField = containerEl.dataset.idField || "id";
+                    const displayNameField = containerEl.dataset.displayNameField || "display_name";
+                    const records = await this.visibilityConditionCachedRecords.read(
+                        model,
+                        [],
+                        [idField, displayNameField]
+                    );
+                    for (const record of records) {
+                        conditionValueList.push({
+                            value: String(record[idField]),
+                            textContent: record[displayNameField],
+                        });
+                    }
+                    if (!inputContainerEl.dataset.visibilityCondition) {
+                        inputContainerEl.dataset.visibilityCondition = String(
+                            records[0]?.[idField]
+                        );
                     }
                 } else {
                     // DependencyEl is a radio or a checkbox
