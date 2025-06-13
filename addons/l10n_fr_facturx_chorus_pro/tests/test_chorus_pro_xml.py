@@ -58,3 +58,7 @@ class TestChorusProXml(AccountTestInvoicingCommon):
 
         self.assertEqual(xml_etree.findtext("{*}BuyerReference"), "buyer_ref_123")
         self.assertEqual(xml_etree.findtext("{*}OrderReference/{*}ID"), "order_ref_123")
+
+    def test_export_invoice_chorus_pro_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_export_invoice_chorus_pro()
