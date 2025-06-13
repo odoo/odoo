@@ -9,14 +9,7 @@ import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_component
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import {
-    click,
-    press,
-    queryAll,
-    queryAllTexts,
-    queryOne,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { click, press, queryAll, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
 import {
@@ -2244,5 +2237,41 @@ describe("translatable", () => {
         // Click away to remove focus
         await contains(".o_form_label").click();
         expect(".o_field_html .btn.o_field_translate").not.toBeVisible();
+    });
+});
+
+describe("codeview enabled", () => {
+    test("Code view command should be available", async () => {
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="txt" widget="html" options="{'codeview': True}"/>
+                </form>`,
+        });
+        const anchorNode = queryOne(`[name='txt'] .odoo-editor-editable p`);
+        setSelection({ anchorNode, anchorOffset: 0 });
+        await insertText(htmlEditor, "/code");
+        await waitFor(".o-we-powerbox");
+        expect(queryAllTexts(".o-we-command-name")).toEqual(["Code"]);
+    });
+
+    test("Video command should be available when codeview enabled", async () => {
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="txt" widget="html" options="{'codeview': True}"/>
+                </form>`,
+        });
+        const anchorNode = queryOne(`[name='txt'] .odoo-editor-editable p`);
+        setSelection({ anchorNode, anchorOffset: 0 });
+        await insertText(htmlEditor, "/video");
+        await waitFor(".o-we-powerbox");
+        expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
     });
 });
