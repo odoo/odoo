@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
+
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form, common
 from odoo.tools import float_compare, mute_logger
@@ -2538,3 +2541,49 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         internal_picking.button_validate()
         self.assertEqual(internal_picking.state, 'done')
         self.assertEqual(order.order_line.qty_delivered, 0)
+
+    def test_date_deadline_propagation_to_byproducts(self):
+        route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id
+        route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id
+        fns = self._cls_create_product('Finished', self.uom_unit, routes=[route_manufacture, route_mto])
+        cmp = self._cls_create_product('Component', self.uom_unit)
+        bp = self._cls_create_product('ByProduct', self.uom_unit)
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': fns.product_tmpl_id.id,
+            'product_id': fns.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [Command.create({'product_id': cmp.id, 'product_qty': 1})],
+            'byproduct_ids': [Command.create({'product_id': bp.id, 'product_qty': 1})],
+        })
+
+        with freeze_time('2025-01-01'):
+            order = self.env['sale.order'].create({
+                'partner_id': partner.id,
+                'order_line': [Command.create({'product_id': fns.id, 'product_uom_qty': 1})],
+            })
+            order.action_confirm()
+            mo = self.env["mrp.production"].search([('product_id', '=', fns.id)])
+            fns_move = mo.move_finished_ids.filtered(lambda m: m.product_id.id == fns.id)
+
+            self.assertEqual(len(mo.move_finished_ids), 2)  # 1 for FNS, 1 for BP
+            self.assertEqual(len(fns_move), 1)
+
+            for move in mo.move_finished_ids:
+                self.assertEqual(move.date_deadline.strftime('%Y-%m-%d'), '2025-01-01')
+            order.commitment_date = '2025-01-02'
+            for move in mo.move_finished_ids:
+                self.assertEqual(move.date_deadline.strftime('%Y-%m-%d'), '2025-01-02')
+
+            # Set Quantity producing to 2
+            wiz = self.env['change.production.qty'].create({'mo_id': mo.id, 'product_qty': 2.0})
+            wiz.change_prod_qty()
+
+            fns_move = mo.move_finished_ids.filtered(lambda m: m.product_id.id == fns.id)
+            self.assertEqual(len(mo.move_finished_ids), 2)  # 1 for FNS, 1 for BP
+            self.assertEqual(len(fns_move), 1)
+
+            mo.button_mark_done()
+            self.assertEqual(mo.state, 'done')

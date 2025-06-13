@@ -629,6 +629,12 @@ class StockMove(models.Model):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.created_production_id,)
 
+    def _get_moves_to_propagate_date_deadline(self):
+        res = super()._get_moves_to_propagate_date_deadline()
+        if self.production_id:
+            res |= self.production_id.move_finished_ids - self
+        return res
+
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         res = super()._prepare_merge_moves_distinct_fields()
