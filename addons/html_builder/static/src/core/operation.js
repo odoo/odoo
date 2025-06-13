@@ -40,6 +40,7 @@ export class Operation {
             cancelTime = 50,
             withLoadingEffect = true,
             loadingEffectDelay = 500,
+            shouldInterceptClick = false,
         } = {}
     ) {
         this.cancelPrevious?.();
@@ -70,7 +71,8 @@ export class Operation {
 
             const removeLoadingElement = this.addLoadingElement(
                 withLoadingEffect,
-                loadingEffectDelay
+                loadingEffectDelay,
+                shouldInterceptClick
             );
             const applyOperation = async () => {
                 const loadResult = await load();
@@ -108,9 +110,11 @@ export class Operation {
      * @param {Boolean} withLoadingEffect if true, adds a loading effect
      * @param {Number} loadingEffectDelay delay after which the loading effect
      *   should appear
+     * @param {Boolean} shouldInterceptClick - whether to redispatch the click
+     *   under the loading element after the end of the current operation
      * @returns {Function}
      */
-    addLoadingElement(withLoadingEffect, loadingEffectDelay) {
+    addLoadingElement(withLoadingEffect, loadingEffectDelay, shouldInterceptClick) {
         const loadingScreenEl = document.createElement("div");
         loadingScreenEl.classList.add(
             ...["o_loading_screen", "d-flex", "justify-content-center", "align-items-center"]
@@ -118,6 +122,21 @@ export class Operation {
         const spinnerEl = document.createElement("img");
         spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
         loadingScreenEl.appendChild(spinnerEl);
+
+        const onClick = (ev) => {
+            const trueTargetEl = this.editableDocument.elementsFromPoint(ev.clientX, ev.clientY)[1];
+            this.next(() => {
+                trueTargetEl.click();
+            });
+        };
+        const interceptClick = () => {
+            this.editableDocument.addEventListener("click", onClick);
+            return () => {
+                this.editableDocument.removeEventListener("click", onClick);
+            };
+        };
+        const loadingRes = shouldInterceptClick ? interceptClick() : undefined;
+
         this.editableDocument.body.appendChild(loadingScreenEl);
 
         // If specified, add a loading effect on that element after a delay.
@@ -133,6 +152,7 @@ export class Operation {
             if (loadingTimeout) {
                 clearTimeout(loadingTimeout);
             }
+            loadingRes?.();
             loadingScreenEl.remove();
         };
     }
