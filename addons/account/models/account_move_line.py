@@ -2521,6 +2521,9 @@ class AccountMoveLine(models.Model):
         # Batch the amls all together to know what should be reconciled and when.
         plan_list, all_amls = self._optimize_reconciliation_plan(reconciliation_plan)
         move_container = {'records': all_amls.move_id}
+        if self.env.context.get('auto_reconcile') is not None:
+            for aml in all_amls:
+                aml.move_id._track_set_author(self.env.ref('base.partner_root'))
         with all_amls.move_id._check_balanced(move_container),\
              all_amls.move_id._sync_dynamic_lines(move_container):
             self._reconcile_plan_with_sync(plan_list, all_amls)
