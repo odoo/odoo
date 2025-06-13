@@ -349,6 +349,26 @@ export function clickOnText(snippet, element, position = "bottom") {
 }
 
 /**
+ * Wait for a specific amount of time.
+ * @param {number} delay
+ * @returns {TourStep[]}
+ */
+export function delayNextStep(delay) {
+    return [
+        {
+            trigger: "body",
+            run: (helpers) => {
+                helpers.anchor.classList.add("wait_in_tour");
+                setTimeout(() => helpers.anchor.classList.remove("wait_in_tour"), delay);
+            },
+        },
+        {
+            trigger: "body:not(.wait_in_tour)",
+        },
+    ];
+}
+
+/**
  * Selects a category or an inner snippet from the snippets menu and insert it
  * in the page.
  * @param {*} snippet contain the id and the name of the targeted snippet. If it
@@ -387,6 +407,9 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
             run: "drag_and_drop :iframe #wrapwrap > footer",
         });
     }
+
+    // Wait for the default html_builder's scrollTo duration.
+    insertSnippetSteps.push(...delayNextStep(600));
 
     if (!ignoreLoading) {
         insertSnippetSteps.push({
