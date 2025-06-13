@@ -1,4 +1,4 @@
-import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
+import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
@@ -14,7 +14,7 @@ defineWebsiteModels();
 
 test("open BuilderSidebar and discard", async () => {
     let websiteBuilder;
-    patchWithCleanup(WebsiteBuilder.prototype, {
+    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         setup() {
             websiteBuilder = this;
             super.setup();
@@ -28,7 +28,7 @@ test("open BuilderSidebar and discard", async () => {
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(0);
     await click(".o-snippets-top-actions button:contains(Discard)");
     await websiteBuilder.iframeLoaded;
-    await animationFrame(); // WebsiteBuilder out of edit mode
+    await animationFrame(); // WebsiteBuilderClientAction out of edit mode
     await animationFrame(); // Navbar systray items updated
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
 });
@@ -43,9 +43,7 @@ test("navigate between builder tab don't fetch snippet description again", async
         "Edit",
         "Theme",
     ]);
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
-        "Add"
-    );
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Add");
     expect.verifySteps(["render_public_asset"]);
 
     await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Theme)").click();
@@ -55,9 +53,7 @@ test("navigate between builder tab don't fetch snippet description again", async
     );
 
     await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Add)").click();
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
-        "Add"
-    );
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Add");
     expect.verifySteps([]);
 });
 
@@ -93,12 +89,8 @@ test("undo and redo buttons", async () => {
 
 test("activate customize tab without any selection", async () => {
     await setupWebsiteBuilder("<h1> Homepage </h1>");
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
-        "Add"
-    );
-    await contains(
-        ".o-website-builder_sidebar .o-snippets-tabs button:contains(Edit)"
-    ).click();
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText("Add");
+    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Edit)").click();
     expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
         "Edit"
     );

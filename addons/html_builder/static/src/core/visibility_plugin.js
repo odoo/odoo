@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { isMobileView } from "@html_builder/utils/utils";
-import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 
 export class VisibilityPlugin extends Plugin {
@@ -144,5 +143,3 @@ export class VisibilityPlugin extends Plugin {
 function isTargetVisible(editingEl) {
     return editingEl.dataset.invisible !== "1";
 }
-
-registry.category("translation-plugins").add(VisibilityPlugin.id, VisibilityPlugin);

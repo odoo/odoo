@@ -32,8 +32,8 @@ import { isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 
-export class WebsiteBuilder extends Component {
-    static template = "website.WebsiteBuilder";
+export class WebsiteBuilderClientAction extends Component {
+    static template = "website.WebsiteBuilderClientAction";
     static components = { LazyComponent, LocalOverlayContainer, ResizablePanel, ResourceEditor };
     static props = { ...standardActionServiceProps };
 
@@ -153,33 +153,29 @@ export class WebsiteBuilder extends Component {
         );
     }
 
-    get menuProps() {
-        const websitePlugins = this.translation
-            ? registry.category("translation-plugins").getAll()
-            : registry.category("website-plugins").getAll();
-
-        return {
+    get websiteBuilderProps() {
+        const builderProps = {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
             reloadEditor: this.reloadEditor.bind(this),
             snippetsName: "website.snippets",
             toggleMobile: this.toggleMobile.bind(this),
             overlayRef: this.overlayRef,
-            isTranslation: this.translation,
             iframeLoaded: this.iframeLoaded,
             isMobile: this.websiteContext.isMobile,
-            Plugins: websitePlugins,
             config: {
                 initialTarget: this.target,
-                initialTab: this.initialTab,
+                initialTab: this.initialTab || this.translation ? "customize" : "blocks",
                 builderSidebar: {
                     toggle: (show) => {
                         this.state.showSidebar = show ?? !this.state.showSidebar;
                     },
                 },
-             },
+                customizeTab: this.translation ? "website.CustomizeTranslationTab" : "",
+            },
             getThemeTab: () =>
                 odoo.loader.modules.get("@website/builder/plugins/theme/theme_tab").ThemeTab,
         };
+        return { translation: this.translation, builderProps };
     }
 
     get systrayProps() {
@@ -571,4 +567,4 @@ registry
         );
     });
 
-registry.category("actions").add("website_preview", WebsiteBuilder);
+registry.category("actions").add("website_preview", WebsiteBuilderClientAction);
