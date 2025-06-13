@@ -1323,6 +1323,8 @@ class SaleOrder(models.Model):
             **super()._get_action_add_from_catalog_extra_context(),
             'product_catalog_currency_id': self.currency_id.id,
             'product_catalog_digits': self.order_line._fields['price_unit'].get_digits(self.env),
+            'partner_id': self.partner_id.id,
+            'prioritize_for': 'sale',
         }
 
     def _get_product_catalog_domain(self):

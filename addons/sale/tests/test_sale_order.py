@@ -340,16 +340,16 @@ class TestSaleOrder(SaleCommon):
         ])
         # Check their last invoice date and displayed name are correctly computed.
         self.assertRecordValues(product_tmpl.product_variant_ids.with_context(display_context), [
-            {'display_name': 'Test Product (A)\t--15d--', 'last_invoice_date': two_weeks_ago},
-            {'display_name': 'Test Product (B)\t--3mo--', 'last_invoice_date': three_months_ago},
-            {'display_name': 'Test Product (C)\t--1y--', 'last_invoice_date': one_and_half_year_ago},
+            {'display_name': '`15d` **Test Product (A)**', 'last_invoice_date': two_weeks_ago},
+            {'display_name': '`3mo` **Test Product (B)**', 'last_invoice_date': three_months_ago},
+            {'display_name': '`1y` **Test Product (C)**', 'last_invoice_date': one_and_half_year_ago},
         ])
         # Do the same check for the product template (it should take the most recent date from all variants.)
         self.assertRecordValues(product_tmpl, [
             {'display_name': 'Test Product', 'last_invoice_date': False},
         ])
         self.assertRecordValues(product_tmpl.with_context(display_context), [
-            {'display_name': 'Test Product\t--15d--', 'last_invoice_date': two_weeks_ago},
+            {'display_name': '`15d` **Test Product**', 'last_invoice_date': two_weeks_ago},
         ])
 
     def test_state_changes(self):

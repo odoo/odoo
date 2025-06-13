@@ -54,43 +54,34 @@ class ProductTemplate(models.Model):
              "whenever the customer hits *Add to Cart* (cross-sell strategy, "
              "e.g. for computers: warranty, software, etc.).",
         check_company=True)
-    last_invoice_date = fields.Date(compute='_compute_last_invoice_date')
-
-    @api.depends_context('partner_id')
-    def _compute_last_invoice_date(self):
-        self.last_invoice_date = False
-        partner_id = self.env.context.get('partner_id')
-        if not partner_id:
-            return
-
-        today = fields.Date.today()
-        prioritized_product_and_time = self._get_products_and_most_recent_invoice_date(partner_id, 'sale', self.product_variant_ids.ids)
-        dates_by_product_template = defaultdict(lambda: False)
-        for data in prioritized_product_and_time:
-            date = data['invoice_date']
-            product_tmpl = self.browse(data['product_tmpl_id'])
-            if not dates_by_product_template[product_tmpl] or date > dates_by_product_template[product_tmpl]:
-                dates_by_product_template[product_tmpl] = date if date <= today else today
-        for (product_tmpl, date) in dates_by_product_template.items():
-            product_tmpl.last_invoice_date = date
+    last_invoice_since = fields.Char(compute="_compute_last_invoice_since")
 
     @api.depends_context('formatted_display_name', 'partner_id', 'prioritize_for')
     def _compute_display_name(self):
         super()._compute_display_name()
 
         # Add last invoiced date beside the product's name.
-        if self.env.context.get('formatted_display_name') and self._must_prioritize_invoiced_product():
-            today = fields.Date.today()
+        if self.env.context.get('formatted_display_name') and\
+            self._must_prioritize_invoiced_product() and\
+            self.env.context.get('prioritize_for') == 'sale':
             for product in self:
                 if product.last_invoice_date:
-                    days_count = (today - product.last_invoice_date).days
-                    if days_count > 365:
-                        day_value_str = self.env._('%(years_count)sy', years_count=(days_count // 365))
-                    elif days_count > 30:
-                        day_value_str = self.env._('%(months_count)smo', months_count=(days_count // 30))
-                    else:
-                        day_value_str = self.env._('%(days_count)sd', days_count=days_count)
-                    product.display_name += f'\t`{day_value_str}`'
+                    product.display_name = f'`{product.last_invoice_since}` **{product.display_name}**'
+
+    @api.depends('last_invoice_date')
+    def _compute_last_invoice_since(self):
+        self.last_invoice_since = False
+        today = fields.Date.today()
+        for product in self:
+            if product.last_invoice_date:
+                days_count = (today - product.last_invoice_date).days
+                if days_count > 365:
+                    day_value_str = self.env._('%(years_count)sy', years_count=(days_count // 365))
+                elif days_count > 30:
+                    day_value_str = self.env._('%(months_count)smo', months_count=(days_count // 30))
+                else:
+                    day_value_str = self.env._('%(days_count)sd', days_count=days_count)
+                product.last_invoice_since = day_value_str
 
     @api.depends('invoice_policy', 'sale_ok', 'service_tracking')
     def _compute_product_tooltip(self):
