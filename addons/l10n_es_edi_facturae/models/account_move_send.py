@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, models, SUPERUSER_ID
+from odoo import _, api, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -8,6 +8,27 @@ _logger = logging.getLogger(__name__)
 
 class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
+
+    @api.model
+    def _is_es_facturae_applicable(self, move) -> bool:
+        """Check if the Factura-e applies to the given move.
+
+        Conditions:
+            - # Ensure move and partner country is Spain ('ES')
+        """
+
+        return move.country_code == 'ES' and move.partner_id.country_code == 'ES'
+
+    def _get_all_extra_edis(self) -> dict:
+        """Extend the EDI providers with the Factura-e option."""
+        res = super()._get_all_extra_edis()
+        res.update({
+            'es_facturae': {
+                'label': _("Factura-e"),
+                'is_applicable': self._is_es_facturae_applicable,
+            },
+        })
+        return res
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
@@ -21,7 +42,10 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis)
 
-        if invoice_edi_format == 'es_facturae' and move._l10n_es_edi_facturae_get_default_enable():
+        if (
+            'es_facturae' in extra_edis
+            or (invoice_edi_format == 'es_facturae' and move._l10n_es_edi_facturae_get_default_enable())
+        ):
             filename = f'{move.name.replace("/", "_")}_facturae_signed.xml'
             results.append({
                 'id': f'placeholder_{filename}',
@@ -40,7 +64,10 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
-        if invoice_data['invoice_edi_format'] == 'es_facturae' and invoice._l10n_es_edi_facturae_get_default_enable():
+        if (
+            'es_facturae' in invoice_data['extra_edis']
+            or (invoice_data['invoice_edi_format'] == 'es_facturae' and invoice._l10n_es_edi_facturae_get_default_enable())
+        ):
             try:
                 xml_content, errors = invoice._l10n_es_edi_facturae_render_facturae()
                 if errors:
