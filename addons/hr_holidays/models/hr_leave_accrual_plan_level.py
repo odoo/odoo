@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from calendar import monthrange
+from datetime import timedelta
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -272,7 +274,7 @@ class HrLeaveAccrualLevel(models.Model):
             date = last_call + relativedelta(day=int(self.first_day))
             if last_call >= date:
                 return date
-            return last_call + relativedelta(day=int(self.first_day), months=-1)
+            return last_call + relativedelta(day=int(self.first_day), months=-1) + timedelta(days=1)
 
         if self.frequency == 'biyearly':
             first_date = last_call + relativedelta(month=int(self.first_month), day=int(self.first_month_day))
