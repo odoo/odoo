@@ -1,12 +1,13 @@
+// TODO: move this with the theme tab to html_builder. It shouldn't be in web.
 @mixin preview-outline-button($type, $ccIndex) {
     .btn-#{$type} {
         background-color: transparent;
-        color: var(--o-cc#{$ccIndex}-btn-#{$type});
-        border-color: var(--o-cc#{$ccIndex}-btn-#{$type});
+        color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
+        border-color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
     }
     .btn-#{$type}:hover {
-        background-color: var(--o-cc#{$ccIndex}-btn-#{$type});
-        color: var(--o-cc#{$ccIndex}-btn-#{$type}-text);
+        background-color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
+        color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type}-text);
     }
 }
 
@@ -159,24 +160,25 @@
     @include text-emphasis-variant(".text-#{$-color-name}", $-color);
 }
 
+// TODO: move this with the theme tab to html_builder. It shouldn't be in web.
 .o_cc_preview_wrapper {
     @for $index from 1 through 5 {
         .o_cc#{$index} {
-            background-color: var(--o-cc#{$index}-bg);
-            background-image: var(--o-cc#{$index}-bg-gradient), url('/web/static/img/transparent.png');
-            color: var(--o-cc#{$index}-text);
+            background-color: var(--hb-cp-o-cc#{$index}-bg);
+            background-image: var(--hb-cp-o-cc#{$index}-bg-gradient), url('/web/static/img/transparent.png');
+            color: var(--hb-cp-o-cc#{$index}-text);
             h1 {
-                color: var(--o-cc#{$index}-headings);
+                color: var(--hb-cp-o-cc#{$index}-headings);
             }
             .btn-primary {
-                background-color: var(--o-cc#{$index}-btn-primary);
-                color: var(--o-cc#{$index}-btn-primary-text);
-                border-color: var(--o-cc#{$index}-btn-primary-border);
+                background-color: var(--hb-cp-o-cc#{$index}-btn-primary);
+                color: var(--hb-cp-o-cc#{$index}-btn-primary-text);
+                border-color: var(--hb-cp-o-cc#{$index}-btn-primary-border);
             }
             .btn-secondary {
-                background-color: var(--o-cc#{$index}-btn-secondary);
-                color: var(--o-cc#{$index}-btn-secondary-text);
-                border-color: var(--o-cc#{$index}-btn-secondary-border);
+                background-color: var(--hb-cp-o-cc#{$index}-btn-secondary);
+                color: var(--hb-cp-o-cc#{$index}-btn-secondary-text);
+                border-color: var(--hb-cp-o-cc#{$index}-btn-secondary-border);
             }
         }
     }
