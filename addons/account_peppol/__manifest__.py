@@ -20,7 +20,10 @@
         'account_edi_ubl_cii',
     ],
     'external_dependencies': {
-        'python': ['phonenumbers']
+        'python': ['phonenumbers'],
+        'apt': {
+            'phonenumbers': 'python3-phonenumbers',
+        },
     },
     'data': [
         'data/cron.xml',

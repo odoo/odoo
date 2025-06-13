@@ -10,6 +10,7 @@ from . import db  # used directly during some migration scripts
 
 from . import module
 from .module import (
+    MissingDependency,
     adapt_version,
     check_manifest_dependencies,
     check_version,
