@@ -852,3 +852,30 @@ class TestRepair(common.TransactionCase):
         self.assertFalse(copied_without_access.create_repair)
         copied_with_access = product_templ.copy().with_user(mitchell_user)
         self.assertTrue(copied_with_access.create_repair)
+
+    def test_delivered_qty_of_generated_so(self):
+        """
+        Test that checks that `qty_delivered` of the generated SOL is correctly set when the repair is done.
+        """
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_storable_order_repair.id,
+            'product_uom': self.product_storable_order_repair.uom_id.id,
+            'partner_id': self.res_partner_1.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_consu_order_repair.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                })
+            ],
+        })
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        self.assertEqual(repair_order.state, 'done')
+        self.assertEqual(repair_order.move_ids.quantity, 1.0)
+        repair_order.action_create_sale_order()
+        sale_order = repair_order.sale_order_id
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.order_line.qty_delivered, 1.0)
