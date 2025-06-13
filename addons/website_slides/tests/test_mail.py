@@ -1,7 +1,52 @@
+from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.website_slides.tests.common import SlidesCase
+from odoo.tests import tagged, users
+
+
+@tagged('mail_thread')
+class TestSlidesNotifications(SlidesCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_manager.group_ids += cls.env.ref('mail.group_mail_template_editor')
+        cls.test_template_publish = cls.env['mail.template'].with_user(cls.user_manager).create({
+            'auto_delete': True,
+            'body_html': '<p>Published <t t-out="object.name"/></p>',
+            'email_from': '{{ object.user_id.email_formatted or user.email_formatted or "" }}',
+            'model_id': cls.env['ir.model']._get_id('slide.slide'),
+            'name': 'Test Publish Template',
+            'subject': 'Published {{ object.name }}'
+        })
+        cls.channel.publish_template_id = cls.test_template_publish.id
+
+        cls.test_users = cls.env['res.users'].with_context(MailCase._test_context).create([
+            {
+                'group_ids': [(4, cls.env.ref('base.group_portal').id)],
+                'email': f'test.user.{user_idx}@test.example.com',
+                'login': f'user_{user_idx}',
+                'name': f'User {user_idx}',
+                'password': f'user_{user_idx}',
+            } for user_idx in range(10)
+        ])
+        cls.channel._action_add_members(cls.test_users.partner_id, member_status='joined')
+
+    @users('user_officer')
+    def test_publish_notification(self):
+        test_channel = self.channel.with_env(self.env)
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.env['slide.slide'].create({
+                'channel_id': test_channel.id,
+                'is_published': True,
+                'name': 'Test Publish',
+            })
+        new_msg = self._new_msgs.filtered(lambda m: m.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'))
+        self.assertEqual(len(new_msg), 1)
+        self.assertEqual(new_msg.notified_partner_ids, self.test_users.partner_id)
 
 
 class TestSlidesMail(SlidesCase):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

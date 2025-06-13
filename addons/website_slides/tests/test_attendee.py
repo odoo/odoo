@@ -11,98 +11,114 @@ from odoo.addons.website_slides.tests import common
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
 
-@tagged('post_install', '-at_install')
+
+@tagged('post_install', '-at_install', 'slide_attendee')
 class TestAttendee(common.SlidesCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_channel = cls.channel
+        cls.user_portal_2_attendee = cls._add_member(cls, cls.test_channel, cls.user_portal_2.partner_id)
 
     @users('user_officer')
     def test_attendee_course_completion_values(self):
         """ Check that once completed, the member_status remains 'completed', except if
             attendee leaves course and is reinvited / rejoins the course, it is then recomputed."""
-
-        def check_course_completion_values(member_status='completed'):
-            """ Check that the course completion is still accounted for, with given member_status """
-            self.assertEqual(user_portal_channel_partner.member_status, member_status)
-            self.assertEqual(user_portal_channel_partner.completion, 100)
-            self.assertTrue(self.channel.with_user(self.user_portal).completed)
-
-        user_portal_partner = self.user_portal.partner_id
-        user_portal_channel_partner = self.env['slide.channel.partner'].create({
-            'channel_id': self.channel.id,
-            'partner_id': user_portal_partner.id,
-        })
+        test_channel = self.test_channel.with_env(self.env)
+        user_portal_attendee = self._add_member(test_channel, self.user_portal.partner_id)
+        user_portal_channel_partner = user_portal_attendee.with_user(self.env.user)
         (self.slide | self.slide_2 | self.slide_3).with_user(self.user_portal)._action_mark_completed()
-        check_course_completion_values()
+        self.assertAttendeeStatus(user_portal_channel_partner, member_status='completed')
 
-        # A new slide should not update status / completion
-        self.env['slide.slide'].create({
-            'name': 'About completion',
-            'channel_id': self.channel.id,
-            'slide_category': 'document',
-            'is_published': True,
-            'completion_time': 2.0,
-            'sequence': 10,
-        })
-        check_course_completion_values()
+        # A new slide should not update status / completion -> completed is completed
+        self._add_slide(test_channel)
+        user_portal_channel_partner.invalidate_recordset()
+        self.assertAttendeeStatus(user_portal_channel_partner, member_status='completed')
 
         # Unpublish a slide user has completed
         self.slide.is_published = False
-        check_course_completion_values()
+        user_portal_channel_partner.invalidate_recordset()
+        self.assertAttendeeStatus(user_portal_channel_partner, member_status='completed')
 
         # Archive attendee
         user_portal_channel_partner.action_archive()
-        check_course_completion_values()
+        user_portal_channel_partner.invalidate_recordset()
+        self.assertAttendeeStatus(
+            user_portal_channel_partner, member_status='completed', active=False,
+            channel_is_member=False)
 
-        # Invited attendee only gets status update
-        self.channel._action_add_members(self.user_portal.partner_id, member_status='invited')
-        check_course_completion_values(member_status='invited')
+        # Invited attendee only gets status update (and is not an active member)
+        test_channel._action_add_members(self.user_portal.partner_id, member_status='invited')
+        user_portal_channel_partner.invalidate_recordset()
+        self.assertAttendeeStatus(
+            user_portal_channel_partner, member_status='invited',
+            channel_is_member=False)
 
-        # Pulbishing a slide user has completed. This will update user values,
-        # but only on channel (those are used for diplay and not before joining)
+        # Publishing a slide user has completed. This will update user values,
+        # but only on channel (those are used for display and not before joining)
         self.slide.is_published = True
-        self.assertEqual(user_portal_channel_partner.member_status, 'invited')
-        self.assertEqual(user_portal_channel_partner.completion, 100)
-        self.assertEqual(self.channel.with_user(self.user_portal).completion, 75)
-        self.assertFalse(self.channel.with_user(self.user_portal).completed)
+        self.assertAttendeeStatus(
+            user_portal_channel_partner, member_status='invited', completion=100,
+            channel_completion=75, channel_completed=False,
+            channel_is_member=False)
 
         # Once they are enrolled (or join), values are now updated and completion is lost.
-        self.channel._action_add_members(self.user_portal.partner_id)
-        self.assertEqual(user_portal_channel_partner.member_status, 'ongoing')
-        self.assertEqual(user_portal_channel_partner.completion, 75)
-        self.assertEqual(self.channel.with_user(self.user_portal).completion, 75)
-        self.assertFalse(self.channel.with_user(self.user_portal).completed)
+        test_channel._action_add_members(self.user_portal.partner_id)
+        self.assertAttendeeStatus(
+            user_portal_channel_partner, member_status='ongoing', completion=75,
+            channel_completion=75, channel_completed=False)
 
     @users('user_officer')
-    def test_enroll_to_course(self):
+    def test_copy_partner_not_course_member(self):
+        """ To check members of the channel after duplication of contact """
+        test_channel = self.test_channel.with_env(self.env)
+        # Adding member
+        test_channel._action_add_members(self.customer)
+        test_channel.invalidate_recordset()
+
+        # Member count before copy of contact
+        member_before = self.env['slide.channel.partner'].search_count([])
+
+        # Duplicating the contact
+        self.customer.copy()
+
+        # Member count after copy of contact
+        member_after = self.env['slide.channel.partner'].search_count([])
+        self.assertEqual(member_before, member_after, "Duplicating the contact should not create a new member")
+
+    @users('user_officer')
+    def test_invite_with_enroll(self):
         user_portal_partner = self.user_portal.partner_id
         self.assertFalse(user_portal_partner.id in self.channel.partner_ids.ids)
 
         # Enroll partner to course
         self.slide_channel_invite_wizard = self.env['slide.channel.invite'].create({
             'channel_id': self.channel.id,
-            'partner_ids': [(6, 0, [self.user_portal.partner_id.id])],
             'enroll_mode': True,
+            'partner_ids': [(6, 0, [self.user_portal.partner_id.id])],
         })
         self.slide_channel_invite_wizard.action_invite()
 
         # The partner should be in the attendees as 'joined'
         user_portal_channel_partner = self.channel.channel_partner_all_ids.filtered(lambda p: p.partner_id.id == user_portal_partner.id)
         self.assertTrue(user_portal_channel_partner)
-        self.assertFalse(self.channel.with_user(self.user_portal).is_member_invited)
-        self.assertIn(user_portal_channel_partner.id, self.channel.channel_partner_ids.ids)
-        self.assertTrue(self.channel.with_user(self.user_portal).is_member)
-        self.assertEqual(user_portal_channel_partner.member_status, 'joined')
+        self.assertAttendeeStatus(
+            user_portal_channel_partner, member_status='joined', completion=0, active=True,
+            channel_completion=0, channel_completed=False, channel_is_member=True)
 
         # Subscribe enrolled attendees to the chatter
         self.assertIn(user_portal_partner.id, self.channel.message_partner_ids.ids)
 
     @users('user_officer')
-    def test_invite_to_course(self):
+    def test_invite_with_invite_email(self):
         user_portal_partner = self.user_portal.partner_id
         self.assertFalse(user_portal_partner.id in self.channel.partner_ids.ids)
 
         # Invite partner to course
         self.slide_channel_invite_wizard = self.env['slide.channel.invite'].create({
             'channel_id': self.channel.id,
+            'enroll_mode': False,
             'partner_ids': [(6, 0, [self.user_portal.partner_id.id])],
             'send_email': True,
         })
@@ -111,52 +127,47 @@ class TestAttendee(common.SlidesCase):
         # The partner should be in the attendees as 'invited'
         user_portal_channel_partner = self.channel.channel_partner_all_ids.filtered(lambda p: p.partner_id.id == user_portal_partner.id)
         self.assertTrue(user_portal_channel_partner)
-        self.assertTrue(self.channel.with_user(self.user_portal).is_member_invited)
-        self.assertFalse(user_portal_channel_partner.id in self.channel.channel_partner_ids.ids)
-        self.assertFalse(self.channel.with_user(self.user_portal).is_member)
-        self.assertEqual(user_portal_channel_partner.member_status, 'invited')
+        self.assertAttendeeStatus(
+            user_portal_channel_partner, member_status='invited', completion=0, active=True,
+            channel_completion=0, channel_completed=False, channel_is_member=False)
 
         # Do not subscribe invited members to the chatter
         self.assertFalse(user_portal_partner.id in self.channel.message_partner_ids.ids)
 
     @users('user_officer')
-    def test_invite_archived_attendees_to_course(self):
+    def test_invite_archived_attendee(self):
         # Make user_portal have ongoing progress in the course
-        user_portal_partner = self.user_portal.partner_id
-        user_portal_channel_partner = self.env['slide.channel.partner'].create({
-            'channel_id': self.channel.id,
-            'partner_id': user_portal_partner.id,
-        })
-        self.slide.with_user(self.user_portal).sudo().action_mark_completed()
-        user_portal_channel_partner.action_archive()
-        self.assertEqual(user_portal_channel_partner.member_status, 'ongoing')
+        user_portal_2_channel_partner = self.user_portal_2_attendee.with_user(self.env.user)
+        self.slide.with_user(self.user_portal_2).sudo().action_mark_completed()
+        user_portal_2_channel_partner.action_archive()
+        self.assertEqual(user_portal_2_channel_partner.member_status, 'ongoing')
 
         # Invite archived ongoing partner to course
         self.slide_channel_invite_wizard = self.env['slide.channel.invite'].create({
             'channel_id': self.channel.id,
-            'partner_ids': [(6, 0, [self.user_portal.partner_id.id])],
+            'partner_ids': [(6, 0, [self.user_portal_2.partner_id.id])],
             'send_email': True,
         })
         self.slide_channel_invite_wizard.action_invite()
 
         # The partner should be reactivated in the attendees as 'invited'
-        self.assertTrue(user_portal_channel_partner.active)
-        self.assertTrue(user_portal_channel_partner.completion > 0)
-        self.assertEqual(user_portal_channel_partner.member_status, 'invited')
+        self.assertAttendeeStatus(
+            user_portal_2_channel_partner, member_status='invited', completion=33, active=True,
+            channel_completion=33, channel_completed=False, channel_is_member=False)
 
         # Archive then enroll the attendee
-        user_portal_channel_partner.action_archive()
+        user_portal_2_channel_partner.action_archive()
         self.slide_channel_invite_wizard.enroll_mode = True
         self.slide_channel_invite_wizard.flush_recordset()
         self.slide_channel_invite_wizard.action_invite()
 
         # The partner should be reactivated in the attendees as 'ongoing'
-        self.assertTrue(user_portal_channel_partner.active)
-        self.assertTrue(user_portal_channel_partner.completion > 0)
-        self.assertEqual(user_portal_channel_partner.member_status, 'ongoing')
+        self.assertAttendeeStatus(
+            user_portal_2_channel_partner, member_status='ongoing', completion=33, active=True,
+            channel_completion=33, channel_completed=False)
 
     @users('user_officer')
-    def test_join_invite_enroll_channel(self):
+    def test_invite_enroll_channel(self):
         self.channel.enroll = 'invite'
         user_portal_partner = self.user_portal.partner_id
 
@@ -174,12 +185,17 @@ class TestAttendee(common.SlidesCase):
         })
 
         self.assertIn(user_portal_partner, self.channel.channel_partner_all_ids.partner_id)
-        self.assertFalse(user_portal_partner.id in self.channel.partner_ids.ids)
+        self.assertAttendeeStatus(
+            user_portal_channel_partner, member_status='invited', completion=0, active=True,
+            channel_completion=0, channel_completed=False, channel_is_member=False)
+
         # Invited partner can join the course and enroll itself. Sudo is used in controller if invited.
         self.assertTrue(self.channel.with_user(self.user_portal).is_member_invited)
         self.channel.with_user(self.user_portal).sudo()._action_add_members(user_portal_partner)
-        self.assertEqual(user_portal_channel_partner.member_status, 'joined')
-        self.assertIn(user_portal_partner.id, self.channel.partner_ids.ids)
+        self.assertAttendeeStatus(
+            user_portal_channel_partner, member_status='joined', completion=0, active=True,
+            channel_completion=0, channel_completed=False, channel_is_member=True)
+
         self.assertIn(self.user_portal.partner_id.id, self.channel.message_partner_ids.ids)
 
     @users('user_officer')
@@ -233,27 +249,12 @@ class TestAttendee(common.SlidesCase):
         joined_cp_channel_ids = self.env['slide.channel'].search([('partner_ids', '=', joined_cp.partner_id.id)])
         self.assertFalse(self.channel in joined_cp_channel_ids)
 
-    def test_copy_partner_not_course_member(self):
-        """ To check members of the channel after duplication of contact """
-        # Adding member
-        self.channel._action_add_members(self.customer)
-        self.channel.invalidate_recordset()
 
-        # Member count before copy of contact
-        member_before = self.env['slide.channel.partner'].search_count([])
-
-        # Duplicating the contact
-        self.customer.copy()
-
-        # Member count after copy of contact
-        member_after = self.env['slide.channel.partner'].search_count([])
-        self.assertEqual(member_before, member_after, "Duplicating the contact should not create a new member")
-
-@tagged('-at_install', 'post_install')
-class TestAttendeeCase(HttpCaseWithUserPortal):
+@tagged('-at_install', 'post_install', 'slide_attendee')
+class TestAttendeeInvite(HttpCaseWithUserPortal):
 
     def setUp(self):
-        super(TestAttendeeCase, self).setUp()
+        super().setUp()
         self.user_admin = self.env.ref('base.user_admin')
         self.user_admin.write({
             'email': 'mitchell.admin@example.com',
