@@ -15,7 +15,7 @@ patch(ChannelMemberList.prototype, {
         if (!this.canOpenChatWith(member)) {
             return;
         }
-        if (!this.avatarCard.isOpen) {
+        if (!this.avatarCard.isOpen && member.persona.userId) {
             this.avatarCard.open(ev.currentTarget, {
                 id: member.persona.userId,
             });
