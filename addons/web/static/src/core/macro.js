@@ -13,7 +13,13 @@ const macroSchema = {
                 action: { type: [Function, String], optional: true },
                 timeout: { type: Number, optional: true },
                 trigger: { type: [Function, String], optional: true },
-                value: { type: [String, Number], optional: true },
+                willUnload: {
+                    type: [Boolean, String],
+                    optional: true,
+                    validate(value) {
+                        return [true, false, "continue"].includes(value);
+                    },
+                },
             },
             validate: (step) => step.action || step.trigger,
         },
@@ -125,6 +131,7 @@ export class Macro {
     }
 
     async start() {
+        this.listenBeforeUnloadEvents();
         await this.advance();
     }
 
@@ -136,6 +143,13 @@ export class Macro {
         try {
             const currentStep = this.steps[this.currentIndex];
             const executeStep = async () => {
+                if (currentStep.willUnload) {
+                    sessionStorage.setItem("waitForUnload", "1");
+                    //Will stop at the end of currentStep
+                    if (currentStep.willUnload !== "continue") {
+                        this.isComplete = true;
+                    }
+                }
                 const trigger = await waitForTrigger(currentStep.trigger);
                 await this.onStep(currentStep, trigger, this.currentIndex);
                 return await performAction(trigger, currentStep.action);
@@ -173,6 +187,25 @@ export class Macro {
         } else if (this.currentIndex === this.steps.length) {
             this.onComplete();
         }
+    }
+
+    listenBeforeUnloadEvents() {
+        sessionStorage.removeItem("waitForUnload");
+        const handleUnloadEvent = () => {
+            const waitForUnload = sessionStorage.getItem("waitForUnload");
+            if (!waitForUnload) {
+                const message = `
+                    Be sure to use { willUnload: true } for any step
+                    that involves firing a beforeUnload or pageHide event.
+                    This avoid a non-deterministic behavior by explicitly stopping 
+                    the macro that might continue before the page is unloaded.
+                `.replace(/^\s+/gm, "");
+                const error = new MacroError("AuthorizeBeforeUnload", message);
+                this.stop(error);
+            }
+        };
+        window.addEventListener("beforeunload", handleUnloadEvent);
+        window.addEventListener("pagehide", handleUnloadEvent);
     }
 }
 

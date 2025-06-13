@@ -56,6 +56,13 @@ const StepSchema = {
         },
     },
     trigger: { type: String },
+    willUnload: {
+        type: [Boolean, String],
+        optional: true,
+        validate(value) {
+            return [true, false, "continue"].includes(value);
+        },
+    },
     //ONLY IN DEBUG MODE
     pause: { type: Boolean, optional: true },
     break: { type: Boolean, optional: true },

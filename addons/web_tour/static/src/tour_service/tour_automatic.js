@@ -55,6 +55,7 @@ export class TourAutomatic {
                 },
                 {
                     trigger: step.trigger ? () => step.findTrigger() : null,
+                    willUnload: step.willUnload,
                     timeout:
                         step.pause && this.debugMode
                             ? 9999999
@@ -64,6 +65,7 @@ export class TourAutomatic {
                             await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
                         }
                         const result = await step.doAction();
+                        tourState.setCurrentIndex(step.index + 1);
                         if (this.debugMode) {
                             console.log(trigger);
                             if (step.skipped) {
@@ -76,7 +78,6 @@ export class TourAutomatic {
                                 await this.pause();
                             }
                         }
-                        tourState.setCurrentIndex(step.index + 1);
                         return result;
                     },
                 },
