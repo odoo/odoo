@@ -28,7 +28,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@id='batch_delivery_data']" position="after">
                 <group invisible="not has_dispatch_management">
-                    <field name="dock_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="dock_id" invisible="not allowed_dock_ids" groups="stock.group_stock_multi_locations" options="{'no_create': True, 'no_open': True}"/>
                     <field name="vehicle_id" placeholder="Third Party Provider"/>
                     <field name="vehicle_category_id" placeholder="semi-truck"/>
                     <label for='used_weight_percentage' string="Weight" invisible="not vehicle_category_id or not vehicle_weight_capacity"/>
