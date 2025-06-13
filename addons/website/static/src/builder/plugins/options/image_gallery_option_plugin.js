@@ -54,8 +54,8 @@ class ImageGalleryOption extends Plugin {
         }
     }
 
-    restoreSelection(imageToSelect) {
-        if (imageToSelect && !this.dependencies.history.getIsPreviewing()) {
+    restoreSelection(imageToSelect, isPreviewing) {
+        if (imageToSelect && !isPreviewing) {
             // We want to update the container to the equivalent cloned image.
             // This has to be done in the new step so we manually add a step
             this.dependencies.history.addStep();
@@ -119,7 +119,7 @@ class ImageGalleryOption extends Plugin {
      * @param {String('slideshow'|'masonry'|'grid'|'nomode')} mode
      * @param {Element[]} images
      */
-    async setImages(imageGalleryElement, mode, images) {
+    setImages(imageGalleryElement, mode, images) {
         if (mode !== this.getMode(imageGalleryElement)) {
             imageGalleryElement.classList.remove("o_nomode", "o_masonry", "o_grid", "o_slideshow");
             imageGalleryElement.classList.add(`o_${mode}`);
@@ -436,10 +436,13 @@ class SetImageGalleryLayoutAction extends BuilderAction {
     load({ editingElement }) {
         return this.dependencies.imageGalleryOption.processImages(editingElement);
     }
-    apply({ editingElement, params: { mainParam: mode }, loadResult }) {
+    apply({ isPreviewing, editingElement, params: { mainParam: mode }, loadResult }) {
         if (mode !== this.dependencies.imageGalleryOption.getMode(editingElement)) {
             this.dependencies.imageGalleryOption.setImages(editingElement, mode, loadResult.images);
-            this.dependencies.imageGalleryOption.restoreSelection(loadResult.imageToSelect);
+            this.dependencies.imageGalleryOption.restoreSelection(
+                loadResult.imageToSelect,
+                isPreviewing
+            );
         }
     }
     isApplied({ editingElement, params: { mainParam: mode } }) {
@@ -452,7 +455,7 @@ class SetImageGalleryColumnsAction extends BuilderAction {
     load({ editingElement }) {
         return this.dependencies.imageGalleryOption.processImages(editingElement);
     }
-    apply({ editingElement, params: { mainParam: columns }, loadResult }) {
+    apply({ isPreviewing, editingElement, params: { mainParam: columns }, loadResult }) {
         if (columns !== this.dependencies.imageGalleryOption.getColumns(editingElement)) {
             editingElement.dataset.columns = columns;
             this.dependencies.imageGalleryOption.setImages(
@@ -460,7 +463,10 @@ class SetImageGalleryColumnsAction extends BuilderAction {
                 this.dependencies.imageGalleryOption.getMode(editingElement),
                 loadResult.images
             );
-            this.dependencies.imageGalleryOption.restoreSelection(loadResult.imageToSelect);
+            this.dependencies.imageGalleryOption.restoreSelection(
+                loadResult.imageToSelect,
+                isPreviewing
+            );
         }
     }
     isApplied({ editingElement, params: { mainParam: columns } }) {
