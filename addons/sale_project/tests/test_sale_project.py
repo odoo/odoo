@@ -1325,3 +1325,17 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(self.project_global.sale_line_id, sale_order.order_line)
 
         sale_order.action_confirm()  # no error should be raised even if the SO is already confirmed
+
+    def test_create_project_from_sale_order(self):
+        """Test that a project created from a sale order is linked to that sale order."""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product_order_service1.id})],
+        })
+        sale_order.action_confirm()
+        action = sale_order.action_create_project()
+        project = self.env['project.project'].with_context(action['context']).create({
+            'name': 'Test Project',
+            'allow_billable': True,
+        })
+        self.assertEqual(sale_order.project_id, project, "The created project should be linked to this sale order")
