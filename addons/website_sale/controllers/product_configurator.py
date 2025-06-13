@@ -9,39 +9,9 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController, WebsiteSale):
 
-    @route(
-        route='/website_sale/should_show_product_configurator',
-        type='jsonrpc',
-        auth='public',
-        website=True,
-        readonly=True,
-    )
-    def website_sale_should_show_product_configurator(
-        self, product_template_id, ptav_ids, is_product_configured
-    ):
-        """ Return whether the product configurator dialog should be shown.
-
-        :param int product_template_id: The product being checked, as a `product.template` id.
-        :param list(int) ptav_ids: The combination of the product, as a list of
-            `product.template.attribute.value` ids.
-        :param bool is_product_configured: Whether the product is already configured.
-        :rtype: bool
-        :return: Whether the product configurator dialog should be shown.
-        """
-        product_template = request.env['product.template'].browse(product_template_id)
-        combination = request.env['product.template.attribute.value'].browse(ptav_ids)
-        single_product_variant = product_template.get_single_product_variant()
-        # We can't use `single_product_variant.get('has_optional_products')` as it doesn't take
-        # `combination` into account.
-        has_optional_products = bool(product_template.optional_product_ids.filtered(
-            lambda op: self._should_show_product(op, combination)
-        ))
-        force_dialog = request.website.add_to_cart_action == 'force_dialog'
-        return (
-            force_dialog
-            or has_optional_products
-            or not (single_product_variant.get('product_id') or is_product_configured)
-        )
+    @route(route='/website_sale/product/get_values', type='jsonrpc', auth='public', readonly=True)
+    def website_sale_product_get_values(self, *args, **kwargs):
+        return super().sale_product_get_values(*args, **kwargs)
 
     def _get_product_template(self, product_template_id):
         if request.is_frontend:
@@ -65,6 +35,12 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
     def website_sale_product_configurator_get_values(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
         return super().sale_product_configurator_get_values(*args, **kwargs)
+
+    def _force_stop_product_configurator(self, product_template, **kwargs):
+        return (
+            kwargs.get("is_product_configured")
+            and not len(product_template.optional_product_ids)
+        ) or super()._force_stop_product_configurator(product_template, **kwargs)
 
     @route(
         route='/website_sale/product_configurator/create_product',

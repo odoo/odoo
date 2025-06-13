@@ -54,6 +54,7 @@ export class ComboConfiguratorDialog extends Component {
         this._initSelectedComboItems();
         this.getPriceUrl = '/sale/combo_configurator/get_price';
         useSubEnv({ currency: { id: this.props.currency_id } });
+        this.product_configurator_url = '/sale/product_configurator/get_values'
     }
 
     /**
@@ -68,14 +69,31 @@ export class ComboConfiguratorDialog extends Component {
         comboItem = this.getSelectedOrProvidedComboItem(comboId, comboItem);
         let product = comboItem.product;
         if (comboItem.is_configurable) {
+            const productConfiguratorValues = await rpc(this.product_configurator_url,
+                {
+                    product_template_id: product.product_tmpl_id,
+                    quantity: 1,
+                    currency_id: this.props.currency_id,
+                    so_date: this.props.date,
+                    company_id: this.props.company_id,
+                    pricelist_id: this.props.pricelist_id,
+                    ptav_ids: product.selectedPtavIds,
+                    force_dialog: true,
+                    show_main_product: true,
+                    show_optional_product: true,
+                    ...this._getAdditionalRpcParams(),
+                }
+            )
             this.dialog.add(ProductConfiguratorDialog, {
+                products: productConfiguratorValues['products'],
+                optionalProducts: productConfiguratorValues['optional_products'],
                 productTemplateId: product.product_tmpl_id,
                 ptavIds: product.selectedPtavIds,
                 customPtavs: product.selectedCustomPtavs,
                 quantity: 1,
                 companyId: this.props.company_id,
                 pricelistId: this.props.pricelist_id,
-                currencyId: this.props.currency_id,
+                currency_id: productConfiguratorValues['currency_id'],
                 soDate: this.props.date,
                 edit: true, // Hide the optional products, if any.
                 options: { canChangeVariant: false, showQuantity: false, showPrice: false },

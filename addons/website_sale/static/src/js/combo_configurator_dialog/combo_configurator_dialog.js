@@ -24,6 +24,7 @@ patch(ComboConfiguratorDialog.prototype, {
 
         if (this.props.isFrontend) {
             this.getPriceUrl = '/website_sale/combo_configurator/get_price';
+            this.product_configurator_url = '/website_sale/product_configurator/get_values'
         }
     },
 
