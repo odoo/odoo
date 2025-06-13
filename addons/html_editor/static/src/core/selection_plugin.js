@@ -248,8 +248,8 @@ export class SelectionPlugin extends Plugin {
                     this.dispatchTo("selection_leave_handlers");
                 }
             };
-            this.addDomListener(this.document, "focus", focusEditable, { capture: true });
-            this.addDomListener(document, "focus", unFocusEditable, { capture: true });
+            this.addDomListener(this.document, "focusin", focusEditable, { capture: true });
+            this.addDomListener(document, "focusin", unFocusEditable, { capture: true });
             this.addDomListener(this.document, "pointerdown", focusEditable, { capture: true });
             this.addDomListener(document, "pointerdown", unFocusEditable, { capture: true });
         }
