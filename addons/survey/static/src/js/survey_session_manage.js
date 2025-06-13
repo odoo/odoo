@@ -54,6 +54,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             self.isStartScreen = self.$el.data('isStartScreen');
             self.isFirstQuestion = self.$el.data('isFirstQuestion');
             self.isLastQuestion = self.$el.data('isLastQuestion');
+            self.surveyLastTriggeringAnswers = self.$el.data('surveyLastTriggeringAnswers');
             // scoring props
             self.isScoredQuestion = self.$el.data('isScoredQuestion');
             self.sessionShowLeaderboard = self.$el.data('sessionShowLeaderboard');
@@ -457,6 +458,16 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         ).then(function (questionResults) {
             if (questionResults) {
                 self.attendeesCount = questionResults.attendees_count;
+
+                // Update the last question next screen tooltip depending on the selected answers.
+                // Because if a selected answer triggers a conditional question, the last question
+                // may no longer be the last.
+                if (self.surveyLastTriggeringAnswers) {
+                    self.isLastQuestion =
+                        !questionResults.answer_count ||
+                        !self.surveyLastTriggeringAnswers.some(answerId => questionResults.selected_answers.includes(answerId));
+                    self._updateNextScreenTooltip();
+                }
 
                 if (self.resultsChart && questionResults.question_statistics_graph) {
                     self.resultsChart.updateChart(JSON.parse(questionResults.question_statistics_graph));

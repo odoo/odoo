@@ -823,8 +823,8 @@ class SurveySurvey(models.Model):
         A question/page will be determined as the last one if any of the following is true:
           - The survey layout is "one_page",
           - There are no more questions/page after `page_or_question` in `user_input`,
-          - All the following questions are conditional AND were not triggered by previous answers,
-            AND cannot be triggered by any answer given on the current page/question.
+          - All the following questions are conditional AND were not triggered by previous answers.
+            Not accounting for the question/page own conditionals.
         """
         if self.questions_layout == "one_page":
             return True
@@ -834,16 +834,11 @@ class SurveySurvey(models.Model):
         if not next_page_or_question_candidates:
             return True
         inactive_questions = user_input._get_inactive_conditional_questions()
-        __, triggered_questions_by_answer, __ = user_input._get_conditional_values()
         if self.questions_layout == 'page_per_question':
             return not (
                 any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
-                or any(answer in triggered_questions_by_answer for answer in page_or_question.suggested_answer_ids)
             )
         elif self.questions_layout == 'page_per_section':
-            for question in page_or_question.question_ids:
-                if any(answer in triggered_questions_by_answer for answer in question.suggested_answer_ids):
-                    return False
             for section in next_page_or_question_candidates:
                 if any(next_question not in inactive_questions for next_question in section.question_ids):
                     return False

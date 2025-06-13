@@ -275,8 +275,8 @@ class Survey(http.Controller):
             data['languages'] = [(lang_code, self.env['res.lang']._get_data(code=lang_code)['name'])
                                  for lang_code in supported_lang_codes]
             data['lang_code'] = self._get_lang_with_fallback(answer_sudo.sudo(False)).code
+        triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
         if survey_sudo.questions_layout != 'page_per_question':
-            triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({
                 'triggering_answers_by_question': {
                     question.id: triggering_answers.ids
@@ -331,7 +331,22 @@ class Survey(http.Controller):
                         survey_last = answer_sudo._is_last_skipped_page_or_question(next_page_or_question)
                     else:
                         survey_last = survey_sudo._is_last_page_or_question(answer_sudo, next_page_or_question)
-                    data.update({'survey_last': survey_last})
+                    values = {'survey_last': survey_last}
+                    # On the last survey page, get the suggested answers which are triggering questions on the following pages
+                    # to dynamically update the survey button to "submit" or "continue" depending on the selected answers.
+                    # NB: Not in the skipped questions flow as conditionals aren't handled.
+                    if not answer_sudo.survey_first_submitted and survey_last and survey_sudo.questions_layout != 'one_page':
+                        pages_or_questions = survey_sudo._get_pages_or_questions(answer_sudo)
+                        following_questions = pages_or_questions.filtered(lambda page_or_question: page_or_question.sequence > next_page_or_question.sequence)
+                        next_page_questions_suggested_answers = next_page_or_question.suggested_answer_ids
+                        if survey_sudo.questions_layout == 'page_per_section':
+                            following_questions = following_questions.question_ids
+                            next_page_questions_suggested_answers = next_page_or_question.question_ids.suggested_answer_ids
+                        values['survey_last_triggering_answers'] = [
+                            answer.id for answer in triggered_questions_by_answer
+                            if answer in next_page_questions_suggested_answers and any(q in following_questions for q in triggered_questions_by_answer[answer])
+                        ]
+                    data.update(values)
 
             if answer_sudo.is_session_answer and next_page_or_question.is_time_limited:
                 data.update({
