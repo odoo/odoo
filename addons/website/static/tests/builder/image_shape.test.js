@@ -205,7 +205,7 @@ describe("flip shape axis", () => {
             "html_builder/geometric/geo_tetris"
         );
 
-        await contains(`.oi-arrows-h[data-action-id="flipImageShape"]`).click();
+        await contains(`[data-action-id="flipImageShape"]:has(.oi-arrows-h)`).click();
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -232,8 +232,8 @@ describe("flip shape axis", () => {
             "html_builder/geometric/geo_tetris"
         );
 
-        await contains(`.oi-arrows-h[data-action-id="flipImageShape"]`).click();
-        await contains(`.oi-arrows-h[data-action-id="flipImageShape"]`).click();
+        await contains(`[data-action-id="flipImageShape"]:has(.oi-arrows-h)`).click();
+        await contains(`[data-action-id="flipImageShape"]:has(.oi-arrows-h)`).click();
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -260,7 +260,7 @@ describe("flip shape axis", () => {
             "html_builder/geometric/geo_tetris"
         );
 
-        await contains(`.oi-arrows-v[data-action-id="flipImageShape"]`).click();
+        await contains(`[data-action-id="flipImageShape"]:has(.oi-arrows-v)`).click();
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -287,8 +287,8 @@ describe("flip shape axis", () => {
             "html_builder/geometric/geo_tetris"
         );
 
-        await contains(`.oi-arrows-h[data-action-id="flipImageShape"]`).click();
-        await contains(`.oi-arrows-v[data-action-id="flipImageShape"]`).click();
+        await contains(`[data-action-id="flipImageShape"]:has(.oi-arrows-h)`).click();
+        await contains(`[data-action-id="flipImageShape"]:has(.oi-arrows-v)`).click();
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -317,7 +317,7 @@ describe("rotate shape", () => {
             "html_builder/geometric/geo_tetris"
         );
 
-        await contains(`.fa-rotate-left[data-action-id="rotateImageShape"]`).click();
+        await contains(`[data-action-id="rotateImageShape"]:has(.fa-rotate-left)`).click();
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -344,8 +344,8 @@ describe("rotate shape", () => {
             "html_builder/geometric/geo_tetris"
         );
 
-        await contains(`.fa-rotate-left[data-action-id="rotateImageShape"]`).click();
-        await contains(`.fa-rotate-right[data-action-id="rotateImageShape"]`).click();
+        await contains(`[data-action-id="rotateImageShape"]:has(.fa-rotate-left)`).click();
+        await contains(`[data-action-id="rotateImageShape"]:has(.fa-rotate-right)`).click();
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 
@@ -372,7 +372,7 @@ describe("rotate shape", () => {
             "html_builder/geometric/geo_tetris"
         );
 
-        await contains(`.fa-rotate-right[data-action-id="rotateImageShape"]`).click();
+        await contains(`[data-action-id="rotateImageShape"]:has(.fa-rotate-right)`).click();
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
 

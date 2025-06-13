@@ -1,60 +1,4 @@
-@mixin hb-svg-icon(
-        $graphic: $o-we-sidebar-content-field-color,
-        $subdle: $o-we-sidebar-content-field-color,
-        $subdle-opacity: 0.5) {
-    .hb-svg {
-        .o_graphic {
-            fill: $graphic;
-        }
-        .o_subdle {
-            fill: rgba($subdle, $subdle-opacity);
-        }
-    }
-}
-
 .options-container {
-    .btn {
-        color: $o-we-fg-light;
-        font-size: 12px;
-        padding: 1px 6px;
-        border: none;
-        min-width: min-content;
-        min-height: 1.5rem;
-
-        @include hb-svg-icon($o-we-sidebar-content-field-clickable-color, $o-we-sidebar-content-field-clickable-color);
-
-        &.active {
-            background-color: $o-we-bg-light !important;
-        }
-
-        &:not([disabled]):hover, &.active {
-            color: $o-we-fg-lighter;
-            @include hb-svg-icon($o-we-sidebar-content-field-pressed-color, $subdle-opacity: .75);
-        }
-
-        &>img {
-          padding-bottom: 2px;
-        }
-
-        &.o_we_text_danger {
-            color: $o-we-color-danger;
-        }
-    }
-
-    .btn-primary {
-        background-color: $o-we-bg-lightest !important;
-    }
-
-    .btn-primary.o_we_bg_danger {
-        color: white;
-        background-color: #e6586c !important;
-    }
-
-    .btn-primary.o_we_bg_success {
-        color: white;
-        background-color: #40ad67 !important;
-    }
-
     .we-bg-options-container {
         > div {
             margin-top: 1px;
@@ -68,22 +12,8 @@
     div:has(> input.o_we_large) {
         width: 100%;
     }
-    table.o_social_media_list button {
-        width: 2em;
-    }
 
     @include o-input-number-no-arrows();
-    input {
-        border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
-        border-radius: $o-we-sidebar-content-field-border-radius;
-        background-color: $o-we-sidebar-content-field-input-bg;
-        color: inherit;
-        padding: 0 $o-we-sidebar-content-field-clickable-spacing;
-
-        &:focus {
-            border-color: $o-we-sidebar-content-field-input-border-color;
-        }
-    }
 
     .o_we_table_wrapper {
         width: 100%;
@@ -94,21 +24,4 @@
 
 .o_we_img_animate:hover img {
     content: image-set(var(--animate-src));
-}
-
-.o_hb_device {
-    .hb-svg {
-        fill: $o-we-sidebar-content-field-clickable-color;
-
-        &:hover {
-            fill: $o-we-sidebar-content-field-pressed-color;
-        }
-    }
-    &.active .hb-svg {
-        fill: $o-we-color-danger;
-
-        &:hover {
-            fill: darken($o-we-color-danger, 7.5%);
-        }
-    }
 }

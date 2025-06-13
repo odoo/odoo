@@ -62,7 +62,7 @@ test("Ensure order of operations when clicking very fast on two options", async 
     await setupWebsiteBuilder(websiteContent);
     await contains(":iframe .s_rating").click();
     await waitFor("[data-label='Icon']");
-    expect("[data-label='Icon'] .btn-primary.dropdown-toggle").toHaveText("Stars");
+    expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Stars");
     expect(":iframe .s_rating").not.toHaveAttribute("data-active-custom-icon");
     await click(".options-container [data-action-id='customIcon']");
     await click(".options-container [data-class-action='fa-2x']");
@@ -70,14 +70,14 @@ test("Ensure order of operations when clicking very fast on two options", async 
     expect(":iframe .s_rating_icons").not.toHaveClass("fa-2x");
     await contains(".modal-dialog .fa-glass").click();
     expect(":iframe .s_rating").toHaveAttribute("data-active-custom-icon", "fa fa-glass");
-    expect("[data-label='Icon'] .btn-primary.dropdown-toggle").toHaveText("Custom");
+    expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Custom");
     expect(":iframe .s_rating_icons").toHaveClass("fa-2x");
     await contains(".o-snippets-top-actions .fa-undo").click();
-    expect("[data-label='Icon'] .btn-primary.dropdown-toggle").toHaveText("Custom");
+    expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Custom");
     expect(":iframe .s_rating").toHaveAttribute("data-active-custom-icon", "fa fa-glass");
     expect(":iframe .s_rating_icons").not.toHaveClass("fa-2x");
     await contains(".o-snippets-top-actions .fa-undo").click();
-    expect("[data-label='Icon'] .btn-primary.dropdown-toggle").toHaveText("Stars");
+    expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Stars");
     expect(":iframe .s_rating").not.toHaveAttribute("data-active-custom-icon");
     expect(":iframe .s_rating_icons").not.toHaveClass("fa-2x");
 });
