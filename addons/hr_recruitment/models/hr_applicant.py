@@ -787,7 +787,7 @@ class HrApplicant(models.Model):
                 (False, 'form'),
             ],
             'search_view_id': self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').ids,
-            'domain': [('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.ids), ],
+            'domain': [('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.ids)],
         }
 
     def action_open_employee(self):
@@ -819,7 +819,6 @@ class HrApplicant(models.Model):
                 "active_test": False,
                 "search_default_stage": 1,
                 "default_applicant_ids": self.ids,
-                "no_create_application_button": True,
             },
         }
 
@@ -1007,7 +1006,7 @@ class HrApplicant(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
         employee = self.env['hr.employee'].with_context(clean_context(self.env.context)).create(self._get_employee_create_vals())
         action['res_id'] = employee.id
-        employee_attachments = self.env['ir.attachment'].search([('res_model', '=','hr.employee'), ('res_id', '=', employee.id)])
+        employee_attachments = self.env['ir.attachment'].search([('res_model', '=', 'hr.employee'), ('res_id', '=', employee.id)])
         unique_attachments = self.attachment_ids.filtered(
             lambda attachment: attachment.datas not in employee_attachments.mapped('datas')
         )
@@ -1016,7 +1015,7 @@ class HrApplicant(models.Model):
             'job_id': self.job_id.id,
             'job_title': self.job_id.name,
             'department_id': self.department_id.id,
-            'work_email': self.department_id.company_id.email or self.email_from, # To have a valid email address by default
+            'work_email': self.department_id.company_id.email or self.email_from,   # To have a valid email address by default
             'work_phone': self.department_id.company_id.phone,
         })
         return action
