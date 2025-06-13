@@ -74,22 +74,14 @@ export class PlaceholderBlockPlugin extends Plugin {
     onNormalize() {
         this.updatePlaceholderBlockContainers();
         if (!this.containerTop.children.length) {
-            if (this.containerTop.nextElementSibling?.matches(this.baseContainerSelector)) {
-                [...this.containerTop.children].forEach((child) => child.remove());
-            } else {
-                this.containerTop.setAttribute("contenteditable", "true");
-                this.containerTop.append(this.createPlaceholderBlock("top"));
-                this.containerTop.setAttribute("contenteditable", "false");
-            }
+            this.containerTop.setAttribute("contenteditable", "true");
+            this.containerTop.append(this.createPlaceholderBlock("top"));
+            this.containerTop.setAttribute("contenteditable", "false");
         }
         if (!this.containerBottom.children.length) {
-            if (this.containerBottom.previousElementSibling?.matches(this.baseContainerSelector)) {
-                [...this.containerBottom.children].forEach((child) => child.remove());
-            } else {
-                this.containerBottom.setAttribute("contenteditable", "true");
-                this.containerBottom.append(this.createPlaceholderBlock("bottom"));
-                this.containerBottom.setAttribute("contenteditable", "false");
-            }
+            this.containerBottom.setAttribute("contenteditable", "true");
+            this.containerBottom.append(this.createPlaceholderBlock("bottom"));
+            this.containerBottom.setAttribute("contenteditable", "false");
         }
     }
 
@@ -107,7 +99,7 @@ export class PlaceholderBlockPlugin extends Plugin {
     onSelectionChange(selectionData) {
         const anchor = closestElement(selectionData.editableSelection.anchorNode);
         if (this.isPlaceholderBlock(anchor)) {
-            if (isEmptyBlock(anchor)) {
+            if (isEmptyBlock(anchor) && anchor.matches(this.baseContainerSelector)) {
                 // Select the block.
                 anchor.classList.add("o-placeholder-block-selected");
                 this.dependencies.powerButtons.setPowerButtonsPosition(
@@ -116,7 +108,7 @@ export class PlaceholderBlockPlugin extends Plugin {
                     closestElement(anchor, "[dir]")?.getAttribute("dir")
                 );
             } else {
-                // Persist the block.
+                // Persist the block (if it changed).
                 anchor.classList.remove(
                     "o-placeholder-block",
                     "o-placeholder-block-selected",
