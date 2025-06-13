@@ -58,5 +58,7 @@ class AccountMoveSend(models.AbstractModel):
                         ),
                         'errors': [error] if not isinstance(error, list) else error,
                     }
+                elif invoice.invoice_pdf_report_id:
+                    invoice.write({'invoice_pdf_report_file': False})
                 if self._can_commit():
                     self._cr.commit()
