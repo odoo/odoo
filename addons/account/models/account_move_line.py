@@ -1578,6 +1578,8 @@ class AccountMoveLine(models.Model):
             tracked_fields = [fname for fname, f in self._fields.items() if hasattr(f, 'tracking') and f.tracking and not (hasattr(f, 'related') and f.related)]
             ref_fields = self.env['account.move.line'].fields_get(tracked_fields)
             empty_values = dict.fromkeys(tracked_fields)
+            is_auto_reconcile = self.env.context.get('auto_reconcile', False)
+            author_id = self.env.ref('base.partner_root').id if is_auto_reconcile else self.env.user.partner_id.id
             for move_id, modified_lines in lines.grouped('move_id').items():
                 if not move_id.posted_before:
                     continue
@@ -1585,7 +1587,8 @@ class AccountMoveLine(models.Model):
                     if tracking_value_ids := line._mail_track(ref_fields, empty_values)[1]:
                         line.move_id._message_log(
                             body=_("Journal Item %s created", line._get_html_link(title=f"#{line.id}")),
-                            tracking_value_ids=tracking_value_ids
+                            tracking_value_ids=tracking_value_ids,
+                            author_id=author_id,
                         )
 
         lines.move_id._synchronize_business_models(['line_ids'])
@@ -1700,6 +1703,8 @@ class AccountMoveLine(models.Model):
                 self._check_constrains_account_id_journal_id()
 
             if not self.env.context.get('tracking_disable', False):
+                is_auto_reconcile = self.env.context.get('auto_reconcile', False)
+                author_id = self.env.ref('base.partner_root').id if is_auto_reconcile else self.env.user.partner_id.id
                 # Log changes to move lines on each move
                 for move_id, modified_lines in move_initial_values.items():
                     for line in self.filtered(lambda l: l.move_id.id == move_id):
@@ -1708,7 +1713,8 @@ class AccountMoveLine(models.Model):
                             msg = _("Journal Item %s updated", line._get_html_link(title=f"#{line.id}"))
                             line.move_id._message_log(
                                 body=msg,
-                                tracking_value_ids=tracking_value_ids
+                                tracking_value_ids=tracking_value_ids,
+                                author_id=author_id,
                             )
 
         return result
@@ -1772,6 +1778,8 @@ class AccountMoveLine(models.Model):
         self._check_tax_lock_date()
 
         if not self.env.context.get('tracking_disable'):
+            is_auto_reconcile = self.env.context.get('auto_reconcile', False)
+            author_id = self.env.ref('base.partner_root').id if is_auto_reconcile else self.env.user.partner_id.id
             # Log changes to move lines on each move
             tracked_fields = [fname for fname, f in self._fields.items() if hasattr(f, 'tracking') and f.tracking and not (hasattr(f, 'related') and f.related)]
             ref_fields = self.env['account.move.line'].fields_get(tracked_fields)
@@ -1783,7 +1791,8 @@ class AccountMoveLine(models.Model):
                     if tracking_value_ids := empty_line._mail_track(ref_fields, line)[1]:
                         line.move_id._message_log(
                             body=_("Journal Item %s deleted", line._get_html_link(title=f"#{line.id}")),
-                            tracking_value_ids=tracking_value_ids
+                            tracking_value_ids=tracking_value_ids,
+                            author_id=author_id,
                         )
 
         move_container = {'records': self.move_id}
@@ -2567,6 +2576,15 @@ class AccountMoveLine(models.Model):
 
         # ==== Track the invoice's state to call the hook when they become paid ====
         pre_hook_data = all_amls._reconcile_pre_hook()
+
+        # ==== Set author for tracking messages ====
+        # For tracking messages, if the reconciliation is done automatically, we set the root user as author.
+        # Or else, we set current user as a author. Only invoices are concerned by this.
+        for aml in all_amls:
+            if aml.move_id.is_invoice():
+                is_auto_reconcile = aml.env.context.get('auto_reconcile', False)
+                author = self.env.ref('base.partner_root') if is_auto_reconcile else self.env.user.partner_id
+                aml.move_id._track_set_author(author)
 
         # ==== Collect amls data ====
         # All residual amounts are collected and updated until the creation of partials in batch.
