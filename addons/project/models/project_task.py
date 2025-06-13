@@ -853,8 +853,8 @@ class ProjectTask(models.Model):
                 child_ids = current_task.child_ids
                 vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in child_ids]
             if not has_default_users and vals['user_ids']:
-                active_users = task.user_ids & active_users
-                vals['user_ids'] = [Command.set(active_users.ids)]
+                task_active_users = task.user_ids & active_users
+                vals['user_ids'] = [Command.set(task_active_users.ids)]
             if task.is_template and not self.env.context.get('copy_from_template'):
                 vals['is_template'] = True
             if self.env.context.get('copy_from_template'):
