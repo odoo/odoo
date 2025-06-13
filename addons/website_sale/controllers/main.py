@@ -1819,6 +1819,22 @@ class WebsiteSale(payment_portal.PaymentPortal):
             request.env['website.track'].sudo().search(domain).unlink()
         return {}
 
+    @route('/snippets/category/set_image', type='jsonrpc', auth='user')
+    def set_category_image(self, category_id, attachment_id):
+        """
+        Set the cover image on the category.
+
+        :param int category_id: ID of the category to set the cover image.
+        :param int attachment_id: ID of the attachment containing the image data.
+        :raise Forbidden: If the user does not have website editing access
+        """
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise Forbidden()
+        category = request.env['product.public.category'].browse(category_id).exists()
+        if category:
+            image_data = request.env['ir.attachment'].browse(attachment_id).datas
+            category.cover_image = image_data
+
     @staticmethod
     def _populate_currency_and_pricelist(kwargs):
         website = request.website
