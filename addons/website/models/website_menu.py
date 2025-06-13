@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import re
 
 import werkzeug.exceptions
 import werkzeug.urls
@@ -168,6 +169,35 @@ class WebsiteMenu(models.Model):
                 url = "/%s" % self.url
         return url
 
+    def _get_current_pages_and_models_dict(self):
+        """ Meant for overrides. Returns a "page_name: model" dict for pages having one child """
+        return {}
+
+    def _is_auto_redirection_model_domain(self, model_name):
+        """ Meant for overrides """
+        return []
+
+    def _is_redirection_into_child(self, unslug_request, request):
+        """ Checks if the `/menu` redirects to `/menu/page` """
+        for page_name, model_name in self._get_current_pages_and_models_dict().items():
+            if page_name in unslug_request:
+                current_website_id = request.website.id
+                # Folders (eg. Blogs) that only appear in the current website
+                # It means that if there's only one blog related to the website you're currently
+                # visiting, then the button is highlighted. (Note: If there isn't, or if there
+                # are several, that's already taken care of and the highlighting is done).
+                domain = [
+                    '|',
+                    ('website_id', '=', False),  # the folder is global to all websites
+                    ('website_id', '=', current_website_id)  # the folder only appears in the current website
+                ]
+                if model_domain := self._is_auto_redirection_model_domain(model_name):
+                    # Adding constraint to domain searched if necessary
+                    domain = Domain.AND([domain, model_domain])
+                related_folders_current_website = request.env[model_name].search(domain)
+                return len(related_folders_current_website) == 1  # if equals 1, it means redirection into the child
+        return False
+
     def _is_active(self):
         """ To be considered active, a menu should either:
 
@@ -199,7 +229,9 @@ class WebsiteMenu(models.Model):
         if not self.child_id:
             menu_url = url_parse(self._clean_url())
             unslug_url = self.env['ir.http']._unslug_url
-            if unslug_url(menu_url.path) == unslug_url(request_url.path):
+            unslug_menu = unslug_url(menu_url.path)
+            unslug_request = unslug_url(request_url.path)
+            if unslug_menu == unslug_request:
                 if not (
                     set(menu_url.decode_query().items(multi=True))
                     <= set(request_url.decode_query().items(multi=True))
@@ -210,6 +242,12 @@ class WebsiteMenu(models.Model):
                     # correct path but not correct domain
                     return False
                 return True
+
+            # Manage the state for the one child case (redirection into the /menu/page)
+            elif (unslug_menu != '/') and re.match(f'{unslug_menu}(/|$)', unslug_request):
+                if self._is_redirection_into_child(unslug_request, request):
+                    return True
+
         else:
             # Child match (dropdown menu), `self` is just a parent/container,
             # don't check its URL, consider only its children
