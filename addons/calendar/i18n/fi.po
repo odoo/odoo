@@ -25,7 +25,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_count
 msgid "# Meetings"
-msgstr "Tapaamisten lkm"
+msgstr "# Tapaamiset"
 
 #. module: calendar
 #. odoo-python
@@ -377,7 +377,7 @@ msgstr ""
 "                                            </div>\n"
 "                                            <t t-if=\"mail_tz\">\n"
 "                                                <div style=\"font-size: 10px; font-weight: normal\">\n"
-"                                                    (<t t-out=\"mail_tz\"> Keski-Euroopan normaaliaika/Bryssel</t>)\n"
+"                                                    (<t t-out=\"mail_tz\"> Europe/Brussels</t>)\n"
 "                                                </div>\n"
 "                                            </t>\n"
 "                                        </t>\n"
@@ -531,14 +531,14 @@ msgstr ""
 "\n"
 "       <t t-if=\"not target_responsible\">\n"
 "           <t t-if=\"not object.event_id.user_id.active\">\n"
-"                Asiakas on kutsunut sinut <strong t-out=\"object.event_id.name or ''\">hanke-ehdotuksen seurantakokoukseen</strong>.\n"
+"                Asiakas on kutsunut sinut <strong t-out=\"object.event_id.name or ''\">Projektiehdotuksen seurantakokoukseen</strong>.\n"
 "           </t>\n"
 "           <t t-else=\"\">\n"
 "               <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> on kutsunut sinut <strong t-out=\"object.event_id.name or ''\">projektiehdotuksen seurantakokoukseen</strong>.\n"
 "           </t>\n"
 "       </t>\n"
 "       <t t-else=\"\">\n"
-"            Kokouksesi <strong t-out=\"object.event_id.name or ''\">Hanke-ehdotuksen seuranta</strong> on varattu.\n"
+"            Tapaamisesi <strong t-out=\"object.event_id.name or ''\">Projektiehdotuksen seuranta</strong> on varattu.\n"
 "       </t>\n"
 "\n"
 "   </p>\n"
@@ -555,19 +555,19 @@ msgstr ""
 "                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''\">Tiistai</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4.</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">Toukokuu 2021</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">toukokuuta, 2021</t>\n"
 "            </div>\n"
 "            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold ; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
 "                <t t-if=\"not object.event_id.allday\">\n"
 "                    <div>\n"
-"                        <t t-out=\"format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''\">11:00 AM</t>\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''\">11:00</t>\n"
 "                    </div>\n"
 "                    <t t-if=\"object.mail_tz\">\n"
 "                        <div style=\"font-size: 10px; font-weight: normal\">\n"
-"                           <t t-out=\"object.mail_tz or ''\">(Eurooppa/Bryssel</t>)\n"
+"                           <t t-out=\"object.mail_tz or ''\">(Euroe/Brussels</t>)\n"
 "                        </div>\n"
 "                    </t>\n"
 "                </t>\n"
@@ -575,7 +575,7 @@ msgstr ""
 "        </td>\n"
 "        <td width=\"20px;\"/>\n"
 "        <td style=\"padding-top: 5px;\">\n"
-"            <p><strong>Tapahtuman yksityiskohdat</strong></p>\n"
+"            <p><strong>Tapahtuman tiedot</strong></p>\n"
 "            <ul>\n"
 "                <t t-if=\"object.event_id.location\">\n"
 "                    <li>Sijainti: <t t-out=\"object.event_id.location or ''\">Bruxelles</t>\n"
@@ -583,7 +583,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>Milloin: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Joka 1 viikko, 3 tapahtumaa</t></li>\n"
+"                    <li>Milloin: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Viikoittain, 3 tapahtumaa</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Kesto: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -603,13 +603,13 @@ msgstr ""
 "                <t t-if=\"object.event_id.videocall_location\">\n"
 "                    <li>\n"
 "                        Miten liittyä:\n"
-"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Liity Odoo Discussin avulla</t>\n"
-"                        <t t-else=\"\"> Liity osoitteessa</t><br/>\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\">Odoo Viestintä</t>\n"
+"                        <t t-else=\"\">Liity osoitteessa</t><br/>\n"
 "                       <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
-"                    <li>Kuvaus tapahtumasta:\n"
+"                    <li>Tapahtuman kuvaus:\n"
 "                   <t t-out=\"object.event_id.description\">Sisäinen kokous, jossa keskustellaan tuotteiden ja palveluiden uudesta hinnoittelusta.</t></li>\n"
 "                </t>\n"
 "            </ul>\n"
@@ -723,15 +723,15 @@ msgstr ""
 "                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) \">Tiistai</t>\n"
 "                    </div>\n"
 "                    <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)\">4</t>\n"
+"                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)\">4.</t>\n"
 "                    </div>\n"
 "                    <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)\">Toukokuuta 2021</t>\n"
+"                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)\">toukokuuta, 2021</t>\n"
 "                    </div>\n"
 "                    <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
 "                        <t t-if=\"not object.allday\">\n"
 "                            <div>\n"
-"                                <t t-out=\"format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</t>\n"
+"                                <t t-out=\"format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00</t>\n"
 "                            </div>\n"
 "                            <t t-if=\"mail_tz\">\n"
 "                                <div style=\"font-size: 10px; font-weight: normal\">\n"
@@ -744,7 +744,7 @@ msgstr ""
 "                <td width=\"20px;\"/>\n"
 "                <td style=\"padding-top: 5px;\">\n"
 "                    <p>\n"
-"                        <strong>Tapahtuman yksityiskohdat</strong>\n"
+"                        <strong>Tapahtuman tiedot</strong>\n"
 "                    </p>\n"
 "                    <ul>\n"
 "                        <t t-if=\"not is_html_empty(object.description)\">\n"
@@ -753,8 +753,8 @@ msgstr ""
 "                        </t>\n"
 "                        <t t-if=\"object.videocall_location\">\n"
 "                            <li>\n"
-"                                Miten osallistua:\n"
-"                                <t t-if=\"object.get_base_url() in object.videocall_location\"> Liity Odoo Discussin kautta</t>\n"
+"                                Miten liittyä:\n"
+"                                <t t-if=\"object.get_base_url() in object.videocall_location\">Odoo Viestintä</t>\n"
 "                                <t t-else=\"\"> Liity osoitteessa</t><br/>\n"
 "                               <a t-att-href=\"object.videocall_location\" target=\"_blank\" t-out=\"object.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
 "                            </li>\n"
@@ -765,7 +765,7 @@ msgstr ""
 "                            </li>\n"
 "                        </t>\n"
 "                        <t t-if=\"recurrent\">\n"
-"                            <li>Milloin: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Joka 1 viikko, 3 tapahtumaa</t></li>\n"
+"                            <li>Milloin: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Viikoittain, 3 tapahtumaa</t></li>\n"
 "                        </t>\n"
 "                        <t t-if=\"not object.allday and object.duration\">\n"
 "                            <li>Kesto:\n"
@@ -928,12 +928,12 @@ msgstr ""
 "            <p><strong>Tapahtuman yksityiskohdat</strong></p>\n"
 "            <ul>\n"
 "                <t t-if=\"object.event_id.location\">\n"
-"                    <li>Sijainti: <t t-out=\"object.event_id.location or ''\">Bruxelles</t>\n"
+"                    <li>Sijainti: <t t-out=\"object.event_id.location or ''\">Bryssel</t>\n"
 "                       <a target=\"_blank\" t-if=\"not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\">(Näytä kartta)</a>\n"
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>Milloin: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Joka 1 viikko, 3 tapahtumaa</t></li>\n"
+"                    <li>Milloin: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Viikoittain, 3 tapahtumaa</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Kesto: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -953,7 +953,7 @@ msgstr ""
 "                <t t-if=\"object.event_id.videocall_location\">\n"
 "                    <li>\n"
 "                        Miten liittyä:\n"
-"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Liity Odoo Discussin avulla</t>\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Odoo Viestintä</t>\n"
 "                        <t t-else=\"\"> Liity osoitteessa</t><br/>\n"
 "                       <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
 "                    </li>\n"
@@ -1034,12 +1034,12 @@ msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> tai </span>"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span> Attendees</span>"
-msgstr "<span> Osallistujat</span>"
+msgstr "<span>Osallistujat</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span> hours</span>"
-msgstr "<span> tuntia</span>"
+msgstr "<span>tunnit</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
@@ -1085,7 +1085,7 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Toiminnot voivat laukaista tietyn toiminnan, kuten kalenterinäkymän "
+"Toiminnot voivat laukaista tietynlaisen toiminnon, kuten kalenterinäkymän "
 "avaamisen tai automaattisesti valmiiksi merkinnän, kun asiakirja on ladattu"
 
 #. module: calendar
@@ -1201,17 +1201,17 @@ msgstr "Osallistuuko?"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
 msgid "Available"
-msgstr "Saatavilla"
+msgstr "Käytettävissä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Available/Busy"
-msgstr "Käytettävissä / varattu"
+msgstr "Käytettävissä/Varattu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__awaiting_count
 msgid "Awaiting Count"
-msgstr "Odottaa laskua"
+msgstr "Odottavien määrä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -1242,7 +1242,7 @@ msgstr "Päivittäin"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "Bye-bye, record!"
-msgstr "Tietue poistetaan!"
+msgstr "Hyvästi, kirjaus!"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
@@ -1264,7 +1264,7 @@ msgstr "Kalenterihälytys"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Osallistujan tiedot kalenterissa"
+msgstr "Kalenterin osallistujatiedot"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_default_privacy
@@ -1314,7 +1314,7 @@ msgstr "Kalenteriasetukset"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
 msgid "Calendar: Date Updated"
-msgstr "Kalenteri: Päivä päivitetty"
+msgstr "Kalenteri: Päivämäärä päivitetty"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
@@ -1324,7 +1324,7 @@ msgstr "Kalenteri: Tapahtuma poistettu"
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 msgid "Calendar: Event Reminder"
-msgstr "Kalenteri: Tapahtuman muistutus"
+msgstr "Kalenteri: Tapahtumamuistutus"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
@@ -1334,7 +1334,7 @@ msgstr "Kalenteri: Tapahtuman päivitys"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr "Kalenteri: Kokouskutsu"
+msgstr "Kalenteri: Kutsu tapaamiseen"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
@@ -1377,14 +1377,14 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
-"Valitse, mitä tehdään muille tapahtumille, jotka ovat toistumisen aikaan. "
-"Kaikkien tapahtumien päivittäminen ei ole sallittua, kun päivämääriä tai "
-"kellonaikaa muutetaan"
+"Valitse, mitä tehdään muille tapahtumille toistuvuudessa. Kaikkien "
+"tapahtumien päivittäminen ei ole sallittua, kun päivämääriä tai kellonaikaa "
+"muutetaan"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Client ID"
-msgstr "Asiakkaan tunniste/ID"
+msgstr "Asiakkaan tunnus/ID"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -1404,7 +1404,7 @@ msgstr "Yleinen nimi"
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_menu_config
 msgid "Configuration"
-msgstr "Asetukset"
+msgstr "Kokoonpanoasetukset"
 
 #. module: calendar
 #. odoo-javascript
@@ -1478,7 +1478,7 @@ msgstr "Nykyinen osallistuja"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__videocall_source__custom
 msgid "Custom"
-msgstr "Mukautettu"
+msgstr "Räätälöi"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__daily
@@ -1539,13 +1539,12 @@ msgstr "Oletus"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Default Privacy"
-msgstr "Oletusasetus julkaisun yksityisyydelle"
+msgstr "Yksityisyysasetuksen oletus"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
 msgid "Default privacy setting for whom the calendar events will be visible."
-msgstr ""
-"Oletusarvoinen yksityisyysasetus, jonka mukaan kalenteritapahtumat näkyvät."
+msgstr "Oletusyksityisyysasetus, jonka mukaan kalenteritapahtumat näkyvät."
 
 #. module: calendar
 #. odoo-javascript
@@ -1587,7 +1586,7 @@ msgstr "Poistettu tapahtuma: {{ object.name }}"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Describe your meeting"
-msgstr "Kuvaile kokousta"
+msgstr "Kuvaile tapaamistasi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1645,12 +1644,12 @@ msgstr "Näyttönimi"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
 msgid "Document ID"
-msgstr "Dokumentin ID"
+msgstr "Asiakirjan tunnus"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
 msgid "Document Model"
-msgstr "Dokumentin malli"
+msgstr "Asiakirjan mallipohja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
@@ -1671,7 +1670,7 @@ msgstr "Kesto"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration_minutes
 msgid "Duration in minutes"
-msgstr "Kesto minuuteissa"
+msgstr "Kesto minuutteina"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1724,7 +1723,7 @@ msgstr "Päättymispäivä"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
 msgid "End Type"
-msgstr "Lopputyyppi"
+msgstr "Päättymistyyppi"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -1740,7 +1739,7 @@ msgstr "Tapahtuman hälytys"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr "Hälytysten hallinta"
+msgstr "Tapahtuman hälytysten hallinta"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
@@ -1750,7 +1749,7 @@ msgstr "Ohjattu \"Tapahtuman peruutus\" -toiminto"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr "Tapahtumakokouksen tyyppi"
+msgstr "Tapahtuman tapaamisen tyyppi"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
@@ -1778,31 +1777,32 @@ msgstr "Joka %(interval)s päivä %(count)s tapahtumaa varten"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days until %(until)s"
-msgstr "Joka %(interval)s päivä, kunnes %(until)s"
+msgstr "Joka %(interval)s päivä, aina %(until)s saakka"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s"
-msgstr "Joka %(interval)s kuukausi päivä %(day)s"
+msgstr "Joka %(interval)s kuukausi, %(day)s päivää"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s for %(count)s events"
-msgstr "Joka %(interval)s kuukauden päivä %(day)s %(count)s tapahtuman osalta"
+msgstr ""
+"Joka %(interval)s kuukausi, %(day)s päivää %(count)s tapahtuman verran"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s until %(until)s"
-msgstr "Joka %(interval)s kuukausi päivä %(day)s kunnes %(until)s"
+msgstr "Joka %(interval)s kuukausi, %(day)s päivää, %(until)s saakka"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
-msgstr "Joka %(interval)s kuukausi %(position)s %(weekday)s"
+msgstr "Joka %(interval)s kuukausi, %(position)s %(weekday)s"
 
 #. module: calendar
 #. odoo-python
@@ -1811,26 +1811,29 @@ msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
 msgstr ""
-"Joka %(interval)s kuukausi %(position)s %(weekday)s %(count)s -tapahtumissa"
+"Joka %(interval)s kuukausi, %(position)s %(weekday)s %(count)s tapahtuman "
+"verran"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
-msgstr "Joka %(interval)s kuukausi %(position)s %(weekday)s kunnes %(until)s"
+msgstr ""
+"Joka %(interval)s kuukausi, %(position)s %(weekday)s,  %(until)s saakka"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s"
-msgstr "Joka %(interval)s viikko %(days)s:llä"
+msgstr "Joka %(interval)s viikko päivänä %(days)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
-msgstr "Joka %(interval)s viikko %(days)s ja %(count)s tapahtuman välillä"
+msgstr ""
+"Joka %(interval)s viikko, päivänä %(days)s, %(count)s tapahtuman verran"
 
 #. module: calendar
 #. odoo-python
@@ -1848,13 +1851,13 @@ msgstr "Joka %(interval)s vuosi"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years for %(count)s events"
-msgstr "Joka %(interval)s vuosi %(count)s tapahtumaa varten"
+msgstr "Joka %(interval)s vuosi, %(count)s tapahtuman verran"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years until %(until)s"
-msgstr "Joka %(interval)s vuosi, kunnes %(until)s"
+msgstr "Joka %(interval)s vuosi, %(until)s saakka"
 
 #. module: calendar
 #. odoo-python
@@ -1877,7 +1880,7 @@ msgstr "Ensin sinun pitää määritellä kutsulle päivä."
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
 msgid "Follow Recurrence"
-msgstr "Seuraa toistumista"
+msgstr "Seuraa toistuvuutta"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
@@ -1989,7 +1992,7 @@ msgstr "Tunnit"
 #: model:ir.model.fields,field_description:calendar.field_res_users__id
 #: model:ir.model.fields,field_description:calendar.field_res_users_settings__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
@@ -2007,8 +2010,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Jos aktiivinen-kentän arvoksi asetetaan false, voit piilottaa "
-"tapahtumahälytystiedot poistamatta niitä."
+"Jos aktiivinen-kentän arvoksi asetetaan epätosi, voit piilottaa "
+"tapahtumahälytysten tiedot poistamatta niitä."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
@@ -2016,7 +2019,7 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the event is shown as 'free', other users know         that you are available during that period of time."
 msgstr ""
-"Jos kellonaika on \"varattu\", tapahtuma näkyy muille henkilöille joko täydellisinä tietoina tai vain \"varattu\" -merkinnällä, riippuen sen yksityisyydestä. Käytä tätä vaihtoehtoa, jos haluat ilmoittaa muille ihmisille, että et ole tavoitettavissa kyseisenä aikana.\n"
+"Jos aika näytetään \"varattu\", näytetään muille henkilöille joko tapahtuma täydet tiedot tai vain \"varattu\" -merkinnällä, riippuen sen yksityisyydestä. Käytä tätä vaihtoehtoa, jos haluat ilmoittaa muille ihmisille, että et ole käytettävissä kyseisenä aikana.\n"
 " Jos tapahtuma näkyy merkinnällä \"vapaa\", muut käyttäjät tietävät, että olet käytettävissä kyseisenä aikana."
 
 #. module: calendar
@@ -2027,7 +2030,7 @@ msgstr "Aikaväli"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
 msgid "Invalid Email Partner"
-msgstr "Virheellinen partnerin sähköpostiosoite"
+msgstr "Virheellinen kumppanin sähköpostiosoite"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -2038,12 +2041,12 @@ msgstr "Kutsu"
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__access_token
 msgid "Invitation Token"
-msgstr "Kutsuavain"
+msgstr "Kutsun pääsytunnus"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
-msgstr "Kutsun yksityiskohdat"
+msgstr "Kutsun tiedot"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_invitation
@@ -2252,7 +2255,7 @@ msgstr "Maanantai"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__month_by
 msgid "Month By"
-msgstr "Kuukausittain"
+msgstr "Kuukaudet"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__monthly
