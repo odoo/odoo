@@ -1588,9 +1588,16 @@ class Website(models.Model):
         if query_string:
             domain += [('url', 'like', query_string)]
 
+        # ==== User Defined Redirections ====
+        redirects = self.env["website.rewrite"].sudo().search([])
+
         pages = self._get_website_pages(domain)
 
+        redirect_map = {r.url_from: r.url_to for r in redirects}
         for page in pages:
+            if page.url in redirect_map:
+                yield {"loc": redirect_map[page.url]}
+                continue
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
