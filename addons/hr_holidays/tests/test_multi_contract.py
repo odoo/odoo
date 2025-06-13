@@ -58,7 +58,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
         # begins during contract, ends after contract => should not raise
         self.contract_cdi.date_end = datetime.strptime('2015-11-30', '%Y-%m-%d').date()
         start = datetime.strptime('2015-11-25 07:00:00', '%Y-%m-%d %H:%M:%S')
-        end = datetime.strptime('2015-12-5 18:00:00', '%Y-%m-%d %H:%M:%S')
+        end = datetime.strptime('2015-12-05 18:00:00', '%Y-%m-%d %H:%M:%S')
         self.create_leave(start, end, name="Doctor Appointment", employee_id=self.jules_emp.id)
 
     def test_no_leave_overlapping_contracts(self):
@@ -199,14 +199,14 @@ class TestHolidaysMultiContract(TestHolidayContract):
             {
                 'employee_id': employee.id,
                 'holiday_status_id': leave_type.id,
-                'request_date_from': '2023-1-3',  # Tuesday
-                'request_date_to': '2023-1-5',  # Thursday
+                'request_date_from': '2023-01-03',  # Tuesday
+                'request_date_to': '2023-01-05',  # Thursday
             },
             {
                 'employee_id': employee.id,
                 'holiday_status_id': leave_type.id,
-                'request_date_from': '2023-12-5',  # Tuesday
-                'request_date_to': '2023-12-7',  # Thursday
+                'request_date_from': '2023-12-05',  # Tuesday
+                'request_date_to': '2023-12-07',  # Thursday
             },
         ])
         self.assertEqual(leave_during_full_time.number_of_days, 3)

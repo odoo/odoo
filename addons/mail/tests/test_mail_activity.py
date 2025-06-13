@@ -20,7 +20,7 @@ class TestMailActivityChatter(HttpCase):
         )
 
     def test_mail_activity_date_format(self):
-        with freeze_time("2024-1-1 09:00:00 AM"):
+        with freeze_time("2024-01-01 09:00:00 AM"):
             LANG_CODE = "en_US"
             self.env = self.env(context={"lang": LANG_CODE})
             testuser = self.env['res.users'].create({

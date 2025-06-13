@@ -428,8 +428,7 @@ class TestHrAttendanceOvertime(TransactionCase):
                                                               ('date', '=', datetime(2024, 5, 29))])
         self.assertAlmostEqual(overtime_record2.duration, 5)
 
-
-    @freeze_time("2024-02-1 23:00:00")
+    @freeze_time("2024-02-01 23:00:00")
     def test_auto_check_out(self):
         self.company.write({
             'auto_check_out': True,
@@ -540,7 +539,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             self.assertEqual(att.worked_hours, 8)
             self.assertEqual(att.check_out, datetime(2025, 3, 12, 17, 0))
 
-    @freeze_time("2024-02-1 14:00:00")
+    @freeze_time("2024-02-01 14:00:00")
     def test_absence_management(self):
         self.company.write({
             'absence_management': True,

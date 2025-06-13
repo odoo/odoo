@@ -261,9 +261,9 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         })
 
         logged_in_emp = self.env.user.employee_id
-        with freeze_time("2024-1-1"):
+        with freeze_time("2024-01-01"):
             allocation_with_carryover = self.env['hr.leave.allocation'].sudo().create({
-                'date_from': '2024-1-1',
+                'date_from': '2024-01-01',
                 'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan_1.id,
                 'holiday_status_id': self.leave_type.id,
@@ -273,12 +273,12 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             leave = self.env['hr.leave'].create({
                 'employee_id': logged_in_emp.id,
                 'holiday_status_id': self.leave_type.id,
-                'request_date_from': '2025-12-1',
-                'request_date_to': '2025-12-5'
+                'request_date_from': '2025-12-01',
+                'request_date_to': '2025-12-05'
             })
             # The expiring allocation
             self.env['hr.leave.allocation'].sudo().create({
-                'date_from': '2024-1-1',
+                'date_from': '2024-01-01',
                 'date_to': '2025-12-31',
                 'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan_2.id,
@@ -389,7 +389,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         If the target date is 01/01/2025, then the expiration date should be 01/01/2026 because 5 of the days
         accrued on 01/01/2025 will expire on 01/01/2026.
         """
-        with freeze_time('2024-1-01'):
+        with freeze_time('2024-01-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).sudo().create({
                 'name': 'Test Accrual Plan',
                 'carryover_date': 'year_start',
@@ -469,10 +469,10 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         })
 
         logged_in_emp = self.env.user.employee_id
-        with freeze_time("2023-1-1"):
+        with freeze_time("2023-01-01"):
             # Allocation 1
             self.env['hr.leave.allocation'].sudo().create({
-                'date_from': '2023-1-1',
+                'date_from': '2023-01-01',
                 'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan.id,
                 'holiday_status_id': self.leave_type.id,
@@ -481,8 +481,8 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             })
             # Allocation 2
             self.env['hr.leave.allocation'].sudo().create({
-                'date_from': '2023-1-1',
-                'date_to': '2024-10-1',
+                'date_from': '2023-01-01',
+                'date_to': '2024-10-01',
                 'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan.id,
                 'holiday_status_id': self.leave_type.id,
@@ -490,7 +490,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'number_of_days': 0,
             })
 
-        with freeze_time("2024-1-1"):
+        with freeze_time("2024-01-01"):
             self.env['hr.leave.allocation'].with_user(self.user_hruser)._update_accrual()
 
         target_date = date(2024, 1, 1)
@@ -714,11 +714,11 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         })
 
         logged_in_emp = self.env.user.employee_id
-        with freeze_time("2023-1-1"):
+        with freeze_time("2023-01-01"):
             # Allocation 1
             self.env['hr.leave.allocation'].sudo().create({
-                'date_from': '2023-1-1',
-                'date_to': '2024-10-1',
+                'date_from': '2023-01-01',
+                'date_to': '2024-10-01',
                 'allocation_type': 'accrual',
                 'accrual_plan_id': accrual_plan_without_accrual_validity.id,
                 'holiday_status_id': self.leave_type.id,
@@ -727,7 +727,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             })
             # Allocation 2
             self.env['hr.leave.allocation'].sudo().create({
-                'date_from': '2023-1-1',
+                'date_from': '2023-01-01',
                 'allocation_type': 'accrual',
                 'accrual_plan_id': self.accrual_plan_with_accrual_validity.id,
                 'holiday_status_id': self.leave_type.id,
@@ -735,7 +735,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'number_of_days': 0,
             })
 
-        with freeze_time("2024-4-1"):
+        with freeze_time("2024-04-01"):
             self.env['hr.leave.allocation'].with_user(self.user_hruser)._update_accrual()
 
         target_date = date(2024, 4, 1)
@@ -772,9 +772,9 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         """
 
         logged_in_emp = self.env.user.employee_id
-        with freeze_time("2023-1-1"):
+        with freeze_time("2023-01-01"):
             self.env['hr.leave.allocation'].sudo().create({
-                'date_from': '2023-1-1',
+                'date_from': '2023-01-01',
                 'allocation_type': 'accrual',
                 'accrual_plan_id': self.accrual_plan_with_accrual_validity.id,
                 'holiday_status_id': self.leave_type.id,
@@ -782,7 +782,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'number_of_days': 0,
             })
 
-        with freeze_time("2024-4-1"):
+        with freeze_time("2024-04-01"):
             self.env['hr.leave.allocation'].with_user(self.user_hruser)._update_accrual()
             leave = self.env['hr.leave'].create({
                 'name': 'leave',
