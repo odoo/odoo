@@ -3,6 +3,7 @@ import pytz
 
 from collections import namedtuple, defaultdict
 
+import babel.dates
 from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from math import ceil
@@ -17,7 +18,7 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_utils import float_to_time
 from odoo.tools.float_utils import float_round, float_compare
-from odoo.tools.misc import format_date
+from odoo.tools.misc import format_date, get_lang
 from odoo.tools.translate import _
 from odoo.osv import expression
 
@@ -1460,7 +1461,9 @@ is approved, validated or refused.')
             to_do_confirm_activity.activity_feedback(['hr_holidays.mail_act_leave_approval'])
         if to_do:
             to_do.activity_feedback(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
-        self.env['mail.activity'].with_context(short_name=False).create(activity_vals)
+        self.env['mail.activity'].with_context(short_name=False, mail_activity_quick_update=True).create(activity_vals)
+        if activity_vals:
+            self._notify_leave_request()
 
     ####################################################
     # Messaging methods
@@ -1495,6 +1498,48 @@ is approved, validated or refused.')
             self.check_access('read')
             return super(HrLeave, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         return super().message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
+
+    def _notify_leave_request(self):
+        """Notifies the responsible approver(s) when an employee applies for leave."""
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
+        locale = get_lang(self.env).code
+        ticket_model_description = self.env['ir.model']._get(self._name).display_name
+        subject = self.env.ref('hr_holidays.new_timeoff_request_template')._render_field('subject', self.ids, compute_lang=True)
+        for holiday in self:
+            if holiday.holiday_status_id.leave_validation_type == 'no_validation':
+                continue
+
+            partner_ids = holiday.sudo()._get_responsible_for_approval().mapped('partner_id')
+
+            if not partner_ids:
+                continue
+            leave_msg = self.env.ref('hr_holidays.new_timeoff_request_template').with_context(
+                manager=', '.join(partner_ids.mapped('name'))
+            )._render_field(
+                'body_html',
+                self.ids,
+                compute_lang=True
+            )[holiday.id]
+
+            subtitles = [
+                _('%(employee_name)s requested a time-off \n',
+                    employee_name=holiday.employee_id.name),
+                _('%(start_date)s → %(end_date)s (%(duration)s)',
+                    start_date=babel.dates.format_date(holiday.request_date_from, 'MMM dd', locale=locale),
+                    end_date=babel.dates.format_date(holiday.request_date_to, 'MMM dd', locale=locale),
+                    duration=holiday.duration_display)
+            ]
+            self.message_notify(
+                subject=subject[holiday.id],
+                body=leave_msg,
+                partner_ids=partner_ids.ids,
+                record_name=holiday.display_name,
+                email_layout_xmlid='mail.mail_notification_layout',
+                model_description=ticket_model_description,
+                subtitles=subtitles,
+            )
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
