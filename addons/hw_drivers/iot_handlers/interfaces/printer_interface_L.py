@@ -1,9 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from cups import Connection as CupsConnection
+from itertools import groupby
 from re import sub
 from threading import Lock
-from urllib.parse import urlsplit, parse_qs
+from urllib.parse import urlsplit, parse_qs, unquote
+from zeroconf import (
+    IPVersion,
+    ServiceBrowser,
+    ServiceStateChange,
+    Zeroconf,
+)
 import logging
 import pyudev
 
@@ -41,6 +48,7 @@ class PrinterInterface(Interface):
         for path, device in devices.items():
             identifier, device = self.process_device(path, device)
             discovered_devices.update({identifier: device})
+        discovered_devices = self.deduplicate_printers(discovered_devices, self.printer_devices)
         self.printer_devices.update(discovered_devices)
         # Deal with devices which are on the list but were not found during this call of "get_devices"
         # If they aren't detected 3 times consecutively, remove them from the list of available devices
@@ -85,9 +93,15 @@ class PrinterInterface(Interface):
         """
         return sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)
 
-    @staticmethod
-    def get_ip(device_path):
-        return urlsplit(device_path).hostname
+    def get_ip(self, device_path):
+        hostname = urlsplit(device_path).hostname
+
+        if hostname and hostname.endswith(".local"):
+            zeroconf_name = unquote(hostname.lower()) + "."
+            if zeroconf_name in self.printer_ip_map:
+                return self.printer_ip_map[zeroconf_name]
+
+        return hostname
 
     @staticmethod
     def get_usb_info(device_path):
@@ -105,6 +119,32 @@ class PrinterInterface(Interface):
             }
         else:
             return {}
+
+    @staticmethod
+    def deduplicate_printers(discovered_printers, current_printers):
+        result = []
+        sorted_printers = sorted(discovered_printers.values(), key=lambda printer: str(printer.get('ip')))
+
+        for ip, printers_with_same_ip in groupby(sorted_printers, lambda printer: printer.get('ip')):
+            printers_with_same_ip = list(printers_with_same_ip)
+            if ip is None or len(printers_with_same_ip) == 1:
+                result += printers_with_same_ip
+                continue
+
+            existing_printer = next((printer for printer in current_printers.values() if printer.get('ip') == ip), None)
+            if existing_printer:
+                result.append(existing_printer)
+                continue
+
+            chosen_printer = next((
+                printer for printer in printers_with_same_ip
+                if 'CMD:' in printer['device-id'] or 'ZPL' in printer['device-id']
+                ), None)
+            if not chosen_printer:
+                chosen_printer = printers_with_same_ip[0]
+            result.append(chosen_printer)
+
+        return {printer['identifier']: printer for printer in result}
 
     def monitor_for_printers(self):
         context = pyudev.Context()
@@ -136,6 +176,27 @@ class PrinterInterface(Interface):
         observer = pyudev.MonitorObserver(monitor, callback=on_device_change)
         observer.start()
 
+    def start_zeroconf_listener(self):
+        self.printer_ip_map = {}
+        service_types = [
+            "_printer._tcp.local.",
+            "_pdl-datastream._tcp.local.",
+            "_ipp._tcp.local.",
+            "_ipps._tcp.local.",
+        ]
+
+        def on_service_change(zeroconf, service_type, name, state_change):
+            if state_change is not ServiceStateChange.Added:
+                return
+            info = zeroconf.get_service_info(service_type, name)
+            if info and info.addresses:
+                address = info.parsed_addresses(IPVersion.V4Only)[0]
+                self.printer_ip_map[name.lower()] = address
+
+        zeroconf = Zeroconf(ip_version=IPVersion.V4Only)
+        self.zeroconf_browser = ServiceBrowser(zeroconf, service_types, handlers=[on_service_change])
+
     def start(self):
         super().start()
+        self.start_zeroconf_listener()
         self.monitor_for_printers()
