@@ -6,6 +6,8 @@ from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
+from odoo.tools import format_date
+
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.float_utils import float_round
@@ -171,19 +173,27 @@ class HrLeaveAllocation(models.Model):
     @api.depends('name', 'date_from', 'date_to')
     def _compute_description_validity(self):
         for allocation in self:
-            date_from = allocation.date_from or fields.Date.context_today(allocation)
+            allocation_date_from = fields.Datetime.to_datetime(allocation.date_from or fields.Date.context_today(allocation))
+            allocation_date_to = fields.Datetime.to_datetime(allocation.date_to)
+
             if allocation.date_to:
-                name_validity = _(
+                name_validity = self.env._(
                     "%(allocation_name)s (from %(date_from)s to %(date_to)s)",
                     allocation_name=allocation.name,
-                    date_from=date_from.strftime("%b %d %Y"),
-                    date_to=allocation.date_to.strftime("%b %d %Y"),
+                    date_from=format_date(allocation.env,
+                        fields.Date.context_today(allocation, allocation_date_from),
+                    ),
+                    date_to=format_date(allocation.env,
+                        fields.Date.context_today(allocation, allocation_date_to),
+                    ),
                 )
             else:
-                name_validity = _(
+                name_validity = self.env._(
                     "%(allocation_name)s (from %(date_from)s to No Limit)",
                     allocation_name=allocation.name,
-                    date_from=date_from.strftime("%b %d %Y"),
+                    date_from=format_date(allocation.env,
+                        fields.Date.context_today(allocation, allocation_date_from),
+                    ),
                 )
             allocation.name_validity = name_validity
 
