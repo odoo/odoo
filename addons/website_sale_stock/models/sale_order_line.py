@@ -8,10 +8,14 @@ class SaleOrderLine(models.Model):
 
     def _set_shop_warning_stock(self, desired_qty, new_qty):
         self.ensure_one()
-        self.shop_warning = self.env._(
-            "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is available",
-            desired_qty=desired_qty, product_name=self.product_id.name, new_qty=new_qty
-        )
+        if new_qty <= 0.0:
+            self.shop_warning = self.env._("This product is no longer available.")
+        else:
+            self.shop_warning = self.env._(
+                "You requested %(desired_qty)s %(product_name)s, but only %(new_qty)s are available"
+                " in stock",
+                desired_qty=desired_qty, product_name=self.product_id.name, new_qty=new_qty
+            )
 
     def _get_max_line_qty(self):
         max_quantity = self._get_max_available_qty()
@@ -34,6 +38,12 @@ class SaleOrderLine(models.Model):
         return min(max_quantities, default=None)
 
     def _check_availability(self):
+        """Whether the current order line is available on the website.
+
+        Note: self.ensure_one()
+
+        :rtype: bool
+        """
         self.ensure_one()
         if self.product_id.is_storable and not self.product_id.allow_out_of_stock_order:
             cart_qty, avl_qty = self.order_id._get_cart_and_free_qty(self.product_id)

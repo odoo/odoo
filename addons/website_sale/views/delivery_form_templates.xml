@@ -35,7 +35,7 @@
         />
         <div class="row flex-column flex-md-row flex-grow-1 gap-lg-3">
             <div class="col">
-                <div class="d-flex form-check mb-0 gap-2">
+                <div class="d-flex form-check mb-0 gap-2 align-items-center">
                     <!-- === Radio button === -->
                     <input
                         t-attf-id="o_delivery_{{dm.id}}"
@@ -43,7 +43,7 @@
                         type="radio"
                         t-att-checked="is_selected"
                         disabled="true"
-                        class="form-check-input position-absolute"
+                        class="form-check-input my-0"
                         t-att-data-dm-id="dm.id"
                         t-att-data-delivery-type="dm.delivery_type"
                         t-att-data-is-pickup-location-required="is_pickup_needed"
