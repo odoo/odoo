@@ -124,7 +124,7 @@ class ResPartnerBank(models.Model):
                 return {}
             return {
                 'barcode_type': 'QR',
-                'quiet': False,
+                'quiet': 0,
                 'width': 120,
                 'height': 120,
                 'value': self._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication),
