@@ -58,7 +58,7 @@ class EventRegistration(models.Model):
     # organization
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
-        readonly=False, store=True)
+        readonly=False, store=True, tracking=True)
     event_begin_date = fields.Datetime("Event Start Date", compute="_compute_event_begin_date", search="_search_event_begin_date")
     event_end_date = fields.Datetime("Event End Date", compute="_compute_event_end_date")
     event_date_range = fields.Char("Date Range", compute="_compute_date_range")
@@ -159,11 +159,11 @@ class EventRegistration(models.Model):
     @api.depends('state')
     def _compute_date_closed(self):
         for registration in self:
-            if not registration.date_closed:
-                if registration.state == 'done':
+            if registration.state == 'done':
+                if not registration.date_closed or registration.date_closed.date() != fields.Date.today():
                     registration.date_closed = self.env.cr.now()
-                else:
-                    registration.date_closed = False
+            else:
+                registration.date_closed = False
 
     @api.depends("event_id", "event_slot_id", "partner_id")
     def _compute_date_range(self):
@@ -456,7 +456,9 @@ class EventRegistration(models.Model):
             'registration_answers': self.registration_answer_ids.filtered('value_answer_id').mapped('display_name'),
             'company_name': self.company_name,
             'iot_printers': iot_printers,
-            'badge_format': self.event_id.badge_format
+            'badge_format': self.event_id.badge_format,
+            'date_closed': self.date_closed.strftime("%d/%m/%Y") if self.date_closed else False,
+            'is_date_closed_today': fields.Date.today() == self.date_closed.date() if self.date_closed else False,
         }
 
     def _get_registration_print_details(self):

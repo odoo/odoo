@@ -3,11 +3,13 @@
 
 from datetime import date, datetime, timedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.event.tests.common import EventCase
 from odoo import exceptions
 from odoo.fields import Datetime as FieldsDatetime
+from odoo.sql_db import Cursor
 from odoo.tests import Form, users, tagged
 from odoo.tools import mute_logger
 
@@ -713,6 +715,43 @@ class TestEventData(TestEventInternalsCommon):
 
 @tagged('event_registration')
 class TestEventRegistrationData(TestEventInternalsCommon):
+
+    @users('user_eventmanager')
+    def test_registration_date_closed(self):
+        """Test changes in date_closed field when state is changed."""
+        with freeze_time('2025-05-02 17:00:00'), \
+            patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2025, 5, 2, 17, 0)):
+
+            event = self.env['event.event'].create({
+                'name': 'Test Event',
+                'date_begin': FieldsDatetime.to_string(datetime.now()),
+                'date_end': FieldsDatetime.to_string(datetime.now() + timedelta(days=2)),
+            })
+            attendee = self.env['event.registration'].create({
+                'name': 'Test Registration',
+                'event_id': event.id,
+                'create_date': FieldsDatetime.to_string(datetime.now()),
+                'state': 'done',
+            })
+            self.assertEqual(attendee.date_closed, datetime.now())
+
+        with freeze_time('2025-05-03 17:00:00'), \
+            patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2025, 5, 3, 17, 0)):
+
+            attendee.action_set_done()
+            self.assertEqual(attendee.date_closed, datetime.now(),
+                'date_closed is updated when state changed on different date')
+
+        with freeze_time('2025-05-03 18:00:00'), \
+            patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2025, 5, 3, 18, 0)):
+
+            attendee.action_set_done()
+            self.assertEqual(attendee.date_closed, datetime(2025, 5, 3, 17, 0),
+                'date_closed should not be updated if already set on the same day')
+
+            attendee.action_cancel()
+            self.assertFalse(attendee.date_closed,
+                'date_closed is set to False when stage is not equal to done')
 
     @users('user_eventmanager')
     def test_registration_partner_sync(self):
