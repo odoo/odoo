@@ -4082,3 +4082,38 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave.action_approve()
             allocation_data = leave_type_day.get_allocation_data(self.employee_emp)
             self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 1)
+
+    def test_accrual_allocation_with_monthly_31st_milestone(self):
+        '''
+        Test that an accrual allocation with a monthly milestone on the 31st correctly accrues 2 days by the end of January.
+        This test verifies that when an accrual plan is configured to grant 2 days monthly on the 31st of each month,
+        and the gain time is set to 'end' of the period, an allocation starting on January 1st correctly accrues
+        2 days by January 31st.
+        '''
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': '31st Monthly Plan',
+            'accrued_gain_time': 'end',
+            'carryover_date': 'allocation',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': 2,
+                'added_value_type': 'day',
+                'frequency': 'monthly',
+                'first_day': '31',
+                'cap_accrued_time': True,
+                'maximum_leave': 10000,
+            })],
+        })
+
+        with (freeze_time('2025-01-31')):
+            allocation = self.env['hr.leave.allocation'].new({
+                'name': 'January Allocation',
+                'employee_id': self.employee_emp.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'date_from': date(2025, 1, 1),
+                'holiday_status_id': self.leave_type.id,
+            })
+            allocation._onchange_date_from()
+            self.assertEqual(allocation.number_of_days, 2.0)
