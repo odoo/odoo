@@ -6,6 +6,7 @@ import {
     normalizeColor,
 } from "@html_builder/utils/utils_css";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { getValueFromVar } from "@html_builder/utils/utils";
 
 export function withoutTransition(editingElement, callback) {
     if (editingElement.classList.contains("o_we_force_no_transition")) {
@@ -170,8 +171,7 @@ class DataAttributeAction extends BuilderAction {
     }
     isApplied({ editingElement, params: { mainParam: attributeName } = {}, value }) {
         if (value) {
-            const match = value.match(/^var\(--(.*)\)$/);
-            value = match ? match[1] : value;
+            value = getValueFromVar(value.toString());
             return editingElement.dataset[attributeName] === value;
         } else {
             return !(attributeName in editingElement.dataset);
@@ -179,8 +179,7 @@ class DataAttributeAction extends BuilderAction {
     }
     apply({ editingElement, params: { mainParam: attributeName } = {}, value }) {
         if (value) {
-            const match = value.match(/^var\(--(.*)\)$/);
-            value = match ? match[1] : value;
+            value = getValueFromVar(value.toString());
             editingElement.dataset[attributeName] = value;
         } else {
             delete editingElement.dataset[attributeName];
