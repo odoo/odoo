@@ -679,3 +679,24 @@ class TestStockLot(TestStockCommon):
         delivery.action_confirm()
 
         self.assertAlmostEqual(delivery.move_line_ids[0].expiration_date, expiration_date, delta=delta)
+
+    def test_compute_display_name(self):
+        apple_lot1 = self.LotObj.create({
+            'name': 'LOT-00001',
+            'product_id': self.apple_product.id,
+            'expiration_date': False,
+            'alert_date': False,
+        })
+        apple_lot2 = self.LotObj.create({
+            'name': 'LOT-00002',
+            'product_id': self.apple_product.id,
+            'expiration_date': datetime.today() - timedelta(days=10),
+        })
+        apple_lot3 = self.LotObj.create({
+            'name': 'LOT-00003',
+            'product_id': self.apple_product.id,
+            'alert_date': datetime.today() - timedelta(days=10),
+        })
+        self.assertEqual(apple_lot1.with_context(formatted_display_name=True).display_name, "LOT-00001")
+        self.assertEqual(apple_lot2.with_context(formatted_display_name=True).display_name, "LOT-00002\t--Expired--")
+        self.assertEqual(apple_lot3.with_context(formatted_display_name=True).display_name, "LOT-00003\t--Expire on " + fields.Datetime.to_string(apple_lot3.expiration_date) + "--")
