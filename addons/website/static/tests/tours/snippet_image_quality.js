@@ -16,7 +16,7 @@ registerWebsitePreviewTour('website_image_quality', {
     },
     {
         content: "Set low quality",
-        trigger: 'we-customizeblock-options:has(we-title:contains("Image")) we-range[data-set-quality] input',
+        trigger: 'div[data-container-title="Image"] div[data-label="Quality"] div[data-action-id="setImageQuality"] input',
         run: 'range 5',
     },
     {
