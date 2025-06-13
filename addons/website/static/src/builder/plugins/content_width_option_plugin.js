@@ -6,7 +6,7 @@ import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 
 class ContentWidthOptionPlugin extends Plugin {
     static id = "contentWidthOption";
-    static dependencies = ["builderActions", "history"];
+    static dependencies = ["builderActions"];
     resources = {
         builder_options: [
             withSequence(CONTAINER_WIDTH, {
@@ -26,11 +26,9 @@ class ContentWidthOptionPlugin extends Plugin {
 
 class SetContainerWidthAction extends ClassAction {
     static id = "setContainerWidth";
-    static dependencies = ["history"];
-    apply({ editingElement }) {
+    apply({ isPreviewing, editingElement }) {
         super.apply(...arguments);
-        const isPreviewMode = this.dependencies.history.getIsPreviewing();
-        editingElement.classList.toggle("o_container_preview", isPreviewMode);
+        editingElement.classList.toggle("o_container_preview", isPreviewing);
     }
 }
 
