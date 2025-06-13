@@ -20,6 +20,9 @@ export class CarouselSlider extends Interaction {
                 "min-height": this.maxHeight ? `${this.maxHeight}px` : "",
             }),
         },
+        ".slide-link": {
+            "t-on-click": this.onSlideClick,
+        },
     };
     carouselOptions = undefined;
 
@@ -150,6 +153,41 @@ export class CarouselSlider extends Interaction {
         if (ev.direction === "left") {
             const carouselItemsEls = this.carouselInnerEl.querySelectorAll(".carousel-item");
             this.carouselInnerEl.appendChild(carouselItemsEls[0]);
+        }
+    }
+
+    /**
+     * Handles the click behavior on a clickable slide.
+     * Allows the click event to pass through to elements like buttons and
+     * links, or manually triggers their click method if needed.
+     * Also supports Ctrl+Click behavior.
+     *
+     * @param {Event} ev
+     */
+    onSlideClick(ev) {
+        const anchorEl = ev.currentTarget; // directly reference the anchor
+        const allElsAtPoint = document.elementsFromPoint(ev.clientX, ev.clientY);
+
+        const elementBehind = allElsAtPoint.find(
+            (el) =>
+                el !== anchorEl &&
+                !anchorEl.contains(el) &&
+                (el.tagName === "BUTTON" ||
+                    (el.tagName === "A" && el.hasAttribute("href")) ||
+                    el.getAttribute("role") === "button")
+        );
+
+        if (elementBehind) {
+            ev.preventDefault(); // stop the anchor navigation
+            const hrefAttr = elementBehind.getAttribute("href");
+            if (hrefAttr) {
+                const targetAttr = ev.ctrlKey
+                    ? "_blank"
+                    : elementBehind.getAttribute("target") || "_self";
+                window.open(hrefAttr, targetAttr);
+            } else if (typeof elementBehind.click === "function") {
+                elementBehind.click();
+            }
         }
     }
 
