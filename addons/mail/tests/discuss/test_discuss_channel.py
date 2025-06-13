@@ -178,6 +178,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "is_company": False,
                                     "name": "Test Partner",
                                     "leave_date_to": False,
+                                    "tz": False,
                                     "userId": False,
                                     "write_date": test_partner_write_date,
                                 },
@@ -224,6 +225,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "is_company": False,
                                     "name": "Test Partner",
                                     "leave_date_to": False,
+                                    "tz": False,
                                     "userId": False,
                                     "write_date": test_partner_write_date,
                                 }
