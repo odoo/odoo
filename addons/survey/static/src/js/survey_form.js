@@ -171,6 +171,28 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         const $target = $(event.currentTarget);
         const $choiceItemGroup = $target.closest('.o_survey_form_choice');
 
+        // Update survey button to "continue" if the current page/question is the last (without accounting for
+        // its own conditional questions) but a selected answer is triggering a conditional question on a next page.
+        const surveyLastTriggeringAnswers = this.$('.o_survey_form_content_data').data('surveyLastTriggeringAnswers');
+        if (surveyLastTriggeringAnswers) {
+            const currentSelectedAnswers = Array.from(document.querySelectorAll(`
+                .o_survey_form_choice[data-question-type='simple_choice_radio'] input:checked,
+                .o_survey_form_choice[data-question-type='multiple_choice'] input:checked
+            `)).map((input) => parseInt(input.value));
+            const submitButton = document.querySelector("button[type=submit]");
+            if (currentSelectedAnswers.some((answerId) => surveyLastTriggeringAnswers.includes(answerId))) {
+                // change to continue
+                submitButton.value = "next";
+                submitButton.textContent = _t("Continue");
+                submitButton.classList.replace("btn-secondary", "btn-primary");
+            } else {
+                // change to submit
+                submitButton.value = "finish";
+                submitButton.textContent = _t("Submit");
+                submitButton.classList.replace("btn-primary", "btn-secondary");
+            }
+        }
+
         this._applyCommentAreaVisibility($choiceItemGroup);
         const isQuestionComplete = this._checkConditionalQuestionsConfiguration($target, $choiceItemGroup);
         if (isQuestionComplete && this.options.usersCanGoBack) {
