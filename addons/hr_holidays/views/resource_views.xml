@@ -29,6 +29,17 @@
         <field name="mode">primary</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button
+                        name="load_public_holidays"
+                        string="Load Public Holidays"
+                        type="object"
+                        class="btn btn-secondary"
+                        display="always"
+                    />
+                </header>
+            </xpath>
             <xpath expr="//list" position="attributes">
                 <attribute name="editable">bottom</attribute>
             </xpath>
