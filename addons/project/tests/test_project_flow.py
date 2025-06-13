@@ -436,3 +436,41 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         self.project_goats.invalidate_recordset()
         render_context = task.with_user(self.user_projectuser)._notify_by_email_prepare_rendering_context(task.message_ids, {})
         self.assertListEqual(render_context['subtitles'], ['Task', 'Project: Goats, Stage: New'])
+
+    def test_project_multi_tasks_copy_with_archive_user(self):
+        """
+        Step 1: Create new  an active project user
+        Step 2: Create three tasks
+            - Task 1: No users assigned.
+            - Task 2: Assigned to two active users.
+            - Task 3: Assigned to one active and one soon-to-be-archived user.
+        Step 3: Archive one of the users
+        Step 4: Copy all tasks
+        Step 5: Validate expected user_ids on copied tasks
+           - Task1 had no users → expect no users in the copied task.
+           - Task2 had 2 active users → both should be preserved.
+           - Task3 had one active + one archived user → only active (self.user_projectuser) should be preserved in the copy.
+        """
+
+        user_projectuser = self.user_projectuser.copy()
+
+        tasks = self.env['project.task'].create([{
+            'name': 'Task1',
+            'project_id': self.project_goats.id,
+        }, {
+            'name': 'Task2',
+            'user_ids': [Command.set([self.user_projectuser.id, self.user_projectmanager.id])],
+            'project_id': self.project_goats.id,
+        }, {
+            'name': 'Task3',
+            'user_ids': [Command.set([self.user_projectuser.id, user_projectuser.id])],
+            'project_id': self.project_goats.id,
+        }])
+
+        user_projectuser.action_archive()
+
+        task1, task_2, task_3 = tasks.copy()
+
+        self.assertFalse(task1.user_ids)
+        self.assertEqual(self.user_projectuser + self.user_projectmanager, task_2.user_ids)
+        self.assertEqual(self.user_projectuser, task_3.user_ids)
