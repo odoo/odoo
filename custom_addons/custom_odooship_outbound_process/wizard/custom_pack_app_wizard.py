@@ -139,27 +139,46 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not scanned_tote:
             return
 
-        # 1. Try to find a discrete pick for the first scanned tote
-        first_picking = self.env["stock.picking"].search([
+        # ==== New: Find all pickings with this tote at this site ====
+        tote_pickings = self.env["stock.picking"].search([
             ("move_ids_without_package.pc_container_code", "=", scanned_tote),
             ("site_code_id", "=", self.site_code_id.id),
-            ("current_state", "=", "pick"),
-        ], limit=1)
+        ])
+
+        if not tote_pickings:
+            raise ValidationError(
+                f"No picking found for scanned tote: {scanned_tote} at this site. Please check the tote code."
+            )
+
+        # ==== Filter for state='assigned' and current_state in ['pick', 'draft'] ====
+        valid_pickings = tote_pickings.filtered(
+            lambda p: p.state == 'assigned' and (p.current_state in ['pick', 'draft'])
+        )
+
+        if not valid_pickings:
+            pick_info = "\n".join(
+                f"- {p.name}: state={p.state}, current_state={p.current_state}" for p in tote_pickings
+            )
+            raise ValidationError(
+                f"Tote '{scanned_tote}' found, but no valid picking available!\n"
+                f"Found picking(s):\n{pick_info}\n"
+                "A pick must have state='assigned' and current_state='pick' or 'draft' to proceed."
+            )
+
+        # === Use the first valid picking for the rest of the flow ===
+        first_picking = valid_pickings[0]
         is_discrete = bool(first_picking and first_picking.discrete_pick)
 
         if is_discrete:
-            # === DISCRETE LOGIC (lock to first SO, require all its totes, ignore others) ===
             sale_order = first_picking.sale_id
             sale_order_id = sale_order.id
 
-            # Find all picks (for this SO, discrete, at this site)
             so_pickings = self.env["stock.picking"].search([
                 ("sale_id", "=", sale_order_id),
                 ("discrete_pick", "=", True),
                 ("site_code_id", "=", self.site_code_id.id),
             ])
 
-            # --------- Check for any pick not in 'pick' state or with missing totes ---------
             for picking in so_pickings:
                 if picking.current_state != "pick":
                     raise ValidationError(
@@ -171,7 +190,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         f"Picking is not done yet for Pick Number: {picking.name}, SO Number: {sale_order.name} (no tote assigned)"
                     )
 
-            # === STRICT ALL-TOTE CHECK FOR MANUAL TYPE ===
             if sale_order.automation_manual_order == 'manual':
                 required_totes = set(so_pickings.mapped("move_ids_without_package.pc_container_code"))
                 scanned_totes = set(tote_codes) & required_totes
@@ -193,7 +211,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
             required_totes = set(so_pickings.mapped("move_ids_without_package.pc_container_code"))
             scanned_totes = set(tote_codes) & required_totes
-
             missing = required_totes - scanned_totes
             if missing:
                 picks_and_totes = []
@@ -215,14 +232,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             )
 
         else:
-            # === NON-DISCRETE LOGIC (allow multiple SOs, multiple picks, all in 'pick' state) ===
             pickings_to_load = self.env["stock.picking"].search([
                 ("move_ids_without_package.pc_container_code", "in", tote_codes),
                 ("site_code_id", "=", self.site_code_id.id),
-                ("current_state", "=", "pick"),
+                ("state", "=", "assigned"),
+                ("current_state", "in", ["pick", "draft"]),
             ])
 
-            # Prevent displaying discrete picks by accident!
             discrete_pickings = pickings_to_load.filtered(lambda p: p.discrete_pick)
             if discrete_pickings:
                 error_lines = []
@@ -235,7 +251,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "\n".join(error_lines)
                 )
 
-            # --------- NEW BLOCK: Manual order discrete enforcement ---------
             relevant_sos = pickings_to_load.mapped("sale_id")
             if len(relevant_sos) > 1:
                 all_manual_slsu_false = all(
@@ -249,9 +264,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         "Please scan only totes for a single sale order.\n"
                         f"Detected sale orders: {so_names}"
                     )
-            # ---------------------------------------------------------------
 
-            # --- STRICT ALL-TOTES-SCANNED VALIDATION FOR MANUAL TYPE ---
             manual_pickings = pickings_to_load.filtered(
                 lambda p: p.automation_manual_order == 'manual' and getattr(p.sale_id, 'automation_manual_order',
                                                                             '') == 'manual'
@@ -275,6 +288,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                             "Picks for this order:\n" +
                             "\n".join(picks_and_totes)
                     ))
+
+        # === No pick found after all logic ===
+        if not pickings_to_load:
+            raise ValidationError(
+                "No pick found for the scanned tote(s) at this site. Please check tote code and picking state."
+            )
 
         self.picking_ids = [(6, 0, pickings_to_load.ids)]
 
@@ -1002,9 +1021,16 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "item_contents_reference": ""
             })
             declared_value += (line.product_id.list_price or 10.0) * (line.quantity or 1.0)
-
+        if (sale.carrier).upper() == "COURIERSPLEASE" and self.tenant_code_id.name == 'MYDEAL':
+            merchant_code_mydeal = 'MYD'
+        else:
+            merchant_code_mydeal = 'MYDEAL'
         payload = {
-            "merchant_code": config["DEFAULT_MERCHANT_CODE"],
+            "merchant_code": (
+                merchant_code_mydeal
+                if (self.tenant_code_id.name or '').upper() == "MYDEAL"
+                else config["DEFAULT_MERCHANT_CODE"]
+            ),
             "service_type": sale.service_type or "STANDARD",
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
@@ -1429,8 +1455,16 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             })
             declared_value += (line.product_id.list_price or 10.0) * (line.quantity or 1.0)
 
+        if (sale.carrier).upper() == "COURIERSPLEASE" and self.tenant_code_id.name == 'MYDEAL':
+            merchant_code_mydeal = 'MYD'
+        else:
+            merchant_code_mydeal = 'MYDEAL'
         payload = {
-            "merchant_code": config["DEFAULT_MERCHANT_CODE"],
+            "merchant_code": (
+                merchant_code_mydeal
+                if (self.tenant_code_id.name or '').upper() == "MYDEAL"
+                else config["DEFAULT_MERCHANT_CODE"]
+            ),
             "service_type": sale.service_type or "STANDARD",
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
