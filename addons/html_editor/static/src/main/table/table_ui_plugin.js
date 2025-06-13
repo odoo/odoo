@@ -4,6 +4,7 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { TableMenu } from "./table_menu";
 import { TablePicker } from "./table_picker";
+import { getRowIndex } from "@html_editor/utils/table";
 
 /**
  * This plugin only contains the table ui feature (table picker, menus, ...).
@@ -159,14 +160,20 @@ export class TableUIPlugin extends Plugin {
             resetTableSize: withAddStep(this.dependencies.table.resetTableSize),
             clearColumnContent: withAddStep(this.dependencies.table.clearColumnContent),
             clearRowContent: withAddStep(this.dependencies.table.clearRowContent),
+            mergeSelectedCells: withAddStep(this.dependencies.table.mergeSelectedCells),
+            unmergeSelectedCell: withAddStep(this.dependencies.table.unmergeSelectedCell),
+            buildTableGrid: this.dependencies.table.buildTableGrid,
         };
-        if (td.cellIndex === 0) {
+        const grid = this.dependencies.table.buildTableGrid(closestElement(td, "table"));
+        const rowIndex = getRowIndex(td.parentElement);
+        if (grid[rowIndex][0] === td) {
             this.rowMenu.open({
                 target: td,
                 props: {
                     type: "row",
                     overlay: this.rowMenu,
                     target: td,
+                    editable: this.editable,
                     dropdownState: this.createDropdownState(this.colMenu),
                     ...tableMethods,
                 },
@@ -179,6 +186,7 @@ export class TableUIPlugin extends Plugin {
                     type: "column",
                     overlay: this.colMenu,
                     target: td,
+                    editable: this.editable,
                     dropdownState: this.createDropdownState(this.rowMenu),
                     direction: this.config.direction || "ltr",
                     ...tableMethods,
