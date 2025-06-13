@@ -120,8 +120,8 @@ class MailTracking(models.Model):
             })
         elif col_info['type'] in {'one2many', 'many2many'}:
             values.update({
-                'old_value_char': ', '.join(initial_value.mapped('display_name')) if initial_value else '',
-                'new_value_char': ', '.join(new_value.mapped('display_name')) if new_value else '',
+                'old_value_char': ', '.join(value.display_name or _('Unnamed %(record_model_name)s (%(record_id)s)', record_model_name=_(value._description), record_id=value.id) for value in initial_value) if initial_value else '',
+                'new_value_char': ', '.join(value.display_name or _('Unnamed %(record_model_name)s (%(record_id)s)', record_model_name=_(value._description), record_id=value.id) for value in new_value) if new_value else '',
             })
         else:
             raise NotImplementedError(f'Unsupported tracking on field {field.name} (type {col_info["type"]}')
