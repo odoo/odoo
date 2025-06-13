@@ -96,3 +96,42 @@ registry.category("web_tour.tours").add("test_context_from_warehouse_filter", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("test_forecast_replenishment", {
+    steps: () => [
+        {
+            trigger: ".o_kanban_record:contains(Lovely product)",
+            run: "click",
+        },
+        {
+            trigger: "button[name=action_product_tmpl_forecast_report]",
+            run: "click",
+        },
+        {
+            trigger: "button.o_forecasted_replenish_btn",
+            run: "click",
+        },
+        {
+            trigger: ".modal-dialog .btn-close",
+            run: "click",
+        },
+        {
+            trigger: ".o_web_client:not(:has(.modal-dialog))",
+        },
+        {
+            trigger: "button.o_forecasted_replenish_btn",
+            run: "click",
+        },
+        {
+            trigger: "button[name=launch_replenishment]",
+            run: "click",
+        },
+        {
+            trigger: ".o_web_client:not(:has(.modal-dialog))",
+        },
+        {
+            trigger:
+                ".o_notification:contains(The following replenishment order have been generated)",
+        },
+    ],
+});
