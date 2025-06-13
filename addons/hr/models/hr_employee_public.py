@@ -58,6 +58,7 @@ class HrEmployeePublic(models.Model):
 
     # Manager-only fields
     is_manager = fields.Boolean(compute='_compute_is_manager')
+    is_user = fields.Boolean(compute='_compute_is_user')
 
     employee_id = fields.Many2one('hr.employee', 'Employee', compute="_compute_employee_id", search="_search_employee_id", compute_sudo=True)
     # hr.employee.public specific fields
@@ -115,6 +116,12 @@ class HrEmployeePublic(models.Model):
         all_reports = self.env['hr.employee.public'].search([('id', 'child_of', self.env.user.employee_id.id)]).ids
         for employee in self:
             employee.is_manager = employee.id in all_reports
+
+    @api.depends_context('uid')
+    def _compute_is_user(self):
+        user_employee_id = self.env.user.employee_id.id
+        for employee in self:
+            employee.is_user = employee.id == user_employee_id
 
     def _compute_presence_state(self):
         self._compute_from_employee('hr_presence_state')

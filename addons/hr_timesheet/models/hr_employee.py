@@ -10,7 +10,7 @@ from odoo.tools import SQL
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    has_timesheet = fields.Boolean(compute='_compute_has_timesheet', groups="hr.group_hr_user,base.group_system", export_string_translation=False)
+    has_timesheet = fields.Boolean(compute='_compute_has_timesheet', export_string_translation=False)
 
     def _compute_has_timesheet(self):
         if self.ids:

@@ -21,6 +21,7 @@ class HrEmployeePublic(models.Model):
         ('presence_holiday_absent', 'On leave'),
         ('presence_holiday_present', 'Present but on leave')])
     allocation_display = fields.Char(compute='_compute_allocation_display')
+    allocation_remaining_display = fields.Char(related='employee_id.allocation_remaining_display')
 
     def _compute_show_leaves(self):
         self._compute_from_employee('show_leaves')
@@ -48,3 +49,8 @@ class HrEmployeePublic(models.Model):
 
     def _compute_allocation_display(self):
         self._compute_from_employee('allocation_display')
+
+    def action_time_off_dashboard(self):
+        self.ensure_one()
+        if self.is_user:
+            return self.employee_id.action_time_off_dashboard()

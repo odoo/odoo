@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_public_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.public.form.inherit.timesheet</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+               <field name="has_timesheet" groups="hr_timesheet.group_hr_timesheet_user" invisible="1"/>
+                <button invisible="not is_user or not has_timesheet" class="oe_stat_button" type="object" name="action_timesheet_from_employee" icon="fa-calendar" groups="hr_timesheet.group_hr_timesheet_user">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Timesheets</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
