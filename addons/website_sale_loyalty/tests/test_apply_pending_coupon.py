@@ -55,7 +55,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
                 product_id=self.largeCabinet.id,
                 quantity=2,
             )
-            self.WebsiteSaleController.pricelist(self.global_program.rule_ids.code)
+            self.WebsiteSaleController.promo(self.global_program.rule_ids.code)
             self.assertEqual(
                 order.amount_total,
                 576,
@@ -94,7 +94,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
                 product_id=self.largeCabinet.id,
                 quantity=1,
             )
-            self.WebsiteSaleController.pricelist(self.global_program.rule_ids.code)
+            self.WebsiteSaleController.promo(self.global_program.rule_ids.code)
             self.assertEqual(self.largeCabinet.lst_price, 320)
             cabinet_sol = order.order_line.filtered(lambda sol: sol.product_id == self.largeCabinet)
             promo_sol = (order.order_line - cabinet_sol)

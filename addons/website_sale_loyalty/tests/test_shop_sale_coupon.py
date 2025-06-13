@@ -136,7 +136,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             'points': 371.03,
         })
 
-        self.env.ref("website_sale.reduction_code").write({"active": True})
+        self.env.ref("website_sale_loyalty.reduction_code").write({"active": True})
         self.start_tour("/", 'shop_sale_loyalty', login="admin")
 
     def test_02_admin_shop_gift_card_tour(self):
@@ -205,7 +205,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             'code': 'GIFT_CARD',
         })
 
-        self.env.ref("website_sale.reduction_code").write({"active": True})
+        self.env.ref("website_sale_loyalty.reduction_code").write({"active": True})
         self.start_tour('/', 'shop_sale_gift_card', login='admin')
 
         self.assertEqual(len(gift_card_program.coupon_ids), 2, 'There should be two coupons, one with points, one without')
@@ -418,13 +418,13 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             self.assertEqual(order.amount_total, 100.0, "The base cart value is incorrect.")
 
             # Apply coupon for the first time
-            WebsiteSaleController.pricelist(promo=self.coupon.code)
+            WebsiteSaleController.promo(promo=self.coupon.code)
 
             # Check that the coupon has been applied
             self.assertEqual(order.amount_total, 90.0, "The coupon is not applied.")
 
             # Apply the coupon again
-            WebsiteSaleController.pricelist(promo=self.coupon.code)
+            WebsiteSaleController.promo(promo=self.coupon.code)
             Cart().cart()
             error_msg = request.session.get('error_promo_code')
 

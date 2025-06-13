@@ -107,7 +107,7 @@ class TestClaimReward(WebsiteSaleCommon):
         discount_reward = self.coupon_program.reward_ids.filtered('discount')
 
         with MockRequest(website.env, website=website, sale_order_id=cart.id):
-            self.WebsiteSaleController.pricelist(promo=self.coupon.code)
+            self.WebsiteSaleController.promo(promo=self.coupon.code)
             self.assertFalse(cart.order_line.reward_id)
 
             self.WebsiteSaleController.claim_reward(discount_reward.id, code=self.coupon.code)
