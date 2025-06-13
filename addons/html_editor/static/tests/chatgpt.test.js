@@ -1,6 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { press, queryAll, tick, waitFor } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, press, queryAll, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { loadLanguages } from "@web/core/l10n/translation";
 import { ChatGPTPlugin } from "../src/main/chatgpt/chatgpt_plugin";
@@ -18,7 +17,6 @@ const TRANSLATE_DIALOG_TITLE = "Translate with AI";
 
 const openFromPowerbox = async (editor) => {
     await insertText(editor, "/ChatGPT");
-    await animationFrame();
     await press("Enter");
 };
 const openFromToolbar = async () => {
@@ -118,43 +116,31 @@ test("ChatGPT dialog opens in translate mode when clicked on translate dropdown 
 
 test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (1)", async () => {
     await setupEditor("<div>[ab]</div>");
-    await animationFrame();
-    await tick();
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
 });
 
 test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (2)", async () => {
     await setupEditor("<div>a[b</div><div>c]d</div>");
-    await animationFrame();
-    await tick();
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
 });
 
 test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (3)", async () => {
     await setupEditor('<div contenteditable="false">a[b</div><div>c]d</div>');
-    await animationFrame();
-    await tick();
     expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
 });
 
 test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (4)", async () => {
     await setupEditor('<div class="oe_unbreakable">a[b</div><div>c]d</div>');
-    await animationFrame();
-    await tick();
     expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
 });
 
 test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (5)", async () => {
     await setupEditor('<div>a[b</div><div>c]d</div><div class="oe_unbreakable">e</div>');
-    await animationFrame();
-    await tick();
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
 });
 
 test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable (6)", async () => {
     await setupEditor('<div>a[b</div><div>cd</div><div class="oe_unbreakable">e]</div>');
-    await animationFrame();
-    await tick();
     expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
 });
 
@@ -346,14 +332,14 @@ test("press escape to close ChatGPT dialog", async () => {
 
 test("AI is an alias to ChatGPT command in the Powerbox", async () => {
     const { editor } = await setupEditor("<p>[]<br></p>");
-    insertText(editor, "/AI");
+    await insertText(editor, "/AI");
     await animationFrame();
     expect(".active .o-we-command-name").toHaveText("ChatGPT");
 
     // Search is case-insensitive: "/ai" should also match.
-    press("backspace");
-    press("backspace");
-    insertText(editor, "ai");
+    await press("backspace");
+    await press("backspace");
+    await insertText(editor, "ai");
     await animationFrame();
     expect(".active .o-we-command-name").toHaveText("ChatGPT");
 });
@@ -367,11 +353,10 @@ test("pressing control + enter should send the prompt only once", async () => {
 
     // Select ChatGPT in the Powerbox.
     await openFromPowerbox(editor);
-    contains(".o_dialog textarea").edit("Write something");
-    await animationFrame();
+    await contains(".o_dialog textarea").edit("Write something");
 
     // Pressing control + enter.
-    contains(".o_dialog textarea").press(["control", "Enter"]);
+    await contains(".o_dialog textarea").press(["control", "Enter"]);
     await waitFor(".o-chatgpt-message");
     expect(".o-chatgpt-message").toHaveCount(2); // user message + response.
 });
