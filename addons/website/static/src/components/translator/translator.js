@@ -99,6 +99,9 @@ const savableSelector = '[data-oe-translation-initial-sha], ' +
     'textarea:contains(data-oe-translation-initial-sha), ' +
     '[alt*="data-oe-translation-initial-sha="]';
 
+const selectors =
+    ".carousel-control-prev-icon, .carousel-control-next-icon, .oi-chevron-right, .oi-chevron-left";
+
 export class WebsiteTranslator extends WebsiteEditorComponent {
     setup() {
         super.setup();
@@ -163,6 +166,16 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const $editable = this.getEditableArea();
         const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         let $edited = $();
+
+        $editable.find(selectors).each(function () {
+            const $el = $(this).closest("a, div");
+            const titleHtml = $el.attr("title");
+            if (titleHtml) {
+                const titleText = $($.parseHTML(titleHtml)).text().trim();
+                $el.attr("title", titleText);
+            }
+        });
+
         attrs.forEach((attr) => {
             const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]').filter(':empty, input, select, textarea, img');
             attrEdit.each(function () {
