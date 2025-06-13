@@ -1,4 +1,4 @@
-import { toRaw } from "@odoo/owl";
+import { markup, toRaw } from "@odoo/owl";
 import {
     IS_DELETED_SYM,
     OR_SYM,
@@ -20,6 +20,8 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
  * @property {boolean} depth Whether to recursively fetch deep data for all related records
  * @property {string[]} fields An array of field names to fetch, using dot notation (e.g., `"persona.group_ids"`).
  */
+
+const Markup = markup().constructor;
 
 export class Record {
     /** @type {import("./model_internal").ModelInternal} */
@@ -415,6 +417,8 @@ export class Record {
                     data[name] = serializeDateTime(value);
                 } else if (Model._.fieldsType.get(name) === "date" && value) {
                     data[name] = serializeDate(value);
+                } else if (Model._.fieldsHtml.get(name) && value instanceof Markup) {
+                    data[name] = ["markup", value.toString()];
                 } else {
                     data[name] = value;
                 }
