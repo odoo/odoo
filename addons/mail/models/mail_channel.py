@@ -12,7 +12,7 @@ from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import html_escape
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, mute_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -855,6 +855,9 @@ class Channel(models.Model):
             :returns: channel_info of the created or existing channel
             :rtype: dict
         """
+        with mute_logger("odoo.sql_db"):
+            self.env.cr.execute("LOCK TABLE mail_channel IN EXCLUSIVE MODE NOWAIT")
+            self.env.cr.execute("LOCK TABLE mail_channel_member IN EXCLUSIVE MODE NOWAIT")
         if self.env.user.partner_id.id not in partners_to:
             partners_to.append(self.env.user.partner_id.id)
         if len(partners_to) > 2:
