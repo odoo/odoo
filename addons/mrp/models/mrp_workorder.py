@@ -385,6 +385,7 @@ class MrpWorkorder(models.Model):
             else:
                 order.progress = 0
 
+    @api.depends('time_ids')
     def _compute_working_users(self):
         """ Checks whether the current user is working, all the users currently working and the last user that worked. """
         for order in self:
@@ -528,6 +529,15 @@ class MrpWorkorder(models.Model):
                 date_start = workorder.date_finished
         # Plan only suitable workorders
         if self.state not in ['pending', 'waiting', 'ready']:
+            if self.state == 'progress' and not self.leave_id:
+                self.leave_id = self.env['resource.calendar.leaves'].create({
+                    'name': self.display_name,
+                    'calendar_id': self.workcenter_id.resource_calendar_id.id,
+                    'date_from': date_start,
+                    'date_to': date_start + relativedelta(minutes=self.duration_expected),
+                    'resource_id': self.workcenter_id.resource_id.id,
+                    'time_type': 'other'
+                })
             return
         if self.leave_id:
             if replan:
