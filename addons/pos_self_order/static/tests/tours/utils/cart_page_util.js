@@ -6,6 +6,13 @@ export function clickBack() {
     };
 }
 
+export function checkNoTableSelector() {
+    return {
+        content: `Check if the table selection is not displayed`,
+        trigger: `body:not(:has(.self_order_popup_table))`,
+    };
+}
+
 export function selectTable(table) {
     return [
         {
