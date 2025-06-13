@@ -16,7 +16,7 @@ registerWebsitePreviewTour('website_image_quality', {
     },
     {
         content: "Set low quality",
-        trigger: 'we-customizeblock-options:has(we-title:contains("Image")) we-range[data-set-quality] input',
+        trigger: ".o_customize_tab div[data-container-title='Image'] div[data-action-id='setImageQuality'] input",
         run: 'range 5',
     },
     {
@@ -27,7 +27,7 @@ registerWebsitePreviewTour('website_image_quality', {
         content: "Check image size",
         // Reached size cannot be hardcoded because it changes with
         // different versions of Chrome.
-        trigger: 'we-customizeblock-options:has(we-title:contains("Image")) .o_we_image_weight:contains(" kb"):not(:contains("42.9 kb"))',
+        trigger: ".o_customize_tab [data-container-title='Image'] span[title='Size']:contains(' kb'):not(:contains('42.9 kb'))",
         run() {
             // Make sure the reached size is smaller than the original one.
             if (parseFloat(this.anchor.innerText) >= 42.9) {
@@ -37,7 +37,7 @@ registerWebsitePreviewTour('website_image_quality', {
     },
     {
         content: "Set high quality",
-        trigger: 'we-customizeblock-options:has(we-title:contains("Image")) we-range[data-set-quality] input',
+        trigger: ".o_customize_tab div[data-container-title='Image'] div[data-action-id='setImageQuality'] input",
         run: 'range 99',
     },
     {
@@ -46,6 +46,6 @@ registerWebsitePreviewTour('website_image_quality', {
     },
     {
         content: "Check image size",
-        trigger: 'we-customizeblock-options:has(we-title:contains("Image")) .o_we_image_weight:contains("42.9")',
+        trigger: ".o_customize_tab [data-container-title='Image'] span[title='Size']:contains('42.9')",
     },
 ]);
