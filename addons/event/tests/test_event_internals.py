@@ -715,6 +715,41 @@ class TestEventData(TestEventInternalsCommon):
 class TestEventRegistrationData(TestEventInternalsCommon):
 
     @users('user_eventmanager')
+    def test_registration_attended_log(self):
+        """Test changes in date_closed field when state is changed."""
+        with self.mock_datetime_and_now('2025-05-03 17:00:00'):
+            event = self.env['event.event'].create({
+                'name': 'Test Event',
+                'date_begin': FieldsDatetime.to_string(datetime.now()),
+                'date_end': FieldsDatetime.to_string(datetime.now() + timedelta(days=2)),
+            })
+            attendee = self.env['event.registration'].create({
+                'name': 'Test Registration',
+                'event_id': event.id,
+                'state': 'done',
+            })
+            self.assertEqual(attendee.date_closed, datetime.now())
+
+            attendee.action_set_done()
+            message = '<p>Attended on 5/3/25</p>'
+            self.assertTrue(message in attendee.message_ids.mapped('body'),
+                'Expected a "Attended on 5/3/25" message in the chatter.')
+            self.assertEqual(attendee.message_ids.mapped('body').count(message), 1,
+                'Logged message when marked as attended.')
+
+            attendee.action_set_done()
+            self.assertEqual(attendee.message_ids.mapped('body').count(message), 2,
+                'Logged message when marked as attended again.')
+
+        with self.mock_datetime_and_now('2025-05-04 17:00:00'):
+            attendee.action_set_done()
+            new_message = '<p>Attended on 5/4/25</p>'
+            self.assertTrue(new_message in attendee.message_ids.mapped('body'),
+                'Expected a "Attended on 5/4/25" message in the chatter.')
+            self.assertEqual(attendee.message_ids.mapped('body').count(new_message), 1,
+                'Logged a new message when marked as attended on a different day.')
+
+    @users('user_eventmanager')
     def test_registration_partner_sync(self):
         """ Test registration computed fields about partner """
         test_email = '"Nibbler In Space" <nibbler@futurama.example.com>'
