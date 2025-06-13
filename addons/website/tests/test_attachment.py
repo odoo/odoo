@@ -1,6 +1,5 @@
 import odoo.tests
 from ..tools import create_image_attachment
-import unittest
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -37,8 +36,6 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
         req = self.url_open(base + '/web/image/test.an_image_redirect_301', allow_redirects=True)
         self.assertEqual(req.status_code, 200)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_02_image_quality(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_image_quality', login="admin")
 
