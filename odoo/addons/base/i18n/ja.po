@@ -1019,7 +1019,7 @@ msgstr ""
 "\n"
 "- *アカウント > 設定 > 請求 > 仕訳*\n"
 "\n"
-"必要に応じて、新しいジャーナルを作成するか、**タイプ**の既存のジャーナルを選択します\n"
+"必要に応じて、新しい仕訳帳を作成するか、**タイプ**の既存の仕訳帳を選択します\n"
 "*“銀行”*に設定します。\n"
 "\n"
 "**詳細設定**で、ABAクレジット転送がチェックされていることを確認します。\n"
@@ -1045,7 +1045,7 @@ msgstr ""
 "\n"
 "-*会計構成支払い銀行口座*\n"
 "\n"
-"アカウントはジャーナル名としてリストに表示されます。\n"
+"アカウントは仕訳帳名としてリストに表示されます。\n"
 "\n"
 "編集すると**アカウント番号**が表示されます。 \n"
 "これはABAプロセスによって使用されるため、重要です。\n"
@@ -1081,7 +1081,7 @@ msgstr ""
 "\n"
 "**ベンダー**が有効なABA支払いアカウントを持つものであることを確認してください。\n"
 "\n"
-"ABA支払い用に設定されている正しい**支払いジャーナル**を選択します。\n"
+"ABA支払い用に設定されている正しい**支払い仕訳帳**を選択します。\n"
 "\n"
 "** ABA Credit Transfer **ラジオボタンを選択します。\n"
 "\n"
@@ -1138,7 +1138,7 @@ msgstr ""
 "\n"
 "会計アクセス権\n"
 "========================\n"
-"これはジャーナル項目と勘定科目一覧表など、すべてのアカウンティング機能への管理者ユーザのアクセスを提供します。\n"
+"これは仕訳帳項目と勘定科目一覧表など、すべてのアカウンティング機能への管理者ユーザのアクセスを提供します。\n"
 "\n"
 "ここで、デモ・ユーザーに会計アプリケーションのみユーザー権限の管理者に管理者とユーザーのアクセス権を割り当てます。\n"
 
@@ -6026,7 +6026,7 @@ msgstr ""
 "\n"
 "このモジュールは、これらのドキュメントタイプを管理するためにローカリゼーションによって拡張されることを目的としており、印刷されたレポートに表示する必要があり、請求書のセット内およびアカウントの移動内で簡単に識別できる必要がある重要な情報です。\n"
 "\n"
-"各ドキュメントタイプには独自のルールとシーケンス番号があり、この最後のルールは、ローカリゼーションユーザーが簡単に使用できるように、請求書番号とジャーナルシーケンスと統合されています。このドキュメントタイプをサポートするかどうかを決定するために、ジャーナルにはドキュメントを使用するかどうかを指定する新しいオプションがあります。\n"
+"各ドキュメントタイプには独自のルールとシーケンス番号があり、この最後のルールは、ローカリゼーションユーザーが簡単に使用できるように、請求書番号と仕訳帳シーケンスと統合されています。このドキュメントタイプをサポートするかどうかを決定するために、仕訳帳にはドキュメントを使用するかどうかを指定する新しいオプションがあります。\n"
 "技術\n"
 "---------\n"
 "\n"
@@ -7980,7 +7980,7 @@ msgstr ""
 "会計履歴のインポートに便利なSAF-Tファイルのインポートモジュール。\n"
 "\n"
 "SAF-Tファイルは、いくつかの国の企業が税務当局に提出しなければならない標準的な会計報告書です。\n"
-"このモジュールでは、これらのファイルから勘定科目、ジャーナル、パートナー、税金、移動をインポートすることができます。\n"
+"このモジュールでは、これらのファイルから勘定科目、仕訳帳、パートナー、税金、移動をインポートすることができます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_sie4_import
@@ -9579,7 +9579,7 @@ msgstr ""
 "QR請求書は以下の場合に生成されます:\n"
 "    - 請求書に記載された取引先が、スイスに完全な住所（番地、都市名、郵便番号、国名）を有している\n"
 "    - 請求書上でスイスQRコードを生成するオプションが選択されている（デフォルトで選択されている）\n"
-"    - 銀行ジャーナルに正しい口座番号/QR IBANが設定されている\n"
+"    - 銀行仕訳帳に正しい口座番号/QR IBANが設定されている\n"
 "    - (QR-IBAN使用時): 請求書の支払参照がQR参照である\n"
 "\n"
 "上記の条件を満たせば、QR請求書は自動的に作成されます。QR請求書は、印刷または郵送の際、請求書の後に付加されます。\n"
@@ -11308,7 +11308,7 @@ msgid ""
 msgstr ""
 "\n"
 "モジュールを使用すると、事前に印刷された小切手用紙に支払いを印刷できます。\n"
-"会社の設定で出力(レイアウト、スタブ情報など)を構成し、ジャーナル設定で小切手の番号付け\n"
+"会社の設定で出力(レイアウト、スタブ情報など)を構成し、仕訳帳設定で小切手の番号付け\n"
 "(番号なしで事前に印刷された小切手を使用する場合)を管理できます。\n"
 "\n"
 "サポートされている形式\n"
@@ -21949,12 +21949,12 @@ msgstr "従業員の計画に基づき、勤怠から勤務エントリを作成
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract_attendance
 msgid "Create work entries from the employee's attendances"
-msgstr "従業員の出勤から作業エントリを作成"
+msgstr "従業員の出勤から勤務記録を作成"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract_planning
 msgid "Create work entries from the employee's planning"
-msgstr "従業員の計画から作業エントリを作成"
+msgstr "従業員の計画から勤務記録を作成"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -25251,43 +25251,43 @@ msgstr "エキスポートタイプ"
 #: model:ir.module.module,description:base.module_l10n_us_hr_payroll_adp
 #: model:ir.module.module,summary:base.module_l10n_us_hr_payroll_adp
 msgid "Export Work Entries to ADP"
-msgstr "作業エントリをADPにエクスポート"
+msgstr "勤務記録をADPにエクスポート"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_acerta
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_acerta
 msgid "Export Work Entries to Acerta"
-msgstr "作業エントリをAcertaにエクスポート"
+msgstr "勤務記録をAcertaにエクスポート"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_group_s
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_group_s
 msgid "Export Work Entries to Group S"
-msgstr "作業エントリをGroup Sにエクスポート"
+msgstr "勤務記録をGroup Sにエクスポート"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_partena
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_partena
 msgid "Export Work Entries to Partena"
-msgstr "作業エントリをPartenaにエクスポート"
+msgstr "勤務記録をPartenaにエクスポート"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_prisma
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_prisma
 msgid "Export Work Entries to Prisma"
-msgstr "作業エントリをPrismaにエクスポート"
+msgstr "勤務記録をPrismaにエクスポート"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_sd_worx
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_sd_worx
 msgid "Export Work Entries to SD Worx"
-msgstr "作業エントリをSD Worxにエクスポート"
+msgstr "勤務記録をSD Worxにエクスポート"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_ucm
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_ucm
 msgid "Export Work Entries to UCM"
-msgstr "作業エントリをUCMにエクスポート"
+msgstr "勤務記録をUCMにエクスポート"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_au_aba
@@ -26251,7 +26251,7 @@ msgstr "フランス-POSのVAT不正防止認証(CGI 286 I-3 bis)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_work_entry_holidays
 msgid "France - Work Entries Time Off"
-msgstr "フランス - 作業エントリ休暇"
+msgstr "フランス - 勤務記録休暇"
 
 #. module: base
 #. odoo-python
@@ -31063,7 +31063,7 @@ msgstr "応募者に送信する署名の管理"
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract_enterprise
 msgid "Manage work entries"
-msgstr "作業エントリを管理する"
+msgstr "勤務記録を管理する"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_facebook
@@ -45637,27 +45637,27 @@ msgstr "ウッドコーナーは、顧客が木、花、菌類を扱うのを助
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
 msgid "Work Entries"
-msgstr "作業エントリ"
+msgstr "勤務記録"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_attendance
 msgid "Work Entries - Attendance"
-msgstr "作業エントリ - 勤怠"
+msgstr "勤務記録 - 勤怠"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
 msgid "Work Entries - Contract"
-msgstr "作業エントリ-契約"
+msgstr "勤務記録-契約"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_enterprise
 msgid "Work Entries - Contract Enterprise"
-msgstr "作業エントリ - 契約 企業版"
+msgstr "勤務記録 - 契約 企業版"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_planning
 msgid "Work Entries - Planning"
-msgstr "作業エントリ - 計画"
+msgstr "勤務記録 - 計画"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder

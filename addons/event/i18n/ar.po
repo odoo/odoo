@@ -1732,7 +1732,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "يجب أن تكون الفترة الزمنية بالساعة بين 0:00 و 23:59.  "
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1990,6 +1990,8 @@ msgid ""
 "Attendees\n"
 "                                    <span invisible=\"not is_multi_slots\"> per slot</span>"
 msgstr ""
+"الحاضرون\n"
+"                                    <span invisible=\"not is_multi_slots\"> في كل فترة زمنية</span>"
 
 #. module: event
 #. odoo-javascript
@@ -3257,7 +3259,7 @@ msgstr "عدد المقاعد محدود"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_url
 msgid "Link where the online event will take place."
-msgstr ""
+msgstr "رابط المكان الذي ستقام فيه الفعالية عبر الإنترنت. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3671,7 +3673,7 @@ msgstr "يرجى إدخال سر base64 صحيح "
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Please enter a valid event URL."
-msgstr ""
+msgstr "يرجى إدخال رابط URL صالح للفعالية. "
 
 #. module: event
 #. odoo-javascript
@@ -4081,6 +4083,7 @@ msgstr "أداة جدولة الخانات الزمنية للبريد الإل�
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
 msgstr ""
+"اختيار الفترة الزمنية أمر ضروري في الفعاليات ذات الفترات الزمنية المتعددة. "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
@@ -4338,6 +4341,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"لا توجد مقاعد كافية لـ %(event_name)s:\n"
+"%(sold_out_info)s "
 
 #. module: event
 #. odoo-python
@@ -4709,7 +4714,7 @@ msgstr "ما إذا كانت المقاعد غير متاحة لهذه التذ�
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "ما إذا كانت المقاعد مباعة بالكامل في هذه الفترة الزمنية أم لا. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form

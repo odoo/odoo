@@ -690,7 +690,7 @@ msgstr "<span class=\"o_stat_text\">Số lô/sê-ri</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Số lô/sê-ri</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -770,11 +770,13 @@ msgid ""
 "<span class=\"text-muted small\"> Available</span>\n"
 "                            <span> / </span>"
 msgstr ""
+"<span class=\"text-muted small\"> Có hàng</span>\n"
+"                            <span> / </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\"> Hiện có</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -2460,7 +2462,7 @@ msgstr "Tùy chỉnh"
 #: model:ir.model.fields,field_description:stock.field_product_template__serial_prefix_format
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Custom Lot/Serial"
-msgstr ""
+msgstr "Lô/sê-ri tuỳ chỉnh"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -2646,7 +2648,7 @@ msgstr "Ngày đã gắn sao"
 #: model:ir.model.fields,field_description:stock.field_stock_move__date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_deadline
 msgid "Deadline"
-msgstr "Hạn chót"
+msgstr "Thời hạn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2657,7 +2659,7 @@ msgstr "Vượt quá thời hạn hoặc/và theo kế hoạch"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Deadline updated due to delay on %s"
-msgstr "Hạn chót đã được cập nhật do chậm trễ đối với %s"
+msgstr "Thời hạn đã được cập nhật do chậm trễ đối với %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__12
@@ -3213,6 +3215,8 @@ msgstr "Hiển thị số sê-ri và lô trên phiếu giao hàng"
 msgid ""
 "Display instructions tailored to the customer or vendor on stock operations."
 msgstr ""
+"Hiển thị hướng dẫn tùy chỉnh cho khách hàng hoặc nhà cung cấp về các hoạt "
+"động liên quan đến tồn kho."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_tree_view_picking
@@ -4366,7 +4370,7 @@ msgstr "Cài đặt Mã vạch"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Instructions on the Stock Operations"
-msgstr ""
+msgstr "Hướng dẫn về hoạt động tồn kho"
 
 #. module: stock
 #. odoo-python
@@ -4438,6 +4442,8 @@ msgid ""
 "Internal instructions for the partner or its parent company as set by the "
 "user."
 msgstr ""
+"Hướng dẫn nội bộ dành cho đối tác hoặc công ty mẹ của họ do người dùng thiết"
+" lập."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_internal_location_ids
@@ -4644,7 +4650,7 @@ msgstr "Bị trễ"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
-msgstr "Bị trễ hoặc sẽ trễ tùy thuộc vào hạn chót và ngày đã lên lịch"
+msgstr "Bị trễ hoặc sẽ trễ tùy thuộc vào thời hạn và ngày đã lên lịch"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -5504,7 +5510,7 @@ msgstr "Hoạt động của tôi"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__my_activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động của tôi"
+msgstr "Thời hạn hoạt động của tôi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -5600,7 +5606,7 @@ msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hoạt động tiếp theo"
+msgstr "Thời hạn cho hoạt động tiếp theo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_summary
@@ -5623,7 +5629,7 @@ msgstr "Dự kiến lần tiếp theo"
 #: model:ir.model.fields,field_description:stock.field_product_product__next_serial
 #: model:ir.model.fields,field_description:stock.field_product_template__next_serial
 msgid "Next Serial"
-msgstr ""
+msgstr "Sê-ri tiếp theo"
 
 #. module: stock
 #. odoo-python
@@ -5663,6 +5669,8 @@ msgid ""
 "No Stock On Hand. This analysis gives you an overview of the current stock "
 "level of your products."
 msgstr ""
+"Không có tồn kho. Phân tích này cung cấp cho bạn cái nhìn tổng quan về lượng"
+" hàng tồn kho hiện tại của các sản phẩm."
 
 #. module: stock
 #. odoo-javascript
@@ -6492,7 +6500,7 @@ msgstr "Địa chỉ đối tác"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Partner-Specific Instructions"
-msgstr ""
+msgstr "Hướng dẫn riêng cho đối tác"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
@@ -6544,7 +6552,7 @@ msgstr "Phiếu xuất kho"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_warning_text
 msgid "Picking Instructions"
-msgstr ""
+msgstr "Hướng dẫn lấy hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -8296,7 +8304,7 @@ msgstr "Số sê-ri"
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_sequence_id
 #: model:ir.model.fields,field_description:stock.field_product_template__lot_sequence_id
 msgid "Serial/Lot Numbers Sequence"
-msgstr ""
+msgstr "Trình tự số lô/sê-ri"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -9013,6 +9021,8 @@ msgid ""
 "Technical Field: The Ir.Sequence record that is used to generate serial/lot "
 "numbers for this product"
 msgstr ""
+"Trường kỹ thuật: Bản ghi Ir.Sequence được sử dụng để tạo số sê-ri/lô cho sản"
+" phẩm này"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -9107,7 +9117,7 @@ msgstr "Ngày kia"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The deadline has been automatically updated due to a delay on %s."
-msgstr "Hạn chót đã được cập nhật tự động do chậm trễ đối với %s."
+msgstr "Thời hạn đã được cập nhật tự động do chậm trễ đối với %s."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__delay
@@ -11408,7 +11418,7 @@ msgstr "VD: Tồn kho dự phòng"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "e.g. The delivery area is at the back of the building."
-msgstr ""
+msgstr "VD: Khu vực giao hàng nằm ở phía sau tòa nhà"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view

@@ -105,7 +105,7 @@ msgstr "%(employee)s في إجازة: %(duration)s "
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(employee_name)s from %(date_from)s to %(date_to)s - %(state)s"
-msgstr ""
+msgstr "%(employee_name)s من %(date_from)s إلى %(date_to)s - %(state)s "
 
 #. module: hr_holidays
 #. odoo-python
@@ -316,6 +316,8 @@ msgid ""
 "<span class=\"mx-2\" invisible=\"request_unit == 'hour'\">days</span>\n"
 "                                    <span class=\"mx-2\" invisible=\"request_unit != 'hour'\">hours</span>"
 msgstr ""
+"<span class=\"mx-2\" invisible=\"request_unit == 'hour'\">أيام</span>\n"
+"                                    <span class=\"mx-2\" invisible=\"request_unit != 'hour'\">ساعات</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -833,7 +835,7 @@ msgstr "نوع المخصصات "
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be \"To Approve\" in order to approve it."
-msgstr ""
+msgstr "يجب أن تكوزن المخصصات \"بانتظار الموافقة\" حتى تتمكن من الموافقة عليها. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -1354,12 +1356,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_leave_report
 msgid "Check back later to overview all time off requests"
-msgstr ""
+msgstr "تحقق مرة أخرى لاحقاً لاستعراض كافة طلبات الإجازات "
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
 msgid "Check back later to review all your employees' time off"
-msgstr ""
+msgstr "عد مجدداً لاحقاً لمراجعة كافة إجازات موظفيك "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -1391,7 +1393,7 @@ msgstr "اضغط على تاريخ 25 "
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Click on this button to request a time-off"
-msgstr ""
+msgstr "اضغط على هذا الزر لطلب إجازة "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__color
@@ -3095,37 +3097,37 @@ msgstr "وحده مسؤول الإجازات هو من يمكنه تغيير ح�
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Officer/Manager can approve a leave."
-msgstr ""
+msgstr "يمكن فقط لموظف الإجازة/المدير الموافقة على الإجازات. "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can approve an allocation."
-msgstr ""
+msgstr "يمكن فقط لموظف الإجازة/المدير الموافقة على المخصصات.  "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Officer/Manager can refuse a leave."
-msgstr ""
+msgstr "يمكن فقط لموظف الإجازة/المدير رفض الإجازات. "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can refuse an allocation."
-msgstr ""
+msgstr "يمكن فقط لموظف الإجازة/المدير رفض المخصصات. "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Officer/Manager can validate a leave."
-msgstr ""
+msgstr "يمكن فقط لموظف الإجازة/المدير تصديق الإجازات. "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can validate an allocation."
-msgstr ""
+msgstr "يمكن فقط لموظف الإجازة/المدير تصديق المخصصات. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -3137,7 +3139,7 @@ msgstr "وحده المدير بمقدوره تعديل إجازة ملغية. "
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a time off Administrator can approve/refuse their own requests."
-msgstr ""
+msgstr "وحده مدير الإجازات من يمكنه رفض/الموافقة على طلباته الخاصة. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -3145,6 +3147,7 @@ msgstr ""
 msgid ""
 "Oops! %(state)s Time-Off requests can only be deleted by Administrators."
 msgstr ""
+"عذراً! لا يمكن حذف طلبات الإجازات قي حالة \"%(state)s\" إلا بواسطة المدراء. "
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__other
@@ -3218,6 +3221,7 @@ msgstr "الإجازات الرسمية "
 msgid ""
 "Public Holidays are non-working days that don't impact employees' balances"
 msgstr ""
+"العطلات الرسمية هي أيام العطلات الرسمية التي لا تؤثر على أرصدة الموظفين "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
@@ -3824,7 +3828,7 @@ msgstr "سيغادر الموظف الشركة بتاريخ %(departure_date)s. 
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 msgid "The first day must be lower than the second day."
-msgstr ""
+msgstr "يجب أن يكون اليوم الأول قبل اليوم الثاني. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -4592,7 +4596,7 @@ msgstr "الأربعاء"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 msgid "Weekday must be selected to use the frequency weekly"
-msgstr ""
+msgstr "يجب تحديد اليوم من الأسبوع حتى تتمكن من استخدام التكرار أسبوعياً "
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__weekly
@@ -4683,13 +4687,13 @@ msgstr "سنوات"
 #. odoo-python
 #: code:addons/hr_holidays/report/hr_leave_report_calendar.py:0
 msgid "You are not allowed to approve this leave request."
-msgstr ""
+msgstr "لا يسمح لك بالموافقة على طلب الإجازة هذا. "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/report/hr_leave_report_calendar.py:0
 msgid "You are not allowed to refuse this leave request."
-msgstr ""
+msgstr "لا يسمح لك برفض طلب الإجازة هذا. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -4746,7 +4750,7 @@ msgstr "لا يمكنك تصديق التخصيص إلا بواسطة مدير �
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "You can select the period you need to take off"
-msgstr ""
+msgstr "يمكنك تحديد المدة التي ترغب في أخذ إجازة فيها "
 
 #. module: hr_holidays
 #. odoo-python
@@ -4777,7 +4781,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "You can't do the same action twice."
-msgstr ""
+msgstr "لا يمكنك تنفيذ نفس الإجراء مرتين. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -4914,7 +4918,7 @@ msgstr "يجب أن تكون لديك صلاحيات المدير لتعديل/�
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You've already booked time off which overlaps with this period:"
-msgstr ""
+msgstr "لقد قمت بالفعل بحجز إجازة تتداخل مع هذه الفترة: "
 
 #. module: hr_holidays
 #. odoo-python

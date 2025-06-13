@@ -387,6 +387,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">نصيحة: أضف قائمة أسعار للمرتجعات (مثال: 0€)</span> "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -451,7 +453,7 @@ msgstr "<strong>الإجمالي</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "<sup title=\"Only works for online and self order\">?</sup>"
-msgstr ""
+msgstr "<sup title=\"يعمل فقط مع الطلب عبر الإنترنت والطلب الذاتي \">؟</sup>"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2726,7 +2728,7 @@ msgstr "التفاصيل"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_sequence
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_sequence
 msgid "Determine the display order in the POS Terminal"
-msgstr ""
+msgstr "قم بتحديد ترتيب العرض فيجهاز الدفع الخاص بنقطة البيع "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number_seq_id
@@ -3090,7 +3092,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Ensure you validate the refund before taking another order."
-msgstr ""
+msgstr "احرص على التحقق من صحة المبلغ المسترد قبل أخذ طلب آخر. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4017,7 +4019,7 @@ msgstr "عناصر اليومية"
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "Kindly ensure that each order contains a customer."
-msgstr ""
+msgstr "يُرجى التأكد من أن كل طلبية تحتوي على عميل. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
@@ -4187,7 +4189,7 @@ msgstr "رقم البند "
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr ""
+msgstr "رابط بين المنتجات ووحدات القياس الخاصة بها "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4380,7 +4382,7 @@ msgstr "تم تجاوز الحد الأقصى "
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_combo__qty_max
 msgid "Maximum number of items to select in the combo."
-msgstr ""
+msgstr "الحد الأقصى لعدد العناصر التي يمكن تحديدها في الكومبو. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__qty_max
@@ -4673,7 +4675,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "No customers found, press enter to load more."
-msgstr ""
+msgstr "لم يتم العثور على أي عملاء. اضغط على زر \"إدخال\" لتحميل المزيد. "
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -4832,7 +4834,7 @@ msgstr "عدد الأخطاء "
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_combo__qty_free
 msgid "Number of free items included in the combo."
-msgstr ""
+msgstr "عدد العناصر المجانية المشمولة في الكومبو. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_qty
@@ -5598,7 +5600,7 @@ msgstr "يرجى تأكيد الكمية الكبيرة "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Please add a valid customer to the order."
-msgstr ""
+msgstr "يُرجى إضافة عميل صالح إلى الطلب. "
 
 #. module: point_of_sale
 #. odoo-python
@@ -7206,7 +7208,7 @@ msgstr "قم بتحديد الإعداد المسبق "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select an order or scan QR code"
-msgstr ""
+msgstr "حدد طلباً أو قم بمسح رمز QR "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7297,7 +7299,7 @@ msgstr "جارِ الإرسال"
 #. module: point_of_sale
 #: model:mail.template,description:point_of_sale.email_template_pos_receipt
 msgid "Sent to customers with the receipt in attachment"
-msgstr ""
+msgstr "يتم إرساله إلى العملاء مع الإيصال في المرفق "
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_sequence
@@ -7422,7 +7424,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Set the background image of your customer display"
-msgstr ""
+msgstr "قم بتعيين صورة خلفية شاشة العميل "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8062,7 +8064,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
-msgstr ""
+msgstr "لقد تم حذف قالب البريد الإلكتروني مع xmlid%s. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9752,7 +9754,7 @@ msgstr "في"
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "open orders for the next few days."
-msgstr ""
+msgstr "الطلبات المفتوحة للأيام القليلة القادمة. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form

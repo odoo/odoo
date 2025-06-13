@@ -39,12 +39,12 @@ msgstr "評分數目"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__number_of_calls
 msgid "# of Sessions with calls"
-msgstr ""
+msgstr "曾進行通話的對話時段數目"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "# of calls"
-msgstr ""
+msgstr "通話數目"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -119,6 +119,8 @@ msgid ""
 "<span groups=\"im_livechat.im_livechat_group_manager\">Configure Channel</span>\n"
 "                                    <span groups=\"!im_livechat.im_livechat_group_manager\">View Channel</span>"
 msgstr ""
+"<span groups=\"im_livechat.im_livechat_group_manager\">配置頻道</span>\n"
+"                                    <span groups=\"!im_livechat.im_livechat_group_manager\">查看頻道</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -208,13 +210,13 @@ msgstr "管理員"
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Agent"
-msgstr "代理"
+msgstr "操作員"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__agent_expertise_ids
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__agent_expertise_ids
 msgid "Agent Expertise"
-msgstr ""
+msgstr "操作員專業知識"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_operator_action
@@ -222,12 +224,12 @@ msgstr ""
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_operator
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
 msgid "Agents"
-msgstr "代理"
+msgstr "操作員"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_agent_history_ids
 msgid "Agents (History)"
-msgstr ""
+msgstr "操作員（歷史）"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -306,7 +308,7 @@ msgstr "平均評分（%）"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__time_to_answer
 msgid "Average time in hours to give the first answer to the visitor"
-msgstr ""
+msgstr "首度回應訪客的平均時間，以小時為單位"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_tree
@@ -321,12 +323,12 @@ msgstr "機器人操作員"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_bot_partner_ids
 msgid "Bots"
-msgstr ""
+msgstr "機器人"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_bot_history_ids
 msgid "Bots (History)"
-msgstr ""
+msgstr "機器人（歷史）"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
@@ -341,7 +343,7 @@ msgstr "按鈕文字顏色"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__call_duration_hour
 msgid "Call Duration"
-msgstr ""
+msgstr "通話持續時間"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.canned_responses
@@ -353,7 +355,7 @@ msgstr "預設回應"
 #: code:addons/im_livechat/models/im_livechat_channel_member_history.py:0
 msgid ""
 "Cannot create history as it is only available for live chats: %(histories)s."
-msgstr ""
+msgstr "未能建立歷史記錄，因只限即時聊天使用：%(histories)s。"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_id
@@ -434,12 +436,12 @@ msgstr "聊天機器人"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_answers_path
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Chatbot Answers"
-msgstr ""
+msgstr "聊天機器人回答"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__chatbot_answers_path_str
 msgid "Chatbot Answers (String)"
-msgstr ""
+msgstr "聊天機器人回答（字串）"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__chatbot_current_step_id
@@ -759,7 +761,7 @@ msgstr "持續時間（分鐘）"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
 msgid "Duration of the conversation (in minutes)"
-msgstr ""
+msgstr "對話持續時間（分鐘）"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__duration
@@ -792,7 +794,7 @@ msgstr "啟用聊天機器人"
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Escalated"
-msgstr ""
+msgstr "曾升級"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -807,7 +809,7 @@ msgstr "專業知識"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_expertises
 msgid "Expertises used in this session"
-msgstr ""
+msgstr "本節對話時段所用專業知識"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -897,7 +899,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/views/discuss_template.xml:0
 msgid "Go to Sessions"
-msgstr ""
+msgstr "前往對話時段"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -913,12 +915,12 @@ msgstr "訪客"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_agent
 msgid "Handled by Agent"
-msgstr ""
+msgstr "由操作員處理"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_bot
 msgid "Handled by Bot"
-msgstr ""
+msgstr "由機器人處理"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -972,7 +974,7 @@ msgstr "嗯，讓我看看有沒有人可以幫助你⋯"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Hour of Day"
-msgstr ""
+msgstr "一天內哪個小時"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_hour
@@ -1031,7 +1033,7 @@ msgstr "識別號"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_chatbot_message__user_raw_script_answer_id
 msgid "Id of the script answer. Useful for statistics when answer is deleted."
-msgstr ""
+msgstr "指令碼回答的識別碼，有助在答案被刪除後進行統計。"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_needaction
@@ -1105,7 +1107,7 @@ msgstr "線上討論是否正在進行？"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_is_escalated
 msgid "Is session escalated"
-msgstr ""
+msgstr "對話時段曾否升級"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -1126,7 +1128,7 @@ msgstr "加入頻道"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_member_history
 msgid "Keep the channel member history"
-msgstr ""
+msgstr "保留頻道成員歷史記錄"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations_value
@@ -1163,7 +1165,7 @@ msgstr "語言"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Last 24 Hours"
-msgstr ""
+msgstr "過去 24 小時"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -1263,12 +1265,12 @@ msgstr "線上客服/實時聊天專業知識"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
 msgid "Live Chat History"
-msgstr ""
+msgstr "線上客服歷史記錄"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_failure
 msgid "Live Chat Session Failure"
-msgstr ""
+msgstr "線上客服對話時段失敗"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
@@ -1308,7 +1310,7 @@ msgstr "實時聊天頻道數目"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_channel_member_history_ids
 msgid "Livechat Channel Member History"
-msgstr ""
+msgstr "線上客服頻道成員歷史記錄"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
@@ -1333,13 +1335,13 @@ msgstr "實時聊天語言"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_history_ids
 msgid "Livechat Member History"
-msgstr ""
+msgstr "線上客服成員歷史記錄"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_type
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__livechat_member_type
 msgid "Livechat Member Type"
-msgstr ""
+msgstr "線上客服成員類型"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_operator_id
@@ -1405,18 +1407,18 @@ msgstr "會員"
 #: model:ir.ui.menu,name:im_livechat.menu_member_history
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_tree
 msgid "Member History"
-msgstr ""
+msgstr "成員歷史記錄"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_tree
 msgid "Member Type"
-msgstr ""
+msgstr "成員類型"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_member_history_member_id_unique
 msgid "Members can only be linked to one history"
-msgstr ""
+msgstr "成員只可連結至一套歷史記錄"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_message
@@ -1443,12 +1445,12 @@ msgstr "訊息"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_message
 msgid "Messages per Session"
-msgstr ""
+msgstr "每個對話時段的訊息數目"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
 msgid "Messages:"
-msgstr ""
+msgstr "訊息："
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__1
@@ -1478,7 +1480,7 @@ msgstr "中立"
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_answer
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_answer
 msgid "Never Answered"
-msgstr ""
+msgstr "從未回應"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1489,7 +1491,7 @@ msgstr "新操作時段"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_failure__no_failure
 msgid "No Failure"
-msgstr ""
+msgstr "沒有失敗"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1523,12 +1525,12 @@ msgstr "未找到歷史記錄"
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__session_outcome__no_agent
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "No one Available"
-msgstr ""
+msgstr "沒有人有空"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Not Answered"
-msgstr ""
+msgstr "未回應"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1599,7 +1601,7 @@ msgstr "只在"
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 msgid "Only Live Chat operators can join Live Chat channels"
-msgstr ""
+msgstr "只限線上客服操作員才可加入線上客服頻道"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_operator
@@ -1810,12 +1812,12 @@ msgstr "重設為預設顏色"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__time_to_answer
 msgid "Response Time"
-msgstr ""
+msgstr "回應時間"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "Response Time (hh:mm:ss)"
-msgstr ""
+msgstr "回應時間（時:分:秒）"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1890,7 +1892,7 @@ msgstr "腳本步驟"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_member_history_view_search
 msgid "Search History"
-msgstr ""
+msgstr "搜尋記錄"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -1941,12 +1943,12 @@ msgstr "對話視窗表格"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__session_outcome
 msgid "Session Outcome"
-msgstr ""
+msgstr "對話時段結果"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__percentage_of_calls
 msgid "Session with Calls (%)"
-msgstr ""
+msgstr "曾進行通話的對話時段（%）"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.discuss_channel_action
@@ -2002,7 +2004,7 @@ msgstr "對話時段開始時間"
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action_from_livechat_channel
 msgid "Start a conversation to populate your chat history."
-msgstr ""
+msgstr "開始對話，以填充你的聊天歷史記錄。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -2171,7 +2173,7 @@ msgstr "標題顏色"
 msgid ""
 "Track and improve live chat performance with insights on session activity, "
 "response times, customer ratings, and call interactions."
-msgstr ""
+msgstr "透過了解對話時段的進行情況、回應時間、客戶評分及通話互動等，追蹤及改善線上客服的表現。"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__2
@@ -2247,7 +2249,7 @@ msgstr "用戶實時聊天用戶名"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_raw_script_answer_id
 msgid "User Raw Script Answer"
-msgstr ""
+msgstr "使用者原始程式碼答案"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users_settings
@@ -2361,7 +2363,7 @@ msgstr "即時聊天對話轉交他人跟進時，聊天機器人會優先考慮
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__has_call
 msgid "Whether the session had a call"
-msgstr ""
+msgstr "對話時段曾否進行通話"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2455,7 +2457,7 @@ msgstr "例如：您的網站地址 "
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/channel_invitation_patch.xml:0
 msgid "in a call"
-msgstr ""
+msgstr "在通話中"
 
 #. module: im_livechat
 #. odoo-javascript

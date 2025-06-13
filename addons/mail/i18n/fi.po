@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
-# Jessica Jakara, 2025
 # Wil Odoo, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -228,13 +228,13 @@ msgid ""
 "message.%(new_line)sType %(bold_start)s:emoji:%(bold_end)s to insert an "
 "emoji in your message."
 msgstr ""
-"%(new_line)s%(new_line)sTyyppi %(bold_start)s@username%(bold_end)s to "
-"mention someone, and grab their attention.%(new_line)sType "
-"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
-"%(bold_start)s::shortcut%(bold_end)s to insert a canned response in your "
-"message.%(new_line)sType %(bold_start)s:emoji:%(bold_end)s to insert an "
-"emoji in your message."
+"%(new_line)s%(new_line)sTyyppi %(bold_start)s@username%(bold_end)s, kun "
+"haluat mainita tietyn henkilön ja saada hänen huomionsa.%(new_line)sTyyppi "
+"%(bold_start)s#channel%(bold_end)s, kun haluat mainita kanavan.%(new_line)s "
+"Tyyppi %(bold_start)s/command%(bold_end)s, kun haluat suorittaa tietyn "
+"komennon.%(new_line)sTyyppi %(bold_start)s::shortcut%(bold_end)s, kun haluat"
+" lisätä valmiin automaattisen vastauksen viestiisi.%(new_line)sTyyppi "
+"%(bold_start)s:emoji:%(bold_end)s, kun haluat lisätä hymiön viestiisi."
 
 #. module: mail
 #. odoo-javascript
@@ -1202,7 +1202,7 @@ msgstr "Lisää Twilio-tunnukset ICE-palvelimille"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Lisää/poista seuraajia"
 
 #. module: mail
 #. odoo-python
@@ -2214,9 +2214,9 @@ msgid ""
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
 msgstr ""
-"Purkitettu vastaus, joka korvataan automaattisesti pidemmällä sisällöllä "
-"viesteissäsi. Kirjoita ':' ja sen perään viestissäsi käytettävän lyhenteen "
-"nimi (esim. :hello)."
+"Automaattinen vastaus, joka korvataan automaattisesti pidemmällä sisällöllä "
+"viesteissäsi. Kirjoita ':' ja sen perään pikanäppäimen nimi (esim. :hello), "
+"jota haluat käyttää."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -2856,7 +2856,7 @@ msgid ""
 "Content that will automatically replace the shortcut of your choosing. This "
 "content can still be adapted before sending your message."
 msgstr ""
-"Sisältö, joka korvaa automaattisesti valitsemasi pikakuvakkeen. Tätä "
+"Sisältö, joka korvaa automaattisesti valitsemasi pikanäppäimen. Tätä "
 "sisältöä voidaan vielä muokata ennen viestin lähettämistä."
 
 #. module: mail
@@ -2955,7 +2955,7 @@ msgstr "Luojan UID"
 #. module: mail
 #: model:ir.model,website_form_label:mail.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Luo asiakas"
 
 #. module: mail
 #. odoo-python
@@ -8667,7 +8667,7 @@ msgstr "Läsnäolo"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Press a key to register it as the push-to-talk shortcut."
-msgstr "Paina näppäintä rekisteröidäksesi sen tangentin-pikanäppäimeksi."
+msgstr "Paina näppäintä tehdäksesi siitä \"paina ja puhu\" -pikanäppäimen."
 
 #. module: mail
 #. odoo-javascript
@@ -8770,7 +8770,7 @@ msgstr "Puhu painamalla"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__push_to_talk_key
 msgid "Push-To-Talk shortcut"
-msgstr "Tangentin näppäinoikotie"
+msgstr "\"Paina ja puhu\" -pikanäppäin"
 
 #. module: mail
 #. odoo-javascript
@@ -10032,7 +10032,7 @@ msgstr "Jaettu kaikkien käyttäjien kanssa."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
 msgid "Shortcut"
-msgstr "Oikotie"
+msgstr "Pikanäppäin"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
@@ -10098,6 +10098,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Näytä kaikki kirjaukset, joiden seuraava toimenpidepäivä on menneisyydessä"
 
 #. module: mail
 #. odoo-javascript
@@ -11481,6 +11482,16 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Multi Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"Palvelintoiminnon tyyppi. Saatavilla seuraavat arvot:\n"
+"- 'Päivitä kirjaus': päivitä kirjauksen arvot\n"
+"- 'Luo toiminta': luo toiminnan (Viestintä)\n"
+"- 'Lähetä sähköposti': lähettää viestin, huomautuksen tai sähköpostin (Viestintä)\n"
+"- 'Lähetä tekstiviesti': lähetä tekstiviestejä, kirjaa ne asiakirjoihin (Tekstiviesti)\n"
+"- 'Lisää/poista seuraajia': lisää tai poista seuraajia kirjaukseen (Viestintä)\n"
+"- 'Luo kirjaus': luo uusi kirjaus uusilla arvoilla\n"
+"- 'Suorita koodi': Python-koodin pätkä, joka suoritetaan\n"
+"- 'Lähetä Webhook-ilmoitus': lähetä POST-pyyntö ulkoiseen järjestelmään, joka tunnetaan myös nimellä Webhook\n"
+"- 'Suorita useita toimintoja': Määritä toiminto, joka käynnistää useita muita palvelintoimintoja\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_exception_decoration
@@ -11810,8 +11821,9 @@ msgid ""
 "Use canned responses to quickly insert prewritten messages with "
 "<i>::shortcut</i>. You can edit the text before sending."
 msgstr ""
-"Käytä valmiita vastaukia sijoittaaksesi valmiiksi kirjoitetun viestin "
-"pikanäppäimellä <i>::</i>. Voit muokata viestiä ennen sen lähettämistä."
+"Käytä valmiita vastaukia sijoittaaksesi automaattisen viestin "
+"pikanäppäimellä <i>::shortcut</i>. Voit muokata viestiä ennen sen "
+"lähettämistä."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__custom_notifications
