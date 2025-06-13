@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="s_dynamic_snippet_category_preview_data" name="Category List Preview Data">
+        <div
+            class="o_category_container d-grid gap-2 rounded-2"
+            contenteditable="false"
+            style="--DynamicCategory-columns: 2; grid-auto-rows: minmax(15vh, auto);"
+        >
+            <div class="d-contents o_not_editable" contenteditable="false">
+                <div
+                    class="s_dynamic_category_item bg-black position-relative overflow-hidden"
+                    role="article"
+                    style="grid-row: span 2;"
+                >
+                    <img
+                        name="category_image"
+                        alt="Desks"
+                        class="o_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
+                        src="/website_sale/static/src/img/categories/desks.jpg"
+                    />
+                    <div
+                        class="p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between"
+                    >
+                        <h4>Desks</h4>
+                        <p class="position-absolute end-0 bottom-0 mb-3 me-3 transition-base">
+                            <i class="oi oi-arrow-right fa-lg"/>
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="s_dynamic_category_item bg-black position-relative overflow-hidden"
+                    role="article"
+                    style="grid-row: span 2;"
+                >
+                    <img
+                        name="category_image"
+                        alt="Furnitures"
+                        class="o_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
+                        src="/website_sale/static/src/img/categories/furnitures.jpg"
+                    />
+                    <div class="p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between">
+                        <h4>Furnitures</h4>
+                        <p class="position-absolute end-0 bottom-0 mb-3 me-3 transition-base">
+                            <i class="oi oi-arrow-right fa-lg"/>
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="s_dynamic_category_item bg-black position-relative overflow-hidden"
+                    role="article"
+                    style="grid-row: span 2;"
+                >
+                    <img
+                        name="category_image"
+                        alt="Boxes"
+                        class="o_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
+                        src="/website_sale/static/src/img/categories/boxes.jpg"
+                    />
+                    <div class="p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between">
+                        <h4>Boxes</h4>
+                        <p class="position-absolute end-0 bottom-0 mb-3 me-3 transition-base">
+                            <i class="oi oi-arrow-right fa-lg"/>
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="s_dynamic_category_item bg-black position-relative overflow-hidden"
+                    role="article"
+                    style="grid-row: span 2;"
+                >
+                    <img
+                        name="category_image"
+                        alt="Drawers"
+                        class="o_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
+                        src="/website_sale/static/src/img/categories/drawers.jpg"
+                    />
+                    <div class="p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between">
+                        <h4>Drawers</h4>
+                        <p class="position-absolute end-0 bottom-0 mb-3 me-3">
+                            <i class="oi oi-arrow-right fa-lg"/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

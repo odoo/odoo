@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.tools.translate import html_translate
 
 
@@ -23,10 +24,13 @@ class ProductPublicCategory(models.Model):
         return 10000
 
     name = fields.Char(required=True, translate=True)
+    cover_image = fields.Image(
+        string="Cover Image", help="Displayed only in the Category List Snippet.",
+    )
     sequence = fields.Integer(default=_default_sequence, index=True)
 
     parent_id = fields.Many2one(
-        string="Parent Category",
+        string="Parent",
         comodel_name='product.public.category',
         ondelete='cascade',
         index=True,
@@ -54,7 +58,7 @@ class ProductPublicCategory(models.Model):
     )
 
     website_description = fields.Html(
-        string="Category Description",
+        string="Description",
         sanitize_attributes=False,
         sanitize_form=False,
         sanitize_overridable=True,
@@ -146,3 +150,34 @@ class ProductPublicCategory(models.Model):
         for data in results_data:
             data['url'] = '/shop/category/%s' % data['id']
         return results_data
+
+    @api.model
+    def get_available_snippet_categories(self, website_id):
+        """Return parent categories available for selection in the dynamic category snippet.
+
+        :param int website_id: ID of the current website
+        :return: Available parent categories
+        :rtype: list[dict]
+        """
+        child_count_by_parent = self._read_group(
+            domain=self._get_available_category_domain(website_id),
+            aggregates=['id:count'],
+            groupby=['parent_id'],
+        )
+        return [{
+            'id': parent_category.id,
+            'name': f'{parent_category.name} ({child_count})',
+        } for parent_category, child_count in child_count_by_parent if parent_category]
+
+    @api.model
+    def _get_available_category_domain(self, website_id):
+        """Build a search domain for product categories to be used in dynamic snippets.
+
+        :param int website_id: ID of the current website
+        :return: A domain to filter product categories for the given website
+        :rtype: Domain
+        """
+        return Domain([
+            ('has_published_products', '=', True),
+            ('website_id', 'in', (False, website_id)),
+        ])

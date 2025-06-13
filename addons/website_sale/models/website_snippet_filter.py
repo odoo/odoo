@@ -19,7 +19,10 @@ class WebsiteSnippetFilter(models.Model):
 
     def _prepare_values(self, limit=None, search_domain=None):
         website = self.env['website'].get_current_website()
-        if self.model_name == 'product.product' and not website.has_ecommerce_access():
+        if (
+            self.model_name in ('product.product', 'product.public.category')
+            and not website.has_ecommerce_access()
+        ):
             return []
         hide_variants = False
         if search_domain and 'hide_variants' in search_domain:
@@ -53,6 +56,12 @@ class WebsiteSnippetFilter(models.Model):
 
     def _get_hardcoded_sample(self, model):
         samples = super()._get_hardcoded_sample(model)
+
+        def merge_samples_with_data(data_):
+            return [
+                {**samples[i % len(samples)], **data_[i % len(data_)]}
+                for i in range(max(len(samples), len(data_)))
+            ]
         if model._name == 'product.product':
             data = [{
                 'image_512': b'/product/static/img/product_chair.jpg',
@@ -79,11 +88,26 @@ class WebsiteSnippetFilter(models.Model):
                 'display_name': _("Bin"),
                 'description_sale': _("Pedal-based opening system"),
             }]
-            merged = []
-            for index in range(max(len(samples), len(data))):
-                merged.append({**samples[index % len(samples)], **data[index % len(data)]})
-                # merge definitions
-            samples = merged
+            samples = merge_samples_with_data(data)
+        elif model._name == 'product.public.category':
+            data = [{
+                'id': 1,
+                'cover_image': b'/website_sale/static/src/img/categories/desks.jpg',
+                'name': _("Desks"),
+            }, {
+                'id': 2,
+                'cover_image': b'/website_sale/static/src/img/categories/furnitures.jpg',
+                'name': _("Furnitures"),
+            }, {
+                'id': 3,
+                'cover_image': b'/website_sale/static/src/img/categories/boxes.jpg',
+                'name': _("Boxes"),
+            }, {
+                'id': 4,
+                'cover_image': b'/website_sale/static/src/img/categories/drawers.jpg',
+                'name': _("Drawers"),
+            }]
+            samples = merge_samples_with_data(data)
         return samples
 
     def _filter_records_to_values(self, records, is_sample=False):
@@ -114,6 +138,36 @@ class WebsiteSnippetFilter(models.Model):
                         'is_sample': True,
                     })
         return res_products
+
+    @api.model
+    def _prepare_category_list_data(self, parent_id=None):
+        """Return a list of categories to be displayed in the category list snippet.
+        If `parent_id` is provided, return it with its children, otherwise top-level categories.
+
+        :param int parent_id: ID of the parent category, if any.
+        :return: List of dictionaries containing category ID, name, and cover image URL.
+        :rtype: list[dict]
+        """
+        CategorySudo = request.env['product.public.category'].sudo()
+        domain = CategorySudo._get_available_category_domain(request.website.id)
+        if parent_id:
+            parent_category = CategorySudo.browse(parent_id)
+            # Parent category should be first.
+            categories = parent_category | parent_category.child_id.filtered_domain(domain)
+        else:  # Only top-level categories
+            categories = CategorySudo.search(domain & Domain('parent_id', '=', False))
+
+        base_url = request.website.get_base_url()
+        default_img_path = request.env['product.template']._get_product_placeholder_filename()
+        default_img_url = f'{base_url}/{default_img_path}'
+        return [{
+            'id': cat.id,
+            'name': cat.name,
+            'cover_image': (
+                f'{base_url}{request.website.image_url(cat, "cover_image")}'
+                if cat.cover_image else default_img_url
+            ),
+        } for cat in categories]
 
     @api.model
     def _get_products(self, mode, **kwargs):
