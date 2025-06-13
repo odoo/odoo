@@ -53,3 +53,52 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             if supplier.company_registry:
                 constraints['chorus_supplier'] = _("The company_registry is mandatory for french suppliers when invoicing to Chorus Pro.")
         return constraints
+
+    # -------------------------------------------------------------------------
+    # EXPORT: New (dict_to_xml) helpers
+    # -------------------------------------------------------------------------
+
+    def _add_invoice_header_nodes(self, document_node, vals):
+        super()._add_invoice_header_nodes(document_node, vals)
+
+        invoice = vals['invoice']
+
+        if invoice.buyer_reference:
+            # Pagero doc states that the 'Service Code' should be in the BuyerReference node
+            document_node['cbc:BuyerReference'] = {'_text': invoice.buyer_reference}
+
+        if invoice.purchase_order_reference:
+            # Pagero doc states that the 'Commitment Number' should be in the OrderReference/ID node
+            document_node['cac:OrderReference'] = {
+                'cbc:ID': {'_text': invoice.purchase_order_reference}
+            }
+
+    def _get_party_node(self, vals):
+        # * Pagero doc states that the siret of the final customer (that has the Chorus peppol ID) should be located in
+        # the PartyIdentification node.
+        # * Chorus Pro doc states that french suppliers should mention their siret, and european non-french suppliers
+        # should put their VAT
+        party_node = super()._get_party_node(vals)
+
+        customer = vals['customer'].commercial_partner_id
+        partner = vals['partner'].commercial_partner_id
+
+        if (
+            customer.peppol_eas and
+            customer.peppol_endpoint and
+            customer.peppol_eas + ":" + customer.peppol_endpoint == CHORUS_PRO_PEPPOL_ID
+        ):
+            party_node['cac:PartyIdentification'] = {
+                'cbc:ID': {
+                    '_text': (
+                        partner.company_registry
+                        if partner.company_registry and partner.country_code == 'FR'
+                        else partner.vat
+                    ),
+                    'schemeName': (
+                        '1' if partner.company_registry and partner.country_code == 'FR' else '2'
+                    ),
+                }
+            }
+
+        return party_node
