@@ -124,27 +124,29 @@ export class Colibri {
         return [event, handler, options];
     }
 
-    refreshListeners() {
-        for (const sel of this.listeners.keys()) {
+    refreshNodes() {
+        for (const sel of this.dynamicNodes.keys()) {
             const nodes = this.getNodes(sel);
-            const newNodes = new Set(nodes);
-            const oldNodes = this.dynamicNodes.get(sel);
-            const events = this.listeners.get(sel);
-            const toRemove = new Set();
-            for (const node of oldNodes) {
-                if (newNodes.has(node)) {
-                    newNodes.delete(node);
-                } else {
-                    toRemove.add(node);
+            if (this.listeners.has(sel)) {
+                const newNodes = new Set(nodes);
+                const oldNodes = this.dynamicNodes.get(sel);
+                const events = this.listeners.get(sel);
+                const toRemove = new Set();
+                for (const node of oldNodes) {
+                    if (newNodes.has(node)) {
+                        newNodes.delete(node);
+                    } else {
+                        toRemove.add(node);
+                    }
                 }
-            }
-            for (const event of Object.keys(events)) {
-                const [handler, options] = events[event];
-                for (const node of toRemove) {
-                    node.removeEventListener(event, handler, options);
-                }
-                if (newNodes.size) {
-                    this.addListener(newNodes, event, handler, options);
+                for (const event of Object.keys(events)) {
+                    const [handler, options] = events[event];
+                    for (const node of toRemove) {
+                        node.removeEventListener(event, handler, options);
+                    }
+                    if (newNodes.size) {
+                        this.addListener(newNodes, event, handler, options);
+                    }
                 }
             }
             this.dynamicNodes.set(sel, nodes);
@@ -159,12 +161,11 @@ export class Colibri {
         }
     }
 
-    mountComponent(nodes, C, props) {
-        for (const node of nodes) {
-            const root = this.core.prepareRoot(node, C, props);
-            root.mount();
-            this.cleanups.push(() => root.destroy());
-        }
+    mountComponent(node, C, props, position = "beforeend") {
+        const root = this.core.prepareRoot(node, C, props, position);
+        root.mount();
+        this.cleanups.push(() => root.destroy());
+        return root;
     }
 
     applyTOut(el, value, initialValue) {
@@ -188,7 +189,7 @@ export class Colibri {
             for (const node of nodes) {
                 this.core.env.services["public.interactions"].startInteractions(node);
             }
-            this.refreshListeners();
+            this.refreshNodes();
         } else {
             el.textContent = value;
         }
@@ -201,7 +202,7 @@ export class Colibri {
             }
             for (const cl in value) {
                 let toApply = value[cl];
-                for (let c of cl.trim().split(" ")) {
+                for (const c of cl.trim().split(" ")) {
                     if (toApply === INITIAL_VALUE) {
                         toApply = initialValue[cl];
                     }
@@ -286,15 +287,24 @@ export class Colibri {
                     this.mapSelectorToListeners(sel, event, handler, options);
                 } else if (directive.startsWith("t-att-")) {
                     const attr = directive.slice(6);
-                    this.dynamicAttrs.push({ nodes, attr, definition: value, initialValues: null });
+                    this.dynamicAttrs.push({
+                        sel,
+                        attr,
+                        definition: value,
+                        initialValues: null,
+                    });
                 } else if (directive === "t-out") {
-                    this.tOuts.push([nodes, value, null]);
+                    this.tOuts.push({ sel, definition: value, initialValue: null });
                 } else if (directive === "t-component") {
                     const { Component } = odoo.loader.modules.get("@odoo/owl");
                     if (Object.prototype.isPrototypeOf.call(Component, value)) {
-                        this.mountComponent(nodes, value);
+                        for (const node of nodes) {
+                            this.mountComponent(node, value);
+                        }
                     } else {
-                        this.mountComponent(nodes, ...value());
+                        for (const node of nodes) {
+                            this.mountComponent(node, ...value());
+                        }
                     }
                 } else {
                     const suffix = directive.startsWith("t-") ? "" : " (should start with t-)";
@@ -314,23 +324,24 @@ export class Colibri {
             throw new Error("Updatecontent should not be called while interaction is updating");
         }
         this.isUpdating = true;
+        this.refreshNodes();
         const errors = [];
         const interaction = this.interaction;
         for (const dynamicAttr of this.dynamicAttrs) {
-            const { nodes, attr, definition, initialValues } = dynamicAttr;
-            let valuePerNode;
-            if (!initialValues) {
-                valuePerNode = new Map();
-                dynamicAttr.initialValues = valuePerNode;
+            let { sel, attr, definition, initialValues } = dynamicAttr;
+            const nodes = this.dynamicNodes.get(sel) || [];
+            if (!initialValues && nodes.length) {
+                initialValues = new Map();
+                dynamicAttr.initialValues = initialValues;
             }
             for (const node of nodes) {
                 try {
                     const value = definition.call(interaction, node);
-                    if (!initialValues) {
+                    if (!initialValues || !initialValues.has(node)) {
                         let attrValue;
                         switch (attr) {
                             case "class":
-                                attrValue = [];
+                                attrValue = {};
                                 for (const classNames of Object.keys(value)) {
                                     attrValue[classNames] = node.classList.contains(classNames);
                                 }
@@ -348,7 +359,7 @@ export class Colibri {
                             default:
                                 attrValue = node.getAttribute(attr);
                         }
-                        valuePerNode.set(node, attrValue);
+                        initialValues.set(node, attrValue);
                     }
                     this.applyAttr(node, attr, value, dynamicAttr.initialValues.get(node));
                 } catch (e) {
@@ -357,21 +368,27 @@ export class Colibri {
             }
         }
         for (const tOut of this.tOuts) {
-            const [nodes, definition, initialValue] = tOut;
-            let valuePerNode;
-            if (!initialValue) {
-                valuePerNode = new Map();
-                tOut[2] = valuePerNode;
+            let { sel, definition, initialValue } = tOut;
+            const nodes = this.dynamicNodes.get(sel) || [];
+            if (!initialValue && nodes.length) {
+                initialValue = new Map();
+                tOut.initialValue = initialValue;
             }
             for (const node of nodes) {
-                if (!initialValue) {
+                if (!initialValue || !initialValue.has(node)) {
                     if (!owl) {
                         owl = odoo.loader.modules.get("@odoo/owl");
                     }
-                    const value = node.children.length ? owl.markup(node.innerHTML) : node.textContent;
-                    valuePerNode.set(node, value);
+                    const value = node.children.length
+                        ? owl.markup(node.innerHTML)
+                        : node.textContent;
+                    initialValue.set(node, value);
                 }
-                this.applyTOut(node, definition.call(interaction, node), tOut[2].get(node));
+                this.applyTOut(
+                    node,
+                    definition.call(interaction, node),
+                    tOut.initialValue.get(node)
+                );
             }
         }
         this.isUpdating = false;
@@ -387,13 +404,15 @@ export class Colibri {
     destroy() {
         // restore t-att to their initial values
         for (const dynAttrs of this.dynamicAttrs) {
-            const { nodes, attr, initialValues } = dynAttrs;
+            const { sel, attr, initialValues } = dynAttrs;
             if (!initialValues) {
                 continue;
             }
-            for (const node of nodes) {
-                const initialValue = initialValues.get(node);
-                this.applyAttr(node, attr, initialValue);
+            for (const node of this.dynamicNodes.get(sel) || []) {
+                if (initialValues.has(node)) {
+                    const initialValue = initialValues.get(node);
+                    this.applyAttr(node, attr, initialValue);
+                }
             }
         }
 
