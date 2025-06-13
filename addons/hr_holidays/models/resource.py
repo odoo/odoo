@@ -1,12 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from datetime import datetime, time
+
+import pytz
+
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools import babel_locale_parse
-from odoo.tools.date_utils import weeknumber
-import pytz
-from datetime import datetime, time
+from odoo.tools.date_utils import weeknumber, convert_timezone
+from odoo.addons.hr_holidays.lib.holiday_generator.holiday_generator import HolidayGenerator
 
 
 class ResourceCalendarLeaves(models.Model):
@@ -129,7 +132,7 @@ class ResourceCalendarLeaves(models.Model):
                 continue
             user_tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
             calendar_tz = pytz.timezone(self.env['resource.calendar'].browse(vals['calendar_id']).tz)
-            if user_tz != calendar_tz:
+            if user_tz != calendar_tz and self.env.context.get('convert_datetime', True):
                 datetime_from = self._ensure_datetime(vals['date_from'], '%Y-%m-%d %H:%M:%S')
                 datetime_to = self._ensure_datetime(vals['date_to'], '%Y-%m-%d %H:%M:%S')
                 if datetime_from and datetime_to:
@@ -159,6 +162,99 @@ class ResourceCalendarLeaves(models.Model):
         self._reevaluate_leaves(time_domain_dict)
 
         return res
+
+    def _generate_public_holidays(self, companies, year_range, convert_datetime=True):
+        response = []
+        existing_holidays_dict = dict(self.env["resource.calendar.leaves"]._read_group(
+            domain=[
+                ('company_id', 'in', companies.ids),
+                ('date_from', '>=', datetime(year_range[0] - 1, 12, 31, 0, 0, 0)),
+                ('date_to', '<=', datetime(year_range[-1] + 1, 1, 2, 0, 0, 0)),
+                ('resource_id', '=', False),
+            ],
+            groupby=['company_id'],
+            aggregates=['id:recordset'],
+        ))
+
+        for company in companies:
+            if not company.country_code:
+                response.append({
+                    'title': self.env._('No Country Code'),
+                    'type': 'danger',
+                    'message': self.env._('Please select a country in %(company)s to load public holidays.', company=company.name),
+                })
+                continue
+            gen = HolidayGenerator()
+            public_holiday_dict = gen.generate(company.country_code, year_range)
+            overlapped_holidays = False
+            company_tz = pytz.timezone(company.resource_calendar_id.tz)
+            public_holidays_values_dict = {}
+
+            for holiday_date, holiday_name in public_holiday_dict.items():
+                holiday_start_utc = convert_timezone(datetime.combine(holiday_date, time.min), pytz.utc, company_tz)
+                holiday_end_utc = convert_timezone(datetime.combine(holiday_date, time.max), pytz.utc, company_tz)
+                overlapping = any(
+                    holiday.date_from <= holiday_end_utc and
+                    holiday.date_to >= holiday_start_utc
+                    for holiday in existing_holidays_dict.get(company, [])
+                )
+                if overlapping:
+                    overlapped_holidays = True
+                    continue
+                if holiday_date in public_holidays_values_dict:
+                    public_holidays_values_dict[holiday_date]['name'] += f" / {holiday_name}"
+                else:
+                    public_holidays_values_dict[holiday_date] = {
+                        'name': holiday_name,
+                        'date_from': holiday_start_utc,
+                        'date_to': holiday_end_utc,
+                        'company_id': company.id,
+                    }
+
+            new_public_holidays = self.env['resource.calendar.leaves'].with_context(convert_datetime=convert_datetime).create(
+                list(public_holidays_values_dict.values()),
+            )
+            notification = {
+                'title': self.env._('Public Holidays Import Notification'),
+                'type': 'success',
+                'message': self.env._('No new public time off were added as they already exist.'),
+            }
+            if not new_public_holidays:
+                response.append(notification)
+            else:
+                notification['message'] = self.env._(
+                    "Public holidays have been successfully created for %(company)s for the next %(years)s years.",
+                    company=company.name, years=len(year_range))
+                if overlapped_holidays:
+                    notification['message'] += " " + self.env._("Some were overlapping existing ones, not all records have been created.")
+                response.append(notification)
+
+        return response
+
+    def load_public_holidays(self, companies=False, convert_datetime=True):
+        notifications = []
+        if not companies:
+            companies = self.env.companies
+        current_year = datetime.now().year
+        notifications.extend(self._generate_public_holidays(
+            year_range=range(current_year, current_year + 5),
+            companies=companies or self.env.companies,
+            convert_datetime=convert_datetime,
+        ))
+        for notification in notifications:
+            self.env['bus.bus']._sendone(
+                self.env.user.partner_id,
+                'simple_notification',
+                notification,
+            )
+
+    def _cron_load_current_year_public_holidays(self):
+        current_year = datetime.now().year
+        self._generate_public_holidays(
+            year_range=[current_year, current_year + 1],
+            companies=self.env.companies,
+            convert_datetime=False,
+        )
 
 
 class ResourceCalendar(models.Model):

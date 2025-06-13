@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import pytz
+
 from datetime import date, datetime, timedelta
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -8,6 +10,7 @@ from odoo.exceptions import ValidationError
 from freezegun import freeze_time
 
 from odoo.tests import tagged
+
 
 @tagged('global_leaves')
 class TestGlobalLeaves(TestHrHolidaysCommon):
@@ -20,6 +23,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Classic 40h/week',
             'tz': 'UTC',
             'hours_per_day': 8.0,
+            'company_id': cls.company.id,
             'attendance_ids': [
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
@@ -63,6 +67,11 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'date_from': date(2022, 3, 8),
             'date_to': date(2022, 3, 8),
             'calendar_id': cls.calendar_1.id,
+        })
+
+        cls.us_company = cls.env['res.company'].create({
+            'name': 'Test company US',
+            'country_id': cls.env.ref('base.us').id,
         })
 
     def test_leave_on_global_leave(self):
@@ -209,7 +218,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
         partially_covered_leave.action_approve()
 
-        global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
+        self.env['resource.calendar.leaves'].with_user(self.env.user).create({
             'name': 'Public holiday',
             'date_from': "2024-12-04 06:00:00",
             'date_to': "2024-12-04 23:00:00",
