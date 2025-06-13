@@ -149,6 +149,10 @@ class TestUBLNL(TestUBLCommon):
         self.assertEqual(attachment.name[-10:], "nlcius.xml")
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
+    def test_export_import_invoice_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_export_import_invoice()
+
     def test_export_import_refund(self):
         refund = self._generate_move(
             self.partner_1,
@@ -206,6 +210,10 @@ class TestUBLNL(TestUBLCommon):
         )
         self.assertEqual(attachment.name[-10:], "nlcius.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
+
+    def test_export_import_refund_new(self):
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        self.test_export_import_refund()
 
     def test_export_fixed_tax(self):
         """
