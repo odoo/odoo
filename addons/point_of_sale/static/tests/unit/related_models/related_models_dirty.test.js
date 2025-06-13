@@ -99,6 +99,19 @@ describe("Dirty record", () => {
         expect(order.isDirty()).toBe(true);
     });
 
+    test("rollback synchronization state", () => {
+        const models = getModels();
+        const order = models["pos.order"].create({ id: "12" }); // ID string so will be dirty
+        expect(order.isDirty()).toBe(true);
+
+        const result = models.serializeForORM(order);
+        expect(order.isDirty()).toBe(false);
+
+        // Rollback the synchronization state in case of a failed synchronization
+        result.rollback();
+        expect(order.isDirty()).toBe(true);
+    });
+
     test("model creation", () => {
         const models = getModels();
         // Models created with a numeric ID are not considered dirty by default

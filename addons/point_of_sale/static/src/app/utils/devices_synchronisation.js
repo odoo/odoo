@@ -1,4 +1,5 @@
 import { Domain } from "@web/core/domain";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * Class representing the synchronization of records.
@@ -94,7 +95,9 @@ export default class DevicesSynchronisation {
                 recordIds,
             ]);
         } catch (error) {
-            console.warn("Error while reading open orders data from server", error);
+            if (!(error instanceof ConnectionLostError)) {
+                console.warn("Error while reading open orders data from server", error);
+            }
             return;
         }
 

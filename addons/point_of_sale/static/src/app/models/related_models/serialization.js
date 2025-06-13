@@ -4,7 +4,7 @@ import { X2MANY_TYPES, DATE_TIME_TYPE } from "./utils";
 const deepSerialization = (
     record,
     opts,
-    { serialized = {}, uuidMapping = {}, parentRelInverseName = null, stack = [] }
+    { serialized = {}, uuidMapping = {}, parentRelInverseName = null, stack = [], rollback = [] }
 ) => {
     const result = {};
     const { fields, name: currentModel } = record.model;
@@ -15,6 +15,7 @@ const deepSerialization = (
             uuidMapping,
             parentRelInverseName,
             stack,
+            rollback,
         });
 
     // We only care about the fields present in python model
@@ -56,9 +57,10 @@ const deepSerialization = (
                     if (typeof childRecord.id === "number" && childRecord._dirty) {
                         toUpdate.push(childRecord);
 
-                        if (!opts.keepCommands) {
-                            childRecord._dirty = false;
-                        }
+                        childRecord._dirty = false;
+                        rollback.push(() => {
+                            childRecord._dirty = true;
+                        });
                     } else if (typeof childRecord.id !== "number") {
                         toCreate.push(childRecord);
                     }
@@ -120,9 +122,12 @@ const deepSerialization = (
                         ({ parentId }) => parentId !== record.id
                     );
 
-                    if (opts.keepCommands) {
-                        continue;
-                    }
+                    rollback.push(() =>
+                        commands.set(
+                            fieldName,
+                            commandList.filter(({ parentId }) => parentId === record.id)
+                        )
+                    );
 
                     if (remainingCommands.length) {
                         commands.set(fieldName, remainingCommands);
@@ -175,9 +180,7 @@ const deepSerialization = (
         res[key] = getValue();
     }
 
-    if (!opts.keepCommands) {
-        record._dirty = false;
-    }
+    record._dirty = false;
 
     // Cleanup: remove empty entries from uuidMapping.
     for (const key in uuidMapping) {
@@ -195,9 +198,13 @@ const deepSerialization = (
 
 export const ormSerialization = (record, opts) => {
     const uuidMapping = {};
+    const rollback = [];
     const result = deepSerialization(record, opts, {
         uuidMapping,
+        rollback,
     });
+
+    result.rollback = () => rollback.forEach((fn) => fn());
     if (Object.keys(uuidMapping).length !== 0) {
         result.relations_uuid_mapping = uuidMapping;
     }

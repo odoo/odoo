@@ -295,7 +295,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     rawData[key] = vals[key];
                 }
 
-                if (key[0] === "_" && key[1] !== "_") {
+                if (key[0] === "_" && key[1] !== "_" && key !== "_dirty") {
                     if (!extraFields) {
                         extraFields = [];
                     }
@@ -513,11 +513,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return ormSerialization(record, { dynamicModels, ...opts });
         }
         serializeForIndexedDB(record) {
-            const serialized = { ...record.raw };
-            const state = record.serializeState();
-            if (state) {
-                serialized[SERIALIZED_UI_STATE_PROP] = JSON.stringify(state);
-            }
+            const serialized = { ...record.raw, _dirty: record._dirty };
+            const state = record.serializeState() || {};
+            serialized[SERIALIZED_UI_STATE_PROP] = JSON.stringify(state);
             return serialized;
         }
     }

@@ -323,7 +323,6 @@ export class PaymentScreen extends Component {
             }
         }
 
-        this.pos.addPendingOrder([this.currentOrder.id]);
         this.currentOrder.state = "paid";
 
         this.env.services.ui.block();

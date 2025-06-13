@@ -85,7 +85,7 @@ describe("IndexedDB serialization", () => {
             expect(result.lines.length).toBe(2);
             expect(result.lines[0]).toBe(line1.id);
             expect(result.lines[1]).toBe(line2.id);
-            expect(result[SERIALIZED_UI_STATE_PROP]).toBeEmpty();
+            expect(JSON.parse(result[SERIALIZED_UI_STATE_PROP])).toBeEmpty();
         }
 
         {
@@ -93,7 +93,7 @@ describe("IndexedDB serialization", () => {
             expect(result.id).toBe(line1.id);
             expect(result.quantity).toBe(1);
             expect(result.attribute_ids).toEqual([99]);
-            expect(result[SERIALIZED_UI_STATE_PROP]).toBeEmpty();
+            expect(JSON.parse(result[SERIALIZED_UI_STATE_PROP])).toBeEmpty();
         }
     });
 

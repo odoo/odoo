@@ -27,3 +27,11 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.start_pos_tour('test_devices_synchronization')
+
+    def test_synchronization_rollback(self):
+        self.main_pos_config.open_ui()
+
+        # This first tour should result with an order with 2 cola and 1 water
+        self.start_pos_tour('test_synchronization_rollback')
+        last_order = self.main_pos_config.current_session_id.order_ids[-1]
+        self.assertEqual(last_order.lines.mapped('qty'), [2, 1])
