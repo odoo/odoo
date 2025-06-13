@@ -9,7 +9,12 @@
     "data": [
         "views/settings.xml",
     ],
-    "external_dependencies": {"python": ["google-auth"]},
+    "external_dependencies": {
+        "python": ["google-auth"],
+        "apt": {
+            "google-auth": "python3-google-auth",
+        },
+    },
     'assets': {
         'web.assets_backend': [
             'cloud_storage_google/static/src/**/*',
