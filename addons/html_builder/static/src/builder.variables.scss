@@ -20,8 +20,22 @@ $o-we-fg-lighter: #FFFFFF !default;
 
 $o-we-color-danger: #e6586c !default;
 $o-we-color-warning: #f0ad4e !default;
-$o-we-color-success: #40ad67 !default;
+$o-we-color-success: #00ff9e !default;
 $o-we-color-info: #6999a8 !default;
+$o-we-color-accent: #01bad2 !default;
+$o-we-color-global: #dbfe5c !default;
+$o-we-color-primary: $o-brand-primary !default;
+
+$o-we-colors: (
+    "primary": $o-we-color-primary,
+    "global": $o-we-color-global,
+    "accent": $o-we-color-accent,
+
+    "info": $o-we-color-info,
+    "success": $o-we-color-success,
+    "danger": $o-we-color-danger,
+    "warning": $o-we-color-warning,
+) !default;
 
 $o-we-bg: $o-we-bg-light !default;
 $o-we-color: $o-we-fg-light !default;
@@ -31,7 +45,7 @@ $o-we-font-size-xs: 10px !default;
 $o-we-font-size-lg: 13px !default;
 $o-we-font-family: "-apple-system", "Roboto", $o-font-family-sans-serif !default;
 $o-we-font-monospace: "Fira_Mono", $o-font-family-monospace !default;
-$o-we-accent: #01bad2 !default;
+
 $o-we-border-width: 1px !default;
 $o-we-border-color: $o-we-bg-light !default;
 
@@ -39,7 +53,7 @@ $o-we-border-color: $o-we-bg-light !default;
 // has a page with a lot of content (10000px was proven to be too small)
 $o-we-handles-offset-to-hide: 100000px !default;
 $o-we-handles-btn-size: 14px !default;
-$o-we-handles-accent-color: $o-we-accent !default;
+$o-we-handles-accent-color: $o-we-color-accent !default;
 $o-we-handles-accent-color-preview: $o-enterprise-color !default;
 $o-we-handle-edge-size: $o-we-handles-btn-size !default;
 $o-we-handle-border-width: 2px !default;
@@ -48,7 +62,7 @@ $o-we-handle-inside-line-width: 3px !default;
 $o-we-dropzone-size: 30px !default; // $grid-gutter-width (todo: allow to use the variable)
 $o-we-dropzone-border-width: 2px !default;
 $o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-odoo !default;
-$o-we-dropzone-accent-color: $o-we-accent !default;
+$o-we-dropzone-accent-color: $o-we-color-accent !default;
 $o-we-dropzone-bg-color: rgba($o-we-dropzone-accent-color, .5) !default;
 
 // Translations
@@ -63,7 +77,7 @@ $o-we-item-border-color: transparent !default;
 $o-we-item-border-radius: 4px !default;
 $o-we-item-clickable-bg: $o-we-bg-lightest!default;
 $o-we-item-clickable-color: $o-we-fg-light!default;
-$o-we-item-clickable-hover-bg: $o-we-bg-dark!default;
+$o-we-item-clickable-hover-bg: $o-we-bg-lighter!default;
 $o-we-item-pressed-bg: $o-we-bg-light !default;
 $o-we-item-pressed-color: $o-we-fg-lighter !default;
 
@@ -129,7 +143,7 @@ $o-we-sidebar-tabs-bg: $o-we-bg-darker !default;
 $o-we-sidebar-tabs-color: $o-we-sidebar-color !default;
 $o-we-sidebar-tabs-disabled-color: $o-we-fg-darker !default;
 $o-we-sidebar-tabs-active-border-width: 2px !default;
-$o-we-sidebar-tabs-active-border-color: $o-we-accent !default;
+$o-we-sidebar-tabs-active-border-color: $o-we-color-accent !default;
 $o-we-sidebar-tabs-active-color: $o-we-fg-lighter !default;
 
 $o-we-sidebar-blocks-content-bg: $o-we-bg-dark !default;
@@ -138,7 +152,7 @@ $o-we-sidebar-blocks-content-snippet-spacing: 2px !default;
 $o-we-sidebar-blocks-content-snippet-bg: $o-we-bg-lighter !default;
 
 $o-we-sidebar-content-highlight-bar-width: 2px !default;
-$o-we-sidebar-content-highlight-bar-color: $o-we-accent !default;
+$o-we-sidebar-content-highlight-bar-color: $o-we-color-accent !default;
 
 $o-we-sidebar-content-gutter-item-indent: 5px !default;
 $o-we-sidebar-content-padding-base: 10px !default;
@@ -204,19 +218,19 @@ $o-we-sidebar-content-field-input-max-width: 60px !default;
 $o-we-sidebar-content-field-input-bg: $o-we-bg-light !default;
 $o-we-sidebar-content-field-input-font-family: $o-we-font-family !default;
 $o-we-sidebar-content-field-input-unit-font-size: 11px !default;
-$o-we-sidebar-content-field-input-border-color: $o-we-accent !default;
+$o-we-sidebar-content-field-input-border-color: $o-we-color-accent !default;
 
 $o-we-sidebar-content-field-button-group-button-spacing: $o-we-sidebar-content-field-clickable-spacing;
 
 $o-we-sidebar-content-field-progress-height: 4px !default;
 $o-we-sidebar-content-field-progress-control-height: 10px !default;
 $o-we-sidebar-content-field-progress-color: $o-we-fg-darker !default;
-$o-we-sidebar-content-field-progress-active-color: $o-we-accent !default;
+$o-we-sidebar-content-field-progress-active-color: $o-we-color-accent !default;
 
 $o-we-sidebar-content-field-toggle-width: 20px !default;
 $o-we-sidebar-content-field-toggle-height: 12px !default;
 $o-we-sidebar-content-field-toggle-bg: $o-we-fg-darker !default;
-$o-we-sidebar-content-field-toggle-active-bg: $o-we-accent !default;
+$o-we-sidebar-content-field-toggle-active-bg: $o-we-color-accent !default;
 $o-we-sidebar-content-field-toggle-control-width: 11px !default;
 $o-we-sidebar-content-field-toggle-control-height: $o-we-sidebar-content-field-toggle-height - 2px !default;
 $o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;

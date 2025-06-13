@@ -7,7 +7,11 @@
             <tbody>
                 <!-- The `fabricatedKey` is a hack. I wish I could use `item.id` for the `t-key`. But the `applyTo`s are not properly updated, and thus it does not target the correct element if the domPosition changes (for example, after a deletion of an earlier item in the list). So `fabricatedKey` is a mix of `item.id` and `item.domPosition`. This causes the inner components to be re-created as soon as one of the two changes -->
                 <tr t-foreach="this.computeItems()" t-as="item" t-key="item.fabricatedKey" t-att-data-id="item.id">
-                    <td><button class="btn fa fa-fw fa-arrows o_drag_handle"></button></td>
+                    <td>
+                        <button class="btn o_drag_handle ps-0">
+                            <i class="oi oi-draggable"/>
+                        </button>
+                    </td>
                     <td width="100%">
                         <BuilderTextInput
                             t-if="item.media"
