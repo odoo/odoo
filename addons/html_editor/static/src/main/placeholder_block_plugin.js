@@ -1,3 +1,4 @@
+import { closestBlock } from "@html_editor/utils/blocks";
 import { Plugin } from "../plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
@@ -99,25 +100,38 @@ export class PlaceholderBlockPlugin extends Plugin {
     onSelectionChange(selectionData) {
         const anchor = closestElement(selectionData.editableSelection.anchorNode);
         if (this.isPlaceholderBlock(anchor)) {
-            if (isEmptyBlock(anchor) && anchor.matches(this.baseContainerSelector)) {
+            if (
+                isEmptyBlock(anchor) &&
+                anchor.matches(this.baseContainerSelector) &&
+                !anchor.previousElementSibling &&
+                !anchor.nextElementSibling
+            ) {
                 // Select the block.
                 anchor.classList.add("o-placeholder-block-selected");
+                // The block changed heights so we need to recompute the power
+                // buttons position.
                 this.dependencies.powerButtons.setPowerButtonsPosition(
                     anchor,
                     anchor.getBoundingClientRect(),
                     closestElement(anchor, "[dir]")?.getAttribute("dir")
                 );
             } else {
-                // Persist the block (if it changed).
-                anchor.classList.remove(
-                    "o-placeholder-block",
-                    "o-placeholder-block-selected",
-                    "o-placeholder-block-top",
-                    "o-placeholder-block-bottom"
-                );
-                anchor.removeAttribute("contenteditable");
+                // Persist the block (if it changed), and its siblings (in case
+                // of split).
                 const cursors = this.dependencies.selection.preserveSelection();
-                anchor.parentElement.after(anchor);
+                const siblings = [...anchor.parentElement.children].reverse();
+                for (const block of siblings) {
+                    if (block) {
+                        block.classList.remove(
+                            "o-placeholder-block",
+                            "o-placeholder-block-selected",
+                            "o-placeholder-block-top",
+                            "o-placeholder-block-bottom"
+                        );
+                        block.removeAttribute("contenteditable");
+                        block.parentElement.after(block);
+                    }
+                }
                 cursors.restore();
             }
         } else {
@@ -125,6 +139,14 @@ export class PlaceholderBlockPlugin extends Plugin {
             this.editable
                 .querySelectorAll(".o-placeholder-block-selected")
                 .forEach((block) => block.classList.remove("o-placeholder-block-selected"));
+            // The block changed heights so we need to recompute the power
+            // buttons position.
+            const block = closestBlock(anchor);
+            this.dependencies.powerButtons.setPowerButtonsPosition(
+                block,
+                block.getBoundingClientRect(),
+                closestElement(anchor, "[dir]")?.getAttribute("dir")
+            );
         }
     }
 
