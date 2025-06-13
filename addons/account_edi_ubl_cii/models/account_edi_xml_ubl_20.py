@@ -2,12 +2,53 @@ from collections import defaultdict
 from lxml import etree
 
 from odoo import _, models, Command
-from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.tools import html2plaintext, cleanup_xml_node, float_is_zero, float_repr, float_round
+from odoo.addons.account.tools import dict_to_xml
+from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 
 UBL_NAMESPACES = {
     'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
     'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
 }
+
+
+class FloatFmt(float):
+    """ A float with a given precision.
+    The precision is used when formatting the float.
+    """
+    def __new__(cls, value, min_dp=2, max_dp=None):
+        return super().__new__(cls, value)
+
+    def __init__(self, value, min_dp=2, max_dp=None):
+        self.min_dp = min_dp
+        self.max_dp = max_dp
+
+    def __str__(self):
+        if not isinstance(self.min_dp, int) or (self.max_dp is not None and not isinstance(self.max_dp, int)):
+            return "<FloatFmt()>"
+        self_float = float(self)
+        min_dp_int = int(self.min_dp)
+        if self.max_dp is None:
+            return float_repr(self_float, min_dp_int)
+        else:
+            # Format the float to between self.min_dp and self.max_dp decimal places.
+            # We start by formatting to self.max_dp, and then remove trailing zeros,
+            # but always keep at least self.min_dp decimal places.
+            max_dp_int = int(self.max_dp)
+            amount_max_dp = float_repr(self_float, max_dp_int)
+            num_trailing_zeros = len(amount_max_dp) - len(amount_max_dp.rstrip('0'))
+            return float_repr(self_float, max(max_dp_int - num_trailing_zeros, min_dp_int))
+
+    def __repr__(self):
+        if not isinstance(self.min_dp, int) or (self.max_dp is not None and not isinstance(self.max_dp, int)):
+            return "<FloatFmt()>"
+        self_float = float(self)
+        min_dp_int = int(self.min_dp)
+        if self.max_dp is None:
+            return f"FloatFmt({self_float!r}, {min_dp_int!r})"
+        else:
+            max_dp_int = int(self.max_dp)
+            return f"FloatFmt({self_float!r}, {min_dp_int!r}, {max_dp_int!r})"
 
 
 class AccountEdiXmlUbl_20(models.AbstractModel):
@@ -889,3 +930,877 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
             return 'refund', 1
         return None, None
+
+    # -------------------------------------------------------------------------
+    # EXPORT: New (dict_to_xml) helpers
+    # -------------------------------------------------------------------------
+
+    def _export_invoice_new(self, invoice):
+        """ Generates an UBL 2.0 xml for a given invoice, using the new dict_to_xml helpers. """
+        # 1. Validate the structure of the taxes
+        self._validate_taxes(invoice.invoice_line_ids.tax_ids)
+
+        # 2. Instantiate the XML builder
+        vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
+        document_node = self._get_invoice_node(vals)
+
+        # 3. Run constraints
+        vals['document_node'] = document_node
+        errors = [constraint for constraint in self._export_invoice_constraints_new(invoice, vals).values() if constraint]
+
+        template = self._get_document_template(vals)
+        nsmap = self._get_document_nsmap(vals)
+
+        # 4. Render the XML
+        xml_content = dict_to_xml(document_node, nsmap=nsmap, template=template)
+
+        # 5. Format the XML
+        return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8'), set(errors)
+
+    def _get_document_template(self, vals):
+        return {
+            'invoice': Invoice,
+            'credit_note': CreditNote,
+            'debit_note': DebitNote,
+        }[vals['document_type']]
+
+    def _get_document_nsmap(self, vals):
+        return {
+            None: {
+                'invoice': "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+                'credit_note': "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2",
+                'debit_note': "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2",
+                'order': "urn:oasis:names:specification:ubl:schema:xsd:Order-2",
+            }[vals['document_type']],
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'ext': "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2",
+        }
+
+    def _get_tags_for_document_type(self, vals):
+        return {
+            'document_type_code': {
+                'invoice': 'cbc:InvoiceTypeCode',
+                'credit_note': 'cbc:CreditNoteTypeCode',
+                'debit_note': None,
+                'order': 'cbc:OrderTypeCode',
+            }[vals['document_type']],
+            'monetary_total': {
+                'invoice': 'cac:LegalMonetaryTotal',
+                'credit_note': 'cac:LegalMonetaryTotal',
+                'debit_note': 'cac:RequestedMonetaryTotal',
+                'order': 'cac:AnticipatedMonetaryTotal',
+            }[vals['document_type']],
+            'document_line': {
+                'invoice': 'cac:InvoiceLine',
+                'credit_note': 'cac:CreditNoteLine',
+                'debit_note': 'cac:DebitNoteLine',
+                'order': 'cac:OrderLine',
+            }[vals['document_type']],
+            'line_quantity': {
+                'invoice': 'cbc:InvoicedQuantity',
+                'credit_note': 'cbc:CreditedQuantity',
+                'debit_note': 'cbc:DebitedQuantity',
+                'order': 'cbc:Quantity',
+            }[vals['document_type']]
+        }
+
+    def _is_document_allowance_charge(self, base_line):
+        """ Whether the base line should be treated as a document-level AllowanceCharge. """
+        return base_line['special_type'] == 'early_payment'
+
+    # -------------------------------------------------------------------------
+    # EXPORT: account.move specific templates
+    # -------------------------------------------------------------------------
+
+    def _get_invoice_node(self, vals):
+        self._add_invoice_config_vals(vals)
+        self._add_invoice_base_lines_vals(vals)
+        self._add_invoice_currency_vals(vals)
+        self._add_invoice_tax_grouping_function_vals(vals)
+        self._add_invoice_monetary_totals_vals(vals)
+
+        document_node = {}
+        self._add_invoice_header_nodes(document_node, vals)
+        self._add_invoice_accounting_supplier_party_nodes(document_node, vals)
+        self._add_invoice_accounting_customer_party_nodes(document_node, vals)
+        self._add_invoice_seller_supplier_party_nodes(document_node, vals)
+
+        if vals['document_type'] == 'invoice':
+            self._add_invoice_delivery_nodes(document_node, vals)
+            self._add_invoice_payment_means_nodes(document_node, vals)
+            self._add_invoice_payment_terms_nodes(document_node, vals)
+
+        self._add_invoice_allowance_charge_nodes(document_node, vals)
+        self._add_invoice_exchange_rate_nodes(document_node, vals)
+        self._add_invoice_tax_total_nodes(document_node, vals)
+        self._add_invoice_monetary_total_nodes(document_node, vals)
+        self._add_invoice_line_nodes(document_node, vals)
+        return document_node
+
+    def _add_invoice_config_vals(self, vals):
+        invoice = vals['invoice']
+        supplier = invoice.company_id.partner_id.commercial_partner_id
+        customer = invoice.partner_id
+
+        vals.update({
+            'document_type': 'debit_note' if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id
+                else 'credit_note' if invoice.move_type == 'out_refund'
+                else 'invoice',
+
+            'supplier': supplier,
+            'customer': customer,
+            'partner_shipping': invoice.partner_shipping_id or invoice.partner_id,
+
+            'currency_id': invoice.currency_id,
+            'company_currency_id': invoice.company_id.currency_id,
+
+            'use_company_currency': False,  # If true, use the company currency for the amounts instead of the invoice currency
+            'fixed_taxes_as_allowance_charges': True,  # If true, include fixed taxes as AllowanceCharges on lines instead of as taxes
+        })
+
+    def _add_invoice_base_lines_vals(self, vals):
+        invoice = vals['invoice']
+        base_lines, _tax_lines = invoice._get_rounded_base_and_tax_lines()
+        vals['base_lines'] = base_lines
+
+    def _add_invoice_currency_vals(self, vals):
+        self._add_document_currency_vals(vals)
+
+    def _add_invoice_tax_grouping_function_vals(self, vals):
+        self._add_document_tax_grouping_function_vals(vals)
+
+    def _add_invoice_monetary_totals_vals(self, vals):
+        self._add_document_monetary_total_vals(vals)
+
+    def _add_invoice_header_nodes(self, document_node, vals):
+        invoice = vals['invoice']
+        document_node.update({
+            'cbc:UBLVersionID': {'_text': '2.0'},
+            'cbc:ID': {'_text': invoice.name},
+            'cbc:IssueDate': {'_text': invoice.invoice_date},
+            'cbc:InvoiceTypeCode': {'_text': 380} if vals['document_type'] == 'invoice' else None,
+            'cbc:Note': {'_text': html2plaintext(invoice.narration)} if invoice.narration else None,
+            'cbc:DocumentCurrencyCode': {'_text': invoice.currency_id.name},
+            'cac:OrderReference': {
+                # OrderReference/ID (order_reference) is mandatory inside the OrderReference node
+                'cbc:ID': {'_text': invoice.ref or invoice.name},
+                # OrderReference/SalesOrderID (sales_order_id) is optional
+                'cbc:SalesOrderID': {
+                    '_text': ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
+                } if 'sale_line_ids' in invoice.invoice_line_ids._fields else None,
+            }
+        })
+
+    def _add_invoice_accounting_supplier_party_nodes(self, document_node, vals):
+        document_node['cac:AccountingSupplierParty'] = {
+            'cac:Party': self._get_party_node({**vals, 'partner': vals['supplier'], 'role': 'supplier'}),
+        }
+
+    def _add_invoice_accounting_customer_party_nodes(self, document_node, vals):
+        document_node['cac:AccountingCustomerParty'] = {
+            'cac:Party': self._get_party_node({**vals, 'partner': vals['customer'], 'role': 'customer'}),
+        }
+
+    def _add_invoice_seller_supplier_party_nodes(self, document_node, vals):
+        pass
+
+    def _add_invoice_delivery_nodes(self, document_node, vals):
+        invoice = vals['invoice']
+        document_node['cac:Delivery'] = {
+            'cbc:ActualDeliveryDate': {'_text': invoice.delivery_date},
+            'cac:DeliveryLocation': {
+                'cac:Address': self._get_address_node({'partner': vals['partner_shipping']})
+            },
+        }
+
+    def _add_invoice_payment_means_nodes(self, document_node, vals):
+        invoice = vals['invoice']
+        if invoice.move_type == 'out_invoice':
+            if invoice.partner_bank_id:
+                payment_means_code, payment_means_name = 30, 'credit transfer'
+            else:
+                payment_means_code, payment_means_name = 'ZZZ', 'mutually defined'
+        else:
+            payment_means_code, payment_means_name = 57, 'standing agreement'
+
+        # in Denmark payment code 30 is not allowed. we hardcode it to 1 ("unknown") for now
+        # as we cannot deduce this information from the invoice
+        if invoice.partner_id.country_code == 'DK':
+            payment_means_code, payment_means_name = 1, 'unknown'
+
+        document_node['cac:PaymentMeans'] = {
+            'cbc:PaymentMeansCode': {
+                '_text': payment_means_code,
+                'name': payment_means_name,
+            },
+            'cbc:PaymentDueDate': {'_text': invoice.invoice_date_due or invoice.invoice_date},
+            'cbc:InstructionID': {'_text': invoice.payment_reference},
+            'cbc:PaymentID': {'_text': invoice.payment_reference or invoice.name},
+            'cac:PayeeFinancialAccount': self._get_financial_account_node({
+                **vals, 'partner_bank': invoice.partner_bank_id
+            }) if invoice.partner_bank_id else None
+        }
+
+    def _add_invoice_payment_terms_nodes(self, document_node, vals):
+        invoice = vals['invoice']
+        payment_term = invoice.invoice_payment_term_id
+        if payment_term:
+            document_node['cac:PaymentTerms'] = {
+                # The payment term's note is automatically embedded in a <p> tag in Odoo
+                'cbc:Note': {'_text': html2plaintext(payment_term.note)}
+            }
+
+    def _add_invoice_allowance_charge_nodes(self, document_node, vals):
+        self._add_document_allowance_charge_nodes(document_node, vals)
+
+    def _add_invoice_exchange_rate_nodes(self, document_node, vals):
+        pass
+
+    def _add_invoice_tax_total_nodes(self, document_node, vals):
+        self._add_document_tax_total_nodes(document_node, vals)
+
+    def _add_invoice_monetary_total_nodes(self, document_node, vals):
+        self._add_document_monetary_total_nodes(document_node, vals)
+        monetary_total_tag = self._get_tags_for_document_type(vals)['monetary_total']
+        invoice = vals['invoice']
+        document_node[monetary_total_tag].update({
+            'cbc:PrepaidAmount': {
+                '_text': self.format_float(invoice.amount_total - invoice.amount_residual, vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+            'cbc:PayableAmount': {
+                '_text': self.format_float(invoice.amount_residual, vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+        })
+
+    def _get_invoice_line_node(self, vals):
+        self._add_invoice_line_vals(vals)
+
+        line_node = {}
+        self._add_invoice_line_id_nodes(line_node, vals)
+        self._add_invoice_line_note_nodes(line_node, vals)
+        self._add_invoice_line_amount_nodes(line_node, vals)
+        self._add_invoice_line_period_nodes(line_node, vals)
+        self._add_invoice_line_allowance_charge_nodes(line_node, vals)
+        self._add_invoice_line_tax_total_nodes(line_node, vals)
+        self._add_invoice_line_item_nodes(line_node, vals)
+        self._add_invoice_line_tax_category_nodes(line_node, vals)
+        self._add_invoice_line_price_nodes(line_node, vals)
+        self._add_invoice_line_pricing_reference_nodes(line_node, vals)
+        return line_node
+
+    def _add_invoice_line_nodes(self, document_node, vals):
+        line_idx = 1
+
+        line_tag = self._get_tags_for_document_type(vals)['document_line']
+        document_node[line_tag] = line_nodes = []
+        for base_line in vals['base_lines']:
+            # Only use product lines to generate the UBL InvoiceLines.
+            # Other lines should be represented as AllowanceCharges.
+            if not self._is_document_allowance_charge(base_line):
+                line_vals = {
+                    **vals,
+                    'line_idx': line_idx,
+                    'base_line': base_line,
+                }
+                line_node = self._get_invoice_line_node(line_vals)
+                line_nodes.append(line_node)
+                line_idx += 1
+
+    def _add_invoice_line_vals(self, vals):
+        self._add_document_line_vals(vals)
+
+    def _add_invoice_line_id_nodes(self, line_node, vals):
+        self._add_document_line_id_nodes(line_node, vals)
+
+    def _add_invoice_line_note_nodes(self, line_node, vals):
+        self._add_document_line_note_nodes(line_node, vals)
+
+    def _add_invoice_line_amount_nodes(self, line_node, vals):
+        self._add_document_line_amount_nodes(line_node, vals)
+
+    def _add_invoice_line_period_nodes(self, line_node, vals):
+        pass
+
+    def _add_invoice_line_allowance_charge_nodes(self, line_node, vals):
+        self._add_document_line_allowance_charge_nodes(line_node, vals)
+
+    def _add_invoice_line_tax_total_nodes(self, line_node, vals):
+        self._add_document_line_tax_total_nodes(line_node, vals)
+
+    def _add_invoice_line_item_nodes(self, line_node, vals):
+        self._add_document_line_item_nodes(line_node, vals)
+
+        line = vals['base_line']['record']
+        if line_name := line.name and line.name.replace('\n', ' '):
+            line_node['cac:Item']['cbc:Description']['_text'] = line_name
+            if not line_node['cac:Item']['cbc:Name']['_text']:
+                line_node['cac:Item']['cbc:Name']['_text'] = line_name
+
+    def _add_invoice_line_tax_category_nodes(self, line_node, vals):
+        self._add_document_line_tax_category_nodes(line_node, vals)
+
+    def _add_invoice_line_price_nodes(self, line_node, vals):
+        self._add_document_line_price_nodes(line_node, vals)
+
+    def _add_invoice_line_pricing_reference_nodes(self, line_node, vals):
+        pass
+
+    # -------------------------------------------------------------------------
+    # EXPORT: Generic templates
+    # -------------------------------------------------------------------------
+
+    def _add_document_currency_vals(self, vals):
+        """ Add the 'currency_suffix', 'currency_dp' and 'currency_name'. """
+        vals['currency_suffix'] = '' if vals['use_company_currency'] else '_currency'
+
+        currency = vals['company_currency_id'] if vals['use_company_currency'] else vals['currency_id']
+        vals['currency_dp'] = self._get_currency_decimal_places(currency)
+        vals['currency_name'] = currency.name
+
+    def _add_document_tax_grouping_function_vals(self, vals):
+        # Add the grouping functions for the monetary totals and tax totals
+        customer = vals['customer']
+        supplier = vals['supplier']
+
+        # This function will be used when computing the monetary totals on the document level.
+        # It should return True for all taxes which should be included in the total.
+        def total_grouping_function(base_line, tax_data):
+            return True
+
+        # This function will be used when computing the tax totals on the document and line level.
+        # It should group taxes together according to the tax catagory with which they will be reported.
+        # Any taxes that should be included in the tax totals should be included.
+        def tax_grouping_function(base_line, tax_data):
+            tax = tax_data and tax_data['tax']
+            # Exclude fixed taxes if 'fixed_taxes_as_allowance_charges' is True
+            if vals['fixed_taxes_as_allowance_charges'] and tax and tax.amount_type == 'fixed':
+                return None
+            return {
+                'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
+                **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
+                'amount': tax.amount if tax else 0.0,
+                'amount_type': tax.amount_type if tax else 'percent',
+            }
+
+        vals['total_grouping_function'] = total_grouping_function
+        vals['tax_grouping_function'] = tax_grouping_function
+
+    def _add_document_monetary_total_vals(self, vals):
+        # Compute the monetary totals for the document
+        def fixed_total_grouping_function(base_line, tax_data):
+            if vals['fixed_taxes_as_allowance_charges'] and tax_data and tax_data['tax'].amount_type == 'fixed':
+                return vals['total_grouping_function'](base_line, tax_data)
+
+        for currency_suffix in ['', '_currency']:
+            for key in ['total_allowance', 'total_charge', 'total_lines']:
+                vals[f'{key}{currency_suffix}'] = 0.0
+
+        for base_line in vals['base_lines']:
+            aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, fixed_total_grouping_function)
+
+            for currency_suffix in ['', '_currency']:
+                base_line_total_excluded = \
+                    base_line['tax_details'][f'total_excluded{currency_suffix}'] \
+                    + base_line['tax_details'][f'delta_total_excluded{currency_suffix}'] \
+                    + sum(
+                        tax_details[f'tax_amount{currency_suffix}']
+                        for grouping_key, tax_details in aggregated_tax_details.items()
+                        if grouping_key
+                    )
+
+                if self._is_document_allowance_charge(base_line):
+                    if base_line_total_excluded < 0.0:
+                        vals[f'total_allowance{currency_suffix}'] += -base_line_total_excluded
+                    else:
+                        vals[f'total_charge{currency_suffix}'] += base_line_total_excluded
+                else:
+                    vals[f'total_lines{currency_suffix}'] += base_line_total_excluded
+
+        for currency_suffix in ['', '_currency']:
+            vals[f'tax_exclusive_amount{currency_suffix}'] = vals[f'total_lines{currency_suffix}'] \
+                + vals[f'total_charge{currency_suffix}'] \
+                - vals[f'total_allowance{currency_suffix}']
+
+        def non_fixed_total_grouping_function(base_line, tax_data):
+            if vals['fixed_taxes_as_allowance_charges'] and tax_data and tax_data['tax'].amount_type == 'fixed':
+                return None
+            return vals['total_grouping_function'](base_line, tax_data)
+
+        base_lines_aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_tax_details(vals['base_lines'], non_fixed_total_grouping_function)
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_aggregated_values(base_lines_aggregated_tax_details)
+        for currency_suffix in ['', '_currency']:
+            vals[f'tax_inclusive_amount{currency_suffix}'] = vals[f'tax_exclusive_amount{currency_suffix}'] \
+                + sum(
+                    tax_details[f'tax_amount{currency_suffix}']
+                    for grouping_key, tax_details in aggregated_tax_details.items()
+                    if grouping_key
+                )
+
+    # -------------------------------------------------------------------------
+    # EXPORT: Generic templates - partner-related nodes
+    # -------------------------------------------------------------------------
+
+    def _get_address_node(self, vals):
+        """ Generic helper to generate the Address node for a res.partner or res.bank. """
+        partner = vals['partner']
+        country_key = 'country' if partner._name == 'res.bank' else 'country_id'
+        state_key = 'state' if partner._name == 'res.bank' else 'state_id'
+        country = partner[country_key]
+        state = partner[state_key]
+
+        return {
+            'cbc:StreetName': {'_text': partner.street},
+            'cbc:AdditionalStreetName': {'_text': partner.street2},
+            'cbc:CityName': {'_text': partner.city},
+            'cbc:PostalZone': {'_text': partner.zip},
+            'cbc:CountrySubentity': {'_text': state.name},
+            'cbc:CountrySubentityCode': {'_text': state.code},
+            'cac:Country': {
+                'cbc:IdentificationCode': {'_text': country.code},
+                'cbc:Name': {'_text': country.name},
+            },
+        }
+
+    def _get_party_node(self, vals):
+        """ Generic helper to generate the Party node for a res.partner. """
+        partner = vals['partner']
+        commercial_partner = partner.commercial_partner_id
+        return {
+            'cac:PartyIdentification': {
+                'cbc:ID': {'_text': commercial_partner.ref},
+            },
+            'cac:PartyName': {
+                'cbc:Name': {'_text': partner.display_name},
+            },
+            'cac:PostalAddress': self._get_address_node(vals),
+            'cac:PartyTaxScheme': {
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cac:RegistrationAddress': self._get_address_node({**vals, 'partner': commercial_partner}),
+                'cac:TaxScheme': {
+                    'cbc:ID': {
+                        '_text': ('NOT_EU_VAT' if commercial_partner.country_id and
+                                commercial_partner.vat and
+                                not commercial_partner.vat[:2].isalpha() else 'VAT')
+                    }
+                },
+            },
+            'cac:PartyLegalEntity': {
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cac:RegistrationAddress': self._get_address_node({**vals, 'partner': commercial_partner}),
+            },
+            'cac:Contact': {
+                'cbc:ID': {'_text': partner.id},
+                'cbc:Name': {'_text': partner.name},
+                'cbc:Telephone': {'_text': partner.phone},
+                'cbc:ElectronicMail': {'_text': partner.email},
+            },
+        }
+
+    def _get_financial_account_node(self, vals):
+        """ Generic helper to generate the FinancialAccount node for a res.partner.bank """
+        partner_bank = vals['partner_bank']
+        bank = partner_bank.bank_id
+        financial_institution_branch = None
+        if bank:
+            financial_institution_branch = {
+                'cbc:ID': {
+                    '_text': bank.bic,
+                    'schemeID': 'BIC'
+                },
+                'cac:FinancialInstitution': {
+                    'cbc:ID': {
+                        '_text': bank.bic,
+                        'schemeID': 'BIC'
+                    },
+                    'cbc:Name': {'_text': bank.name},
+                    'cac:Address': self._get_address_node({**vals, 'partner': bank})
+                }
+            }
+        return {
+            'cbc:ID': {'_text': partner_bank.acc_number.replace(' ', '')},
+            'cac:FinancialInstitutionBranch': financial_institution_branch
+        }
+
+    # -------------------------------------------------------------------------
+    # EXPORT: Generic templates for tax-related nodes
+    # -------------------------------------------------------------------------
+
+    def _add_document_tax_total_nodes(self, document_node, vals):
+        """ Generic helper to fill the TaxTotal and WithholdingTaxTotal nodes for a document. """
+        base_lines_aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_tax_details(vals['base_lines'], vals['tax_grouping_function'])
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_aggregated_values(base_lines_aggregated_tax_details)
+        document_node['cac:TaxTotal'] = self._get_tax_total_node({**vals, 'aggregated_tax_details': aggregated_tax_details, 'role': 'document'})
+        document_node['cac:WithholdingTaxTotal'] = None
+
+    def _add_tax_total_node_in_company_currency(self, document_node, vals):
+        """ Generic helper to add a TaxTotal section in the company currency. """
+        company_currency = vals['invoice'].company_id.currency_id
+        base_lines_aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_tax_details(vals['base_lines'], vals['tax_grouping_function'])
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_lines_aggregated_values(base_lines_aggregated_tax_details)
+        tax_total_node_in_company_currency = self._get_tax_total_node({
+            **vals,
+            'aggregated_tax_details': aggregated_tax_details,
+            'currency_suffix': '',
+            'currency_dp': self._get_currency_decimal_places(company_currency),
+            'currency_name': company_currency.name,
+            'role': 'document'
+        })
+        document_node['cac:TaxTotal'].append(tax_total_node_in_company_currency)
+
+    def _get_tax_total_node(self, vals):
+        """ Generic helper to generate a TaxTotal node given a dict of aggregated tax details. """
+        aggregated_tax_details = vals['aggregated_tax_details']
+        currency_suffix = vals['currency_suffix']
+        sign = vals.get('sign', 1)
+        total_tax_amount = sum(
+            values[f'tax_amount{currency_suffix}']
+            for grouping_key, values in aggregated_tax_details.items()
+            if grouping_key
+        )
+        return {
+            'cbc:TaxAmount': {
+                '_text': self.format_float(sign * total_tax_amount, vals['currency_dp']),
+                'currencyID': vals['currency_name']
+            },
+            'cac:TaxSubtotal': [
+                self._get_tax_subtotal_node({
+                    **vals,
+                    'tax_details': tax_details,
+                    'grouping_key': grouping_key,
+                })
+                for grouping_key, tax_details in aggregated_tax_details.items()
+                if grouping_key
+            ]
+        }
+
+    def _get_tax_subtotal_node(self, vals):
+        """ Generic helper to generate a TaxSubtotal node given a tax grouping key dict and associated tax values. """
+        tax_details = vals['tax_details']
+        grouping_key = vals['grouping_key']
+        sign = vals.get('sign', 1)
+        currency_suffix = vals['currency_suffix']
+        return {
+            'cbc:TaxableAmount': {
+                '_text': self.format_float(tax_details[f'base_amount{currency_suffix}'], vals['currency_dp']),
+                'currencyID': vals['currency_name']
+            },
+            'cbc:TaxAmount': {
+                '_text': self.format_float(sign * tax_details[f'tax_amount{currency_suffix}'], vals['currency_dp']),
+                'currencyID': vals['currency_name']
+            },
+            'cbc:Percent': {'_text': grouping_key['amount']} if grouping_key['amount_type'] == 'percent' else None,
+            'cac:TaxCategory': self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
+        }
+
+    def _get_tax_category_node(self, vals):
+        """ Generic helper to generate a TaxCategory node given a tax grouping key dict. """
+        grouping_key = vals['grouping_key']
+        return {
+            'cbc:ID': {'_text': grouping_key['tax_category_code']},
+            'cbc:Name': {'_text': grouping_key.get('name')},
+            'cbc:Percent': {'_text': grouping_key['amount']} if grouping_key['amount_type'] == 'percent' else None,
+            'cbc:TaxExemptionReasonCode': {'_text': grouping_key.get('tax_exemption_reason_code')},
+            'cbc:TaxExemptionReason': {'_text': grouping_key.get('tax_exemption_reason')},
+            'cac:TaxScheme': {
+                'cbc:ID': {'_text': 'VAT'},
+            }
+        }
+
+    def _add_document_monetary_total_nodes(self, document_node, vals):
+        """ Generic helper to fill the MonetaryTotal node for a document given a list of base_lines. """
+        monetary_total_tag = self._get_tags_for_document_type(vals)['monetary_total']
+        currency_suffix = vals['currency_suffix']
+
+        document_node[monetary_total_tag] = {
+            'cbc:LineExtensionAmount': {
+                '_text': self.format_float(vals[f'total_lines{currency_suffix}'], vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+            'cbc:TaxExclusiveAmount': {
+                '_text': self.format_float(vals[f'tax_exclusive_amount{currency_suffix}'], vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+            'cbc:TaxInclusiveAmount': {
+                '_text': self.format_float(vals[f'tax_inclusive_amount{currency_suffix}'], vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+            'cbc:AllowanceTotalAmount': {
+                '_text': self.format_float(vals[f'total_allowance{currency_suffix}'], vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            } if vals[f'total_allowance{currency_suffix}'] else None,
+            'cbc:ChargeTotalAmount': {
+                '_text': self.format_float(vals[f'total_charge{currency_suffix}'], vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            } if vals[f'total_charge{currency_suffix}'] else None,
+            'cbc:PrepaidAmount': {
+                '_text': self.format_float(0.0, vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+            'cbc:PayableAmount': {
+                '_text': self.format_float(vals[f'tax_inclusive_amount{currency_suffix}'], vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+        }
+
+    def _get_document_line_node(self, vals):
+        self._add_document_line_vals(vals)
+
+        line_node = {}
+        self._add_document_line_id_nodes(line_node, vals)
+        self._add_document_line_note_nodes(line_node, vals)
+        self._add_document_line_amount_nodes(line_node, vals)
+        self._add_document_line_period_nodes(line_node, vals)
+        self._add_document_line_allowance_charge_nodes(line_node, vals)
+        self._add_document_line_tax_total_nodes(line_node, vals)
+        self._add_document_line_item_nodes(line_node, vals)
+        self._add_document_line_tax_category_nodes(line_node, vals)
+        self._add_document_line_price_nodes(line_node, vals)
+        self._add_document_line_pricing_reference_nodes(line_node, vals)
+        return line_node
+
+    def _add_document_line_nodes(self, document_node, vals):
+        line_idx = 1
+
+        line_tag = self._get_tags_for_document_type(vals)['document_line']
+        document_node[line_tag] = line_nodes = []
+        for base_line in vals['base_lines']:
+            if not self._is_document_allowance_charge(base_line):
+                line_vals = {
+                    **vals,
+                    'line_idx': line_idx,
+                    'base_line': base_line,
+                }
+                line_node = self._get_document_line_node(line_vals)
+                line_nodes.append(line_node)
+                line_idx += 1
+
+    # -------------------------------------------------------------------------
+    # EXPORT: Templates for document-level allowance charge nodes
+    # -------------------------------------------------------------------------
+
+    def _add_document_allowance_charge_nodes(self, document_node, vals):
+        """ Generic helper to fill the AllowanceCharge nodes for a document given a list of base_lines. """
+        # AllowanceCharge doesn't exist in debit notes in UBL 2.0
+        if vals['document_type'] != 'debit_note':
+            document_node['cac:AllowanceCharge'] = []
+            for base_line in vals['base_lines']:
+                if self._is_document_allowance_charge(base_line):
+                    document_node['cac:AllowanceCharge'].append(
+                        self._get_document_allowance_charge_node({**vals, 'base_line': base_line})
+                    )
+
+    def _get_document_allowance_charge_node(self, vals):
+        """ Generic helper to generate a document-level AllowanceCharge node given a base_line. """
+        base_line = vals['base_line']
+        currency_suffix = vals['currency_suffix']
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, vals['tax_grouping_function'])
+        base_amount = base_line['tax_details'][f'total_excluded{currency_suffix}']
+        return {
+            'cbc:ChargeIndicator': {'_text': 'false' if base_amount < 0.0 else 'true'},
+            'cbc:AllowanceChargeReasonCode': {'_text': '66' if base_amount < 0.0 else 'ZZZ'},
+            'cbc:AllowanceChargeReason': {'_text': _("Conditional cash/payment discount")},
+            'cbc:Amount': {
+                '_text': self.format_float(abs(base_amount), vals['currency_dp']),
+                'currencyID': vals['currency_name']
+            },
+            'cac:TaxCategory': [
+                self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
+                for grouping_key in aggregated_tax_details
+                if grouping_key
+            ]
+        }
+
+    # -------------------------------------------------------------------------
+    # EXPORT: Templates for line nodes
+    # -------------------------------------------------------------------------
+
+    def _add_document_line_vals(self, vals):
+        """ Generic helper to calculate the amounts for a document line. """
+        self._add_document_line_total_vals(vals)
+        self._add_document_line_gross_subtotal_and_discount_vals(vals)
+
+    def _add_document_line_total_vals(self, vals):
+        base_line = vals['base_line']
+
+        def fixed_total_grouping_function(base_line, tax_data):
+            if vals['fixed_taxes_as_allowance_charges'] and tax_data and tax_data['tax'].amount_type == 'fixed':
+                return vals['total_grouping_function'](base_line, tax_data)
+
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, fixed_total_grouping_function)
+
+        for currency_suffix in ['', '_currency']:
+            vals[f'total_fixed_taxes{currency_suffix}'] = sum(
+                tax_details[f'tax_amount{currency_suffix}']
+                for grouping_key, tax_details in aggregated_tax_details.items()
+                if grouping_key
+            )
+
+            vals[f'total_excluded{currency_suffix}'] = \
+                base_line['tax_details'][f'total_excluded{currency_suffix}'] \
+                + base_line['tax_details'][f'delta_total_excluded{currency_suffix}'] \
+                + vals[f'total_fixed_taxes{currency_suffix}']
+
+    def _add_document_line_gross_subtotal_and_discount_vals(self, vals):
+        base_line = vals['base_line']
+        company_currency = vals['company_currency_id']
+
+        discount_factor = 1 - (base_line['discount'] / 100.0)
+
+        if discount_factor != 0.0:
+            gross_subtotal_currency = base_line['currency_id'].round(base_line['tax_details']['raw_total_excluded_currency'] / discount_factor)
+            gross_subtotal = company_currency.round(base_line['tax_details']['raw_total_excluded'] / discount_factor)
+        else:
+            gross_subtotal_currency = base_line['currency_id'].round(base_line['price_unit'] * base_line['quantity'])
+            gross_subtotal = company_currency.round(gross_subtotal_currency / base_line['rate'])
+
+        if base_line['quantity'] == 0.0 or discount_factor == 0.0:
+            gross_price_unit_currency = base_line['price_unit']
+            gross_price_unit = company_currency.round(base_line['price_unit'] / base_line['rate'])
+        else:
+            gross_price_unit_currency = gross_subtotal_currency / base_line['quantity']
+            gross_price_unit = gross_subtotal / base_line['quantity']
+
+        discount_amount_currency = gross_subtotal_currency - base_line['tax_details']['total_excluded_currency']
+        discount_amount = gross_subtotal - base_line['tax_details']['total_excluded']
+
+        vals.update({
+            'discount_amount_currency': discount_amount_currency,
+            'discount_amount': discount_amount,
+            'gross_subtotal_currency': gross_subtotal_currency,
+            'gross_subtotal': gross_subtotal,
+            'gross_price_unit_currency': gross_price_unit_currency,
+            'gross_price_unit': gross_price_unit,
+        })
+
+    def _add_document_line_id_nodes(self, line_node, vals):
+        line_node['cbc:ID'] = {'_text': vals['line_idx']}
+
+    def _add_document_line_note_nodes(self, line_node, vals):
+        pass
+
+    def _add_document_line_amount_nodes(self, line_node, vals):
+        currency_suffix = vals['currency_suffix']
+        base_line = vals['base_line']
+
+        quantity_tag = self._get_tags_for_document_type(vals)['line_quantity']
+
+        line_node.update({
+            quantity_tag: {
+                '_text': base_line['quantity'],
+                'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+            },
+            'cbc:LineExtensionAmount': {
+                '_text': self.format_float(vals[f'total_excluded{currency_suffix}'], vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+        })
+
+    def _add_document_line_period_nodes(self, line_node, vals):
+        pass
+
+    def _add_document_line_item_nodes(self, line_node, vals):
+        product = vals['base_line']['product_id']
+
+        line_node['cac:Item'] = {
+            'cbc:Description': {'_text': product.description_sale},
+            'cbc:Name': {'_text': product.name},
+            'cac:StandardItemIdentification': {
+                'cbc:ID': {'_text': product.barcode},
+            },
+            'cac:AdditionalItemProperty': [
+                {
+                    'cbc:Name': {'_text': value.attribute_id.name},
+                    'cbc:Value': {'_text': value.name},
+                } for value in product.product_template_attribute_value_ids
+            ],
+        }
+
+    def _add_document_line_allowance_charge_nodes(self, line_node, vals):
+        if vals['document_type'] not in {'credit_note', 'debit_note'}:
+            line_node['cac:AllowanceCharge'] = [self._get_line_discount_allowance_charge_node(vals)]
+            if vals['fixed_taxes_as_allowance_charges']:
+                line_node['cac:AllowanceCharge'].extend(self._get_line_fixed_tax_allowance_charge_nodes(vals))
+
+    def _get_line_discount_allowance_charge_node(self, vals):
+        currency_suffix = vals['currency_suffix']
+        if float_is_zero(vals[f'discount_amount{currency_suffix}'], precision_digits=vals['currency_dp']):
+            return None
+
+        return {
+            'cbc:ChargeIndicator': {'_text': 'false' if vals[f'discount_amount{currency_suffix}'] > 0 else 'true'},
+            'cbc:AllowanceChargeReasonCode': {'_text': '95'},
+            'cbc:Amount': {
+                '_text': self.format_float(
+                    abs(vals[f'discount_amount{currency_suffix}']),
+                    vals['currency_dp'],
+                ),
+                'currencyID': vals['currency_name'],
+            },
+        }
+
+    def _get_line_fixed_tax_allowance_charge_nodes(self, vals):
+        fixed_tax_aggregated_tax_details = self._get_line_fixed_tax_aggregated_tax_details(vals)
+        currency_suffix = vals['currency_suffix']
+
+        allowance_charge_nodes = []
+        for grouping_key, tax_details in fixed_tax_aggregated_tax_details.items():
+            if grouping_key:
+                allowance_charge_nodes.append({
+                    'cbc:ChargeIndicator': {'_text': 'true' if tax_details[f'tax_amount{currency_suffix}'] > 0 else 'false'},
+                    'cbc:AllowanceChargeReasonCode': {'_text': 'AEO'},
+                    'cbc:AllowanceChargeReason': {'_text': grouping_key},
+                    'cbc:Amount': {
+                        '_text': self.format_float(
+                            abs(tax_details[f'tax_amount{currency_suffix}']),
+                            vals['currency_dp'],
+                        ),
+                        'currencyID': vals['currency_name'],
+                    },
+                })
+        return allowance_charge_nodes
+
+    def _get_line_fixed_tax_aggregated_tax_details(self, vals):
+        base_line = vals['base_line']
+
+        def fixed_tax_grouping_function(base_line, tax_data):
+            tax = tax_data and tax_data['tax']
+            if not tax or tax.amount_type != 'fixed':
+                return None
+            return tax.name
+
+        return self.env['account.tax']._aggregate_base_line_tax_details(base_line, fixed_tax_grouping_function)
+
+    def _add_document_line_tax_category_nodes(self, line_node, vals):
+        base_line = vals['base_line']
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, vals['tax_grouping_function'])
+        line_node.setdefault('cac:Item', {})['cac:ClassifiedTaxCategory'] = [
+            self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
+            for grouping_key in aggregated_tax_details
+        ]
+
+    def _add_document_line_tax_total_nodes(self, line_node, vals):
+        base_line = vals['base_line']
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(base_line, vals['tax_grouping_function'])
+        line_node['cac:TaxTotal'] = self._get_tax_total_node({**vals, 'aggregated_tax_details': aggregated_tax_details, 'role': 'line'})
+
+    def _add_document_line_price_nodes(self, line_node, vals):
+        currency_suffix = vals['currency_suffix']
+        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
+
+        line_node['cac:Price'] = {
+            'cbc:PriceAmount': {
+                '_text': float_round(
+                    vals[f'gross_price_unit{currency_suffix}'],
+                    precision_digits=product_price_dp,
+                ),
+                'currencyID': vals['currency_name'],
+            },
+        }
+
+    def _add_document_line_pricing_reference_nodes(self, line_node, vals):
+        pass
