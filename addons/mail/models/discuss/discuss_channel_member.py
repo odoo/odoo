@@ -9,7 +9,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_ACTION, PUSH_NOTIFICATION_TYPE
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError, RedirectWarning
 from odoo.fields import Domain
 from ...tools import jwt, discuss
 
@@ -30,6 +30,15 @@ class DiscussChannelMember(models.Model):
     is_self = fields.Boolean(compute="_compute_is_self", search="_search_is_self")
     # channel
     channel_id = fields.Many2one("discuss.channel", "Channel", ondelete="cascade", required=True, auto_join=True)
+    channel_role = fields.Selection(
+        [("owner", "Owner"), ("admin", "Admin")],
+        default=None,
+        string="Channel Role",
+        help="The role of the member in the channel. There is only one owner per channel."
+             "The owner can add and remove admins. All admins have the same rights."
+             "The owner and admins can edit the channel and its members.",
+        groups="base.group_system",
+    )
     # state
     custom_channel_name = fields.Char('Custom channel name')
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched', index="btree_not_null")
@@ -169,6 +178,10 @@ class DiscussChannelMember(models.Model):
         'CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))',
         'A channel member must be a partner or a guest.',
     )
+    _channel_owner_unique = models.UniqueIndex(
+        "(channel_id, channel_role) WHERE channel_role = 'owner'",
+        "A channel can only have maximum one owner.",
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -242,6 +255,28 @@ class DiscussChannelMember(models.Model):
         self.custom_notifications = custom_notifications
         self._bus_send_store(self.channel_id, {"custom_notifications": self.custom_notifications})
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_transfer_channel_owner(self):
+        for channel_member in self:
+            # sudo: discuss.channel.member - reading channel ownership related to a member is considered acceptable
+            if channel_member.is_self and len(channel_member.channel_id.channel_partner_ids) > 1 and channel_member.sudo().channel_role == "owner":
+                raise RedirectWarning(
+                    self.env._("You are the channel owner. If you leave, your permissions will transfer to another member. Do you want to proceed?"),
+                    action={
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'discuss.channel.owner.edit',
+                        'views': [(self.env.ref('mail.discuss_channel_owner_edit_form').id, 'form')],
+                        "context": {
+                            "default_channel_id": channel_member.channel_id.id,
+                        },
+                        'target': 'new',
+                    },
+                    additional_context={
+                        'unlink_after_transfer': True,
+                    },
+                    button_text=_("Proceed"),
+                )
+
     @api.model
     def _cleanup_expired_mutes(self):
         """
@@ -272,6 +307,8 @@ class DiscussChannelMember(models.Model):
     def _to_store_defaults(self):
         return [
             Store.One("channel_id", [], as_thread=True),
+            # sudo: discuss.channel.member - reading channel ownership related to a member is considered acceptable
+            Store.Attr("channel_role", lambda m: m.sudo().channel_role),
             "create_date",
             "fetched_message_id",
             "last_seen_dt",

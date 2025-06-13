@@ -13,7 +13,7 @@
                 <i t-elif="!record.im_status" class="fa fa-fw fa-question-circle" title="No IM status available"/>
             </span>
         </xpath>
-        <xpath expr="//div[hasclass('o_card_user_infos')]/span" position="attributes">
+        <xpath expr="//span[hasclass('o_card_user_name')]" position="attributes">
             <attribute name="t-esc">record.name</attribute>
         </xpath>
         <xpath expr="//div[hasclass('o_avatar_card_buttons')]/button" position="attributes">

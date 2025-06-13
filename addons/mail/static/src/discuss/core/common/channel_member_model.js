@@ -4,6 +4,7 @@ import { fields, Record } from "@mail/core/common/record";
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
+import { rpc } from "@web/core/network/rpc";
 
 const { DateTime } = luxon;
 
@@ -25,6 +26,8 @@ export class ChannelMember extends Record {
         return this.guest_id || this.partner_id;
     }
     channel_id = fields.One("Thread", { inverse: "channel_member_ids" });
+    /** @type {string} */
+    channel_role;
     threadAsSelf = fields.One("Thread", {
         compute() {
             if (this.store.self?.eq(this.persona)) {
@@ -117,6 +120,28 @@ export class ChannelMember extends Record {
                   locale: user.lang,
               })
             : undefined;
+    }
+    async removeFromChannel() {
+        this.store.insert(
+            await rpc("/discuss/channel/remove_channel_member", {
+                member_id: this.id,
+            })
+        );
+    }
+    async setChannelRole(channel_role) {
+        this.store.insert(
+            await rpc("/discuss/channel/set_channel_member_role", {
+                member_id: this.id,
+                channel_role,
+            })
+        );
+    }
+    async transferOwnership() {
+        this.store.insert(
+            await rpc("/discuss/channel/transfer_channel_ownership", {
+                member_id: this.id,
+            })
+        );
     }
 }
 

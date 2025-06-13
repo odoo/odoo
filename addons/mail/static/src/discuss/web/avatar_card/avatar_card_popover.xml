@@ -18,7 +18,33 @@
                         </span>
                     </span>
                     <div class="d-flex flex-column o_card_user_infos overflow-hidden">
-                        <span class="fw-bold" t-esc="user.name"/>
+                        <div class="o_card_user_name_actions d-flex align-items-center justify-content-center">
+                            <span class="o_card_user_name fw-bold" t-esc="user.name"/>
+                            <div class="flex-grow-1"/>
+                            <Dropdown t-if="props.channelMember and props.thread?.is_self_channel_owner or props.thread?.is_self_channel_admin" position="'right-start'">
+                                <button class="btn btn-sm">
+                                    <i class="oi oi-ellipsis-v"/>
+                                </button>
+                                <t t-set-slot="content">
+                                    <t t-if="props.thread.is_self_channel_owner">
+                                        <t t-if="props.channelMember.channel_role !== 'owner'">
+                                            <DropdownItem t-if="props.channelMember.channel_role !== 'admin'" onSelected.bind="() => this.onClickToggleAdmin(true)">
+                                                Set as Admin
+                                            </DropdownItem>
+                                            <DropdownItem t-if="props.channelMember.channel_role === 'admin'" onSelected.bind="() => this.onClickToggleAdmin(false)">
+                                                Remove Admin
+                                            </DropdownItem>
+                                            <DropdownItem onSelected.bind="onClickTransferOwnership">
+                                                Transfer Ownership
+                                            </DropdownItem>
+                                        </t>
+                                    </t>
+                                    <DropdownItem onSelected.bind="onClickRemove">
+                                        <span class="text-danger">Remove</span>
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
+                        </div>
                         <t t-if="userInfoTemplate" t-call="{{userInfoTemplate}}"/>
                         <a t-if="email" t-att-href="'mailto:'+email" t-att-title="email" class="text-truncate">
                             <i class="fa fa-fw fa-envelope me-1"/><t t-esc="email"/>

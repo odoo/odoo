@@ -70,6 +70,8 @@ class DiscussChannel(models.Model):
     rtc_session_ids = fields.One2many('discuss.channel.rtc.session', 'channel_id', groups="base.group_system")
     call_history_ids = fields.One2many("discuss.call.history", "channel_id")
     is_member = fields.Boolean("Is Member", compute="_compute_is_member", search="_search_is_member", compute_sudo=True)
+    is_self_channel_owner = fields.Boolean("Is Channel Owner", compute="_compute_is_channel_owner_admin", search="_search_is_channel_owner")
+    is_self_channel_admin = fields.Boolean("Is Channel Admin", compute="_compute_is_channel_owner_admin", search="_search_is_channel_admin")
     # sudo: discuss.channel - sudo for performance, self member can be accessed on accessible channel
     self_member_id = fields.Many2one("discuss.channel.member", compute="_compute_self_member_id", compute_sudo=True)
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
@@ -250,6 +252,39 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.self_member_id = member_by_channel.get(channel)
 
+    @api.depends_context("uid", "guest")
+    @api.depends("self_member_id", "channel_member_ids", "channel_member_ids.channel_role")
+    def _compute_is_channel_owner_admin(self):
+        for channel in self:
+            # sudo: discuss.channel.member - reading channel role is accepted for self member
+            channel.is_self_channel_owner = bool(
+                channel.self_member_id and channel.self_member_id.sudo().channel_role == "owner",
+            )
+            # sudo: discuss.channel.member - reading channel role is accepted for self member
+            channel.is_self_channel_admin = bool(
+                channel.self_member_id and channel.self_member_id.sudo().channel_role == "admin",
+            )
+
+    def _search_is_channel_owner(self, operator, operand):
+        if operator != 'in':
+            return NotImplemented
+        current_partner = self.env["res.partner"]._get_current_persona()[0]
+        if current_partner:
+            channels = current_partner.channel_member_ids.filtered(lambda member: member.sudo().channel_role == "owner").channel_id
+        else:
+            channels = self.env["discuss.channel"]
+        return [('id', 'in', channels.ids)]
+
+    def _search_is_channel_admin(self, operator, operand):
+        if operator != 'in':
+            return NotImplemented
+        current_partner = self.env["res.partner"]._get_current_persona()[0]
+        if current_partner:
+            channels = current_partner.channel_member_ids.filtered(lambda member: member.sudo().channel_role == "admin").channel_id
+        else:
+            channels = self.env["discuss.channel"]
+        return [('id', 'in', channels.ids)]
+
     @api.depends("channel_member_ids.rtc_inviting_session_id")
     def _compute_invited_member_ids(self):
         members_by_channel = {
@@ -304,7 +339,7 @@ class DiscussChannel(models.Model):
 
     @api.model
     def _get_allowed_channel_member_create_params(self):
-        return ["partner_id", "guest_id", "unpin_dt", "last_interest_dt"]
+        return ["channel_role", "partner_id", "guest_id", "unpin_dt", "last_interest_dt"]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -336,8 +371,8 @@ class DiscussChannel(models.Model):
             # is_pinned + ensure they have rights to see channel
             if not self.env.context.get('install_mode') and not self.env.user._is_public():
                 partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
-            vals['channel_member_ids'] = membership_ids_cmd + [
-                (0, 0, {'partner_id': pid})
+            vals["channel_member_ids"] = membership_ids_cmd + [
+                (0, 0, {"partner_id": pid, "channel_role": "owner" if vals.get("channel_type") in ["channel", "group"] and pid == self.env.user.partner_id.id else None})
                 for pid in partner_ids_to_add if pid not in membership_pids
             ]
 
@@ -383,6 +418,14 @@ class DiscussChannel(models.Model):
                         "Cannot change authorized group of sub-channel: %(channels)s.",
                         channels=failing_channels.mapped("name"),
                     )
+                )
+        if "active" in vals:
+            if failing_channels := self.filtered(lambda channel: channel.channel_type in ["channel", "group"] and not channel.is_self_channel_owner):
+                raise UserError(
+                    self.env._(
+                        "Cannot deactivate channels: %(channels)s as you are not the owner.",
+                        channels=failing_channels.mapped("name"),
+                    ),
                 )
 
         def get_field_name(field_description):
@@ -1057,6 +1100,8 @@ class DiscussChannel(models.Model):
             "last_interest_dt",
             "member_count",
             "name",
+            "is_self_channel_owner",
+            "is_self_channel_admin",
             Store.One("parent_channel_id"),
             Store.Many("rtc_session_ids", mode="ADD", extra=True, sudo=True),
             "uuid",
@@ -1266,7 +1311,7 @@ class DiscussChannel(models.Model):
         """
         partners_to = OrderedSet(partners_to)
         channel = self.create({
-            'channel_member_ids': [Command.create({'partner_id': partner_id}) for partner_id in partners_to],
+            'channel_member_ids': [Command.create({'partner_id': partner_id, 'channel_role': 'owner' if partner_id == self.env.user.partner_id.id else None}) for partner_id in partners_to],
             'channel_type': 'group',
             'default_display_mode': default_display_mode,
             'name': name,

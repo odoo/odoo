@@ -324,7 +324,7 @@ test("avatar card preview", async () => {
     // Open card
     await click(".o_m2o_avatar > img");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span", { text: "Mario" });
+    await contains(".o_card_user_name", { text: "Mario" });
     await contains(".o_card_user_infos > a", { text: "Mario@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+78786987" });
     await waitForSteps(["user read"]);
@@ -366,7 +366,7 @@ test("many2one_avatar_user widget in list view", async () => {
     await contains(".o_data_cell .o_many2one a", { count: 0 });
     await click(".o_data_cell .o_m2o_avatar > img");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span", { text: "Mario" });
+    await contains(".o_card_user_name", { text: "Mario" });
     await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
     await contains(".o_card_user_infos > a", { text: "+45687468" });
 });
@@ -388,7 +388,7 @@ test("many2many_avatar_user widget in form view", async () => {
     });
     await click(".o_field_many2many_avatar_user .o_avatar img");
     await contains(".o_avatar_card");
-    await contains(".o_card_user_infos > span", { text: "Mario" });
+    await contains(".o_card_user_name", { text: "Mario" });
     await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
     await contains(".o_card_user_infos > a", { text: "+45687468" });
 });
