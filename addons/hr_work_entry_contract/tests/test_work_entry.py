@@ -337,3 +337,10 @@ class TestWorkEntry(TestWorkEntryBase):
             'work_entry_type_id': self.work_entry_type.id,
         })
         self.assertEqual(work_entry.duration, 1, "The duration should be 1 hour")
+
+    def test_work_entry_without_resource_calendar(self):
+        """ Test generating work entries without a resource calendar """
+        self.richard_emp.contract_id.resource_calendar_id = False
+        self.richard_emp.generate_work_entries(self.start, self.end)
+        entries = self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id)])
+        self.assertTrue(entries)
