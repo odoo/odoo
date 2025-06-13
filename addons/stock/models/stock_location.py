@@ -16,7 +16,6 @@ class StockLocation(models.Model):
     _parent_name = "location_id"
     _parent_store = True
     _order = 'complete_name, id'
-    _rec_name = 'complete_name'
     _rec_names_search = ['complete_name', 'barcode']
     _check_company_auto = True
 
@@ -100,6 +99,17 @@ class StockLocation(models.Model):
         'check(cyclic_inventory_frequency >= 0)',
         'The inventory frequency (days) for a location must be non-negative',
     )
+
+    @api.depends('name', 'location_id.complete_name', 'usage')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        for location in self:
+            has_parent = location.location_id and location.usage != 'view'
+            if location.env.context.get('formatted_display_name') and has_parent:
+                location.display_name = f"--{location.location_id.complete_name}/--{location.name}"
+            elif has_parent:
+                location.display_name = f"{location.location_id.complete_name}/{location.name}"
 
     @api.depends('outgoing_move_line_ids.quantity_product_uom', 'incoming_move_line_ids.quantity_product_uom',
                  'outgoing_move_line_ids.state', 'incoming_move_line_ids.state',

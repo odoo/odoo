@@ -12,8 +12,9 @@ class StockPickingBatch(models.Model):
     vehicle_category_id = fields.Many2one(
         'fleet.vehicle.model.category', string="Vehicle Category",
         compute='_compute_vehicle_category_id', store=True, readonly=False)
-    dock_id = fields.Many2one('stock.location', string="Dock Location", domain="[('warehouse_id', '=', warehouse_id), ('is_a_dock', '=', True)]",
-                              compute='_compute_dock_id', store=True, readonly=False)
+    allowed_dock_ids = fields.Many2many(related='picking_type_id.dock_ids', string="Allowed Docks")
+    dock_id = fields.Many2one('stock.location', string="Dock", domain="[('id', 'child_of', allowed_dock_ids)]",
+        compute='_compute_dock_id', store=True, readonly=False)
     vehicle_weight_capacity = fields.Float(string="Vehcilce Payload Capacity",
                               related='vehicle_category_id.weight_capacity')
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
@@ -41,12 +42,13 @@ class StockPickingBatch(models.Model):
         for rec in self:
             rec.vehicle_category_id = rec.vehicle_id.category_id
 
-    @api.depends('picking_ids', 'picking_ids.location_id', 'picking_ids.location_dest_id')
+    @api.depends('picking_ids', 'picking_ids.location_id', 'picking_ids.location_dest_id', 'picking_type_id')
     def _compute_dock_id(self):
         for batch in self:
-            if batch.picking_ids:
-                if len(batch.picking_ids.location_id) == 1 and batch.picking_ids.location_id.is_a_dock:
-                    batch.dock_id = batch.picking_ids.location_id
+            if batch.picking_type_id != batch._origin.picking_type_id and batch.dock_id:
+                batch.dock_id = False
+            if batch.picking_ids and len(batch.picking_ids.location_id) == 1 and batch.picking_ids.location_id in batch.allowed_dock_ids:
+                batch.dock_id = batch.picking_ids.location_id
 
     def _compute_weight_uom_name(self):
         self.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
