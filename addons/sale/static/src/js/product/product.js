@@ -6,6 +6,7 @@ import {
 } from "../product_template_attribute_line/product_template_attribute_line";
 import { QuantityButtons } from '../quantity_buttons/quantity_buttons';
 import { getSelectedCustomPtav } from "../sale_utils";
+import { _t } from "@web/core/l10n/translation";
 
 export class Product extends Component {
     static components = { PTAL, QuantityButtons };
@@ -17,6 +18,9 @@ export class Product extends Component {
         description_sale: [Boolean, String], // backend sends 'false' when there is no description
         price: Number,
         quantity: Number,
+        uom_id: Number,
+        uom_data: { type: Object, optional: true },
+        uom_order: { type: Array, optional: true },
         attribute_lines: Object,
         optional: Boolean,
         imageURL: { type: String, optional: true },
@@ -71,4 +75,14 @@ export class Product extends Component {
             || ptal.create_variant === 'no_variant'
             || !!getSelectedCustomPtav(ptal);
     }
+
+
+    get UoMTitle() {
+        return _t("Packaging");
+    }
+
+    async selectUoM(event) {
+        this.env.setUoM(this.props.product_tmpl_id, parseInt(event.target.value));
+    }
+
 }

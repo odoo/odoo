@@ -25,9 +25,9 @@ registry
                 trigger: 'button:contains(Proceed to Checkout)',
                 run: 'click',
             },
-            wsTourUtils.assertCartContains({ productName: "Combo product" }),
-            wsTourUtils.assertCartContains({ productName: "3 x Product A1" }),
-            wsTourUtils.assertCartContains({ productName: "3 x Product B2" }),
+            ...wsTourUtils.assertCartContains({ productName: "Combo product" }),
+            ...wsTourUtils.assertCartContains({ productName: "3 x Product A1" }),
+            ...wsTourUtils.assertCartContains({ productName: "3 x Product B2" }),
             {
                 content: "Verify the first combo item's attributes",
                 trigger: 'div.o_cart_product:contains("No variant attribute: B: Some custom value")',
@@ -50,8 +50,8 @@ registry
                 trigger: 'div[name="website_sale_cart_line_quantity"] input.quantity',
                 run: "edit 2 && click body",
             },
-            wsTourUtils.assertCartContains({ productName: "2 x Product A1" }),
-            wsTourUtils.assertCartContains({ productName: "2 x Product B2" }),
+            ...wsTourUtils.assertCartContains({ productName: "2 x Product A1" }),
+            ...wsTourUtils.assertCartContains({ productName: "2 x Product B2" }),
             {
                 content: "Verify the combo product's price",
                 trigger: 'h6[name="website_sale_cart_line_price"]:contains(62.00)',

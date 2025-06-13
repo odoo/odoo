@@ -16,17 +16,19 @@ class WebsiteSaleVariantController(Controller):
         readonly=True,
     )
     def get_combination_info_website(
-        self, product_template_id, product_id, combination, add_qty, **kwargs
+        self, product_template_id, product_id, combination, add_qty, uom_id=None, **kwargs
     ):
         product_template_id = product_template_id and int(product_template_id)
         product_id = product_id and int(product_id)
+        add_qty = (add_qty and float(add_qty)) or 1.0
 
         product_template = request.env['product.template'].browse(product_template_id)
 
         combination_info = product_template._get_combination_info(
             combination=request.env['product.template.attribute.value'].browse(combination),
             product_id=product_id,
-            add_qty=add_qty and float(add_qty) or 1.0,
+            add_qty=add_qty,
+            uom_id=uom_id,
         )
 
         # Pop data only computed to ease server-side computations.

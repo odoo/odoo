@@ -91,30 +91,25 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         product_short = self.env['product.template'].create({
             'name': 'Short (TEST)',
             'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': always_attribute.id,
+                    'value_ids': [(4, always_S.id), (4, always_M.id)],
+                }),
+                Command.create({
+                    'attribute_id': dynamic_attribute.id,
+                    'value_ids': [(4, dynamic_S.id), (4, dynamic_M.id)],
+                }),
+                Command.create({
+                    'attribute_id': never_attribute.id,
+                    'value_ids': [(4, never_S.id), (4, never_M.id)],
+                }),
+                Command.create({
+                    'attribute_id': never_attribute_custom.id,
+                    'value_ids': [(4, never_custom_no.id), (4, never_custom_yes.id)],
+                }),
+            ]
         })
-
-        self.env['product.template.attribute.line'].create([
-            {
-                'product_tmpl_id': product_short.id,
-                'attribute_id': always_attribute.id,
-                'value_ids': [(4, always_S.id), (4, always_M.id)],
-            },
-            {
-                'product_tmpl_id': product_short.id,
-                'attribute_id': dynamic_attribute.id,
-                'value_ids': [(4, dynamic_S.id), (4, dynamic_M.id)],
-            },
-            {
-                'product_tmpl_id': product_short.id,
-                'attribute_id': never_attribute.id,
-                'value_ids': [(4, never_S.id), (4, never_M.id)],
-            },
-            {
-                'product_tmpl_id': product_short.id,
-                'attribute_id': never_attribute_custom.id,
-                'value_ids': [(4, never_custom_no.id), (4, never_custom_yes.id)],
-            },
-        ])
 
         # Add an optional product to trigger the modal window
         optional_product = self.env['product.template'].create({

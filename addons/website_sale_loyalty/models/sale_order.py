@@ -248,9 +248,9 @@ class SaleOrder(models.Model):
                         res[coupon] = reward
         return res
 
-    def _cart_find_product_line(self, product_id, **kwargs):
+    def _cart_find_product_line(self, *args, **kwargs):
         # Filter out reward lines, they shouldn't be modified by standard _cart_add logic.
         # This kind of lines is handled by _update_programs_and_rewards and _auto_apply_rewards.
-        return super()._cart_find_product_line(product_id, **kwargs).filtered(
+        return super()._cart_find_product_line(*args, **kwargs).filtered(
             lambda sol: not sol.is_reward_line
         )

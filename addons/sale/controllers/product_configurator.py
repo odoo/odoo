@@ -297,7 +297,10 @@ class SaleProductConfiguratorController(Controller):
                 'parent_exclusions': dict,
             }
         """
-        product_uom = request.env['uom.uom'].browse(product_uom_id)
+        uom = (
+            (product_uom_id and request.env['uom.uom'].browse(product_uom_id))
+            or product_template.uom_id
+        )
         product = product_template._get_variant_for_combination(combination)
         attribute_exclusions = product_template._get_attribute_exclusions(
             parent_combination=parent_combination,
@@ -312,33 +315,40 @@ class SaleProductConfiguratorController(Controller):
                 pricelist,
                 combination,
                 quantity=quantity,
-                uom=product_uom,
+                uom=uom,
                 currency=currency,
                 date=so_date,
                 **kwargs,
             ),
             quantity=quantity,
-            attribute_lines=[dict(
-                id=ptal.id,
-                attribute=dict(**ptal.attribute_id.read(['id', 'name', 'display_type'])[0]),
-                attribute_values=[
+            uom_id=uom.id,
+            attribute_lines=[{
+                'id': ptal.id,
+                'attribute': dict(**ptal.attribute_id.read(['id', 'name', 'display_type'])[0]),
+                'attribute_values': [
                     dict(
                         **ptav.read(['name', 'html_color', 'image', 'is_custom'])[0],
                         price_extra=self._get_ptav_price_extra(
                             ptav, currency, so_date, product_or_template
                         ),
                     ) for ptav in ptal.product_template_value_ids
-                    if ptav.ptav_active or combination and ptav.id in combination.ids
+                    if ptav.ptav_active or (combination and ptav.id in combination.ids)
                 ],
-                selected_attribute_value_ids=combination.filtered(
+                'selected_attribute_value_ids': combination.filtered(
                     lambda c: ptal in c.attribute_line_id
                 ).ids,
-                create_variant=ptal.attribute_id.create_variant,
-            ) for ptal in product_template.attribute_line_ids],
+                'create_variant': ptal.attribute_id.create_variant,
+            } for ptal in product_template.attribute_line_ids],
             exclusions=attribute_exclusions['exclusions'],
             archived_combinations=attribute_exclusions['archived_combinations'],
             parent_exclusions=attribute_exclusions['parent_exclusions'],
         )
+        if product_template._has_multiple_uoms():
+            values['uom_data'] = {
+                uom.id: uom.name
+                for uom in product_template._get_allowed_uoms()
+            }
+            values['uom_order'] = product_template._get_uom_order()
         # Shouldn't be sent client-side
         values.pop('pricelist_rule_id', None)
         return values
