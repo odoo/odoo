@@ -22,7 +22,6 @@ export class EatingLocationPage extends Component {
 
     selectPreset(preset) {
         this.selfOrder.currentOrder.setPreset(preset);
-        this.selfOrder.currentTable = null;
         this.router.navigate("product_list");
     }
 
