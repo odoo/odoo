@@ -190,7 +190,7 @@ class PaymentPortal(portal.CustomerPortal):
     def _get_payment_page_template_xmlid(self, **kwargs):
         return 'payment.pay'
 
-    @http.route('/my/payment_method', type='http', methods=['GET'], auth='user', website=True)
+    @http.route('/my/payment_method', type='http', methods=['GET'], auth='public', website=True)
     def payment_method(self, **kwargs):
         """ Display the form to manage payment methods.
 
