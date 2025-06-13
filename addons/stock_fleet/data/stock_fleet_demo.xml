@@ -52,17 +52,4 @@
         <field name="manager_id" ref="base.user_admin"/>
         <field eval="[(6,0,[ref('vehicle_tag_transport')])]" name="tag_ids"/>
     </record>
-
-    <record id="dock_a" model="stock.location">
-        <field name="name">Dock A</field>
-        <field name="barcode">DOCKA</field>
-        <field name="is_a_dock">True</field>
-        <field name="location_id" ref="stock.stock_location_output"/>
-    </record>
-    <record id="dock_b" model="stock.location">
-        <field name="name">Dock B</field>
-        <field name="barcode">DOCKB</field>
-        <field name="is_a_dock">True</field>
-        <field name="location_id" ref="stock.stock_location_output"/>
-    </record>
 </odoo>
