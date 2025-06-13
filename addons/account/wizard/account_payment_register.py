@@ -257,8 +257,8 @@ class AccountPaymentRegister(models.TransientModel):
 
         if len(lines.company_id.root_id) > 1:
             raise UserError(_("You can't create payments for entries belonging to different companies."))
-        if len(lines.company_id.filtered(lambda c: c.root_id not in lines.company_id)) > 1:
-            raise UserError(_("You can't create payments for entries belonging to different branches."))
+        if self._from_sibling_companies(lines) and lines.company_id.root_id not in self.env.user.company_ids:
+            raise UserError(_("You can't create payments for entries belonging to different branches without access to parent company."))
         if not lines:
             raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
 
@@ -319,7 +319,7 @@ class AccountPaymentRegister(models.TransientModel):
         '''
         payment_values = batch_result['payment_values']
         lines = batch_result['lines']
-        company = min(lines.company_id, key=lambda c: len(c.parent_ids))
+        company = min(lines.company_id, key=lambda c: len(c.sudo().parent_ids)) if not self._from_sibling_companies(lines) else lines.company_id.root_id
 
         source_amount = abs(sum(lines.mapped('amount_residual')))
         if payment_values['currency_id'] == company.currency_id.id:
@@ -336,6 +336,10 @@ class AccountPaymentRegister(models.TransientModel):
             'source_amount': source_amount,
             'source_amount_currency': source_amount_currency,
         }
+
+    @api.model
+    def _from_sibling_companies(self, lines):
+        return len(lines.company_id) > 1 and not any(c.root_id in lines.company_id for c in lines.company_id)
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -380,8 +384,10 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.can_group_payments = len(batch_result['lines']) != 1
             else:
                 # == Multiple batches: The wizard is not editable  ==
+                lines = sum((batch_result['lines'] for batch_result in batches), self.env['account.move.line'])
+                company = min(lines.company_id, key=lambda c: len(c.parent_ids)) if not self._from_sibling_companies(lines) else lines.company_id.root_id
                 wizard.update({
-                    'company_id': min(batches, key=lambda batch: len(batch['lines'].company_id.parent_ids))['lines'].company_id.id,
+                    'company_id': company.id,
                     'partner_id': False,
                     'partner_type': False,
                     'payment_type': wizard_values_from_batch['payment_type'],
@@ -980,10 +986,19 @@ class AccountPaymentRegister(models.TransientModel):
                     'batch': batch_result,
                 })
 
-        payments = self._init_payments(to_process, edit_mode=edit_mode)
-        self._post_payments(to_process, edit_mode=edit_mode)
-        self._reconcile_payments(to_process, edit_mode=edit_mode)
-        return payments
+        lines = sum((batch_result['lines'] for batch_result in batches), self.env['account.move.line'])
+        from_sibling_companies = self._from_sibling_companies(lines)
+        if from_sibling_companies and lines.company_id.root_id not in self.env.companies:
+            # Payment made for sibling companies, we don't want to redirect to the payments
+            # to avoid access error, as it will be created as parent company.
+            self.env.context = {**self.env.context, "dont_redirect_to_payments": True}
+
+        wizard = self.sudo() if from_sibling_companies else self
+
+        payments = wizard._init_payments(to_process, edit_mode=edit_mode)
+        wizard._post_payments(to_process, edit_mode=edit_mode)
+        wizard._reconcile_payments(to_process, edit_mode=edit_mode)
+        return payments.sudo(flag=False)
 
     def action_create_payments(self):
         payments = self._create_payments()

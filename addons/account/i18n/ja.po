@@ -6,8 +6,8 @@
 # 764374359f7a865bd0df682e21e54552_335e00f <6548f6be8d222d7d28a3e8d58aa819d1_1128047>, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Wil Odoo, 2025
-# Junko Augias, 2025
 # Ryoko Tsuda <ryoko@quartile.co>, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-14 20:46+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2025\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5137,7 +5137,7 @@ msgstr "日付例"
 msgid ""
 "Date from which the accounting is managed in Odoo. It is the date of the "
 "opening entry."
-msgstr "Odooで会計管理を開始した日付。これは繰越記帳の日付です。"
+msgstr "Odooで会計管理を開始する日付です。これは期首仕訳の日付にあたります。"
 
 #. module: account
 #. odoo-javascript
@@ -5277,7 +5277,7 @@ msgstr "会社のデフォルトインコタームズ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__default_opening_date_filter
 msgid "Default Opening"
-msgstr "オープニングデフォルト"
+msgstr "デフォルト期首日付"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
@@ -5355,7 +5355,7 @@ msgstr "プロダクト販売時に適用されるデフォルト税。"
 msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
-msgstr "このアカウントを使用できるジャーナルを定義します。空の場合、すべてのジャーナルで使用できます。"
+msgstr "この勘定科目を使用できる仕訳帳を指定します。空白の場合、すべての仕訳帳で使用できます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5440,7 +5440,7 @@ msgstr "株式勘定デモ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
-msgstr "廃止済"
+msgstr "非推奨"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
@@ -6206,7 +6206,7 @@ msgstr "エントリー:%(account)s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 msgid "Entry Name"
-msgstr "エントリ名"
+msgstr "仕訳名"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
@@ -6512,12 +6512,12 @@ msgstr "ノートの最初のテキスト"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_date
 msgid "First Date"
-msgstr "初回日"
+msgstr "開始日"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "First Entry"
-msgstr "最初の入力"
+msgstr "初回仕訳"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6544,7 +6544,7 @@ msgstr "最初の請求書を送付しました!"
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post_origin_id
 msgid "First recurring entry"
-msgstr "最初の定期的な仕訳"
+msgstr "初回定期仕訳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
@@ -7677,7 +7677,7 @@ msgstr "貿易条件は、買い手と売り手の間で取引費用と責任を
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr "このジャーナル明細は税ラインであることを示します"
+msgstr "この仕訳明細が税額に対応する行(税金行)であることを示します"
 
 #. module: account
 #. odoo-javascript
@@ -8529,7 +8529,7 @@ msgstr "未消込入金仕訳"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
 msgid "Journal Suspense Account"
-msgstr "ジャーナルサスペンスアカウント"
+msgstr "仕訳帳用仮勘定"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_code_company_uniq
@@ -8561,19 +8561,19 @@ msgstr "仕訳は、反対仕訳と同じ種類を使用する必要がありま
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
 msgid "Journal used by default for moving the period of an entry"
-msgstr "エントリの期間を移動するためにデフォルトで使用されるジャーナル"
+msgstr "仕訳の会計期間を移動する際に、デフォルトで使用される仕訳帳"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
 msgid ""
 "Journal where the opening entry of this company's accounting has been "
 "posted."
-msgstr "この会社の会計の繰越記帳がされた仕訳帳。"
+msgstr "この会社の会計における期首仕訳が記帳された仕訳帳です。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
 msgid "Journal where to create the entry."
-msgstr "記入する仕訳。"
+msgstr "仕訳を作成するための仕訳帳です。"
 
 #. module: account
 #. odoo-javascript
@@ -8695,7 +8695,7 @@ msgstr "Lang"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Last Entry"
-msgstr "最後のエントリ"
+msgstr "最終仕訳"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -10169,37 +10169,37 @@ msgstr "開く"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
 msgid "Opening Balance"
-msgstr "開始残高"
+msgstr "期首残高"
 
 #. module: account
 #: model:ir.model,name:account.model_account_financial_year_op
 msgid "Opening Balance of Financial Year"
-msgstr "会計年度の開始残高"
+msgstr "会計年度の期首残高"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_credit
 msgid "Opening Credit"
-msgstr "貸方開始残高"
+msgstr "期首貸方残高"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_date
 msgid "Opening Date"
-msgstr "開始日"
+msgstr "期首日付"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_debit
 msgid "Opening Debit"
-msgstr "借方開始残高"
+msgstr "期首借方残高"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_date
 msgid "Opening Entry"
-msgstr "繰越記帳"
+msgstr "期首仕訳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_journal_id
 msgid "Opening Journal"
-msgstr "ジャーナルを開きます"
+msgstr "期首仕訳帳"
 
 #. module: account
 #. odoo-python
@@ -10207,19 +10207,19 @@ msgstr "ジャーナルを開きます"
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_move_id
 #, python-format
 msgid "Opening Journal Entry"
-msgstr "繰越仕訳記帳"
+msgstr "期首仕訳エントリ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
 msgid "Opening Move Posted"
-msgstr "記帳済開始仕訳"
+msgstr "期首仕訳が記帳済"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Opening balance"
-msgstr "残高を開きます"
+msgstr "期首残高"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
@@ -12759,7 +12759,7 @@ msgstr "短縮コード"
 msgid ""
 "Shorter name used for display. The journal entries of this journal will also"
 " be named using this prefix by default."
-msgstr "表示に使用する短い名前。このジャーナルのジャーナルエントリは、デフォルトで、このプレフィックスを使用して名前が付けられます。"
+msgstr "表示用の短縮名です。この仕訳帳の仕訳は、デフォルトでこのプレフィックスを使って命名されます。"
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -13150,7 +13150,7 @@ msgstr "小計"
 #: model:ir.model.fields,field_description:account.field_account_move__suitable_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__suitable_journal_ids
 msgid "Suitable Journal"
-msgstr "適しジャーナル"
+msgstr "適用可能な仕訳帳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_supplier_rank
@@ -13648,7 +13648,7 @@ msgstr "テキストがコピーされました"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr "それが繰越記帳の日付です。"
+msgstr "これは期首仕訳の日付です。"
 
 #. module: account
 #. odoo-python
@@ -14563,7 +14563,7 @@ msgstr "未消込金残高が以前の明細書の終了残高と一致しない
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
-msgstr "このエントリを作成した文の行"
+msgstr "この仕訳を作成した明細行"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__payment_tolerance_type
@@ -14970,7 +14970,7 @@ msgstr "この消込モデルは、これまで一度もエントリに使用さ
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This recurring entry originated from %s"
-msgstr "この定期的な仕訳は以下に由来します：%s"
+msgstr "この定期仕訳は%sから作成されました"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post_until
@@ -15257,31 +15257,31 @@ msgstr "取引タイプパラメータ"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer"
-msgstr "移動"
+msgstr "振替"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Transfer Date"
-msgstr "運送日"
+msgstr "振替日"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Transfer Journal Items"
-msgstr "仕訳項目を転送"
+msgstr "仕訳明細を振替える"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer counterpart"
-msgstr "振替相手"
+msgstr "相手勘定を振替える"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer entry to %s"
-msgstr "%sの振替エントリ"
+msgstr "仕訳を%s に振替える"
 
 #. module: account
 #. odoo-python
@@ -15289,7 +15289,7 @@ msgstr "%sの振替エントリ"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer from %s"
-msgstr "%sの振替"
+msgstr "%sから振替える"
 
 #. module: account
 #. odoo-python
@@ -15297,7 +15297,7 @@ msgstr "%sの振替"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer to %s"
-msgstr "%sの振替"
+msgstr "%sへ振替える"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15697,7 +15697,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "ダッシュボードビューで注文ジャーナルに使用"
+msgstr "ダッシュボードビューで仕訳帳を並べ替えるために使用されます"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__loss_account_id
