@@ -86,7 +86,7 @@ disableAnimations();
 describe.current.tags("desktop");
 defineTestMailModels();
 beforeEach(async () => {
-    mockDate("2023-4-8 10:00:00", 0);
+    mockDate("2023-04-08 10:00:00", 0);
     patchWithCleanup(DynamicList.prototype, {
         async load(params) {
             return patchActivityDomain(super.load.bind(this), params);

@@ -119,7 +119,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'holiday_status_id': self.holidays_type_2.id,
                 'number_of_days': 2,
                 'state': 'confirm',
-                'date_from': time.strftime('%Y-1-1'),
+                'date_from': time.strftime('%Y-01-01'),
                 'date_to': time.strftime('%Y-12-31'),
             })
 
@@ -159,7 +159,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'holiday_status_id': self.holidays_type_2.id,
                 'number_of_days': 2,
                 'state': 'confirm',
-                'date_from': time.strftime('%Y-1-1'),
+                'date_from': time.strftime('%Y-01-01'),
                 'date_to': time.strftime('%Y-12-31'),
             })
             allocation.action_approve()
@@ -354,8 +354,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'number_of_days': 20,
             'employee_id': employee.id,
             'state': 'confirm',
-            'date_from': time.strftime('2018-1-1'),
-            'date_to': time.strftime('%Y-1-1'),
+            'date_from': time.strftime('2018-01-01'),
+            'date_to': time.strftime('%Y-01-01'),
         })
 
         leave1 = self.env['hr.leave'].create({
@@ -418,16 +418,16 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'number_of_days': 20,
             'employee_id': employee.id,
             'state': 'confirm',
-            'date_from': time.strftime('2018-1-1'),
-            'date_to': time.strftime('%Y-1-1'),
+            'date_from': time.strftime('2018-01-01'),
+            'date_to': time.strftime('%Y-01-01'),
         })
 
         leave0 = self.env['hr.leave'].create({
             'name': 'Holiday 1 day',
             'employee_id': employee.id,
             'holiday_status_id': leave_type.id,
-            'request_date_from': fields.Date.from_string('2019-12-9'),
-            'request_date_to': fields.Date.from_string('2019-12-9'),
+            'request_date_from': fields.Date.from_string('2019-12-09'),
+            'request_date_to': fields.Date.from_string('2019-12-09'),
         })
 
         self.assertAlmostEqual(leave0.number_of_hours, 24, 2)

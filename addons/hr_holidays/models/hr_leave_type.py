@@ -142,8 +142,9 @@ class HrLeaveType(models.Model):
             date_to = fields.Date.context_today(self, default_date_to_dt)
 
         else:
-            date_from = fields.Date.today().strftime('%Y-1-1')
-            date_to = fields.Date.today().strftime('%Y-12-31')
+            current_year = fields.Date.today().year
+            date_from = date(current_year, 1, 1)
+            date_to = date(current_year, 12, 31)
 
         employee_id = self._context.get('default_employee_id', self._context.get('employee_id')) or self.env.user.employee_id.id
 

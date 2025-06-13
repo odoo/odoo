@@ -398,8 +398,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'attendees': [],  # <= attendee removed in Google
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=MO'],
             'reminders': {'useDefault': True},
-            'start': {'date': '2020-01-6'},
-            'end': {'date': '2020-01-7'},
+            'start': {'date': '2020-01-06'},
+            'end': {'date': '2020-01-07'},
         }])
         events = recurrence.calendar_event_ids.sorted('start')
         self.assertEqual(events.partner_ids, user.partner_id)
@@ -420,8 +420,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'summary': 'Pricing new update',
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
             'reminders': {'useDefault': True},
-            'start': {'date': '2020-01-6'},
-            'end': {'date': '2020-01-7'},
+            'start': {'date': '2020-01-06'},
+            'end': {'date': '2020-01-07'},
             'transparency': 'opaque',
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
@@ -478,8 +478,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'organizer': {'email': self.env.user.email, 'self': True},
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
             'reminders': {'useDefault': True},
-            'start': {'date': '2020-01-6'},
-            'end': {'date': '2020-01-7'},
+            'start': {'date': '2020-01-06'},
+            'end': {'date': '2020-01-07'},
         }, {   # Third event has been deleted
             'id': '%s_20200113' % recurrence_id,
             'originalStartTime': {'dateTime': '2020-01-13'},
@@ -503,9 +503,9 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             "id": recurrence_id,
             "updated": "2020-01-13T16:17:03.806Z",
             "summary": "r rul",
-            "start": {"date": "2020-01-6"},
+            "start": {"date": "2020-01-06"},
             'organizer': {'email': self.env.user.email, 'self': True},
-            "end": {"date": "2020-01-7"},
+            "end": {"date": "2020-01-07"},
             'reminders': {'useDefault': True},
             "recurrence": ["RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO"],
         }, {
@@ -601,8 +601,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'id': recurrence_id,
             'summary': 'Pricing new update',
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
-            'start': {'date': '2020-01-6'},
-            'end': {'date': '2020-01-7'},
+            'start': {'date': '2020-01-06'},
+            'end': {'date': '2020-01-07'},
             'reminders': {'useDefault': True},
             'updated': self.now,
             'guestsCanModify': True,
@@ -960,8 +960,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'recurrence': ['EXDATE;TZID=Europe/Rome:20200113',
                            'RRULE;X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO;X-RELATIVE=1'],
             'reminders': {'useDefault': True},
-            'start': {'date': '2020-01-6'},
-            'end': {'date': '2020-01-7'},
+            'start': {'date': '2020-01-06'},
+            'end': {'date': '2020-01-07'},
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])
@@ -1759,8 +1759,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             }, ],
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
             'reminders': {'useDefault': True},
-            'start': {'date': '2020-01-6'},
-            'end': {'date': '2020-01-7'},
+            'start': {'date': '2020-01-06'},
+            'end': {'date': '2020-01-07'},
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])

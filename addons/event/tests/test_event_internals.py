@@ -394,7 +394,7 @@ class TestEventData(TestEventInternalsCommon):
             registration.invalidate_recordset(['event_date_range'])
             self.assertEqual(registration.event_date_range, 'in 6 days')
 
-    @freeze_time('2020-1-31 10:00:00')
+    @freeze_time('2020-01-31 10:00:00')
     @users('user_eventmanager')
     def test_event_date_timezone(self):
         event = self.event_0.with_user(self.env.user)
@@ -459,7 +459,7 @@ class TestEventData(TestEventInternalsCommon):
         templates = self.env['mail.template'].with_context(filter_template_on_event=True).search([('name', '=', 'test template')])
         self.assertEqual(len(templates), 1, 'Should also return only mail templates related to the event registration model using search')
 
-    @freeze_time('2020-1-31 10:00:00')
+    @freeze_time('2020-01-31 10:00:00')
     @users('user_eventmanager')
     def test_event_registrable(self):
         """Test if `_compute_event_registrations_open` works properly."""
@@ -511,7 +511,7 @@ class TestEventData(TestEventInternalsCommon):
         self.assertTrue(ticket.is_expired)
         self.assertFalse(event.event_registrations_open)
 
-    @freeze_time('2020-1-31 10:00:00')
+    @freeze_time('2020-01-31 10:00:00')
     @users('user_eventmanager')
     def test_event_multi_slots_registrable(self):
         """Test if `_compute_event_registrations_open` works properly on multi slots events. """
@@ -582,7 +582,7 @@ class TestEventData(TestEventInternalsCommon):
         } for slot in slot1 + slot2 for _ in range(2)])
         self.assertFalse(event.event_registrations_open)
 
-    @freeze_time('2020-1-31 10:00:00')
+    @freeze_time('2020-01-31 10:00:00')
     @users('user_eventmanager')
     def test_event_ongoing(self):
         event_1 = self.env['event.event'].create({
@@ -910,7 +910,7 @@ class TestEventRegistrationPhone(EventCase):
 @tagged('event_ticket')
 class TestEventTicketData(TestEventInternalsCommon):
 
-    @freeze_time('2020-1-31 10:00:00')
+    @freeze_time('2020-01-31 10:00:00')
     @users('user_eventmanager')
     def test_event_ticket_fields(self):
         """ Test event ticket fields synchronization """
