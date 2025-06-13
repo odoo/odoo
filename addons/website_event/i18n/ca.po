@@ -48,7 +48,7 @@ msgstr "<b>Final</b>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Sold Out</b>"
-msgstr ""
+msgstr "<b>Esgotat</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -58,7 +58,7 @@ msgstr "<b>Inici</b>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<em>Hidden for visitors</em>"
-msgstr ""
+msgstr "<em>Ocult per als visitants</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -87,7 +87,7 @@ msgstr "<i class=\"fa fa-ban me-2\"/>No publicat"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
-msgstr ""
+msgstr "<i class=\"fa fa-check me-2\" role=\"img\"/>Inscrit"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -191,7 +191,7 @@ msgstr "<small class=\"text-muted\">Afegir al calendari:</small>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<small>Add this event to your calendar</small>"
-msgstr ""
+msgstr "<small>Afegeix aquest esdeveniment al teu calendari</small>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -250,6 +250,9 @@ msgid ""
 "                                        <i class=\"fa fa-ban me-2\"/>Sold Out\n"
 "                                    </span>"
 msgstr ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
+"                                        <i class=\"fa fa-ban me-2\"/>Esgotat\n"
+"                                    </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -430,7 +433,7 @@ msgstr "Tornar a tots els esdeveniments"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.navbar
 msgid "Back to {{event.name}}"
-msgstr ""
+msgstr "Tornar a {{event.name}}"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_1_question_0_answer_1
@@ -460,7 +463,7 @@ msgstr "Cancel·la"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Card design"
-msgstr ""
+msgstr "Disseny de la targeta"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -525,7 +528,7 @@ msgstr "Països"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Cover Position"
-msgstr ""
+msgstr "Posició de la portada"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__cover_properties
@@ -608,7 +611,7 @@ msgstr "No oblidis fer clic a <b>desar</b> quan hagis acabat."
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Don't miss out!"
-msgstr ""
+msgstr "No t'ho perdis!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
@@ -618,7 +621,7 @@ msgstr "Descarregar totes les entrades"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
 msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
-msgstr ""
+msgstr "Descarregar entrades <i class=\"ms-1 fa fa-download\"/>"
 
 #. module: website_event
 #. odoo-javascript
@@ -640,7 +643,7 @@ msgstr "Menús de la comunitat d'esdeveniments"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Event Cover Position"
-msgstr ""
+msgstr "Posició de la portada de l'esdeveniment"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
@@ -759,7 +762,7 @@ msgstr "Pàgina d'esdeveniments"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
 msgid "Excellence in Achievement Awards"
-msgstr ""
+msgstr "Premis a l'excel·lència"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -809,7 +812,7 @@ msgstr "Peu de pàgina visible"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Get directions"
-msgstr ""
+msgstr "Obtenir direccions"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
@@ -831,7 +834,7 @@ msgstr "Graella"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
 msgid "Harmony Under the Stars"
-msgstr ""
+msgstr "Harmonia sota les estrelles"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__header_visible
@@ -841,7 +844,7 @@ msgstr "Capçalera visible"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Hidden (visitor only)"
-msgstr ""
+msgstr "Ocult (només per a visitants)"
 
 #. module: website_event
 #. odoo-python
@@ -852,7 +855,7 @@ msgstr "Torneig d'hoquei"
 #. module: website_event
 #: model:event.question,title:website_event.event_7_question_1
 msgid "How did you hear about us?"
-msgstr ""
+msgstr "Com vas saber de nosaltres?"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_0_question_2
@@ -860,7 +863,7 @@ msgstr ""
 #: model:event.question,title:website_event.event_5_question_0
 #: model:event.question,title:website_event.event_type_data_sports_question_0
 msgid "How did you learn about this event?"
-msgstr "Com has après sobre aquest esdeveniment?"
+msgstr "Com vas saber sobre aquest esdeveniment?"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
@@ -886,12 +889,12 @@ msgstr "Informació"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
 msgid "Innovations in Technology and Society"
-msgstr ""
+msgstr "Innovació en tecnologia i societat"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Inside content"
-msgstr ""
+msgstr "Dins del contingut"
 
 #. module: website_event
 #. odoo-python
@@ -1154,7 +1157,7 @@ msgstr "Cites"
 #: model:event.question.answer,name:website_event.event_5_question_0_answer_2
 #: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_2
 msgid "Radio Ad"
-msgstr ""
+msgstr "Anunci a la ràdio"
 
 #. module: website_event
 #. odoo-javascript
@@ -1248,7 +1251,7 @@ msgstr "Recerca"
 #: model:ir.model.fields,help:website_event.field_event_tag__website_id
 #: model:ir.model.fields,help:website_event.field_event_tag_category__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "Restringir a un lloc web específic."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -1313,7 +1316,7 @@ msgstr "Mostra al lloc web"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_options_template
 msgid "Show time"
-msgstr ""
+msgstr "Mostrar hora"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -1356,7 +1359,7 @@ msgstr "Submenú (Específic)"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Template badge"
-msgstr ""
+msgstr "Etiqueta de plantilla"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_absolute_url
@@ -1438,7 +1441,7 @@ msgstr "Filtre de barra superior"
 #. odoo-python
 #: code:addons/website_event/models/website_visitor.py:0
 msgid "Unsupported 'Not In' operation on visitors registrations"
-msgstr ""
+msgstr "L'operació «Not In» no és compatible amb els registres dels visitants"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
@@ -1455,7 +1458,7 @@ msgstr "Esdeveniments propers"
 #. module: website_event
 #: model:website.snippet.filter,name:website_event.website_snippet_filter_event_list_unfinished
 msgid "Upcoming and Ongoing Events"
-msgstr ""
+msgstr "Esdeveniments actuals i pròxims"
 
 #. module: website_event
 #. odoo-javascript
@@ -1481,7 +1484,7 @@ msgstr "Utilitzat quan no és un menú basat en un URL"
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 msgid "Value should be True or False (not %)"
-msgstr ""
+msgstr "El valor ha de ser vertader o fals (no %)"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_1
@@ -1491,7 +1494,7 @@ msgstr "Vegetarià"
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_event__website_visibility__link
 msgid "Via a Link"
-msgstr ""
+msgstr "A través d'un enllaç"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__view_id
@@ -1523,7 +1526,7 @@ msgstr "Visitant"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "We couldn't find any event matching your search for:"
-msgstr ""
+msgstr "No trobem cap esdeveniment que coincideixi amb la teva cerca:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -1629,7 +1632,7 @@ msgstr "Imatge del lloc web"
 #. module: website_event
 #: model:event.question,title:website_event.event_5_question_1
 msgid "What's your Hockey level?"
-msgstr ""
+msgstr "Quin és el teu nivell d'hoquei?"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_ongoing
@@ -1675,7 +1678,7 @@ msgstr "esdeveniments"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "time)"
-msgstr ""
+msgstr "temps)"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full

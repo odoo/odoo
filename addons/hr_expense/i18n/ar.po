@@ -62,7 +62,7 @@ msgstr "%(expense_name)s: إنها نفقتك الخاصة "
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: You are neither a Manager nor a HR Officer"
-msgstr ""
+msgstr "%(expense_name)s: أنت لست مديراً أو مسؤولاً عن الموارد البشرية "
 
 #. module: hr_expense
 #. odoo-python
@@ -87,6 +87,8 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'النفقة - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"'')) "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1105,13 +1107,13 @@ msgstr "عنصر اليومية"
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from these expenses: %(links)s"
-msgstr ""
+msgstr "تم إنشاء قيد اليومية من هذه النفقات: %(links)s "
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from this expense: %(link)s"
-msgstr ""
+msgstr "تم إنشاء قيد اليومية من هذه النفقة: %(link)s "
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
@@ -1420,7 +1422,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only draft expenses can have a total of 0."
-msgstr ""
+msgstr "يمكن فقط لمسودة النفقات أن يكون مجموعها 0. "
 
 #. module: hr_expense
 #. odoo-python
@@ -1433,7 +1435,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only one expense can be linked to a particular payment"
-msgstr ""
+msgstr "يمكن ربط نفقة واحدة فقط بدفعة معينة "
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2215,7 +2217,7 @@ msgstr "لا يسمح لك بتحرير هذه النفقة. "
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can not submit an expense without a category."
-msgstr ""
+msgstr "لا يمكنك تقديم نفقات بدون فئة. "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2235,6 +2237,8 @@ msgid ""
 "You can't post simultaneously employee-paid expenses belonging to different "
 "companies"
 msgstr ""
+"لا يمكنك ترحيل النفقات التي يدفعها الموظفون في نفس الوقت والتي تنتمي إلى "
+"شركات مختلفة "
 
 #. module: hr_expense
 #. odoo-python
@@ -2275,7 +2279,7 @@ msgstr "لا يمكنك إجراء تعديلات بما أن الدفع مرت�
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot edit the security fields of an expense manually"
-msgstr ""
+msgstr "لا يمكنك تحرير حقول الأمان الخاصة بنفقة ما يدوياً "
 
 #. module: hr_expense
 #. odoo-python
@@ -2299,7 +2303,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot split an expense that is already posted."
-msgstr ""
+msgstr "لا يمكنك تقسيم النفقات التي تم ترحيلها بالفعل. "
 
 #. module: hr_expense
 #. odoo-python
@@ -2311,13 +2315,13 @@ msgstr "ليس لديك الإذن المطلوب لإرسال هذه النفق
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
-msgstr ""
+msgstr "لا تملك صلاحيات كافية لتحرير هذه النفقة. "
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the rights to create accounting entries."
-msgstr ""
+msgstr "لا تملك صلاحية إنشاء القيود المحاسبية. "
 
 #. module: hr_expense
 #. odoo-python
