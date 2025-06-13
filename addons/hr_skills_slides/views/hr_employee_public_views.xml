@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_public_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.public.form.inherit.skills.slides</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+               <field name="has_subscribed_courses" invisible="1" groups="website_slides.group_website_slides_officer"/>
+                <button name="action_open_courses"
+                    class="oe_stat_button"
+                    groups="website_slides.group_website_slides_officer"
+                    icon="fa-graduation-cap"
+                    type="object"
+                    invisible="not is_user or not user_id or not has_subscribed_courses">
+                    <field name="courses_completion_text" widget="statinfo" string="Courses"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
