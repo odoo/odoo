@@ -1,8 +1,9 @@
 from odoo.exceptions import UserError
+from odoo.addons.sale.models.sale_order_logic_interface import SaleOrderLogicInterface
+class SaleOrderLogic(SaleOrderLogicInterface):
 
-class SaleOrderLogic:
     def __init__(self, orders):
-        self.orders = orders
+        super().__init__(orders)
 
     def action_confirm(self):
         """ Confirm the given quotation(s) and set their confirmation date.
