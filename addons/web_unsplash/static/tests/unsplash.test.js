@@ -1,5 +1,6 @@
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, Deferred, press, waitFor } from "@odoo/hoot-dom";
 import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
@@ -48,10 +49,10 @@ test("Unsplash is inserted in the Media Dialog", async () => {
     });
     const env = await makeMockEnv();
     const { editor } = await setupEditor(`<p>[]</p>`, { env });
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
     await insertText(editor, "/image");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(1);
+    await expectElementCount(".o-we-powerbox", 1);
     await click(".o-we-command");
     await animationFrame();
     expect(".o_select_media_dialog").toHaveCount(1);
@@ -85,10 +86,10 @@ test("Unsplash error is displayed when there is no key", async () => {
     });
     const env = await makeMockEnv();
     const { editor } = await setupEditor(`<p>[]</p>`, { env });
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
     await insertText(editor, "/image");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(1);
+    await expectElementCount(".o-we-powerbox", 1);
     await click(".o-we-command");
     await animationFrame();
     expect(".o_select_media_dialog").toHaveCount(1);

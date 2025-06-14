@@ -81,9 +81,8 @@ export class PivotHeader extends Component {
             description: item.description || item.string,
             isActive: false,
             options:
-                item.options || ["date", "datetime"].includes(item.type)
-                    ? getIntervalOptions()
-                    : undefined,
+                item.options ||
+                (["date", "datetime"].includes(item.type) ? getIntervalOptions() : undefined),
         }));
     }
 
@@ -106,11 +105,7 @@ export class PivotHeader extends Component {
      */
     validateField(fieldName, field) {
         const { groupable, type } = field;
-        return (
-            groupable &&
-            fieldName !== "id" &&
-            GROUPABLE_TYPES.includes(type)
-        );
+        return groupable && fieldName !== "id" && GROUPABLE_TYPES.includes(type);
     }
 
     /**

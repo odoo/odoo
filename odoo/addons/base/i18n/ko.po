@@ -5171,7 +5171,7 @@ msgstr ""
 "DI는 표준화된 형식을 사용하여 비즈니스 정보를 전자적으로 교환하는 것입니다.\n"
 "\n"
 "이것은 다양한 EDI 형식의 송장 가져 오기 및 내보내기를 위한 기본 모듈이며, \n"
-"해당 문서를 교환에 관련된 다양한 당사자 (타사, 정부 등)\n"
+"해당 문서를 교환에 관련된 다양한 당사자 (외부 업체, 정부 기관 등)\n"
 "에게 전송합니다\n"
 
 #. module: base
@@ -8514,10 +8514,10 @@ msgstr ""
 "이 모듈을 통해 대상 국가에 부합하도록 전화번호 인증 및 번호 형식  지정 기능을\n"
 "사용할 수 있습니다.\n"
 "\n"
-"특정 모델을 통해서 블랙리스트에 올린 전화번호를 관리하는 전화 블랙리스트 관리 기능도\n"
+"특정 모델을 통해서 블랙리스트에 올린 전화번호를 관리하는 수신 거부 전화 관리 기능도\n"
 "추가되어 있습니다.\n"
 "\n"
-"저장한 번호에 대한 검증 및 블랙리스트 처리를 관리하는 mail.thread.phone 기능도 \n"
+"저장한 번호에 대한 검증 및 수신 거부 처리를 관리하는 mail.thread.phone 기능도 \n"
 "추가되어 있습니다. "
 
 #. module: base
@@ -13949,6 +13949,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type in "
 "['one2many', 'many2many']\">to</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type in "
+"['one2many', 'many2many']\"></span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -25083,7 +25085,7 @@ msgstr "외부 식별 기호"
 msgid ""
 "External Key/Identifier that can be used for data integration with third-"
 "party systems"
-msgstr "타사 시스템과의 데이터 통합에 사용할 수 있는 외부 키/식별 기호"
+msgstr "외부 기관의 시스템과의 데이터 통합에 사용할 수 있는 외부 키/식별 기호"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_external_tax
@@ -28400,7 +28402,7 @@ msgstr "POS를 Stripe 결제용 단말기와 통합"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_tyro
 msgid "Integrate your POS with a Tyro payment terminal (AU)"
-msgstr ""
+msgstr "POS를 Tyro 결제 단말기(AU)와 통합 사용"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_viva_wallet
@@ -32452,10 +32454,9 @@ msgid ""
 "This here module is useful to validate that they're doing what they're \n"
 "supposed to do\n"
 msgstr ""
-"타사 테스트 유틸리티에는 모델 및 모든 것이 필요할 수 있습니다.\n"
+"비단순 테스트 유틸리티에는 모델 및 전체 내용이 필요할 수 있습니다.\n"
 "\n"
-"이 모듈은 그들이 해야 할 일을 하고 있는지 확인하는 데 \n"
-"유용합니다.\n"
+"이 모듈은 유틸리티가 제대로 작동하는지 확인해야 할 때 유용합니다..\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__none
@@ -34662,7 +34663,7 @@ msgstr "하루에 오직 하나의 환율만 허용됩니다!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_decimal_precision_name_uniq
 msgid "Only one value can be defined for each given usage!"
-msgstr "각 주어진 사용에는 하나의 값만 정의할 수 있습니다!"
+msgstr "각각의 사례에는 하나의 값만 지정할 수 있습니다!"
 
 #. module: base
 #. odoo-python
@@ -37335,7 +37336,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_condominium
 msgid "Property Owner Association"
-msgstr "부동산 소유자 협회"
+msgstr "부동산 소유주 조합"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -38130,7 +38131,7 @@ msgstr "제거"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
 msgid "Rental"
-msgstr "임대하기"
+msgstr "렌탈"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp_renting
@@ -38574,7 +38575,7 @@ msgstr "규칙"
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "Rules can not be applied on the Record Rules model."
-msgstr "레코드 규칙 모델에는 규칙을 적용할 수 없습니다."
+msgstr "레코드 규칙 모델에 규칙을 적용할 수 없습니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -40330,7 +40331,7 @@ msgstr "죄송합니다, 이 문서를 사용할 수 있는 권한이 없습니�
 #. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 msgid "Sorry, you are not allowed to write on this document"
-msgstr "죄송합니다, 이 문서를 작성할 수 있는 권한이 없습니다."
+msgstr "죄송합니다, 이 문서를 작성할 권한이 없습니다."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__sort
@@ -40469,7 +40470,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
 msgid "Specify industries to classify your contacts and draw up reports."
-msgstr "연락처를 분류하고 보고서를 작성할 대상 산업을 지정하십시오."
+msgstr "연락처를 분류하고 보고서를 작성할 인더스트리를 지정하세요."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__crud_model_id
@@ -42583,7 +42584,7 @@ msgstr "제3자 및 이연/전자 수표 관리"
 #: model:ir.actions.act_url,name:base.action_third_party
 #: model:ir.ui.menu,name:base.menu_third_party
 msgid "Third-Party Apps"
-msgstr "타사 앱"
+msgstr "외부 앱"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__iso_code
@@ -43426,7 +43427,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/image.py:0
 msgid "Too large image (above %sMpx), reduce the image size."
-msgstr ""
+msgstr "이미지가 너무 큽니다(%sMpx 이상). 이미지 크기를 줄이세요."
 
 #. module: base
 #. odoo-python

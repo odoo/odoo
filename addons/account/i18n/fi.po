@@ -1544,7 +1544,7 @@ msgid ""
 "disabled again if there are any existing journal items."
 msgstr ""
 "<strong>Varoitus:</strong> Kun kirjausketju on otettu käyttöön, sitä ei voi "
-"poistaa käytöstä, jos yhtäkään päiväkirjamerkintöjä on olemassa."
+"poistaa käytöstä, jos se sisältää yhdenkin päiväkirjamerkinnän."
 
 #. module: account
 #. odoo-python
@@ -1565,7 +1565,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A Ledger group name must be unique per company."
-msgstr "Kirjanpitoryhmän nimen on oltava yksilöllinen kullakin yhtiöllä."
+msgstr "Pääkirjaryhmän nimen on oltava yksilöllinen per yritys."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -3584,7 +3584,7 @@ msgstr "Tilinumero"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr "Pankkitili %(link)s ja tilinumero %(number)s ovat arkistoitu"
+msgstr "Pankkitili %(link)s ja tilinumero %(number)s ovat arkistoituja"
 
 #. module: account
 #. odoo-python
@@ -13531,7 +13531,7 @@ msgstr "Maksettava palkka"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Sale"
-msgstr "Ale"
+msgstr "Myynti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_sale_receipts
@@ -15458,6 +15458,7 @@ msgstr ""
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr ""
+"Kauppakumppanin kaikki siihen liittyvät kirjanpitomerkinnät on päivitetty."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -15691,7 +15692,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr "Ulkomaan valuutan on oltava eri kuin päiväkirjalla: %s"
+msgstr "Ulkomaan valuutan on oltava eri kuin päiväkirjan valuutan: %s"
 
 #. module: account
 #. odoo-python
@@ -18714,6 +18715,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
+"Et voi asettaa kumppania toisen laskutusosoitteeksi, jos heillä on eri "
+"%(vat_label)s."
 
 #. module: account
 #. odoo-python

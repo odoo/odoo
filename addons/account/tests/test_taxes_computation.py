@@ -43,6 +43,23 @@ class TestTaxesComputation(TestTaxCommon):
         )
         self._run_js_tests()
 
+    def test_taxes_filtering(self):
+        tax_percent_1 = self.percent_tax(10.0)
+        tax_percent_2 = self.percent_tax(20.0)
+        self.assert_taxes_computation(
+            tax_percent_1 | tax_percent_2,
+            100.0,
+            {
+                'total_included': 110.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 10.0),
+                ),
+            },
+            excluded_tax_ids=tax_percent_2.ids,
+        )
+        self._run_js_tests()
+
     def test_random_case_1(self):
         tax_percent_8_price_included = self.percent_tax(8.0, price_include_override='tax_included')
         tax_percent_0_price_included = self.percent_tax(0.0, price_include_override='tax_included')

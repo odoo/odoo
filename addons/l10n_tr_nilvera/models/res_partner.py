@@ -1,7 +1,7 @@
 import logging
 import urllib.parse
 
-from odoo import api, fields, models
+from odoo import api, fields, models, modules
 from odoo.exceptions import UserError
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
@@ -44,6 +44,8 @@ class ResPartner(models.Model):
 
     @api.depends('vat', 'invoice_edi_format')
     def _compute_nilvera_customer_status_and_alias_id(self):
+        if modules.module.current_test:
+            return
         for partner in self:
             if partner.vat and partner.invoice_edi_format == 'ubl_tr':
                 try:

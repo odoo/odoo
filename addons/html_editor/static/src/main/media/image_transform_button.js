@@ -37,11 +37,6 @@ export class ImageTransformButton extends Component {
             }
             this.mouseDownInsideTransform = false;
         });
-        // When we click on any character the image is deleted and we need to close the image transform
-        // We handle this by selectionchange
-        useExternalListener(this.props.document, "selectionchange", (ev) => {
-            this.closeImageTransformation();
-        });
     }
 
     isNodeInsideTransform(node) {

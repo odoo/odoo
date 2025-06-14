@@ -118,21 +118,7 @@ class TestMailComposer(MailCommon, TestRecipients):
         :param add_web: add web context, generally making noise especially in
           mass mail mode (active_id/ids both present in context)
         """
-        base_context = {
-            'default_model': records._name,
-            'default_res_ids': records.ids,
-        }
-        if len(records) == 1:
-            base_context['default_composition_mode'] = 'comment'
-        else:
-            base_context['default_composition_mode'] = 'mass_mail'
-        if add_web:
-            base_context['active_model'] = records._name
-            base_context['active_id'] = records[0].id
-            base_context['active_ids'] = records.ids
-        if values:
-            base_context.update(**values)
-        return base_context
+        return self._get_mail_composer_web_context(records, add_web=add_web, **values)
 
 
 @tagged('mail_composer')

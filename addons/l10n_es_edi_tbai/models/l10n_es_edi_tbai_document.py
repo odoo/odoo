@@ -628,6 +628,9 @@ class L10nEsEdiTbaiDocument(models.Model):
         for values in values_per_grouping_key.values():
             total_amount += values['base_amount']
 
+        if is_refund:
+            total_amount = -total_amount
+
         return {
             'invoice_info': invoice_info,
             'total_amount': total_amount,

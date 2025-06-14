@@ -4,13 +4,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-17 09:50+0000\n"
-"PO-Revision-Date: 2024-01-15 23:04+0000\n"
+"POT-Creation-Date: 2025-06-12 15:49+0000\n"
+"PO-Revision-Date: 2025-06-12 15:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,12 +18,12 @@ msgstr ""
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
 msgid "<b>CIG: </b>"
-msgstr "<b>CIG: </b>"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
 msgid "<b>CUP: </b>"
-msgstr "<b>CUP: </b>"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
@@ -65,14 +64,23 @@ msgstr ""
 "<span class=\"o_form_label\">\n"
 "                                Modalità fattura elettronica\n"
 "                            </span>\n"
-"                            <span class=\"fa fa-lg fa-building-o\" title=\"I "
-"valori indicati di seguito sono specifici per l'azienda.\"/>"
+"                            <span class=\"fa fa-lg fa-building-o\" title=\"I valori indicati di seguito sono specifici per l'azienda.\"/>"
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">\n"
+"                        This branch shares the same VAT number and Codice Fiscale as its parent company. Select the parent company to configure the EDI settings.\n"
+"                    </span>"
+msgstr ""
+"<span class=\"o_form_label\">\n"
+"                        Questa filiale condivide la stessa partita IVA e Codice Fiscale della società madre. Selezionare la società madre per configurare le impostazioni EDI.\n"
+"                    </span>"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Allow Odoo to process invoices</span>"
-msgstr ""
-"<span class=\"o_form_label\">Consenti a Odoo di inviare le fatture</span>"
+msgstr "<span class=\"o_form_label\">Consenti a Odoo di inviare le fatture</span>"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
@@ -605,6 +613,11 @@ msgid "PEC e-mail"
 msgstr "E-mail PEC"
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__company_parent_id
+msgid "Parent Company"
+msgstr "Società madre"
+
+#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Partner not found, useful informations from XML file:"
@@ -665,7 +678,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_proxy_user.py:0
 msgid ""
-"Please fill your codice fiscale to be able to receive invoices from FatturaPA"
+"Please fill your codice fiscale to be able to receive invoices from "
+"FatturaPA"
 msgstr ""
 "Per favore, inserisci il codice fiscale per poter ricevere le fatture da "
 "FatturaPA"
@@ -856,6 +870,14 @@ msgstr "Test (sperimentale)"
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "The Origin Document Date cannot be in the future."
 msgstr "La Data Documento Origine non può essere nel futuro."
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The amount_total %(current_total)s is different than PrezzoTotale "
+"%(expected_total)s for '%(move_name)s'"
+msgstr "L'importo totale %(current_total)s è diverso dal PrezzoTotale %(expected_total)s per '%(move_name)s'"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1141,6 +1163,11 @@ msgid "Unknown error"
 msgstr "Errore sconosciuto"
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__use_root_proxy_user
+msgid "Use Root Proxy User"
+msgstr "Utilizzare l'utente proxy root"
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_header
 #: model:ir.model.fields,help:l10n_it_edi.field_account_move__l10n_it_edi_header
 msgid ""
@@ -1265,8 +1292,8 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_tax_system__rf10
 msgid ""
-"[RF10] Intrattenimenti, giochi e altre attività di cui alla tariffa allegata "
-"al DPR 640/72 (art.74, c.6, DPR 633/72)"
+"[RF10] Intrattenimenti, giochi e altre attività di cui alla tariffa allegata"
+" al DPR 640/72 (art.74, c.6, DPR 633/72)"
 msgstr ""
 
 #. module: l10n_it_edi

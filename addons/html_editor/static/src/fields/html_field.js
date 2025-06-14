@@ -264,6 +264,7 @@ export class HtmlField extends Component {
         }
         if (this.props.codeview) {
             config.resources = {
+                ...config.resources,
                 user_commands: [
                     {
                         id: "codeview",

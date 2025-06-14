@@ -1533,6 +1533,9 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Một tài khoản ngân hàng với số tài khoản %(number)s đã tồn tại cho Đối tác "
+"%(partner)s, nhưng đang ở trạng thái lưu trữ. Vui lòng khôi phục lại tài "
+"khoản này thay vì tạo mới."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3083,7 +3086,7 @@ msgid ""
 msgstr ""
 "Bất kỳ bút toán nào có thuế cho đến và bao gồm ngày đó sẽ được hoãn lại đến "
 "một thời gian sau, theo trình tự sổ nhật ký của bút toán đó. Ngày khóa thuế "
-"được tự động thiết lập khi bút toán quyết toán thuế được ghi sổ."
+"được tự động thiết lập khi bút toán kết chuyển thuế cuối kỳ được ghi sổ."
 
 #. module: account
 #. odoo-python
@@ -6644,7 +6647,7 @@ msgid ""
 "Entry."
 msgstr ""
 "Các khoản trả trước được vào sổ trên tài khoản này sẽ được tính đến trong "
-"bút toán quyết toán thuế."
+"bút toán kết chuyển thuế cuối kỳ."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__draft
@@ -10669,7 +10672,7 @@ msgstr "Phép nhân tùy thuộc vào loại chứng từ, để chuyển giá t
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__my_activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động của tôi"
+msgstr "Thời hạn hoạt động của tôi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10823,7 +10826,7 @@ msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hoạt động tiếp theo"
+msgstr "Thời hạn cho hoạt động tiếp theo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_summary
@@ -14691,7 +14694,7 @@ msgstr "Sổ nhật ký thuế cơ sở dòng tiền"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
 msgid "Tax Closing Entry"
-msgstr "Bút toán quyết toán thuế"
+msgstr "Bút toán kết chuyển thuế cuối kỳ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
@@ -14882,8 +14885,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the authorities."
 msgstr ""
-"Tài khoản vãng lai thuế được sử dụng làm đối ứng với bút toán quyết toán "
-"thuế khi phải trả cho cơ quan chức năng."
+"Tài khoản vãng lai thuế được sử dụng làm đối ứng với bút toán kết chuyển "
+"thuế cuối kỳ khi phải trả cho cơ quan chức năng."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__tax_receivable_account_id
@@ -14891,8 +14894,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
 msgstr ""
-"Tài khoản vãng lai thuế được sử dụng làm đối ứng với bút toán quyết toán "
-"thuế khi nhận về công ty."
+"Tài khoản vãng lai thuế được sử dụng làm đối ứng với bút toán kết chuyển "
+"thuế cuối kỳ khi nhận về công ty."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id

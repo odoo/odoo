@@ -4,7 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setContent } from "./_helpers/selection";
-import { undo } from "./_helpers/user_actions";
+import { insertText, undo } from "./_helpers/user_actions";
 import { expectElementCount } from "./_helpers/ui_expectations";
 
 const base64Img =
@@ -328,6 +328,40 @@ test("Image transformation disappear on escape", async () => {
     await animationFrame();
     transfoContainers = document.querySelectorAll(".transfo-container");
     expect(transfoContainers.length).toBe(0);
+});
+
+test("Image transformation disappear on backspace/delete", async () => {
+    const { editor } = await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    await contains(".o-we-toolbar div[name='image_transform'] button").click();
+    expect(".transfo-container").toHaveCount(1);
+    press("backspace");
+    await animationFrame();
+    expect(".transfo-container").toHaveCount(0);
+    undo(editor);
+    click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    await contains(".o-we-toolbar div[name='image_transform'] button").click();
+    expect(".transfo-container").toHaveCount(1);
+    press("delete");
+    await animationFrame();
+    expect(".transfo-container").toHaveCount(0);
+});
+
+test("Image transformation disappears on character key press", async () => {
+    const { editor } = await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    await contains(".o-we-toolbar div[name='image_transform'] button").click();
+    expect(".transfo-container").toHaveCount(1);
+    insertText(editor, "a");
+    await animationFrame();
+    expect(".transfo-container").toHaveCount(0);
 });
 
 test("Image transformation scalers position", async () => {

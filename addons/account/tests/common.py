@@ -8,11 +8,14 @@ from odoo.addons.product.tests.common import ProductCommon
 
 import json
 import base64
+import logging
 from contextlib import contextmanager
 from functools import wraps
 from lxml import etree
 from unittest import SkipTest
 from unittest.mock import patch
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountTestInvoicingCommon(ProductCommon):
@@ -650,13 +653,14 @@ class AccountTestInvoicingCommon(ProductCommon):
         attrib_wo_ns = {k: v for k, v in node.attrib.items() if '}' not in k}
         full_path = f'{path}/{tag_wo_ns}'
         return {
+            'node': node,
             'tag': tag_wo_ns,
             'full_path': full_path,
             'namespace': None if len(tag_split) < 2 else tag_split[0],
             'text': (node.text or '').strip(),
             'attrib': attrib_wo_ns,
             'children': [
-                self._turn_node_as_dict_hierarchy(child_node, path=path)
+                self._turn_node_as_dict_hierarchy(child_node, path=full_path)
                 for child_node in node.getchildren()
             ],
         }
@@ -697,9 +701,19 @@ class AccountTestInvoicingCommon(ProductCommon):
                 )
 
             # Check children.
+            children = [child['tag'] for child in node_dict['children']]
+            expected_children = [child['tag'] for child in expected_node_dict['children']]
+            if children != expected_children:
+                for child in node_dict['children']:
+                    if child['tag'] not in expected_children:
+                        _logger.warning('Non-expected child: \n%s', etree.tostring(child['node']).decode())
+                for child in expected_node_dict['children']:
+                    if child['tag'] not in children:
+                        _logger.warning('Missing child: \n%s', etree.tostring(child['node']).decode())
+
             self.assertEqual(
-                [child['tag'] for child in node_dict['children']],
-                [child['tag'] for child in expected_node_dict['children']],
+                children,
+                expected_children,
                 f"Number of children elements for node {node_dict['full_path']} is different.",
             )
 
@@ -1109,11 +1123,12 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                     float_round(results['price_unit'], precision_rounding=rounding),
                 )
 
-    def _create_py_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method):
+    def _create_py_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method, excluded_tax_ids):
         kwargs = {
             'product': product,
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
+            'filter_tax_function': (lambda tax: tax.id not in excluded_tax_ids) if excluded_tax_ids else None,
         }
         results = {'results': taxes._get_tax_details(price_unit, quantity, **kwargs)}
         if rounding_method == 'round_globally':
@@ -1131,7 +1146,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             )
         return results
 
-    def _create_js_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method):
+    def _create_js_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method, excluded_tax_ids):
         return {
             'test': 'taxes_computation',
             'taxes': [self._jsonify_tax(tax) for tax in taxes],
@@ -1140,6 +1155,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'product': self._jsonify_product(product, taxes),
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
+            'excluded_tax_ids': excluded_tax_ids,
         }
 
     def assert_taxes_computation(
@@ -1152,6 +1168,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         precision_rounding=0.01,
         rounding_method='round_per_line',
         excluded_special_modes=None,
+        excluded_tax_ids=None,
     ):
         def extra_function(results):
             results['excluded_special_modes'] = excluded_special_modes
@@ -1170,6 +1187,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             product,
             precision_rounding,
             rounding_method,
+            excluded_tax_ids,
             extra_function=extra_function,
         )
 
