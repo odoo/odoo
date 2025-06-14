@@ -858,3 +858,12 @@ class ResCompany(models.Model):
                 company.early_pay_discount_computation = 'excluded'
             else:
                 company.early_pay_discount_computation = 'included'
+
+    def _get_fields_no_cache_clear(self):
+        fields = super()._get_fields_no_cache_clear()
+        fields.update({
+            'expense_accrual_account_id',
+            'revenue_accrual_account_id',
+            'automatic_entry_default_journal_id'
+        })
+        return fields
