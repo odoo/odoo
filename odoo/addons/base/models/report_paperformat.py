@@ -189,11 +189,6 @@ class report_paperformat(models.Model):
     print_page_height = fields.Float('Print page height (mm)', compute='_compute_print_page_size')
     css_margins = fields.Boolean('Use css margins', default=False)
 
-    @api.constrains('format')
-    def _check_format_or_page(self):
-        if self.filtered(lambda x: x.format != 'custom' and (x.page_width or x.page_height)):
-            raise ValidationError(_('You can select either a format or a specific page width/height, but not both.'))
-
     def _compute_print_page_size(self):
         for record in self:
             width = height = 0.0
