@@ -9,7 +9,7 @@ import pytz
 from dateutil.parser import parse
 
 from odoo import api, fields, models, registry, _
-from odoo.tools import ormcache_context, email_normalize
+from odoo.tools import email_normalize
 from odoo.osv import expression
 from odoo.sql_db import BaseCursor
 
@@ -57,14 +57,12 @@ class GoogleSync(models.AbstractModel):
     _name = 'google.calendar.sync'
     _description = "Synchronize a record with Google Calendar"
 
-    google_id = fields.Char('Google Calendar Id', copy=False)
+    google_id = fields.Char('Google Calendar Id', index='btree_not_null', copy=False)
     need_sync = fields.Boolean(default=True, copy=False)
     active = fields.Boolean(default=True)
 
     def write(self, vals):
         google_service = GoogleCalendarService(self.env['google.service'])
-        if 'google_id' in vals:
-            self._event_ids_from_google_ids.clear_cache(self)
         synced_fields = self._get_google_synced_fields()
         if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
             vals['need_sync'] = True
@@ -78,8 +76,6 @@ class GoogleSync(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        if any(vals.get('google_id') for vals in vals_list):
-            self._event_ids_from_google_ids.clear_cache(self)
         if self.env.user.google_synchronization_stopped:
             for vals in vals_list:
                 vals.update({'need_sync': False})
@@ -127,7 +123,6 @@ class GoogleSync(models.AbstractModel):
         return self.browse(self._event_ids_from_google_ids(google_ids))
 
     @api.model
-    @ormcache_context('google_ids', keys=('active_test',))
     def _event_ids_from_google_ids(self, google_ids):
         return self.search([('google_id', 'in', google_ids)]).ids
 

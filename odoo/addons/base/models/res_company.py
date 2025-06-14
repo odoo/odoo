@@ -251,7 +251,8 @@ class Company(models.Model):
         return companies
 
     def write(self, values):
-        self.clear_caches()
+        if not self.env.context.get('skip_clear_ormcache'):
+            self.clear_caches()
         # Make sure that the selected currency is enabled
         if values.get('currency_id'):
             currency = self.env['res.currency'].browse(values['currency_id'])
