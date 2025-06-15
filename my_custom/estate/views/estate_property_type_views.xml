@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Action -->
+  <record id="estate_property_type_action" model="ir.actions.act_window">
+    <field name="name">Property Types</field> <!--Hiển
+    thị tên action trên UI, DB-->
+    <field name="res_model">estate.property.type</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <!-- Tree -->
+  <record id="estate_property_type_list_view" model="ir.ui.view">
+    <field name="name">estate.property.type.list.view</field>
+    <field name="model">estate.property.type</field>
+    <field name="arch" type="xml">
+      <list>
+      <!-- Sort -->
+        <!-- <field name="sequence" widget="handle"/> -->
+        <field name="name" string="Type" />
+      </list>
+    </field>
+  </record>
+
+  <!--Form-->
+  <record id="estate_property_type_form_view" model="ir.ui.view">
+    <field name="name">estate.property.type.form.view</field>
+    <field name="model">estate.property.type</field>
+    <field name="arch" type="xml">
+      <form string="Property Types">
+
+        <sheet>
+          <!-- Smart Button -->
+          <div class="oe_button_box" name="button_box">
+            <button name="%(estate_property_offer_action)d" string="Offers" type="action" class="oe_stat_button" icon="fa-money">
+              <field name="offer_count" string="Offers" widget="statinfo"/>
+            </button>
+          </div>
+          <!-- Title -->
+          <div class="oe_title">
+            <h1>
+              <field name="name" />
+            </h1>
+          </div>
+          <!-- Pages -->
+          <notebook>
+            <page id="page_1" string="Properties">
+              <field name="property_ids">
+                <list>
+                  <field name="name" />
+                  <field name="expected_price" />
+                  <field name="status" />
+                </list>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Search & Filter -->
+  <record id="estate_property_type_view_search_filter" model="ir.ui.view">
+    <field name="name">estate.property.type.view.search.filter</field> <!--name
+    này giúp dễ debug, không ảnh hưởng Ui, DB-->
+    <field name="model">estate.property.type</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="name" />
+      </search>
+    </field>
+  </record>
+</odoo>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <data noupdate="1">
+
+    <record id="page_airproof_faq" model="website.page">
+      <field name="name">Airproof FAQ</field>
+      <field name="key">website_airproof.new_page_template_sections_airproof_faq</field>
+      <field name="url">/airproof-faq</field>
+      <field name="type">qweb</field>
+      <field name="is_published" eval="True" />
+      <field name="website_id" eval="1" />
+      <field name="arch" type="xml">
+        <t t-name="website_airproof.page_airproof_faq">
+          <t t-call="website.layout">
+            <div id="wrap">
+              <t t-snippet-call="website_airproof.new_page_template_airproof_faq_s_text_block_h1" />
+              <t t-snippet-call="website_airproof.new_page_template_airproof_faq_s_title" />
+              <t t-snippet-call="website_airproof.new_page_template_airproof_faq_s_faq_collapse" />
+              <t t-snippet-call="website_airproof.new_page_template_airproof_faq_s_call_to_action" />
+            </div>
+          </t>
+        </t>
+      </field>
+    </record>
+
+  </data>
+
+  <template id="s_airproof_text_block_h1" inherit_id="website.s_text_block" primary="True">
+    <xpath expr="//div[hasclass('container')]" position="before">
+      <div class="container s_allow_columns">
+        <h1 class="display-1">FAQ - Help</h1>
+      </div>
+    </xpath>
+  </template>
+
+  <template id="new_page_template_s_airproof_text_block_h1" inherit_id="s_airproof_text_block_h1"
+    primary="True" />
+  <template id="new_page_template_airproof_faq_s_title" inherit_id="s_airproof_text_block_h1"
+    primary="True" />
+
+  <template id="new_pages_template_groups" inherit_id="website.new_page_template_groups"
+    name="Airproof - New Page Template Groups">
+    <xpath expr="//div[@id='custom']" position="replace">
+      <div id="airproof">Airproof</div>
+    </xpath>
+  </template>
+
+</odoo>
