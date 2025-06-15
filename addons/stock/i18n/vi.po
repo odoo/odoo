@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-06-13 18:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -1663,8 +1663,10 @@ msgstr "Tính chi phí giao hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Tính toán phí giao hàng và giao bằng DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                        <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1673,8 +1675,10 @@ msgstr "Tính toán phí giao hàng và giao bằng Easypost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Tính toán phí giao hàng và giao bằng FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                        <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1683,13 +1687,17 @@ msgstr "Tính toán phí giao hàng và giao bằng Sendcloud"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Tính toán phí giao hàng và giao bằng UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                        <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Tính toán phí giao hàng và giao bằng USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                        <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2140,6 +2148,11 @@ msgid "Cyclic Counting"
 msgstr "Kiểm kho theo chu kỳ"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
 msgstr "Kết nối DHL Express"
@@ -2245,7 +2258,7 @@ msgstr "Ngày đã gắn sao"
 #: model:ir.model.fields,field_description:stock.field_stock_move__date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_deadline
 msgid "Deadline"
-msgstr "Hạn chót"
+msgstr "Thời hạn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2257,7 +2270,7 @@ msgstr "Vượt quá thời hạn hoặc/và theo kế hoạch"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Deadline updated due to delay on %s"
-msgstr "Hạn chót đã được cập nhật do chậm trễ đối với %s"
+msgstr "Thời hạn đã được cập nhật do chậm trễ đối với %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__12
@@ -2962,6 +2975,7 @@ msgstr "Tháng 2"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Kết nối FedEx"
 
@@ -4018,7 +4032,7 @@ msgstr "Bị trễ"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
-msgstr "Bị trễ hoặc sẽ trễ tùy thuộc vào hạn chót và ngày đã lên lịch"
+msgstr "Bị trễ hoặc sẽ trễ tùy thuộc vào thời hạn và ngày đã lên lịch"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -4904,7 +4918,7 @@ msgstr "Nhiều quy tắc dung lượng cho một sản phẩm."
 #: model:ir.model.fields,field_description:stock.field_stock_lot__my_activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động của tôi"
+msgstr "Thời hạn hoạt động của tôi"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -5012,7 +5026,7 @@ msgstr "Sự kiện theo lịch cho hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hoạt động tiếp theo"
+msgstr "Thời hạn cho hoạt động tiếp theo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_summary
@@ -8291,7 +8305,7 @@ msgstr "Công ty được tự động đặt từ tùy chọn người dùng c�
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "The deadline has been automatically updated due to a delay on %s."
-msgstr "Hạn chót đã được cập nhật tự động do sự chậm trễ đối với %s."
+msgstr "Thời hạn đã được cập nhật tự động do sự chậm trễ đối với %s."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__delay
@@ -9103,11 +9117,13 @@ msgstr "Loại hoạt động ngoại lệ trên bản ghi."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Kết nối UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Kết nối USPS"
 

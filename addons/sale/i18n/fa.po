@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-22 18:35+0000\n"
+"POT-Creation-Date: 2025-06-13 18:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -1129,8 +1129,10 @@ msgstr "داده های شرکت را تنظیم کنید"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1139,8 +1141,10 @@ msgstr "محاسبه هزینه حمل و نقل و ارسال با Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1149,13 +1153,17 @@ msgstr "محاسبه هزینه های حمل و نقل و ارسال توسط S
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "محاسبه هزینه حمل و نقل و ارسال با USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1400,6 +1408,11 @@ msgstr "ظاهر پیش‌فاکتور خود سفارشی کن."
 #, python-format
 msgid "Customize your quotes and orders."
 msgstr "پیش‌فاکتور و سفارش‌های خود سفارشی کن."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -1752,6 +1765,7 @@ msgstr "سطر اضافی با %s "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "درگاه FedEx"
 
@@ -4367,11 +4381,13 @@ msgstr "نوع فعالیت استثنایی برای رکورد."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "درگاه UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "درگاه USPS"
 
