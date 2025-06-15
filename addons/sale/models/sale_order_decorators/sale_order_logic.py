@@ -1,7 +1,8 @@
 from odoo.exceptions import UserError
-from odoo.addons.sale.models.sale_order_logic_interface import SaleOrderLogicInterface
-class SaleOrderLogic(SaleOrderLogicInterface):
+from odoo.addons.sale.models.sale_order_decorators.sale_order_logic_interface import SaleOrderLogicInterface
 
+
+class SaleOrderLogic(SaleOrderLogicInterface):
     def __init__(self, orders):
         super().__init__(orders)
 

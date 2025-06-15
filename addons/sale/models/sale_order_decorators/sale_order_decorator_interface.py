@@ -1,5 +1,4 @@
-from abc import abstractmethod
-from sale_order_logic_interface import SaleOrderLogicInterface
+from odoo.addons.sale.models.sale_order_decorators.sale_order_logic_interface import SaleOrderLogicInterface
 
 
 class SaleOrderDecoratorInterface(SaleOrderLogicInterface):
@@ -7,7 +6,7 @@ class SaleOrderDecoratorInterface(SaleOrderLogicInterface):
         super().__init__(order)
         self.child = sale_order_logic_interface
 
-    @abstractmethod
+
     def action_confirm(self):
         """ Confirm the given quotation(s) and set their confirmation date.
 
@@ -19,7 +18,7 @@ class SaleOrderDecoratorInterface(SaleOrderLogicInterface):
         """
         self.child.action_confirm()
 
-    @abstractmethod
+
     def _action_cancel(self):
         """ Cancel SO after showing the cancel wizard when needed.
 
@@ -27,7 +26,6 @@ class SaleOrderDecoratorInterface(SaleOrderLogicInterface):
         """
         self.child._action_cancel()
 
-    @abstractmethod
     def _validate_order(self):
         """
         Confirm the sale order and send a confirmation email.
@@ -36,6 +34,6 @@ class SaleOrderDecoratorInterface(SaleOrderLogicInterface):
         """
         self.child._validate_order()
 
-    @abstractmethod
+
     def _recompute_prices(self):
         self.child._recompute_prices()

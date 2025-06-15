@@ -7,7 +7,9 @@ from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 
-from odoo.addons.sale.models.sale_order_logic import SaleOrderLogic
+
+from odoo.addons.sale.models.sale_order_decorators import _decorator_map
+from odoo.addons.sale.models.sale_order_decorators.sale_order_logic import SaleOrderLogic
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import (
     AccessError,
@@ -318,6 +320,38 @@ class SaleOrder(models.Model):
         compute='_compute_has_active_pricelist')
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
+
+    class _LogicDecoratorBuilder:
+        _logic_chain = None
+
+        @classmethod
+        def _get_decorator_chain(cls, order):
+            if cls._logic_chain is None:
+                chain_str = order.env['ir.config_parameter'].sudo().get_param('sale.customize', 'sale')
+                class_names = [name.strip() for name in chain_str.split(',') if name.strip()]
+                class_chain = [SaleOrderLogic]
+                it = reversed(class_names)
+                if class_names[-1] == 'sale':
+                    next(it)
+                else:
+                    _logger.warning(f"[sale.customize] Invalid customization type: should end with 'sale' — using default 'sale'.")
+                for name in it:
+                    class_type = cls._decorator_map.get(name, None)
+                    if class_type is None:
+                        _logger.warning(f"[sale.customize] Unknown customization type: '{name}' — skipping.")
+                    else:
+                        class_chain.append(class_type)
+                cls._logic_chain = class_chain
+            return cls._logic_chain
+
+        @classmethod
+        def get_logic_interface(cls, order):
+            chain = cls._get_decorator_chain(order)
+            it = chain.__iter__()
+            instance = next(it)(order)
+            for logic_cls in it:
+                instance = logic_cls(order, instance)
+            return instance
 
     def init(self):
         create_index(self._cr, 'sale_order_date_order_id_idx', 'sale_order', ["date_order desc", "id desc"])
@@ -1144,7 +1178,7 @@ class SaleOrder(models.Model):
         :rtype: bool
         :raise: UserError if trying to confirm cancelled SO's
         """
-        return SaleOrderLogic(self).action_confirm()
+        return self._LogicDecoratorBuilder.get_logic_interface(self).action_confirm()
 
     def _should_be_locked(self):
         self.ensure_one()
@@ -1275,7 +1309,7 @@ class SaleOrder(models.Model):
             return self._action_cancel()
 
     def _action_cancel(self):
-        return SaleOrderLogic(self)._action_cancel()
+        return self._LogicDecoratorBuilder.get_logic_interface(self)._action_cancel()
 
     def _show_cancel_wizard(self):
         """ Decide whether the sale.order.cancel wizard should be shown to cancel specified orders.
@@ -1323,7 +1357,7 @@ class SaleOrder(models.Model):
         self.message_post(body=message)
 
     def _recompute_prices(self):
-        SaleOrderLogic(self)._recompute_prices()
+        self._LogicDecoratorBuilder.get_logic_interface(self)._recompute_prices()
 
     def _default_order_line_values(self, child_field=False):
         default_data = super()._default_order_line_values(child_field)
@@ -2234,4 +2268,4 @@ class SaleOrder(models.Model):
 
         :return: None
         """
-        return SaleOrderLogic(self).validate_order()
+        return self._LogicDecoratorBuilder.get_logic_interface(self).validate_order()
