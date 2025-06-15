@@ -30,8 +30,10 @@ list of filtered posts (by date or tag).
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
         <t t-set="opt_blog_cards_design" t-value="is_view_active('website_blog.opt_blog_cards_design')"/>
+        <t t-set="opt_blog_promoted_post" t-value="is_view_active('website_blog.opt_blog_promoted_post')"/>
+        <t t-set="opt_blog_compact_list_view" t-value="is_view_active('website_blog.opt_blog_compact_list_view')"/>
         <t t-set="opt_blog_list_view" t-value="is_view_active('website_blog.opt_blog_list_view')"/>
-        <t t-set="opt_blog_readable" t-value="is_view_active('website_blog.opt_blog_readable')"/>
+        <t t-set="opt_blog_large_list_view" t-value="is_view_active('website_blog.opt_blog_large_list_view')"/>
         <t t-set="opt_blog_sidebar_show" t-value="is_view_active('website_blog.opt_blog_sidebar_show')"/>
 
         <div id="o_wblog_blog_top">
@@ -63,8 +65,8 @@ list of filtered posts (by date or tag).
                 <div t-if="original_search and posts" class="alert alert-warning mt8">
                     No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search"/>'.
                 </div>
-                <div t-attf-class="row #{opt_blog_sidebar_show and 'justify-content-between' or 'justify-content-center'}">
-                    <div id="o_wblog_posts_loop_container" t-attf-class="col #{'o_container_small mx-0' if opt_blog_list_view else ''}">
+                <div class="row">
+                    <div id="o_wblog_posts_loop_container" class="col">
 
                         <t t-call="website_blog.posts_loop">
                             <t t-if="not blog" t-set="posts_list_show_parent_blog" t-value="True"/>
@@ -95,7 +97,7 @@ list of filtered posts (by date or tag).
                     <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
                         <t t-call="website.record_cover">
                             <t t-set="_record" t-value="blog"/>
-                            <t t-set="additionnal_classes" t-value="'h-100 py-5 py-md-0 overflow-hidden rounded shadow'"/>
+                            <t t-set="additionnal_classes" t-value="'ratio ratio-16x9 overflow-hidden rounded '"/>
                         </t>
                     </div>
                     <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
@@ -123,7 +125,8 @@ list of filtered posts (by date or tag).
             <t t-set="_record" t-value="blog"/>
             <t t-set="use_filters" t-value="True"/>
             <t t-set="use_text_align" t-value="True"/>
-            <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto'"/>
+            <t t-set="use_size" t-value="True"/>
+            <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto o_cc5 py-5'"/>
             <div class="container position-relative h-100 d-flex flex-column justify-content-around" t-cache="_record">
                 <div t-attf-class="o_wblog_post_title">
                     <span t-att-title="blog.name" class="text-white text-decoration-none">
@@ -134,7 +137,7 @@ list of filtered posts (by date or tag).
             </div>
         </t>
         <t t-else="">
-            <div class="h1 my-4 o_not_editable" style="text-align:center;">Our Latest Posts</div>
+            <div class="h1 mt-4 o_not_editable" style="text-align:center;">Our Latest Posts</div>
         </t>
     </xpath>
 </template>
@@ -143,7 +146,7 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Sidebar : Show -->
 <template id="opt_blog_sidebar_show" name="Show Sidebar" inherit_id="website_blog.blog_post_short" active="False">
     <xpath expr="//div[@id='o_wblog_posts_loop_container']" position="after">
-        <div t-attf-class="col-12 col-md-3 d-flex #{opt_blog_list_view and 'col-lg-4' or 'ms-lg-5'}">
+        <div t-attf-class="col-12 col-lg-4 col-xl-3 d-flex ps-lg-4 ps-xl-5">
             <t t-call="website_blog.sidebar_blog_index"/>
         </div>
     </xpath>
@@ -154,17 +157,25 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_cards_design" name="'Cards' Design" inherit_id="website_blog.blog_post_short" active="False"/>
 
+<!-- (Option) Blog: Show Posts in compact list-view
+    Display post in a list rather than a grid
+-->
+<template id="opt_blog_compact_list_view" name="Compact List View" inherit_id="website_blog.blog_post_short" active="False"/>
 
 <!-- (Option) Blog: Show Posts in list-view
     Display post in a list rather than a grid
 -->
 <template id="opt_blog_list_view" name="List View" inherit_id="website_blog.blog_post_short" active="False"/>
 
-<!-- (Option) Blog: Increase readability
-    Increase font-size, adapt layout
+<!-- (Option) Blog: Show Posts in large list-view
+    Display post in a large list rather than a grid
 -->
-<template id="opt_blog_readable" name="Increase Readability" inherit_id="website_blog.blog_post_short" active="True"/>
+<template id="opt_blog_large_list_view" name="Large List View" inherit_id="website_blog.blog_post_short" active="False"/>
 
+<!-- (Option) Blog: Show Promoted Post
+    Display post in a list rather than a grid
+-->
+<template id="opt_blog_promoted_post" name="Promoted Post" inherit_id="website_blog.blog_post_short" active="False"/>
 
 <!-- ====== Blog Post Complete Layout ==========================================
 ============================================================================ -->

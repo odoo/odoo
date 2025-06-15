@@ -35,7 +35,7 @@ according to the enabled options.
             </div>
         </div>
 
-        <div t-attf-class="row #{posts and not opt_blog_readable and 'mx-n2'}">
+        <div t-attf-class="row gx-3 #{(opt_blog_list_view or opt_blog_large_list_view) and 'gy-3 gy-lg-4'} #{opt_blog_compact_list_view and 'gy-lg-5'} #{not opt_blog_list_view and not opt_blog_large_list_view and not opt_blog_compact_list_view and 'gy-5'}">
             <!-- Filters -->
             <div t-if="tag or date_begin or search" class="col-12 mb-3">
                 <div t-if="posts" class="h4 mb-3">
@@ -82,66 +82,148 @@ according to the enabled options.
             </div>
 
             <!-- Posts -->
-
-            <!-- Define 'colWidth' qWeb variable, to be assigned later.
-            Adjust accordingly if sidebar and/or readability modes are active. -->
-            <t t-if="not opt_blog_list_view">
-                <t t-if="opt_blog_readable">
-                    <t t-if="opt_blog_sidebar_show" t-set="colWidth" t-value="'col-md-6'"/>
-                    <t t-else="" t-set="colWidth" t-value="'col-md-6 col-xl-4'"/>
-                </t>
-                <t t-else="">
-                    <t t-if="opt_blog_sidebar_show" t-set="colWidth" t-value="'px-2 col-md-6 col-xl-4'"/>
-                    <t t-else="" t-set="colWidth" t-value="'px-2 col-sm-6 col-lg-4 col-xl-3'"/>
-                </t>
-            </t>
-            <!-- Loop through posts: exclude the first one if already displayed as top banner -->
-            <t t-foreach="posts" t-as="blog_post">
-                <!-- Assign 'colWidth': 'col-12' is default for List-View and mobile -->
-                <div t-attf-class="pb-4 col-12 #{colWidth}" t-cache="blog_post,opt_blog_list_view,opt_blog_readable,active_tag_ids">
-                    <article t-attf-class="o_wblog_post position-relative #{'card h-100' if opt_blog_cards_design else ''}" name="blog_post">
-                        <!-- List-View Design -->
-                        <t t-if="opt_blog_list_view">
-                            <div t-att-class="opt_blog_cards_design and 'card-body py-3'">
-                                <t t-call="website_blog.post_heading"/>
-                            </div>
-                            <div t-if="not opt_blog_cards_design" class="py-2">
-                                <t t-call="website_blog.post_info"></t>
-                            </div>
-                            <div t-if="opt_posts_loop_show_cover">
-                                <t t-call="website_blog.post_cover_image"/>
-                            </div>
-                            <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')" t-att-class="opt_blog_cards_design and 'card-body pt-0'">
+            <t t-if="opt_blog_promoted_post and posts and not opt_blog_compact_list_view and not opt_blog_list_view and not opt_blog_large_list_view">
+                <!-- Sticky First Post Column -->
+                <div t-attf-class="position-relative col-12 #{opt_blog_sidebar_show and 'col-lg-7' or ''}">
+                    <t t-set="blog_post" t-value="posts[0]"/>
+                    <article t-attf-class="o_wblog_post #{'card' if opt_blog_cards_design else ''} #{opt_blog_promoted_post and 'o_sticky_reactive position-static position-lg-sticky sticky-lg-top'}" name="blog_post">
+                            <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image">
+                            <t t-set="classes" t-value="'mb-3'"/>
+                        </t>
+                        <div t-att-class="opt_blog_cards_design and 'card-body'">
+                            <a t-if="posts_list_show_parent_blog" class="small fw-bold" t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id"/>
+                            <t t-call="website_blog.post_heading">
+                                <t t-set="_classes" t-value="'mt-1'"/>
+                            </t>
+                            <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')">
                                 <t t-call="website_blog.post_teaser"/>
                             </div>
-                            <div t-if="opt_blog_cards_design" t-attf-class="opt_blog_cards_design and 'card-body pt-0 pb-2'}">
+                            <div t-if="opt_posts_loop_show_stats">
                                 <t t-call="website_blog.post_info"></t>
                             </div>
-                            <div t-else="" class="mt-3">
-                                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="btn btn-primary">
-                                    Read more <i class="oi oi-chevron-right ms-2"/>
-                                </a>
-                            </div>
-                        </t>
-                        <!-- Grid-View Design -->
-                        <t t-if="not opt_blog_list_view">
-                            <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image"/>
-                            <div t-att-class="opt_blog_cards_design and 'card-body px-2 py-0 mb-2'">
-                                <t t-call="website_blog.post_heading"/>
-                                <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')">
-                                    <t t-call="website_blog.post_teaser"/>
-                                </div>
-                            </div>
-                            <div t-attf-class="o_wblog_normalize_font #{'card-footer px-2 pb-2' if opt_blog_cards_design else 'pe-2 pb-2'}">
-                                <t t-call="website_blog.post_info"></t>
-                            </div>
-                        </t>
-                        <!-- Add 'unpublished' badge -->
-                        <span t-if="not blog_post.website_published" class="bg-danger small py-1 px-2 position-absolute o_not_editable" style="top:0; right:0">unpublished</span>
+                        </div>
+                        <div t-if="is_view_active('website_blog.opt_posts_loop_show_author')" t-call="website_blog.post_author" t-att-class="opt_blog_cards_design and 'p-3'">
+                            <t t-set="additionnal_classes" t-value="'o_wblog_post_list_author o_list_cover d-flex w-100 o_not_editable '"/>
+                        </div>
                     </article>
                 </div>
-                <!-- List-View Design, add <hr> after post -->
-                <div t-if="opt_blog_list_view and not blog_post_last" class="col-12 mt-2 mb-5 px-2"><hr/></div>
+
+                <!-- Remaining Posts Column -->
+                <div t-attf-class="col-12 #{opt_blog_sidebar_show and 'col-lg-5' or ''}">
+                    <t t-if="opt_blog_sidebar_show" t-set="remainingColWidth" t-value="'col-12 mb-4'"/>
+                    <t t-else="" t-set="remainingColWidth" t-value="'col-sm-6 col-md-6 mb-4'"/>
+                    <div class="row gx-3 gy-4">
+                        <t t-foreach="posts[1:]" t-as="blog_post">
+                                <div t-attf-class="{{ remainingColWidth }}">
+                                <article t-attf-class="o_wblog_post position-relative #{'card h-100' if opt_blog_cards_design and not opt_blog_compact_list_view and not opt_blog_large_list_view else ''}" name="blog_post">
+                                    <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image">
+                                        <t t-set="classes" t-value="'mb-3'"/>
+                                    </t>
+                                    <div t-att-class="opt_blog_cards_design and 'card-body'">
+                                        <a t-if="posts_list_show_parent_blog" class="small fw-bold" t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id"/>
+                                        <t t-call="website_blog.post_heading">
+                                            <t t-set="_classes" t-value="'mt-1'"/>
+                                        </t>
+                                        <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')">
+                                            <t t-call="website_blog.post_teaser"/>
+                                        </div>
+                                        <div t-if="opt_posts_loop_show_stats">
+                                            <t t-call="website_blog.post_info"></t>
+                                        </div>
+
+                                    </div>
+                                    <div t-if="is_view_active('website_blog.opt_posts_loop_show_author')" t-call="website_blog.post_author" t-att-class="opt_blog_cards_design and 'p-3'">
+                                        <t t-set="additionnal_classes" t-value="'o_wblog_post_list_author o_list_cover d-flex w-100 o_not_editable '"/>
+                                    </div>
+                                </article>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <!-- Define 'colWidth' qWeb variable, to be assigned later.
+                Adjust accordingly if sidebar and/or readability modes are active. -->
+                <t t-if="not opt_blog_compact_list_view and not opt_blog_list_view and not opt_blog_large_list_view">
+                    <t t-if="opt_blog_sidebar_show" t-set="colWidth" t-value="'px-2 col-md-6 col-xl-4'"/>
+                    <t t-else="" t-set="colWidth" t-value="'px-2 col-sm-6 col-lg-4'"/>
+                </t>
+                <!-- Loop through posts: exclude the first one if already displayed as top banner -->
+                <t t-foreach="posts" t-as="blog_post">
+                    <t t-if="opt_blog_compact_list_view">
+                        <t t-set="post_month" t-value="blog_post.post_date.strftime('%Y-%m')"/>
+                        <t t-if="post_month != current_month">
+                            <div class="o_wblog_compact_list_month_header o_sticky_reactive position-static position-lg-sticky sticky-lg-top col-12 bg-white py-3">
+                                <h4 class="mb-0">
+                                    <t t-esc="blog_post.post_date" t-options="{'widget': 'date', 'format': 'MMMM yyyy'}"/>
+                                </h4>
+                            </div>
+                            <t t-set="current_month" t-value="post_month"/>
+                        </t>
+                    </t>
+                    <!-- Assign 'colWidth': 'col-12' is default for List-View and mobile -->
+                    <div t-attf-class="col-12 #{colWidth} #{opt_blog_compact_list_view and 'm-0'} #{(opt_blog_list_view or opt_blog_large_list_view) and 'pb-3 pb-lg-4'}" t-cache="blog_post,opt_blog_compact_list_view,opt_blog_list_view,opt_blog_large_list_view,active_tag_ids">
+                        <article t-attf-class="o_wblog_post position-relative #{'card h-100' if opt_blog_cards_design and not opt_blog_compact_list_view and not opt_blog_large_list_view and not opt_blog_list_view else ''}" name="blog_post">
+                            <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="stretched-link position-absolute w-100 h-100"/>
+                            <!-- List-View Design -->
+                            <t t-if="opt_blog_compact_list_view or opt_blog_list_view or opt_blog_large_list_view">
+                                <div t-attf-class="row #{opt_blog_compact_list_view and 'align-items-start mx-0' or (opt_blog_list_view or opt_blog_large_list_view) and 'align-items-start align-items-md-stretch'} #{opt_blog_large_list_view and 'flex-md-row-reverse'}">
+                                    <div t-if="not opt_blog_compact_list_view" t-attf-class="#{opt_blog_list_view and 'col-4'} #{'card-header p-0' if opt_blog_cards_design and not opt_blog_compact_list_view and not opt_blog_large_list_view and not opt_blog_list_view else ''} #{opt_blog_large_list_view and 'col-4 col-md-6 col-lg-5 offset-lg-2'}">
+                                        <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image"/>
+                                    </div>
+                                    <div t-attf-class="{{opt_blog_cards_design and not opt_blog_compact_list_view and not opt_blog_large_list_view and not opt_blog_list_view and 'card-body col-sm-8 ' or 'col-8 col-md-6 col-lg-5 px-3' if not opt_blog_compact_list_view else 'col d-flex gap-3 align-items-lg-center p-0'}}">
+                                        <t t-if="posts_list_show_parent_blog and not opt_blog_compact_list_view" class="text-nowrap text-truncate px-2">
+                                            <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="position-relative z-1 small fw-bold"/>
+                                        </t>
+                                        <small t-if="opt_blog_compact_list_view" t-field="blog_post.post_date" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': 'true'}" class="o_wblog_post_date flex-shrink-0"/>
+                                        <div class="d-flex flex-grow-1 justify-content-between flex-wrap gap-1">
+                                            <t t-call="website_blog.post_heading">
+                                                <t t-set="_classes" t-value="opt_blog_large_list_view and posts_list_show_parent_blog and 'mt-md-3' or opt_blog_compact_list_view and 'm-0'"/>
+                                            </t>
+                                            <div t-if="len(blog_post.tag_ids) and opt_blog_compact_list_view" t-attf-class="position-relative z-1 col-auto d-flex flex-wrap gap-1 p-0">
+                                                <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                                                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, one_tag.id))}"
+                                                    t-attf-class="badge o_tag o_color_#{one_tag.color} post_link"
+                                                    t-att-rel="len(active_tag_ids) and 'nofollow'"
+                                                    t-esc="one_tag.name"/>
+                                                </t>
+                                            </div>
+                                        </div>
+                                        <t t-if="is_view_active('website_blog.opt_posts_loop_show_teaser') and not opt_blog_compact_list_view" t-call="website_blog.post_teaser"/>
+                                        <t t-if="is_view_active('website_blog.opt_posts_loop_show_author') and not opt_blog_compact_list_view" t-call="website_blog.post_author">
+                                            <t t-set="additionnal_classes" t-value="not opt_blog_compact_list_view and ((opt_blog_list_view or opt_blog_large_list_view) and 'mt-0 mt-md-3' or 'mt-3') or ''"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+                            <!-- Grid-View Design -->
+                            <t t-else="">
+                                <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image"/>
+                                <div t-att-class="opt_blog_cards_design and 'card-body'">
+                                    <t t-if="posts_list_show_parent_blog" class="text-nowrap text-truncate px-2">
+                                        <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="position-relative z-1 small fw-bold"/>
+                                    </t>
+                                    <t t-call="website_blog.post_heading"/>
+                                    <div t-if="is_view_active('website_blog.opt_posts_loop_show_teaser')">
+                                        <t t-call="website_blog.post_teaser"/>
+                                    </div>
+                                </div>
+                                <div t-att-class="opt_blog_cards_design and 'p-3'">
+                                    <t t-call="website_blog.post_info"></t>
+                                    <t t-if="is_view_active('website_blog.opt_posts_loop_show_author')" t-call="website_blog.post_author">
+                                        <t t-set="additionnal_classes" t-value="'o_wblog_post_list_author o_list_cover'"/>
+                                    </t>
+                                </div>
+                            </t>
+                            <!-- Add 'unpublished' badge -->
+                            <span t-if="not blog_post.website_published" class="bg-danger small py-1 px-2 position-absolute o_not_editable" style="top:0; right:0">unpublished</span>
+                        </article>
+                    </div>
+                    <!-- List-View Design, add <hr> after post -->
+                    <div t-if="(opt_blog_list_view or opt_blog_large_list_view or opt_blog_compact_list_view) and not blog_post_last" class="col-12 mt-0">
+                        <hr/>
+                    </div>
+                </t>
             </t>
         </div>
     </div>
@@ -150,11 +232,9 @@ according to the enabled options.
 
 <!-- ======   Sub-Template: Posts list : Posts Heading  =================== -->
 <template id="post_heading">
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}"
-       t-field="blog_post.name"
-       t-attf-class="d-block text-reset text-decoration-none o_blog_post_title my-0 #{'h3' if opt_blog_list_view else ('h5' if opt_blog_readable else 'h6')}">
-       Untitled Post
-   </a>
+    <h5 t-field="blog_post.name" t-attf-class="h5 text-wrap-pretty #{_classes}">
+    Untitled Post
+    </h5>
 
     <div t-if="not opt_posts_loop_show_cover and is_view_active('website_blog.opt_posts_loop_show_author')" class="text-muted small mt-2">
         by <span t-field="blog_post.author_id"/>
@@ -165,15 +245,10 @@ according to the enabled options.
 <template id="post_info">
     <div class="d-flex small flex-wrap mb-1 w-100">
         <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between mx-n2 #{opt_blog_list_view and 'flex-grow-0 w-auto mw-100' or 'flex-grow-1' }">
-            <time t-field="blog_post.post_date" class="text-nowrap fw-bold px-2" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'medium'}"/>
             <div t-if="is_view_active('website_blog.opt_posts_loop_show_stats')" class="px-2">
                 <b class="text-nowrap" title="Comments"><i class="fa fa-comment text-muted me-1"/><t t-esc="len(blog_post.message_ids)"/></b>
                 <b class="text-nowrap ps-2" title="Views"><i class="fa fa-eye text-muted me-1"/><t t-esc="blog_post.visits"/></b>
             </div>
-            <b t-if="posts_list_show_parent_blog" class="text-nowrap text-truncate px-2">
-                <i class="fa fa-folder-open text-muted"/>
-                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id"/>
-            </b>
         </div>
     </div>
 </template>
@@ -183,35 +258,22 @@ according to the enabled options.
     <t t-if="opt_blog_cards_design and not opt_blog_list_view" t-set="classes" t-value="'card-img-top mb-2'"/>
     <t t-if="not opt_blog_cards_design and opt_blog_list_view" t-set="classes" t-value="'o_wblog_post_cover_nocard'"/>
 
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}"
-       t-attf-class="text-decoration-none d-block #{classes or 'mb-2'}"
-       t-att-style="not blog_post.website_published and 'opacity:0.6;'">
-
-        <t t-call="website.record_cover">
-            <t t-set="_record" t-value="blog_post"/>
-            <t t-set="additionnal_classes" t-value="'o_list_cover o_not_editable ' + (not opt_blog_cards_design and ' rounded overflow-hidden shadow mb-3' or '')"/>
-
-            <t t-if="is_view_active('website_blog.opt_posts_loop_show_author')" t-call="website_blog.post_author">
-                <t t-set="additionnal_classes" t-value="'o_wblog_post_list_author o_list_cover d-flex text-white w-100 o_not_editable ' + ('p-3 h5 m-0' if opt_blog_list_view else 'px-2 pb-2 pt-3') "/>
-                <t t-set="hide_date" t-value="True"/>
-            </t>
-        </t>
-    </a>
+    <t t-call="website.record_cover">
+        <t t-set="_record" t-value="blog_post"/>
+        <t t-set="additionnal_classes" t-value="'o_not_editable ratio ratio-16x9' + (not opt_blog_cards_design and not opt_blog_list_view and not opt_blog_large_list_view and ' rounded overflow-hidden mb-3' or ' h-auto')"/>
+    </t>
 </template>
 
 <!-- ======   Sub-Template: Posts list : Posts Teaser + Tags  ============= -->
 <template id="post_teaser">
     <t t-cache="blog_post,str(active_tag_ids)">
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="text-reset text-decoration-none">
-        <div t-if="opt_blog_list_view" t-field="blog_post.teaser" class="mt-2 o_wblog_read_text"/>
-        <div t-else="" t-field="blog_post.teaser" t-attf-class="mt-2 #{opt_blog_readable and 'o_wblog_normalize_font'}"/>
-    </a>
+    <p t-field="blog_post.teaser" t-attf-class="o_wblog_teaser #{(opt_blog_list_view or opt_blog_large_list_view) and 'o_wblog_teaser_list'}"/>
 
     <!-- Tags -->
-    <div t-if="len(blog_post.tag_ids)" class="o_wblog_post_short_tag_section d-flex align-items-center flex-wrap pt-2">
+    <div t-if="len(blog_post.tag_ids)" t-attf-class="position-relative z-1 d-flex flex-wrap gap-1 #{not opt_blog_cards_design and 'mb-3'} #{(opt_blog_list_view or opt_blog_large_list_view) and 'd-none d-md-flex'}">
         <t t-foreach="blog_post.tag_ids" t-as="one_tag">
             <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, one_tag.id))}"
-               t-attf-class="badge mb-2 me-1 text-truncate o_tag o_color_#{one_tag.color} post_link"
+               t-attf-class="badge o_tag o_color_#{one_tag.color} post_link"
                t-att-rel="len(active_tag_ids) and 'nofollow'"
                t-esc="one_tag.name"/>
         </t>

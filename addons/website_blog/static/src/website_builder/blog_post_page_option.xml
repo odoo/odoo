@@ -11,16 +11,20 @@
         </BuilderRow>
         <BuilderRow label.translate="Layout">
             <BuilderSelect>
-                <BuilderSelectItem actionParam="{views: []}">Grid</BuilderSelectItem>
-                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_list_view']}">List</BuilderSelectItem>
+                <BuilderSelectItem id="'blog_posts_grid_opt'" actionParam="{views: []}">Grid</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_compact_list_view']}">Compact List</BuilderSelectItem>
+                <BuilderSelectItem id="'blog_posts_list_opt'" actionParam="{views: ['website_blog.opt_blog_list_view']}">List</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_large_list_view']}">Large List</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Cards" level="1">
-            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cards_design']}"/>
+        <BuilderRow label.translate="Promoted Post" level="1">
+            <BuilderCheckbox t-if="this.isActiveItem('blog_posts_grid_opt')" actionParam="{views: ['website_blog.opt_blog_promoted_post']}"/>
         </BuilderRow>
-        <BuilderRow label.translate="Increase Readability" level="1">
-            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_readable']}"/>
-        </BuilderRow>
+        <t t-if="this.isActiveItem('blog_posts_grid_opt')">
+            <BuilderRow label.translate="Cards" level="1">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cards_design']}"/>
+            </BuilderRow>
+        </t>
         <BuilderRow label.translate="Sidebar">
             <BuilderCheckbox id="'blog_posts_sidebar_opt'" actionParam="{views: ['website_blog.opt_blog_sidebar_show']}"/>
         </BuilderRow>
