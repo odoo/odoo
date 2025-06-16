@@ -10,10 +10,12 @@ test("on leave members are categorised correctly in online/offline", async () =>
     const pyEnv = await startServer();
     const [partnerId1, partnerId2, partnerId3] = pyEnv["res.partner"].create([
         { name: "Online Partner", im_status: "online" },
-        { name: "On Leave Online", im_status: "leave_online" },
-        { name: "On Leave Idle", im_status: "leave_away" },
+        { name: "On Leave Online", im_status: "online" },
+        { name: "On Leave Idle", im_status: "away" },
     ]);
-    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "leave_offline" });
+    pyEnv["res.users"].write([serverState.userId], { leave_date_to: "2023-01-02" });
+    pyEnv["res.users"].create({ partner_id: partnerId2, leave_date_to: "2023-01-03" });
+    pyEnv["res.users"].create({ partner_id: partnerId3, leave_date_to: "2023-01-04" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [

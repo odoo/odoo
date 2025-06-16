@@ -5,6 +5,7 @@ import { patch } from "@web/core/utils/patch";
 
 const { DateTime } = luxon;
 
+/** @param {string} datetime */
 export function getOutOfOfficeDateEndText(datetime) {
     const foptions = { ...DateTime.DATE_MED };
     const dt = deserializeDateTime(datetime);
@@ -18,9 +19,9 @@ export function getOutOfOfficeDateEndText(datetime) {
 patch(Persona.prototype, {
     /** @returns {string} */
     get outOfOfficeDateEndText() {
-        if (!this.leave_date_to) {
+        if (!this.main_user_id?.leave_date_to) {
             return "";
         }
-        return getOutOfOfficeDateEndText(this.leave_date_to);
+        return getOutOfOfficeDateEndText(this.main_user_id.leave_date_to);
     },
 });
