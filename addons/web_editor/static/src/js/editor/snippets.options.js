@@ -7909,6 +7909,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         // images when previewing the options. This is done here because if it
         // was done in one of the widget methods, the animation would be
         // canceled when "_refreshPublicWidgets" is executed in the "_super"
+        //todo
         if (widget.$el[0].closest("#o_hover_effects_options")) {
             const hasSetImgShapeHoverEffectMethod = widget.getMethodsNames().includes("setImgShapeHoverEffect");
             // We trigger the animation when preview mode is "false", except for
