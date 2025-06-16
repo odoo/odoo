@@ -185,6 +185,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         invoice_line_vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
         invoice_line_vals['line_quantity_attrs'] = {'unitCode': line.product_uom_id._get_unece_code()}
         invoice_line_vals['currency_dp'] = 2
+        invoice_line_vals['invoice_period_vals_list'] = []  # UBL-TR does not support invoice periods per line
         return invoice_line_vals
 
     def _get_pricing_exchange_rate_vals_list(self, invoice):
