@@ -334,6 +334,11 @@
                                                 t-att-value="wish.product_id.product_tmpl_id.type"
                                                 type="hidden"
                                             />
+                                            <input
+                                                name="ptav_ids"
+                                                t-att-value="wish.product_id.product_template_attribute_value_ids.ids"
+                                                type="hidden"
+                                            />
                                             <a
                                                 t-if="combination_info['prevent_zero_price_sale']"
                                                 t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
