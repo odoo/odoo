@@ -13,6 +13,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { escape } from "@web/core/utils/strings";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import wUtils from '@website/js/utils';
+import { toggleSubmitButton } from '@website/js/utils';
 
 let currentActionName;
 
@@ -898,6 +899,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         // Model name
         this.$target[0].dataset.model_name = this.activeForm.model;
         // Load template
+        const $submitButton = this.$target.find('.s_website_form_send, .o_website_form_send');
         if (formInfo) {
             const formatInfo = this._getDefaultFormat();
             await formInfo.formFields.forEach(async field => {
@@ -905,6 +907,9 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 await this._fetchFieldRecords(field);
                 this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(this._renderField(field));
             });
+            toggleSubmitButton(this.$target, false);
+        } else {
+            toggleSubmitButton(this.$target, true);
         }
     },
     /**
@@ -1732,6 +1737,7 @@ options.registry.AddFieldForm = FormEditor.extend({
         this.trigger_up('activate_snippet', {
             $snippet: $(fieldEl),
         });
+        toggleSubmitButton(this.$target, false);
     },
 });
 

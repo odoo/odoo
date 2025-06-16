@@ -23,6 +23,7 @@ import { scrollTo } from "@web_editor/js/common/scrolling";
 const DEBOUNCE = 400;
 const { DateTime } = luxon;
 import wUtils from '@website/js/utils';
+import { toggleSubmitButton } from '@website/js/utils';
 
     publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({
         selector: '.s_website_form form, form.s_website_form', // !compatibility
@@ -121,12 +122,18 @@ import wUtils from '@website/js/utils';
                     this._getUserPreFillFields()
                 ))[0] || {};
             }
+            this.isDesignerUser = await user.hasGroup('website.group_website_designer')
             return res;
         },
         start: function () {
             // Reset the form first, as it is still filled when coming back
             // after a redirect.
             this.resetForm();
+
+            const formFields = this.$target.find('.s_website_form_field');
+            if (formFields.length === 0) {
+                toggleSubmitButton(this.$target, true, true, this.isDesignerUser);
+            }
 
             // Prepare visibility data and update field visibilities
             const visibilityFunctionsByFieldName = new Map();
@@ -326,6 +333,20 @@ import wUtils from '@website/js/utils';
             this.restoreBtnLoading = addLoadingEffect($button[0]);
 
             var self = this;
+
+            const fields = self.$el.find('input, textarea, select').not('[type=hidden]');
+            let anyFilled = false;
+            fields.each(function () {
+                const val = $(this).val();
+                if (val && val.trim() !== '') {
+                    anyFilled = true;
+                    return false;
+                }
+            });
+            if (!anyFilled) {
+                this.update_status("error", _t("Please fill in the form correctly."));
+                return false;
+            }
 
             self.$el.find('#s_website_form_result, #o_website_form_result').empty(); // !compatibility
             if (!self.check_error_fields({})) {
