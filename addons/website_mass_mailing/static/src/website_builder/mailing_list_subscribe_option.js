@@ -2,7 +2,7 @@ import { onWillStart } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export class MailingListSubscribeOption extends BaseOptionComponent {
-    static template = "html_builder.MailingListSubscribeOption";
+    static template = "website_mass_mailing.MailingListSubscribeOption";
     static props = {
         fetchMailingLists: Function,
     };

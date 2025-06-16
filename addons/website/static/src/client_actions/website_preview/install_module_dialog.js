@@ -4,7 +4,7 @@ import { WebsiteDialog } from "@website/components/dialog/dialog";
 
 export class InstallModuleDialog extends Component {
     static components = { WebsiteDialog };
-    static template = "html_builder.InstallModuleDialog";
+    static template = "website.InstallModuleDialog";
     static props = {
         title: String,
         installationText: String,

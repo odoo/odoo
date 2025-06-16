@@ -3,7 +3,7 @@ import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class NewContentSystrayItem extends Component {
-    static template = "html_builder.NewContentSystrayItem";
+    static template = "website.NewContentSystrayItem";
     static components = { NewContentModal };
     static props = {
         onNewPage: Function,

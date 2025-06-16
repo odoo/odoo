@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.MailingListSubscribeOption">
+<t t-name="website_mass_mailing.MailingListSubscribeOption">
 
     <BuilderRow label.translate="Newsletter" t-if="!isActiveItem('form_opt')">
         <BuilderSelect dataAttributeAction="'listId'">
@@ -21,7 +21,7 @@
 
 </t>
 
-<t t-name="html_builder.MailingListSubscribeFormOption">
+<t t-name="website_mass_mailing.MailingListSubscribeFormOption">
 
     <BuilderRow label.translate="Placeholder">
         <BuilderTextInput attributeAction="'placeholder'" applyTo="'.s_newsletter_subscribe_form_input'"/>

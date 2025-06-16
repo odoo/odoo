@@ -8,7 +8,7 @@ import { PublishSystrayItem } from "./publish_website_systray_item";
 import { WebsiteSwitcherSystrayItem } from "./website_switcher_systray_item";
 
 export class WebsiteSystrayItem extends Component {
-    static template = "html_builder.WebsiteSystrayItem";
+    static template = "website.WebsiteSystrayItem";
     static props = {
         onNewPage: { type: Function },
         onEditPage: { type: Function },
