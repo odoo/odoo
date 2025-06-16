@@ -264,7 +264,7 @@ class HrLeave(models.Model):
                 ('employee_id', '=', holiday.employee_id.id),
                 ('date_from', '<', holiday.date_to),
                 ('date_to', '>', holiday.date_from),
-                ('id', '!=', holiday.id),
+                ('id', 'not in', holiday.ids),
             ])
             if not conflicting_holidays:
                 holiday.dashboard_warning_message = False
