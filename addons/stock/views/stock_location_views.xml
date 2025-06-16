@@ -25,10 +25,14 @@
                                 type="action" name="stock.act_product_location_open"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <label for="name"/>
-                    <h1><field name="name" placeholder="e.g. Shelf 1"/></h1>
-                    <label for="location_id"/>
-                    <h2><field name="location_id" placeholder="e.g. Aisle 1" options="{'no_create': True}"/></h2>
+                    <div class="oe_location_header">
+                        <div>
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. Shelf 1"/></h1>
+                            <label for="location_id"/>
+                            <h2><field name="location_id" placeholder="e.g. Aisle 1" options="{'no_create': True}"/></h2>
+                        </div>
+                    </div>
 
                     <group>
                         <group string="Additional Information" name="additional_info">
