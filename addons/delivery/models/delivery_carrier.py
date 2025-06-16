@@ -205,7 +205,10 @@ class DeliveryCarrier(models.Model):
             products = source.move_ids.product_id
         else:
             raise UserError(_("Invalid source document type"))
-        return all(tag in products.all_product_tag_ids for tag in self.must_have_tag_ids)
+        return not self.must_have_tag_ids or any(
+            tag in products.all_product_tag_ids
+            for tag in self.must_have_tag_ids
+        )
 
     def _match_excluded_tags(self, source):
         self.ensure_one()
