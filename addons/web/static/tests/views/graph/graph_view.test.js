@@ -171,7 +171,25 @@ class Foo extends models.Model {
     };
 }
 
-defineModels([Foo, Color, Product]);
+class Currency extends models.Model {
+    _name = "res.currency";
+
+    name = fields.Char();
+    symbol = fields.Char();
+    position = fields.Selection({
+        selection: [
+            ["after", "A"],
+            ["before", "B"],
+        ],
+    });
+
+    _records = [
+        { id: 1, name: "USD", symbol: "$", position: "before" },
+        { id: 2, name: "EUR", symbol: "€", position: "after" },
+    ];
+}
+
+defineModels([Foo, Color, Product, Currency]);
 
 setupChartJsForTests();
 
@@ -2992,4 +3010,66 @@ test("graph views make their control panel available directly", async () => {
     def.resolve();
     await animationFrame();
     expect(".o_graph_view .o_graph_renderer").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("monetary chart rendering", async () => {
+    onRpc("/web/domain/validate", () => true);
+    Foo._fields.amount = fields.Monetary({ currency_field: "currency_id" });
+    Foo._fields.currency_id = fields.Many2one({ relation: "res.currency", default: 1 });
+    Foo._records[0].amount = 500;
+    Foo._records[1].amount = 300;
+    Foo._records[2].amount = 200;
+    Foo._records[3].amount = 400;
+    Foo._records[3].currency_id = 2;
+    Foo._records[4].amount = 700;
+    Foo._records[4].currency_id = 2;
+    Foo._records[5].amount = 100;
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph>
+                <field name="bar" />
+                <field name="amount" type="measure" />
+            </graph>
+        `,
+    });
+
+    expect(".o_graph_canvas_container canvas").toHaveCount(1);
+    checkLabels(view, ["false", "true"]);
+    checkDatasets(view, ["backgroundColor", "borderColor", "data", "label"], {
+        backgroundColor: "#4EA7F2",
+        borderColor: undefined,
+        data: [false, 1000],
+        label: "Amount",
+    });
+    checkLegend(view, "Amount");
+    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "" }] }, 0);
+    checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "$ 1,000.00" }] }, 1);
+    expect(".o_graph_alert").toHaveCount(1);
+    expect(".o_graph_alert").toHaveText(
+        "The graph is hiding data due to mixing several currencies. Select one of them to perform an accurate analysis: EUR - USD"
+    );
+    await contains(".o_graph_alert a:first").click();
+    checkDatasets(view, ["backgroundColor", "borderColor", "data", "label"], {
+        backgroundColor: "#4EA7F2",
+        borderColor: undefined,
+        data: [1100],
+        label: "Amount",
+    });
+    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "1,100.00 €" }] }, 0);
+    expect(".o_graph_alert").toHaveCount(0);
+    await contains(".o_searchview .o_facet_remove").click();
+    expect(".o_graph_alert").toHaveCount(1);
+    await contains(".o_graph_alert a:eq(1)").click();
+    checkDatasets(view, ["backgroundColor", "borderColor", "data", "label"], {
+        backgroundColor: "#4EA7F2",
+        borderColor: undefined,
+        data: [100, 1000],
+        label: "Amount",
+    });
+    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "$ 100.00" }] }, 0);
+    checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "$ 1,000.00" }] }, 1);
+    expect(".o_graph_alert").toHaveCount(0);
 });
