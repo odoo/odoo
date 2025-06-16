@@ -30,7 +30,9 @@ export class ProductsItemOption extends BaseOptionComponent {
             this.displayReOrder = this.defaultSort[0].shop_default_sort === "website_sequence asc";
 
             // If /shop page layout is list, do not display Size option
-            this.displaySizeOption = !this.env.getEditingElement().closest("#o_wsale_container").classList.contains("o_wsale_layout_list");
+            const wsale_container = this.env.getEditingElement().closest("#o_wsale_container");
+            this.displaySizeOption = !wsale_container.classList.contains("o_wsale_layout_list");
+            this.maxWidth = parseInt(wsale_container.dataset.ppr) || 5;
         });
 
         onMounted(() => {
