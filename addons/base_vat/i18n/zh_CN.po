@@ -146,7 +146,7 @@ msgstr "HU12345676 或 12345678-1-11 或 8071592153"
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
 msgid "Has Foreign Fiscal Position"
-msgstr ""
+msgstr "有外国财务规则"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__id
@@ -173,7 +173,7 @@ msgstr "共同体内有效"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
-msgstr ""
+msgstr "请留意：预期格式为 %(expected_format)s"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
@@ -194,7 +194,7 @@ msgstr "税务识别码"
 msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
 "%(expected_note)s"
-msgstr ""
+msgstr "%(vat_label)s 的号码 [%(wrong_vat)s] 似乎无效。%(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -203,6 +203,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
 msgstr ""
+"以下记录的 %(vat_label)s 号码 [%(wrong_vat)s] "
+"似乎无效。记录：%(record_label)s。%(expected_note)s"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
@@ -231,7 +233,7 @@ msgstr "增值税验证请求未处理。VIES 服务回复如下错误：%s"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
-msgstr ""
+msgstr "要明确表明没有（有效）增值税，请改用「/」（斜线）。"
 
 #. module: base_vat
 #. odoo-python

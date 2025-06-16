@@ -4707,6 +4707,12 @@ msgid ""
 "                    In these cases, the calculated/fixed price is set as the unit price with 0% discount\n"
 "                    in the order."
 msgstr ""
+"若价格是通过算式计算或为固定金额，销售单数据行或结账页面\n"
+"                    通常不会显示原始价格（原价）。 不过，\n"
+"                    使用部分特定的算式计算定价规则时，折扣可能会在网店页面中显示\n"
+"                    （例如在产品页面及配置工具中），但不会在购物车或结账页面显示。\n"
+"                    在这些情况下，订单将以计算得出/固定的价格为单价，\n"
+"                    并套用 0% 折扣。"
 
 #. module: website_sale
 #. odoo-python
@@ -4739,7 +4745,7 @@ msgstr "有3个脚"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Wrong format: got `pricelist=%s`, expected an integer"
-msgstr ""
+msgstr "格式错误：要求输入整数，但收到 `pricelist=%s`"
 
 #. module: website_sale
 #. odoo-javascript

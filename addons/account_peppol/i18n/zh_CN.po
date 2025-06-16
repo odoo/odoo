@@ -4,9 +4,9 @@
 # 
 # Translators:
 # 何彬 <vnsoft.he@gmail.com>, 2025
-# Chloe Wang, 2025
 # Raymond Yu <cl_yu@hotmail.com>, 2025
 # Wil Odoo, 2025
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -264,7 +264,7 @@ msgstr "由于捆绑消息中相关消息单元出错，导致该消息单元未
 msgid ""
 "A participant with these details has already been registered on the network."
 " If you have previously registered to a Peppol service, please deregister."
-msgstr ""
+msgstr "已存在使用该详细信息的参与者在网络上注册。如果您曾注册过 Peppol 服务，请先注销。"
 
 #. module: account_peppol
 #. odoo-python
@@ -815,7 +815,7 @@ msgstr "实时"
 msgid ""
 "Message properties were present in the fragment SOAP header that were not "
 "specified in %s"
-msgstr ""
+msgstr "片段 SOAP 头中存在未在%s中指定的消息属性。"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_migration_key
@@ -837,19 +837,19 @@ msgstr "手机号码"
 msgid ""
 "More time than %s has passed since the first fragment was received but not "
 "all other fragments are received."
-msgstr ""
+msgstr "自收到第一个片段以来已超过%s时间，但尚未收到所有其他片段。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No UBL document was provided to the Peppol Outbound Service."
-msgstr ""
+msgstr "未向 Peppol 出站服务提供 UBL 文档。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No valid AS4 participant endpoint were found."
-msgstr ""
+msgstr "未找到有效的 AS4 参与者端点。"
 
 #. module: account_peppol
 #. odoo-python
@@ -857,7 +857,7 @@ msgstr ""
 msgid ""
 "Not enough disk space available to store all (expected) fragments of the "
 "group."
-msgstr ""
+msgstr "可用磁盘空间不足，无法存储该组的所有（预期）片段。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
@@ -877,7 +877,7 @@ msgstr "尚未验证"
 #. module: account_peppol
 #: model:mail.template,description:account_peppol.mail_template_peppol_registration
 msgid "Notification email for peppol registration state update"
-msgstr ""
+msgstr "Peppol 注册状态更新的通知邮件"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -951,7 +951,7 @@ msgstr "Peppol：更新参与者状态"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_webhook_keepalive_ir_actions_server
 msgid "PEPPOL: webhook keep alive"
-msgstr ""
+msgstr "PEPPOL：Webhook 保持活动"
 
 #. module: account_peppol
 #. odoo-python
@@ -973,7 +973,7 @@ msgstr "应提供 Peppol 地址。"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_can_send
 msgid "Peppol Can Send"
-msgstr ""
+msgstr "Peppol 可发送"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_peppol_config_wizard
@@ -1116,7 +1116,7 @@ msgstr "请安装 phonenumbers 库."
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "Please set a journal for Peppol invoices on %s before receiving documents."
-msgstr ""
+msgstr "请在接收文档前于%s上设置 Peppol 发票日志。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1151,7 +1151,7 @@ msgstr "代理类型"
 msgid ""
 "Proxy error, please contact Odoo (missing \"%s\" - please make sure that it "
 "was loaded from the configuration panel)"
-msgstr ""
+msgstr "代理错误，请联系 Odoo（缺少“%s” - 请确保已从配置面板加载）"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -1255,7 +1255,7 @@ msgid ""
 "Some reliability function as implemented by the Reliability module, is not "
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
-msgstr ""
+msgstr "可靠性模块实现的某些可靠性功能未运行，或与此消息序列关联的可靠性状态无效。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1270,7 +1270,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Something went wrong with your request"
-msgstr ""
+msgstr "您的请求出现错误"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
