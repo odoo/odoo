@@ -16,6 +16,12 @@ class WebsiteTest(Home):
     def test_view(self, **kwargs):
         return request.render('test_website.test_view')
 
+    @http.route('/test_view_access_error', type='http', auth='public', website=True, sitemap=False)
+    def test_view_access_error(self, **kwargs):
+        public = self.env.ref('base.public_user')
+        record = self.env.ref('test_website.test_model_exposed_record_not_published')
+        return request.render('test_website.test_view_access_error', {'record': record.with_user(public)})
+
     @http.route('/ignore_args/converteronly/<string:a>', type='http', auth="public", website=True, sitemap=False)
     def test_ignore_args_converter_only(self, a):
         return request.make_response(json.dumps(dict(a=a, kw=None)))

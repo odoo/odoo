@@ -531,7 +531,7 @@ class IrHttp(models.AbstractModel):
             values.update(qweb_exception=exception)
             exception = exception.__cause__ or exception.__context__
 
-        elif isinstance(exception, exceptions.UserError):
+        if isinstance(exception, exceptions.UserError):
             code = exception.http_status
             values['error_message'] = exception.args[0]
         elif isinstance(exception, werkzeug.exceptions.HTTPException):
