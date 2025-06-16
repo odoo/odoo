@@ -2070,42 +2070,42 @@ msgstr "カウント"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_move_ready
 msgid "Count Move Ready"
-msgstr "移動準備完了カウント"
+msgstr "移動準備完了数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
 msgid "Count Picking"
-msgstr "カウントピッキング"
+msgstr "ピッキング件数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "ピッキングバックオーダのカウント"
+msgstr "ピッキングのバックオーダ件数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr "ピッキングドラフトを数える"
+msgstr "ピッキングのドラフト件数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
 msgid "Count Picking Late"
-msgstr "ピッキングを遅らせる"
+msgstr "期限超過ピッキング件数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_ready
 msgid "Count Picking Ready"
-msgstr "ピッキング準備完了カウント"
+msgstr "準備完了ピッキング件数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr "ピッキング待機カウント"
+msgstr "処理待ちピッキング件数"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_inventory
 msgid "Count Sheet"
-msgstr "カウントシート"
+msgstr "在庫棚卸シート"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
@@ -6414,12 +6414,12 @@ msgstr "ピッキング"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quant_id
 msgid "Pick From"
-msgstr "以下から集荷:"
+msgstr "ピッキング元:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
 msgid "Pick Type"
-msgstr "ピックタイプ"
+msgstr "ピッキングタイプ"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
@@ -6435,7 +6435,7 @@ msgstr "ピッキング、梱包して配送 (3ステップ)"
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picked
 msgid "Picked"
-msgstr "集荷済"
+msgstr "ピッキング済"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__picking_ids
@@ -6450,7 +6450,7 @@ msgstr "ピッキング"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr "集荷リスト"
+msgstr "ピッキングリスト"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking
@@ -7700,7 +7700,7 @@ msgstr "補充ルート"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
-msgstr "返却"
+msgstr "返品"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -7710,12 +7710,12 @@ msgstr "全て返品"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "ピッキングの戻し"
+msgstr "返品ピッキング"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "ピッキングラインを返す"
+msgstr "返品ピッキング明細"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -7747,7 +7747,7 @@ msgstr "返品伝票"
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Returned Picking"
-msgstr "返送品の選別"
+msgstr "返品済ピッキング"
 
 #. module: stock
 #. odoo-python
@@ -11002,7 +11002,7 @@ msgstr "ランチが届きました。お食事をお楽しみ下さい!"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Your stock is currently empty"
-msgstr "現在、在庫はございません。"
+msgstr "現在、在庫が空です"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__package_label_to_print__zpl

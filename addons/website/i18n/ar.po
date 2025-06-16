@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Malaz Abuidris <msea@odoo.com>, 2025
 # Wil Odoo, 2025
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:37+0000\n"
+"POT-Creation-Date: 2025-06-13 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1883,6 +1883,8 @@ msgid ""
 "<span class=\"s_number display-1-fs\">12k</span><br/>\n"
 "                        <span class=\"h5-fs\">Useful options</span>"
 msgstr ""
+"<span class=\"s_number display-1-fs\">12 ألف</span><br/>\n"
+"                        <span class=\"h5-fs\">من الخيارات الفعالة</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
@@ -1890,6 +1892,8 @@ msgid ""
 "<span class=\"s_number display-1-fs\">45%</span><br/>\n"
 "                        <span class=\"h5-fs\">More leads</span>"
 msgstr ""
+"<span class=\"s_number display-1-fs\">زيادة بنسبة 45%</span><br/>\n"
+"                        <span class=\"h5-fs\">على عدد العملاء المهتمين</span> "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
@@ -1897,6 +1901,8 @@ msgid ""
 "<span class=\"s_number display-1-fs\">8+</span><br/>\n"
 "                        <span class=\"h5-fs\">Amazing pages</span>"
 msgstr ""
+"أكثر من<span class=\"s_number display-1-fs\">8</span><br/>\n"
+"                        <span class=\"h5-fs\">صفحات مذهلة</span> "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar
@@ -14807,6 +14813,12 @@ msgstr ""
 "على نظام شبكات توصيل المحتوى "
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "URL must not start with '#'."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
 msgstr "رابط URL إلى "
@@ -16585,6 +16597,12 @@ msgstr "متجر إلكتروني "
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "and"
 msgstr "و"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "base URL of 'URL to' should not be same as 'URL from'."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
