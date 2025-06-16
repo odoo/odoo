@@ -6,6 +6,7 @@ import requests
 from datetime import datetime, timezone, timedelta
 from requests import Response
 from unittest.mock import patch
+import base64
 
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.tests.common import TransactionCase
@@ -196,6 +197,81 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
         sent_mail = next((m for m in self._mails if 'cloud_attachment.txt' in m['body']), None)
         self.assertIsNotNone(sent_mail)
         self.assertIn(self.env['ir.qweb']._render('mail.mail_attachment_links', {'attachments': cloud_attachment}), sent_mail['body'])
+
+    def test_mail_composer_cloud_storage_attachment_multiple(self):
+        """Ensure cloud attachments are converted to links in all outgoing emails and no duplicate links occur."""
+
+        # Create multiple recipients
+        partners = self.env["res.partner"].create([
+            {"name": "Partner A", "email": "a@test.com"},
+            {"name": "Partner B", "email": "b@test.com"},
+        ])
+
+        # Attachments: one cloud, one binary (below threshold), one binary (above threshold), one URL
+        binary_small = self.env['ir.attachment'].create({
+            'name': 'small.txt',
+            'type': 'binary',
+            'datas': base64.b64encode(b'small content'),
+            'res_model': 'res.partner',
+            'res_id': partners[0].id,
+            'mimetype': 'text/plain',
+        })
+        binary_large = self.env['ir.attachment'].create({
+            'name': 'large.txt',
+            'type': 'binary',
+            'datas': base64.b64encode(b'x' * 10_000_000),  # ~10MB
+            'res_model': 'res.partner',
+            'res_id': partners[0].id,
+            'mimetype': 'text/plain',
+        })
+        url_attachment = self.env['ir.attachment'].create({
+            'name': 'external.txt',
+            'type': 'url',
+            'url': 'https://example.com/external.txt',
+            'res_model': 'res.partner',
+            'res_id': partners[0].id,
+            'mimetype': 'text/plain',
+        })
+        cloud_attachment = self.env['ir.attachment'].create({
+            'name': 'cloud_attachment.txt',
+            'type': 'cloud_storage',
+            'url': 'https://storage.googleapis.com/fakebucket/cloud_attachment.txt',
+            'res_model': 'res.partner',
+            'res_id': partners[0].id,
+            'mimetype': 'text/plain',
+        })
+
+        context = {
+            'default_model': 'res.partner',
+            'default_res_ids': partners.ids,
+            'default_composition_mode': 'comment',
+            'default_partner_ids': partners.ids,
+        }
+
+        composer = self.env['mail.compose.message'].with_context(context).create({
+            'body': "<p>Hello</p>",
+            'attachment_ids': [
+                (4, binary_small.id),
+                (4, binary_large.id),
+                (4, url_attachment.id),
+                (4, cloud_attachment.id),
+            ],
+        })
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
+
+        cloud_link_html = self.env['ir.qweb']._render('mail.mail_attachment_links', {'attachments': cloud_attachment})
+
+        matched_mails = [m for m in self._mails if all(p.email in m['email_to'] for p in partners)]
+        self.assertTrue(matched_mails self._mail, "No mail sent to all expected partners.")
+
+        for mail in matched_mails:
+            self.assertIn(cloud_link_html, mail['body'])
+
+        # Check cloud link appears only once per email body
+        for mail in matched_mails:
+            self.assertEqual(mail['body'].count(cloud_link_html), 1, "Duplicate cloud link found in email.")
 
     def test_uninstall_fail(self):
         with self.assertRaises(UserError, msg="Don't uninstall the module if there are Azure attachments in use"):
