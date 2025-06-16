@@ -230,8 +230,8 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_3')])]"/>
             <field name="date_version" eval="time.strftime('%Y')+'-1-1'"/>
             <field name="contract_date_start" eval="time.strftime('%Y')+'-1-1'"/>
-            <field name="contract_date_end" eval="time.strftime('%Y-%m-15')"/>
-            <field name="contract_type_id" ref="contract_type_full_time"/>
+            <field name="contract_date_end" eval="False"/>
+            <field name="contract_type_id" ref="contract_type_permanent"/>
             <field name="structure_type_id" ref="structure_type_employee"/>
             <field name="wage">7540.00</field>
             <field name="job_id" ref="hr.job_cto"/>
@@ -247,17 +247,6 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">male</field>
         </record>
-
-        <function name="create_version" model="hr.employee">
-            <value eval="[ref('hr.employee_admin')]"/>
-            <value eval="{
-                'date_version': time.strftime('%Y-%m-16'),
-                'contract_date_start': time.strftime('%Y-%m-16'),
-                'contract_date_end': False,
-                'contract_type_id': ref('hr.contract_type_permanent'),
-                'wage': 5500.00
-            }"/>
-        </function>
 
         <record id="work_contact_ngh" model="res.partner">
             <field name="name">Jeffrey Kelly</field>
