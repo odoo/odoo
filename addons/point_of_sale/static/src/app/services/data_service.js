@@ -3,7 +3,7 @@ import { Base, createRelatedModels } from "@point_of_sale/app/models/related_mod
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
-import { batched } from "@web/core/utils/timing";
+import { batched, debounce } from "@web/core/utils/timing";
 import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
 import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
@@ -33,6 +33,10 @@ export class PosData extends Reactive {
         this.records = {};
         this.opts = new DataServiceOptions();
         this.channels = [];
+        this.debouncedSynchronizeLocalDataInIndexedDB = debounce(
+            this.synchronizeLocalDataInIndexedDB.bind(this),
+            300
+        );
 
         this.network = {
             warningTriggered: false,
@@ -370,16 +374,57 @@ export class PosData extends Reactive {
         this.relations = relations;
         this.models = models;
 
+        if (odoo.debug === "assets") {
+            window.performance.mark("pos_data_service_init");
+        }
+
         await this.initData();
         await this.getLocalDataFromIndexedDB();
         this.initListeners();
+
+        if (odoo.debug === "assets") {
+            window.performance.mark("pos_data_service_init_end");
+        }
+
+        this.debugInfos();
         this.network.loading = false;
+    }
+
+    debugInfos() {
+        if (odoo.debug === "assets") {
+            const sortedByLength = Object.keys(this.models)
+                .map((m) => [m, this.models[m].length])
+                .sort((a, b) => a[1] - b[1]);
+
+            for (const [model, length] of sortedByLength) {
+                console.debug(
+                    `[%c${model}%c]: %c${length}%c records`,
+                    "color:lime;",
+                    "",
+                    "font-weight:bold;color:#e67e22",
+                    ""
+                );
+            }
+
+            const measure = window.performance.measure(
+                "pos_loading",
+                "pos_data_service_init",
+                "pos_data_service_init_end"
+            );
+
+            console.debug(
+                `%cPosDataService initialized in %c${measure.duration.toFixed(2)}ms%c`,
+                "color:lime;font-weight:bold",
+                "color:#e67e22;font-weight:bold",
+                ""
+            );
+        }
     }
 
     initListeners() {
         this.models["pos.order"].addEventListener(
             "update",
-            batched(this.synchronizeLocalDataInIndexedDB.bind(this))
+            batched(this.debouncedSynchronizeLocalDataInIndexedDB.bind(this))
         );
 
         const ignore = Object.keys(this.opts.databaseTable);
@@ -642,6 +687,20 @@ export class PosData extends Reactive {
             }
 
             try {
+                if (["product.product", "product.template"].includes(model)) {
+                    await this.callRelated("product.template", "load_product_from_pos", [
+                        odoo.pos_config_id,
+                        [
+                            "|",
+                            ["product_variant_ids.id", "in", Array.from(ids)],
+                            ["id", "in", Array.from(ids)],
+                        ],
+                        0,
+                        0,
+                    ]);
+                    continue;
+                }
+
                 const data = await this.orm.read(model, Array.from(ids), this.fields[model], {
                     load: false,
                 });

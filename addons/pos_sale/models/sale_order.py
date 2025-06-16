@@ -26,6 +26,27 @@ class SaleOrder(models.Model):
         return ['name', 'state', 'user_id', 'order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed', 'amount_unpaid',
             'picking_ids', 'partner_shipping_id', 'partner_invoice_id', 'date_order', 'write_date']
 
+    def load_sale_order_from_pos(self, config_id):
+        product_ids = self.order_line.product_id.ids
+        product_tmpls = self.env['product.template'].load_product_from_pos(
+            config_id,
+            [
+                '|',
+                ('product_variant_ids.id', 'in', product_ids),
+                ('id', 'in', product_ids),
+            ]
+        )
+        sale_order_fields = self._load_pos_data_fields(config_id)
+        sale_order_read = self.read(sale_order_fields, load=False)
+        sale_order_line_fields = self.order_line._load_pos_data_fields(config_id)
+        sale_order_line_read = self.order_line.read(sale_order_line_fields, load=False)
+
+        return {
+            'sale.order': sale_order_read,
+            'sale.order.line': sale_order_line_read,
+            **product_tmpls,
+        }
+
     def _count_pos_order(self):
         for order in self:
             linked_orders = order.pos_order_line_ids.mapped('order_id')

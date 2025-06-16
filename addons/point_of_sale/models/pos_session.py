@@ -1858,46 +1858,14 @@ class PosSession(models.Model):
         return []
 
     def find_product_by_barcode(self, barcode, config_id):
-        product_fields = self.env['product.product']._load_pos_data_fields(config_id)
-        product_template_fields = self.env['product.template']._load_pos_data_fields(config_id)
-        packaging_fields = self.env['product.uom']._load_pos_data_fields(config_id)
-        product_tmpl_attr_value_fields = self.env['product.template.attribute.value']._load_pos_data_fields(config_id)
-        product_context = {**self.env.context, 'display_default_code': False}
-        product = self.env['product.product'].search([
+        # Kept for backward compatibility.
+        return self.env['product.template'].load_product_from_pos(config_id, [
+            '|',
+            ('product_variant_ids.barcode', '=', barcode),
             ('barcode', '=', barcode),
-            ('sale_ok', '=', True),
             ('available_in_pos', '=', True),
+            ('sale_ok', '=', True),
         ])
-        if product:
-            product = product.with_context(product_context)
-            return {
-                'product.product': product.read(product_fields, load=False),
-                'product.template': product.product_tmpl_id.read(product_template_fields, load=False),
-                'product.template.attribute.value': product.product_template_attribute_value_ids.read(product_tmpl_attr_value_fields, load=False)
-            }
-
-        domain = [('barcode', 'not in', ['', False])]
-        loaded_data = self._context.get('loaded_data')
-        if loaded_data:
-            loaded_product_ids = [x['id'] for x in loaded_data['product.product']]
-            domain = AND([domain, [('product_id', 'in', [x['id'] for x in self._context.get('loaded_data')['product.product']])]]) if self._context.get('loaded_data') else []
-            domain = AND([domain, [('product_id', 'in', loaded_product_ids)]])
-        packaging_params = {
-            'search_params': {
-                'domain': domain,
-                'fields': ['barcode', 'product_id', 'uom_id'],
-            },
-        }
-        packaging_params['search_params']['domain'] = [['barcode', '=', barcode]]
-        packaging = self.env['product.uom'].search(packaging_params['search_params']['domain'])
-        product = packaging.product_id.with_context(product_context)
-        condition = packaging and packaging.product_id
-        return {
-            'product.product': product.read(product_fields, load=False) if condition else [],
-            'product.template.attribute.value': product.product_template_attribute_value_ids.read(product_tmpl_attr_value_fields, load=False) if condition else [],
-            'product.template': product.product_tmpl_id.read(product_template_fields, load=False) if condition else [],
-            'product.uom': packaging.read(packaging_fields, load=False) if condition else [],
-        }
 
     def get_total_discount(self):
         amount = 0
