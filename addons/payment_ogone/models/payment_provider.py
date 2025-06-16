@@ -44,6 +44,22 @@ class PaymentProvider(models.Model):
             'support_tokenization': True,
         })
 
+    # === ACTION METHODS === #
+
+    def action_open_worldline_provider(self):
+        """Open the Worldline module form."""
+        worldline_module = self.env['ir.module.module'].search([
+            ('name', '=', 'payment_worldline'),
+        ])
+        return worldline_module and {
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.module.module',
+            'res_id': worldline_module.id,
+            'view_mode': 'form',
+            'view_id': self.env.ref('base.module_form').id,
+            'target': 'current',
+        }
+
     #=== BUSINESS METHODS ===#
 
     @api.model
