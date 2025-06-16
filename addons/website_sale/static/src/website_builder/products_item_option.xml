@@ -7,7 +7,7 @@
                     <table t-ref="table" t-on-mouseenter="_onTableMouseEnter" t-on-mouseleave="_onTableMouseLeave">
                         <t t-foreach="[0, 1, 2, 3]" t-as="i" t-key="i">
                             <tr>
-                                <t t-foreach="[0, 1, 2, 3]" t-as="j" t-key="j">
+                                <t t-foreach="[...Array(this.maxWidth).keys()]" t-as="j" t-key="j">
                                     <td t-on-mouseover="()=>this._onTableCellMouseOver(i, j)" t-on-click="()=>this._onTableCellMouseClick(i, j)">
                                         <BuilderButton preview="false" actionValue="[i, j]" />
                                     </td>
