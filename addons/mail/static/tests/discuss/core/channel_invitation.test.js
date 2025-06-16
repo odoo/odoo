@@ -145,6 +145,30 @@ test("should be able to create a new group chat from an existing chat", async ()
     });
 });
 
+test("create a new group chat with no participants selected", async () => {
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId_1 });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await click("button[title='Create Group Chat']:enabled");
+    await contains(".o-mail-DiscussSidebarChannel", {
+        text: "Mitchell Admin and TestPartner",
+    });
+});
+
 test("unnamed group chat should display correct name just after being invited", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({

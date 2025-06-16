@@ -24,7 +24,7 @@ declare module "models" {
         getRecentChatPartnerIds: () => number[];
         onlineMemberStatuses: Readonly<string[]>;
         sortMembers: (m1: ChannelMember, m2: ChannelMember) => number;
-        startChat: (partnerIds: number[]) => Promise<void>;
+        startChat: (partnerIds: number[], groupChat?: boolean) => Promise<void>;
         updateBusSubscription: (() => unknown) & { cancel: () => void };
     }
     export interface Thread {

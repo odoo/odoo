@@ -70,13 +70,16 @@ const storeServicePatch = {
     sortMembers(m1, m2) {
         return m1.name?.localeCompare(m2.name) || m1.id - m2.id;
     },
-    /** @param {number[]} partnerIds */
-    async startChat(partnerIds) {
+    /**
+     * @param {number[]} partnerIds
+     * @param {boolean} [groupChat=false]
+     */
+    async startChat(partnerIds, groupChat = false) {
         const partners_to = [...new Set([this.self.id, ...partnerIds])];
         if (partners_to.length === 1) {
             const chat = await this.joinChat(partners_to[0], true);
             chat.open({ focus: true, bypassCompact: true });
-        } else if (partners_to.length === 2) {
+        } else if (partners_to.length === 2 && !groupChat) {
             const correspondentId = partners_to.find(
                 (partnerId) => partnerId !== this.store.self.id
             );

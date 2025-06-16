@@ -47,7 +47,7 @@
                             </t>
                         </div>
                     </div>
-                    <button t-if="props.thread" class="btn btn-primary w-100 my-2" t-att-disabled="selectedPartners.length === 0" t-att-title="invitationButtonText" t-on-click="onClickInvite">
+                    <button t-if="props.thread" class="btn btn-primary w-100 my-2" t-att-disabled="selectedPartners.length === 0 and this.props.thread.channel_type != 'chat'" t-att-title="invitationButtonText" t-on-click="onClickInvite">
                         <t t-esc="invitationButtonText"/>
                     </button>
                 </t>

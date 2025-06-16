@@ -37,7 +37,10 @@ export class ChannelInvitation extends Component {
             searchResultCount: 0,
             searchStr: "",
         });
-        this.debouncedFetchPartnersToInvite = useDebounced(this.fetchPartnersToInvite.bind(this), 250);
+        this.debouncedFetchPartnersToInvite = useDebounced(
+            this.fetchPartnersToInvite.bind(this),
+            250
+        );
         onWillStart(() => {
             if (this.store.self.type === "partner") {
                 this.fetchPartnersToInvite();
@@ -163,7 +166,7 @@ export class ChannelInvitation extends Component {
             if (this.props.thread.correspondent) {
                 partnerIds.unshift(this.props.thread.correspondent.persona.id);
             }
-            await this.store.startChat(partnerIds);
+            await this.store.startChat(partnerIds, true);
         } else {
             await this.orm.call("discuss.channel", "add_members", [[this.props.thread.id]], {
                 partner_ids: this.selectedPartners.map((partner) => partner.id),
