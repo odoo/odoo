@@ -306,7 +306,12 @@ export class KanbanController extends Component {
     }
 
     get modelOptions() {
-        return { lazy: !this.env.inDialog && !!this.props.display.controlPanel };
+        return {
+            lazy:
+                !this.env.config.isReloadingController &&
+                !this.env.inDialog &&
+                !!this.props.display.controlPanel,
+        };
     }
 
     get progressBarAggregateFields() {
