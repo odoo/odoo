@@ -274,6 +274,8 @@ class HrEmployee(models.Model):
         action['context']['search_default_employee_id'] = self.ids
         action['context'].pop('search_default_waiting_for_me', False)
         action['context'].pop('search_default_waiting_for_me_manager', False)
+        action['context']['search_default_approve'] = 1
+        action['context']['search_default_second_approval'] = 1
         return action
 
     def _is_leave_user(self):
