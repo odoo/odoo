@@ -370,7 +370,8 @@ export class HistoryPlugin extends Plugin {
         const records = mutationRecords
             .flatMap((record) => this.transformRecord(record))
             .filter((record) => !this.isSystemClassOrAttributeRecord(record))
-            .filter((record) => !this.isNoOpRecord(record));
+            .filter((record) => !this.isNoOpRecord(record))
+            .filter((record) => !this.isIgnoredMutationRecord(record));
         this.stageRecords(records);
         return records;
     }
@@ -380,6 +381,10 @@ export class HistoryPlugin extends Plugin {
      */
     isNoOpRecord({ type, oldValue, newValue }) {
         return type === "attributes" && oldValue === newValue;
+    }
+
+    isIgnoredMutationRecord(record) {
+        return this.getResource("ignored_mutation_record_predicates").some((fn) => fn(record));
     }
 
     dispatchContentUpdated() {

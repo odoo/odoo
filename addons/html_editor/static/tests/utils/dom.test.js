@@ -9,6 +9,7 @@ import {
 import { getContent } from "../_helpers/selection";
 import { parseHTML } from "@html_editor/utils/html";
 import { unformat } from "../_helpers/format";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 describe("splitAroundUntil", () => {
     test("should split a slice of text from its inline ancestry (1)", async () => {
@@ -301,10 +302,22 @@ describe("wrapInlinesInBlocks", () => {
 describe("fillEmpty", () => {
     test("should not add fill a shrunk protected block, nor add a ZWS to it", async () => {
         const { el } = await setupEditor('<div data-oe-protected="true"></div>');
-        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        expect(el.innerHTML).toBe(
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<div data-oe-protected="true" contenteditable="false"></div>${PLACEHOLDER_BLOCK_CONTAINER(
+                "bottom"
+            )}`
+        );
         const div = el.firstChild;
         fillEmpty(div);
-        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        expect(el.innerHTML).toBe(
+            `${PLACEHOLDER_BLOCK_CONTAINER(
+                "top"
+            )}<div data-oe-protected="true" contenteditable="false"></div>${PLACEHOLDER_BLOCK_CONTAINER(
+                "bottom"
+            )}`
+        );
     });
     test("should not fill a block containing a canvas", async () => {
         const { el } = await setupEditor("<div><canvas></canvas></div>");

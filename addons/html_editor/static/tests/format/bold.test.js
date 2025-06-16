@@ -7,6 +7,7 @@ import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { BOLD_TAGS, notStrong, span, strong, em } from "../_helpers/tags";
 import { bold, italic, simulateArrowKeyPress, tripleClick } from "../_helpers/user_actions";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -205,6 +206,7 @@ test("should make a few characters bold inside table (bold)", async () => {
             </table>`),
         stepFunction: bold,
         contentAfterEdit: unformat(`
+            ${PLACEHOLDER_BLOCK_CONTAINER("top")}
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -223,7 +225,8 @@ test("should make a few characters bold inside table (bold)", async () => {
                         <td><p><br></p></td>
                     </tr>
             </tbody>
-            </table>`),
+            </table>
+            ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}`),
     });
 });
 

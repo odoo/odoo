@@ -3,6 +3,7 @@ import { press } from "@odoo/hoot-dom";
 import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { toggleOrderedList } from "../_helpers/user_actions";
+import { PLACEHOLDER_BLOCK_CONTAINER } from "../_helpers/placeholder_block";
 
 describe("Range collapsed", () => {
     describe("Insert", () => {
@@ -93,6 +94,7 @@ describe("Range collapsed", () => {
                 `),
                 stepFunction: toggleOrderedList,
                 contentAfterEdit: unformat(`
+                    ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                     <table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
@@ -107,6 +109,7 @@ describe("Range collapsed", () => {
                             </tr>
                         </tbody>
                     </table>
+                    ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}
                 `),
                 contentAfter: unformat(`
                     <table class="table table-bordered">
@@ -224,6 +227,7 @@ describe("Range collapsed", () => {
                 `),
                 stepFunction: toggleOrderedList,
                 contentAfterEdit: unformat(`
+                    ${PLACEHOLDER_BLOCK_CONTAINER("top")}
                     <table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
@@ -238,6 +242,7 @@ describe("Range collapsed", () => {
                             </tr>
                         </tbody>
                     </table>
+                    ${PLACEHOLDER_BLOCK_CONTAINER("bottom")}
                 `),
                 contentAfter: unformat(`
                     <table class="table table-bordered">
