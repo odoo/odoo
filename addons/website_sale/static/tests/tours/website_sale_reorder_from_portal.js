@@ -70,14 +70,12 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             content: "Deleting All products from cart",
             trigger: 'div.js_cart_lines',
             run: async () => {
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
+
+                // Keep clicking delete buttons until none are left
+                while ($('a.js_delete_product').length > 0) {
+                    $('a.js_delete_product:first').click();
+                    await new Promise(resolve => setTimeout(resolve, 1200)); 
+                }
             }
         },
         {
