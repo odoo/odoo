@@ -1,11 +1,13 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { fields, getKwArgs } from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, makeKwArgs } from "@web/../tests/web_test_helpers";
 
 export class ResPartner extends mailModels.ResPartner {
     leave_date_to = fields.Date({ related: false });
 
     compute_im_status(partner) {
-        if (partner.leave_date_to) {
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+        if (partner.main_user_id && ResUsers.browse(partner.main_user_id).leave_date_to) {
             if (partner.im_status === "online") {
                 return "leave_online";
             } else if (partner.im_status === "away") {
@@ -26,11 +28,16 @@ export class ResPartner extends mailModels.ResPartner {
     _to_store(ids, store, fields) {
         const kwargs = getKwArgs(arguments, "ids", "store", "fields");
         fields = kwargs.fields;
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
         super._to_store(...arguments);
         for (const partner of this.browse(ids)) {
-            store.add(this.browse(partner.id), {
-                leave_date_to: partner.leave_date_to,
-            });
+            if (partner.main_user_id) {
+                store.add(
+                    ResUsers.browse(partner.main_user_id),
+                    makeKwArgs({ fields: ["leave_date_to"] })
+                );
+            }
         }
     }
 }

@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-
-from dateutil.relativedelta import relativedelta
 
 from freezegun import freeze_time
 
@@ -45,13 +41,13 @@ class TestPartner(TransactionCase):
             'responsible_ids': cls.users.ids
         })
         cls.leaves = cls.env['hr.leave'].create([{
-            'request_date_from': cls.today + relativedelta(days=-1),
-            'request_date_to': cls.today + relativedelta(days=2),
+            'request_date_from': "2024-06-03",
+            'request_date_to': "2024-06-06",
             'employee_id': cls.employees[0].id,
             'holiday_status_id': cls.leave_type.id,
         }, {
-            'request_date_from': cls.today + relativedelta(days=-2),
-            'request_date_to': cls.today + relativedelta(days=1),
+            'request_date_from': "2024-06-02",
+            'request_date_to': "2024-06-05",
             'employee_id': cls.employees[1].id,
             'holiday_status_id': cls.leave_type.id,
         }])
@@ -60,13 +56,13 @@ class TestPartner(TransactionCase):
     def test_res_partner_to_store(self):
         self.leaves.write({'state': 'validate'})
         self.assertEqual(
-            Store(self.partner).get_result()["res.partner"][0]["leave_date_to"],
-            fields.Date.to_string(self.today + relativedelta(days=2)),
-            'Return date is the first return date of all users associated with a partner',
+            Store(self.partner).get_result()["res.users"][0]["leave_date_to"],
+            "2024-06-07",
+            "Return date is the return date of the main user of the partner",
         )
-        self.leaves[1].action_refuse()
+        self.leaves[0].action_refuse()
         self.assertEqual(
-            Store(self.partner).get_result()["res.partner"][0]["leave_date_to"],
+            Store(self.partner).get_result()["res.users"][0]["leave_date_to"],
             False,
-            'Partner is not considered out of office if one of their users is not on holiday',
+            "Partner is not considered out of office if their main user is not on holiday",
         )

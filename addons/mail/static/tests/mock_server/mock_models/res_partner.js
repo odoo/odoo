@@ -238,6 +238,7 @@ export class ResPartner extends webModels.ResPartner {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
+        this._compute_main_user_id(); // compute not automatically triggering when necessary
         for (const partner of this.browse(ids)) {
             const [data] = this._read_format(
                 partner.id,
@@ -270,24 +271,19 @@ export class ResPartner extends webModels.ResPartner {
                 data.im_status_access_token = partner.id;
             }
             if (fields.includes("user")) {
-                const users = ResUsers.browse(partner.user_ids);
-                const internalUsers = users.filter((user) => !user.share);
-                let mainUser;
-                if (internalUsers.length > 0) {
-                    mainUser = internalUsers[0];
-                } else if (users.length > 0) {
-                    mainUser = users[0];
-                }
-                data.main_user_id = mainUser ? mainUser.id : false;
-                if (mainUser) {
-                    store.add(ResUsers.browse(mainUser.id), makeKwArgs({ fields: ["share"] }));
-                }
-                if (mainUser && fields.includes("is_admin")) {
-                    store.add(ResUsers.browse(mainUser.id), { is_admin: true }); // mock server simplification
-                }
-                if (mainUser && fields.includes("notification_type")) {
+                data.main_user_id = partner.main_user_id;
+                if (partner.main_user_id) {
                     store.add(
-                        ResUsers.browse(mainUser.id),
+                        ResUsers.browse(partner.main_user_id),
+                        makeKwArgs({ fields: ["share"] })
+                    );
+                }
+                if (partner.main_user_id && fields.includes("is_admin")) {
+                    store.add(ResUsers.browse(partner.main_user_id), { is_admin: true }); // mock server simplification
+                }
+                if (partner.main_user_id && fields.includes("notification_type")) {
+                    store.add(
+                        ResUsers.browse(partner.main_user_id),
                         makeKwArgs({ fields: ["notification_type"] })
                     );
                 }

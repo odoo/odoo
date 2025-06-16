@@ -22,9 +22,6 @@ const { DateTime } = luxon;
 test("Show 'back on' in avatar card", async () => {
     mockDate("2025-04-08 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write([serverState.partnerId], {
-        leave_date_to: DateTime.now().plus({ days: 3 }).toISODate(),
-    });
     pyEnv["res.users"].write([serverState.userId], {
         leave_date_to: DateTime.now().plus({ days: 3 }).toISODate(),
     });
@@ -45,9 +42,6 @@ test("Show 'back on' in avatar card", async () => {
 test("Show 'back on' in mention list", async () => {
     mockDate("2025-04-08 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write([serverState.partnerId], {
-        leave_date_to: DateTime.now().plus({ days: 3 }).toISODate(),
-    });
     pyEnv["res.users"].write([serverState.userId], {
         leave_date_to: DateTime.now().plus({ days: 3 }).toISODate(),
     });
@@ -64,9 +58,6 @@ test("Show 'back on' in mention list", async () => {
 test("Show year when 'back on' is on different year than now", async () => {
     mockDate("2024-12-20 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["res.partner"].write([serverState.partnerId], {
-        leave_date_to: DateTime.now().plus({ days: 15 }).toISODate(),
-    });
     pyEnv["res.users"].write([serverState.userId], {
         leave_date_to: DateTime.now().plus({ days: 15 }).toISODate(),
     });

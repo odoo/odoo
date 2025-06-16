@@ -389,7 +389,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
-                    "leave_date_to": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -402,7 +401,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 },
             ),
             "res.users": self._filter_users_fields(
-                {"id": self.user_root.id, "share": False},
+                {"id": self.user_root.id, "leave_date_to": False, "share": False},
                 {
                     "id": self.users[0].id,
                     "is_admin": False,
@@ -1653,7 +1652,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "main_user_id": user.id,
                 "name": "Ernest Employee",
-                "leave_date_to": False,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
@@ -1705,7 +1703,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "main_user_id": user.id,
                 "name": "test2",
-                "leave_date_to": False,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[3]:
@@ -1719,7 +1716,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "main_user_id": user.id,
                 "name": "test3",
-                "leave_date_to": False,
                 "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
             }
         if user == self.users[12]:
@@ -1733,7 +1729,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "main_user_id": user.id,
                 "name": "test12",
-                "leave_date_to": False,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[14]:
@@ -1747,7 +1742,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "main_user_id": user.id,
                 "name": "test14",
-                "leave_date_to": False,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[15]:
@@ -1761,7 +1755,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "main_user_id": user.id,
                 "name": "test15",
-                "leave_date_to": False,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.user_root:
@@ -1827,19 +1820,19 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
 
     def _res_for_user(self, user):
         if user == self.users[0]:
-            return {"id": user.id, "share": False}
+            return {"id": user.id, "leave_date_to": False, "share": False}
         if user == self.users[1]:
             return {"id": user.id, "share": False}
         if user == self.users[2]:
-            return {"id": user.id, "share": False}
+            return {"id": user.id, "leave_date_to": False, "share": False}
         if user == self.users[3]:
-            return {"id": user.id, "share": False}
+            return {"id": user.id, "leave_date_to": False, "share": False}
         if user == self.users[12]:
-            return {"id": user.id, "share": False}
+            return {"id": user.id, "leave_date_to": False, "share": False}
         if user == self.users[14]:
-            return {"id": user.id, "share": False}
+            return {"id": user.id, "leave_date_to": False, "share": False}
         if user == self.users[15]:
-            return {"id": user.id, "share": False}
+            return {"id": user.id, "leave_date_to": False, "share": False}
         if user == self.user_root:
             return {"id": user.id, "share": False}
         return {}

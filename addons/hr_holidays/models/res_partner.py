@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResPartner(models.Model):
@@ -32,4 +33,9 @@ class ResPartner(models.Model):
         return self.env['res.users']._get_on_leave_ids(partner=True)
 
     def _to_store_defaults(self):
-        return super()._to_store_defaults() + ["leave_date_to"]
+        return super()._to_store_defaults() + [
+            Store.One(
+                "main_user_id",
+                [Store.Attr("leave_date_to", lambda u: u.leave_date_to if u.active else False)],
+            ),
+        ]
