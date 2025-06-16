@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale_comparison.ProductComparisonPopover">
+        <div style="width:600px;" class="popover" role="tooltip">
+            <h3 class="popover-header">Compare Products</h3>
+            <div class="popover-body">
+                <t t-foreach="state.products.values()" t-as="product" t-key="product.id">
+                    <ProductRow t-props="product"/>
+                </t>
+                <a
+                    t-if="state.products.length >= 2"
+                    t-att-href="comparisonUrl"
+                    class="btn btn-primary"
+                    role="button"
+                >
+                    <i class="fa fa-exchange me-2"/>
+                    <span>Compare</span>
+                </a>
+            </div>
+        </div>
+    </t>
+</templates>

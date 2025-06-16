@@ -8,7 +8,7 @@ publicWidget.registry.ProductWishlist.include({
      *
      * @override
      */
-    _addNewProducts: function () {
+    _addProduct: function () {
         this._super(...arguments);
         const saveForLaterButtonEl = document.querySelector('#wsale_save_for_later_button');
         const addedToYourWishListAlertEl = document.querySelector('#wsale_added_to_your_wishlist_alert');

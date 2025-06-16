@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale_comparison.ProductComparisonButton">
+        <button t-if="showButton" t-on-click="togglePopover" class="btn btn-secondary">
+            <i class="fa fa-exchange me-2"/>
+            <span>Compare</span>
+            <span class="o_product_circle o_animate_blink badge text-bg-primary">0</span>
+        </button>
+    </t>
+</templates>
