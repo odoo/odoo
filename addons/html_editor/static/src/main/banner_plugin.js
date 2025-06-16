@@ -131,14 +131,6 @@ export class BannerPlugin extends Plugin {
             ? blockEl.nodeName
             : this.dependencies.baseContainer.getDefaultNodeName();
         this.dependencies.dom.setTag({ tagName: nextNode });
-        // If the first child of editable is contenteditable false element
-        // a chromium bug prevents selecting the container.
-        // Add a baseContainer above it so it's no longer the first child.
-        if (this.editable.firstChild === bannerElement) {
-            const firstBaseContainer = this.dependencies.baseContainer.createBaseContainer();
-            firstBaseContainer.append(this.document.createElement("br"));
-            bannerElement.before(firstBaseContainer);
-        }
         this.dependencies.selection.setCursorEnd(
             bannerElement.querySelector(`.o_editor_banner_content > ${baseContainer.tagName}`)
         );
