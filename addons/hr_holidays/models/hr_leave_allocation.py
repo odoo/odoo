@@ -366,17 +366,17 @@ class HrLeaveAllocation(models.Model):
         datetime_min_time = datetime.min.time()
         start_dt = datetime.combine(start_date, datetime_min_time)
         end_dt = datetime.combine(end_date, datetime_min_time)
-        worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
-            [self.employee_id.id]['hours']
+        worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt,
+            calendar=self.employee_id.resource_calendar_id)[self.employee_id.id]['hours']
         if start_period != start_date or end_period != end_date:
             start_dt = datetime.combine(start_period, datetime_min_time)
             end_dt = datetime.combine(end_period, datetime_min_time)
-            planned_worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt, calendar=self.employee_id.resource_calendar_id)\
-                [self.employee_id.id]['hours']
+            planned_worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt,
+                calendar=self.employee_id.resource_calendar_id)[self.employee_id.id]['hours']
         else:
             planned_worked = worked
         left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt, calendar=self.employee_id._get_calendars(start_dt)[self.employee_id.id],
-            domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
+            domain=[('elligible_for_accrual_rate', '=', False)])[self.employee_id.id]['hours']
         if level.frequency == 'hourly':
             if level.accrual_plan_id.is_based_on_worked_time:
                 work_entry_prorata = planned_worked
