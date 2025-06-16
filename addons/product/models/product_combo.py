@@ -76,3 +76,4 @@ class ProductCombo(models.Model):
     def _check_company_id(self):
         templates = self.env['product.template'].sudo().search([('combo_ids', 'in', self.ids)])
         templates._check_company(fnames=['combo_ids'])
+        self.combo_item_ids._check_company(fnames=['product_id'])

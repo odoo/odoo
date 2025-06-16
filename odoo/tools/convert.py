@@ -347,6 +347,13 @@ form: module.record_id""" % (xml_id,)
                 return None
 
             if record := env['ir.model.data']._load_xmlid(xid):
+                for child in rec.xpath('.//record[@id]'):
+                    sub_xid = child.get("id")
+                    self._test_xml_id(sub_xid)
+                    sub_xid = self.make_xml_id(sub_xid)
+                    if sub_record := env['ir.model.data']._load_xmlid(sub_xid):
+                        self.idref[sub_xid] = sub_record.id
+
                 # if the resource already exists, don't update it but store
                 # its database id (can be useful)
                 self.idref[rec_id] = record.id

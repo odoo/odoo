@@ -15,9 +15,9 @@
 # Henning Fyllingsnes, 2024
 # Jorunn D. Newth, 2025
 # Martin Trigaux, 2025
-# Marius Stedjan <marius@stedjan.com>, 2025
 # Rune Restad, 2025
 # Wil Odoo, 2025
+# Marius Stedjan <marius@stedjan.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-13 15:13+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12439,7 +12439,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
 msgid "Apply Scheduled Upgrades"
-msgstr "Utfør planlagte oppgraderinger"
+msgstr "Kjør planlagte oppgraderinger"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_appointment
@@ -15970,7 +15970,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_details
 msgid "Company Details"
-msgstr "Selskapdetaljer"
+msgstr "Firmadetaljer"
 
 #. module: base
 #. odoo-python
@@ -16019,7 +16019,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_header
 msgid "Company Tagline"
-msgstr "Firma-slagord"
+msgstr "Firmaslagord"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__company_type
@@ -16033,6 +16033,8 @@ msgid ""
 "Company tagline, which is included in a printed document's header or footer "
 "(depending on the selected layout)."
 msgstr ""
+"Firmaslagord, som blir printet i topp- eller bunntekst på dokumenter "
+"(avhengig av valgt oppsett)."
 
 #. module: base
 #. odoo-python
@@ -16674,7 +16676,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_company_form
 msgid "Create a new company"
-msgstr "Opprett et nytt selskap"
+msgstr "Opprett et nytt firma"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
@@ -17283,7 +17285,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Express Shipping"
+msgid "DHL Express Shipping (Legacy)"
 msgstr ""
 
 #. module: base
@@ -17554,7 +17556,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Default Company"
-msgstr "Standard selskap"
+msgstr "Standard firma"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -26787,7 +26789,7 @@ msgstr "Fru"
 #: model:res.groups,name:base.group_multi_company
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Multi Companies"
-msgstr "Multi-selskap"
+msgstr "Multi-firma"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
@@ -29664,7 +29666,7 @@ msgstr "Tilhører applikasjon"
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
 #: model:ir.model.fields,field_description:base.field_res_company__parent_id
 msgid "Parent Company"
-msgstr "Morselskap"
+msgstr "Morfirma"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_field_id
@@ -32957,7 +32959,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__usage__ir_cron
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 msgid "Scheduled Action"
-msgstr "Planlagt tiltak"
+msgstr "Planlagt handling"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -32967,7 +32969,7 @@ msgstr "Planlagt tiltak"
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_tree
 msgid "Scheduled Actions"
-msgstr "Planlagte tiltak"
+msgstr "Planlagte handlinger"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_trigger_action
@@ -33289,7 +33291,10 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
-msgid "Send your shippings through DHL and track them online"
+msgid ""
+"This is the legacy integration with DHL Express that is no longer supported."
+" Please install the new \"DHL Express Shipping\" module and uninstall this "
+"one as soon as possible."
 msgstr ""
 
 #. module: base
@@ -34420,7 +34425,7 @@ msgstr "Startoppsett"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Status"
+msgstr "Fylke"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -35608,7 +35613,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
-msgstr "Standard selskap for denne brukeren."
+msgstr "Standard firma for denne brukeren."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog

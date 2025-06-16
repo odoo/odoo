@@ -11,20 +11,20 @@
 # Henning Fyllingsnes, 2024
 # Aleksander, 2024
 # Jens Nymoen <jens@nettimport.no>, 2024
-# Marius Stedjan <marius@stedjan.com>, 2024
 # Jorunn D. Newth, 2024
 # Rune Restad, 2025
 # Martin Trigaux, 2025
 # Wil Odoo, 2025
 # Joar Horvei, 2025
+# Marius Stedjan <marius@stedjan.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:37+0000\n"
+"POT-Creation-Date: 2025-06-13 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Joar Horvei, 2025\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4011,7 +4011,7 @@ msgstr "Lukk"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Close Button Color"
-msgstr "Lukk knapp farge"
+msgstr "Farge på lukk-knapp"
 
 #. module: website
 #. odoo-javascript
@@ -8365,7 +8365,7 @@ msgstr "Stilling"
 #: model_terms:ir.ui.view,arch_db:website.s_cta_mockups
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
 msgid "Join us and make your company a better place."
-msgstr "Bli med oss og gjør selskapet ditt til et bedre sted."
+msgstr "Bli med oss og gjør firmaet ditt til et bedre sted."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cta_box
@@ -14171,6 +14171,12 @@ msgstr ""
 "URL som passer med filtrene vil bli omskrevet ved hjelp av CDN base-URL"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "URL must not start with '#'."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
 msgstr "Til adresse"
@@ -15836,6 +15842,12 @@ msgstr ""
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "and"
 msgstr "og"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "base URL of 'URL to' should not be same as 'URL from'."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

@@ -430,7 +430,7 @@ export class Thread extends Record {
     }
 
     get correspondents() {
-        return this.channelMembers.filter(({ persona }) => persona.notEq(this.store.self));
+        return this.channelMembers.filter(({ persona }) => persona?.notEq(this.store.self));
     }
 
     computeCorrespondent() {
