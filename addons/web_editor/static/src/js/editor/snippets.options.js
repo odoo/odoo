@@ -6969,6 +6969,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     async setImgShapeRotateRight(previewMode, widgetValue, params) {
         await this._setImgShapeRotate(90);
     },
+    // todo
     /**
      * Sets the hover effects of the image shape.
      *
@@ -7021,10 +7022,12 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async selectDataAttribute(previewMode, widgetValue, params) {
         await this._super(...arguments);
+        // todo
         if (["shapeAnimationSpeed", "hoverEffectIntensity", "hoverEffectStrokeWidth"].includes(params.attributeName)) {
             await this._reapplyCurrentShape();
         }
     },
+    // todo
     /**
      * Sets the color of hover effects.
      *
@@ -7050,6 +7053,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @override
      */
     notify(name) {
+        //todo
         if (name === "enable_hover_effect") {
             this.trigger_up("snippet_edition_request", {exec: () => {
                 // Add the "square" shape to the image if it has no shape
@@ -7237,6 +7241,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         let needToRefreshPublicWidgets = false;
         let hasHoverEffect = false;
 
+        // todo
         // Add shape animations on hover.
         if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
             // The "ImageShapeHoverEffet" public widget needs to restart
@@ -7310,6 +7315,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             svg.querySelector("#filterPath").setAttribute("style", `transform: ${shapeTransformValues.join(" ")}; ${transformOrigin}`);
         }
 
+        // todo
         // Add shape animations on hover.
         if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
             this._addImageShapeHoverEffect(svg, img);
@@ -7757,6 +7763,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     _canHaveHoverEffect() {
         return !this._isDeviceShape() && !this._isAnimatedShape() && this._isImageSupportedForShapes();
     },
+    // todo
     /**
      * Adds hover effect to the SVG.
      *
@@ -7855,6 +7862,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
         }
     },
+    // todo
     /**
      * Gets the hover effects list.
      *
@@ -7871,6 +7879,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 return xmlDoc.getElementsByTagName("svg")[0];
             });
     },
+    // todo
     /**
      * Disables the hover effect on the image.
      *
