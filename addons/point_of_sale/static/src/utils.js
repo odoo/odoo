@@ -122,13 +122,41 @@ export function loadImage(url, options = {}) {
  * Load all images in the given element.
  * @param {HTMLElement} el
  */
-export function loadAllImages(el) {
-    if (!el) {
-        return Promise.resolve();
-    }
 
-    const images = el.querySelectorAll("img");
-    return Promise.all(Array.from(images).map((img) => loadImage(img.src)));
+export function waitImages(containerElement, timeoutMs = 3000) {
+    return new Promise((resolve) => {
+        const images = containerElement.querySelectorAll("img");
+        const total = images.length;
+        let loadedCount = 0;
+        let timedOut = false;
+
+        if (total === 0) {
+            resolve({ timedOut: false });
+            return;
+        }
+
+        const timeoutId = setTimeout(() => {
+            timedOut = true;
+            resolve({ timedOut: true });
+        }, timeoutMs);
+
+        const onLoadOrError = () => {
+            loadedCount++;
+            if (loadedCount === total && !timedOut) {
+                clearTimeout(timeoutId);
+                resolve({ timedOut: false });
+            }
+        };
+
+        images.forEach((img) => {
+            if (img.complete) {
+                onLoadOrError();
+            } else {
+                img.addEventListener("load", onLoadOrError);
+                img.addEventListener("error", onLoadOrError);
+            }
+        });
+    });
 }
 
 export class Counter {
