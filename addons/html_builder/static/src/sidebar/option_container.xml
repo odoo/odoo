@@ -8,6 +8,9 @@
         <div class="we-bg-darker p-2">
                 <!-- TODO change the structure so the clickable surface is bigger -->
             <span class="ps-2 text-white" t-out="title" role="button" t-on-click="selectElement"/>
+            <t t-if="props.optionTitleComponents" t-foreach="props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
+                <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
+            </t>
                 <!-- TODO CSS + remove temporary BS classes -->
             <div class="float-end">
                 <div class="me-3 d-inline">
