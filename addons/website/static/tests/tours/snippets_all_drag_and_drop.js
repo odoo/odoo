@@ -15,13 +15,6 @@ const SUB_SNIPPET_TEMPLATES = {
     s_masonry_block_alternation_image_text_template: "s_masonry_block",
 };
 
-const SNIPPET_NAME_NORMALIZATIONS = {
-    "Hr": "Separator",
-    "Cta Badge": "CTA Badge",
-    "Website Form": "Form",
-    "Searchbar Input": "Search",
-};
-
 // Extract snippets names from URL parameters
 function getSnippetsNames() {
     let snippetsNamesRaw = new URL(document.location.href).searchParams.get("snippets_names") || "";
@@ -49,22 +42,14 @@ function generateSnippetSteps(snippetsNames) {
             name: snippet.split(":")[0],
             group: snippet.split(":")[1],
         };
-        const isModal = ["s_popup", "s_newsletter_subscribe_popup"].includes(snippetData.name);
-
-        const searchSnippetName = snippetData.name
-            .split("_")
-            .slice(1)
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
+        // const isModal = ["s_popup", "s_newsletter_subscribe_popup"].includes(snippetData.name);
         const snippetKey = SUB_SNIPPET_TEMPLATES[snippetData.name] || snippetData.name;
 
         let draggableElSelector = "";
         if (snippetData.group) {
-            draggableElSelector = `.o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[data-snippet-group="${snippetData.group}"] .o_snippet_thumbnail`;
+            draggableElSelector = `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups [data-snippet-group="${snippetData.group}"].o_draggable .o_snippet_thumbnail_area`;
         } else {
-            const normalizedSnippetName =
-                SNIPPET_NAME_NORMALIZATIONS[searchSnippetName] || searchSnippetName;
-            draggableElSelector = `.o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) #snippet_content .o_snippet[name="${normalizedSnippetName}"] .o_snippet_thumbnail`;
+            draggableElSelector = `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_content [data-snippet="${snippetData.name}"].o_snippet_thumbnail`;
         }
 
         const snippetSteps = [
@@ -73,7 +58,7 @@ function generateSnippetSteps(snippetsNames) {
                     snippetData.group ? "group" : "snippet"
                 } [${n}/${snippetsNames.length}]`,
                 trigger: draggableElSelector,
-                run: "drag_and_drop :iframe #wrap .oe_drop_zone",
+                run: "drag_and_drop :iframe #wrapwrap .oe_drop_zone:last",
             },
             {
                 content: `Click on ${snippetData.name} snippet`,
@@ -114,25 +99,11 @@ function generateSnippetSteps(snippetsNames) {
                 trigger: ":iframe .modal-footer .btn-secondary",
                 run: "click",
             });
-        } else if (isModal) {
-            snippetSteps.splice(
-                4,
-                3,
-                {
-                    content: `Hide the ${snippetData.name} popup`,
-                    trigger: `:iframe [data-snippet="${snippetData.name}"] .s_popup_close`,
-                    run: "click",
-                },
-                {
-                    content: `Make sure ${snippetData.name} is hidden`,
-                    trigger: ":iframe body:not(.modal-open)",
-                }
-            );
         } else if (["s_button", "s_video"].includes(snippetData.name)) {
             snippetSteps[1].trigger =
                 snippetData.name === "s_button"
-                    ? `:iframe #wrapwrap .s_text_image .btn`
-                    : `:iframe #wrapwrap .s_text_image .media_iframe_video`;
+                    ? `:iframe #wrapwrap .btn`
+                    : `:iframe #wrapwrap .media_iframe_video`;
         }
 
         steps = steps.concat(snippetSteps);
