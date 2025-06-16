@@ -1779,9 +1779,11 @@ class TestHttp(common.HttpCase):
             "webhook_url": automation_receiver.url,
         })
 
-        with self.allow_requests(all_requests=True):  # Changing the name will make an http request.
-            obj.name = "new_name"
+        # Changing the name will make an http request, post-commitedly
+        obj.name = "new_name"
         self.cr.flush()
+        with self.allow_requests(all_requests=True):
+            self.cr.postcommit.run()  # webhooks run in postcommit
         self.cr.clear()
         self._wait_remaining_requests()  # just in case the request timeouts
         self.assertEqual(json.loads(obj.another_field), {

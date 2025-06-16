@@ -1056,21 +1056,28 @@ class IrActionsServer(models.Model):
         json_values = json.dumps(vals, sort_keys=True, default=str)
         _logger.info("Webhook call to %s", url)
         _logger.debug("POST JSON data for webhook call: %s", json_values)
-        import requests  # noqa: PLC0415
-        try:
-            # 'send and forget' strategy, and avoid locking the user if the webhook
-            # is slow or non-functional (we still allow for a 1s timeout so that
-            # if we get a proper error response code like 400, 404 or 500 we can log)
-            response = requests.post(url, data=json_values, headers={'Content-Type': 'application/json'}, timeout=1)
-            response.raise_for_status()
-        except requests.exceptions.ReadTimeout:
-            _logger.warning("Webhook call timed out after 1s - it may or may not have failed. "
-                            "If this happens often, it may be a sign that the system you're "
-                            "trying to reach is slow or non-functional.")
-        except requests.exceptions.RequestException as e:
-            _logger.warning("Webhook call failed: %s", e)
-        except Exception as e:  # noqa: BLE001
-            raise UserError(_("Wow, your webhook call failed with a really unusual error: %s", e)) from e
+
+        @self.env.cr.postrollback.add
+        def _add_post_rollback():
+            _logger.warning("Webhook call to %s - cancelled due to a rollback", url)
+
+        @self.env.cr.postcommit.add
+        def _add_post_commit():
+            _logger.debug("Webhook call to %s - start", url)
+            import requests  # noqa: PLC0415
+            try:
+                # 'send and forget' strategy, and avoid locking the user if the webhook
+                # is slow or non-functional (we still allow for a 1s timeout so that
+                # if we get a proper error response code like 400, 404 or 500 we can log)
+                response = requests.post(url, data=json_values, headers={'Content-Type': 'application/json'}, timeout=1)
+                response.raise_for_status()
+                _logger.info("Webhook call to %s - succeeded", url)
+            except requests.exceptions.ReadTimeout:
+                _logger.warning("Webhook call timed out after 1s - it may or may not have failed. "
+                                "If this happens often, it may be a sign that the system you're "
+                                "trying to reach is slow or non-functional.")
+            except requests.exceptions.RequestException as e:
+                _logger.warning("Webhook call failed: %s", e)
 
     def _run_action_object_copy(self, eval_context=None):
         """ Duplicate specified model object.
