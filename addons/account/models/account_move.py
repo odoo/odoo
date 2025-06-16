@@ -2434,11 +2434,34 @@ class AccountMove(models.Model):
             default['date'] = self.company_id._get_user_fiscal_lock_date() + timedelta(days=1)
         copied_am = super().copy(default)
         message_origin = '' if not copied_am.auto_post_origin_id else \
+<<<<<<< f9f0529c93614bb9f9deec1a5aaa1daccfe8b58c
             (Markup('<br/>') + _('This recurring entry originated from %s', copied_am.auto_post_origin_id._get_html_link()))
         message_content = _('This entry has been reversed from %s', self._get_html_link()) if default.get('reversed_entry_id') else _('This entry has been duplicated from %s', self._get_html_link())
         copied_am._message_log(body=message_content + message_origin)
+||||||| c43b865324d9e7bb713b3fe4edeede52b0bef495
+            '<br/>' + _('This recurring entry originated from %s', copied_am.auto_post_origin_id._get_html_link())
+        copied_am._message_log(body=_(
+            'This entry has been duplicated from %s%s',
+            self._get_html_link(),
+            message_origin,
+        ))
+=======
+            '<br/>' + _('This recurring entry originated from %s', copied_am.auto_post_origin_id._get_html_link())
+        message_content = self._get_copy_message_content(default)
+        copied_am._message_log(
+            body=message_content + message_origin,
+        )
+>>>>>>> 994091fa5e78bc2f43b05703370ffaec24064602
 
         return copied_am
+
+    def _get_copy_message_content(self, default):
+        """Hook method to customize the message content when copying a move.
+        This method can be overridden by other modules to add custom logic.
+        :param default: The default values dict passed to copy method
+        :return: The message content string
+        """
+        return _('This entry has been duplicated from %s', self._get_html_link())
 
     def _sanitize_vals(self, vals):
         if vals.get('invoice_line_ids') and vals.get('line_ids'):
