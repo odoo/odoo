@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { delay } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 const testUrl = '/test_client_action_redirect';
@@ -9,9 +8,9 @@ const goToBackendSteps = [{
     content: "Go to the backend",
     trigger: 'body',
     async run() {
-        await delay(2000);
         window.location.assign(`/@${testUrl}`);
-    }
+    },
+    willUnload: true,
 }, {
     content: "Check we are in the backend",
     trigger: ".o_website_preview :iframe main:has(#test_contact_BE):has(#test_contact_FE)",

@@ -11,10 +11,12 @@ function applyForAJob(jobName, application) {
         content: "Select Job",
         trigger: `.oe_website_jobs h3:contains(${jobName})`,
         run: "click",
+        willUnload: true,
     }, {
         content: "Apply",
         trigger: ".js_hr_recruitment a:contains('Apply')",
         run: "click",
+        willUnload: true,
     }, {
         content: "Complete name",
         trigger: "input[name=partner_name]",
@@ -39,6 +41,7 @@ function applyForAJob(jobName, application) {
         content: "Send the form",
         trigger: ".s_website_form_send",
         run: "click",
+        willUnload: true,
     }, {
         content: "Check the form is submitted without errors",
         trigger: "#jobs_thankyou h1:contains('Congratulations')",
@@ -60,6 +63,7 @@ registry.category("web_tour.tours").add('website_hr_recruitment_tour', {
         run: () => {
             window.location.href = '/jobs';
         },
+        willUnload: true,
     },
     ...applyForAJob('Internship', {
         name: 'Jack Doe',

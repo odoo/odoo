@@ -42,6 +42,7 @@ registry
                 content: "Proceed to checkout",
                 trigger: 'button:contains(Proceed to Checkout)',
                 run: 'click',
+                willUnload: true,
             },
             {
                 content: "Verify the quantity in the cart",

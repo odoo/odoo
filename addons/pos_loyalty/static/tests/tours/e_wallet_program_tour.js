@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
             // Topup 50$ for partner_aaa
             ProductScreen.clickDisplayedProduct("Top-up eWallet"),
             PosLoyalty.orderTotalIs("50.00"),
-            ProductScreen.clickPayButton(false),
+            ProductScreen.clickPayButton({ shouldCheck: false }),
             // If there's no partner, we asked to redirect to the partner list screen.
             Dialog.confirm(),
             PartnerList.clickPartner("AAAAAAA"),

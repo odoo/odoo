@@ -238,7 +238,7 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
             ReceiptScreen.isShown(),
         ].flat(),
 });
@@ -321,7 +321,7 @@ registry.category("web_tour.tours").add("PosSettleOrder4", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.remainingIs("0.0"),
             PaymentScreen.clickShipLaterButton(),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
             ReceiptScreen.isShown(),
         ].flat(),
 });
@@ -358,7 +358,7 @@ registry.category("web_tour.tours").add("PosSettleOrder5", {
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Product A", 1),
-            Chrome.clickMenuOption("Backend"),
+            Chrome.clickMenuOption("Backend", { willUnload: true }),
         ].flat(),
 });
 
@@ -426,7 +426,7 @@ registry.category("web_tour.tours").add("POSSalePaymentScreenInvoiceOrder", {
 
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
             ReceiptScreen.receiptIsThere(),
         ].flat(),
 });

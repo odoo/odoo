@@ -45,7 +45,7 @@ export function payAndInvoice(totalAmount) {
         PaymentScreen.remainingIs("0.0"),
 
         PaymentScreen.clickInvoiceButton(),
-        PaymentScreen.clickValidate(),
+        PaymentScreen.clickValidate({ willUnload: "continue" }),
 
         ReceiptScreen.receiptAmountTotalIs(totalAmount),
         ReceiptScreen.clickNextOrder(),

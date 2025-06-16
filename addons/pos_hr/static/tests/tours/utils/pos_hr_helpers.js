@@ -54,6 +54,7 @@ export function refreshPage() {
             run: () => {
                 window.location.reload();
             },
+            willUnload: true,
         },
     ];
 }

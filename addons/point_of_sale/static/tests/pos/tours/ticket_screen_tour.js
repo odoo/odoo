@@ -99,7 +99,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             inLeftSide(Order.hasLine()),
             TicketScreen.clickControlButton("Invoice"),
             Dialog.confirm(),
-            PartnerList.clickPartner("Partner Test 3"),
+            PartnerList.clickPartner("Partner Test 3", { willUnload: "continue" }),
             TicketScreen.invoicePrinted(),
             TicketScreen.back(),
             // When going back, the ticket screen should be in its previous state.

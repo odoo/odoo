@@ -38,6 +38,7 @@ webTours.add("check_shipping_discount", {
             content: "select Plumbus",
             trigger: '.oe_product a:contains("Plumbus")',
             run: "click",
+            willUnload: true,
         },
         {
             content: "add 3 Plumbus into cart",
@@ -61,6 +62,7 @@ webTours.add("check_shipping_discount", {
             content: "pay with eWallet",
             trigger: "form[name=claim_reward] a[name='o_loyalty_claim']:contains('Use')",
             run: "click",
+            willUnload: true,
         },
         ...assertRewardAmounts({ discount: "- 304.00" }),
         selectDelivery("delivery1"),
@@ -70,20 +72,22 @@ webTours.add("check_shipping_discount", {
             content: "confirm shipping method",
             trigger: ".o_total_card a[name=website_sale_main_button]",
             run: "click",
+            willUnload: true,
         },
-        pay(),
+        ...pay({ willUnload: true }),
     ],
 });
 
 webTours.add("update_shipping_after_discount", {
     url: "/shop",
     steps: () => [
-        ...addToCart({ productName: "Plumbus" }),
+        ...addToCart({ productName: "Plumbus", willUnload: true }),
         goToCart(),
         {
             content: "use eWallet to check it doesn't impact `free_over` shipping",
             trigger: "a[name='o_loyalty_claim']:contains('Use')",
             run: "click",
+            willUnload: true,
         },
         {
             content: "Check pay with eWallet is applied",
@@ -106,6 +110,7 @@ webTours.add("update_shipping_after_discount", {
             content: "apply discount code",
             trigger: "form[name=coupon_code] .a-submit",
             run: "click",
+            willUnload: true,
         },
         ...assertCartAmounts({
             total: "0.00", // $50 total is covered by eWallet

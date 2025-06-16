@@ -129,6 +129,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run() {
                 location.reload();
             },
+            willUnload: true,
         },
         {
             content: "Remove reaction",
@@ -141,6 +142,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run() {
                 location.reload();
             },
+            willUnload: true,
         },
         {
             trigger: ".o-mail-Message:not(:has(.o-mail-MessageReaction))",
@@ -174,11 +176,13 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
+            trigger:
+                ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
             content: "Check the earlier provided extra attachment is listed",
-            trigger: '.o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer[title="extra.txt"]',
+            trigger:
+                '.o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer[title="extra.txt"]',
         },
         {
             content: "Save edited message",

@@ -86,19 +86,21 @@ export function clickInvoiceButton() {
         },
     ];
 }
-export function clickValidate() {
+export function clickValidate({ willUnload = false } = {}) {
     return [
         {
             isActive: ["desktop"],
             content: "validate payment",
             trigger: `.payment-screen .button.next.highlight`,
             run: "click",
+            willUnload,
         },
         {
             isActive: ["mobile"],
             content: "validate payment",
             trigger: `.payment-screen .btn-switchpane:contains('Validate')`,
             run: "click",
+            willUnload,
         },
     ];
 }

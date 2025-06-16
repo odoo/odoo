@@ -3,6 +3,7 @@ export function editShopConfiguration(shop) {
         {
             trigger: ".o_main_navbar span:contains('Configuration')",
             run: "click",
+            willUnload: "continue",
         },
         {
             trigger: ".dropdown-item:contains('Point of Sales')",

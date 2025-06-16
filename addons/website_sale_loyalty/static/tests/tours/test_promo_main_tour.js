@@ -13,6 +13,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             content: "select Small Cabinet",
             trigger: '.oe_product_cart a:contains("Small Cabinet")',
             run: "click",
+            willUnload: true,
         },
         {
             content: "add 2 Small Cabinet into cart",
@@ -37,6 +38,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             content: "validate the coupon",
             trigger: 'form[name="coupon_code"] .a-submit',
             run: "click",
+            willUnload: true,
         },
         {
             content: "check reward product",
@@ -75,8 +77,9 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
                     });
                 });
             },
+            willUnload: true,
         },
-            ...tourUtils.addToCart({productName: "Taxed Product"}),
+        ...tourUtils.addToCart({ productName: "Taxed Product", willUnload: true }),
             tourUtils.goToCart({quantity: 3}),
         {
             trigger: ".oe_currency_value:contains(/74.00/):not(div[name='o_cart_total'])",
@@ -118,6 +121,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             content: "go to checkout",
             trigger: 'a[href="/shop/checkout?try_skip_step=true"]',
             run: "click",
+            willUnload: true,
         },
         ...tourUtils.assertCartAmounts({
             total: '967.50',

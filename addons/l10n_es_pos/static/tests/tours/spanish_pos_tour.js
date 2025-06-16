@@ -30,13 +30,13 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             Dialog.confirm(),
 
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
             // verify that the pos requires the selection of a partner
             Dialog.confirm(),
             PartnerList.clickPartner(""),
 
             PaymentScreen.isInvoiceOptionSelected(),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
             {
                 content:
                     "verify that the simplified invoice number does not appear on the receipt, because this order is invoiced, so it does not have a simplified invoice number",
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Customer Account"),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
             Dialog.is({ title: "Customer Required" }),
         ].flat(),
 });

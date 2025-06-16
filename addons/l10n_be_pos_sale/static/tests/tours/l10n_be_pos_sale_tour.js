@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("PosSettleOrderIsInvoice", {
             Dialog.confirm(),
             PaymentScreen.isInvoiceButtonChecked(),
             PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
             ReceiptScreen.isShown(),
             ReceiptScreen.clickNextOrder(),
 
@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add("test_pos_branch_company_access", {
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
             ReceiptScreen.isShown(),
         ].flat(),
 });

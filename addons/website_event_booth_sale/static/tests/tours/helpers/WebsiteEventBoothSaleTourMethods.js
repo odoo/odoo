@@ -6,16 +6,19 @@
                 content: "Go to page Event",
                 trigger: '.nav-link:contains("Event")',
                 run: "click",
+                willUnload: true,
             },
             {
                 content: 'Open "Test Event Booths" event',
                 trigger: `h5.card-title span:contains(${eventName})`,
                 run: "click",
+                willUnload: true,
             },
             {
                 content: 'Go to "Booth" page',
                 trigger: 'a:contains("Become exhibitor")',
                 run: "click",
+                willUnload: true,
             },
             {
                 content: 'Select the booth',

@@ -35,6 +35,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_redirect", {
         {
             trigger: ".o-livechat-root:shadow button:contains(Go to the /chatbot-redirect page)",
             run: "click",
+            willUnload: true,
         },
         {
             trigger:

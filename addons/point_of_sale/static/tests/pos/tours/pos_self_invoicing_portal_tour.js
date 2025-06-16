@@ -21,6 +21,7 @@ registry.category("web_tour.tours").add("invoicePoSOrderWithSelfInvocing", {
         {
             trigger: ".o_portal_wrap button:contains('Request Invoice')",
             run: "click",
+            willUnload: true,
         },
         {
             trigger: ".o_portal_wrap input[name='name']",
@@ -93,6 +94,7 @@ registry.category("web_tour.tours").add("invoicePoSOrderWithSelfInvocing", {
         {
             trigger: ".o_portal_wrap button:contains('Get my invoice')",
             run: "click",
+            willUnload: true,
         },
         {
             trigger: ".rounded.text-bg-success.fw-normal.badge",

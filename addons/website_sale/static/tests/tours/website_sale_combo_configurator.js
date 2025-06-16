@@ -8,7 +8,7 @@ registry
     .add('website_sale_combo_configurator', {
         url: '/shop?search=Combo product',
         steps: () => [
-            ...wsTourUtils.addToCart({ productName: "Combo product", search: false }),
+            ...wsTourUtils.addToCart({ productName: "Combo product", search: false , willUnload: true}),
             // Assert that the combo configurator behaves as expected.
             comboConfiguratorTourUtils.assertFooterButtonsDisabled(),
             comboConfiguratorTourUtils.setQuantity(3),
@@ -24,6 +24,7 @@ registry
                 content: "Proceed to checkout",
                 trigger: 'button:contains(Proceed to Checkout)',
                 run: 'click',
+                willUnload: true,
             },
             wsTourUtils.assertCartContains({ productName: "Combo product" }),
             wsTourUtils.assertCartContains({ productName: "3 x Product A1" }),

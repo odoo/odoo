@@ -1,18 +1,20 @@
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 
-export function clickNextOrder() {
+export function clickNextOrder({ willUnload = false } = {}) {
     return [
         {
             isActive: ["desktop"],
             content: "go to next screen",
             trigger: ".receipt-screen .button.next.highlight[name='done']",
             run: "click",
+            willUnload,
         },
         {
             isActive: ["mobile"],
             content: "go to next screen",
             trigger: ".receipt-screen .btn-switchpane.validation-button.highlight[name='done']",
             run: "click",
+            willUnload,
         },
     ];
 }

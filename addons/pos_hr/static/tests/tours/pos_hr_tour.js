@@ -159,7 +159,7 @@ registry.category("web_tour.tours").add("test_change_on_rights_reflected_directl
             PosHr.clickLoginButton(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
-            Chrome.clickMenuOption("Backend"),
+            Chrome.clickMenuOption("Backend", { willUnload: true }),
             BackendUtils.editShopConfiguration("Shop"),
             {
                 trigger: ".o_tag:contains('Pos Employee1') .o_delete",

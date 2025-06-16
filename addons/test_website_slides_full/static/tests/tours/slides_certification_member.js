@@ -25,6 +25,7 @@ var startCertificationSurvey = [{
     content: 'eLearning: go to certification course',
     trigger: 'a:contains("DIY Furniture - TEST")',
     run: "click",
+    willUnload: true,
 }, {
     content: 'eLearning: user should be enrolled',
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
@@ -32,6 +33,7 @@ var startCertificationSurvey = [{
     content: 'eLearning: start course',
     trigger: '.o_wslides_js_slides_list_slide_link',
     run: "click",
+    willUnload: true,
 }];
 
 var failCertificationSteps = [{
@@ -64,6 +66,7 @@ var retrySteps = [{
     content: 'Survey: retry certification',
     trigger: 'a:contains("Retry")',
     run: "click",
+    willUnload: true,
 }];
 
 var succeedCertificationSteps = [{
@@ -117,6 +120,7 @@ var certificationCompletionSteps = [{
     content: 'Survey: back to course home page',
     trigger: 'a:contains("Go back to course")',
     run: "click",
+    willUnload: true,
 }, {
     content: 'eLearning: course should be completed',
     trigger: '.o_wslides_channel_completion_completed',
@@ -126,10 +130,12 @@ var profileSteps = [{
     content: 'eLearning: back to e-learning home page',
     trigger: 'a:contains("Courses")',
     run: "click",
+    willUnload: true,
 }, {
     content: 'eLearning: access user profile',
     trigger: '.o_wslides_home_aside_loggedin a:contains("View")',
     run: "click",
+    willUnload: true,
 }, {
     content: 'eLearning: check that the user profile certifications include the new certification',
     trigger: '.o_wprofile_slides_course_card_body:contains("Furniture Creation Certification")',

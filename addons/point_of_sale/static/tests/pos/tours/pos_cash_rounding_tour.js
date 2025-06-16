@@ -26,7 +26,7 @@ registry
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickInvoiceButton(),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("-0.02"),
@@ -52,7 +52,7 @@ registry
                 PaymentScreen.totalIs("-15.72"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("-15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("0.02"),
@@ -88,7 +88,7 @@ registry
                     PaymentScreen.clickPaymentMethod("Cash"),
                     PaymentScreen.remainingIs("0.0"),
                     PaymentScreen.clickInvoiceButton(),
-                    PaymentScreen.clickValidate(),
+                    PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                     ReceiptScreen.receiptAmountTotalIs("15.72"),
                     ReceiptScreen.receiptRoundingAmountIs("0.01"),
@@ -117,7 +117,7 @@ registry
                     PaymentScreen.remainingIs("-15.04"),
                     PaymentScreen.clickPaymentMethod("Cash"),
                     PaymentScreen.remainingIs("0.0"),
-                    PaymentScreen.clickValidate(),
+                    PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                     ReceiptScreen.receiptAmountTotalIs("-15.72"),
                     ReceiptScreen.receiptRoundingAmountIs("-0.01"),
@@ -152,7 +152,7 @@ registry
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickInvoiceButton(),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("15.72"),
                 ReceiptScreen.receiptRoundingAmountIsNotThere(),
@@ -182,7 +182,7 @@ registry
                 PaymentScreen.remainingIs("-15.05"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("-15.72"),
                 ReceiptScreen.receiptRoundingAmountIsNotThere(),
@@ -218,7 +218,7 @@ registry
                     PaymentScreen.clickPaymentMethod("Cash"),
                     PaymentScreen.remainingIs("0.0"),
                     PaymentScreen.clickInvoiceButton(),
-                    PaymentScreen.clickValidate(),
+                    PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                     ReceiptScreen.receiptAmountTotalIs("15.72"),
                     ReceiptScreen.receiptRoundingAmountIs("-0.04"),
@@ -247,7 +247,7 @@ registry
                     PaymentScreen.remainingIs("-15.04"),
                     PaymentScreen.clickPaymentMethod("Cash"),
                     PaymentScreen.remainingIs("0.0"),
-                    PaymentScreen.clickValidate(),
+                    PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                     ReceiptScreen.receiptAmountTotalIs("-15.72"),
                     ReceiptScreen.receiptRoundingAmountIs("0.04"),
@@ -282,7 +282,7 @@ registry
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickInvoiceButton(),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("0.02"),
@@ -311,7 +311,7 @@ registry
                 PaymentScreen.remainingIs("-15.08"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("-15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("-0.02"),
@@ -342,7 +342,7 @@ registry
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickInvoiceButton(),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("-0.02"),
@@ -368,7 +368,7 @@ registry
                 PaymentScreen.totalIs("-15.72"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("-15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("0.02"),
@@ -403,7 +403,7 @@ registry
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickInvoiceButton(),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("0.01"),
@@ -433,7 +433,7 @@ registry
                 PaymentScreen.remainingIs("-15.04"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("-15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("-0.01"),
@@ -464,7 +464,7 @@ registry
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickInvoiceButton(),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("15.70"),
                 ReceiptScreen.receiptToPayAmountIsNotThere(),
@@ -489,7 +489,7 @@ registry
                 PaymentScreen.totalIs("-15.70"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("-15.70"),
                 ReceiptScreen.receiptToPayAmountIsNotThere(),
@@ -523,7 +523,7 @@ registry
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickInvoiceButton(),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("15.70"),
                 ReceiptScreen.receiptRoundingAmountIs("0.02"),
@@ -553,7 +553,7 @@ registry
                 PaymentScreen.remainingIs("-15.03"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("-15.70"),
                 ReceiptScreen.receiptRoundingAmountIs("-0.02"),
@@ -584,7 +584,7 @@ registry
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickInvoiceButton(),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("-0.02"),
@@ -610,7 +610,7 @@ registry
                 PaymentScreen.totalIs("-15.72"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("-15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("0.02"),
@@ -645,7 +645,7 @@ registry
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
                 PaymentScreen.clickInvoiceButton(),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("0.01"),
@@ -675,7 +675,7 @@ registry
                 PaymentScreen.remainingIs("-15.04"),
                 PaymentScreen.clickPaymentMethod("Cash"),
                 PaymentScreen.remainingIs("0.0"),
-                PaymentScreen.clickValidate(),
+                PaymentScreen.clickValidate({ willUnload: "continue" }),
 
                 ReceiptScreen.receiptAmountTotalIs("-15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("-0.01"),
@@ -704,7 +704,7 @@ registry.category("web_tour.tours").add("test_cash_rounding_with_change", {
             PaymentScreen.fillPaymentLineAmountMobile("Bank", "20.00"),
             PaymentScreen.changeIs("4.30"),
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
 
             ReceiptScreen.receiptAmountTotalIs("15.72"),
             ReceiptScreen.receiptRoundingAmountIs("-0.02"),
@@ -751,7 +751,7 @@ registry.category("web_tour.tours").add("test_cash_rounding_only_cash_method_wit
             PaymentScreen.changeIs("4.30"),
 
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
 
             ReceiptScreen.receiptAmountTotalIs("15.72"),
             ReceiptScreen.receiptRoundingAmountIs("-0.02"),

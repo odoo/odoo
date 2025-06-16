@@ -5,8 +5,8 @@ import { simulateBarCode } from "@barcodes/../tests/legacy/helpers";
 export function negate(selector, parent = "body") {
     return `${parent}:not(:has(${selector}))`;
 }
-export function run(run, content = "run function") {
-    return { content, trigger: "body", run };
+export function run(run, content = "run function", willUnload = false) {
+    return { content, trigger: "body", run, willUnload };
 }
 export function scan_barcode(barcode) {
     return [
@@ -27,24 +27,28 @@ export function negateStep(step) {
     };
 }
 export function refresh() {
-    return run(async () => {
-        await new Promise((resolve) => {
-            const checkTransaction = () => {
-                const activeTransactions = posmodel.data.indexedDB.activeTransactions;
-                if (activeTransactions <= 0) {
-                    window.location.reload();
-                    resolve();
-                } else {
-                    setTimeout(checkTransaction, 100);
-                }
-            };
+    return run(
+        async () => {
+            await new Promise((resolve) => {
+                const checkTransaction = () => {
+                    const activeTransactions = posmodel.data.indexedDB.activeTransactions;
+                    if (activeTransactions <= 0) {
+                        window.location.reload();
+                        resolve();
+                    } else {
+                        setTimeout(checkTransaction, 100);
+                    }
+                };
 
-            checkTransaction();
-            setTimeout(() => {
-                throw new Error("Timeout waiting indexedDB for transactions to finish");
-            }, 2000);
-        });
-    }, "refresh page");
+                checkTransaction();
+                setTimeout(() => {
+                    throw new Error("Timeout waiting indexedDB for transactions to finish");
+                }, 2000);
+            });
+        },
+        "refresh page",
+        true
+    );
 }
 export function elementDoesNotExist(selector) {
     return {

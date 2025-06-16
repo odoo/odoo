@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { queryValue } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("portal_compute_codice_fiscale", {
     url: "/my",
@@ -8,6 +7,7 @@ registry.category("web_tour.tours").add("portal_compute_codice_fiscale", {
             content: "Check portal is loaded",
             trigger: 'a[href*="/my/account"]:contains("Edit"):first',
             run: "click",
+            willUnload: true,
         },
         {
             content: "Load my account details",
@@ -16,30 +16,25 @@ registry.category("web_tour.tours").add("portal_compute_codice_fiscale", {
         },
         {
             content: "Fill address form with VAT",
-            trigger: 'form.address_autoformat',
+            trigger: "form.address_autoformat",
             run: function () {
-                $('input[name="phone"]').val('99999999');
-                $('input[name="email"]').val('abc@odoo.com');
-                $('input[name="vat"]').val('IT12345670017');
-                $('input[name="street"]').val('SO1 Billing Street, 33');
-                $('input[name="city"]').val('SO1BillingCity');
-                $('input[name="zip"]').val('10000');
+                $('input[name="phone"]').val("99999999");
+                $('input[name="email"]').val("abc@odoo.com");
+                $('input[name="vat"]').val("IT12345670017");
+                $('input[name="street"]').val("SO1 Billing Street, 33");
+                $('input[name="city"]').val("SO1BillingCity");
+                $('input[name="zip"]').val("10000");
             },
         },
         {
-            id: 'o_country_id',
+            id: "o_country_id",
             content: "Select country with code 'IT' to trigger compute of Codice Fiscale",
             trigger: 'select[name="country_id"]',
             run: `selectByLabel Italy`,
         },
         {
             content: "Check if the Codice Fiscale value matches",
-            trigger: "input[name='l10n_it_codice_fiscale']",
-            run: () => {
-                if (queryValue("input[name='l10n_it_codice_fiscale']") !== "12345670017") {
-                    console.error('Expected "12345670017" for Codice Fiscale.');
-                }
-            }
+            trigger: "input[name='l10n_it_codice_fiscale']:value(12345670017)",
         },
         {
             content: "Add state",
@@ -47,12 +42,14 @@ registry.category("web_tour.tours").add("portal_compute_codice_fiscale", {
             run: "selectByIndex 2",
         },
         {
-             content: "Submit the form",
-             trigger: 'button[id=save_address]',
-             run: "click",
-         },
-         {
-             content: "Check that we are back on the portal",
-             trigger: 'a[href*="/my/account"]:contains("Edit"):first',
-         }
-]});
+            content: "Submit the form",
+            trigger: "button[id=save_address]",
+            run: "click",
+            willUnload: true,
+        },
+        {
+            content: "Check that we are back on the portal",
+            trigger: 'a[href*="/my/account"]:contains("Edit"):first',
+        },
+    ],
+});

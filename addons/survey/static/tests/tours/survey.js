@@ -107,6 +107,7 @@ registry.category("web_tour.tours").add("test_survey_multilang", {
                     langSelect.value = "fr_BE";
                     langSelect.dispatchEvent(new Event("change", { bubbles: true }));
                 },
+                willUnload: true,
             },
             {
                 content: "Check French translation",
@@ -120,6 +121,7 @@ registry.category("web_tour.tours").add("test_survey_multilang", {
                     langSelect.value = "fr_BE";
                     langSelect.dispatchEvent(new Event("change", { bubbles: true }));
                 },
+                willUnload: true,
             },
             {
                 content: "Check French translation",

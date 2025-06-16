@@ -6,6 +6,7 @@ import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_in
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import { LONG_PRESS_DURATION } from "@point_of_sale/utils";
+import { clickValidate } from "./payment_screen_util";
 
 export function firstProductIsFavorite(name) {
     return [
@@ -143,19 +144,21 @@ export function clickSubcategory(name) {
 export function clickNumpad(...keys) {
     return inLeftSide(keys.map(Numpad.click));
 }
-export function clickPayButton(shouldCheck = true) {
+export function clickPayButton({ shouldCheck = true, willUnload = false } = {}) {
     const steps = [
         {
             isActive: ["desktop"],
             content: "click pay button",
             trigger: ".product-screen .pay-order-button",
             run: "click",
+            willUnload,
         },
         {
             isActive: ["mobile"],
             content: "click pay button",
             trigger: ".btn-switchpane:contains('Pay')",
             run: "click",
+            willUnload,
         },
     ];
     if (shouldCheck) {
@@ -702,18 +705,7 @@ export function closePos() {
 
 export function finishOrder() {
     return [
-        {
-            isActive: ["desktop"],
-            content: "validate the order",
-            trigger: ".payment-screen .button.next.highlight:visible",
-            run: "click",
-        },
-        {
-            isActive: ["mobile"],
-            content: "validate the order",
-            trigger: ".payment-screen .btn-switchpane:contains('Validate')",
-            run: "click",
-        },
+        ...clickValidate({ willUnload: "continue" }),
         Chrome.isSyncStatusConnected(),
         {
             isActive: ["desktop"],

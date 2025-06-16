@@ -91,7 +91,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
 
             // click next screen on order 3
             // then delete the new empty order
-            ReceiptScreen.clickNextOrder(),
+            ReceiptScreen.clickNextOrder({ willUnload: "continue" }),
             ProductScreen.orderIsEmpty(),
             Chrome.clickOrders(),
             TicketScreen.deleteOrder("004"),
@@ -114,7 +114,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ReceiptScreen.isShown(),
 
             // Cancelling a floating order should remove it from the floating orders list.
-            ReceiptScreen.clickNextOrder(),
+            ReceiptScreen.clickNextOrder({ willUnload: "continue" }),
             Chrome.hasFloatingOrder("006"),
             ProductScreen.clickReview(),
             ProductScreen.clickControlButton("Cancel Order"),
@@ -156,7 +156,12 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
             ReceiptScreen.clickNextOrder(),
             ProductScreen.isShown(),
             Chrome.clickMenuOption("Close Register"),
-            Utils.selectButton("Close Register"),
+            {
+                content: `Select button close register`,
+                trigger: `button:contains(close register)`,
+                run: "click",
+                willUnload: true,
+            },
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Pad", true, "1.0"),

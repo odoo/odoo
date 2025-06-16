@@ -1,4 +1,4 @@
-import { queryAttribute } from '@odoo/hoot-dom';
+import { queryAttribute } from "@odoo/hoot-dom";
 
 function productSelector(productName) {
     return `

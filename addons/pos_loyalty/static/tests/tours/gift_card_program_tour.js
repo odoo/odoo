@@ -142,7 +142,7 @@ registry.category("web_tour.tours").add("GiftCardProgramInvoice", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
             ReceiptScreen.isShown(),
         ].flat(),
 });
@@ -172,7 +172,7 @@ registry.category("web_tour.tours").add("test_physical_gift_card_invoiced", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
-            PaymentScreen.clickValidate(),
+            PaymentScreen.clickValidate({ willUnload: "continue" }),
             ReceiptScreen.isShown(),
         ].flat(),
 });

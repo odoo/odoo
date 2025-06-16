@@ -18,6 +18,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
             content: "validate the website creation modal",
             trigger: 'button.btn-primary:contains("Create")',
             run: "click",
+            willUnload: true,
         },
         // Configurator first screen
         {

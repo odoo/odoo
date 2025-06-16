@@ -10,9 +10,15 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             content: 'Select first order',
             trigger: '.o_portal_my_doc_table a:first',
             run: "click",
+            willUnload: true,
         },
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
-        clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
+        {
+            content: "Confirm",
+            trigger: ".o_wsale_reorder_confirm",
+            run: "click",
+            willUnload: true,
+        },
         assertCartContains({productName: 'Reorder Product 1'}),
         assertCartContains({productName: 'Reorder Product 2'}),
         {
@@ -26,16 +32,27 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             trigger: "body",
             run() {
                 window.location = "/my/orders";
-            }
+            },
+            willUnload: true,
         },
         {
             content: 'Select first order',
             trigger: '.o_portal_my_doc_table a:first',
             run: "click",
+            willUnload: true,
         },
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
-        clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
-        clickOnElement('No', 'button:contains(No)'),
+        {
+            content: "Confirm",
+            trigger: ".modal .o_wsale_reorder_confirm",
+            run: "click",
+        },
+        {
+            content: "No",
+            trigger: ".modal button:contains(No)",
+            run: "click",
+            willUnload: true,
+        },
         assertCartContains({productName: 'Reorder Product 1'}),
         assertCartContains({productName: 'Reorder Product 2'}),
         {
@@ -49,16 +66,27 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             trigger: "body",
             run() {
                 window.location = "/my/orders";
-            }
+            },
+            willUnload: true,
         },
         {
             content: 'Select first order',
             trigger: '.o_portal_my_doc_table a:first',
             run: "click",
+            willUnload: true,
         },
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
-        clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
-        clickOnElement('Yes', 'button:contains(Yes)'),
+        {
+            content: "Confirm",
+            trigger: ".o_wsale_reorder_confirm",
+            run: "click",
+        },
+        {
+            content: "Yes",
+            trigger: ".modal button:contains(Yes)",
+            run: "click",
+            willUnload: true,
+        },
         assertCartContains({productName: 'Reorder Product 1'}),
         assertCartContains({productName: 'Reorder Product 2'}),
         {
@@ -68,32 +96,58 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         // Fourth reorder making sure confirmation dialog doesn't pop up unnecessary
         {
             content: "Deleting All products from cart",
-            trigger: 'div.js_cart_lines',
-            run: async () => {
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-            }
+            trigger: "div.js_cart_lines",
+        },
+        {
+            trigger: "#cart_products:has(.o_cart_product:eq(3)):not(:has(.o_cart_product:eq(4)))",
+        },
+        {
+            trigger: `a.js_delete_product:first`,
+            run: "click",
+        },
+        {
+            trigger: "#cart_products:has(.o_cart_product:eq(2)):not(:has(.o_cart_product:eq(3)))",
+        },
+        {
+            trigger: `a.js_delete_product:first`,
+            run: "click",
+        },
+        {
+            trigger: "#cart_products:has(.o_cart_product:eq(1)):not(:has(.o_cart_product:eq(2)))",
+        },
+        {
+            trigger: `a.js_delete_product:first`,
+            run: "click",
+        },
+        {
+            trigger: "#cart_products:has(.o_cart_product:eq(0)):not(:has(.o_cart_product:eq(1)))",
+        },
+        {
+            trigger: `a.js_delete_product:first`,
+            run: "click",
+            willUnload: true,
         },
         {
             content: "Go to my orders",
             trigger: 'body',
             run: () => {
                 window.location = '/my/orders';
-            }
+            },
+            willUnload: true,
         },
         {
             content: "Select first order",
             trigger: '.o_portal_my_doc_table a:first',
             run: "click",
+            willUnload: true,
         },
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
-        clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
+        {
+            content: "Confirm",
+            trigger: ".o_wsale_reorder_confirm",
+            run: "click",
+            willUnload: true,
+        },
         assertCartContains({productName: 'Reorder Product 1'}),
         {
             content: "Check that quantity is 1",
