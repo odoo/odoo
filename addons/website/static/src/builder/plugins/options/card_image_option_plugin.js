@@ -39,12 +39,11 @@ class CardImageOptionPlugin extends Plugin {
             },
             removeCoverImage: {
                 apply: ({ editingElement }) => {
-                    const imageWrapper = editingElement.querySelector(".o_card_img_wrapper");
-                    const elementToSelect = this.dependencies.remove.removeElement(imageWrapper);
+                    const imageWrapperEl = editingElement.querySelector(".o_card_img_wrapper");
+                    imageWrapperEl.remove();
+                    // Remove the classes and styles linked to the wrapper.
                     editingElement.classList.remove(...imageRelatedClasses);
                     imageRelatedStyles.forEach((prop) => editingElement.style.removeProperty(prop));
-                    this.dependencies.history.addStep();
-                    this.dependencies["builder-options"].updateContainers(elementToSelect);
                 },
             },
             addCoverImage: {
