@@ -162,7 +162,7 @@ class ResUsers(models.Model):
         sync_status = 'missing_credentials'
         if credentials_status.get('microsoft_calendar'):
             sync_status = self._get_microsoft_sync_status()
-            if sync_status == 'sync_active' and not self.microsoft_calendar_token:
+            if sync_status == 'sync_active' and not self.sudo().microsoft_calendar_token:
                 sync_status = 'sync_stopped'
         res['microsoft_calendar'] = sync_status
         return res
