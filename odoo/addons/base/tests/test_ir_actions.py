@@ -592,9 +592,11 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         with patch.object(requests, 'post', _patched_post), mute_logger('odoo.addons.base.models.ir_actions'):
             # first run: 200
             self.action.with_context(self.context).run()
+            self.env.cr.postcommit.run()  # webhooks run in postcommit
             # second run: 400, should *not* raise but
             # should warn in logs (hence mute_logger)
             self.action.with_context(self.context).run()
+            self.env.cr.postcommit.run()  # webhooks run in postcommit
         self.assertEqual(num_requests, 2)
 
     def test_90_convert_to_float(self):
