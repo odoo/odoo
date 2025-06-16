@@ -825,6 +825,41 @@ test("there is no flickering when switching between views", async () => {
 });
 
 test.tags("desktop");
+test("there is no flickering when reloading a view", async () => {
+    let def;
+    onRpc(() => def);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_list_view .o_data_row").toHaveCount(5);
+
+    MockServer.env["partner"].create([{ foo: "a new record" }]);
+    // reload the list view
+    def = new Deferred();
+    await switchView("list");
+    expect(".o_list_view .o_data_row").toHaveCount(5);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_list_view .o_data_row").toHaveCount(6);
+
+    // do the same in kanban view
+    await switchView("kanban");
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(6);
+
+    MockServer.env["partner"].create([{ foo: "yet another record" }]);
+    def = new Deferred();
+    await switchView("kanban");
+    expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(6);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(7);
+});
+
+test.tags("desktop");
 test("breadcrumbs are updated when display_name changes", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
