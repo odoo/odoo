@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.ReceiptHeader">
         <img t-attf-src="/web/image?model=res.company&amp;id={{order.company.id}}&amp;field=logo" alt="Logo" class="pos-receipt-logo"/>
         <div class="text-center pt-3" style="font-size: 75%;">
-            <span>
+            <span class="pos-receipt-vat">
                 <t t-if="order.config._IS_VAT"> VAT </t>
                 Ticket
                 <t t-out="order.pos_reference"/>
