@@ -45,24 +45,24 @@
                             <!-- Used by other modules-->
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <div class="row justify-content-between position-relative w-100 m-0 mb-2">
-                            <div class="oe_title ps-0 pe-2">
-                                <label for="name" string="Employee Name"/>
-                                <h1 class="d-flex flex-row">
-                                    <span class="me-2" invisible="not context.get('chat_icon')">
-                                        <widget name="hr_employee_chat"/>
-                                    </span>
-                                    <field name="name" placeholder="e.g. John Doe" required="True"
-                                        style="font-size: min(4vw, 2.6rem);"/>
-                                </h1>
-                                <h2>
-                                    <field name="job_id" placeholder="Job Position" options="{'no_open': True}"/>
-                                </h2>
-                            </div>
+                        <div class="d-flex align-items-center">
                             <div class="o_employee_avatar m-0 p-0">
+                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                                 <field name="avatar_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
-                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                            </div>
+                            <div class="d-flex flex-column oe_title mw-75 ps-0 pe-2 ms-2" >
+                                <h1 class="d-flex align-items-center">
+                                    <field name="name" placeholder="Employee's Name" class="w-md-50 w-fit"
+                                        required="True" style="font-size: min(4vw, 2.6rem);"/>
+                                    <div invisible="not context.get('chat_icon')" class="m-2">
+                                        <widget name="hr_employee_chat"/>
+                                    </div>
+                                </h1>
+                                <h2 class="d-flex align-items-baseline">
+                                    <i class="fa fa-suitcase fa-fw m-1 text-primary" title="Position"/>
+                                    <field name="job_id" placeholder="Job Position" />
+                                </h2>
                             </div>
                         </div>
                         <group>
@@ -140,6 +140,7 @@
                             </aside>
                             <main class="ms-2">
                                 <div>
+                                    <field class="fw-bolder" name="name" placeholder="Employee's Name"/>
                                     <div t-if="record.show_hr_icon_display.raw_value" class="float-end">
                                         <field name="hr_icon_display" class=" align-items-center" widget="hr_presence_status" />
                                     </div>
