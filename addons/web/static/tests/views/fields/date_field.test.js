@@ -314,6 +314,12 @@ test("date field in editable list view", async () => {
 
 test.tags("desktop");
 test("multi edition of date field in list view: clear date in input", async () => {
+    onRpc("/web/view/save_multi", async function (request) {
+        const { params } = await request.json();
+        const { changes, ids, model } = params;
+        this.env[model].write(ids, changes);
+        expect.step("save_multi");
+    });
     onRpc("has_group", () => true);
     Partner._records = [
         { id: 1, date: "2017-02-03" },
@@ -341,6 +347,7 @@ test("multi edition of date field in list view: clear date in input", async () =
 
     expect(".o_data_row:first-child .o_data_cell").toHaveText("");
     expect(".o_data_row:nth-child(2) .o_data_cell").toHaveText("");
+    expect.verifySteps(["save_multi"]);
 });
 
 test("date field remove value", async () => {

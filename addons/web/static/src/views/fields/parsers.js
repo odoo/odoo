@@ -3,6 +3,7 @@ import { localization } from "@web/core/l10n/localization";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { escapeRegExp } from "@web/core/utils/strings";
+import { FieldOperator } from "@web/core/utils/field_operator";
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -70,6 +71,10 @@ export class InvalidNumberError extends Error {}
  * @returns {number} a float
  */
 export function parseFloat(value) {
+    const operator = new FieldOperator(value, "float");
+    if (operator.isValid) {
+        return operator;
+    }
     const thousandsSepRegex = localization.thousandsSep || "";
     const decimalPointRegex = localization.decimalPoint;
     let parsed = parseNumber(value, {
@@ -96,6 +101,10 @@ export function parseFloat(value) {
  * @returns {number} a float
  */
 export function parseFloatTime(value) {
+    const operator = new FieldOperator(value, "float_time");
+    if (operator.isValid) {
+        return operator;
+    }
     let sign = 1;
     if (value[0] === "-") {
         value = value.slice(1);
@@ -120,6 +129,10 @@ export function parseFloatTime(value) {
  * @returns {number} an integer
  */
 export function parseInteger(value) {
+    const operator = new FieldOperator(value, "int");
+    if (operator.isValid) {
+        return operator;
+    }
     const thousandsSepRegex = localization.thousandsSep || "";
     const decimalPointRegex = localization.decimalPoint;
     let parsed = parseNumber(value, {
@@ -174,6 +187,10 @@ export function parsePercentage(value) {
  * @returns {number}
  */
 export function parseMonetary(value) {
+    const operator = new FieldOperator(value, "monetary");
+    if (operator.isValid) {
+        return operator;
+    }
     value = value.trim();
     const startMatch = value.match(
         new RegExp(`[\\d\\-+=]|${escapeRegExp(localization.decimalPoint)}`)
