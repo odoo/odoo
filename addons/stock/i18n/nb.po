@@ -14,9 +14,9 @@
 # Joar Horvei, 2024
 # Lars Aam <lars.aam@vikenfiber.no>, 2024
 # Martin Trigaux, 2024
-# Marius Stedjan <marius@stedjan.com>, 2024
 # Jorunn D. Newth, 2025
 # Rune Restad, 2025
+# Marius Stedjan <marius@stedjan.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Rune Restad, 2025\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -361,7 +361,7 @@ msgstr ""
 "* Kundeplassering: Virtuelt sted som representerer destinasjonsstedet for produkter sendt til dine kunder \n"
 "* Lagerjustering: Virtuelt sted som fungerer som motpart for lageroperasjoner brukt til å korrigere lagerbeholdning (fysiske inventeringer) \n"
 "* Produksjon: Virtuelt motpartsted for produksjonsoperasjoner: dette stedet forbruker komponentene og produserer ferdige produkter \n"
-"* Transittsted: Motpartsted som skal brukes i operasjoner mellom selskaper eller mellom lager"
+"* Transittsted: Motpartsted som skal brukes i operasjoner mellom firmaer eller mellom lager"
 
 #. module: stock
 #. odoo-python
@@ -1730,7 +1730,7 @@ msgid ""
 "Changing the company of this record is forbidden at this point, you should "
 "rather archive it and create a new one."
 msgstr ""
-"Å endre selskapet til denne posten er forbudt på dette tidspunktet. Du bør "
+"Å endre firmaet til denne posten er forbudt på dette tidspunktet. Du bør "
 "heller arkivere den og opprette en ny."
 
 #. module: stock
@@ -3231,12 +3231,12 @@ msgstr "E-post bekreftelse"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_move_email_validation
 msgid "Email Confirmation picking"
-msgstr "Epost bekreftelse plukk"
+msgstr "E-post bekreftelse plukk"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
-msgstr "Epost mal bekreftelse plukk"
+msgstr "E-post mal bekreftelse plukk"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
@@ -4860,8 +4860,7 @@ msgstr "La stå tom"
 #: model:ir.model.fields,help:stock.field_stock_route__company_id
 #: model:ir.model.fields,help:stock.field_stock_rule__route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
-msgstr ""
-"La dette feltet stå tomt hvis denne ruten deles mellom alle selskaper."
+msgstr "La dette feltet stå tomt hvis denne ruten deles mellom alle firmaer."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -4890,7 +4889,7 @@ msgstr "Lengdeenhet for måleetikett"
 #: model:ir.model.fields,help:stock.field_stock_quant_relocate__company_id
 msgid "Let this field empty if this location is shared between companies"
 msgstr ""
-"La dette feltet stå tomt hvis denne lokasjonen deles mellom alle selskaper."
+"La dette feltet stå tomt hvis denne lokasjonen deles mellom alle firmaer."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -7459,7 +7458,7 @@ msgstr "Referansesekvens"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_picking_name_uniq
 msgid "Reference must be unique per company!"
-msgstr "Referansen må være unik per selskap!"
+msgstr "Referansen må være unik per firma!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__origin
@@ -7847,7 +7846,7 @@ msgstr "Rute"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_company_id
 msgid "Route Company"
-msgstr "Rute selskap"
+msgstr "Rute firma"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
@@ -8152,7 +8151,7 @@ msgstr "Send an automatic confirmation email when Delivery Orders are done"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
 msgid "Send email"
-msgstr "Send epost"
+msgstr "Send e-post"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
@@ -8362,7 +8361,7 @@ msgstr ""
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
 msgid "Shipping: Send by Email"
-msgstr "Forsendelse: Send med epost"
+msgstr "Forsendelse: Send med e-post"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
@@ -9020,7 +9019,7 @@ msgstr "Restordre%s er opprettet."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
-msgstr "Strekkoden for en lokasjon må være unik per selskap!"
+msgstr "Strekkoden for en lokasjon må være unik per firma!"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -9259,7 +9258,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
 msgid "The short name of the warehouse must be unique per company!"
-msgstr "Det korte navnet på lageret må være unikt per selskap!"
+msgstr "Det korte navnet på lageret må være unikt per firma!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer
@@ -9493,8 +9492,8 @@ msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
 msgstr ""
-"Selskapet for dette produktet kan ikke endres så lenge det finnes mengder av"
-" det som tilhører et annet selskap."
+"Firmaet for dette produktet kan ikke endres så lenge det finnes mengder av "
+"det som tilhører et annet firma."
 
 #. module: stock
 #. odoo-python
@@ -9503,8 +9502,8 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
-"Selskapet for dette produktet kan ikke endres så lenge det finnes "
-"lagerbevegelser av det som tilhører et annet selskap."
+"Firmaet for dette produktet kan ikke endres så lenge det finnes "
+"lagerbevegelser av det som tilhører et annet firma."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -10901,7 +10900,7 @@ msgid ""
 "company per relocation."
 msgstr ""
 "Du kan bare flytte positive mengder lagret i lokasjoner som brukes av ett "
-"enkelt selskap per flytting."
+"enkelt firma per flytting."
 
 #. module: stock
 #. odoo-python
@@ -10927,7 +10926,7 @@ msgid ""
 " by company"
 msgstr ""
 "Du kan ikke deaktivere flere lokasjoner hvis du har mer enn ett lager per "
-"selskap."
+"firma."
 
 #. module: stock
 #. odoo-python
