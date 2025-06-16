@@ -121,7 +121,7 @@ class StockRule(models.Model):
         elif values.get('orderpoint_id', False) and values['orderpoint_id'].bom_id:
             bom = values['orderpoint_id'].bom_id
         # We check that our BoM from the procurement values is actually for this product before using it
-        if bom and bom.product_id and bom.product_id == product_id or product_id in byproduct_ids.product_id or not bom.product_id and bom.product_tmpl_id == product_id.product_tmpl_id:
+        if bom and (bom.product_id and bom.product_id == product_id or product_id in byproduct_ids.product_id or not bom.product_id and bom.product_tmpl_id == product_id.product_tmpl_id):
             return bom
         return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
 
