@@ -4618,8 +4618,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertTrue(all(line.full_reconcile_id for line in lines_to_reconcile), "All tax lines should be fully reconciled")
 
     def test_caba_undo_reconciliation(self):
-        ''' Make sure there is no traceback like "Record has already been deleted" during the deletion of partials. '''
-        self.cash_basis_transfer_account.reconcile = True
+        self.env.company.tax_exigibility = True
 
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
@@ -4636,12 +4635,21 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         bill.action_post()
 
         # Register a payment creating the CABA journal entry on the fly and reconcile it with the tax line.
-        self.env['account.payment.register']\
+        payment = self.env['account.payment.register']\
             .with_context(active_ids=bill.ids, active_model='account.move')\
             .create({})\
             ._create_payments()
 
+        init_reconciliation = (payment.move_id + bill).line_ids._reconciled_by_number()
+        self.assertEqual(len(init_reconciliation), 2)  # reconciled for caba and receivable
+
+        # Make sure that we don't break any reconciliation before
         bill.button_draft()
+        self.assertEqual((payment.move_id + bill).line_ids._reconciled_by_number(), init_reconciliation)
+
+        # Make sure there is no traceback like "Record has already been deleted" during the deletion of partials.
+        bill.line_ids.remove_move_reconcile()
+        self.assertFalse((payment.move_id + bill).line_ids._reconciled_by_number())
 
     def test_caba_foreign_vat(self):
         self.env.company.tax_exigibility = True
