@@ -113,88 +113,88 @@ class TestSaEdiCommon(AccountEdiTestCommon):
 
         cls.invoice_applied_xpath = '''
             <xpath expr="(//*[local-name()='Invoice']/*[local-name()='ID'])[1]" position="replace">
-                <ID>___ignore___</ID>
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
             </xpath>
             <xpath expr="(//*[local-name()='Invoice']/*[local-name()='UUID'])[1]" position="replace">
-                <UUID>___ignore___</UUID>
+                <cbc:UUID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:UUID>
             </xpath>
             <xpath expr="(//*[local-name()='Contact']/*[local-name()='ID'])[1]" position="replace">
-                <ID>___ignore___</ID>
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
             </xpath>
             <xpath expr="(//*[local-name()='Contact']/*[local-name()='ID'])[2]" position="replace">
-                <ID>___ignore___</ID>
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
             </xpath>
             <xpath expr="//*[local-name()='PaymentMeans']/*[local-name()='InstructionID']" position="replace">
-                <InstructionID>___ignore___</InstructionID>
+                <cbc:InstructionID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:InstructionID>
             </xpath>
             <xpath expr="(//*[local-name()='PaymentMeans']/*[local-name()='PaymentID'])" position="replace">
-                <PaymentID>___ignore___</PaymentID>
+                <cbc:PaymentID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:PaymentID>
             </xpath>
             <xpath expr="//*[local-name()='InvoiceLine']/*[local-name()='ID']" position="replace">
-                <ID>___ignore___</ID>
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
             </xpath>
             '''
 
         cls.credit_note_applied_xpath = '''
             <xpath expr="(//*[local-name()='Invoice']/*[local-name()='ID'])[1]" position="replace">
-                <ID>___ignore___</ID>
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
             </xpath>
             <xpath expr="(//*[local-name()='Invoice']/*[local-name()='UUID'])[1]" position="replace">
-                <UUID>___ignore___</UUID>
+                <cbc:UUID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:UUID>
             </xpath>
             <xpath expr="(//*[local-name()='Contact']/*[local-name()='ID'])[1]" position="replace">
-                <ID>___ignore___</ID>
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
             </xpath>
             <xpath expr="(//*[local-name()='Contact']/*[local-name()='ID'])[2]" position="replace">
-                <ID>___ignore___</ID>
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
             </xpath>
             <xpath expr="(//*[local-name()='OrderReference']/*[local-name()='ID'])[1]" position="replace">
-                <ID>___ignore___</ID>
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
             </xpath>
             <xpath expr="(//*[local-name()='InvoiceDocumentReference']/*[local-name()='ID'])[1]" position="replace">
-                <ID>___ignore___</ID>
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
             </xpath>
             <xpath expr="(//*[local-name()='PaymentMeans']/*[local-name()='InstructionNote'])" position="replace">
-                <InstructionNote>___ignore___</InstructionNote>
+                <cbc:InstructionNote xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:InstructionNote>
             </xpath>
             <xpath expr="(//*[local-name()='PaymentMeans']/*[local-name()='PaymentID'])" position="replace">
-                <PaymentID>___ignore___</PaymentID>
+                <cbc:PaymentID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:PaymentID>
             </xpath>
             <xpath expr="//*[local-name()='InvoiceLine']/*[local-name()='ID']" position="replace">
-                <ID>___ignore___</ID>
+                <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
             </xpath>
             '''
 
         cls.debit_note_applied_xpath = '''
                 <xpath expr="(//*[local-name()='Invoice']/*[local-name()='ID'])[1]" position="replace">
-                    <ID>___ignore___</ID>
+                    <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
                 </xpath>
                 <xpath expr="(//*[local-name()='Invoice']/*[local-name()='UUID'])[1]" position="replace">
-                    <UUID>___ignore___</UUID>
+                    <cbc:UUID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:UUID>
                 </xpath>
                 <xpath expr="(//*[local-name()='Contact']/*[local-name()='ID'])[1]" position="replace">
-                    <ID>___ignore___</ID>
+                    <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
                 </xpath>
                 <xpath expr="(//*[local-name()='Contact']/*[local-name()='ID'])[2]" position="replace">
-                    <ID>___ignore___</ID>
+                    <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
                 </xpath>
                 <xpath expr="(//*[local-name()='OrderReference']/*[local-name()='ID'])[1]" position="replace">
-                    <ID>___ignore___</ID>
+                    <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
                 </xpath>
                 <xpath expr="(//*[local-name()='InvoiceDocumentReference']/*[local-name()='ID'])[1]" position="replace">
-                    <ID>___ignore___</ID>
+                    <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
                 </xpath>
                 <xpath expr="//*[local-name()='InvoiceLine']/*[local-name()='ID']" position="replace">
-                    <ID>___ignore___</ID>
+                    <cbc:ID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:ID>
                 </xpath>
                 <xpath expr="//*[local-name()='PaymentMeans']/*[local-name()='InstructionID']" position="replace">
-                    <InstructionID>___ignore___</InstructionID>
+                    <cbc:InstructionID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:InstructionID>
                 </xpath>
                 <xpath expr="(//*[local-name()='PaymentMeans']/*[local-name()='PaymentID'])" position="replace">
-                    <PaymentID>___ignore___</PaymentID>
+                    <cbc:PaymentID xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:PaymentID>
                 </xpath>
                 <xpath expr="(//*[local-name()='PaymentMeans']/*[local-name()='InstructionNote'])" position="replace">
-                    <InstructionNote>___ignore___</InstructionNote>
+                    <cbc:InstructionNote xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">___ignore___</cbc:InstructionNote>
                 </xpath>
                 '''
 
