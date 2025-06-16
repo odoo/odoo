@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ubl_21_InvoiceType_tr" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceType" primary="True">
+        <xpath expr="//*[local-name()='TaxTotal']" position="replace">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" 
+               t-foreach="vals.get('tax_total_vals', [])"
+               t-as="foreach_vals">
+                <t t-if="foreach_vals.get('tax_amount') >= 0">
+                    <cac:TaxTotal>
+                        <t t-call="{{TaxTotalType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:TaxTotal>
+                </t>
+                <t t-else="">
+                    <cac:WithholdingTaxTotal>
+                        <t t-call="{{TaxTotalType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:WithholdingTaxTotal>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_21_InvoiceLineType_tr" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceLineType" primary="True">
+        <xpath expr="//*[local-name()='TaxTotal']" position="replace">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" 
+               t-foreach="vals.get('tax_total_vals', [])"
+               t-as="foreach_vals">
+                <t t-if="foreach_vals.get('tax_amount') >= 0">
+                    <cac:TaxTotal>
+                        <t t-call="{{TaxTotalType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:TaxTotal>
+                </t>
+                <t t-else="">
+                    <cac:WithholdingTaxTotal>
+                        <t t-call="{{TaxTotalType_template}}">
+                            <t t-set="vals" t-value="foreach_vals"/>
+                        </t>
+                    </cac:WithholdingTaxTotal>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_20_TaxTotalType_tr" inherit_id="account_edi_ubl_cii.ubl_20_TaxTotalType">
+        <xpath expr="//*[local-name()='TaxAmount']" position="replace">
+            <cbc:TaxAmount
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                t-att-currencyID="vals['currency'].name"
+                t-out="format_float(abs(vals.get('tax_amount')), vals.get('currency_dp'))"/>
+        </xpath>
+        <xpath expr="//*[local-name()='TaxSubtotal']/*[local-name()='TaxAmount']" position="replace">
+            <cbc:TaxAmount
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                t-att-currencyID="foreach_vals['currency'].name"
+                t-out="format_float(abs(foreach_vals.get('tax_amount')), foreach_vals.get('currency_dp'))"/>
+        </xpath>
+        <xpath expr="//*[local-name()='Percent']" position="replace">
+            <cbc:Percent
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                t-out="abs(foreach_vals.get('percent'))"/>
+        </xpath>
+    </template>
+</odoo>
