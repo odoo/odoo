@@ -1,6 +1,6 @@
 .o-mail-DiscussActions-group {
     &.o-inline {
-        outline: 1px solid mix($gray-200, $gray-300);
+        outline: 1px solid $gray-300;
     }
     &:not(.o-inline) {
         gap: 1px;
@@ -45,13 +45,15 @@
         background-color: var(--mail-DiscussSidebarChannelActions-activeBgColor, mix($gray-100, $gray-200)) !important;
         color: var(--mail-DiscussSidebarChannelActions-activeColor, black) !important;
         &.o-danger {
-            background-color: rgba(lighten($danger, 5%), .85) !important;
+            // background-color: rgba(lighten($danger, 5%), .85) !important;
+            background-color: mix(lighten($danger, 5%), mail-DiscussPanel-bgColor(), 85%) !important;
             color: white !important;
             text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
             outline: 1px solid rgba(lighten($danger, 5%), 1) !important;
         }
         &.o-success {
-            background-color: rgba(lighten($success, 5%), .65) !important;
+            // background-color: rgba(lighten($success, 5%), .65) !important;
+            background-color: mix(lighten($success, 5%), mail-DiscussPanel-bgColor(), 65%) !important;
             color: white !important;
             text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
             outline: 1px solid rgba(lighten($success, 5%), .75) !important;
