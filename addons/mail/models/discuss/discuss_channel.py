@@ -1172,7 +1172,7 @@ class DiscussChannel(models.Model):
             "default_display_mode",
             Store.Attr("description", predicate=is_channel_or_group),
             Store.One("from_message_id", predicate=is_channel_or_group),
-            Store.Many("group_ids", [], predicate=is_channel),
+            Store.Many("group_ids", [], predicate=is_channel, sudo=True),  # sudo: we are reading only the ids (comodel is inaccessible)
             Store.One("group_public_id", ["full_name"], predicate=is_channel),
             Store.Many(
                 "invited_member_ids",
