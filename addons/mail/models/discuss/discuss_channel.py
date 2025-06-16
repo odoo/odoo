@@ -1066,7 +1066,7 @@ class DiscussChannel(models.Model):
             "default_display_mode",
             "description",
             Store.One("from_message_id"),
-            Store.Many("group_ids", []),
+            Store.Many("group_ids", [], sudo=True),  # sudo: we are reading only the ids (comodel is inaccessible)
             Store.One("group_public_id", ["full_name"]),
             Store.Many(
                 "invited_member_ids",
