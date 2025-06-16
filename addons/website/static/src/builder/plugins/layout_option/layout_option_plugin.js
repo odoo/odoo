@@ -138,7 +138,9 @@ export class ChangeColumnCountAction extends BuilderAction {
         if (itemsDelta > 0) {
             for (let i = 0; i < itemsDelta; i++) {
                 const lastEl = rowEl.lastElementChild;
-                this.dependencies.clone.cloneElement(lastEl);
+                this.dependencies.clone.cloneElement(lastEl, {
+                    activateClone: false,
+                });
             }
         }
 
