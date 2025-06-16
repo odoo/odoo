@@ -34,6 +34,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         super.setup();
         this.videoBlock = this.props.host;
         this.state = useEmbeddedState(this.videoBlock);
+        this.dropdown = useDropdownState();
 
         this.videoSettingsOverlay = this.props.createOverlay(VideoSettings, {
             positionOptions: {
@@ -44,7 +45,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         });
         this.iframeRef = useRef("iframeRef");
 
-        useExternalListener(this.videoBlock, "mouseenter", () => {
+        useExternalListener(this.videoBlock, "pointerenter", () => {
             this.videoSettingsOverlay.open({
                 target: this.videoBlock,
                 props: {
@@ -60,12 +61,13 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
                         this.props.addStep();
                     },
                     focusEditable: this.props.focusEditable,
+                    dropdown: this.dropdown,
                 },
             });
         });
 
-        useExternalListener(this.videoBlock, "mouseleave", (e) => {
-            if (e.relatedTarget?.closest(".video-overlay")) {
+        useExternalListener(this.videoBlock, "pointerleave", (e) => {
+            if (this.dropdown.isOpen || e.relatedTarget?.closest(".video-overlay")) {
                 return;
             }
             this.videoSettingsOverlay.close();
@@ -108,22 +110,22 @@ export class VideoSettings extends Component {
         replaceVideo: { type: Function },
         removeVideo: { type: Function },
         focusEditable: { type: Function },
+        dropdown: { type: Object },
     };
 
     setup() {
         this.menuRef = useRef("menuRef");
-        this.dropdown = useDropdownState();
 
         onMounted(() => {
             this.menuRef.el.addEventListener("mouseleave", () => {
-                if (!this.dropdown.isOpen) {
+                if (!this.props.dropdown.isOpen) {
                     this.props.overlay.close();
                 }
             });
         });
 
         useExternalListener(document, "pointerdown", (ev) => {
-            if (ev.target.closest(".o-dropdown-item")) {
+            if (this.props.dropdown.isOpen) {
                 return;
             }
             this.props.overlay.close();

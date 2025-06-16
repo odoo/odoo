@@ -9,12 +9,12 @@ export class VideoSelectorDialog extends Component {
     static props = {
         save: { type: Function },
         close: { type: Function },
-        media: { type: Object, optional: true },
+        videoIframe: { type: HTMLElement, optional: true },
     };
 
     setup() {
         super.setup();
-        this.media = this.props.media || {};
+        this.media = this.props.videoIframe || {};
         this.state = useState({
             enableInsertVideoButton: false,
         });

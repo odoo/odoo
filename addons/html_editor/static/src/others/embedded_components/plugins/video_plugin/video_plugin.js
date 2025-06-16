@@ -82,7 +82,7 @@ export class VideoPlugin extends Plugin {
                     save(media);
                     restoreSelection = () => {};
                 },
-                ...(iframe && { media: iframe }),
+                ...(iframe && { videoIframe: iframe }),
             },
             {
                 onClose: () => {

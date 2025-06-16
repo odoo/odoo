@@ -1069,10 +1069,10 @@ test("should display overlay on video hover and handle video replacement and rem
     });
     setSelectionInHtmlField();
 
-    let callCount = 0;
-    await onRpc("/web_editor/video_url/data", async () => {
-        callCount++;
-        if (callCount === 1) {
+    await onRpc("/web_editor/video_url/data", async (request) => {
+        const videoUrl = (await request.json()).params.video_url;
+
+        if (videoUrl === "https://www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0") {
             return {
                 video_id: "qxb74CMR748",
                 platform: "youtube",
@@ -1109,9 +1109,9 @@ test("should display overlay on video hover and handle video replacement and rem
         inputType: "insertText",
     });
     await waitFor(".o_video_dialog_options", { timeout: 1500 });
-    await click(".modal-footer button");
-    await animationFrame();
-    const iframeSrcBefore = queryOne("div[data-embedded='video'] iframe").dataset.src;
+    await click(queryOne(".modal-footer").firstChild);
+    const embeddedVideoEl = await waitFor("div[data-embedded='video'] iframe");
+    const iframeSrcBefore = embeddedVideoEl.dataset.src;
 
     // Hover on VideoBlock shows overlay
     await hover(queryOne("div[data-embedded='video']"));
@@ -1130,11 +1130,13 @@ test("should display overlay on video hover and handle video replacement and rem
     manuallyDispatchProgrammaticEvent(replaceInput, "input", {
         inputType: "insertText",
     });
-    await waitFor(".o_video_dialog_options", { timeout: 1500 });
-
-    await click(".modal-footer button");
+    await waitFor(
+        '.o_video_dialog_iframe[data-src="https://www.youtube.com/embed/gbE3azm_Io0?rel=0&autoplay=0"]',
+        { timeout: 1500 }
+    );
+    await click(queryOne(".modal-footer").firstChild);
     await animationFrame();
-    const iframeSrcAfter = queryOne("div[data-embedded='video'] iframe").dataset.src;
+    const iframeSrcAfter = embeddedVideoEl.dataset.src;
     expect(iframeSrcBefore).not.toBe(iframeSrcAfter);
 
     // Hover VideoBlock again, and choose Remove
