@@ -49,6 +49,7 @@
                 <separator/>
                 <filter domain="[('state', '=', 'confirm')]" string="First Approval" name="approve"/>
                 <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
+                <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="to_approve"/>
                 <filter string="Approved" domain="[('state', '=', 'validate')]" name="validated"/>
                 <filter name="cancelled_leaves" string="Cancelled" domain="[('state', '=', 'cancel')]"/>
                 <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]"/>
@@ -890,7 +891,8 @@
         <field name="res_model">hr.leave</field>
         <field name="view_mode">list,graph,pivot,calendar,form</field>
         <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
-        <field name="context">{'search_default_filter_date_from': 1, 'search_default_group_employee': 1, 'search_default_group_type': 1}</field>
+        <field name="context">{'search_default_filter_date_from': 1, 'search_default_group_employee': 1,
+            'search_default_group_type': 1, 'search_default_to_approve': 1, 'search_default_validated': 1}</field>
         <field name="domain">[('state', '!=', 'cancel')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
