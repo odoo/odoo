@@ -133,23 +133,25 @@ class AccountJournal(models.Model):
         self.ensure_one()
 
         company_id = self.company_id
+        partner = self.company_id.partner_id
+        parent = self.company_id.parent_id.partner_id
         version_info = service.common.exp_version()
         builder = x509.CertificateSigningRequestBuilder()
         subject_names = (
             # Country Name
-            (NameOID.COUNTRY_NAME, company_id.country_id.code),
+            (NameOID.COUNTRY_NAME, partner.country_id.code),
             # Organization Unit Name
-            (NameOID.ORGANIZATIONAL_UNIT_NAME, (company_id.vat or '')[:10]),
+            (NameOID.ORGANIZATIONAL_UNIT_NAME, partner.name if parent else partner.vat[:10]),
             # Organization Name
-            (NameOID.ORGANIZATION_NAME, company_id.name),
+            (NameOID.ORGANIZATION_NAME, parent.name if parent else partner.name),
             # Subject Common Name
-            (NameOID.COMMON_NAME, company_id.name),
+            (NameOID.COMMON_NAME, partner.name),
             # Organization Identifier
-            (ObjectIdentifier('2.5.4.97'), company_id.vat),
+            (ObjectIdentifier('2.5.4.97'), parent.vat if parent else partner.vat),
             # State/Province Name
-            (NameOID.STATE_OR_PROVINCE_NAME, company_id.state_id.name),
+            (NameOID.STATE_OR_PROVINCE_NAME, partner.state_id.name),
             # Locality Name
-            (NameOID.LOCALITY_NAME, company_id.city),
+            (NameOID.LOCALITY_NAME, partner.city),
         )
         # The CertificateSigningRequestBuilder instances are immutable, which is why everytime we modify one,
         # we have to assign it back to itself to keep track of the changes
@@ -164,13 +166,13 @@ class AccountJournal(models.Model):
                 x509.NameAttribute(ObjectIdentifier('2.5.4.4'), '1-Odoo|2-%s|3-%s' % (
                     version_info['server_version_info'][0], self.l10n_sa_serial_number)),
                 # Organisation Identifier (UID)
-                x509.NameAttribute(NameOID.USER_ID, company_id.vat),
+                x509.NameAttribute(NameOID.USER_ID, partner.vat),
                 # Invoice Type. 4-digit numerical input using 0 & 1
                 x509.NameAttribute(NameOID.TITLE, company_id._l10n_sa_get_csr_invoice_type()),
                 # Location
-                x509.NameAttribute(ObjectIdentifier('2.5.4.26'), company_id.street),
+                x509.NameAttribute(ObjectIdentifier('2.5.4.26'), partner.street),
                 # Industry
-                x509.NameAttribute(ObjectIdentifier('2.5.4.15'), company_id.partner_id.industry_id.name or 'Other'),
+                x509.NameAttribute(ObjectIdentifier('2.5.4.15'), partner.industry_id.name or 'Other'),
             ]))
         ])
 
