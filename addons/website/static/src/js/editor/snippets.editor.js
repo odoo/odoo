@@ -217,6 +217,24 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
      */
     _computeSnippetTemplates(html) {
         const $html = $(html);
+
+        // TODO remove in master: add s_progress_bar_text in progress bar where it's missing, fix the previous wrong width
+        const progressBarEls = html.querySelectorAll(".progress-bar");
+        progressBarEls.forEach((el) => {
+            if (el.style.width === "45%") {
+                el.style.width = "25%";
+            }
+            if (!el.querySelector(".s_progress_bar_text")) {
+                const textEl = document.createElement("span");
+                textEl.classList.add("s_progress_bar_text", "small");
+                textEl.textContent = el.style.width;
+                if (el.closest(".s_progress_bar_label_hidden")) {
+                    textEl.classList.add("d-none");
+                }
+                el.appendChild(textEl);
+            }
+        });
+
         const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
         const fontVariables = toFind.map((el) => el.dataset.variable);
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
