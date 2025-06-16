@@ -115,10 +115,14 @@ class StockRule(models.Model):
         return fields
 
     def _get_matching_bom(self, product_id, company_id, values):
+        bom = False
         if values.get('bom_id', False):
-            return values['bom_id']
-        if values.get('orderpoint_id', False) and values['orderpoint_id'].bom_id:
-            return values['orderpoint_id'].bom_id
+            bom = values['bom_id']
+        elif values.get('orderpoint_id', False) and values['orderpoint_id'].bom_id:
+            bom = values['orderpoint_id'].bom_id
+        # We check that our BoM from the procurement values is actually for this product before using it
+        if bom and bom.product_id and bom.product_id == product_id or product_id in byproduct_ids.product_id or not bom.product_id and bom.product_tmpl_id == product_id.product_tmpl_id:
+            return bom
         return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):
@@ -220,6 +224,8 @@ class ProcurementGroup(models.Model):
                     quant_uom = bom_line.product_id.uom_id
                     # recreate dict of values since each child has its own bom_line_id
                     values = dict(procurement.values, bom_line_id=bom_line.id)
+                    # Don't pass in the BoM itself since it does not point to the correct product any more
+                    values.pop('bom_id', False)
                     component_qty, procurement_uom = bom_line_uom._adjust_uom_quantities(bom_line_data['qty'], quant_uom)
                     procurements_without_kit.append(self.env['procurement.group'].Procurement(
                         bom_line.product_id, component_qty, procurement_uom,
