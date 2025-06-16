@@ -27,8 +27,7 @@ class AccountTax(models.Model):
     l10n_sa_is_retention = fields.Boolean("Is Retention", default=False,
                                           help="Determines whether or not a tax counts as a Withholding Tax")
 
-    l10n_sa_exemption_reason_code = fields.Selection(string="Exemption Reason Code",
-                                                     selection=EXEMPTION_REASON_CODES, help="Tax Exemption Reason Code (ZATCA)")
+    ubl_cii_tax_exemption_reason_code = fields.Selection(selection_add=EXEMPTION_REASON_CODES)
 
     @api.onchange('amount')
     def onchange_amount(self):
@@ -40,3 +39,15 @@ class AccountTax(models.Model):
         for tax in self:
             if tax.amount >= 0 and tax.l10n_sa_is_retention and tax.type_tax_use == 'sale':
                 raise UserError(_("Cannot set a tax to Retention if the amount is greater than or equal 0"))
+
+    @api.depends('ubl_cii_tax_category_code')
+    def _compute_ubl_cii_requires_exemption_reason(self):
+        # EXTEND
+        super()._compute_ubl_cii_requires_exemption_reason()
+        for tax in self:
+            if tax.country_code == 'SA':
+                tax.ubl_cii_requires_exemption_reason = (
+                    tax.ubl_cii_tax_category_code in ['AE', 'E', 'G', 'O', 'K', 'Z'] and
+                    tax.type_tax_use == 'sale' and
+                    tax.amount == 0
+                )
