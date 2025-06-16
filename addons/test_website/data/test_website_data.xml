@@ -124,6 +124,9 @@
                 <p>placeholder</p>
             </xpath>
         </template>
+        <template id="test_view_access_error">
+            <p><t t-out="record.name"/></p>
+        </template>
 
         <!-- RECORDS FOR MODULE OPERATION TESTS -->
         <template id="update_module_base_view">
@@ -157,6 +160,14 @@
         <!-- Test model record -->
         <record id="test_model_record" model="test.model">
             <field name="name">Test Model Record</field>
+        </record>
+        <record id="test_model_exposed_record_published" model="test.model">
+            <field name="name">Test Model Exposed Record (published)</field>
+            <field name="website_published">True</field>
+        </record>
+        <record id="test_model_exposed_record_not_published" model="test.model">
+            <field name="name">Test Model Exposed Record (not published)</field>
+            <field name="website_published">False</field>
         </record>
     </data>
 </odoo>
