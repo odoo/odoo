@@ -711,12 +711,6 @@ export class ListRenderer extends Component {
         const { widget, attrs } = column;
         const field = this.props.list.fields[column.name];
         const aggregateValue = group.aggregates[column.name];
-        if (aggregateValue === false) {
-            return {
-                help: _t("Different currencies cannot be aggregated"),
-                value: "—",
-            };
-        }
         if (
             !(column.name in group.aggregates) ||
             widget === "handle" ||
@@ -732,7 +726,14 @@ export class ListRenderer extends Component {
             escape: true,
         };
         if (field.type === "monetary") {
-            formatOptions.currencyId = group.aggregates[field.currency_field][0];
+            const currencies = group.aggregates[field.currency_field];
+            if (currencies.length > 1) {
+                return {
+                    help: _t("Different currencies cannot be aggregated"),
+                    value: "—",
+                };
+            }
+            formatOptions.currencyId = currencies[0];
         }
         return {
             value: formatter ? formatter(aggregateValue, formatOptions) : aggregateValue,
