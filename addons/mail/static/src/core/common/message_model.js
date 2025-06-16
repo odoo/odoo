@@ -270,6 +270,10 @@ export class Message extends Record {
         return candidates.has(this.subject?.toLowerCase());
     }
 
+    get persistent() {
+        return Number.isInteger(this.id);
+    }
+
     get resUrl() {
         return `${url("/web")}#model=${this.model}&id=${this.res_id}`;
     }
