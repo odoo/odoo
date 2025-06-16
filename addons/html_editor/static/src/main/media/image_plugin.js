@@ -237,6 +237,7 @@ export class ImagePlugin extends Plugin {
             return;
         }
         targetedImg.style.width = size || "";
+        targetedImg.style.height = size || "";
         this.dependencies.history.addStep();
     }
 
@@ -361,6 +362,8 @@ export class ImagePlugin extends Plugin {
             "style",
             (image.getAttribute("style") || "").replace(/[^;]*transform[\w:]*;?/g, "")
         );
+        image.style.removeProperty("width");
+        image.style.removeProperty("height");
         this.dependencies.history.addStep();
     }
 
