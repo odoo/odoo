@@ -74,6 +74,7 @@ class MaintenanceEquipmentCategory(models.Model):
         if self.id:
             values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
             defaults['category_id'] = self.id
+            defaults['company_id'] = self.company_id.id
         return values
 
 
