@@ -2,6 +2,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "../font/color_selector";
+import { HEX_OPACITY } from "../font/color_plugin";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -175,10 +176,15 @@ export class IconPlugin extends Plugin {
         return selectedIcon.classList.contains("fa-spin");
     }
 
-    applyIconColor(color, mode) {
+    applyIconColor(color, mode, previewMode, applyTransparency) {
         const selectedIcon = this.getSelectedIcon();
         if (!selectedIcon) {
             return;
+        }
+        if (applyTransparency) {
+            // Apply default transparency to selected solid tab colors in background
+            // mode to make text highlighting more usable between light and dark modes.
+            color += HEX_OPACITY;
         }
         this.dependencies.color.colorElement(selectedIcon, color, mode);
     }
