@@ -1382,6 +1382,14 @@ Please change the quantity done or the rounding precision of your unit of measur
                 # `partner_id` and `ref` field will refer to multiple records. In this
                 # case, we chose to wipe them.
                 vals = moves._assign_picking_values(picking)
+                if any(picking.partner_id.id != m.partner_id.id for m in moves):
+                    vals['partner_id'] = False
+                if picking.origin and any(picking.origin != m.origin for m in moves):
+                    origin_list = picking.origin.split(',')
+                    vals['origin'] = picking.origin
+                    for move in moves:
+                        if move.origin not in origin_list:
+                            vals['origin'] += f',{move.origin}'
                 if vals:
                     picking.write(vals)
             else:
