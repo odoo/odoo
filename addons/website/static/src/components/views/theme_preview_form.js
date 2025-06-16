@@ -22,13 +22,14 @@ export function useLoaderOnClick() {
             const name = params.clickParams.name;
             if (['button_refresh_theme', 'button_choose_theme'].includes(name)) {
                 website.invalidateSnippetCache = true;
-                website.showLoader({ showTips: name !== 'button_refresh_theme' });
+                website.showLoader({title : "Applying theme on your website..."});
                 try {
                     const resParams = params.getResParams();
                     const callback = await orm.silent.call(resParams.resModel, name, [[resParams.resId]]);
                     let keepLoader = false;
                     if (callback) {
                         callback.target = 'main';
+                        callback.context.params = {with_loader: false};                        
                         await action.doAction(callback);
                         if (callback.tag === 'website_preview' && callback.context.params.with_loader) {
                             keepLoader = true;
