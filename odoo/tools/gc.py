@@ -39,14 +39,14 @@ def _timing_gc_callback(event, info):
     gen = info['generation']
     if event == 'start':
         _gc_start = _gc_time()
-        if gen == 2 and _logger.isEnabledFor(logging.DEBUG):
-            _logger.debug("info %s, starting collection of gen2", gc_info())
+        if gen == 2:
+            _logger.info("info %s, starting collection of gen2", gc_info())
     else:
         timing = _gc_time() - _gc_start
         _gc_timings[gen] += timing
         _gc_start = 0
         if gen > 0:
-            _logger.debug("collected %s in %.2fms", info, _to_ms(timing))
+            _logger.info("collected %s in %.2fms", info, _to_ms(timing))
 
 
 def gc_set_timing(*, enable: bool):
@@ -84,6 +84,7 @@ def gc_info():
         'time': times if _timing_gc_callback in gc.callbacks else (),
         'count': stats,
         'thresholds': (gc.get_count(), gc.get_threshold()),
+        'frozen count': (gc.get_freeze_count(), len(gc.get_objects())),
     }
 
 
