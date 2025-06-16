@@ -285,7 +285,7 @@ class AccountEdiFormat(models.Model):
             Helper function to check if ZATCA mandated partner fields are missing for the buyer
         """
         fields_to_check = []
-        if any(tax.l10n_sa_exemption_reason_code in ('VATEX-SA-HEA', 'VATEX-SA-EDU') for tax in
+        if any(tax.ubl_cii_tax_exemption_reason_code in ('VATEX-SA-HEA', 'VATEX-SA-EDU') for tax in
                invoice.invoice_line_ids.filtered(
                    lambda line: line.display_type == 'product').tax_ids):
             fields_to_check += [
