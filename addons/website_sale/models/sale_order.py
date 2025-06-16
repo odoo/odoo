@@ -822,4 +822,4 @@ class SaleOrder(models.Model):
             ))
 
         if not self.only_services and not self.carrier_id:
-            raise ValidationError(_("No shipping method is selected."))
+            raise ValidationError(_("No delivery method is selected."))
