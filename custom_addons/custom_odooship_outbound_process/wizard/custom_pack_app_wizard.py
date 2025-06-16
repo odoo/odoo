@@ -519,7 +519,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         "product_package_number": line.product_package_number or self.next_package_number
                     })
             except Exception as e:
-                raise UserError(_("Error while sending label for Order %s:\n%s") % (sale, str(e)))
+                raise UserError(_("Error while sending label for Order %s:\n%s") % (sale.name, str(e)))
         else:
             # SINGLE PICK LOGIC (all lines are for one SO)
             line.quantity = 1
@@ -1044,6 +1044,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 else config["DEFAULT_MERCHANT_CODE"]
             ),
             "service_type": sale.service_type or "STANDARD",
+            "carrier_code":sale.carrier or "AUSPOST",
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
             "tu_id": None,
@@ -1478,6 +1479,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 else config["DEFAULT_MERCHANT_CODE"]
             ),
             "service_type": sale.service_type or "STANDARD",
+            "carrier_code": sale.carrier or "AUSPOST",
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
             "auto_generate_label": config["DEFAULT_AUTO_GENERATE_LABEL"],
