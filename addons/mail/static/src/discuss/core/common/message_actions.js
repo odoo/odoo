@@ -15,7 +15,8 @@ messageActionsRegistry.add("set-new-message-separator", {
             thread &&
             thread.selfMember &&
             thread.eq(component.message.thread) &&
-            !component.message.hasNewMessageSeparator
+            !component.message.hasNewMessageSeparator &&
+            component.message.persistent
         );
     },
     icon: "fa fa-eye-slash",
