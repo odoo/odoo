@@ -10,11 +10,6 @@ from odoo.addons.sale.tests.common import TestTaxCommonSale
 @tagged('post_install', '-at_install')
 class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.other_currency = cls.setup_other_currency('EUR')
-
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
@@ -367,12 +362,13 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
     def test_down_payment_invoice_foreign_currency_different_dates(self):
         product = self.company_data['product_order_cost']
         tax_15 = self.percent_tax(15.0)
+        other_currency = self.setup_other_currency('EUR')
 
         with freeze_time('2016-01-01'):
-            self.foreign_currency_pricelist.currency_id = self.other_currency
+            self.foreign_currency_pricelist.currency_id = other_currency
             so = self.env['sale.order'].create({
                 'partner_id': self.partner_a.id,
-                'currency_id': self.other_currency.id,
+                'currency_id': other_currency.id,
                 'pricelist_id': self.foreign_currency_pricelist.id,
                 'order_line': [
                     Command.create({

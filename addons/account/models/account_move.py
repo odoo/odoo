@@ -1466,15 +1466,19 @@ class AccountMove(models.Model):
         else:
             rate = (abs(product_line.amount_currency) / abs(product_line.balance)) if product_line.balance else 0.0
 
-        return self.env['account.tax']._prepare_base_line_for_taxes_computation(
-            product_line,
-            price_unit=product_line.price_unit if is_invoice else product_line.amount_currency,
-            quantity=product_line.quantity if is_invoice else 1.0,
-            discount=product_line.discount if is_invoice else 0.0,
-            rate=rate,
-            sign=sign,
-            special_mode=False if is_invoice else 'total_excluded',
-        )
+        base_values = {
+            'price_unit': product_line.price_unit if is_invoice else product_line.amount_currency,
+            'quantity': product_line.quantity if is_invoice else 1.0,
+            'discount': product_line.discount if is_invoice else 0.0,
+            'rate': rate,
+            'sign': sign,
+            'special_mode': False if is_invoice else 'total_excluded',
+        }
+
+        if product_line.extra_tax_data and product_line.extra_tax_data.get('computation_key', '').startswith('global_discount,'):
+            base_values['special_type'] = 'global_discount'
+
+        return self.env['account.tax']._prepare_base_line_for_taxes_computation(product_line, **base_values)
 
     def _prepare_epd_base_line_for_taxes_computation(self, epd_line):
         """ Convert an account.move.line having display_type='epd' into a base line for the taxes computation.

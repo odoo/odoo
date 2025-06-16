@@ -549,8 +549,8 @@ export const accountTaxHelpers = {
             discount: load("discount", 0.0),
             currency_id: currency,
             sign: load("sign", 1.0),
-            special_mode: load('special_mode', null),
-            special_type: load('special_type', null),
+            special_mode: load("special_mode", null),
+            special_type: load("special_type", null),
             rate: load("rate", 1.0),
             filter_tax_function: load("filter_tax_function", null),
         };

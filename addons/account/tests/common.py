@@ -1318,9 +1318,18 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             expected_results,
             soft_checking=results['soft_checking'],
         )
+        if results.get('tax_totals_dispatched_global_discount'):
+            self._assert_tax_totals_summary(
+                results['tax_totals_dispatched_global_discount'],
+                expected_results,
+                soft_checking=results['soft_checking'],
+            )
 
     def _create_py_sub_test_global_discount(self, document, amount_type, amount, soft_checking):
         AccountTax = self.env['account.tax']
+
+        results = {'soft_checking': soft_checking}
+
         base_lines = AccountTax._prepare_global_discount_lines(
             base_lines=document['lines'],
             company=self.env.company,
@@ -1331,13 +1340,32 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         new_document['lines'] += base_lines
         AccountTax._add_tax_details_in_base_lines(new_document['lines'], self.env.company)
         AccountTax._round_base_lines_tax_details(new_document['lines'], self.env.company)
-        tax_totals = AccountTax._get_tax_totals_summary(
+        results['tax_totals'] = AccountTax._get_tax_totals_summary(
             base_lines=new_document['lines'],
             currency=new_document['currency'],
             company=self.env.company,
             cash_rounding=new_document['cash_rounding'],
         )
-        return {'tax_totals': tax_totals, 'soft_checking': soft_checking}
+
+        base_lines = AccountTax._dispatch_global_discount_lines(
+            base_lines=new_document['lines'],
+            company=self.env.company,
+        )
+        new_document = copy.deepcopy(document)
+        new_document['lines'] = []
+        for base_line in base_lines:
+            new_document['lines'].append(base_line)
+            new_document['lines'] += base_line['discount_base_lines']
+        AccountTax._add_tax_details_in_base_lines(new_document['lines'], self.env.company)
+        AccountTax._round_base_lines_tax_details(new_document['lines'], self.env.company)
+        results['tax_totals_dispatched_global_discount'] = AccountTax._get_tax_totals_summary(
+            base_lines=new_document['lines'],
+            currency=new_document['currency'],
+            company=self.env.company,
+            cash_rounding=new_document['cash_rounding'],
+        )
+
+        return results
 
     def _create_js_sub_test_global_discount(self, document, amount_type, amount, soft_checking):
         return {
