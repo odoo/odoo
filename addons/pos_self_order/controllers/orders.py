@@ -25,6 +25,9 @@ class PosSelfOrderController(http.Controller):
         if not (sequence_number and pos_reference and tracking_number):
             pos_reference, sequence_number, tracking_number = pos_session.get_next_order_refs(ref_prefix=ref_prefix, tracking_prefix=tracking_prefix)
 
+        if device_type == 'kiosk':
+            order['floating_order_name'] = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
+
         if 'picking_type_id' in order:
             del order['picking_type_id']
 

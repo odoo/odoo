@@ -21,7 +21,12 @@ patch(SelfOrder.prototype, {
                 (o) => o.access_token === data["pos.order"][0].access_token
             );
             if (status === "success" && !this.currentOrder.access_token && order) {
-                this.confirmationPage("order", this.config.self_ordering_mode, order.access_token);
+                this.confirmationPage(
+                    "order",
+                    this.config.self_ordering_mode,
+                    order.access_token,
+                    true
+                );
             }
         });
     },
