@@ -125,6 +125,7 @@ export class WebsiteBuilder extends Component {
         onWillDestroy(() => {
             websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
             this.websiteService.currentWebsiteId = null;
+            websiteSystrayRegistry.trigger("EDIT-WEBSITE");
         });
 
         effect(
