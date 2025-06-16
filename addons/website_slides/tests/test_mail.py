@@ -1,5 +1,9 @@
-import contextlib
+from werkzeug.urls import url_decode
 
+import contextlib
+import re
+
+from odoo import tools
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.website_slides.tests.common import SlidesCase
@@ -47,6 +51,14 @@ class TestSlidesNotifications(SlidesCase, CronMixinCase):
             cron.method_direct_trigger()
             return capture
 
+    def _extract_unfollow_url(self, mail_body):
+        unfollow_urls = [
+            link_url
+            for _, link_url, _, _ in re.findall(tools.mail.HTML_TAG_URL_REGEX, mail_body)
+            if '/slides/channel' in link_url
+        ]
+        return unfollow_urls
+
     def test_assert_initial_values(self):
         self.assertEqual(len(self.attendee_ids_asc), 11, 'Should have 10 test users + creator (officer)')
 
@@ -66,6 +78,16 @@ class TestSlidesNotifications(SlidesCase, CronMixinCase):
         self.assertNotSentEmail()
 
         self._execute_slide_mailing_cron()
+        for mail in self._new_mails:
+            unfollow_url = self._extract_unfollow_url(mail.body_html)
+            self.assertEqual(len(unfollow_url), 1)
+            url = unfollow_url[0]
+            print('url', url)
+            # caca = url_decode(url)
+            # print('caca', caca)
+            res = self.url_open(url)
+            print('res', res)
+
         # should have sent one email / attendee until the iteration max
         self.assertEqual(len(self._new_mails), test_batch_size)
         contacted = self.attendee_ids_asc[:test_batch_size]

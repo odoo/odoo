@@ -47,6 +47,7 @@ Featuring
         'views/website_slides_templates_lesson.xml',
         'views/website_slides_templates_lesson_fullscreen.xml',
         'views/website_slides_templates_lesson_embed.xml',
+        'views/website_slides_templates_portal_unsubscribe.xml',
         'views/website_slides_templates_profile.xml',
         'views/website_slides_templates_utils.xml',
         'views/website_pages_views.xml',

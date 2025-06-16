@@ -735,6 +735,7 @@ class SlideSlide(models.Model):
             # fetch interested attendees
             base_domain = [
                 ('channel_id', '=', slide.channel_id.id),
+                ('opt_out', '=', False),
             ]
             if slide.publish_attendee_id:
                 base_domain += [('id', '>', slide.publish_attendee_id.id)]
@@ -743,6 +744,7 @@ class SlideSlide(models.Model):
             # send template directly to attendees (don't post on slide, not necessary)
             template = slide.channel_id.publish_template_id
             for attendee in todo_valid:
+                attendee_token = attendee._generate_mailing_token(),
                 template.send_mail(
                     slide.id,
                     force_send=True,
@@ -750,6 +752,11 @@ class SlideSlide(models.Model):
                     email_values={
                         'email_cc': False,
                         'email_to': attendee.partner_id.email_formatted,
+                    },
+                    layout_render_ctx={
+                        'show_unfollow': True,
+                        'unfollow_text': 'Stop harassing me',
+                        'unfollow_url': f'/slides/channel/{slide.channel_id.id}/opt_out?{urls.url_encode({"attendee_id": attendee.id, "token": attendee_token})}',
                     },
                 )
             # update status, either plan a retry, either set as done
