@@ -28,6 +28,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { usePositionHook } from "@html_editor/position_hook";
 
 const rad = Math.PI / 180;
+const MIN_IMAGE_SIZE = 20;
 
 export class ImageTransformation extends Component {
     static template = "html_editor.ImageTransformation";
@@ -79,13 +80,9 @@ export class ImageTransformation extends Component {
         const center = this.transfo.active.center;
         const cdx = center.left - ev.pageX;
         const cdy = center.top - ev.pageY;
-
         if (this.transfo.active.type == "rotator") {
             let ang;
-            const dang =
-                Math.atan(
-                    (settings.width * settings.scalex) / (settings.height * settings.scaley)
-                ) / rad;
+            const dang = Math.atan(settings.width / settings.height) / rad;
 
             if (cdy) {
                 ang = Math.atan(-cdx / cdy) / rad;
@@ -101,9 +98,6 @@ export class ImageTransformation extends Component {
             }
 
             ang -= dang;
-            if (settings.scaley < 0 && settings.scalex < 0) {
-                ang += 180;
-            }
 
             if (!ev.ctrlKey) {
                 settings.angle =
@@ -133,32 +127,33 @@ export class ImageTransformation extends Component {
             settings.translatex += dx;
             settings.translatey += dy;
         } else if (this.transfo.active.type.length === 2) {
-            const angle = settings.angle * rad;
-            const dx = cdx * Math.cos(angle) - cdy * Math.sin(-angle);
-            const dy = -cdx * Math.sin(angle) + cdy * Math.cos(-angle);
+            const width = this.transfo.active.width;
+            const height = this.transfo.active.height;
+            const deltaX = ev.pageX - this.transfo.active.pageX;
+            const deltaY = ev.pageY - this.transfo.active.pageY;
+
+            let newWidth = width;
+            let newHeight = height;
+
             if (this.transfo.active.type.indexOf("t") != -1) {
-                settings.scaley = dy / (settings.height / 2);
+                newHeight = height - deltaY;
             }
             if (this.transfo.active.type.indexOf("b") != -1) {
-                settings.scaley = -dy / (settings.height / 2);
+                newHeight = height + deltaY;
             }
             if (this.transfo.active.type.indexOf("l") != -1) {
-                settings.scalex = dx / (settings.width / 2);
+                newWidth = width - deltaX;
             }
             if (this.transfo.active.type.indexOf("r") != -1) {
-                settings.scalex = -dx / (settings.width / 2);
+                newWidth = width + deltaX;
             }
-            if (settings.scaley > 0 && settings.scaley < 0.05) {
-                settings.scaley = 0.05;
+
+            // Ensure minimum dimensions
+            if (newWidth < MIN_IMAGE_SIZE) {
+                newWidth = MIN_IMAGE_SIZE;
             }
-            if (settings.scalex > 0 && settings.scalex < 0.05) {
-                settings.scalex = 0.05;
-            }
-            if (settings.scaley < 0 && settings.scaley > -0.05) {
-                settings.scaley = -0.05;
-            }
-            if (settings.scalex < 0 && settings.scalex > -0.05) {
-                settings.scalex = -0.05;
+            if (newHeight < MIN_IMAGE_SIZE) {
+                newHeight = MIN_IMAGE_SIZE;
             }
 
             if (
@@ -168,15 +163,22 @@ export class ImageTransformation extends Component {
                     this.transfo.active.type === "tr" ||
                     this.transfo.active.type === "br")
             ) {
-                settings.scaley = settings.scalex;
+                const aspectRatio = width / height;
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    newHeight = newWidth / aspectRatio;
+                } else {
+                    newWidth = newHeight * aspectRatio;
+                }
             }
+            this.image.style.width = newWidth + "px";
+            this.image.style.height = newHeight + "px";
+            settings.width = newWidth;
+            settings.height = newHeight;
         }
 
         settings.angle = Math.round(settings.angle);
         settings.translatex = Math.round(settings.translatex);
         settings.translatey = Math.round(settings.translatey);
-        settings.scalex = Math.round(settings.scalex * 100) / 100;
-        settings.scaley = Math.round(settings.scaley * 100) / 100;
         this.positionTransfoContainer();
         this.props.onChange();
     }
@@ -216,10 +218,10 @@ export class ImageTransformation extends Component {
 
         this.transfo.active = {
             type: type,
-            scalex: this.transfo.settings.scalex,
-            scaley: this.transfo.settings.scaley,
             pageX: ev.pageX,
             pageY: ev.pageY,
+            width: parseFloat(getComputedStyle(this.image).width),
+            height: parseFloat(getComputedStyle(this.image).height),
             center: this.getOffset(this.transfoCenter.el),
         };
     }
@@ -234,21 +236,12 @@ export class ImageTransformation extends Component {
             transform.indexOf("rotate") != -1
                 ? parseFloat(transform.match(/rotate\(([^)]+)deg\)/)[1])
                 : 0;
-        this.transfo.settings.scalex =
-            transform.indexOf("scaleX") != -1
-                ? parseFloat(transform.match(/scaleX\(([^)]+)\)/)[1])
-                : 1;
-        this.transfo.settings.scaley =
-            transform.indexOf("scaleY") != -1
-                ? parseFloat(transform.match(/scaleY\(([^)]+)\)/)[1])
-                : 1;
 
         this.image.style.transform = "";
 
         this.transfo.settings.pos = this.getOffset(this.image);
-
-        this.transfo.settings.height = this.image.clientHeight;
-        this.transfo.settings.width = this.image.clientWidth;
+        this.transfo.settings.width = parseFloat(getComputedStyle(this.image).width);
+        this.transfo.settings.height = parseFloat(getComputedStyle(this.image).height);
 
         const translatex = transform.match(/translateX\(([0-9.-]+)(%|px)\)/);
         const translatey = transform.match(/translateY\(([0-9.-]+)(%|px)\)/);
@@ -275,8 +268,8 @@ export class ImageTransformation extends Component {
 
     positionTransfoContainer() {
         const settings = this.transfo.settings;
-        const width = parseFloat(settings.css.width);
-        const height = parseFloat(settings.css.height);
+        const width = parseFloat(getComputedStyle(this.image).width);
+        const height = parseFloat(getComputedStyle(this.image).height);
         settings.translatexp = Math.round((settings.translatex / width) * 1000) / 10;
         settings.translateyp = Math.round((settings.translatey / height) * 1000) / 10;
 
@@ -294,11 +287,6 @@ export class ImageTransformation extends Component {
         controls.style.width = width + "px";
         controls.style.height = height + "px";
         controls.style.cursor = "move";
-
-        for (const child of controls.children) {
-            child.style.transform =
-                "scaleX(" + 1 / settings.scalex + ") scaleY(" + 1 / settings.scaley + ")";
-        }
     }
 
     setImageTransformation(element) {
@@ -321,12 +309,6 @@ export class ImageTransformation extends Component {
                     ? this.transfo.settings.translateyp + "%"
                     : this.transfo.settings.translatey + "px") +
                 ") ";
-        }
-        if (this.transfo.settings.scalex != 1) {
-            transform += " scaleX(" + this.transfo.settings.scalex + ") ";
-        }
-        if (this.transfo.settings.scaley != 1) {
-            transform += " scaleY(" + this.transfo.settings.scaley + ") ";
         }
         element.style.transform = transform;
     }
