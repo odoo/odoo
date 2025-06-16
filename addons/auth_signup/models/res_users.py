@@ -6,7 +6,7 @@ import logging
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -185,9 +185,14 @@ class ResUsers(models.Model):
             email_values['email_to'] = user.email
             with contextlib.closing(self.env.cr.savepoint()):
                 if account_created_template:
-                    account_created_template.send_mail(
+                    account_created_template.with_context(
+                        email_notification_force_header=True,
+                        email_notification_force_footer=True,
+                    ).send_mail(
                         user.id, force_send=True,
-                        raise_exception=True, email_values=email_values)
+                        raise_exception=True, email_values=email_values,
+                        email_layout_xmlid='mail.mail_notification_layout',
+                        subtitles=[_("Welcome to Odoo"), user.name or ''])
                 else:
                     user_lang = user.lang or self.env.lang or 'en_US'
                     body = self.env['mail.render.mixin'].with_context(lang=user_lang)._render_template(
@@ -197,9 +202,21 @@ class ResUsers(models.Model):
                     mail = self.env['mail.mail'].sudo().create({
                         'subject': self.with_context(lang=user_lang).env._('Password reset'),
                         'email_from': user.company_id.email_formatted or user.email_formatted,
+                        'body': body,
                         'body_html': body,
                         **email_values,
                     })
+                    mail.body_html = self.env['mail.render.mixin']._render_encapsulate(
+                        'mail.mail_notification_layout', body, context_record=self,
+                        add_context={
+                            'email_add_signature': True,
+                            'email_notification_force_header': True,
+                            'email_notification_force_footer': True,
+                            'message': mail.mail_message_id,
+                            'is_html_empty': tools.is_html_empty,
+                            'signature': self.env.user.signature,
+                            'subtitles': ['Your Account', user.display_name],
+                        })
                     mail.send()
             if signup_type == 'reset':
                 _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
@@ -240,7 +257,7 @@ class ResUsers(models.Model):
         for user, invited_users in invited_by_users.items():
             invited_user_emails = [f"{u.name} ({u.login})" for u in invited_users]
             template = email_template.with_context(dbname=self.env.cr.dbname, invited_users=invited_user_emails)
-            template.send_mail(user.id, email_layout_xmlid='mail.mail_notification_light', force_send=False)
+            template.send_mail(user.id, email_layout_xmlid='mail.mail_notification_layout', force_send=False)
             if not self.env['ir.cron']._commit_progress(len(invited_users)):
                 _logger.info("send_unregistered_user_reminder: timeout reached, stopping")
                 break
