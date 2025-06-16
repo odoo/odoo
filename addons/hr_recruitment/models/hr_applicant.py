@@ -3,13 +3,11 @@ import re
 
 from markupsafe import Markup
 from collections import defaultdict
-from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 from odoo import api, fields, models, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.osv import expression
 from odoo.tools import SQL, clean_context
 from odoo.tools.translate import _
 
@@ -521,26 +519,21 @@ class HrApplicant(models.Model):
                 applicant.application_status = 'ongoing'
 
     def _search_application_status(self, operator, value):
-        supported_operators = ['=', '!=', 'in', 'not in']
-        if operator not in supported_operators:
-            raise UserError(_('Operation not supported'))
+        if operator != 'in':
+            return NotImplemented
 
-        # Normalize value to be a list to simplify processing
-        if isinstance(value, (str, bool)):
-            value = [value]
+        domains = []
+        # Map statuses to domain filters
+        if 'refused' in value:
+            domains.append([('active', '=', True), ('refuse_reason_id', '!=', None)])
+        if 'hired' in value:
+            domains.append([('active', '=', True), ('date_closed', '!=', False)])
+        if 'archived' in value or False in value:
+            domains.append([('active', '=', False)])
+        if 'ongoing' in value:
+            domains.append([('active', '=', True), ('date_closed', '=', False)])
 
-        valid_statuses_domain = {
-            'refused': Domain('refuse_reason_id', '!=', None),
-            'archived': Domain('active', '=', False),
-            'hired': Domain('date_closed', '!=', False),
-            'ongoing': Domain(['&', ('active', '=', True), ('date_closed', '=', False)]),
-        }
-        if not all(v in (list(valid_statuses_domain) + [False]) for v in value):
-            raise UserError(_('Some values do not exist in the application status'))
-        domain = Domain.FALSE
-        for status in value:
-            domain |= valid_statuses_domain[status]
-        return ~domain if operator in expression.NEGATIVE_TERM_OPERATORS else domain
+        return Domain.OR(domains)
 
     def _get_attachment_number(self):
         read_group_res = self.env['ir.attachment']._read_group(

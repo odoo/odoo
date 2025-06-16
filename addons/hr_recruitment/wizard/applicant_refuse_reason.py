@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-
 from datetime import datetime
 from itertools import product
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 class ApplicantGetRefuseReason(models.TransientModel):
@@ -59,11 +57,11 @@ class ApplicantGetRefuseReason(models.TransientModel):
     @api.depends('applicant_ids')
     def _compute_duplicate_applicant_ids_domain(self):
         for wizard in self:
-            domain = expression.AND([
-                self.applicant_ids._get_similar_applicants_domain(),
-                [('id', 'not in', self.applicant_ids.ids)],
-                [('application_status', 'not in', ['hired', 'refused', 'archived'])]
-            ])
+            domain = (
+                self.applicant_ids._get_similar_applicants_domain()
+                & Domain('id', 'not in', self.applicant_ids.ids)
+                & Domain('application_status', 'not in', ['hired', 'refused', 'archived'])
+            )
             wizard.duplicate_applicant_ids_domain = domain
             wizard.duplicates_count = self.env['hr.applicant'].search_count(wizard.duplicate_applicant_ids_domain)
 

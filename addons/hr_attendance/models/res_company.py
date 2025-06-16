@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
-from odoo.osv.expression import OR
+from odoo.fields import Domain
 
 import uuid
 from werkzeug.urls import url_join
@@ -68,18 +68,20 @@ class ResCompany(models.Model):
             self.env.cr.execute_values(query, values_args)
 
     def write(self, vals):
-        search_domains = []  # Overtime to generate
+        search_domain = Domain.FALSE  # Overtime to generate
         # Also recompute if the threshold have changed
         if 'overtime_company_threshold' in vals or 'overtime_employee_threshold' in vals:
-            for company in self:
-                # If we modify the thresholds only
-                if (vals.get('overtime_company_threshold') != company.overtime_company_threshold) or\
-                    (vals.get('overtime_employee_threshold') != company.overtime_employee_threshold):
-                    search_domains.append([('employee_id.company_id', '=', company.id)])
+            # If we modify the thresholds only
+            search_domain = Domain.OR(
+                Domain('employee_id.company_id', '=', company.id)
+                for company in self
+                if (vals.get('overtime_company_threshold') != company.overtime_company_threshold)
+                or (vals.get('overtime_employee_threshold') != company.overtime_employee_threshold)
+            )
 
         res = super().write(vals)
-        if search_domains:
-            self.env['hr.attendance'].search(OR(search_domains))._update_overtime()
+        if not search_domain.is_false():
+            self.env['hr.attendance'].search(search_domain)._update_overtime()
 
         return res
 

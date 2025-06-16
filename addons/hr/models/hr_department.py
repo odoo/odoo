@@ -5,7 +5,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class HrDepartment(models.Model):
@@ -165,7 +165,7 @@ class HrDepartment(models.Model):
         ]
         if 'domain' in action:
             allowed_company_ids = self.env.context.get('allowed_company_ids', [])
-            action['domain'] = expression.AND([
+            action['domain'] = Domain.AND([
                 ast.literal_eval(action['domain'].replace('allowed_company_ids', str(allowed_company_ids))), domain
             ])
         else:

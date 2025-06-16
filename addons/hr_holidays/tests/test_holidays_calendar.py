@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, timedelta
-
-from odoo.osv import expression
 
 from odoo.addons.base.tests.common import HttpCase
 from odoo.tests.common import tagged
