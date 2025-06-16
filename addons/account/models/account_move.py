@@ -7208,7 +7208,7 @@ class AccountMove(models.Model):
             domain,
             order='date asc, invoice_date asc, sequence_number asc, id asc',
             limit=job_count)
-        to_process.try_lock_for_update()
+        to_process = to_process.try_lock_for_update()
         if not to_process:
             return
 

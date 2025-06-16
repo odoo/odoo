@@ -1836,7 +1836,6 @@ class SaleOrder(models.Model):
             invoice.action_post()
 
             if invoice._is_ready_to_be_sent():
-                invoice.is_move_sent = True  # Mark invoice as sent
                 send_context = {"allow_raising": False, "allow_fallback_pdf": True}
 
                 default_template_param = (
@@ -1851,4 +1850,4 @@ class SaleOrder(models.Model):
                     if mail_template.exists():
                         send_context["mail_template"] = mail_template
 
-                self.env["account.move.send"]._generate_and_send_invoices(invoice, **send_context)
+                self.env['account.move.send']._generate_and_send_invoices_post_commit(invoice, **send_context)

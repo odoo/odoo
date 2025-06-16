@@ -1,17 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
-
+from contextlib import contextmanager
 from datetime import date
 from unittest.mock import patch
 
 from odoo import Command
+from odoo.exceptions import UserError
+from odoo.tests import Form, tagged, users, warmup
+from odoo.tests.common import new_test_user
+from odoo.tests.test_cursor import TestCursor
+from odoo.tools import formataddr, mute_logger
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import UserError
-from odoo.tests import users, warmup, tagged, Form
-from odoo.tests.common import new_test_user
-from odoo.tools import formataddr, mute_logger
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'mail_flow')
@@ -1415,3 +1417,104 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         message = self._get_mail_message(invoice)
         self.assertEqual(message.reply_to, custom_reply_to)
+
+    @contextmanager
+    def _send_after_commit(self):
+        """ Allow the sending to be postponed after commit, and run the post-commit hooks when leaving.
+        Everything happens in registry test mode: the cursor opened by the hook is a TestCursor on top of
+        the test cursor, so its commit only releases a savepoint and nothing is ever committed for real.
+        """
+        with (
+            self.enter_registry_test_mode(),
+            patch.object(self.registry['account.move'], '_can_commit', return_value=True),
+        ):
+            yield
+            self.env.flush_all()  # as done by the commit
+            self.env.cr.postcommit.run()
+
+    def test_generate_and_send_invoices_post_commit(self):
+        """ The invoice must only be sent once the current transaction is committed,
+        in a new cursor, with all the records given as arguments bound to that cursor. """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        template = self.env.ref('account.email_template_edi_invoice').copy({'subject': "Sent after commit"}).sudo()
+
+        AccountMoveSend = self.registry['account.move.send']
+        generate_and_send_invoices = AccountMoveSend._generate_and_send_invoices
+        calls = []
+
+        def spy(self, moves, **kwargs):
+            calls.append((self, moves, kwargs))
+            return generate_and_send_invoices(self, moves, **kwargs)
+
+        with patch.object(AccountMoveSend, '_generate_and_send_invoices', spy), self._send_after_commit():
+            self.env['account.move.send']._generate_and_send_invoices_post_commit(
+                invoice,
+                sending_methods=['email'],
+                mail_template=template,
+            )
+            self.assertFalse(calls, "Nothing should be sent before the commit")
+            self.assertFalse(invoice.invoice_pdf_report_id)
+            self.assertFalse(invoice.is_move_sent)
+            self.assertTrue(invoice.sending_data, "The invoice must be flagged for the cron in the current transaction")
+
+        self.assertEqual(len(calls), 1)
+        send, moves, kwargs = calls[0]
+        self.assertEqual(moves, invoice)
+        self.assertEqual(kwargs['mail_template'], template)
+        new_cr = send.env.cr
+        self.assertIsInstance(new_cr, TestCursor)
+        self.assertNotEqual(self.env.cr, new_cr)
+        self.assertIs(moves.env.cr, new_cr)
+        self.assertIs(kwargs['mail_template'].env.cr, new_cr)
+        self.assertTrue(kwargs['mail_template'].env.su, "The sudo flag must be kept on the new cursor")
+
+        self.env.invalidate_all()
+        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.message_ids.filtered(lambda m: m.subject == "Sent after commit"))
+        self.assertTrue(invoice.is_move_sent)
+        self.assertFalse(invoice.sending_data)
+
+    def test_generate_and_send_invoices_post_commit_error(self):
+        """ An error while sending after the commit must be logged and rolled back,
+        not raised: the transaction that triggered the sending is already committed.
+        The invoice is left to the sending cron. """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        def failing_hook(self, invoice, invoice_data):
+            invoice.ref = "Should be rolled back"
+            raise ValueError("Sending failed")
+
+        with (
+            self.assertLogs('odoo.addons.account.tools.after_commit', level='ERROR'),
+            patch.object(self.registry['account.move.send'], '_hook_invoice_document_before_pdf_report_render', failing_hook),
+            self._send_after_commit(),
+        ):
+            self.env['account.move.send']._generate_and_send_invoices_post_commit(invoice, sending_methods=['email'])
+
+        self.env.invalidate_all()
+        self.assertFalse(invoice.ref)
+        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.is_move_sent)
+        self.assertTrue(invoice.sending_data)
+
+    def test_generate_and_send_invoices_post_commit_locked(self):
+        """ An invoice locked by another transaction is not sent after the commit,
+        but left to the sending cron. """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        with (
+            patch.object(self.registry['account.move'], 'try_lock_for_update', lambda self, **kwargs: self.browse()),
+            self._send_after_commit(),
+        ):
+            self.env['account.move.send']._generate_and_send_invoices_post_commit(invoice, sending_methods=['email'])
+
+        self.env.invalidate_all()
+        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.is_move_sent)
+        self.assertTrue(invoice.sending_data)
+
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.is_move_sent)
+        self.assertFalse(invoice.sending_data)
