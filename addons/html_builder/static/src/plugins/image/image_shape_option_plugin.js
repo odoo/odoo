@@ -109,7 +109,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         const svgWidth = getData("resizeWidth") || getData("width") || (await getNaturalWidth());
 
         // Get the svg element.
-        const svg = this.computeShape(shapeSvgText, {
+        const svg = await this.computeShape(shapeSvgText, {
             shapeId,
             shapeFlip: getData("shapeFlip") || "",
             shapeRotate: getData("shapeRotate") || 0,
@@ -198,7 +198,8 @@ export class ImageShapeOptionPlugin extends Plugin {
      * @param {HTMLImageElement} img
      * @returns {SVGElement}
      */
-    computeShape(svgText, { shapeId, shapeFlip, shapeRotate, shapeAnimationSpeed, shapeColors }) {
+    async computeShape(svgText, params) {
+        const { shapeId, shapeFlip, shapeRotate, shapeAnimationSpeed, shapeColors } = params;
         // Apply the colors to the shape.
         svgText = this.replaceSvgColors(svgText, shapeColors.split(";"));
         // Apply the right animation speed if there is an animated shape.
@@ -233,6 +234,9 @@ export class ImageShapeOptionPlugin extends Plugin {
         }
 
         // todo: Add shape animations on hover.
+        for (const cb of this.getResource("post_compute_shape_listeners")) {
+            await cb(svg, params);
+        }
         // if (params.hoverEffect && this._canHaveHoverEffect()) {
         //     this._addImageShapeHoverEffect(svg, img);
         // }
