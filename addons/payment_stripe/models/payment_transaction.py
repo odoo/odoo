@@ -6,7 +6,7 @@ import pprint
 from werkzeug.urls import url_encode, url_join
 
 from odoo import _, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import const
@@ -299,8 +299,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if inconsistent data were received
-        :raise: ValidationError if the data match no transaction
         """
         if provider_code != 'stripe':
             return super()._get_tx_from_notification_data(provider_code, notification_data)
@@ -356,7 +354,6 @@ class PaymentTransaction(models.Model):
                                        and 'payment_method' can be populated with their
                                        corresponding Stripe API objects.
         :return: None
-        :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'stripe':
@@ -384,10 +381,8 @@ class PaymentTransaction(models.Model):
             self.provider_reference = notification_data['payment_intent']['id']
             status = notification_data['payment_intent']['status']
         if not status:
-            raise ValidationError(
-                "Stripe: " + _("Received data with missing intent status.")
-            )
-        if status in const.STATUS_MAPPING['draft']:
+            self._set_error(_("Received data with missing intent status."))
+        elif status in const.STATUS_MAPPING['draft']:
             pass
         elif status in const.STATUS_MAPPING['pending']:
             self._set_pending()

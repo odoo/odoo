@@ -2,10 +2,8 @@
 
 import json
 import logging
-import pprint
 from datetime import timedelta
 
-import requests
 from werkzeug import urls
 
 from odoo import _, fields, models

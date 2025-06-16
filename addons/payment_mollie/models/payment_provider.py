@@ -1,13 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pprint
 
-import requests
 from werkzeug import urls
 
 from odoo import _, fields, models, service
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_mollie import const
 

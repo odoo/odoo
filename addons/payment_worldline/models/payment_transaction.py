@@ -258,7 +258,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data are received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'worldline':
@@ -287,9 +286,8 @@ class PaymentTransaction(models.Model):
         status = payment_data.get('status')
         has_token_data = 'token' in payment_method_data
         if not status:
-            raise ValidationError("Worldline: " + _("Received data with missing payment state."))
-
-        if status in const.PAYMENT_STATUS_MAPPING['pending']:
+            self._set_error(_("Received data with missing payment state."))
+        elif status in const.PAYMENT_STATUS_MAPPING['pending']:
             if status == 'AUTHORIZATION_REQUESTED':
                 self._set_error("Worldline: " + status)
             elif self.operation == 'validation' \

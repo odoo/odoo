@@ -4,13 +4,9 @@ import base64
 import hashlib
 import hmac
 import logging
-import pprint
 from wsgiref.handlers import format_date_time
 
-import requests
-
-from odoo import _, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 from odoo.fields import Datetime
 
 from odoo.addons.payment_worldline import const

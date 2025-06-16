@@ -6,7 +6,6 @@ import pprint
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import consteq, str2bool
 

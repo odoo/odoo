@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 from uuid import uuid4
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools import float_round
 
 from odoo.addons.payment import utils as payment_utils
@@ -132,7 +132,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data are received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'nuvei':
@@ -155,7 +154,8 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = notification_data.get('Status') or notification_data.get('ppp_status')
         if not status:
-            raise ValidationError("Nuvei: " + _("Received data with missing payment state."))
+            self._set_error(_("Received data with missing payment state."))
+            return
         status = status.lower()
         if status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()

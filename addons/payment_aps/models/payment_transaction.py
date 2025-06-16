@@ -5,7 +5,6 @@ import logging
 from werkzeug import urls
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_aps import utils as aps_utils
@@ -106,7 +105,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data are received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'aps':
@@ -123,8 +121,8 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = notification_data.get('status')
         if not status:
-            raise ValidationError("APS: " + _("Received data with missing payment state."))
-        if status in PAYMENT_STATUS_MAPPING['pending']:
+            self._set_error(_("Received data with missing payment state."))
+        elif status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif status in PAYMENT_STATUS_MAPPING['done']:
             self._set_done()

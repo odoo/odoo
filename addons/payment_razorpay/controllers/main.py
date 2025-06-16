@@ -7,7 +7,6 @@ import pprint
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
 from odoo.addons.payment_razorpay.const import HANDLED_WEBHOOK_EVENTS

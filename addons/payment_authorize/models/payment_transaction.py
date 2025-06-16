@@ -4,7 +4,6 @@ import logging
 import pprint
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_authorize import const
@@ -96,10 +95,11 @@ class PaymentTransaction(models.Model):
         authorize_api = AuthorizeAPI(self.provider_id)
         tx_details = authorize_api.get_transaction_details(self.provider_reference)
         if 'err_code' in tx_details:  # Could not retrieve the transaction details.
-            raise ValidationError("Authorize.Net: " + _(
+            self._set_error(_(
                 "Could not retrieve the transaction details. (error code: %(error_code)s; error_details: %(error_message)s)",
                 error_code=tx_details['err_code'], error_message=tx_details.get('err_msg'),
             ))
+            return self
 
         refund_tx = self.env['payment.transaction']
         tx_status = tx_details.get('transaction', {}).get('transactionStatus')
@@ -135,7 +135,7 @@ class PaymentTransaction(models.Model):
             data = {'reference': tx_to_process.reference, 'response': res_content}
             tx_to_process._handle_notification_data('authorize', data)
         else:
-            raise ValidationError("Authorize.net: " + _(
+            _logger.warning(_(
                 "The transaction is not in a status to be refunded. (status: %(status)s, details: %(message)s)",
                 status=tx_status, message=tx_details.get('messages', {}).get('message'),
             ))

@@ -3,7 +3,6 @@
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 

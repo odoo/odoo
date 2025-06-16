@@ -5,7 +5,6 @@ import logging
 from werkzeug import urls
 
 from odoo import _, models
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_buckaroo import const
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController

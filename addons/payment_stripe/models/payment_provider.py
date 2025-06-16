@@ -2,9 +2,7 @@
 
 import json
 import logging
-import uuid
 
-import requests
 from werkzeug.urls import url_encode, url_join, url_parse
 
 from odoo import _, api, fields, models

@@ -10,7 +10,6 @@ from odoo.tools import mute_logger
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_xendit.controllers.main import XenditController
-from odoo.addons.payment_xendit.models.payment_provider import PaymentProvider
 from odoo.addons.payment_xendit.tests.common import XenditCommon
 
 

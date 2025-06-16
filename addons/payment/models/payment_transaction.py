@@ -659,9 +659,7 @@ class PaymentTransaction(models.Model):
             return self
         tx = self.search(self._prepare_domain_tx_from_reference(provider_code, reference))
         if not tx:
-            _logger.warning(
-                "Could not find the transaction for notification data: %s.", notification_data
-            )
+            _logger.warning("No transaction found matching reference %s.", reference)
         return tx
 
     def _prepare_domain_tx_from_reference(self, provider_code, reference):
