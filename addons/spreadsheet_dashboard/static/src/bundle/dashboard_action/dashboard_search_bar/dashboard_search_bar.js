@@ -5,26 +5,25 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { DashboardSearchDialog } from "../dashboard_search_dialog/dashboard_search_dialog";
 import { dateFilterValueToString } from "@spreadsheet/global_filters/helpers";
+import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
 
 export class DashboardSearchBar extends Component {
     static template = "spreadsheet_dashboard.DashboardSearchBar";
     static components = {
         DashboardFacet,
+        DashboardDateFilter,
     };
     static props = { model: Object };
 
     setup() {
         this.facets = [];
+        this.firstDateFilter = undefined;
         this.nameService = useService("name");
         this.dialog = useService("dialog");
 
         this.searchBarDropdownState = useDropdownState();
-        onWillStart(this.computeFacets.bind(this));
-        onWillUpdateProps(this.computeFacets.bind(this));
-    }
-
-    get filters() {
-        return this.props.model.getters.getGlobalFilters();
+        onWillStart(this.computeState.bind(this));
+        onWillUpdateProps(this.computeState.bind(this));
     }
 
     openDialog() {
@@ -41,11 +40,31 @@ export class DashboardSearchBar extends Component {
         this.searchBarDropdownState.open();
     }
 
-    async computeFacets() {
-        const filters = this.filters.filter((filter) =>
-            this.props.model.getters.isGlobalFilterActive(filter.id)
+    updateFirstDateFilter(value) {
+        this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+            id: this.firstDateFilter.id,
+            value,
+        });
+    }
+
+    get firstDateFilterValue() {
+        if (!this.firstDateFilter) {
+            return undefined;
+        }
+        return this.props.model.getters.getGlobalFilterValue(this.firstDateFilter.id);
+    }
+
+    async computeState() {
+        const filters = this.props.model.getters.getGlobalFilters();
+        const firstDateFilterIndex = filters.findIndex((filter) => filter.type === "date");
+        if (firstDateFilterIndex !== -1) {
+            this.firstDateFilter = filters.splice(firstDateFilterIndex, 1)[0];
+        }
+        this.facets = await Promise.all(
+            filters
+                .filter((filter) => this.props.model.getters.isGlobalFilterActive(filter.id))
+                .map((filter) => this.getFacetFor(filter))
         );
-        this.facets = await Promise.all(filters.map((filter) => this.getFacetFor(filter)));
     }
 
     async getFacetFor(filter) {
