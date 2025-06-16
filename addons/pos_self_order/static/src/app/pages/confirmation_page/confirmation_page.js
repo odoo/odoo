@@ -97,7 +97,7 @@ export class ConfirmationPage extends Component {
             try {
                 this.isPrinting = true;
                 const order = this.confirmedOrder;
-                await this.printer.print(
+                const result = await this.printer.print(
                     OrderReceipt,
                     {
                         order: order,
@@ -108,6 +108,13 @@ export class ConfirmationPage extends Component {
                     this.updateHasPaper(true);
                 }
                 order.nb_print = 1;
+                if (typeof order.id === "number" && result) {
+                    await rpc("/pos_self_order/kiosk/increment_nb_print/", {
+                        access_token: this.selfOrder.access_token,
+                        order_id: order.id,
+                        order_access_token: order.access_token,
+                    });
+                }
             } catch (e) {
                 if (e.errorCode === "EPTR_REC_EMPTY") {
                     this.dialog.add(OutOfPaperPopup, {
