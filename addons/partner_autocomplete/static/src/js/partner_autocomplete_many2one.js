@@ -94,9 +94,7 @@ class PartnerAutoCompleteMany2one extends Component {
 		if (!data?.company) {
 			return;
 		}
-        let context = {
-            'default_is_company': true
-        };
+        let context = {};
 
         for (const [key, val] of Object.entries(data.company)) {
             context['default_' + key] = val && val.id ? val.id : val;

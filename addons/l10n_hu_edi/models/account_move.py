@@ -350,7 +350,7 @@ class AccountMove(models.Model):
             },
             'partner_vat_missing': {
                 'records': self.partner_id.commercial_partner_id.filtered(
-                    lambda p: p.is_company and not p.vat
+                    lambda p: not p.vat
                 ),
                 'message': _('Please set partner Tax ID on company partners!'),
                 'action_text': _('View partner(s)'),
@@ -358,7 +358,7 @@ class AccountMove(models.Model):
             'partner_vat_invalid': {
                 'records': self.partner_id.commercial_partner_id.filtered(
                     lambda p: (
-                        p.is_company and p.country_code == 'HU'
+                        p.country_code == 'HU'
                         and (
                             (p.vat and not hu_vat_regex.fullmatch(p.vat))
                             or (p.l10n_hu_group_vat and not hu_vat_regex.fullmatch(p.l10n_hu_group_vat))
@@ -370,7 +370,7 @@ class AccountMove(models.Model):
             },
             'partner_address_missing': {
                 'records': self.partner_id.commercial_partner_id.filtered(
-                    lambda p: p.is_company and (not p.country_id or not p.zip or not p.city or not p.street),
+                    lambda p: (not p.country_id or not p.zip or not p.city or not p.street),
                 ),
                 'message': _('Please set partner Country, Zip, City and Street!'),
                 'action_text': _('View partner(s)'),
@@ -833,6 +833,7 @@ class AccountMove(models.Model):
 
         base_invoice = self._l10n_hu_get_chain_base()
 
+        # TODO Check with team
         invoice_values = {
             'invoice': self,
             'invoiceIssueDate': self.invoice_date,
@@ -844,8 +845,8 @@ class AccountMove(models.Model):
             'supplierBankAccountNumber': format_bank_account_number(self.partner_bank_id or supplier.bank_ids[:1]),
             'individualExemption': self.company_id.l10n_hu_tax_regime == 'ie',
             'customer': customer,
-            'customerVatStatus': (not customer.is_company and 'PRIVATE_PERSON') or (customer.country_code == 'HU' and 'DOMESTIC') or 'OTHER',
-            'customer_vat_data': get_vat_data(customer) if customer.is_company else None,
+            'customerVatStatus': (not customer.vat and 'PRIVATE_PERSON') or (customer.country_code == 'HU' and 'DOMESTIC') or 'OTHER',
+            'customer_vat_data': get_vat_data(customer) if customer.vat else None,
             'customerBankAccountNumber': format_bank_account_number(customer.bank_ids[:1]),
             'smallBusinessIndicator': self.company_id.l10n_hu_tax_regime == 'sb',
             'exchangeRate': currency_rate,

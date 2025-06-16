@@ -13,7 +13,6 @@ class TestControllersRoute(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.rated_partner = self.env['res.partner'].create({
             'name': 'Test company',
             'email': "testcompany@example.com",
-            'is_company': True,
             'child_ids': [
                 (0, 0, {'name': 'Test child_1', 'type': 'contact', 'email': "testchild_1@example.com",}),
             ]

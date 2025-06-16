@@ -164,7 +164,7 @@ class AuthorizeAPI:
         # but is not allowed for transactions with a payment.token.
         bill_to = {}
         if 'profile' not in tx_data:
-            if tx.partner_id.is_company:
+            if tx.partner_id.vat:
                 split_name = '', tx.partner_name
             else:
                 split_name = payment_utils.split_partner_name(tx.partner_name)
@@ -173,7 +173,7 @@ class AuthorizeAPI:
                 'billTo': {
                     'firstName': split_name[0][:50],
                     'lastName': split_name[1][:50],  # lastName is always required
-                    'company': tx.partner_name[:50] if tx.partner_id.is_company else '',
+                    'company': tx.partner_name[:50] if tx.partner_id.vat else '',
                     'address': tx.partner_address,
                     'city': tx.partner_city,
                     'state': tx.partner_state_id.name or '',

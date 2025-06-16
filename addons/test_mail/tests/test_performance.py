@@ -1599,7 +1599,6 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
                                     "id": self.env.user.partner_id.id,
                                     "isInternalUser": True,
-                                    "is_company": False,
                                     "name": "OdooBot",
                                     "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(
@@ -1712,7 +1711,6 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
                                     "id": self.env.user.partner_id.id,
                                     "isInternalUser": True,
-                                    "is_company": False,
                                     "name": "OdooBot",
                                     "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(

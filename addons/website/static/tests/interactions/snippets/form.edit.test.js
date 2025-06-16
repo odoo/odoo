@@ -34,7 +34,7 @@ const formXml = `
                                     <span class="s_website_form_label_content">Company</span>
                                 </label>
                                 <div class="col-sm">
-                                    <input class="form-control s_website_form_input" type="text" name="company" data-fill-with="commercial_company_name" id="o291di1too2s"/>
+                                    <input class="form-control s_website_form_input" type="text" name="company" data-fill-with="parent_name" id="o291di1too2s"/>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +53,7 @@ const formXml = `
 function setupUser() {
     onRpc("res.users", "read", ({ parent }) => {
         const result = parent();
-        result[0].commercial_company_name = "TestCompany";
+        result[0].parent_name = "TestCompany";
         return result;
     });
 }

@@ -215,7 +215,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                             1
                         ].partner_id._get_avatar_128_access_token(),
                         "id": self.users[1].partner_id.id,
-                        "is_company": False,
                         "isInternalUser": True,
                         "user_livechat_username": "chuck",
                         "userId": self.users[1].id,
@@ -327,7 +326,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                         "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
                                         "id": self.env.user.partner_id.id,
                                         "isInternalUser": False,
-                                        "is_company": False,
                                         "name": "Chell Gladys",
                                         "userId": self.env.user.id,
                                         "user_livechat_username": False,

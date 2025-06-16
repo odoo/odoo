@@ -358,7 +358,6 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         """Ensure that credit to invoice gets computed on partners' companies."""
         company_a = self.env['res.partner'].create({
             'name': "Company A",
-            'is_company': True,
             'credit_limit': 10000.0,
         })
         self.partner_a.commercial_partner_id = company_a

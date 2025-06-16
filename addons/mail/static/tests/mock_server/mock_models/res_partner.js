@@ -229,7 +229,7 @@ export class ResPartner extends webModels.ResPartner {
         fields = kwargs.fields;
         extra_fields = kwargs.extra_fields ?? [];
         if (!fields) {
-            fields = ["avatar_128", "name", "email", "active", "im_status", "is_company", "user"];
+            fields = ["avatar_128", "name", "email", "active", "im_status", "user"];
         }
         fields = [...fields, extra_fields];
 

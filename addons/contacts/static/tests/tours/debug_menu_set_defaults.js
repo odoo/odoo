@@ -11,13 +11,19 @@
                 run: "click",
             },
             {
-                content: "Check that Company is checked by default, and not Individual",
-                trigger: '.o_field_widget[name="company_type"] input[data-value="company"]:checked',
+                content: "Check that Job Position is empty",
+                trigger: '.o_field_widget[name="function"] input#function_0',
+                run: function () {
+                    const function_input = document.querySelector('#function_0')
+                    if (function_input.value) {
+                        console.error(`Job Position should be empty`);
+                    }
+                }
             },
             {
-                content: "Select the individual radio button",
-                trigger: '.o_field_widget[name="company_type"] input[data-value="person"]',
-                run: "click",
+                content: "Enter a Job Position",
+                trigger: '.o_field_widget[name="function"] input#function_0',
+                run: "edit Default Position",
             },
             {
                 content: "Open the debug menu",
@@ -34,7 +40,7 @@
                 trigger: '#formview_default_fields',
                 run: function () {
                     const element_field = document.querySelector('select#formview_default_fields');
-                    element_field.value = 'company_type';
+                    element_field.value = 'function';
                     element_field.dispatchEvent(new Event("change"));
                 },
             },
@@ -58,8 +64,14 @@
                 run: "click",
             },
             {
-                content: "Check that Individual is checked instead of Company",
-                trigger: '.o_field_widget[name="company_type"] input[data-value="person"]:checked',
+                content: "Check that Job Position is set as `Default Position`",
+                trigger: '.o_field_widget[name="function"] input#function_0',
+                run: function () {
+                    const function_input = document.querySelector('#function_0')
+                    if (function_input.value !== "Default Position") {
+                        console.error(`Job Position should be set as 'Default Position'`);
+                    }
+                }
             },
             {
                 content: "Discard the contact creation",

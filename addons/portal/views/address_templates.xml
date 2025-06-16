@@ -181,8 +181,8 @@
                     <input
                         id="o_company_name"
                         type="text"
-                        name="company_name"
-                        t-att-value="current_partner.commercial_company_name"
+                        name="parent_name"
+                        t-att-value="current_partner.parent_name"
                         t-att-readonly="'1' if (not is_commercial_address or vat_warning) else None"
                         class="form-control"
                     />
@@ -211,8 +211,8 @@
                 </div>
                 <div t-elif="not is_commercial_address" class="col-12 d-none d-lg-block mb-1">
                     <small class="form-text text-muted">
-                        <t t-if="commercial_partner.is_company">
-                            The company name and VAT number can only be updated on the company account.
+                        <t t-if="commercial_partner.parent_id">
+                            The company name and VAT number can only be updated on the parent account.
                         </t>
                         <t t-else="">
                             The company name and VAT number can only be updated on your main account.

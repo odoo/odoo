@@ -59,6 +59,10 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "edit abc@odoo.com",
     },
     {
+        trigger: `input[name="parent_name"]`,
+        run: "edit YourCompany"
+    },
+    {
         trigger: `input[name="street"]`,
         run: "edit SO1 Delivery Street, 33",
     },

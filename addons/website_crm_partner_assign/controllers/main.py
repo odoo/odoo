@@ -191,7 +191,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
         current_grade = kw.get('current_grade')
         current_country = kw.get('current_country')
 
-        domain = [('grade_id', '!=', False), ('is_company', '=', True)]
+        domain = [('grade_id', '!=', False), ('parent_id', '=', False)]
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             domain += [('grade_id.website_published', '=', True)]
 
@@ -209,7 +209,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         slug = env['ir.http']._slug
         base_partner_domain = [
-            ('is_company', '=', True),
+            ('parent_id', '=', False),
             ('grade_id', '!=', False),
             ('website_published', '=', True),
             ('grade_id.website_published', '=', True),
@@ -238,7 +238,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         search = post.get('search', '')
 
-        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
+        base_partner_domain = [('parent_id', '=', False), ('grade_id', '!=', False), ('website_published', '=', True), ('grade_id.active', '=', True)]
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:

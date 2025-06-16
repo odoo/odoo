@@ -512,7 +512,7 @@ class ResPartner(models.Model):
                     res.append(True)
                 else:
                     res.append(False)
-            elif partner.commercial_partner_id.is_company:
+            elif partner.commercial_partner_id.vat:
                 if len(vat) == 12:
                     res.append(True)
                 else:

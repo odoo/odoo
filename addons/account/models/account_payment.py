@@ -117,7 +117,7 @@ class AccountPayment(models.Model):
         store=True, readonly=False, ondelete='restrict',
         compute='_compute_partner_id',
         precompute=True,
-        domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
+        domain="[('parent_id','=', False)]",
         tracking=True,
         check_company=True)
     outstanding_account_id = fields.Many2one(

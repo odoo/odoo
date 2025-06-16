@@ -344,7 +344,7 @@ class AccountEdiFormat(models.Model):
         if issuer:
             return 'B'
         elif partner_id.commercial_partner_id.country_code == 'EG':
-            return 'B' if partner_id.commercial_partner_id.is_company else 'P'
+            return 'B' if partner_id.commercial_partner_id.vat else 'P'
         else:
             return 'F'
 

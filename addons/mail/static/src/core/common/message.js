@@ -236,9 +236,10 @@ export class Message extends Component {
     }
 
     get authorAvatarAttClass() {
+        // TODO CHECK, MAYBE REMOVE IT?
         return {
-            o_object_fit_contain: this.props.message.author?.is_company,
-            o_object_fit_cover: !this.props.message.author?.is_company,
+            o_object_fit_contain: this.props.message.author?.parent_id,
+            o_object_fit_cover: !this.props.message.author?.parent_id,
         };
     }
 

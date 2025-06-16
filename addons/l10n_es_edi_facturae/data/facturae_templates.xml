@@ -55,7 +55,7 @@
         <!-- Sub-template used for every instance of TaxIdentificationType -->
         <template id="tax_identification_type">
             <TaxIdentification>
-                <PersonTypeCode t-out="'J' if partner.is_company else 'F'"/>
+                <PersonTypeCode t-out="'J' if partner.vat else 'F'"/>
                 <ResidenceTypeCode t-out="partner.l10n_es_edi_facturae_residence_type"/>
                 <TaxIdentificationNumber t-out="partner.vat"/>
             </TaxIdentification>
@@ -86,7 +86,7 @@
         <template id="business_type">
             <t t-call="l10n_es_edi_facturae.tax_identification_type"/>
             <t t-call="l10n_es_edi_facturae.administrative_centers_type"/>
-            <t t-if="partner.is_company">
+            <t t-if="partner.vat">
                 <t t-call="l10n_es_edi_facturae.legal_entity_type"/>
             </t>
             <t t-else="">

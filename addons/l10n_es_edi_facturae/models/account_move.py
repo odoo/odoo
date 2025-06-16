@@ -127,7 +127,7 @@ class AccountMove(models.Model):
             and not self.l10n_es_edi_facturae_xml_id \
             and not self.l10n_es_is_simplified \
             and self.is_invoice(include_receipts=True) \
-            and (self.partner_id.is_company or self.partner_id.vat) \
+            and self.partner_id.vat \
             and self.company_id.country_code == 'ES' \
             and self.company_id.currency_id.name == 'EUR' \
             and self.company_id.sudo().l10n_es_edi_facturae_certificate_ids  # We only enable Facturae if a certificate is valid or has been valid (which will raise an error)
@@ -341,7 +341,7 @@ class AccountMove(models.Model):
         """
         def extract_party_name(party):
             name = {'firstname': 'UNKNOWN', 'surname': 'UNKNOWN', 'surname2': ''}
-            if not party.is_company:
+            if not party.vat:
                 name_split = [part for part in party.name.replace(', ', ' ').split(' ') if part]
                 if len(name_split) > 2:
                     name['firstname'] = ' '.join(name_split[:-2])

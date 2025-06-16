@@ -26,7 +26,9 @@ class AccountMove(models.Model):
         :return:
         """
         self.ensure_one()
-        return self.partner_id.company_type == 'person'
+        # TODO: Check with SA Team
+        individual_schemes = ['NAT', 'GCC', 'IQA', 'PAS']
+        return self.partner_id.l10n_sa_edi_additional_identification_scheme in individual_schemes
 
     @api.depends('amount_total_signed', 'amount_tax_signed', 'l10n_sa_confirmation_datetime', 'company_id',
                  'company_id.vat', 'journal_id', 'journal_id.l10n_sa_production_csid_json', 'edi_document_ids',

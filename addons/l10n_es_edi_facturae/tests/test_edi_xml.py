@@ -66,7 +66,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
         cls.partner_b.write({
             'name': 'Ayuntamiento de San Sebastián de los Reyes',
-            'is_company': True,
             'country_id': cls.env.ref('base.es').id,
             'vat': 'P2813400E',
             'city': 'San Sebastián de los Reyes',
@@ -94,8 +93,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.us').id,
             'state_id': cls.env['res.country.state'].search([('name', '=', 'California')]).id,
             'email': 'indigo.exterior@example.com',
-            'company_type': 'company',
-            'is_company': True,
         })
 
         cls.password = "test"

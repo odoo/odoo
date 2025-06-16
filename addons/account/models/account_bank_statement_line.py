@@ -60,7 +60,7 @@ class AccountBankStatementLine(models.Model):
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string='Partner', ondelete='restrict',
-        domain="['|', ('parent_id','=', False), ('is_company','=',True)]",
+        domain="[('parent_id','=', False)]",
         check_company=True)
 
     # Technical field used to store the bank account number before its creation, upon the line's processing

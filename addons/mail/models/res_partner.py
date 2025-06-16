@@ -255,7 +255,7 @@ class ResPartner(models.Model):
         return [field_name]
 
     def _to_store_defaults(self):
-        return ["active", "avatar_128", "email", "im_status", "is_company", "name", "user"]
+        return ["active", "avatar_128", "email", "im_status", "name", "user"]
 
     def _to_store(self, store: Store, fields, *, main_user_by_partner=None):
         if not self.env.user._is_internal() and "email" in fields:
