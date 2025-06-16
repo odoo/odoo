@@ -60,8 +60,6 @@ class ProductProduct(models.Model):
     volume = fields.Float('Volume', digits='Volume')
     weight = fields.Float('Weight', digits='Stock Weight')
 
-    pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_variant_item_count")
-
     pricelist_rule_ids = fields.One2many(
         string="Pricelist Rules",
         comodel_name='product.pricelist.item',
@@ -335,17 +333,6 @@ class ProductProduct(models.Model):
                     break
             else:
                 product.partner_ref = product.display_name
-
-    def _compute_variant_item_count(self):
-        for product in self:
-            domain = [
-                ('pricelist_id.active', '=', True),
-                '|',
-                    '&', ('product_tmpl_id', 'in', product.product_tmpl_id.ids), ('applied_on', '=', '1_product'),
-                    '&', ('product_id', 'in', product.ids), ('applied_on', '=', '0_product_variant'),
-                ('compute_price', '=', 'fixed'),
-            ]
-            product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
 
     def _compute_product_document_count(self):
         for product in self:
