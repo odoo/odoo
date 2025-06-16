@@ -277,6 +277,7 @@ class HrEmployee(models.Model):
             'domain': [('employee_id', 'in', self.ids)],
             'context': {
                 'employee_id': self.ids,
+                'search_default_to_approve': True,
             },
         }
 
