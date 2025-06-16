@@ -144,8 +144,17 @@ TERM_OPERATORS_NEGATION = orm_domains._INVERSE_OPERATOR | orm_domains._INVERSE_I
 TRUE_LEAF = orm_domains._TRUE_LEAF
 FALSE_LEAF = orm_domains._FALSE_LEAF
 
-TRUE_DOMAIN = [TRUE_LEAF]
-FALSE_DOMAIN = [FALSE_LEAF]
+
+class _ProtectedDomain(tuple):
+    __slots__ = ()
+    __hash__ = None
+
+    def __eq__(self, other): return list(self).__eq__(other)
+    def copy(self): return list(self)
+
+
+TRUE_DOMAIN = _ProtectedDomain([TRUE_LEAF])
+FALSE_DOMAIN = _ProtectedDomain([FALSE_LEAF])
 
 _logger = logging.getLogger(__name__)
 
