@@ -745,15 +745,6 @@ class SlideSlide(models.Model):
             )
         return True
 
-    def _generate_signed_token(self, partner_id):
-        """ Lazy generate the acces_token and return it signed by the given partner_id
-            :rtype tuple (string, int)
-            :return (signed_token, partner_id)
-        """
-        if not self.access_token:
-            self.write({'access_token': self._default_access_token()})
-        return self._sign_token(partner_id)
-
     def _send_share_email(self, email, fullscreen):
         courses_without_templates = self.channel_id.filtered(lambda channel: not channel.share_slide_template_id)
         if courses_without_templates:
