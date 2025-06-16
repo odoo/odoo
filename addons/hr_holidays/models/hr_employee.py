@@ -271,7 +271,12 @@ class HrEmployee(models.Model):
     def action_time_off_dashboard(self):
         action = self.env['ir.actions.act_window']._for_xml_id('hr_holidays.hr_leave_action_action_approve_department')
         action['context'] = dict(literal_eval(action['context']))
-        action['context']['show_dashboard'] = True
+        action['context'].update({
+            'show_dashboard': True,
+            'search_default_approve': 1,
+            'search_default_second_approval': 1,
+            'search_default_upcoming_approved': 1,
+        })
         action['context'].pop('search_default_waiting_for_me', False)
         action['context'].pop('search_default_waiting_for_me_manager', False)
         action['context']['default_employee_id'] = self.id
