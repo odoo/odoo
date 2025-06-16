@@ -2252,13 +2252,20 @@ class AccountMove(models.Model):
         copied_am = super().copy(default)
         message_origin = '' if not copied_am.auto_post_origin_id else \
             '<br/>' + _('This recurring entry originated from %s', copied_am.auto_post_origin_id._get_html_link())
-        copied_am._message_log(body=_(
-            'This entry has been duplicated from %s%s',
-            self._get_html_link(),
-            message_origin,
-        ))
+        message_content = self._get_copy_message_content(default)
+        copied_am._message_log(
+            body=message_content + message_origin,
+        )
 
         return copied_am
+
+    def _get_copy_message_content(self, default):
+        """Hook method to customize the message content when copying a move.
+        This method can be overridden by other modules to add custom logic.
+        :param default: The default values dict passed to copy method
+        :return: The message content string
+        """
+        return _('This entry has been duplicated from %s', self._get_html_link())
 
     def _sanitize_vals(self, vals):
         if vals.get('invoice_line_ids') and vals.get('line_ids'):
