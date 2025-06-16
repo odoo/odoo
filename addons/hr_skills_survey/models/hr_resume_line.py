@@ -25,3 +25,11 @@ class HrResumeLine(models.Model):
                     line.expiration_status = 'expired'
                 elif line.date_end + relativedelta(months=-3) <= fields.Date.today():
                     line.expiration_status = 'expiring'
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for resume, vals in zip(self, vals_list):
+                vals['name'] = self.env._("%s (Copy)", resume.name)
+        return vals_list
