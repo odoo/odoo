@@ -5,7 +5,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { rpc } from "@web/core/network/rpc";
 
 export class EditWebsiteSystrayItem extends Component {
-    static template = "html_builder.EditWebsiteSystrayItem";
+    static template = "website.EditWebsiteSystrayItem";
     static props = {
         onNewPage: { type: Function },
         onEditPage: { type: Function },

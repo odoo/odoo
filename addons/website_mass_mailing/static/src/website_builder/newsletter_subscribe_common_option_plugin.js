@@ -31,7 +31,7 @@ class NewsletterSubscribeCommonOptionPlugin extends Plugin {
                 applyTo: ".s_newsletter_list",
             }),
             withSequence(SNIPPET_SPECIFIC, {
-                template: "html_builder.MailingListSubscribeFormOption",
+                template: "website_mass_mailing.MailingListSubscribeFormOption",
                 selector: ".s_newsletter_subscribe_form",
             }),
         ],
