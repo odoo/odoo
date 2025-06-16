@@ -6,6 +6,7 @@ from markupsafe import Markup
 from odoo import Command, _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.account.tools import after_commit
 
 _logger = logging.getLogger(__name__)
 
@@ -811,6 +812,38 @@ class AccountMoveSend(models.AbstractModel):
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
             for sending_method in custom_settings.get('sending_methods', [])
         ) if 'sending_methods' in custom_settings else True
+
+    @api.model
+    def _generate_and_send_invoices_post_commit(self, moves, **kwargs):
+        """ Generate and send the moves once the current transaction is committed.
+        The moves are flagged as being sent in the current transaction, so that the ones that could not
+        be sent after the commit (locked or failing) are processed later by the sending cron.
+        :param moves: account.move to process
+        :param kwargs: see `_generate_and_send_invoices`
+        """
+        moves.filtered(lambda m: not m.sending_data).sending_data = {
+            'author_user_id': self.env.user.id,
+            'author_partner_id': self.env.user.partner_id.id,
+        }
+        self._generate_and_send_pending_invoices(moves, **kwargs)
+
+    @api.model
+    @after_commit
+    def _generate_and_send_pending_invoices(
+        self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings
+    ):
+        moves = moves.try_lock_for_update().filtered('sending_data')
+        if not moves:
+            return
+        if allow_fallback_pdf:
+            moves.is_move_sent = True
+        self._generate_and_send_invoices(
+            moves,
+            from_cron=from_cron,
+            allow_raising=allow_raising,
+            allow_fallback_pdf=allow_fallback_pdf,
+            **custom_settings,
+        )
 
     @api.model
     def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
