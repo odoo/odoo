@@ -1731,6 +1731,7 @@ def get_diff(data_from, data_to, custom_style=False, dark_color_scheme=False):
                 table.diff { width: 100%%; }
                 table.diff th.diff_header { width: 50%%; }
                 table.diff td.diff_header { white-space: nowrap; }
+                table.diff td.diff_header + td { width: 50%%; }
                 table.diff td { word-break: break-all; vertical-align: top; }
                 table.diff .diff_chg, table.diff .diff_sub, table.diff .diff_add {
                     display: inline-block;

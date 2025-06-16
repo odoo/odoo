@@ -3,6 +3,7 @@
 import datetime
 import json
 import sys
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import Command
@@ -1645,6 +1646,72 @@ class TestCompute(common.TransactionCase):
             active_id=test_partner.id,
         ).run()
         self.assertEqual(test_partner.ref, "PARTNER/0001/TEST")
+
+    def test_03_server_action_code_history_wizard(self):
+        self.env.user.tz = 'Europe/Brussels'  # UTC +2 for May 2025
+
+        def get_history(action):
+            return self.env["ir.actions.server.history"].search([("action_id", "=", action.id)])
+
+        def assert_history(action, expected):
+            history = get_history(action)
+            self.assertRecordValues(history, expected)
+
+        expected = []
+
+        with freeze_time("2025-05-01 08:00:00"):
+            self.env.cr._now = datetime.datetime.now()  # reset transaction's NOW
+            action = self.env["ir.actions.server"].create({
+                "name": "Test Action",
+                "model_id": self.env["ir.model"]._get("res.partner").id,
+                "state": "code",
+                "code": "pass",
+            })
+        expected.insert(0, {
+            "code": "pass",
+            "display_name": f"May 1, 2025, 10:00:00 AM - {self.env.ref('base.user_root').name}",
+        })
+        assert_history(action, expected)
+
+        with freeze_time("2025-05-01 08:30:00"):
+            self.env.cr._now = datetime.datetime.now()  # reset transaction's NOW
+            action.with_user(self.env.ref('base.user_admin')).write({"code": "hello"})
+        expected.insert(0, {
+            "code": "hello",
+            "display_name": f"May 1, 2025, 10:30:00 AM - {self.env.ref('base.user_admin').name}",
+        })
+        assert_history(action, expected)
+
+        with freeze_time("2025-05-05 11:30:00"):
+            self.env.cr._now = datetime.datetime.now()  # reset transaction's NOW
+            action.with_user(self.env.ref('base.user_admin')).write({"code": "coucou"})
+        expected.insert(0, {
+            "code": "coucou",
+            "display_name": f"May 5, 2025, 1:30:00 PM - {self.env.ref('base.user_admin').name}",
+        })
+        assert_history(action, expected)
+
+        with freeze_time("2025-05-12 09:30:00"):
+            self.env.cr._now = datetime.datetime.now()  # reset transaction's NOW
+            with Form(self.env['server.action.history.wizard'].with_context(default_action_id=action.id)) as wizard_form:
+                self.assertRecordValues(wizard_form.revision, [
+                    {
+                        "code": "hello",
+                        "display_name": f"May 1, 2025, 10:30:00 AM - {self.env.ref('base.user_admin').name}",
+                    }
+                ])
+                first_diff = str(wizard_form.code_diff)
+                wizard_form.revision = get_history(action)[-1]
+                second_diff = str(wizard_form.code_diff)
+                self.assertNotEqual(first_diff, second_diff)
+            wizard_form.record.restore_revision()
+
+        self.assertEqual(action.code, "pass")
+        expected.insert(0, {
+            "code": "pass",
+            "display_name": f"May 12, 2025, 11:30:00 AM - {self.env.ref('base.user_root').name}",
+        })
+        assert_history(action, expected)
 
 
 @common.tagged("post_install", "-at_install")
