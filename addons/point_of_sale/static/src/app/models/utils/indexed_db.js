@@ -1,5 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
 
+const BATCH_SIZE = 500; // Can be adjusted based on performance testing
+const TRANSACTION_TIMEOUT = 5000; // 5 seconds timeout for transactions
+
 export default class IndexedDB {
     constructor(dbName, dbVersion, dbStores, whenReady) {
         this.db = null;
@@ -43,22 +46,83 @@ export default class IndexedDB {
     }
 
     async promises(storeName, arrData, method) {
-        const transaction = this.getNewTransaction([storeName], "readwrite");
-        if (!transaction) {
-            return false;
+        if (!arrData?.length) {
+            return;
+        }
+        // Batch processing for large arrays to avoid performance issues
+        // or transaction failures due to large data sets
+        const results = [];
+        for (let i = 0; i < arrData.length; i += BATCH_SIZE) {
+            const batch = arrData.slice(i, i + BATCH_SIZE);
+            const transaction = this.getNewTransaction([storeName], "readwrite");
+
+            if (!transaction) {
+                results.push(Promise.reject("Transaction could not be created"));
+                continue;
+            }
+
+            let timeoutId;
+            let finished = false;
+
+            const doneMethod = () => {
+                finished = true;
+                clearTimeout(timeoutId);
+            };
+
+            // Mark transaction as finished in all cases
+            transaction.oncomplete = doneMethod;
+            transaction.onabort = doneMethod;
+            transaction.onerror = doneMethod;
+
+            const batchPromise = new Promise((resolve, reject) => {
+                const store = transaction.objectStore(storeName);
+                let completed = 0;
+                let hasError = false;
+
+                timeoutId = setTimeout(() => {
+                    if (!finished) {
+                        reject(new Error("IndexedDB transaction timeout"));
+                        try {
+                            transaction.abort();
+                        } catch (e) {
+                            console.error("Error aborting transaction:", e);
+                        }
+                    }
+                }, TRANSACTION_TIMEOUT);
+
+                if (odoo.debug) {
+                    console.debug(
+                        `%cIndexedDB: ${method} ${storeName} with ${batch.length} items`,
+                        "color: #ffb7a8"
+                    );
+                }
+
+                batch.forEach((data) => {
+                    const request = store[method](data);
+
+                    request.onsuccess = () => {
+                        completed++;
+                        if (completed === batch.length && !hasError && !finished) {
+                            clearTimeout(timeoutId);
+                            resolve();
+                        }
+                    };
+
+                    request.onerror = (event) => {
+                        hasError = true;
+                        clearTimeout(timeoutId);
+                        console.error("IndexedDB error:", event.target?.error);
+                        reject(event.target?.error || "Unknown error");
+                    };
+                });
+            });
+
+            results.push(batchPromise);
         }
 
-        const promises = arrData.map((data) => {
-            data = JSON.parse(JSON.stringify(data));
-            return new Promise((resolve, reject) => {
-                const request = transaction.objectStore(storeName)[method](data);
-                request.onsuccess = () => resolve();
-                request.onerror = () => reject();
-            });
-        });
-
-        return Promise.allSettled(promises).then((results) => results);
+        return Promise.allSettled(results);
     }
+
     getNewTransaction(dbStore) {
         try {
             if (!this.db) {

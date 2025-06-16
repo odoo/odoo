@@ -200,12 +200,11 @@ export class ProductScreen extends Component {
         }
 
         if (!product) {
-            const records = await this.pos.data.callRelated(
-                "pos.session",
-                "find_product_by_barcode",
-                [odoo.pos_session_id, code.base_code, this.pos.config.id]
-            );
+            const records = await this.pos.loadNewProducts([
+                ["product_variant_ids.barcode", "in", [code.base_code]],
+            ]);
             await this.pos.processProductAttributes();
+
             if (records && records["product.product"].length > 0) {
                 return records["product.product"][0];
             }
@@ -331,9 +330,15 @@ export class ProductScreen extends Component {
         return [
             "|",
             "|",
+            "|",
             ["name", "ilike", searchProductWord],
+            ["product_variant_ids.name", "ilike", searchProductWord],
+            "|",
             ["default_code", "ilike", searchProductWord],
+            ["product_variant_ids.default_code", "ilike", searchProductWord],
+            "|",
             ["barcode", "ilike", searchProductWord],
+            ["product_variant_ids.barcode", "ilike", searchProductWord],
             ["available_in_pos", "=", true],
             ["sale_ok", "=", true],
         ];
@@ -353,19 +358,10 @@ export class ProductScreen extends Component {
             const categIds = iface_available_categ_ids.map((categ) => categ.id);
             domain.push(["pos_categ_ids", "in", categIds]);
         }
-        const product = await this.pos.data.searchRead(
-            "product.product",
-            domain,
-            this.pos.data.fields["product.product"],
-            {
-                context: { display_default_code: false },
-                offset: this.state.currentOffset,
-                limit: 30,
-            }
-        );
 
+        const results = await this.pos.loadNewProducts(domain, this.state.currentOffset, 30);
         await this.pos.processProductAttributes();
-        return product;
+        return results["product.product"];
     }
 
     async addProductToOrder(product) {

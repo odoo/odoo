@@ -66,8 +66,11 @@ patch(PosStore.prototype, {
         this.selectOrderLine(this.getOrder(), this.getOrder().lines.at(-1));
     },
     async _getSaleOrder(id) {
-        const sale_order = (await this.data.read("sale.order", [id]))[0];
-        return sale_order;
+        const result = await this.data.callRelated("sale.order", "load_sale_order_from_pos", [
+            id,
+            this.config.id,
+        ]);
+        return result["sale.order"][0];
     },
     async settleSO(sale_order, orderFiscalPos) {
         if (sale_order.pricelist_id) {

@@ -6,6 +6,8 @@ from odoo.tools import SQL
 from itertools import groupby
 from operator import itemgetter
 from datetime import date
+from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class ProductTemplate(models.Model):
@@ -52,6 +54,80 @@ class ProductTemplate(models.Model):
             category_ids = self.env['pos.category'].browse(available_category_ids)._get_descendants().ids
             domain += [('pos_categ_ids', 'in', category_ids)]
         return domain
+
+    @api.model
+    def load_product_from_pos(self, config_id, domain, offset=0, limit=0):
+        domain_obj = Domain(domain)
+        config = self.env['pos.config'].browse(config_id)
+        product_tmpls = self._load_product_with_domain(domain_obj, False, offset, limit)
+        products = product_tmpls.product_variant_ids
+
+        # product.pricelist_item & product.pricelist loading
+        pricelists = config.current_session_id.get_pos_ui_product_pricelist_item_by_product(
+            product_tmpls.ids,
+            products.ids,
+            config.id
+        )
+
+        # product.template.attribute.value & product.template.attribute.line loading
+        product_tmpl_attr_value = products.product_template_attribute_value_ids
+        product_tmpl_attr_line = products.product_template_variant_value_ids
+        product_tmpl_attr_value_fields = product_tmpl_attr_value._load_pos_data_fields(config.id)
+        product_tmpl_attr_line_fields = product_tmpl_attr_line._load_pos_data_fields(config.id)
+        product_tmpl_attr_value_read = product_tmpl_attr_value.read(product_tmpl_attr_value_fields, load=False)
+        product_tmpl_attr_line_read = product_tmpl_attr_line.read(product_tmpl_attr_line_fields, load=False)
+
+        # product.product loading
+        product_fields = products._load_pos_data_fields(config.id)
+        product_read = products.with_context(display_default_code=False).read(product_fields, load=False)
+
+        # product.template loading
+        product_tmpl_fields = self._load_pos_data_fields(config.id)
+        product_tmpl_read = product_tmpls.read(product_tmpl_fields, load=False)
+
+        # product.combo and product.combo.item loading
+        for product_tmpl in product_tmpls:
+            if product_tmpl.type == 'combo':
+                product_tmpls += product_tmpl.combo_ids.combo_item_ids.product_id.product_tmpl_id
+
+        combo_domain = [('id', 'in', product_tmpls.combo_ids.ids)]
+        combo_fields = self.env['product.combo']._load_pos_data_fields(config.id)
+        combo_read = self.env['product.combo'].search_read(combo_domain, combo_fields, load=False)
+        combo_item_domain = [('combo_id', 'in', product_tmpls.combo_ids.ids)]
+        combo_item_fields = self.env['product.combo.item']._load_pos_data_fields(config.id)
+        combo_item_read = self.env['product.combo.item'].search_read(combo_item_domain, combo_item_fields, load=False)
+
+        # product.uom loading
+        packaging_domain = Domain([('product_id', 'in', products.ids)])
+        conditions = list(domain_obj.iter_conditions())
+        barcode_in_domain = any('barcode' in condition.field_expr for condition in conditions)
+
+        if barcode_in_domain:
+            barcode = [condition.value for condition in conditions if 'barcode' in condition.field_expr]
+            flat = [item for sublist in barcode for item in sublist]
+            packaging_domain = expression.OR([packaging_domain, [('barcode', 'in', flat)]])
+
+        packaging_fields = ['barcode', 'product_id', 'uom_id']
+        packaging = self.env['product.uom'].search(packaging_domain)
+        condition = packaging and packaging.product_id
+
+        # account.tax loading
+        tax_domain = self.env['account.tax']._check_company_domain(config.company_id.id)
+        tax_domain = expression.AND([tax_domain, [['id', 'in', product_tmpls.taxes_id.ids]]])
+        tax_fields = self.env['account.tax']._load_pos_data_fields(config.id)
+        tax_read = self.env['account.tax'].search_read(tax_domain, tax_fields, load=False)
+
+        return {
+            **pricelists,
+            'account.tax': tax_read,
+            'product.product': products.with_context(config_id=config_id)._post_read_pos_data(product_read),
+            'product.template': self.with_context(config_id=config.id)._post_read_pos_data(product_tmpl_read),
+            'product.uom': packaging.read(packaging_fields, load=False) if condition else [],
+            'product.combo': combo_read,
+            'product.combo.item': combo_item_read,
+            'product.template.attribute.value': product_tmpl_attr_value_read,
+            'product.template.attribute.line': product_tmpl_attr_line_read,
+        }
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -118,12 +194,15 @@ class ProductTemplate(models.Model):
         self._process_pos_ui_product_product(data, config)
         return super()._post_read_pos_data(data)
 
-    def _load_product_with_domain(self, domain, load_archived=False):
+    def _load_product_with_domain(self, domain, load_archived=False, offset=0, limit=0):
         context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
         domain = self._server_date_to_domain(domain)
         return self.with_context(context).search(
             domain,
-            order='sequence,default_code,name')
+            order='sequence,default_code,name',
+            offset=offset,
+            limit=limit if limit else False
+        )
 
     def _process_pos_ui_product_product(self, products, config_id):
 

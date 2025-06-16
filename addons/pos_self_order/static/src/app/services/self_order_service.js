@@ -664,7 +664,7 @@ export class SelfOrder extends Reactive {
                 uuid = result["pos.order"][0].uuid;
             }
 
-            this.data.synchronizeLocalDataInIndexedDB();
+            this.data.debouncedSynchronizeLocalDataInIndexedDB();
             this.currentOrder.recomputeChanges();
             return this.models["pos.order"].getBy("uuid", uuid);
         } catch (error) {
