@@ -157,6 +157,29 @@ registry.category("web_tour.tours").add('test_error_website', {
         content: "http access error page debug has traceback closed",
         trigger: 'body:has(div#error_traceback.collapse:not(.show) pre#exception_traceback)',
         run: function () {
+                window.location.href = window.location.origin + '/test_view_access_error?debug=0';
+        },
+    },
+    {
+        trigger: 'h1:contains("403: Forbidden")',
+    },
+    {
+        content: "http access error page has title and message",
+        trigger: 'div.container pre:contains("Uh-oh! Looks like you have stumbled upon some top-secret records.")',
+        run: function () {
+                window.location.href = window.location.origin + '/test_view_access_error?debug=1';
+        },
+    },
+    {
+        trigger: 'h1:contains("403: Forbidden")',
+    },
+    {
+        content: "http access error page debug has title and message open",
+        trigger: 'div#error_main.collapse.show pre:contains("Uh-oh! Looks like you have stumbled upon some top-secret records.")',
+    }, {
+        content: "http access error page debug has traceback closed",
+        trigger: 'body:has(div#error_traceback.collapse:not(.show) pre#exception_traceback)',
+        run: function () {
                 window.location.href = window.location.origin + '/test_missing_error_http?debug=0';
         },
         expectUnloadPage: true,
