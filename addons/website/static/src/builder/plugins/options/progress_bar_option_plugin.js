@@ -81,9 +81,15 @@ class ProgressBarValueAction extends BuilderAction {
         const progressBarEl = editingElement.querySelector(".progress-bar");
         const progressBarTextEl = editingElement.querySelector(".s_progress_bar_text");
         const progressMainEl = editingElement.querySelector(".progress");
-        // Target precisely the XX% not only XX to not replace wrong element
-        // eg 'Since 1978 we have completed 45%' <- don't replace 1978
-        progressBarTextEl.innerText = progressBarTextEl.innerText.replace(/[0-9]+%/, value + "%");
+        // Added to address the prior omission of s_progress_bar_text in s_numbers_charts.
+        if (progressBarTextEl) {
+            // Target precisely the XX% not only XX to not replace wrong element
+            // eg 'Since 1978 we have completed 45%' <- don't replace 1978
+            progressBarTextEl.innerText = progressBarTextEl.innerText.replace(
+                /[0-9]+%/,
+                value + "%"
+            );
+        }
         progressMainEl.setAttribute("aria-valuenow", value);
         progressBarEl.style.width = value + "%";
     }
