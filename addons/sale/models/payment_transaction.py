@@ -159,7 +159,6 @@ class PaymentTransaction(models.Model):
             invoice_to_send = tx.invoice_ids.filtered(
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
-            invoice_to_send.is_move_sent = True # Mark invoice as sent
 
             send_context = {'allow_raising': False, 'allow_fallback_pdf': True}
             default_template_param = (
@@ -172,7 +171,7 @@ class PaymentTransaction(models.Model):
                 if mail_template.exists():
                     send_context['mail_template'] = mail_template
 
-            tx.env['account.move.send']._generate_and_send_invoices(
+            tx.env['account.move.send']._generate_and_send_invoices_post_commit(
                 invoice_to_send,
                 **send_context,
             )
