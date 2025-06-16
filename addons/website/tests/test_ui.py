@@ -192,7 +192,6 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
 @odoo.tests.tagged('external', '-standard', '-at_install', 'post_install')
 class TestUiHtmlEditorWithExternal(HttpCaseWithUserDemo):
-    @unittest.skip
     def test_media_dialog_external_library(self):
         self.start_tour("/", 'website_media_dialog_external_library', login='admin')
 
