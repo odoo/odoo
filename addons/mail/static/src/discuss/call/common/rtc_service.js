@@ -195,6 +195,7 @@ export class Rtc {
                 if (!this.userSettingsService.isPushToTalkKey(ev)) {
                     return;
                 }
+                this.pttExtService.resetExtensionState();
                 this.onPushToTalk();
             },
             { capture: true }
@@ -214,6 +215,16 @@ export class Rtc {
             },
             { capture: true }
         );
+
+        browser.addEventListener("blur", () => {
+            if (
+                this.userSettingsService.usePushToTalk &&
+                this.state.selfSession?.isTalking &&
+                !this.pttExtService.isExtensionMode
+            ) {
+                this.setPttReleaseTimeout(0);
+            }
+        });
 
         browser.addEventListener("pagehide", () => {
             if (this.state.channel) {
