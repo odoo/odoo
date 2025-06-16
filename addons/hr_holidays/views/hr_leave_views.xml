@@ -323,13 +323,33 @@
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
                                 options="{'no_create': True, 'request_type': 'leave'}"
-                                readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                                readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" groups="!hr_holidays.group_hr_holidays_user"/>
+
+                            <field name="holiday_status_id" force_save="1"
+                                domain="[
+                                    '|',
+                                        ('requires_allocation', '=', False),
+                                        '&amp;',
+                                            ('has_valid_allocation', '=', True),
+                                            '|',
+                                                ('allows_negative', '=', True),
+                                                '&amp;',
+                                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                                    ('allows_negative', '=', False),
+                                ]"
+                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
+                                options="{'no_create': True, 'request_type': 'leave'}"
+                                groups="hr_holidays.group_hr_holidays_user"
+                                id="group_hr_holidays_user_holiday_status_id"/>
                             <!-- half day or custom hours: only show one date -->
                             <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
                             <label for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
                             <div class="o_row" invisible="not request_unit_half and not request_unit_hours">
-                                <field name="request_date_from" class="oe_inline" string="Date" readonly="state != 'confirm'" />
-                                <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half" readonly="state != 'confirm'"/>
+                                <field name="request_date_from" class="oe_inline" string="Date" readonly="state != 'confirm'" groups="!hr_holidays.group_hr_holidays_user"/>
+                                <field name="request_date_from" class="oe_inline" string="Date" groups="hr_holidays.group_hr_holidays_user" id="group_hr_holidays_user_request_date_from"/>
+
+                                <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half" readonly="state != 'confirm'" groups="!hr_holidays.group_hr_holidays_user"/>
+                                <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half" groups="hr_holidays.group_hr_holidays_user" id="group_hr_holidays_user_request_date_from_period"/>
                                 <div>
                                 ( <field name="duration_display" readonly="1" class="w-auto"/> )
                                 </div>
@@ -341,7 +361,16 @@
                                     widget="daterange"
                                     readonly="state != 'confirm'"
                                     required="not date_from or not date_to"
-                                    options="{'end_date_field': 'request_date_to'}"/>
+                                    options="{'end_date_field': 'request_date_to'}"
+                                    groups="!hr_holidays.group_hr_holidays_user"/>
+
+                                <field
+                                    name="request_date_from"
+                                    widget="daterange"
+                                    required="not date_from or not date_to"
+                                    options="{'end_date_field': 'request_date_to'}"
+                                    groups="hr_holidays.group_hr_holidays_user"
+                                    id="group_hr_holidays_user_request_date_from_full_date"/>
                                 <field name="request_date_to" invisible="1"/> <!-- For Form view test-->
                                 <div>
                                 ( <field name="duration_display" readonly="1" class="w-auto"/> )
@@ -349,19 +378,27 @@
                             </div>
                             <label for="request_unit_half" string="" invisible="not leave_type_request_unit or leave_type_request_unit == 'day'"/>
                             <div class="o_row o_row_readonly oe_edit_only" style="margin-left: -2px;" invisible="not leave_type_request_unit or leave_type_request_unit == 'day'">
-                                <field name="request_unit_half" class="oe_inline" invisible="leave_type_request_unit == 'day' or (not request_unit_half and state != 'confirm')" readonly="state != 'confirm'" />
-                                <label for="request_unit_half" invisible="leave_type_request_unit == 'day' or (not request_unit_half and state != 'confirm')" />
-                                <field name="request_unit_hours" invisible="leave_type_request_unit != 'hour' or (not request_unit_hours and state != 'confirm')" readonly="state != 'confirm'" class="ms-5" />
-                                <label for="request_unit_hours" invisible="leave_type_request_unit != 'hour' or (not request_unit_hours and state != 'confirm')" />
+                                <field name="request_unit_half" class="oe_inline" invisible="leave_type_request_unit == 'day' or (not request_unit_half and state != 'confirm')" readonly="state != 'confirm'" groups="!hr_holidays.group_hr_holidays_user "/>
+                                <label for="request_unit_half" invisible="leave_type_request_unit == 'day' or (not request_unit_half and state != 'confirm')" groups="!hr_holidays.group_hr_holidays_user "/>
+                                <field name="request_unit_hours" invisible="leave_type_request_unit != 'hour' or (not request_unit_hours and state != 'confirm')" readonly="state != 'confirm'" class="ms-5" groups="!hr_holidays.group_hr_holidays_user "/>
+                                <label for="request_unit_hours" invisible="leave_type_request_unit != 'hour' or (not request_unit_hours and state != 'confirm')" groups="!hr_holidays.group_hr_holidays_user "/>
+
+                                <field name="request_unit_half" class="oe_inline" invisible="leave_type_request_unit == 'day' or not request_unit_half" groups="hr_holidays.group_hr_holidays_user" id="group_hr_holidays_user_request_unit_half"/>
+                                <label for="request_unit_half" invisible="leave_type_request_unit == 'day' or not request_unit_half" groups="hr_holidays.group_hr_holidays_user"/>
+                                <field name="request_unit_hours" invisible="leave_type_request_unit != 'hour' or not request_unit_hours" class="ms-5" groups="hr_holidays.group_hr_holidays_user" id="group_hr_holidays_user_request_unit_hours"/>
+                                <label for="request_unit_hours" invisible="leave_type_request_unit != 'hour' or not request_unit_hours" groups="hr_holidays.group_hr_holidays_user"/>
                             </div>
                             <label for="request_hour_from" string="" invisible="not request_unit_hours"/>
-                            <div class="o_row o_row_readonly" invisible="not request_unit_hours">
+                            <div id="unit_hours" class="o_row o_row_readonly" invisible="not request_unit_hours">
                                 <label for="request_hour_from" string="From" />
-                                <field name="request_hour_from" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" widget="float_time_selection" placeholder="00:00"/>
+                                <field name="request_hour_from" invisible="not request_unit_hours" readonly="state != 'confirm'" required="request_unit_hours" widget="float_time_selection" placeholder="00:00" groups="!hr_holidays.group_hr_holidays_user"/>
+                                <field name="request_hour_from" invisible="not request_unit_hours" required="request_unit_hours" widget="float_time_selection" placeholder="00:00" groups="hr_holidays.group_hr_holidays_user" id="group_hr_holidays_user_request_hour_from"/>
                                 <label for="request_hour_to" string="To" />
-                                <field name="request_hour_to" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" widget="float_time_selection"/>
+                                <field name="request_hour_to" invisible="not request_unit_hours" readonly="state != 'confirm'" required="request_unit_hours" widget="float_time_selection" groups="!hr_holidays.group_hr_holidays_user"/>
+                                <field name="request_hour_to" invisible="not request_unit_hours" required="request_unit_hours" widget="float_time_selection" groups="hr_holidays.group_hr_holidays_user" id="group_hr_holidays_user_request_hour_to"/>
                             </div>
-                            <field name="name" readonly="state != 'confirm'" widget="text" nolabel="1" colspan="2" placeholder="No description provided" />
+                            <field name="name" readonly="state != 'confirm'" widget="text" nolabel="1" colspan="2" placeholder="No description provided" groups="!hr_holidays.group_hr_holidays_user"/>
+                            <field name="name" widget="text" nolabel="1" colspan="2" placeholder="No description provided" groups="hr_holidays.group_hr_holidays_user" id="group_hr_holidays_user_name"/>
                         </group>
                         <group>
                             <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="state not in ('confirm', 'validate1')" />
