@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Component, onRendered, reactive, useRef, xml } from "@odoo/owl";
 import { toCanvas } from "@point_of_sale/app/utils/html-to-image";
+import { waitImages } from "@point_of_sale/utils";
 
 export class RenderContainer extends Component {
     static props = ["comp", "onRendered"];
@@ -109,12 +110,14 @@ export const htmlToCanvas = async (el, options) => {
     return await applyWhenMounted({
         el,
         container: document.querySelector(".render-container"),
-        callback: async (el) =>
-            toCanvas(el, {
+        callback: async (el) => {
+            await waitImages(el); // Ensure all images in the cloned element are fully loaded to be rendered correctly
+            return toCanvas(el, {
                 backgroundColor: "#ffffff",
                 height: Math.ceil(el.clientHeight),
                 width: Math.ceil(el.clientWidth),
                 pixelRatio: 1,
-            }),
+            });
+        },
     });
 };
