@@ -4,7 +4,6 @@ import logging
 
 from odoo.addons.mail.controllers.mail import MailController
 from odoo import http
-from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -19,7 +18,7 @@ class CrmController(http.Controller):
                 record.action_set_won_rainbowman()
             except Exception:
                 _logger.exception("Could not mark crm.lead as won")
-                return MailController._redirect_to_messaging()
+                return MailController._redirect_to_generic_fallback('crm.lead', res_id)
         return redirect
 
     @http.route('/lead/case_mark_lost', type='http', auth='user', methods=['GET'])
@@ -30,7 +29,7 @@ class CrmController(http.Controller):
                 record.action_set_lost()
             except Exception:
                 _logger.exception("Could not mark crm.lead as lost")
-                return MailController._redirect_to_messaging()
+                return MailController._redirect_to_generic_fallback('crm.lead', res_id)
         return redirect
 
     @http.route('/lead/convert', type='http', auth='user', methods=['GET'])
@@ -41,5 +40,5 @@ class CrmController(http.Controller):
                 record.convert_opportunity(record.partner_id)
             except Exception:
                 _logger.exception("Could not convert crm.lead to opportunity")
-                return MailController._redirect_to_messaging()
+                return MailController._redirect_to_generic_fallback('crm.lead', res_id)
         return redirect
