@@ -21,5 +21,22 @@ registry
     .add("website_snippets", (namespace, snippets) => {
         if (namespace === "website.snippets") {
             // This should be empty in master, it is used to fix snippets in stable.
+
+            // TODO remove in master: add s_progress_bar_text in progress bar where it's missing, fix the previous wrong width
+            const progressBarEls = snippets.querySelectorAll(".progress-bar");
+            progressBarEls.forEach((el) => {
+                if (el.style.width === "45%") {
+                    el.style.width = "25%";
+                }
+                if (!el.querySelector(".s_progress_bar_text")) {
+                    const textEl = document.createElement("span");
+                    textEl.classList.add("s_progress_bar_text", "small");
+                    textEl.textContent = el.style.width;
+                    if (el.closest(".s_progress_bar_label_hidden")) {
+                        textEl.classList.add("d-none");
+                    }
+                    el.appendChild(textEl);
+                }
+            });
         }
     });
