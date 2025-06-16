@@ -77,6 +77,8 @@ msgid ""
 "<i class=\"fa fa-pencil me-1\"/>\n"
 "                        Edit"
 msgstr ""
+"<i class=\"fa fa-pencil me-1\"/>\n"
+"                        Muokkaa"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -86,7 +88,7 @@ msgstr "<i class=\"fa fa-pencil\"/> Muokkaa tietoja"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_row
 msgid "<i class=\"fa fa-plus fa-2x mb-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"fa fa-plus fa-2x mb-2\"/>Lisää osoite"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -138,6 +140,11 @@ msgid ""
 "                        operation.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Yrityksen nimen tai ALV-tunnuksen muuttaminen ei ole sallittua, kun tilillesi on jo\n"
+"                         luotu asiakirjoja. Ota meihin suoraan yhteyttä, jos haluat tehdä tämän\n"
+"                        muutoksen.\n"
+"                    </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -158,7 +165,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "<span class=\"mx-2\">|</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">|</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -403,7 +410,7 @@ msgstr "Lisätty"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 msgid "Address Management"
-msgstr ""
+msgstr "Osoitteiden hallinta"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -466,6 +473,8 @@ msgid ""
 "Changing your name is not allowed once document(s) have been issued for your"
 " account. Please contact us directly for this operation."
 msgstr ""
+"Nimesi muuttaminen ei ole sallittua, kun tilillesi on jo luotu asiakirjoja. "
+"Ota meihin suoraan yhteyttä tämän muutoksen tekemiseksi."
 
 #. module: portal
 #. odoo-javascript
@@ -791,7 +800,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "Jos haluat muokata sitä, päivitä"
 
 #. module: portal
 #. odoo-javascript
@@ -926,7 +935,7 @@ msgstr "Oma tilini"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
-msgstr ""
+msgstr "Omat osoitteeni"
 
 #. module: portal
 #. odoo-javascript
@@ -1095,7 +1104,7 @@ msgstr "Poista"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "Remove address"
-msgstr ""
+msgstr "Poista osoite"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1115,7 +1124,7 @@ msgstr "Sama kuin toimitusosoite"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "Save Address"
-msgstr ""
+msgstr "Tallenna osoite"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1228,13 +1237,13 @@ msgstr "Kiitos!"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your company account."
-msgstr ""
+msgstr "Kenttää %(field_name)s hallitaan yritystililläsi."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your main account address."
-msgstr ""
+msgstr "Kenttää %(field_name)s hallitaan pääosoitteessasi."
 
 #. module: portal
 #. odoo-python
@@ -1260,13 +1269,13 @@ msgstr "Liitettä ei ole olemassa, tai sinulla ei ole oikeuksia nähdä sitä."
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid ""
 "The company name and VAT number can only be updated on the company account."
-msgstr ""
+msgstr "Yrityksen nimi ja ALV-numero voidaan päivittää vain yritystilillä."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid ""
 "The company name and VAT number can only be updated on your main account."
-msgstr ""
+msgstr "Yrityksen nimi ja ALV-numero voidaan päivittää vain päätilillä."
 
 #. module: portal
 #. odoo-python
@@ -1510,7 +1519,7 @@ msgstr "Väärä salasana."
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot archive your main address"
-msgstr ""
+msgstr "Et voi arkistoida pääosoitettasi"
 
 #. module: portal
 #. odoo-python
@@ -1538,7 +1547,7 @@ msgstr "Sinun tulee ensin myöntää kumppanille portaalin käyttöoikeus \"%s\"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "Your Account Address"
-msgstr ""
+msgstr "Tilisi osoite"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -1607,4 +1616,4 @@ msgstr "käyttäjätilillesi, on erittäin tärkeää säilyttää se turvallise
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
-msgstr ""
+msgstr "tilisi tiedot"

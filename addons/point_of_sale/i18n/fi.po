@@ -325,6 +325,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hei <t t-out=\"client_name\">Asiakkaan Nimi </t>,</t>\n"
+"                        <t t-else=\"\">Hei,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Kiitos, kun teit ostoksesi <t t-out=\"store_name\">Myymälän nimi</t>!</div>\n"
+"                    <div>Liitteenä löydät kuitin <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or ''\">päivämäärä</t> klo. <t t-out=\"format_time(time=object.date_order, tz=tz, time_format='short',                          lang_code=lg)\">aika</t> tekemästäsi ostoksesta.</span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Parhain terveisin,</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Myymälän nimi</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_pos_kanban
@@ -399,6 +418,8 @@ msgid ""
 "<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
 "text-info\">Tip: add a return pricelist (i.e. 0€)</span>"
 msgstr ""
+"<span invisible=\"not is_return or pricelist_id\" class=\"oe_inline ps-2 "
+"text-info\">Vinkki: lisää palautushinnasto (esim. 0€)</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -463,7 +484,7 @@ msgstr "<strong>Yhteensä</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "<sup title=\"Only works for online and self order\">?</sup>"
-msgstr ""
+msgstr "<sup title=\"Only works for online and self order\">?</sup>"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2119,7 +2140,7 @@ msgstr "Vahvista"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_confirm_action_wizard
 msgid "Confirm Action"
-msgstr ""
+msgstr "Vahvista toiminto"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2136,7 +2157,7 @@ msgstr "Vahvista?"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirmation_wizard
 msgid "Confirmation Wizard"
-msgstr ""
+msgstr "Ohjattu vahvistustoiminto"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2331,7 +2352,7 @@ msgstr "Luo"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #: code:addons/point_of_sale/wizard/pos_confirmation_wizard.py:0
 msgid "Create Invoice(s)"
-msgstr ""
+msgstr "Luo lasku(ja)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
@@ -2555,7 +2576,7 @@ msgstr "Asiakas vaaditaan"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Customer address is required"
-msgstr ""
+msgstr "Asiakkaan osoite on pakollinen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3206,7 +3227,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Ensure you validate the refund before taking another order."
-msgstr ""
+msgstr "Varmista, että hyväksyt palautuksen ennen uuden tilauksen tekemistä."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3284,7 +3305,7 @@ msgstr "Maksun QR-koodin luomisen epäonnistuminen"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fallback_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Fallback Nomenclature"
-msgstr ""
+msgstr "Varanimikäytäntö"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3349,7 +3370,7 @@ msgstr "Jauhot"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_flour_product_template
 msgid "Flour sold by the kilogram."
-msgstr ""
+msgstr "Jauhoja myydään kiloissa."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_follower_ids
@@ -3926,7 +3947,7 @@ msgstr "Aikavälin kesto (minuuteissa)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Invalid QR Code! Please, Scan again!"
-msgstr ""
+msgstr "Virheellinen QR-koodi! Yritä skannata uudelleen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3954,7 +3975,7 @@ msgstr "Lasku"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__invoice_emails
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__invoice_emails
 msgid "Invoice Emails"
-msgstr ""
+msgstr "Laskun sähköpostit"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
@@ -4100,6 +4121,9 @@ msgid ""
 "\n"
 "Would you like to set %(customer_name)s as the customer for the selected POS order(s)?"
 msgstr ""
+"Näyttää siltä, että kassatilauksessa/-tilauksissa %(order_ref)s  ei ole asiakasta.\n"
+"\n"
+"Haluatko asetta %(customer_name)s asiakkaaksi valittuihin tilauksiin?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
@@ -4135,7 +4159,7 @@ msgstr "Päiväkirjan tapahtumat"
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "Kindly ensure that each order contains a customer."
-msgstr ""
+msgstr "Varmista, että jokaisella tilauksella on asiakas."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
@@ -4362,7 +4386,7 @@ msgstr "Lataa tuotevalikko"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Load Sample"
-msgstr ""
+msgstr "Lataa esimerkki"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4606,7 +4630,7 @@ msgstr "Moniviljaleipä"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_invoice
 msgid "Multiple order invoice creation"
-msgstr ""
+msgstr "Usean tilauksen laskutus"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -4776,7 +4800,7 @@ msgstr "Ei valittu kassaa"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "No Product Yet?"
-msgstr ""
+msgstr "Ei vielä tuotteita?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5088,7 +5112,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oops.."
-msgstr ""
+msgstr "Hups..."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5408,7 +5432,7 @@ msgstr "Kassapääte tilaus %s"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_order_count
 msgid "POS Order Count"
-msgstr ""
+msgstr "Kassatilauksien määrä"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
@@ -5856,7 +5880,7 @@ msgstr "Skannaa uudelleen!"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_contact_address
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_contact_address
 msgid "PoS Address"
-msgstr ""
+msgstr "Kassaosoite"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -6067,7 +6091,7 @@ msgstr "Kassapäätteen käyttäjien käyttäjäryhmä"
 #. module: point_of_sale
 #: model:mail.template,name:point_of_sale.email_template_pos_receipt
 msgid "Point of Sale: Receipt"
-msgstr ""
+msgstr "Kassajärjestelmä: kuitti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
@@ -6799,13 +6823,13 @@ msgstr "Kuittitulostin"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Receipt and invoice sent successfully"
-msgstr ""
+msgstr "Kuitti ja lasku lähetetty onnistuneesti"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Receipt sent successfully"
-msgstr ""
+msgstr "Kuitti lähetetty onnistuneesti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
@@ -7244,6 +7268,7 @@ msgstr "Skannaa EAN-13"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
 msgstr ""
+"Skannaa viivakoodi automaattista luontia varten tai lataa esimerkkitiedot."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -7332,7 +7357,7 @@ msgstr "Valitse esiasetus"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select an order or scan QR code"
-msgstr ""
+msgstr "Valitse tilaus tai skannaa QR-koodi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7423,7 +7448,7 @@ msgstr "Lähetetään"
 #. module: point_of_sale
 #: model:mail.template,description:point_of_sale.email_template_pos_receipt
 msgid "Sent to customers with the receipt in attachment"
-msgstr ""
+msgstr "Lähetetty asiakkaille, kuitti liitteenä"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_sequence
@@ -8239,6 +8264,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Seuraavia palautustilauksia ei voida yhdistää samaan konsolidoituun laskuun, koska ne ovat palautuksia laskutettuista tilauksista. Kukin palautus tulee käsitellä erikseen.\n"
+"\n"
+"%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -8264,7 +8292,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
-msgstr ""
+msgstr "Sähköpostimalli, jonka xmlid on %s, on poistettu."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8384,6 +8412,8 @@ msgid ""
 "The product will be available after this hour for online order and self "
 "order."
 msgstr ""
+"Tuote on saatavilla tämän kellonajan jälkeen verkko- ja "
+"itsepalvelutilauksissa."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_until
@@ -8391,6 +8421,8 @@ msgid ""
 "The product will be available until this hour for online order and self "
 "order."
 msgstr ""
+"Tuote on saatavilla tähän kellonaikaan asti verkko- ja "
+"itsepalvelutilauksissa."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__currency_rate
@@ -8650,6 +8682,8 @@ msgid ""
 "This barcode is not compatible with the GS1 standard. Consider configuring a"
 " fallback barcode parser from the PoS settings."
 msgstr ""
+"Tämä viivakoodi ei ole yhteensopiva GS1-standardin kanssa. Harkitse "
+"varaviivakoodin tulkitsijan määrittämistä Kassajärjestelmän asetuksista."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8695,7 +8729,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "This invoice has been created from the point of sale session:%s"
-msgstr ""
+msgstr "Tämä lasku on luotu Kassajärjestelmän istunnosta: %s "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -8848,7 +8882,7 @@ msgstr "Raidallinen valkoinen leipä"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__use_timing
 msgid "Time Slots"
-msgstr ""
+msgstr "Ajat"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9132,6 +9166,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Konsolidoitua laskua/laskuja ei voida luoda, koska seuraavia tilauksia ei voida laskuttaa.\n"
+"\n"
+"%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9220,7 +9257,7 @@ msgstr "Nimetön tuote"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
 msgid "Unsupported Barcode Format"
-msgstr ""
+msgstr "Viivakoodimuotoa ei tueta"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9635,7 +9672,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "You cannot close the POS while there are still draft orders for the day."
-msgstr ""
+msgstr "Kassaa ei voi sulkea, jos päivältä on vielä keskeneräisiä tilauksia."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9824,7 +9861,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
 msgid "Your {{ object.config_id.name }} receipt"
-msgstr ""
+msgstr "Sinun {{ object.config_id.name }} kuittisi"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -9853,7 +9890,7 @@ msgstr "sähköpostitse"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "default_preset_id"
-msgstr ""
+msgstr "default_preset_id"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10025,7 +10062,7 @@ msgstr "avoin pelastusistunto"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "preset_id"
-msgstr ""
+msgstr "preset_id"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code

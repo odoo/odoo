@@ -56,7 +56,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_view_tree
 msgid "# Public Holidays"
-msgstr ""
+msgstr "# Arkipyhät"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2796,19 +2796,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset a refused leave."
-msgstr ""
+msgstr "Vain lomapäällikkö voi palauttaa hylätyn lomapyynnön."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset a started leave."
-msgstr ""
+msgstr "Vain lomapäällikkö voi nollata jo alkaneen loman."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset other people leaves."
-msgstr ""
+msgstr "Vain lomapäällikkö voi palauttaa muiden henkilöiden lomia."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2816,7 +2816,7 @@ msgstr ""
 msgid ""
 "Only a Time Off Officer or Administrator can approve/refuse its own "
 "requests."
-msgstr ""
+msgstr "Ainoastaan lomapäällikkö voi hyväksyä tai hylätä omat pyyntönsä."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3877,7 +3877,7 @@ msgstr "Lomatyyppi"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Time Off Type's Name"
-msgstr ""
+msgstr "Lomatyypin nimi"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
@@ -4491,6 +4491,8 @@ msgstr "Sinulla ei ole oikeutta hakea toista hyväksyntää lomapyyntöön"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Time Off Approver to approve this leave"
 msgstr ""
+"Sinun tulee olla henkilön %s lomapäällikkö, jotta voisit hyväksyä tämän "
+"lomapyynnön"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4499,6 +4501,8 @@ msgid ""
 "You must be either %s's Time Off Approver or Time off Administrator to "
 "approve this leave"
 msgstr ""
+"Sinun tulee olla henkilön %s lomapäällikkö ja vapaista vastaava esimies, "
+"jotta voit vahvistaa tämän lomapyynnön."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4507,8 +4511,8 @@ msgid ""
 "You must be either %s's Time Off Approver or Time off Administrator to "
 "validate this allocation request."
 msgstr ""
-"Sinun on oltava joko %s:n vapaiden hyväksyjä tai ylläpitäjä, jotta voit "
-"vahvistaa tämän varauspyynnön."
+"Sinun tulee olla henkilön %s lomapäällikkö ja vapaiden hyväksyjä, jotta voit"
+" vahvistaa tämän lomapyynnön."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4517,6 +4521,8 @@ msgid ""
 "You must either be a Time off Officer or Time off Administrator to approve "
 "this leave"
 msgstr ""
+"Sinun on oltava joko lomapäällikkö tai vapaista vastaava esimies voidaksesi "
+"hyväksyä tämän loman"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
