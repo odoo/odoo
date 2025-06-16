@@ -727,3 +727,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_popup_visibility_option(self):
         self.start_tour("/", "website_popup_visibility_option", login="admin")
+
+    def test_systray_items_disappear(self):
+        self.start_tour("/", "website_systray_items_disappear", login="admin")
