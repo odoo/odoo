@@ -168,4 +168,16 @@ describe("range not collapsed", () => {
             `<p><img src="${window.location.origin}/nice.png"></p>`
         );
     });
+
+    test("should not add origin to base64 images", async () => {
+        const base64Img =
+            "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+        await setupEditor(`<p>[<img src="${base64Img}">]</p>`);
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/html")).toBe(`<p><img src="${base64Img}"></p>`);
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            `<p><img src="${base64Img}"></p>`
+        );
+    });
 });
