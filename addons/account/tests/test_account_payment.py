@@ -521,6 +521,7 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
         invoice.js_assign_outstanding_line(credit_line.id)
         self.assertTrue(invoice.payment_state in ('in_payment', 'paid'), "Invoice should be paid")
         invoice.button_draft()
+        invoice.line_ids.remove_move_reconcile()
         self.assertTrue(invoice.payment_state == 'not_paid', "Invoice should'nt be paid anymore")
         self.assertTrue(invoice.state == 'draft', "Invoice should be draft")
 

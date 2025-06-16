@@ -1644,11 +1644,7 @@ class AccountMoveLine(models.Model):
                     if self.env['account.move']._field_will_change(line, vals, field_name)
                 })
             ):
-                matching2lines = dict(self.env['account.move.line'].sudo()._read_group(
-                    domain=[('matching_number', 'in', [n for n in self.mapped('matching_number') if n])],
-                    groupby=['matching_number'],
-                    aggregates=['id:recordset'],
-                )) if matching2lines is None else matching2lines
+                matching2lines = self._reconciled_by_number() if matching2lines is None else matching2lines
                 if (
                     # allow changing the account on all the lines of a reconciliation together
                     changing_fields - {'account_id'}
@@ -1763,8 +1759,7 @@ class AccountMoveLine(models.Model):
         if not self:
             return True
 
-        # Check the lines are not reconciled (partially or not).
-        self._check_reconciliation()
+        self.remove_move_reconcile()
 
         # Check the lock date. (Only relevant if the move is posted)
         self.move_id.filtered(lambda m: m.state == 'posted')._check_fiscal_lock_dates()
@@ -3114,11 +3109,11 @@ class AccountMoveLine(models.Model):
         """Get the mapping of all the lines matched with the lines in self grouped by matching number."""
         matching_numbers = [n for n in set(self.mapped('matching_number')) if n]
         if matching_numbers:
-            return dict(self._read_group(
+            return {number: lines.with_env(self.env) for number, lines in self.sudo()._read_group(
                 domain=[('matching_number', 'in', matching_numbers)],
                 groupby=['matching_number'],
                 aggregates=['id:recordset'],
-            ))
+            )}
         return {}
 
     def _filter_reconciled_by_number(self, mapping: dict):
