@@ -37,36 +37,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         return min(producibles) * bom_data['bom']['product_qty'] if producibles else 0
 
     @api.model
-    def _compute_production_capacities(self, bom_qty, bom_data):
-        date_today = self.env.context.get('from_date', fields.Date.today())
-        earliest_capacity = 0
-        lead_time = bom_data['lead_time']
-        res = {}
-        if bom_data.get('producible_qty', 0):
-            # Some quantities are producible today, at the earliest time possible
-            earliest_capacity = bom_data['producible_qty']
-
-        if bom_data['availability_state'] != 'unavailable':
-            availability_delay = bom_data['availability_delay']
-            if lead_time and lead_time == availability_delay:
-                # Means that stock will be resupplied at date_today, so the whole manufacture can start at date_today.
-                earliest_capacity = bom_qty
-            elif (balance := bom_qty - bom_data.get('producible_qty', 0) - bom_data.get('quantity_available', 0)) > 0:
-                res['leftover_capacity'] = balance
-                res['leftover_date'] = format_date(self.env, date_today + timedelta(days=availability_delay))
-
-        if earliest_capacity:
-            if bom_data['route_type'] == 'manufacture':
-                # Simulate planning for 'earliest' capacity at date
-                operations_planning = self._simulate_bom_planning(bom_data['bom'], bom_data['product'], datetime.combine(date_today, time.min), earliest_capacity)
-                days = max(((p['date_finished'].date() - date_today).days for p in operations_planning.values()), default=0)
-                lead_time = max(bom_data['bom'].produce_delay, days)
-            res['earliest_date'] = format_date(self.env, date_today + timedelta(days=lead_time))
-            res['earliest_capacity'] = earliest_capacity
-
-        return res
-
-    @api.model
     def _get_report_values(self, docids, data=None):
         docs = []
         for bom_id in docids:
@@ -124,8 +94,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
 
         lines = self._get_bom_data(bom, warehouse, product=product, line_qty=bom_quantity, level=0)
-        production_capacities = self._compute_production_capacities(bom_quantity, lines)
-        lines.update(production_capacities)
         return {
             'lines': lines,
             'variants': bom_product_variants,
@@ -424,6 +392,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         quantities_info = {
             'free_qty': max(product.uom_id._compute_quantity(product.free_qty, bom_uom), 0) if product.is_storable else 0,
             'on_hand_qty': product.uom_id._compute_quantity(product.qty_available, bom_uom) if product.is_storable else 0,
+            'forecasted_qty': product.uom_id._compute_quantity(product.virtual_available, bom_uom) if product.is_storable else 0,
             'stock_loc': 'in_stock',
         }
         quantities_info['free_to_manufacture_qty'] = quantities_info['free_qty']
@@ -685,6 +654,9 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             resupply_state, resupply_delay = ('available', 0)
         elif route_info:
             resupply_state, resupply_delay = self._get_resupply_availability(route_info, components)
+
+        if quantities_info and quantities_info.get('forecasted_qty') < quantity:
+            resupply_state = 'unavailable'
 
         if resupply_state == "unavailable" and route_info == {} and components and report_line and report_line['phantom_bom']:
             val = self._get_last_availability(report_line)

@@ -82,10 +82,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         for component in bom_data['lines']['components']:
             self.assertEqual(component['quantity_on_hand'], 4)
             self.assertEqual(component['availability_state'], 'available')
-        self.assertEqual(bom_data['lines']['earliest_capacity'], 3)
-        self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
-        self.assertTrue('leftover_capacity' not in bom_data['lines']['earliest_date'])
-        self.assertTrue('leftover_date' not in bom_data['lines']['earliest_date'])
 
         # Generate a report for 5 products: only 4 products should be ready for production
         bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 5)
@@ -93,11 +89,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertFalse(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
             self.assertEqual(component['quantity_on_hand'], 4)
-            self.assertEqual(component['availability_state'], 'estimated')
-        self.assertEqual(bom_data['lines']['earliest_capacity'], 4)
-        self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
-        self.assertEqual(bom_data['lines']['leftover_capacity'], 1)
-        self.assertEqual(bom_data['lines']['leftover_date'], '01/16/2024')
+            self.assertEqual(component['availability_state'], 'unavailable')
 
     def test_count_smart_buttons(self):
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
@@ -861,11 +853,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         for component in bom_data['lines']['components']:
             self.assertEqual(component['quantity_on_hand'], 4)
             self.assertEqual(component['availability_state'], 'available')
-        self.assertEqual(bom_data['lines']['earliest_capacity'], 3)
-        # 01/11 + 2 days of Security Lead Time = 01/13
-        self.assertEqual(bom_data['lines']['earliest_date'], '01/13/2024')
-        self.assertTrue('leftover_capacity' not in bom_data['lines']['earliest_date'])
-        self.assertTrue('leftover_date' not in bom_data['lines']['earliest_date'])
 
         # Generate a report for 5 products: only 4 products should be ready for production
         bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 5)
@@ -873,13 +860,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertFalse(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
             self.assertEqual(component['quantity_on_hand'], 4)
-            self.assertEqual(component['availability_state'], 'estimated')
-        self.assertEqual(bom_data['lines']['earliest_capacity'], 4)
-        # 01/11 + 2 days of Security Lead Time = 01/13
-        self.assertEqual(bom_data['lines']['earliest_date'], '01/13/2024')
-        self.assertEqual(bom_data['lines']['leftover_capacity'], 1)
-        # 01/16 + 2 x 2 days (for components and for final product) = 01/20
-        self.assertEqual(bom_data['lines']['leftover_date'], '01/20/2024')
+            self.assertEqual(component['availability_state'], 'unavailable')
 
     def test_location_after_dest_location_update_backorder_production(self):
         """
