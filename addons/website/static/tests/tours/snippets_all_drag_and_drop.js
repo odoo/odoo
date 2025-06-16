@@ -15,13 +15,6 @@ const SUB_SNIPPET_TEMPLATES = {
     s_masonry_block_alternation_image_text_template: "s_masonry_block",
 };
 
-const SNIPPET_NAME_NORMALIZATIONS = {
-    "Hr": "Separator",
-    "Cta Badge": "CTA Badge",
-    "Website Form": "Form",
-    "Searchbar Input": "Search",
-};
-
 // Extract snippets names from URL parameters
 function getSnippetsNames() {
     let snippetsNamesRaw = new URL(document.location.href).searchParams.get("snippets_names") || "";
@@ -50,21 +43,13 @@ function generateSnippetSteps(snippetsNames) {
             group: snippet.split(":")[1],
         };
         const isModal = ["s_popup", "s_newsletter_subscribe_popup"].includes(snippetData.name);
-
-        const searchSnippetName = snippetData.name
-            .split("_")
-            .slice(1)
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
         const snippetKey = SUB_SNIPPET_TEMPLATES[snippetData.name] || snippetData.name;
 
         let draggableElSelector = "";
         if (snippetData.group) {
-            draggableElSelector = `.o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[data-snippet-group="${snippetData.group}"] .o_snippet_thumbnail`;
+            draggableElSelector = `#snippet_groups .o_snippet[data-snippet-group="${snippetData.group}"] .o_snippet_thumbnail`;
         } else {
-            const normalizedSnippetName =
-                SNIPPET_NAME_NORMALIZATIONS[searchSnippetName] || searchSnippetName;
-            draggableElSelector = `.o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) #snippet_content .o_snippet[name="${normalizedSnippetName}"] .o_snippet_thumbnail`;
+            draggableElSelector = `#snippet_content .o_snippet [data-snippet="${snippetData.name}"]`;
         }
 
         const snippetSteps = [
