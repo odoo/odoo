@@ -25,7 +25,9 @@
                                 </div>
                                 <ul class="info-list d-flex flex-column p-0">
                                     <li class="price-per-unit">
-                                        <span class="qty px-1 border rounded text-bg-view fw-bolder me-1" t-esc="line.qty"/>
+                                        <span class="qty px-1 border rounded text-bg-view fw-bolder me-1">
+                                            <t t-esc="line.qty" /> <t t-if="line.unit and line.unit !== 'Units'" t-esc="line.unit" />
+                                        </span>
                                         x
                                         <t t-if="line.price !== 0">
                                             <t t-esc="line.unitPrice" />
