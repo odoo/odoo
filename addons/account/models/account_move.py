@@ -5160,7 +5160,7 @@ class AccountMove(models.Model):
                 move.sudo().activity_schedule(
                     activity_type_id=self.env.ref('mail.mail_activity_data_todo').id,
                     summary=_('To check'),
-                    user_id=move.invoice_user_id.name,
+                    user_id=move.invoice_user_id.id,
                 )
 
         if validation_msgs:
