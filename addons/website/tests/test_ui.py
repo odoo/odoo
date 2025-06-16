@@ -192,8 +192,6 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
 @odoo.tests.tagged('external', '-standard', '-at_install', 'post_install')
 class TestUiHtmlEditorWithExternal(HttpCaseWithUserDemo):
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_media_dialog_external_library(self):
         self.start_tour("/", 'website_media_dialog_external_library', login='admin')
 
