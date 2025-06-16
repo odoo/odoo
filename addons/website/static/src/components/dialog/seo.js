@@ -7,6 +7,7 @@ import { escapeRegExp } from "@web/core/utils/strings";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { isVisible } from "@web/core/utils/ui";
 import { CheckBox } from '@web/core/checkbox/checkbox';
+import { getDataURLFromFile } from "@web/core/utils/urls";
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
 import { Component, onMounted, onWillStart, reactive, useEffect, useState } from "@odoo/owl";
@@ -22,6 +23,7 @@ const seoContext = reactive({
     seoName: '',
     metaImage: '',
     defaultTitle: '',
+    defaultImage: '',
     updatedAlts: [],
     brokenLinks: [],
 });
@@ -163,11 +165,13 @@ class ImageSelector extends Component {
         this.seoContext = useState(seoContext);
 
         const firstImageId = this.props.hasSocialDefaultImage ? 'social_default_image' : 'logo';
-        const firstImageSrc = `/web/image/website/${encodeURIComponent(this.website.currentWebsite.id)}/${firstImageId}`;
+        const fallbackSrc = `/web/image/website/${encodeURIComponent(this.website.currentWebsite.id)}/${firstImageId}`;
+        const firstImageSrc = this.seoContext.defaultImage || fallbackSrc;
+
         const firstImage = {
             src: firstImageSrc,
             active: this.areSameImages(firstImageSrc, this.seoContext.metaImage),
-            custom: false,
+            custom: Boolean(this.seoContext.defaultImage),
         };
 
         this.state = useState({
@@ -217,6 +221,11 @@ class ImageSelector extends Component {
         this.seoContext.metaImage = src;
     }
 
+    async setDefaultSocialImage(src) {
+        if (!src) return;
+        this.seoContext.defaultImage = src;
+    }
+
     openMediaDialog() {
         this.dialogs.add(MediaDialog, {
             onlyImages: true,
@@ -242,6 +251,10 @@ class ImageSelector extends Component {
                 this.seoContext.metaImage = image.src;
             },
         });
+    }
+
+    isDefaultImage(src) {
+        return this.areSameImages(src, this.seoContext.defaultImage);
     }
 }
 
@@ -930,6 +943,7 @@ export class OptimizeSEODialog extends Component {
             }
         }
         data.website_meta_og_img = seoContext.metaImage;
+
         await this.orm.write(this.object.model, [this.object.id], data, {
             context: {
                 lang: this.website.currentWebsite.metadata.lang,
@@ -953,6 +967,15 @@ export class OptimizeSEODialog extends Component {
             rpcCalls.push(
                 rpc("/website/update_alt_images", {
                     imgs: seoContext.updatedAlts,
+                })
+            );
+        }
+        if (seoContext.defaultImage instanceof Blob) {
+            const data = await getDataURLFromFile(seoContext.defaultImage);
+            rpcCalls.push(
+                rpc("/website/set_default_social_image", {
+                    website_id: this.website.currentWebsite.id,
+                    data: data.split(',')[1],
                 })
             );
         }

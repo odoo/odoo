@@ -10,7 +10,18 @@
 <t t-name="website.ImageSelector">
     <section>
         <div class="o_seo_og_image">
-            <h4><small>Cover image</small></h4>
+            <div class="d-flex gap-3">
+                <h4><small>Cover image</small></h4>
+                <label class="ms-2">
+                    <input
+                        type="checkbox"
+                        class="mt-1"
+                        t-att-checked="this.isDefaultImage(this.activeMetaImage)"
+                        t-on-click="() => this.setDefaultSocialImage(this.activeMetaImage)"
+                    />
+                    <span class="ms-2">Set as default</span>
+                </label>
+            </div>
             <t t-foreach="state.images" t-as="image" t-key="image.src">
                 <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
             </t>
