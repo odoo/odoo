@@ -403,7 +403,8 @@ export class Message extends Record {
                 !this.isPending &&
                 this.thread &&
                 this.store.self.type === "partner" &&
-                this.store.self.main_user_id?.share === false
+                this.store.self.main_user_id?.share === false &&
+                this.persistent
         );
     }
 
