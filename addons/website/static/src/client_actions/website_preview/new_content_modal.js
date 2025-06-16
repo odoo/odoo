@@ -11,7 +11,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { redirect } from "@web/core/utils/urls";
 
 export class NewContentModal extends Component {
-    static template = "html_builder.NewContentModal";
+    static template = "website.NewContentModal";
     static components = { NewContentElement };
     static props = {
         onNewPage: Function,

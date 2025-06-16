@@ -8,7 +8,7 @@ export const MODULE_STATUS = {
 };
 
 export class NewContentElement extends Component {
-    static template = "html_builder.NewContentElement";
+    static template = "website.NewContentElement";
     static props = {
         name: { type: String, optional: true },
         title: String,
