@@ -3,6 +3,7 @@ from collections import defaultdict
 from contextlib import ExitStack, contextmanager
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
+from functools import wraps
 from hashlib import sha256
 from json import dumps
 import logging
@@ -12,7 +13,7 @@ import psycopg2
 import re
 from textwrap import shorten
 
-from odoo import api, fields, models, _, Command, SUPERUSER_ID, modules, tools
+from odoo import api, fields, models, _, Command, SUPERUSER_ID, modules, tools, registry
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.tools.misc import clean_context
@@ -4624,6 +4625,31 @@ class AccountMove(models.Model):
             **kwargs,
         }
 
+    # As we are often sending invoices to the government, we want to make sure that
+    # the record is correctly stored in the db before sending it
+    def after_commit(func):
+        @wraps(func)
+        def wrapped(self, *args, **kwargs):
+            dbname = self.env.cr.dbname
+            context = self.env.context
+            uid = self.env.uid
+
+            if self.env['account.move']._can_commit():
+                @self.env.cr.postcommit.add
+                def called_after():
+                    db_registry = registry(dbname)
+                    with db_registry.cursor() as cr:
+                        env = api.Environment(cr, uid, context)
+                        try:
+                            func(self.with_env(env), *args, **kwargs)
+                        except Exception:
+                            _logger.warning("Could not sync record now: %s", self)
+                            _logger.exception()
+            else:
+                func(self, *args, **kwargs)
+        return wrapped
+
+    @after_commit
     def _generate_pdf_and_send_invoice(self, template, force_synchronous=True, allow_fallback_pdf=True, bypass_download=False, **kwargs):
         """ Generate the pdf for the current invoices and send them by mail using the send & print wizard.
         :param force_synchronous:   Flag indicating if the method should be done synchronously.
@@ -4633,7 +4659,7 @@ class AccountMove(models.Model):
         """
         composer_vals = self._get_pdf_and_send_invoice_vals(template, **kwargs)
         composer = self.env['account.move.send'].create(composer_vals)
-        return composer.action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, bypass_download=bypass_download)
+        composer.action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, bypass_download=bypass_download)
 
     def _get_invoice_legal_documents(self):
         """ Return existing attachments or a temporary Pro Forma pdf. """
