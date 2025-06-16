@@ -206,7 +206,7 @@ registry.category("services").add("website_edit", {
                 }),
                 patch(publicInteractions.constructor.prototype, {
                     shouldStop(el, interaction) {
-                        if (super.shouldStop(el, interaction)) {
+                        if (super.shouldStop(el, interaction) || interaction.el.contains(el)) {
                             if (this.isRefreshing) {
                                 return interaction.interaction.shouldStop();
                             }
