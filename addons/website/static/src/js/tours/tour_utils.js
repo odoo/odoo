@@ -5,6 +5,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { markup } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
 import { waitForStable } from "@web/core/macro";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 export function addMedia(position = "right") {
     return {
@@ -325,6 +326,7 @@ export function clickOnSave(position = "bottom", timeout = 50000) {
             noPrepend: true,
             timeout,
         },
+        stepUtils.waitIframeIsReady(),
     ];
 }
 
