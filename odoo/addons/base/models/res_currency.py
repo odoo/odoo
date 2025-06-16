@@ -72,7 +72,7 @@ class ResCurrency(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if vals.keys() & {'active', 'digits', 'position', 'symbol'}:
+        if vals.keys() & {'active', 'digits', 'name', 'position', 'symbol'}:
             # invalidate cache for get_all_currencies
             self.env.registry.clear_cache()
         if 'active' not in vals:
@@ -263,9 +263,9 @@ class ResCurrency(models.Model):
     @ormcache()
     @api.model
     def get_all_currencies(self):
-        currencies = self.sudo().search_fetch([('active', '=', True)], ['symbol', 'position', 'decimal_places'])
+        currencies = self.sudo().search_fetch([('active', '=', True)], ['name', 'symbol', 'position', 'decimal_places'])
         return {
-            c.id: {'symbol': c.symbol, 'position': c.position, 'digits': [69, c.decimal_places]}
+            c.id: {'name': c.name, 'symbol': c.symbol, 'position': c.position, 'digits': [69, c.decimal_places]}
             for c in currencies
         }
 
