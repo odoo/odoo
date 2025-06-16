@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet.DateFilterDropdown">
+        <t t-foreach="dateOptions" t-as="option" t-key="option.id">
+            <DropdownItem tag="'div'"
+                            class="{ 'selected': isSelected(option), 'd-flex justify-content-between o-date-filter-dropdown': true }"
+                            closingMode="'none'"
+                            attrs="{ 'data-id': option.id }"
+                            onSelected="() => this.update(option)">
+
+                <div class="o-date-option-label" t-esc="option.label"/>
+                <t t-if="option.type === 'range'">
+                    <div class="d-flex flex-row">
+                        <DateTimeInput type="'date'" value="dateFrom()" onChange="(dateFrom) => this.setDateFrom(dateFrom)" />
+                        <span class="d-flex align-items-center">to</span>
+                        <DateTimeInput type="'date'" value="dateTo()" onChange="(dateTo) => this.setDateTo(dateTo)" />
+                    </div>
+                </t>
+                <t t-elif="isMonthQuarterYear(option)">
+                    <div class="d-flex justify-content-between">
+                        <button class="btn-previous fa fa-caret-left" t-on-click="() => this.selectPrevious(option.type)" />
+                        <input class="o_input" type="text" t-att-value="getDescription(option.type)" readonly="true"/>
+                        <button class="btn-next fa fa-caret-right" t-on-click="() => this.selectNext(option.type)" />
+                    </div>
+                </t>
+            </DropdownItem>
+            <div class="dropdown-divider" t-if="option.separator"/>
+        </t>
+    </t>
+</templates>

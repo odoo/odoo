@@ -11,7 +11,6 @@ import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helper
 import { browser } from "@web/core/browser/browser";
 import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
-import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 
 describe.current.tags("desktop");
 defineSpreadsheetDashboardModels();
@@ -200,7 +199,19 @@ test("Last selected spreadsheet is kept when go back from breadcrumb", async fun
 
 test("Can clear filter date filter value that defaults to current period", async function () {
     const spreadsheetData = {
-        globalFilters: [THIS_YEAR_GLOBAL_FILTER],
+        globalFilters: [
+            {
+                id: "1",
+                type: "date",
+                label: "Period",
+            },
+            {
+                id: "2",
+                type: "date",
+                label: "This Year",
+                defaultValue: "this_year",
+            },
+        ],
     };
     const serverData = getServerData(spreadsheetData);
     await createSpreadsheetDashboard({ serverData });
@@ -251,7 +262,19 @@ test("share dashboard from dashboard view", async function () {
 
 test("Changing filter values will create a new share", async function () {
     const spreadsheetData = {
-        globalFilters: [THIS_YEAR_GLOBAL_FILTER],
+        globalFilters: [
+            {
+                id: "1",
+                type: "date",
+                label: "Period",
+            },
+            {
+                id: "2",
+                type: "date",
+                label: "This Year",
+                defaultValue: "this_year",
+            },
+        ],
     };
     const serverData = getServerData(spreadsheetData);
     let counter = 0;
@@ -483,4 +506,44 @@ test("Changes of global filters are not dispatched while inside the dialog", asy
     expect(model.getters.getGlobalFilterValue("1")).toBe(undefined);
     await contains(".modal-footer .btn-primary").click();
     expect(model.getters.getGlobalFilterValue("1")).toEqual([37]);
+});
+
+test("First global filter date is displayed as button", async function () {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+                defaultValue: [37],
+            },
+            {
+                id: "2",
+                type: "date",
+                label: "Period",
+                defaultValue: "this_year",
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    await createSpreadsheetDashboard({ serverData });
+    expect(".o_sp_date_filter_button").toHaveCount(1);
+    expect(".o_searchview_facet").toHaveCount(1);
+});
+
+test("No date buttons are displayed if there is no date filter", async function () {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    await createSpreadsheetDashboard({ serverData });
+    expect(".o_sp_date_filter_button").toHaveCount(0);
 });

@@ -1,9 +1,12 @@
 /** @ts-check */
 import { describe, expect, test, beforeEach } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
 import {
     getDateDomain,
     getRelativeDateFromTo,
     dateFilterValueToString,
+    getNextDateFilterValue,
+    getPreviousDateFilterValue,
 } from "@spreadsheet/global_filters/helpers";
 import {
     getDateDomainDurationInDays,
@@ -205,10 +208,13 @@ test("dateFilterValueToString > year", function () {
 
 test("dateFilterValueToString > range", function () {
     expect(valueToString({ type: "range", from: "2022-01-01", to: "2022-12-31" })).toBe(
-        "2022-01-01 to 2022-12-31"
+        "January 1 – December 31, 2022"
     );
-    expect(valueToString({ type: "range", from: "2022-01-01" })).toBe("2022-01-01 to all time");
-    expect(valueToString({ type: "range", to: "2022-12-31" })).toBe("All time to 2022-12-31");
+    expect(valueToString({ type: "range", from: "2022-01-01", to: "2022-01-01" })).toBe(
+        "January 1, 2022"
+    );
+    expect(valueToString({ type: "range", from: "2022-01-01" })).toBe("Since January 1, 2022");
+    expect(valueToString({ type: "range", to: "2022-12-31" })).toBe("Until December 31, 2022");
     expect(valueToString({ type: "range" })).toBe("All time");
 });
 
@@ -220,4 +226,223 @@ test("dateFilterValueToString > all time", function () {
 test("dateFilterValueToString > invalid value", function () {
     expect(valueToString({ type: "invalid" })).toBe("All time");
     expect(valueToString(undefined)).toBe("All time");
+});
+
+describe("getNextDateFilterValue", () => {
+    test("month: December rolls over to January next year", () => {
+        expect(getNextDateFilterValue({ type: "month", year: 2022, month: 12 })).toEqual({
+            type: "month",
+            year: 2023,
+            month: 1,
+        });
+    });
+    test("month: increments month", () => {
+        expect(getNextDateFilterValue({ type: "month", year: 2022, month: 5 })).toEqual({
+            type: "month",
+            year: 2022,
+            month: 6,
+        });
+    });
+    test("quarter: Q4 rolls over to Q1 next year", () => {
+        expect(getNextDateFilterValue({ type: "quarter", year: 2022, quarter: 4 })).toEqual({
+            type: "quarter",
+            year: 2023,
+            quarter: 1,
+        });
+    });
+    test("quarter: increments quarter", () => {
+        expect(getNextDateFilterValue({ type: "quarter", year: 2022, quarter: 2 })).toEqual({
+            type: "quarter",
+            year: 2022,
+            quarter: 3,
+        });
+    });
+    test("year: increments year", () => {
+        expect(getNextDateFilterValue({ type: "year", year: 2022 })).toEqual({
+            type: "year",
+            year: 2023,
+        });
+    });
+
+    test("relative", () => {
+        mockDate("2022-07-14 00:00:00");
+
+        let result = getNextDateFilterValue({ type: "relative", period: "last_7_days" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2022-07-15",
+            to: "2022-07-21",
+        });
+
+        result = getNextDateFilterValue({ type: "relative", period: "last_30_days" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2022-07-15",
+            to: "2022-08-13",
+        });
+
+        result = getNextDateFilterValue({ type: "relative", period: "last_90_days" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2022-07-15",
+            to: "2022-10-12",
+        });
+
+        result = getNextDateFilterValue({ type: "relative", period: "year_to_date" });
+        expect(result).toEqual({
+            type: "year",
+            year: 2023,
+        });
+
+        result = getNextDateFilterValue({ type: "relative", period: "last_12_months" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2022-07-01",
+            to: "2023-06-30",
+        });
+
+        result = getNextDateFilterValue({ type: "relative", period: "today" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2022-07-15",
+            to: "2022-07-15",
+        });
+
+        result = getNextDateFilterValue({ type: "relative", period: "yesterday" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2022-07-14",
+            to: "2022-07-14",
+        });
+
+        result = getNextDateFilterValue({ type: "relative", period: "last_month" });
+        expect(result).toEqual({
+            type: "month",
+            year: 2022,
+            month: 7,
+        });
+
+        result = getNextDateFilterValue({ type: "relative", period: "month_to_date" });
+        expect(result).toEqual({
+            type: "month",
+            year: 2022,
+            month: 8,
+        });
+    });
+
+    test("range: shifts range forward", () => {
+        expect(
+            getNextDateFilterValue({ type: "range", from: "2022-01-01", to: "2022-01-10" })
+        ).toEqual({ type: "range", from: "2022-01-11", to: "2022-01-20" });
+    });
+});
+
+describe("getPreviousDateFilterValue", () => {
+    test("month: January rolls back to December previous year", () => {
+        expect(getPreviousDateFilterValue({ type: "month", year: 2022, month: 1 })).toEqual({
+            type: "month",
+            year: 2021,
+            month: 12,
+        });
+    });
+    test("month: decrements month", () => {
+        expect(getPreviousDateFilterValue({ type: "month", year: 2022, month: 6 })).toEqual({
+            type: "month",
+            year: 2022,
+            month: 5,
+        });
+    });
+    test("quarter: Q1 rolls back to Q4 previous year", () => {
+        expect(getPreviousDateFilterValue({ type: "quarter", year: 2022, quarter: 1 })).toEqual({
+            type: "quarter",
+            year: 2021,
+            quarter: 4,
+        });
+    });
+    test("quarter: decrements quarter", () => {
+        expect(getPreviousDateFilterValue({ type: "quarter", year: 2022, quarter: 3 })).toEqual({
+            type: "quarter",
+            year: 2022,
+            quarter: 2,
+        });
+    });
+    test("year: decrements year", () => {
+        expect(getPreviousDateFilterValue({ type: "year", year: 2022 })).toEqual({
+            type: "year",
+            year: 2021,
+        });
+    });
+
+    test("relative", () => {
+        mockDate("2022-07-14 00:00:00");
+
+        let result = getPreviousDateFilterValue({ type: "relative", period: "last_7_days" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2022-07-01",
+            to: "2022-07-07",
+        });
+
+        result = getPreviousDateFilterValue({ type: "relative", period: "last_30_days" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2022-05-16",
+            to: "2022-06-14",
+        });
+
+        result = getPreviousDateFilterValue({ type: "relative", period: "last_90_days" });
+        expect(result).toEqual({
+            type: "range",
+
+            from: "2022-01-16",
+            to: "2022-04-15",
+        });
+
+        result = getPreviousDateFilterValue({ type: "relative", period: "year_to_date" });
+        expect(result).toEqual({
+            type: "year",
+            year: 2021,
+        });
+
+        result = getPreviousDateFilterValue({ type: "relative", period: "last_12_months" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2020-07-01",
+            to: "2021-06-30",
+        });
+
+        result = getPreviousDateFilterValue({ type: "relative", period: "today" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2022-07-13",
+            to: "2022-07-13",
+        });
+
+        result = getPreviousDateFilterValue({ type: "relative", period: "yesterday" });
+        expect(result).toEqual({
+            type: "range",
+            from: "2022-07-12",
+            to: "2022-07-12",
+        });
+
+        result = getPreviousDateFilterValue({ type: "relative", period: "last_month" });
+        expect(result).toEqual({
+            type: "month",
+            year: 2022,
+            month: 5,
+        });
+
+        result = getPreviousDateFilterValue({ type: "relative", period: "month_to_date" });
+        expect(result).toEqual({
+            type: "month",
+            year: 2022,
+            month: 6,
+        });
+    });
+
+    test("range: shifts range backward", () => {
+        expect(
+            getPreviousDateFilterValue({ type: "range", from: "2022-01-11", to: "2022-01-20" })
+        ).toEqual({ type: "range", from: "2022-01-01", to: "2022-01-10" });
+    });
 });
