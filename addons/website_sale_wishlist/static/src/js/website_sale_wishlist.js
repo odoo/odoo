@@ -174,7 +174,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     /**
      * @private
      */
-    _addOrMoveWish: function (ev) {
+    async _addOrMoveWish(ev) {
         const td = ev.currentTarget.parentElement;
 
         const productId = parseInt(
@@ -186,20 +186,26 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         const isCombo = td.querySelector(
             'input[type="hidden"][name="product_type"]'
         )?.value === 'combo';
+        const ptavs = JSON.parse(
+            td.querySelector('input[type="hidden"][name="ptav_ids"]')?.value || '[]'
+        );
         const showQuantity = Boolean(ev.currentTarget.dataset.showQuantity);
 
         const addToCart = this.call('cart', 'add', {
             productTemplateId: productTemplateId,
             productId: parseInt(productId, 10),
             isCombo: isCombo,
+            ptavs: ptavs,
         }, {
+            isConfigured: false, // custom attributes may still require input
+            redirectToCart: false,
             showQuantity: showQuantity,
         });
 
-        if (!document.getElementById('b2b_wish').checked) {
+        const quantity = await addToCart;
+        if (quantity > 0 && !document.getElementById('b2b_wish').checked) {
             this._removeWish(ev, addToCart);
         }
-        return addToCart;
     },
     /**
      * @private
@@ -266,7 +272,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @param {Event} ev
      */
     _onClickWishRemove: function (ev) {
-        this._removeWish(ev, false);
+        this._removeWish(ev);
     },
     /**
      * @private
