@@ -212,21 +212,15 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 return;
             }
 
-            const invoicedOrderIds = new Set(
+            const orderIds = new Set(
                 allToRefundDetails
-                    .filter(
-                        (detail) =>
-                            this._state.syncedOrders.cache[detail.orderline.orderBackendId] &&
-                            this._state.syncedOrders.cache[detail.orderline.orderBackendId].state ===
-                            "invoiced"
-                    )
                     .map((detail) => detail.orderline.orderBackendId)
             );
 
-            if (invoicedOrderIds.size > 1) {
+            if (orderIds.size > 1) {
                 this.showPopup('ErrorPopup', {
-                    title: this.env._t('Multiple Invoiced Orders Selected'),
-                    body: this.env._t('You have selected orderlines from multiple invoiced orders. To proceed refund, please select orderlines from the same invoiced order.')
+                    title: this.env._t('Multiple Orders Selected'),
+                    body: this.env._t('You have selected orderlines from multiple orders. To proceed refund, please select orderlines from the same order.')
                 });
                 return;
             }
