@@ -164,7 +164,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     /**
      * @private
      */
-    _addOrMoveWish: function (ev) {
+    async _addOrMoveWish(ev) {
         const td = ev.currentTarget.parentElement;
 
         const productId = parseInt(
@@ -176,18 +176,33 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         const isCombo = td.querySelector(
             'input[type="hidden"][name="product_type"]'
         )?.value === 'combo';
+<<<<<<< b30a87fe790aa691b28e78475d6b3b34c552fbc6
         const showQuantity = Boolean(ev.currentTarget.dataset.showQuantity);
+||||||| 383a5a06c749eb155072737515219fd170d4a130
+=======
+        const ptavs = JSON.parse(
+            td.querySelector('input[type="hidden"][name="ptav_ids"]')?.value || '[]'
+        );
+>>>>>>> fe68687f8c3bfc493ae56220f88aab5aabe66791
 
         const addToCart = this.call('cart', 'add', {
             productTemplateId: productTemplateId,
             productId: parseInt(productId, 10),
             isCombo: isCombo,
+<<<<<<< b30a87fe790aa691b28e78475d6b3b34c552fbc6
         }, {
             showQuantity: showQuantity,
+||||||| 383a5a06c749eb155072737515219fd170d4a130
+=======
+            ptavs: ptavs,
+        }, {
+            redirectToCart: false,
+            isConfigured: false, // custom attributes may still require input
+>>>>>>> fe68687f8c3bfc493ae56220f88aab5aabe66791
         });
-
-        if (!document.getElementById('b2b_wish').checked) {
-            this._removeWish(ev, addToCart);
+        const quantity = await addToCart;
+        if (quantity > 0 && !document.getElementById('b2b_wish').checked) {
+            this._removeWish(ev, false);
         }
         return addToCart;
     },
