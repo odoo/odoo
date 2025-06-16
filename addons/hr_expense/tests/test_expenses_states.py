@@ -160,6 +160,7 @@ class TestExpensesStates(TestExpenseCommon):
         self.get_new_payment(self.expenses_employee, self.expenses_employee.total_amount)
 
         self.expenses_employee.account_move_id.button_draft()
+        self.expenses_employee.account_move_id.line_ids.remove_move_reconcile()
         self.assertEqual(self.expenses_employee.state, 'posted')
         self.assertRecordValues(self.expenses_employee.account_move_id, [
             {'state': 'draft', 'payment_state': 'not_paid'},
