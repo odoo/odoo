@@ -346,7 +346,7 @@ class MrpWorkorder(models.Model):
             if delta_duration > 0:
                 if order.state not in ('progress', 'done'):
                     order.state = 'progress'
-                enddate = datetime.now()
+                enddate = datetime.now().replace(microsecond=0)
                 date_start = enddate - timedelta(seconds=_float_duration_to_second(delta_duration))
                 if order.duration_expected >= new_order_duration or old_order_duration >= order.duration_expected:
                     # either only productive or only performance (i.e. reduced speed) time respectively
