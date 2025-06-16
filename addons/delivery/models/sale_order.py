@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
-    _name = 'sale.order'
-    _inherit = ['sale.order', 'pickup.location.mixin']
+    _inherit = 'sale.order'
 
     carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method", check_company=True, help="Fill this field if you plan to invoice the shipping based on picking.")
     is_pickup_carrier = fields.Boolean(related='carrier_id.is_pickup')
@@ -61,12 +62,17 @@ class SaleOrder(models.Model):
                 _('You can not update the shipping costs on an order where it was already invoiced!\n\nThe following delivery lines (product, invoiced quantity and price) have already been processed:\n\n')
                 + '\n'.join(['- %s: %s x %s' % (line.product_id.with_context(display_default_code=False).display_name, line.qty_invoiced, line.price_unit) for line in delivery_lines])
             )
+        if self.partner_shipping_id.location_data:
+            self.write({'partner_shipping_id': self.partner_id, 'carrier_id': False})  # Reset the pickup location data.
         to_delete.unlink()
 
-    def set_delivery_line(self, carrier, amount):
+    def set_delivery_line(self, carrier, amount, delivery_address=None):
+        if not delivery_address:
+            delivery_address = self.partner_shipping_id
         self._remove_delivery_line()
         for order in self:
             order.carrier_id = carrier.id
+            order.partner_shipping_id = delivery_address
             order._create_delivery_line(carrier, amount)
         return True
 
@@ -158,3 +164,12 @@ class SaleOrder(models.Model):
         if self:
             self.onchange_order_line()
         return price_unit
+
+    def set_pickup_location(self, pickup_location_data):
+        """ Set the pickup location on the current record. """
+        self.ensure_one()
+        if self.carrier_id.is_pickup:
+            pickup_location_data = json.loads(pickup_location_data)
+            parent_location = self.partner_shipping_id.parent_id if self.partner_shipping_id.is_pickup_location else self.partner_id
+            address = self.env['res.partner']._address_from_json(pickup_location_data, parent_location)
+            self.partner_shipping_id = address or self.partner_id

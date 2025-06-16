@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
 class ChooseDeliveryCarrier(models.TransientModel):
     _name = 'choose.delivery.carrier'
-    _inherit = ['pickup.location.mixin']
     _description = 'Delivery Carrier Selection Wizard'
 
     def _get_default_weight_uom(self):
@@ -21,7 +22,6 @@ class ChooseDeliveryCarrier(models.TransientModel):
         domain="[('id', 'in', available_carrier_ids)]",
     )
     is_pickup_carrier = fields.Boolean(related='carrier_id.is_pickup')
-    state = fields.Selection(related='order_id.state')
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
     delivery_price = fields.Float()
     display_price = fields.Float(string='Cost', readonly=True)
@@ -96,19 +96,21 @@ class ChooseDeliveryCarrier(models.TransientModel):
         self.ensure_one()
         if self.is_pickup_carrier and not self.partner_shipping_id:
             raise UserError(_("Please select a pickup point before adding a shipping method"))
-        self.order_id.set_delivery_line(self.carrier_id, self.delivery_price)
+        delivery_address = self.partner_shipping_id if self.is_pickup_carrier else self.partner_id
+        self.order_id.set_delivery_line(self.carrier_id, self.delivery_price, delivery_address)
         so_vals = {
             'recompute_delivery_price': False,
             'delivery_message': self.delivery_message,
         }
-        if self.is_pickup_carrier:
-            so_vals['partner_shipping_id'] = self.partner_shipping_id.id
-        else:
-            so_vals['partner_shipping_id'] = self.partner_id.id
         self.order_id.write(so_vals)
 
     def set_pickup_location(self, pickup_location_data):
-        super().set_pickup_location(pickup_location_data)
+        self.ensure_one()
+        if self.carrier_id.is_pickup:
+            pickup_location_data = json.loads(pickup_location_data)
+            parent_location = self.partner_shipping_id.parent_id if self.partner_shipping_id.is_pickup_location else self.partner_id
+            address = self.env['res.partner']._address_from_json(pickup_location_data, parent_location)
+            self.partner_shipping_id = address or self.partner_id
         # When opening a dialog from another dialog, the first one gets closed
         # We need to return an action to open the first dialog again
         action = self.order_id.action_open_delivery_wizard()

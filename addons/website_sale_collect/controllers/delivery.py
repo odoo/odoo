@@ -19,7 +19,7 @@ class InStoreDelivery(Delivery):
             if not order_sudo:  # Pickup location requested without a cart creation.
                 # Create a temporary order to fetch pickup locations.
                 temp_order = request.env['sale.order'].new({'carrier_id': in_store_dm.id})
-                return temp_order.sudo()._get_pickup_locations(zip_code, **kwargs)  # Skip super
+                return temp_order.carrier_id.sudo()._get_pickup_locations(zip_code, **kwargs)  # Skip super
             elif order_sudo.carrier_id.delivery_type != 'in_store':
                 order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
         return super().website_sale_get_pickup_locations(zip_code, **kwargs)

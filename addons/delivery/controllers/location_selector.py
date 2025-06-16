@@ -23,4 +23,4 @@ class LocationSelectorController(Controller):
             )
         else:
             country = record.partner_id.country_id
-        return record._get_pickup_locations(zip_code, country)
+        return record.carrier_id._get_pickup_locations(zip_code, country, parent_record=record)

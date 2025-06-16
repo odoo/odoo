@@ -43,7 +43,7 @@ class WebsiteSaleCollect(WebsiteSale):
 
         res.update(order_sudo._prepare_in_store_default_location_data())
         if order_sudo.carrier_id.delivery_type == 'in_store' and order_sudo.partner_shipping_id.location_data:
-            res['unavailable_order_lines'] = order_sudo._get_unavailable_lines(
+            res['unavailable_order_lines'] = order_sudo._get_unavailable_order_lines(
                 order_sudo.partner_shipping_id.location_data.get('id')
             )
         return res

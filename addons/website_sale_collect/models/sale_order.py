@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
         )
         super(SaleOrder, self - in_store_orders_with_pickup_data)._compute_warehouse_id()
         for order in in_store_orders_with_pickup_data:
-            order.warehouse_id = order.partner_shipping_id.location_data['id']
+            order.warehouse_id = self.env['stock.warehouse'].browse(order.partner_shipping_id.location_data['id']).id
 
     def _compute_fiscal_position_id(self):
         """Override of `sale` to set the fiscal position matching the selected pickup location
@@ -35,7 +35,7 @@ class SaleOrder(models.Model):
             )
         super(SaleOrder, self - in_store_orders)._compute_fiscal_position_id()
 
-    def set_delivery_line(self, carrier, amount):
+    def set_delivery_line(self, carrier, amount, delivery_address=None):
         """ Override of `website_sale` to recompute warehouse and fiscal position when a new
         delivery method is not in-store anymore. """
         in_store_orders = self.filtered(
@@ -43,7 +43,7 @@ class SaleOrder(models.Model):
                 so.carrier_id.delivery_type == 'in_store' and carrier.delivery_type != 'in_store'
             )
         )
-        res = super().set_delivery_line(carrier, amount)
+        res = super().set_delivery_line(carrier, amount, delivery_address)
         in_store_orders._compute_warehouse_id()
         in_store_orders._compute_fiscal_position_id()
         return res
@@ -63,24 +63,6 @@ class SaleOrder(models.Model):
             self._compute_fiscal_position_id()
         else:
             self._compute_warehouse_id()
-
-    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
-        """ Override of `website_sale` to ensure that a country is provided when there is a zip
-        code.
-
-        If the country cannot be found (e.g., the GeoIP request fails), the zip code is cleared to
-        prevent the parent method's assertion to fail.
-        """
-        if zip_code and not country:
-            country_code = None
-            if self.partner_shipping_id.location_data:
-                country_code = self.partner_shipping_id.location_data['country_code']
-            elif request.geoip.country_code:
-                country_code = request.geoip.country_code
-            country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
-            if not country:
-                zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
-        return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
 
     def _get_shop_warehouse_id(self):
         """Override of `website_sale_stock` to consider the chosen warehouse."""
@@ -118,7 +100,7 @@ class SaleOrder(models.Model):
                 if pickup_location_data:
                     default_pickup_locations[dm.id] = {
                         'pickup_location_data': pickup_location_data,
-                        'unavailable_lines': self._get_unavailable_lines(
+                        'unavailable_order_lines': self._get_unavailable_order_lines(
                             pickup_location_data['id']
                         ),
                     }
@@ -132,9 +114,9 @@ class SaleOrder(models.Model):
         :return: Whether all storable products are in stock.
         :rtype: bool
         """
-        return not self._get_unavailable_lines(wh_id)
+        return not self._get_unavailable_order_lines(wh_id)
 
-    def _get_unavailable_lines(self, wh_id):
+    def _get_unavailable_order_lines(self, wh_id):
         """ Return the order lines with unavailable products for the given warehouse.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.

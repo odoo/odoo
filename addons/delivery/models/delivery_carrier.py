@@ -514,3 +514,39 @@ class DeliveryCarrier(models.Model):
             raise UserError(_("Not available for current order"))
 
         return price
+
+    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
+        """
+        Return the pickup locations of the delivery method close to a given zip code.
+
+        Use provided `zip_code` and `country` or the order's delivery address to determine the zip
+        code and the country to use.
+
+        Note: self.ensure_one()
+
+        :param int zip_code: The zip code to look up to, optional.
+        :param res.country country: The country to look up to, required if `zip_code` is provided.
+        :return: The close pickup locations data.
+        :rtype: dict
+        """
+        self.ensure_one()
+        if zip_code:
+            assert country  # country is required if zip_code is provided.
+            partner_address = self.env['res.partner'].new({
+                'active': False,
+                'country_id': country.id,
+                'zip': zip_code,
+            })
+        else:
+            raise UserError(_("No zip code provided."))
+        try:
+            error = {'error': _("No pick-up points are available for this delivery address.")}
+            function_name = f'_{self.delivery_type}_get_close_locations'
+            if not hasattr(self, function_name):
+                return error
+            pickup_locations = getattr(self, function_name)(partner_address, **kwargs)
+            if not pickup_locations:
+                return error
+            return {'pickup_locations': pickup_locations}
+        except UserError as e:
+            return {'error': str(e)}
