@@ -29,7 +29,8 @@ export class PickupLocationField extends Component {
         this.parentModel = this.props.record.resModel;
     }
     
-    onSelectLocation(ev) {
+    async onSelectLocation(ev) {
+        await this.props.record.save();
         this.dialog.add(LocationSelectorDialog, {
             parentModel: this.parentModel,
             parentId: this.parentId,

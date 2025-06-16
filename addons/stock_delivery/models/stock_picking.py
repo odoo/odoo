@@ -9,8 +9,7 @@ from odoo.exceptions import UserError
 
 
 class StockPicking(models.Model):
-    _name = 'stock.picking'
-    _inherit = ['stock.picking', 'pickup.location.mixin']
+    _inherit = 'stock.picking'
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -38,10 +37,6 @@ class StockPicking(models.Model):
             carriers = self.env['delivery.carrier'].search(self.env['delivery.carrier']._check_company_domain(picking.company_id))
             picking.allowed_carrier_ids = carriers.available_carriers(picking.partner_id, picking) if picking.partner_id else carriers
 
-    def _get_delivery_address_field(self):
-        """ Get the field name to store the delivery address. """
-        return 'partner_id'
-
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
         for picking in self:
@@ -63,7 +58,7 @@ class StockPicking(models.Model):
                 picking.return_label_ids = False
 
     def action_confirm(self):
-        if any(picking.is_pickup_carrier and not picking.partner_id.is_pickup_location for picking in self):
+        if not self._context.get('create_delivery_line') and any(picking.is_pickup_carrier and not picking.partner_id.is_pickup_location for picking in self):
             raise UserError(_("You must select a pickup address with this delivery method."))
         return super().action_confirm()
 
@@ -241,3 +236,21 @@ class StockPicking(models.Model):
                 if sm.product_uom_qty > product_free_qty:
                     unavailable_moves |= sm
         return unavailable_moves
+
+    def set_pickup_location(self, pickup_location_data):
+        """ Set the pickup location on the current record. """
+        self.ensure_one()
+        if self.carrier_id.is_pickup:
+            pickup_location_data = json.loads(pickup_location_data)
+            parent_location = self.partner_id.parent_id if self.partner_id.is_pickup_location else self.partner_id
+            address = self.env['res.partner']._address_from_json(pickup_location_data, parent_location)
+            self.partner_id = address or self.partner_id
+
+    def _is_in_stock(self, wh_id):
+        """ Check whether all storable products of the cart are in stock in the given warehouse.
+
+        :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
+        :return: Whether all storable products are in stock.
+        :rtype: bool
+        """
+        return not self._get_unavailable_lines(wh_id)

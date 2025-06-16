@@ -63,6 +63,27 @@ class DeliveryCarrier(models.Model):
 
     # === BUSINESS METHODS ===#
 
+    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
+        """ Override of `website_sale` to ensure that a country is provided when there is a zip
+        code.
+
+        If the country cannot be found (e.g., the GeoIP request fails), the zip code is cleared to
+        prevent the parent method's assertion to fail.
+        """
+        if zip_code and not country:
+            country_code = None
+            shipping_address = self.env['res.partner']
+            if kwargs.get('parent_record'):
+                shipping_address = kwargs.get('parent_record').partner_id
+            if shipping_address.location_data:
+                country_code = shipping_address.location_data['country_code']
+            elif request.geoip.country_code:
+                country_code = request.geoip.country_code
+            country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+            if not country:
+                zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
+        return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
+
     def _in_store_get_close_locations(self, partner_address, product_id=None, parent_record=None):
         """ Get the formatted close pickup locations sorted by distance to the partner address.
 
