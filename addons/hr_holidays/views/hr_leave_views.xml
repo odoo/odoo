@@ -322,13 +322,32 @@
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
                                 options="{'no_create': True, 'request_type': 'leave'}"
-                                readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                                readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"
+                                invisible="is_timeoff_officer_can_write"
+                                />
+                            <field name="holiday_status_id" force_save="1"
+                                domain="[
+                                    '|',
+                                        ('requires_allocation', '=', False),
+                                        '&amp;',
+                                            ('has_valid_allocation', '=', True),
+                                            '|',
+                                                ('allows_negative', '=', True),
+                                                '&amp;',
+                                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                                    ('allows_negative', '=', False),
+                                ]"
+                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
+                                options="{'no_create': True, 'request_type': 'leave'}"
+                                invisible="not is_timeoff_officer_can_write"/>
                             <!-- half day or custom hours: only show one date -->
                             <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
                             <label for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
                             <div class="o_row" invisible="not request_unit_half and not request_unit_hours">
-                                <field name="request_date_from" class="oe_inline" string="Date" readonly="state != 'confirm'" />
-                                <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half" readonly="state != 'confirm'"/>
+                                <field name="request_date_from" class="oe_inline" string="Date" readonly="state != 'confirm'"  invisible="is_timeoff_officer_can_write"/>
+                                <field name="request_date_from_period" required="request_unit_half" readonly="state != 'confirm'" invisible="not request_unit_half or is_timeoff_officer_can_write"/>
+                                <field name="request_date_from" class="oe_inline" string="Date" invisible="not is_timeoff_officer_can_write"/>
+                                <field name="request_date_from_period" invisible="not request_unit_half or not is_timeoff_officer_can_write"/>
                                 <div>
                                 ( <field name="duration_display" readonly="1" class="w-auto"/> )
                                 </div>
@@ -340,27 +359,52 @@
                                     widget="daterange"
                                     readonly="state != 'confirm'"
                                     required="not date_from or not date_to"
+                                    options="{'end_date_field': 'request_date_to'}"
+                                    invisible="is_timeoff_officer_can_write"
+                                    />
+                                <field name="request_date_to" invisible="1"/> <!-- For Form view test-->
+                                <field
+                                    name="request_date_from"
+                                    widget="daterange"
+                                    invisible="not is_timeoff_officer_can_write"
+                                    required="not date_from or not date_to"
                                     options="{'end_date_field': 'request_date_to'}"/>
                                 <field name="request_date_to" invisible="1"/> <!-- For Form view test-->
                                 <div>
                                 ( <field name="duration_display" readonly="1" class="w-auto"/> )
                                 </div>
                             </div>
-                            <label for="request_unit_half" string="" invisible="not leave_type_request_unit or leave_type_request_unit == 'day'"/>
-                            <div class="o_row o_row_readonly oe_edit_only" style="margin-left: -2px;" invisible="not leave_type_request_unit or leave_type_request_unit == 'day'">
+                            <label for="request_unit_half" string="" invisible="is_timeoff_officer_can_write or (not leave_type_request_unit or leave_type_request_unit == 'day')"/>
+                            <div class="o_row o_row_readonly oe_edit_only" style="margin-left: -2px;" invisible="is_timeoff_officer_can_write or (not leave_type_request_unit or leave_type_request_unit == 'day')">
                                 <field name="request_unit_half" class="oe_inline" invisible="leave_type_request_unit == 'day' or (not request_unit_half and state != 'confirm')" readonly="state != 'confirm'" />
                                 <label for="request_unit_half" invisible="leave_type_request_unit == 'day' or (not request_unit_half and state != 'confirm')" />
                                 <field name="request_unit_hours" invisible="leave_type_request_unit != 'hour' or (not request_unit_hours and state != 'confirm')" readonly="state != 'confirm'" class="ms-5" />
                                 <label for="request_unit_hours" invisible="leave_type_request_unit != 'hour' or (not request_unit_hours and state != 'confirm')" />
                             </div>
+
+                            <label for="request_unit_half" string="" invisible="not is_timeoff_officer_can_write and not leave_type_request_unit == 'day'"/>
+                            <div class="o_row o_row_readonly oe_edit_only" style="margin-left: -2px;" invisible="not is_timeoff_officer_can_write and not leave_type_request_unit == 'day'">
+                                <field name="request_unit_half" class="oe_inline" invisible="leave_type_request_unit in ['day']" />
+                                <label for="request_unit_half" invisible="leave_type_request_unit in ['day']" />
+                                <field name="request_unit_hours"  invisible="leave_type_request_unit in ['day', 'half_day']" class="ms-5" />
+                                <label for="request_unit_hours" invisible="leave_type_request_unit in ['day', 'half_day']" />
+                            </div>
+
                             <label for="request_hour_from" string="" invisible="not request_unit_hours"/>
-                            <div class="o_row o_row_readonly" invisible="not request_unit_hours">
+                            <div class="o_row o_row_readonly" invisible="is_timeoff_officer_can_write or not request_unit_hours">
                                 <label for="request_hour_from" string="From" />
                                 <field name="request_hour_from" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" widget="float_time_selection" placeholder="00:00"/>
                                 <label for="request_hour_to" string="To" />
                                 <field name="request_hour_to" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" widget="float_time_selection"/>
                             </div>
-                            <field name="name" readonly="state != 'confirm'" widget="text" nolabel="1" colspan="2" placeholder="No description provided" />
+                            <div class="o_row o_row_readonly" invisible="not is_timeoff_officer_can_write or not request_unit_hours">
+                                <label for="request_hour_from" string="From" />
+                                <field name="request_hour_from" invisible="not request_unit_hours" required="request_unit_hours" widget="float_time_selection" placeholder="00:00"/>
+                                <label for="request_hour_to" string="To" />
+                                <field name="request_hour_to" invisible="not request_unit_hours" required="request_unit_hours" widget="float_time_selection"/>
+                            </div>
+                            <field name="name" readonly="state != 'confirm'" widget="text" nolabel="1" colspan="2" placeholder="No description provided" invisible="is_timeoff_officer_can_write"/>
+                            <field name="name" widget="text" nolabel="1" colspan="2" placeholder="No description provided" invisible="not is_timeoff_officer_can_write"/>
                         </group>
                         <group>
                             <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="state not in ('confirm', 'validate1')" />

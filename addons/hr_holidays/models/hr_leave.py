@@ -191,6 +191,7 @@ class HrLeave(models.Model):
     can_validate = fields.Boolean(compute='_compute_can_validate', export_string_translation=False)
     can_refuse = fields.Boolean(compute='_compute_can_refuse', export_string_translation=False)
     can_cancel = fields.Boolean(compute='_compute_can_cancel', export_string_translation=False)
+    is_timeoff_officer_can_write = fields.Boolean(compute='_compute_is_timeoff_officer_can_write', export_string_translation=False)
 
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string="Attachments")
     # To display in form view
@@ -584,6 +585,11 @@ class HrLeave(models.Model):
             holiday.can_cancel = holiday._check_approval_update('cancel', raise_if_not_possible=False)
 
     @api.depends('state')
+    def _compute_is_timeoff_officer_can_write(self):
+        for leave in self:
+            leave.is_timeoff_officer_can_write = self.env.user.has_group('hr_holidays.group_hr_holidays_user') and leave.state == 'validate'
+
+    @api.depends('state')
     def _compute_is_hatched(self):
         for holiday in self:
             holiday.is_striked = holiday.state == 'refuse'
@@ -625,7 +631,7 @@ class HrLeave(models.Model):
         if self.env.context.get('leave_skip_state_check'):
             return
         for holiday in self:
-            if holiday.state in ['validate1', 'validate']:
+            if holiday.state in ['validate1', 'validate'] and not holiday.is_timeoff_officer_can_write:
                 raise ValidationError(_("This modification is not allowed in the current state."))
 
     def _check_validity(self):
