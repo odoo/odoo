@@ -255,7 +255,7 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember[]} */
     get correspondents() {
-        return this.channel_member_ids.filter(({ persona }) => persona.notEq(this.store.self));
+        return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
     },
     get displayName() {
         if (this.supportsCustomChannelName && this.selfMember?.custom_channel_name) {
