@@ -35,14 +35,14 @@
         <t t-call="web.conditional_assets_tests">
             <t t-set="ignore_missing_deps" t-value="True"/>
         </t>
-        <t t-if="use_pos_fake_tours">
-            <t t-call-assets="point_of_sale.assets_debug" />
-        </t>
         <t t-if="request.cookies.get('pos_color_scheme') == 'dark'">
             <t t-call-assets="point_of_sale.assets_prod_dark"/>
         </t>
         <t t-else="">
             <t t-call-assets="point_of_sale.assets_prod"/>
+        </t>
+        <t t-if="use_pos_fake_tours">
+            <t t-call-assets="point_of_sale.assets_debug" />
         </t>
     </head>
     <body class="pos">
