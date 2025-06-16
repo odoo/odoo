@@ -293,7 +293,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
     ];
 }
 
-export function clickOnSave(position = "bottom", timeout = 50000) {
+export function clickOnSave(position = "bottom", timeout = 50000, withContains = true) {
     return [
         {
             trigger: ".o-snippets-menu:not(:has(.o_we_ongoing_insertion))",
@@ -303,7 +303,7 @@ export function clickOnSave(position = "bottom", timeout = 50000) {
             noPrepend: true,
         },
         {
-            trigger: "button[data-action=save]:enabled:contains(save)",
+            trigger: withContains ? "button[data-action=save]:enabled:contains(save)" : "button[data-action=save]:enabled",
         content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
             tooltipPosition: position,
             run: "click",
