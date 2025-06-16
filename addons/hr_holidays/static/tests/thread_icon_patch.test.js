@@ -8,10 +8,8 @@ defineHrHolidaysModels();
 
 test("thread icon of a chat when correspondent is on leave & online", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        im_status: "leave_online",
-        name: "Demo",
-    });
+    const partnerId = pyEnv["res.partner"].create({ im_status: "online", name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, leave_date_to: "2023-01-01" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -29,10 +27,8 @@ test("thread icon of a chat when correspondent is on leave & online", async () =
 
 test("thread icon of a chat when correspondent is on leave & away", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        im_status: "leave_away",
-        name: "Demo",
-    });
+    const partnerId = pyEnv["res.partner"].create({ im_status: "away", name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, leave_date_to: "2023-01-01" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -50,10 +46,8 @@ test("thread icon of a chat when correspondent is on leave & away", async () => 
 
 test("thread icon of a chat when correspondent is on leave & offline", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        im_status: "leave_offline",
-        name: "Demo",
-    });
+    const partnerId = pyEnv["res.partner"].create({ im_status: "offline", name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, leave_date_to: "2023-01-01" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
