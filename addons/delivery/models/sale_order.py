@@ -129,7 +129,7 @@ class SaleOrder(models.Model):
         if self.env.context.get('carrier_recompute'):
             name = _('Update shipping cost')
         else:
-            name = _('Add a shipping method')
+            name = _('Add a delivery method')
         return {
             'name': name,
             'type': 'ir.actions.act_window',

@@ -317,7 +317,7 @@
         <table t-if="hasattr(object, 'carrier_id') and object.carrier_id" width="100%" style="color: #454748; font-size: 12px;">
             <tr>
                 <td>
-                    <span style="font-weight:bold;">Shipping Method:</span>
+                    <span style="font-weight:bold;">Delivery Method:</span>
                     <t t-out="object.carrier_id.name or ''"></t>
                     <t t-if="object.amount_delivery == 0.0">
                         (Free)
@@ -329,7 +329,7 @@
             </tr>
             <tr t-if="object.carrier_id.carrier_description">
                 <td>
-                    <strong>Shipping Description:</strong>
+                    <strong>Delivery Description:</strong>
                     <t t-out="object.carrier_id.carrier_description"/>
                 </td>
             </tr>

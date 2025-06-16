@@ -130,7 +130,7 @@ class TestCarrierPropagation(TransactionCase):
     def test_route_based_on_carrier_delivery(self):
         """
             Check that the route on the sale order line is selected as per the first priority even if route on shipping mehod is present
-            Also, Check that the route on the shipping method is selected if there is no route selected on sale order line
+            Also, Check that the route on the delivery method is selected if there is no route selected on sale order line
         """
         route1 = self.env['stock.route'].create({
             'name': 'Route1',
