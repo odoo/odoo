@@ -693,22 +693,20 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     def _turn_node_as_dict_hierarchy(self, node, path=''):
         ''' Turn the node as a python dictionary to be compared later with another one.
-        Allow to ignore the management of namespaces.
         :param node:    A node inside an xml tree.
         :param path:    The optional path of tags for recursive call.
         :return:        A python dictionary.
         '''
         tag_split = node.tag.split('}')
         tag_wo_ns = tag_split[-1]
-        attrib_wo_ns = {k: v for k, v in node.attrib.items() if '}' not in k}
         full_path = f'{path}/{tag_wo_ns}'
         return {
             'node': node,
-            'tag': tag_wo_ns,
+            'tag': node.tag,
             'full_path': full_path,
             'namespace': None if len(tag_split) < 2 else tag_split[0],
             'text': (node.text or '').strip(),
-            'attrib': attrib_wo_ns,
+            'attrib': dict(node.attrib.items()),
             'children': [
                 self._turn_node_as_dict_hierarchy(child_node, path=full_path)
                 for child_node in node.getchildren()
