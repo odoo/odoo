@@ -1,5 +1,6 @@
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
+import { useMessageHighlight } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -32,6 +33,7 @@ export class Chatter extends Component {
             thread: undefined,
             aside: false,
         });
+        this.messageHighlight = useMessageHighlight();
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         useChildSubEnv(this.childSubEnv);
@@ -58,7 +60,10 @@ export class Chatter extends Component {
     }
 
     get childSubEnv() {
-        return { inChatter: this.state };
+        return {
+            inChatter: this.state,
+            messageHighlight: this.messageHighlight,
+        };
     }
 
     get onCloseFullComposerRequestList() {
@@ -70,7 +75,11 @@ export class Chatter extends Component {
     }
 
     changeThread(threadModel, threadId) {
-        this.state.thread = this.store.Thread.insert({ model: threadModel, id: threadId });
+        this.state.thread = this.store.Thread.insert({
+            model: threadModel,
+            id: threadId,
+            highlightMessage: this.highlightMessage,
+        });
         if (threadId === false) {
             if (this.state.thread.messages.length === 0) {
                 this.state.thread.messages.push({
