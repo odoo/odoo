@@ -18,6 +18,8 @@ import { memoize } from "@web/core/utils/functions";
  */
 const loadSfuAssets = memoize(async () => await loadBundle("mail.assets_odoo_sfu"));
 
+const INACTIVE_PTT_KEYDOWN_DELAY = 3000;
+const PTT_RELEASE_DURATION = 200;
 const ORDERED_TRANSCEIVER_NAMES = ["audio", "screen", "camera"];
 export const CONNECTION_TYPES = { P2P: "p2p", SERVER: "server" };
 const PEER_NOTIFICATION_WAIT_DELAY = 50;
@@ -105,6 +107,8 @@ export class Rtc {
     downloadTimeouts = new Map();
     /** @type {import("@mail/static/libs/odoo_sfu/odoo_sfu").SfuClient} */
     sfuClient = undefined;
+    /** @type {number} */
+    stoppedKeydownTimeout;
 
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -201,7 +205,8 @@ export class Rtc {
                     !this.state.channel ||
                     !this.userSettingsService.usePushToTalk ||
                     !this.userSettingsService.isPushToTalkKey(ev) ||
-                    !this.state.selfSession.isTalking
+                    !this.state.selfSession.isTalking ||
+                    this.pttExtService.voiceActivated
                 ) {
                     return;
                 }
@@ -243,16 +248,21 @@ export class Rtc {
         }, 30_000);
     }
 
-    setPttReleaseTimeout(duration = 200) {
+    setPttReleaseTimeout(duration = PTT_RELEASE_DURATION) {
         this.state.pttReleaseTimeout = browser.setTimeout(() => {
-            this.setTalking(false);
-            if (!this.state.selfSession?.isMute) {
-                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
-            }
+            this.setStopTalkingFromPttRelease();
         }, Math.max(this.userSettingsService.voiceActiveDuration || 0, duration));
     }
 
-    onPushToTalk() {
+    setStopTalkingFromPttRelease() {
+        browser.clearTimeout(this.stoppedKeydownTimeout);
+        this.setTalking(false);
+        if (!this.state.selfSession?.isMute) {
+            this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
+        }
+    }
+
+    onPushToTalk({ withAutoRelease = true } = {}) {
         if (
             !this.state.channel ||
             this.userSettingsService.isRegisteringKey ||
@@ -261,6 +271,12 @@ export class Rtc {
             return;
         }
         browser.clearTimeout(this.state.pttReleaseTimeout);
+        browser.clearTimeout(this.stoppedKeydownTimeout);
+        if (withAutoRelease) {
+            this.stoppedKeydownTimeout = browser.setTimeout(() => {
+                this.setStopTalkingFromPttRelease();
+            }, Math.max(this.userSettingsService.voiceActiveDuration || 0, PTT_RELEASE_DURATION + INACTIVE_PTT_KEYDOWN_DELAY));
+        }
         if (!this.state.selfSession.isTalking && !this.state.selfSession.isMute) {
             this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
         }

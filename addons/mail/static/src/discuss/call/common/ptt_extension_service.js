@@ -47,7 +47,7 @@ export const pttExtensionHookService = {
                         if (voiceActivated) {
                             rtc.setPttReleaseTimeout(0);
                         } else {
-                            rtc.onPushToTalk();
+                            rtc.onPushToTalk({ withAutoRelease: false });
                         }
                         voiceActivated = !voiceActivated;
                     }
@@ -91,6 +91,9 @@ export const pttExtensionHookService = {
             },
             get isEnabled() {
                 return isEnabled;
+            },
+            get voiceActivated() {
+                return voiceActivated;
             },
         };
     },
