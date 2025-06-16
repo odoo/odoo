@@ -876,6 +876,7 @@ export function makeActionManager(env, router = _router) {
                 env.bus.trigger("WEBCLIENT:LOAD_DEFAULT_APP");
             }
         };
+        controller.config.isReloadingController = controller === controllerStack.at(-1);
 
         class ControllerComponent extends Component {
             static template = ControllerComponentTemplate;

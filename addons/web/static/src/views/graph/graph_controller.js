@@ -35,7 +35,12 @@ export class GraphController extends Component {
     }
 
     get modelOptions() {
-        return { lazy: !this.env.inDialog && !!this.props.display.controlPanel };
+        return {
+            lazy:
+                !this.env.config.isReloadingController &&
+                !this.env.inDialog &&
+                !!this.props.display.controlPanel,
+        };
     }
 
     /**
