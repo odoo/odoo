@@ -2,7 +2,7 @@ import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { hover } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
-import { setupEditor } from "./_helpers/editor";
+import { base64Img, setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 
 describe.current.tags("desktop");
@@ -31,6 +31,18 @@ test("should show the hook when hovering the second P", async () => {
     await hover(el.querySelector("p:last-child"));
     expect(".oe-sidewidget-move").toHaveCount(1);
     expect(".oe-sidewidget-move").toHaveRect({ top: 37, left: 5 });
+});
+test("should show the hook when hovering the figure element", async () => {
+    const html = `<figure>
+                    <img class="img-fluid test-image" src="${base64Img}">
+                    <figcaption>hello</figcaption>
+                </figure>`
+    const { el } = await setupEditor(html, {
+        styleContent: styles,
+    });
+    await hover(el.querySelector("figure"));
+    expect(".oe-sidewidget-move").toHaveCount(1);
+    expect(".oe-sidewidget-move").toHaveRect({ top: 0, left: 5 });
 });
 test("should not show the hook when hovering a DIV which is not a baseContainer", async () => {
     const { el } = await setupEditor(`<p>a[]</p><div class="oe_unbreakable"><br></div><p>b</p>`, {
