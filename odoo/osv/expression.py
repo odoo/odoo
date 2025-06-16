@@ -173,8 +173,17 @@ TERM_OPERATORS_NEGATION = {
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
 
-TRUE_DOMAIN = [TRUE_LEAF]
-FALSE_DOMAIN = [FALSE_LEAF]
+
+class _ProtectedDomain(tuple):
+    __slots__ = ()
+    __hash__ = None
+
+    def __eq__(self, other): return list(self).__eq__(other)
+    def copy(self): return list(self)
+
+
+TRUE_DOMAIN = _ProtectedDomain([TRUE_LEAF])
+FALSE_DOMAIN = _ProtectedDomain([FALSE_LEAF])
 
 _logger = logging.getLogger(__name__)
 
