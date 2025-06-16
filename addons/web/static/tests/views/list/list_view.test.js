@@ -4562,6 +4562,37 @@ test(`monetary aggregates in grouped list (different currencies in same group)`,
     );
 });
 
+test(`handle false values in aggregates`, async () => {
+    Foo._fields.false_amount = fields.Monetary({ currency_field: "currency_test" });
+    Foo._fields.currency_test = fields.Many2one({ relation: "res.currency", default: 1 });
+    onRpc("web_read_group", async ({ parent }) => {
+        expect.step("web_read_group");
+        const res = await parent();
+        expect(res.groups[1]["amount:sum"]).toBe(false);
+        res.groups[1]["qux:sum"] = false;
+        res.groups[1]["false_amount:sum"] = false;
+        return res;
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="qux" sum="Sum"/>
+                <field name="amount"/>
+                <field name="false_amount"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+    });
+    expect.verifySteps(["web_read_group"]);
+    expect(`.o_group_header:first`).toHaveText("No (1)\n 9.00 $ 0.00 $ 0.00");
+    expect(`.o_group_header:last`).toHaveText("Yes (3)\n —", {
+        message: "false values are just hidden except for monetary field with multiple currencies",
+    });
+});
+
 test(`aggregates in grouped lists with buttons`, async () => {
     await mountView({
         resModel: "foo",
