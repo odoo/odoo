@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { sortBy, groupBy } from "@web/core/utils/arrays";
+import { sortBy, groupBy, unique } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
@@ -193,7 +193,8 @@ export class GraphModel extends Model {
                 continue;
             }
 
-            const { domain, labelIndex, trueLabel, value, identifier, cumulatedStart } = dataPt;
+            const { domain, labelIndex, trueLabel, value, identifier, cumulatedStart, currencyId } =
+                dataPt;
             const dataset = dataPtMapping.get(dataPt);
             if (!dataset.data) {
                 const dataLength = labels.length;
@@ -203,12 +204,14 @@ export class GraphModel extends Model {
                     trueLabels: labels.slice(0, dataLength),
                     domains: new Array(dataLength).fill([]),
                     identifiers: new Set(),
+                    currencyIds: new Array(dataLength).fill(false),
                 });
             }
             dataset.data[labelIndex] = value;
             dataset.domains[labelIndex] = domain;
             dataset.trueLabels[labelIndex] = trueLabel;
             dataset.identifiers.add(identifier);
+            dataset.currencyIds[labelIndex] = currencyId || false;
         }
         // sort by origin
         let datasets = sortBy(Object.values(datasetsTmp), "originIndex");
@@ -258,14 +261,17 @@ export class GraphModel extends Model {
                 const [[originIndex, datasets]] = Object.entries(stacks);
                 if (datasets.length > 1) {
                     const data = [];
+                    const currencyIds = [];
                     for (const dataset of datasets) {
                         for (let i = 0; i < dataset.data.length; i++) {
                             data[i] = (data[i] || 0) + dataset.data[i];
+                            currencyIds[i] = dataset.currencyIds[i] || currencyIds[i];
                         }
                     }
                     lineOverlayDataset = {
                         label: this._getLabel(domains[originIndex].description),
                         data,
+                        currencyIds,
                         trueLabels: datasets[0].trueLabels,
                     };
                 }
@@ -360,7 +366,7 @@ export class GraphModel extends Model {
         const sequential_spec = sequential_field && groupBy[0].spec;
         const measures = ["__count"];
         if (measure !== "__count") {
-            let { aggregator, type } = fields[measure];
+            let { aggregator, type, currency_field } = fields[measure];
             if (type === "many2one") {
                 aggregator = "count_distinct";
             }
@@ -368,6 +374,13 @@ export class GraphModel extends Model {
                 throw new Error(
                     `No aggregate function has been provided for the measure '${measure}'`
                 );
+            }
+            if (type === "monetary" && currency_field) {
+                this.currencyState = {
+                    currencyField: currency_field,
+                    currencies: [],
+                };
+                measures.push(`${currency_field}:array_agg_distinct`);
             }
             measures.push(`${measure}:${aggregator}`);
         }
@@ -460,12 +473,13 @@ export class GraphModel extends Model {
                     labels.push(label);
                 }
 
-                const value = group[measures.slice(-1)];
+                const value = group[measures.at(-1)];
                 if (!Number.isInteger(value)) {
                     metaData.allIntegers = false;
                 }
+                // There is a currency aggregate
                 const group_id = JSON.stringify(rawValues.slice(1));
-                dataPoints.push({
+                const dataPoint = {
                     count: __count,
                     domain: __domain,
                     value,
@@ -473,7 +487,18 @@ export class GraphModel extends Model {
                     originIndex,
                     identifier: JSON.stringify(rawValues),
                     cumulatedStart: cumulatedStartValue[group_id] || 0,
-                });
+                };
+                if (measures.length > 2) {
+                    const currencies = group[measures[1]];
+                    this.currencyState.currencies = unique(
+                        this.currencyState.currencies.concat(currencies)
+                    );
+                    dataPoint.currencyId = currencies.length === 1 ? currencies[0] : false;
+                    if (currencies.length !== 1) {
+                        dataPoint.value = false;
+                    }
+                }
+                dataPoints.push(dataPoint);
             }
             return dataPoints;
         });
