@@ -134,7 +134,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         }])
 
     def test_shop_sale_gift_card_keep_delivery(self):
-        # Get admin user and set his preferred shipping method to normal delivery
+        # Get admin user and set his preferred delivery method to normal delivery
         # This test also tests that we can indeed pay delivery fees with gift cards/ewallet
         self.partner_admin.property_delivery_carrier_id = self.normal_delivery
         self.start_tour(

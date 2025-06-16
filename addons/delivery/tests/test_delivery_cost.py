@@ -139,9 +139,9 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
 
     def test_01_delivery_cost_from_pricelist(self):
         """ This test aims to validate the use of a pricelist to compute the delivery cost in the case the associated
-            product of the shipping method is defined in the pricelist """
+            product of the delivery method is defined in the pricelist """
 
-        # Create pricelist with a custom price for the standard shipping method
+        # Create pricelist with a custom price for the standard delivery method
         my_pricelist = self.env['product.pricelist'].create({
             'name': 'shipping_cost_change',
             'item_ids': [Command.create({
@@ -178,9 +178,9 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
 
     def test_02_delivery_cost_from_different_currency(self):
         """ This test aims to validate the use of a pricelist using a different currency to compute the delivery cost in
-            the case the associated product of the shipping method is defined in the pricelist """
+            the case the associated product of the delivery method is defined in the pricelist """
 
-        # Create pricelist with a custom price for the standard shipping method
+        # Create pricelist with a custom price for the standard delivery method
         my_pricelist = self.env['product.pricelist'].create({
             'name': 'shipping_cost_change',
             'item_ids': [Command.create({
@@ -543,7 +543,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
                 'inverse_company_rate': 2,
             })
 
-        # Company less shipping method
+        # Company less delivery method
         product_delivery_rule = self.env['product.product'].with_company(nook_inc).create({
             'name': 'rule delivery charges',
             'type': 'service',
@@ -565,7 +565,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
             'fixed_margin': 10,
         })
 
-        # Create sale using the shipping method
+        # Create sale using the delivery method
         so = self.env['sale.order'].with_company(nook_inc).create({
             'partner_id': self.partner_4.id,
             'partner_invoice_id': self.partner_4.id,

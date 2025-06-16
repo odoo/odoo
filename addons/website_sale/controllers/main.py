@@ -1561,7 +1561,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order._has_deliverable_products() and not order._get_delivery_methods():
             errors.append((
                 _("Sorry, we are unable to ship your order."),
-                _("No shipping method is available for your current order and shipping address."
+                _("No delivery method is available for your current order and shipping address."
                   " Please contact us for more information."),
             ))
         return errors

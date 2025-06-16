@@ -15,7 +15,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', required=True)
     carrier_id = fields.Many2one(
         'delivery.carrier',
-        string="Shipping Method",
+        string="Delivery Method",
         required=True,
         domain="[('id', 'in', available_carrier_ids)]",
     )
@@ -79,7 +79,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         if vals.get('error_message'):
             raise UserError(vals.get('error_message'))
         return {
-            'name': _('Add a shipping method'),
+            'name': _('Add a delivery method'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'choose.delivery.carrier',

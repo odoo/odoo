@@ -185,7 +185,7 @@ class TestStockMoveInvoice(TestSaleCommon):
         self.assertEqual(so.invoice_status, 'no', 'The status should still be "Nothing To Invoice"')
 
     def test_delivery_carrier_from_confirmed_so(self):
-        """Test if adding shipping method in sale order after confirmation
+        """Test if adding delivery method in sale order after confirmation
            will add it in pickings too"""
 
         sale_order = self.SaleOrder.create({
@@ -231,11 +231,11 @@ class TestStockMoveInvoice(TestSaleCommon):
 
         # Check the carrier in picking after confirm sale order
         delivery_for_product_11 = sale_order.picking_ids.filtered(lambda p: self.product_11 in p.move_ids.product_id)
-        self.assertEqual(delivery_for_product_11.carrier_id, self.normal_delivery, "The shipping method should be set in pending deliveries.")
+        self.assertEqual(delivery_for_product_11.carrier_id, self.normal_delivery, "The delivery method should be set in pending deliveries.")
 
         done_delivery = sale_order.picking_ids.filtered(lambda p: p.state == "done")
-        self.assertFalse(done_delivery.carrier_id.id, "The shipping method should not be set in done deliveries.")
-        self.assertFalse(return_picking.carrier_id.id, "The shipping method should not set in return pickings")
+        self.assertFalse(done_delivery.carrier_id.id, "The delivery method should not be set in done deliveries.")
+        self.assertFalse(return_picking.carrier_id.id, "The delivery method should not set in return pickings")
 
     def test_picking_weight(self):
         """Test if the picking weight is correctly computed when the product of the move changes."""

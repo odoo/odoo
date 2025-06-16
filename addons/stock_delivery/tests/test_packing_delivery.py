@@ -204,7 +204,7 @@ class TestPackingDelivery(TestPackingCommon):
         picking_ship.move_ids.picked = True
         picking_ship.button_validate()
 
-        # Mock carrier shipping method
+        # Mock carrier delivery method
         with patch(
             'odoo.addons.stock_delivery.models.delivery_carrier.DeliveryCarrier.fixed_send_shipping',
             return_value=[{'exact_price': 0, 'tracking_number': "666"}]
