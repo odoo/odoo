@@ -13,3 +13,4 @@ export const ProjectTaskAnalysisRendererMixin = (T) => class ProjectTaskAnalysis
         });
     }
 }
+
