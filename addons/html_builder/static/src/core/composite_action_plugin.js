@@ -1,8 +1,4 @@
-import {
-    checkAndWarnForActionAsyncApplyInPreview,
-    convertParamToObject,
-    isActionPreviewable,
-} from "@html_builder/core/utils";
+import { convertParamToObject, isActionPreviewable } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -116,6 +112,8 @@ class CompositeAction extends BuilderAction {
             return acc;
         }, {});
     }
+
+    // TODO use builder actions plugin
     async apply({
         isPreviewing,
         editingElement,
@@ -141,10 +139,12 @@ class CompositeAction extends BuilderAction {
             }
         }
         if (isPreviewing) {
-            checkAndWarnForActionAsyncApplyInPreview(actionProms);
+            // checkAndWarnForActionAsyncApplyInPreview(actionProms);
         }
         return Promise.all(actionProms.map(([action, prom]) => prom));
     }
+
+    // TODO use builder actions plugin
     async clean({
         isPreviewing,
         editingElement,
@@ -181,7 +181,7 @@ class CompositeAction extends BuilderAction {
             }
         }
         if (isPreviewing) {
-            checkAndWarnForActionAsyncApplyInPreview(actionProms);
+            // checkAndWarnForActionAsyncApplyInPreview(actionProms);
         }
         return Promise.all(actionProms.map(([action, prom]) => prom));
     }

@@ -438,17 +438,6 @@ function useWithLoadingEffect(getAllActions) {
     return withLoadingEffect;
 }
 
-/**
- * @param {[[Object, any]]} actionValues - Entries of action and the return value to check for a promise
- */
-export function checkAndWarnForActionAsyncApplyInPreview(actionValues) {
-    for (const [action, value] of actionValues) {
-        if (typeof value?.then === "function" && !action.suppressPreviewableAsyncWarning) {
-            console.warn(action.id + " is previewable => apply or clean should not be async.");
-        }
-    }
-}
-
 export function useClickableBuilderComponent() {
     useBuilderComponent();
     const comp = useComponent();
@@ -521,38 +510,26 @@ export function useClickableBuilderComponent() {
     }
 
     async function clean(nextApplySpecs, isPreviewing) {
-        const actionProms = [];
+        const applySpecs = [];
         for (const { actionId, actionParam, actionValue } of getAllActions(isPreviewing)) {
             for (const editingElement of comp.env.getEditingElements()) {
-                let nextAction;
-                const action = getAction(actionId);
-                actionProms.push([
-                    action,
-                    action.clean?.({
-                        isPreviewing,
-                        editingElement,
-                        params: actionParam,
-                        value: actionValue,
-                        dependencyManager: comp.env.dependencyManager,
-                        selectableContext: comp.env.selectableContext,
-                        get nextAction() {
-                            nextAction =
-                                nextAction ||
-                                nextApplySpecs.find((a) => a.actionId === actionId) ||
-                                {};
-                            return {
-                                params: nextAction.actionParam,
-                                value: nextAction.actionValue,
-                            };
-                        },
-                    }),
-                ]);
+                applySpecs.push({
+                    editingElement,
+                    actionId,
+                    actionParam,
+                    actionValue,
+                });
             }
         }
-        if (isPreviewing) {
-            checkAndWarnForActionAsyncApplyInPreview(actionProms);
-        }
-        return Promise.all(actionProms.map(([action, prom]) => prom));
+        return comp.env.editor.shared.builderActions.callApplySpecs(
+            applySpecs,
+            comp.env.dependencyManager,
+            comp.env.selectableContext,
+            isPreviewing,
+            false,
+            false,
+            nextApplySpecs
+        );
     }
 
     async function callApply(applySpecs, isPreviewing) {
@@ -567,43 +544,15 @@ export function useClickableBuilderComponent() {
         }
         await Promise.all(cleanProms);
 
-        const actionProms = [];
         const isAlreadyApplied = isApplied();
-        for (const applySpec of applySpecs) {
-            const hasClean = !!applySpec.clean;
-            const shouldClean = _shouldClean(comp, hasClean, isAlreadyApplied);
-            if (shouldClean) {
-                actionProms.push([
-                    getAction(applySpec.actionId),
-                    applySpec.clean({
-                        isPreviewing,
-                        editingElement: applySpec.editingElement,
-                        params: applySpec.actionParam,
-                        value: applySpec.actionValue,
-                        loadResult: applySpec.loadOnClean ? applySpec.loadResult : null,
-                        dependencyManager: comp.env.dependencyManager,
-                        selectableContext: comp.env.selectableContext,
-                    }),
-                ]);
-            } else {
-                actionProms.push([
-                    getAction(applySpec.actionId),
-                    applySpec.apply({
-                        isPreviewing,
-                        editingElement: applySpec.editingElement,
-                        params: applySpec.actionParam,
-                        value: applySpec.actionValue,
-                        loadResult: applySpec.loadResult,
-                        dependencyManager: comp.env.dependencyManager,
-                        selectableContext: comp.env.selectableContext,
-                    }),
-                ]);
-            }
-        }
-        if (isPreviewing) {
-            checkAndWarnForActionAsyncApplyInPreview(actionProms);
-        }
-        await Promise.all(actionProms.map(([action, prom]) => prom));
+        return comp.env.editor.shared.builderActions.callApplySpecs(
+            applySpecs,
+            comp.env.dependencyManager,
+            comp.env.selectableContext,
+            isPreviewing,
+            (applySpec) => !_shouldClean(comp, !!applySpec.clean, isAlreadyApplied),
+            true
+        );
     }
     function getPriority() {
         return (
@@ -657,24 +606,12 @@ export function useInputBuilderComponent({
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
 
     async function callApply(applySpecs, isPreviewing) {
-        const actionProms = [];
-        for (const applySpec of applySpecs) {
-            actionProms.push([
-                getAction(applySpec.actionId),
-                applySpec.apply({
-                    isPreviewing,
-                    editingElement: applySpec.editingElement,
-                    params: applySpec.actionParam,
-                    value: applySpec.actionValue,
-                    loadResult: applySpec.loadResult,
-                    dependencyManager: comp.env.dependencyManager,
-                }),
-            ]);
-        }
-        if (isPreviewing) {
-            checkAndWarnForActionAsyncApplyInPreview(actionProms);
-        }
-        await Promise.all(actionProms.map(([action, prom]) => prom));
+        return comp.env.editor.shared.builderActions.callApplySpecs(
+            applySpecs,
+            comp.env.dependencyManager,
+            comp.env.selectableContext,
+            isPreviewing
+        );
     }
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(callApply);
