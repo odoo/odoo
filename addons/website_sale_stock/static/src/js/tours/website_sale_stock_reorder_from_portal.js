@@ -12,12 +12,11 @@ registry.category("web_tour.tours").add('website_sale_stock_reorder_from_portal'
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
         {
             content: "Check that there is one out of stock product",
-            trigger: "#o_wsale_reorder_body div.text-warning span:contains('This product is out of stock.')",
-            run: "click",
+            trigger: "div.alert-warning:contains('1.0 unavailable_product was not added to your cart because it is currently unavailable.')",
         },
         {
             content: "Check that there is one product that does not have enough stock",
-            trigger: "#o_wsale_reorder_body div.text-warning:contains('You ask for 2.0 Units but only 1.0 are available.')",
+            trigger: "div.alert-warning:contains('Only 1.0 partially_available_product is available. It has been added to your cart.')",
         },
     ]
 });

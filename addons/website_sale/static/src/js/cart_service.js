@@ -446,16 +446,18 @@ export class CartService {
             no_variant_attribute_value_ids: noVariantAttributeValues,
             ...rest
         });
-        // TODO should not redirect if errors in data.
-        if (shouldRedirectToCart || session.add_to_cart_action === 'go_to_cart') {
-            window.location = '/shop/cart';
-            return data.quantity;
-        }
+        // Calling this first because we don't want to miss any type of cart quantity update in session
+        // storage.
         if (data.cart_quantity && (
             data.cart_quantity !== browser.sessionStorage.getItem('website_sale_cart_quantity')
         )) {
             this._updateCartIcon(data.cart_quantity);
         };
+        // TODO should not redirect if errors in data.
+        if (shouldRedirectToCart || session.add_to_cart_action === 'go_to_cart') {
+            window.location = '/shop/cart';
+            return data.quantity;
+        }
         this._showCartNotification(data.notification_info);
         if (data.quantity) {
             this._trackProducts(data.tracking_info);

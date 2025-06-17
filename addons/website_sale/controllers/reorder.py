@@ -4,6 +4,7 @@ from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, route
 
 from odoo.addons.sale.controllers import portal as sale_portal
+from odoo.addons.website_sale.controllers.cart import Cart
 
 
 class CustomerPortal(sale_portal.CustomerPortal):
@@ -12,52 +13,54 @@ class CustomerPortal(sale_portal.CustomerPortal):
         return {}
 
     @route(
-        '/my/orders/reorder_modal_content',
+        '/my/orders/reorder',
         type='jsonrpc',
         auth='public',
         website=True,
-        readonly=True,
     )
-    def my_orders_reorder_modal_content(self, order_id, access_token):
+    def my_orders_reorder(self, order_id, access_token):
+        """ Retrieve reorder content and automatically add products to the cart.
+
+        param int order_id: The ID of the sale order to reorder.
+        param str access_token: The access token for the sale order.
+        return: The number of items in the cart after reordering.
+        rtype: int
+        """
         try:
             sale_order = self._document_check_access('sale.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        currency = request.env['website'].get_current_website().currency_id
-        result = {
-            'currency': currency.id,
-            'products': [],
-        }
         for line in sale_order.order_line:
-            if line.display_type:
-                continue
-            if line._is_delivery():
-                continue
-            combination = line.product_id.product_template_attribute_value_ids | line.product_no_variant_attribute_value_ids
-            res = {
-                'product_template_id': line.product_id.product_tmpl_id.id,
-                'product_id': line.product_id.id,
-                'combination': combination.ids,
-                'no_variant_attribute_value_ids': line.product_no_variant_attribute_value_ids.ids,
-                'product_custom_attribute_values': [
-                    { # Same input format as provided by product configurator
+            if not line._is_reorder_allowed():
+                continue  # Skip section headers, deliveries, or combo item lines
+
+            linked_products = None
+
+            if line.product_id.type == 'combo':
+                linked_products = [{
+                    'product_template_id': linked_line.product_id.product_tmpl_id.id,
+                    'parent_product_template_id': line.product_id.product_tmpl_id.id,
+                    'quantity': linked_line.product_uom_qty,
+                    'combo_item_id': linked_line.combo_item_id.id,
+                    'product_id': linked_line.product_id.id,
+                    'product_custom_attribute_values': [{
                         'custom_product_template_attribute_value_id': pcav.custom_product_template_attribute_value_id.id,
                         'custom_value': pcav.custom_value,
-                    } for pcav in line.product_custom_attribute_value_ids
-                ],
-                'type': line.product_id.type,
-                'name': line.name_short,
-                'description_sale': line.product_id.description_sale or '' + line._get_sale_order_line_multiline_description_variants(),
-                'qty': line.product_uom_qty,
-                'add_to_cart_allowed': line.with_user(request.env.user).sudo()._is_reorder_allowed(),
-                'has_image': bool(line.product_id.image_128),
-            }
-            if res['add_to_cart_allowed']:
-                res['combinationInfo'] = line.product_id.product_tmpl_id.with_context(
-                    **self._sale_reorder_get_line_context()
-                )._get_combination_info(combination, res['product_id'], res['qty'])
-            else:
-                res['combinationInfo'] = {}
-            result['products'].append(res)
-        return result
+                    } for pcav in linked_line.product_custom_attribute_value_ids],
+                    'no_variant_attribute_value_ids': linked_line.product_no_variant_attribute_value_ids.ids,
+                } for linked_line in line.linked_line_ids]
+
+            Cart().add_to_cart(
+                product_id=line.product_id.id,
+                product_template_id=line.product_id.product_tmpl_id.id,
+                quantity=line.product_uom_qty,
+                product_custom_attribute_values=[{
+                    'custom_product_template_attribute_value_id': pcav.custom_product_template_attribute_value_id.id,
+                    'custom_value': pcav.custom_value,
+                } for pcav in line.product_custom_attribute_value_ids],
+                no_variant_attribute_value_ids=line.product_no_variant_attribute_value_ids.ids,
+                linked_products=linked_products,
+            )
+
+        return request.session.get('website_sale_cart_quantity', request.cart.cart_quantity)

@@ -146,6 +146,8 @@ class ProductProduct(models.Model):
             return False
         if not self.filtered_domain(self.env['website']._product_domain()):
             return False
+        if request.website.prevent_zero_price_sale:
+            return not float_is_zero(self._get_contextual_price(), precision_digits=2)
         return request.website.has_ecommerce_access()
 
     @api.onchange('public_categ_ids')
