@@ -652,6 +652,10 @@ export class LinkPopover extends Component {
         return customStyles;
     }
 
+    get showUrl() {
+        return this.state.urlTitle && this.state.url && this.state.urlTitle !== this.state.url;
+    }
+
     async uploadFile() {
         const { upload, getURL } = this.uploadService;
         const { resModel, resId } = this.props.recordInfo;
