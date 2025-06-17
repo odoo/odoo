@@ -21,6 +21,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
 import { createElementWithContent } from "@web/core/utils/html";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
+import { Widget } from "@web/views/widgets/widget";
 
 const NO_DATA = _t("No data");
 const formatters = registry.category("formatters");
@@ -115,7 +116,7 @@ function shortenLabel(label) {
 
 export class GraphRenderer extends Component {
     static template = "web.GraphRenderer";
-    static components = { Dropdown, DropdownItem, ReportViewMeasures };
+    static components = { Dropdown, DropdownItem, ReportViewMeasures, Widget };
     static props = ["class?", "model", "buttonTemplate"];
 
     setup() {

@@ -26,7 +26,14 @@ export class MenuDropdown extends Dropdown {}
 
 export class NavBar extends Component {
     static template = "web.NavBar";
-    static components = { Dropdown, DropdownItem, DropdownGroup, MenuDropdown, ErrorHandler, Transition };
+    static components = {
+        Dropdown,
+        DropdownItem,
+        DropdownGroup,
+        MenuDropdown,
+        ErrorHandler,
+        Transition,
+    };
     static props = {};
 
     setup() {

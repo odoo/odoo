@@ -5,12 +5,14 @@ import { useSetupAction } from "@web/search/action_hook";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { Widget } from "@web/views/widgets/widget";
+import { ActionHelper } from "@web/views/action_helper";
 
 import { Component, useRef } from "@odoo/owl";
 
 export class GraphController extends Component {
     static template = "web.GraphView";
-    static components = { Layout, SearchBar, CogMenu };
+    static components = { Layout, SearchBar, CogMenu, Widget, ActionHelper };
     static props = {
         ...standardViewProps,
         Model: Function,

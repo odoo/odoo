@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <t t-name="loyalty.LoyaltyListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
-        <t t-call="web.ActionHelper" position="replace">
+        <ActionHelper position="replace">
             <t t-if="showNoContentHelper">
                 <LoyaltyActionHelper noContentHelp="props.noContentHelp"/>
             </t>
-        </t>
+        </ActionHelper>
     </t>
 
     <t t-name="loyalty.LoyaltyActionHelper">
