@@ -418,3 +418,43 @@ class ProductProduct(models.Model):
             gmc_info['item_group_id'] = self.product_tmpl_id.id
 
         return gmc_info
+    # ---------------------------------------------------------
+    # Product Ribbon Methods
+    # ---------------------------------------------------------
+
+    def _get_ribbon(self, get_product_prices):
+        """
+        Retrieve the appropriate ribbon for the product based on manual or automatic assignment.
+
+        This method first checks if a ribbon is manually set If no manual ribbon is set, it returns
+        appropriate ribbon based on the priority assigned in product.ribbon.
+
+        :param function get_product_prices: a lazy function that returns product's pricing info.
+        :return: The ribbon that matches the product's criteria or an empty ribbon record.
+        :rtype: `product.ribbon` recordset.
+        """
+        product_ribbon_sudo = self.env['product.ribbon'].sudo()
+        if not self:
+            return {False: product_ribbon_sudo}
+
+        product_ribbon_map = {}
+        auto_assign_ribbons = product_ribbon_sudo.search([('assign', '!=', 'manual')])
+        for product in self:
+            product_ribbon_map[product.id] = product_ribbon_sudo
+            manually_set_ribbon = (
+                product.product_tmpl_id.website_ribbon_id or product.variant_ribbon_id
+            )
+
+            if manually_set_ribbon:
+                product_ribbon_map[product.id] = manually_set_ribbon
+            else:
+                product_prices = (
+                    get_product_prices(product.product_tmpl_id)
+                    if get_product_prices
+                    else product.product_tmpl_id._get_combination_info()
+                )
+                product_ribbon_map[product.id] = auto_assign_ribbons._get_applicable_ribbon(
+                    product, product_prices,
+                )
+
+        return product_ribbon_map
