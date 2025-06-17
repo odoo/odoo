@@ -66,6 +66,10 @@
                     >
                         <group>
                             <field name="account_move" invisible="1"/>
+                            <field name="l10n_es_edi_verifactu_refund_reason"
+                                   invisible="amount_total >= 0"
+                                   readonly="state != 'draft'"/>
+                            <field name="refunded_order_ids" invisible="not refunded_order_ids"/>
                             <field name="l10n_es_edi_verifactu_errors" groups="base.group_no_one"/>
                             <field name="l10n_es_edi_verifactu_error_level" groups="base.group_no_one"/>
                             <field name="l10n_es_edi_verifactu_required" groups="base.group_no_one"/>

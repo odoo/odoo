@@ -1,45 +1,49 @@
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
-    # TODO: move to l10n_es?
-    @api.model
-    def _l10n_es_get_sujeto_tax_types(self):
-        return ['sujeto', 'sujeto_isp', 'sujeto_agricultura', 'igic']
+    l10n_es_applicability = fields.Selection(
+        selection=[
+            ('iva', 'VAT'),
+            ('igic', 'IGIC'),
+            ('ipsi', 'IPSI'),
+            ('other', 'Other'),
+        ],
+        string="Applicability (Spain)",
+        default='iva',
+    )
 
     @api.model
     def _l10n_es_edi_verifactu_get_tax_types_map(self):
-        """Return dict: l10n_es_type -> verifactu tax type
+        """Return dict: l10n_es_applicability -> verifactu tax type
         """
-        VAT = '01'
-        IPSI = '02'
-        IGIC = '03'
-        other = '05'
         return {
-            'exento': VAT,
-            'sujeto': VAT,
-            'sujeto_agricultura': VAT,
-            'sujeto_isp': VAT,
-            'no_sujeto': VAT,
-            'no_sujeto_loc': VAT,
-            'recargo': other,
-            'igic': IGIC,
-            'ipsi': IPSI,
+            'iva': '01',
+            'ipsi': '02',
+            'igic': '03',
+            'other': '05',
         }
 
     @api.model
     def _l10n_es_edi_verifactu_get_tax_types_name_map(self):
         """Return dict: verifactu tax type -> human readable string
         """
+        # We use the applicability selection strings since every applicability is mapped to a single verifactu tax type
+        applicability_string = dict(self.env['account.tax']._fields['l10n_es_applicability'].get_description(self.env)['selection'])
         return {
-            # TODO: translate
-            '01': 'IVA',
-            '02': 'IPSI',
-            '03': 'IGIC',
-            '05': 'Otros',
+            '01': applicability_string['iva'],
+            '02': applicability_string['ipsi'],
+            '03': applicability_string['igic'],
+            '05': applicability_string['other'],
         }
+
+    def _l10n_es_edi_verifactu_filter_main_taxes(self):
+        return self.filtered(
+            lambda tax: tax.l10n_es_type not in ('retencion', 'recargo', 'dua', 'ignore')
+                        and tax.l10n_es_applicability
+        )
 
     @api.model
     def _l10n_es_edi_verifactu_get_tax_details_functions(self, company):
@@ -65,8 +69,8 @@ class AccountTax(models.Model):
                 'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
                 'l10n_es_exempt_reason': l10n_es_exempt_reason,
                 'l10n_es_type': tax.l10n_es_type,
-                'verifactu_tax_type': verifactu_tax_type_map.get(tax.l10n_es_type),
-                'is_main_tax': tax.l10n_es_type not in ('retencion', 'recargo', 'dua', 'ignore'),
+                'verifactu_tax_type': verifactu_tax_type_map.get(tax.l10n_es_applicability),
+                'is_main_tax': bool(tax._l10n_es_edi_verifactu_filter_main_taxes()),
             }
             return grouping_key
 

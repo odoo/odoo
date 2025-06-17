@@ -29,13 +29,14 @@ class ResCompany(models.Model):
         string="Veri*Factu Next Batch Time",
         readonly=True,
         copy=False,
-        help="The Datetime at which the next submission to the AEAT can be made."
+        help="The Datetime at which the next submission to the AEAT can be made.",
     )
     l10n_es_edi_verifactu_special_vat_regime = fields.Selection(
         string="Special VAT Regime",
         selection=[
             ('simplified', "Simplified Regime"),
             ('reagyp', "REAGYP (Speical Regime for Agriculture, Livestock and Fisheries)"),
+            ('recargo', "Recargo de Equivalencia"),
         ],
     )
 

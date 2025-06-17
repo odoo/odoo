@@ -10,6 +10,7 @@
         'security/ir.model.access.csv',
         'wizard/account_move_send_views.xml',
         'views/account_move_views.xml',
+        'views/account_tax_views.xml',
         'views/l10n_es_edi_verifactu_certificate_views.xml',
         'views/l10n_es_edi_verifactu_document_views.xml',
         'views/report_invoice.xml',
@@ -21,6 +22,7 @@
         'demo/demo_certificate.xml',
         'demo/demo_company.xml',
     ],
+    'post_init_hook': '_l10n_es_edi_verifactu_post_init_hook',
     'assets': {
         'web.assets_backend': [
             'l10n_es_edi_verifactu/static/src/css/warning.scss',

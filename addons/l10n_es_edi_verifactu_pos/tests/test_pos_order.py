@@ -1,20 +1,19 @@
-from contextlib import contextmanager, nullcontext
 import datetime
+
+from contextlib import contextmanager, nullcontext
 from freezegun import freeze_time
 from unittest import mock
 
-from odoo import Command
-
-from odoo.addons.l10n_es_edi_verifactu.tests.common import TestL10nEsEdiVerifactuCommon
 from odoo.addons.point_of_sale.models.pos_order import PosOrder
-from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+from .common import TestL10nEsEdiVerifactuPosCommon
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuCommon, TestPoSCommon):
+class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -24,22 +23,6 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuCommon, TestPoSCommon
         cls.fakenow = datetime.datetime(2025, 1, 1)
         cls.startClassPatcher(freeze_time(cls.fakenow))
 
-        cls.config = cls.basic_config
-
-        cls.product = cls.env['product.product'].create({
-            'name': 'verifactu_pos_product',
-            'default_code': "product_verifactu",
-            'lst_price': 100.0,
-            'property_account_income_id': cls.company_data['default_account_revenue'].id,
-            'property_account_expense_id': cls.company_data['default_account_expense'].id,
-            'taxes_id': [Command.set(cls.tax21_goods.ids)],
-            'company_id': cls.company.id,
-            'available_in_pos': True,
-        })
-
-        # Use the VAT / NIF that was used to generate the responses
-        # This is needed to have the correct record identifiers on the invoices
-        cls.company.vat = 'A39200019'
 
     @contextmanager
     def with_pos_session(self):
@@ -114,6 +97,8 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuCommon, TestPoSCommon
                 'date_order': datetime.datetime(2024, 11, 10, 10, 11, 12),
                }])
 
+            self.assertEqual(len(order.l10n_es_edi_verifactu_document_ids), 1)
+
             expected_record_identifier = {
                 'IDEmisorFactura': 'A39200019',
                 'NumSerieFactura': 'INV/2019/00004',
@@ -147,7 +132,6 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuCommon, TestPoSCommon
                     'name': 'INV/2019/00026',
                     'date_order': '2024-12-30 00:00:00',
                 })
-
         self.assertRecordValues(order, [{
             'l10n_es_edi_verifactu_state': 'accepted',
             'l10n_es_edi_verifactu_qr_code': '/report/barcode/?barcode_type=QR&value=https%3A%2F%2Fprewww2.aeat.es%2Fwlpl%2FTIKE-CONT%2FValidarQR%3Fnif%3DA39200019%26numserie%3DINV%252F2019%252F00026%26fecha%3D30-12-2024%26importe%3D121.00&barLevel=M&width=180&height=180',

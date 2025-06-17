@@ -16,6 +16,7 @@ patch(Order.prototype, {
         const json = super.export_as_JSON(...arguments);
         if (this.pos.config.is_spanish) {
             json.l10n_es_edi_verifactu_required = this.l10n_es_edi_verifactu_required;
+            json.l10n_es_edi_verifactu_refund_reason = this.l10n_es_edi_verifactu_refund_reason;
         }
         return json;
     },

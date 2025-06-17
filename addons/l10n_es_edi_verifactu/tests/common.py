@@ -1,9 +1,7 @@
 import base64
-import datetime
 import json
 import requests
 
-from freezegun import freeze_time
 from unittest import mock
 
 from odoo import _, Command
@@ -16,8 +14,6 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref='es_full'):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        cls.fakenow = datetime.datetime(2024, 12, 5)
-        cls.startClassPatcher(freeze_time(cls.fakenow))
 
         fake_db_identifier = '7244834601315494189'
         db_identifier_function = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_document.L10nEsEdiVerifactuDocument._get_db_identifier'

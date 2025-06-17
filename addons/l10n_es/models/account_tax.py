@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class AccountTax(models.Model):
@@ -30,9 +30,11 @@ class AccountTax(models.Model):
             ('recargo', 'Recargo de Equivalencia'),
             ('dua', 'DUA'),
             ('ignore', 'Ignore even the base amount'),
-            ('igic', 'IGIC'),
-            ('ipsi', 'IPSI'),
         ],
         string="Tax Type (Spain)", default='sujeto'
     )
     l10n_es_bien_inversion = fields.Boolean('Bien de Inversion', default=False)
+
+    @api.model
+    def _l10n_es_get_sujeto_tax_types(self):
+        return ['sujeto', 'sujeto_isp', 'sujeto_agricultura']

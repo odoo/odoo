@@ -16,6 +16,9 @@
         'point_of_sale._assets_pos': [
             'l10n_es_edi_verifactu_pos/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'l10n_es_edi_verifactu_pos/static/tests/tours/*'
+        ],
     },
     'auto_install': True,
     'license': 'LGPL-3',

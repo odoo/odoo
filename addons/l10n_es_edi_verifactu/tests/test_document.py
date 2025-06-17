@@ -1,4 +1,5 @@
 import datetime
+from freezegun import freeze_time
 from unittest import mock
 
 from odoo import _, Command
@@ -14,6 +15,9 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.fakenow = datetime.datetime(2024, 12, 5)
+        cls.startClassPatcher(freeze_time(cls.fakenow))
+
         # Use the VAT / NIF that was used to generate the responses
         # This is needed to have the correct record identifiers on the invoices
         cls.company.vat = 'A39200019'
@@ -59,10 +63,9 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
             document.unlink()
 
     def test_generation_error(self):
-        # TODO: mock error check function instead
-        render_xml_node_function_path = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_document.L10nEsEdiVerifactuDocument._check_record_values'
+        check_function_path = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_document.L10nEsEdiVerifactuDocument._check_record_values'
         mock_errors = ["Problem 1", "Problem 2"]
-        patched_render_xml_node = mock.patch(render_xml_node_function_path, return_value=mock_errors)
+        patched_render_xml_node = mock.patch(check_function_path, return_value=mock_errors)
         invoice = self._create_dummy_invoice()
         with patched_render_xml_node:
             document = invoice._l10n_es_edi_verifactu_create_document()
@@ -82,8 +85,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         }
         self.assertRecordValues(invoice, [expected_record_values])
 
-    def test_html_response(self):
-        # TODO: rename test; or maybe test for doctype html header?
+    def test_certificate_issue(self):
         invoice = self._create_dummy_invoice()
         document = invoice._l10n_es_edi_verifactu_create_document()
         with self._mock_zeep_registration_operation_certificate_issue():

@@ -31,11 +31,11 @@ class AccountMove(models.Model):
     )
     l10n_es_edi_verifactu_warning_level = fields.Char(
         string="Veri*Factu Warning Level",
-        compute="_compute_l10n_es_edi_verifactu_warning"
+        compute="_compute_l10n_es_edi_verifactu_warning",
     )
     l10n_es_edi_verifactu_warning = fields.Html(
         string="Veri*Factu Warning",
-        compute="_compute_l10n_es_edi_verifactu_warning"
+        compute="_compute_l10n_es_edi_verifactu_warning",
     )
     l10n_es_edi_verifactu_error_level = fields.Selection(
         string="Veri*Factu Error Level",
@@ -43,11 +43,11 @@ class AccountMove(models.Model):
             ('rejected', "Rejected"),
             ('registered_with_errors', "Registered with Errors"),
         ],
-        compute="_compute_l10n_es_edi_verifactu_errors_and_error_level"
+        compute="_compute_l10n_es_edi_verifactu_errors_and_error_level",
     )
     l10n_es_edi_verifactu_errors = fields.Html(
         string="Veri*Factu Errors",
-        compute="_compute_l10n_es_edi_verifactu_errors_and_error_level"
+        compute="_compute_l10n_es_edi_verifactu_errors_and_error_level",
     )
     l10n_es_edi_verifactu_qr_code = fields.Char(
         string="Veri*Factu QR Code",
@@ -68,29 +68,52 @@ class AccountMove(models.Model):
         selection='_l10n_es_edi_verifactu_operation_type_selection',
         compute='_compute_l10n_es_edi_verifactu_operation_type', store=True, readonly=False,
     )
+    l10n_es_edi_verifactu_substituted_entry_id = fields.Many2one(
+        comodel_name='account.move',
+        string="Substitution of",
+        index='btree_not_null',
+        readonly=True,
+        copy=False,
+        check_company=True,
+    )
+    l10n_es_edi_verifactu_substitution_move_id = fields.One2many(
+        string="Substituted by",
+        comodel_name='account.move',
+        inverse_name='l10n_es_edi_verifactu_substituted_entry_id',
+    )
+    l10n_es_edi_verifactu_refund_reason = fields.Selection(
+        selection=[
+            ('R1', "R1: Art 80.1 and 80.2 and error of law"),
+            ('R2', "R2: Art. 80.3"),
+            ('R3', "R3: Art. 80.4"),
+            ('R4', "R4: Rest"),
+            ('R5', "R5: Corrective invoices concerning simplified invoices"),
+        ],
+        string="Veri*Factu Refund Reason",
+        copy=False,
+    )
 
     @api.model
     def _l10n_es_edi_verifactu_operation_type_selection(self):
         return [
-            # TODO: translate
             # Format: '{impuesto}_{clave_regimen}' (the clave regimen only appplies for VAT and IGIC)
             # VAT
-            ('01_01', 'Operación de régimen general'),
-            ('01_02', 'Exportación'),
-            ('01_11', 'Operaciones de arrendamiento de local de negocio'),
-            ('01_17', 'Operación acogida a alguno de los regímenes previstos en el Capítulo XI del Título IX (OSS e IOSS)'),
-            ('01_18', 'Recargo de equivalencia'),
-            ('01_19', 'Operaciones de actividades incluidas en el Régimen Especial de Agricultura, Ganadería y Pesca (REAGYP)'),
-            ('01_20', 'Régimen simplificado'),
+            ('01_01', 'General regime operation'), # Operación de régimen general
+            ('01_02', 'Export'), # Exportación
+            ('01_11', 'Leasing of business premises'), # Operaciones de arrendamiento de local de negocio
+            ('01_17', 'Operation under one of the regimes provided for in Chapter XI of Title IX (OSS and IOSS).'), # Operación acogida a alguno de los regímenes previstos en el Capítulo XI del Título IX (OSS e IOSS)
+            ('01_18', 'Recargo de equivalencia'), # Recargo de equivalencia
+            ('01_19', 'Operations of activities included in the Special Regime for Agriculture, Livestock and Fishing (REAGYP)'), # Operaciones de actividades incluidas en el Régimen Especial de Agricultura, Ganadería y Pesca (REAGYP)
+            ('01_20', 'Simplified Regime'), # Régimen simplificado
             # IPSI
-            ('02_', 'IPSI'),
+            ('02_', 'IPSI'), # IPSI
             # IGIC
-            ('03_01', 'Operación de régimen general'),
-            ('03_02', 'Exportación'),
-            ('03_11', 'Operaciones de arrendamiento de local de negocio'),
-            ('03_17', 'Régimen especial de comerciante minorista'),
+            ('03_01', 'General regime operation'), # Operación de régimen general
+            ('03_02', 'Export'), # Exportación
+            ('03_11', 'Leasing of business premises'), # Operaciones de arrendamiento de local de negocio
+            ('03_17', 'Special retailer regime'), # Régimen especial de comerciante minorista
             # other
-            ('05_', 'Otros'),
+            ('05_', 'Other'), # Otros
         ]
 
     def _l10n_es_edi_verifactu_get_verifactu_tax_type(self):
@@ -106,17 +129,14 @@ class AccountMove(models.Model):
         verifactu_tax_type_map = self.env['account.tax']._l10n_es_edi_verifactu_get_tax_types_map()
 
         taxes = self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy()
-        main_taxes = taxes.filtered(
-            lambda tax: tax.l10n_es_type not in ('retencion', 'recargo', 'dua', 'ignore')
-        )
+        main_taxes = taxes._l10n_es_edi_verifactu_filter_main_taxes()
 
-        # We pick the "first" main tax type.
+        # We pick the "first" main tax type (they always have a `l10n_es_applicability`).
         # In `_check_record_values` of model 'l10n_es_edi_verifactu.document' we check:
         # There is only a single Veri*Factu Tax Type on the whole move.
-        l10n_es_tax_types = main_taxes.mapped('l10n_es_type')
-        if not l10n_es_tax_types:
+        if not main_taxes:
             return False
-        return verifactu_tax_type_map.get(l10n_es_tax_types[0], False)
+        return verifactu_tax_type_map.get(main_taxes[0].l10n_es_applicability, False)
 
     @api.model
     def _l10n_es_edi_verifactu_get_available_operation_types_map(self):
@@ -158,7 +178,6 @@ class AccountMove(models.Model):
 
         company_regime = self.company_id.l10n_es_edi_verifactu_special_vat_regime
 
-        # TODO: do all moves have to be simplified if the company is in the simplified regime?
         if VAT and company_regime == 'simplified' and self.l10n_es_is_simplified:
             # simplified
             regimen_key = '20'
@@ -176,8 +195,6 @@ class AccountMove(models.Model):
             regimen_key = '02'
         else:
             regimen_key = '01'
-        # TODO: (VAT subject to IPSI/IGIC) or (IGIC subject to VAT/IPSI)
-        #   regimen_key = '08'
 
         return f'{verifactu_tax_type}_{regimen_key}'
 
@@ -237,9 +254,8 @@ class AccountMove(models.Model):
             warning_level = False
             waiting_documents = move.l10n_es_edi_verifactu_document_ids._filter_waiting()
             if move.state == 'draft':
-                registered = move.l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')
-                if registered:
-                    warning = _("You are modifying a journal entry for which a Veri*Factu document has been registered by the AEAT.")
+                if move.l10n_es_edi_verifactu_state:
+                    warning = _("You are modifying a journal entry for which a Veri*Factu document has been sent to the AEAT already.")
                     warning_level = 'warning'
                 elif waiting_documents:
                     warning = _("You are modifying a journal entry for which a Veri*Factu document is waiting to be sent.")
@@ -255,30 +271,23 @@ class AccountMove(models.Model):
         for move in self:
             move.l10n_es_edi_verifactu_show_cancel_button = move.l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')
 
-    @api.depends('l10n_es_edi_verifactu_state', 'l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.state')
+    @api.depends('l10n_es_edi_verifactu_state', 'l10n_es_edi_verifactu_document_ids',
+                 'l10n_es_edi_verifactu_document_ids.state', 'l10n_es_edi_verifactu_document_ids.json_attachment_id')
     def _compute_show_reset_to_draft_button(self):
         """
         Disallow resetting to draft in the following cases:
-        * The move is cancelled
-        * We are waiting to sent a cancellation document to the AEAT
+        * The move is registered (accepted, regsitered_with_errors, cancelled)
+        * We are waiting to sent a document to the AEAT
         """
         # EXTENDS 'account'
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            if move.l10n_es_edi_verifactu_state == 'cancelled':
-                move.show_reset_to_draft_button = False
-                continue
-            waiting_documents = move.l10n_es_edi_verifactu_document_ids._filter_waiting()
-            if any(doc.document_type == 'cancellation' for doc in waiting_documents):
+            if (move.l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted', 'cancelled')
+                or move.l10n_es_edi_verifactu_document_ids._filter_waiting()):
                 move.show_reset_to_draft_button = False
 
     def l10n_es_edi_verifactu_button_cancel(self):
-        created_documents = self._l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
-        skipped_moves = self.filtered(lambda move: not created_documents.get(move))
-        if skipped_moves and len(self) == 1:
-            # TODO: not correct in case we skip for concurrency case
-            raise UserError(_("We are waiting to send a Veri*Factu record to the AEAT already."))
-        # In other cases we just silently skip them
+        self._l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
 
     def _l10n_es_edi_verifactu_check(self, cancellation=False):
         self.ensure_one()
@@ -286,12 +295,6 @@ class AccountMove(models.Model):
 
         if self.state != 'posted':
             errors.append(_("The journal entry has to be posted."))
-
-        refunded_move = self.reversed_entry_id
-        refunded_document = refunded_move.l10n_es_edi_verifactu_document_ids._get_last('submission')
-        if refunded_move and not refunded_document:
-            # TODO: could also be cancellation without prior registration
-            errors.append(_("The refunded journal entry has no Veri*Factu document yet."))
 
         if not self.l10n_es_edi_verifactu_operation_type:
             errors.append(_("The journal entry has no Veri*Factu Operation Type."))
@@ -325,6 +328,19 @@ class AccountMove(models.Model):
         is_simplified = self.l10n_es_is_simplified
 
         verifactu_tax_type, clave_regimen = self.l10n_es_edi_verifactu_operation_type.split('_', 1)
+        substituted_move = self.l10n_es_edi_verifactu_substituted_entry_id
+        reversed_move = self.reversed_entry_id
+
+        move_type = self.move_type
+        if move_type == 'out_invoice' and substituted_move:
+            verifactu_move_type = 'correction_substitution'
+        elif move_type == 'out_invoice':
+            verifactu_move_type = 'invoice'
+        elif move_type == 'out_refund' and reversed_move.l10n_es_edi_verifactu_substitution_move_id:
+            verifactu_move_type = 'reversal_for_substitution'
+        else:
+            # move_type == 'out_refund' and not reversed_move.l10n_es_edi_verifactu_substitution_move_id
+            verifactu_move_type = 'correction_incremental'
 
         vals.update({
             'rejected_before': rejected_before,
@@ -333,10 +349,14 @@ class AccountMove(models.Model):
             'description': self.invoice_origin[:500] if self.invoice_origin else None,
             'invoice_date': self.invoice_date,
             'is_simplified': is_simplified,
-            'move_type': self.move_type,
+            'move_type': move_type,
+            'verifactu_move_type': verifactu_move_type,
             'name': self.name,
             'partner': self.commercial_partner_id,
-            'refunded_document': self.reversed_entry_id.l10n_es_edi_verifactu_document_ids._get_last('submission'),
+            'refund_reason': self.l10n_es_edi_verifactu_refund_reason,
+            'refunded_document': reversed_move.l10n_es_edi_verifactu_document_ids._get_last('submission'),
+            'substituted_document': substituted_move.l10n_es_edi_verifactu_document_ids._get_last('submission'),
+            'substituted_document_reversal_document': substituted_move.reversal_move_id.l10n_es_edi_verifactu_document_ids._get_last('submission'),
             'documents': documents,
             'record_identifier': documents._get_last('submission').record_identifier,
             'verifactu_tax_type': verifactu_tax_type,

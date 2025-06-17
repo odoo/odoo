@@ -34,11 +34,11 @@ class PosOrder(models.Model):
             ('rejected', "Rejected"),
             ('registered_with_errors', "Registered with Errors"),
         ],
-        compute="_compute_l10n_es_edi_verifactu_errors_and_error_level"
+        compute="_compute_l10n_es_edi_verifactu_errors_and_error_level",
     )
     l10n_es_edi_verifactu_errors = fields.Html(
         string="Veri*Factu Errors",
-        compute="_compute_l10n_es_edi_verifactu_errors_and_error_level"
+        compute="_compute_l10n_es_edi_verifactu_errors_and_error_level",
     )
     l10n_es_edi_verifactu_qr_code = fields.Char(
         string="Veri*Factu QR Code",
@@ -47,6 +47,17 @@ class PosOrder(models.Model):
     l10n_es_edi_verifactu_show_cancel_button = fields.Boolean(
         string="Show Veri*Factu Cancel Button",
         compute='_compute_l10n_es_edi_verifactu_show_cancel_button',
+    )
+    l10n_es_edi_verifactu_refund_reason = fields.Selection(
+        selection=[
+            ('R1', "R1: Art 80.1 and 80.2 and error of law"),
+            ('R2', "R2: Art. 80.3"),
+            ('R3', "R3: Art. 80.4"),
+            ('R4', "R4: Rest"),
+            ('R5', "R5: Corrective invoices concerning simplified invoices"),
+        ],
+        string="Veri*Factu Refund Reason",
+        copy=False,
     )
 
     @api.depends('country_code')
@@ -75,7 +86,8 @@ class PosOrder(models.Model):
             if invoice:
                 url = invoice.l10n_es_edi_verifactu_qr_code
             else:
-                url = order.l10n_es_edi_verifactu_document_ids._get_last('submission')._get_qr_code_img_url()
+                last_submission = order.l10n_es_edi_verifactu_document_ids._get_last('submission')
+                url = last_submission._get_qr_code_img_url() if last_submission else False
             order.l10n_es_edi_verifactu_qr_code = url
 
     @api.depends('l10n_es_edi_verifactu_state')
@@ -83,13 +95,15 @@ class PosOrder(models.Model):
         for order in self:
             order.l10n_es_edi_verifactu_show_cancel_button = order.l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')
 
+    @api.model
+    def l10n_es_edi_verifactu_get_refund_reason_selection(self):
+        return self._fields['l10n_es_edi_verifactu_refund_reason']._description_selection(self.env)
+
     def l10n_es_edi_verifactu_button_cancel(self):
-        created_documents = self._l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
-        skipped_orders = self.filtered(lambda order: not created_documents.get(order))
-        if skipped_orders and len(self) == 1:
-            # TODO: not correct in case we skip for concurrency case
-            raise UserError(_("We are waiting to send a Veri*Factu record to the AEAT already."))
-        # In other cases we just silently skip them
+        self._l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
+
+    def l10n_es_edi_verifactu_button_send(self):
+        self._l10n_es_edi_verifactu_mark_for_next_batch()
 
     def _l10n_es_edi_verifactu_check(self, cancellation=False):
         self.ensure_one()
@@ -97,12 +111,6 @@ class PosOrder(models.Model):
 
         if self.state != 'paid':
             errors.append(_("Veri*Factu documents can only be generated for paid Point of Sale Orders."))
-
-        refunded_order = self.refunded_order_ids  # it is max 1 record (see `create_from_ui`)
-        refunded_document = refunded_order.l10n_es_edi_verifactu_document_ids._get_last('submission')
-        if refunded_order and not refunded_document:
-            # TODO: could also be cancellation without prior registration
-            errors.append(_("The refunded order has no Veri*Factu document yet."))
 
         return errors
 
@@ -141,13 +149,18 @@ class PosOrder(models.Model):
             'description': None,
             'invoice_date': self.date_order.date(),
             'is_simplified': True,
-            'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
+            # NOTE: invoice with negative amounts possible (when no `refunded_order` specified)
+            'move_type': 'out_refund' if refunded_order else 'out_invoice',
+            'verifactu_move_type': 'correction_incremental' if refunded_order else 'invoice',
             'name': self.name,
             'partner': self.partner_id.commercial_partner_id,
+            'refund_reason': self.l10n_es_edi_verifactu_refund_reason,
             'refunded_document': refunded_order.l10n_es_edi_verifactu_document_ids._get_last('submission'),
+            'substituted_document': None,
+            'substituted_document_reversal_document': None,
             'documents': documents,
             'record_identifier': documents._get_last('submission').record_identifier,
-            # TODO:
+            # TODO: check
             'verifactu_tax_type': '01',
             'clave_regimen': '20' if company_in_simplified_regime else '01',
         })
@@ -204,6 +217,18 @@ class PosOrder(models.Model):
                     raise ValidationError(_("You can only refund products from the same order."))
         return super().create_from_ui(orders, draft=draft)
 
+    def _export_for_ui(self, order):
+        # EXTENDS 'point_of_sale'
+        vals = super()._export_for_ui(order)
+        vals['l10n_es_edi_verifactu_refund_reason'] = order.l10n_es_edi_verifactu_refund_reason
+        return vals
+
+    def _order_fields(self, ui_order):
+        # EXTENDS 'point_of_sale'
+        vals = super()._order_fields(ui_order)
+        vals['l10n_es_edi_verifactu_refund_reason'] = ui_order.get('l10n_es_edi_verifactu_refund_reason', False)
+        return vals
+
     def _process_saved_order(self, draft):
         self.ensure_one()
         if self.l10n_es_edi_verifactu_required:
@@ -214,6 +239,8 @@ class PosOrder(models.Model):
             if len(refunded_order) > 1:
                 raise UserError(_("You can only refund products from the same order."))
             if refunded_order:
+                if refunded_order and not self.l10n_es_edi_verifactu_refund_reason:
+                    raise UserError(_("You have to specify a refund reason."))
                 if self.to_invoice and refunded_order.state != 'invoiced':
                     raise UserError(_("You cannot invoice a refund whose linked order hasn't been invoiced."))
                 if not self.to_invoice and refunded_order.state == 'invoiced':
@@ -241,6 +268,10 @@ class PosOrder(models.Model):
             if order.l10n_es_edi_verifactu_state in ('accepted', 'registered_with_errors'):
                 order._l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
 
+            refunded_order = self.refunded_order_ids
+            if refunded_order and not refunded_order.account_move:
+                raise UserError(_("The order can not be invoiced. The refunded order needs to be invoiced first."))
+
             # Register the invoice instead. The call to `super()` may already have sent it
             invoice = order.account_move
             if invoice.l10n_es_edi_verifactu_required and invoice and not invoice.l10n_es_edi_verifactu_document_ids:
@@ -248,10 +279,7 @@ class PosOrder(models.Model):
 
         return res
 
-    def l10n_es_edi_verifactu_button_send(self):
-        created_documents = self._l10n_es_edi_verifactu_mark_for_next_batch()
-        skipped_orders = self.filtered(lambda order: not created_documents.get(order))
-        if skipped_orders and len(self) == 1:
-            # TODO: not correct in case we skip for concurrency case
-            raise UserError(_("The order is waiting to send a Veri*Factu record to the AEAT already."))
-        # In other cases we just silently skip them
+    def _prepare_invoice_vals(self):
+        res = super()._prepare_invoice_vals()
+        res['l10n_es_edi_verifactu_refund_reason'] = self.l10n_es_edi_verifactu_refund_reason
+        return res

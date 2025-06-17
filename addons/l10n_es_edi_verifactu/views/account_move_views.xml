@@ -100,6 +100,11 @@
                         invisible="not l10n_es_edi_verifactu_required and not l10n_es_edi_verifactu_document_ids"
                     >
                         <group>
+                            <field name="l10n_es_edi_verifactu_refund_reason"
+                                   invisible="move_type == 'out_invoice' and not l10n_es_edi_verifactu_substituted_entry_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="l10n_es_edi_verifactu_substituted_entry_id" invisible="not l10n_es_edi_verifactu_substituted_entry_id"/>
+                            <field name="reversed_entry_id" invisible="not reversed_entry_id"/>
                             <field name="l10n_es_edi_verifactu_errors" groups="base.group_no_one"/>
                             <field name="l10n_es_edi_verifactu_error_level" groups="base.group_no_one"/>
                             <field name="l10n_es_edi_verifactu_required" groups="base.group_no_one"/>

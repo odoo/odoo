@@ -13,14 +13,13 @@
             "IDVersion": "1.0",
             "IDFactura": {
                 "IDEmisorFactura": "59962470K",
-                "NumSerieFactura": "RINV/2019/00001",
+                "NumSerieFactura": "INV/2019/00002",
                 "FechaExpedicionFactura": "11-02-2019"
             },
             "NombreRazonEmisor": "company_1_data",
             "Subsanacion": "N",
             "TipoFactura": "R1",
-            "FechaOperacion": "30-01-2019",
-            "TipoRectificativa": "I",
+            "TipoRectificativa": "S",
             "FacturasRectificadas": [{
                 "IDFacturaRectificada": {
                     "IDEmisorFactura": "59962470K",
@@ -28,6 +27,11 @@
                     "FechaExpedicionFactura": "30-01-2019"
                 }
             }],
+            "ImporteRectificacion": {
+                "BaseRectificada": "0.00",
+                "CuotaRectificada": "0.00"
+            },
+            "FechaOperacion": "30-01-2019",
             "DescripcionOperacion": "manual",
             "Destinatarios": {
                 "IDDestinatario": [{
@@ -42,21 +46,21 @@
                         "ClaveRegimen": "01",
                         "CalificacionOperacion": "S1",
                         "TipoImpositivo": "21.00",
-                        "BaseImponibleOimporteNoSujeto": "-300.00",
-                        "CuotaRepercutida": "-63.00"
+                        "BaseImponibleOimporteNoSujeto": "250.00",
+                        "CuotaRepercutida": "52.50"
                     },
                     {
                         "Impuesto": "01",
                         "ClaveRegimen": "01",
                         "CalificacionOperacion": "S1",
                         "TipoImpositivo": "10.00",
-                        "BaseImponibleOimporteNoSujeto": "-1000.00",
-                        "CuotaRepercutida": "-100.00"
+                        "BaseImponibleOimporteNoSujeto": "1000.00",
+                        "CuotaRepercutida": "100.00"
                     }
                 ]
             },
-            "CuotaTotal": "-163.00",
-            "ImporteTotal": "-1463.00",
+            "CuotaTotal": "152.50",
+            "ImporteTotal": "1402.50",
             "Encadenamiento": {
                 "PrimerRegistro": "S"
             },
@@ -73,7 +77,7 @@
             },
             "FechaHoraHusoGenRegistro": "2024-12-05T01:00:00+01:00",
             "TipoHuella": "01",
-            "Huella": "CE1BD25AF61BCADFB2F71FBB48EA783463249E2878E7D7B2919FC53A6A86491D"
+            "Huella": "267BC5314080D74D4042FF25D2E3003FE99F364A6CE283B8FF980655AD5BC6CC"
         }
     }]
 }
