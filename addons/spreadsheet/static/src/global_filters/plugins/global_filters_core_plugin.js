@@ -39,6 +39,8 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
             case "EDIT_GLOBAL_FILTER":
                 if (!this.getGlobalFilter(cmd.filter.id)) {
                     return CommandResult.FilterNotFound;
+                } else if (!cmd.filter.label) {
+                    return CommandResult.InvalidFilterLabel;
                 } else if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
                     return CommandResult.DuplicatedFilterLabel;
                 }
@@ -52,7 +54,9 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
                 }
                 break;
             case "ADD_GLOBAL_FILTER":
-                if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
+                if (!cmd.filter.label) {
+                    return CommandResult.InvalidFilterLabel;
+                } else if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
                     return CommandResult.DuplicatedFilterLabel;
                 }
                 if (!checkFilterDefaultValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
