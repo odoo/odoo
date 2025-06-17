@@ -223,7 +223,13 @@ export function formatFloat(value, options = {}) {
     } else {
         precision = 2;
     }
-    const formatted = value.toFixed(precision).split(".");
+
+    // Round the value to precision before converting to string with `toFixed`.
+    // Even though `toFixed` can also round the value, it sometimes produces incorrect results like:
+    // * `-0.00` -> from `(-0.0001).toFixed(2)` (incorrect sign; should be `0.00`)
+    // * `0.01`  -> from `(0.015).toFixed(2)`   (incorrect rounding; should be `0.02`)
+    const roundedValue = roundDecimals(value, precision);
+    const formatted = roundedValue.toFixed(precision).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (options.trailingZeros === false && formatted[1]) {
         formatted[1] = formatted[1].replace(/0+$/, "");
