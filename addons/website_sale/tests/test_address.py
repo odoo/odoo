@@ -563,9 +563,9 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         })
         partner_1, _partner_2, _partner_3 = partner_company.child_ids
         self.assertTrue(partner_company.can_edit_vat())
-        self.assertTrue(partner_company._can_edit_name())
+        self.assertTrue(partner_company._can_edit_country())
         self.assertTrue(all(not p.can_edit_vat() for p in partner_company.child_ids))
-        self.assertTrue(all(p._can_edit_name() for p in partner_company.child_ids))
+        self.assertTrue(all(p._can_edit_country() for p in partner_company.child_ids))
 
         dumb_product = self.env['product.product'].create({'name': 'test'})
         invoice = self.env['account.move'].create({
@@ -581,8 +581,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
         self.assertEqual(invoice.state, 'posted')
         self.assertFalse(partner_company.can_edit_vat())
-        self.assertFalse(partner_company._can_edit_name())
-        self.assertTrue(all(p._can_edit_name() for p in partner_company.child_ids))
+        self.assertFalse(partner_company._can_edit_country())
+        self.assertTrue(all(p._can_edit_country() for p in partner_company.child_ids))
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': partner_1.id,
@@ -593,7 +593,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             ],
         })
         invoice.action_post()
-        self.assertFalse(partner_1._can_edit_name())
+        self.assertFalse(partner_1._can_edit_country())
 
     def test_11_payment_term_when_address_change(self):
         """Make sure the expected payment terms are set on ecommerce orders"""

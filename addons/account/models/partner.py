@@ -764,9 +764,9 @@ class ResPartner(models.Model):
         )
         return bool(invoice)
 
-    def _can_edit_name(self):
-        """ Can't edit `name` if there is (non draft) issued invoices. """
-        return super()._can_edit_name() and not self._has_invoice(
+    def _can_edit_country(self):
+        """ Can't edit `country_id` if there is (non draft) issued invoices. """
+        return super()._can_edit_country() and not self._has_invoice(
             [('partner_id', '=', self.id)]
         )
 

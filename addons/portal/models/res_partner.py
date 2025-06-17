@@ -18,8 +18,7 @@ class ResPartner(models.Model):
             'zipcode', 'vat', 'company_name',
         }
 
-    def _can_edit_name(self):
-        """ Name can be changed more often than the VAT """
+    def _can_edit_country(self):
         self.ensure_one()
         return True
 

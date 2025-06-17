@@ -92,11 +92,22 @@
                     t-out="contact"
                     t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"
                 />
+                <t t-set="icon_classes" t-value="'fa text-primary fs-5 position-absolute mt-1 '"/>
                 <div class="mt-3 mx-1">
                     <i
                         t-if="is_user_address"
-                        class="fa fa-id-card text-primary fs-5 position-absolute mt-1"
+                        t-att-class=" icon_classes + 'fa-id-card'"
                         title="Your Account Address"
+                    />
+                    <i
+                        t-elif="contact.type=='delivery'"
+                        t-att-class=" icon_classes + 'fa-solid fa-truck'"
+                        title="Delivery Address"
+                    />
+                    <i
+                        t-elif="contact.type=='invoice'"
+                        t-att-class=" icon_classes + 'fa-file-text'"
+                        title="Billing Address"
                     />
                     <div t-if="can_be_edited" class="text-end">
                         <t
@@ -183,7 +194,7 @@
                         type="text"
                         name="company_name"
                         t-att-value="current_partner.commercial_company_name"
-                        t-att-readonly="'1' if (not is_commercial_address or vat_warning) else None"
+                        t-att-readonly="'1' if not is_main_address else None"
                         class="form-control"
                     />
                 </div>
@@ -199,24 +210,27 @@
                         t-att-readonly="'1' if (not is_commercial_address or vat_warning) else None"
                         class="form-control"
                     />
+                    <!-- Even on new addresses, first tell the customer if their VAT cannot be changed,
+                        then tell them to update it elsewhere if it can be. -->
+                    <div
+                        t-if="not is_commercial_address and commercial_partner.is_company and is_main_address"
+                        class="col-12 d-none d-lg-block mb-1"
+                    >
+                        <small class="form-text text-muted">
+                            The VAT number can only be updated on the company account.
+                        </small>
+                    </div>
+                    <div t-elif="vat_warning and is_main_address" class="col-12 d-none d-lg-block mb-1">
+                        <small class="form-text text-muted">
+                            Changing VAT number is not allowed once document(s) have
+                            been issued for your account. Please contact us directly for this
+                            operation.
+                        </small>
+                    </div>
                 </div>
-                <!-- Even on new addresses, first tell the customer if their VAT/Company cannot be changed,
-                    then tell them to update it elsewhere if it can be. -->
-                <div t-if="vat_warning" class="col-12 d-none d-lg-block mb-1">
+                <div t-if="not (is_commercial_address or is_main_address)" class="col-12 d-none d-lg-block mb-1">
                     <small class="form-text text-muted">
-                        Changing company name or VAT number is not allowed once document(s) have
-                        been issued for your account. Please contact us directly for this
-                        operation.
-                    </small>
-                </div>
-                <div t-elif="not is_commercial_address" class="col-12 d-none d-lg-block mb-1">
-                    <small class="form-text text-muted">
-                        <t t-if="commercial_partner.is_company">
-                            The company name and VAT number can only be updated on the company account.
-                        </t>
-                        <t t-else="">
-                            The company name and VAT number can only be updated on your main account.
-                        </t>
+                        The company name and VAT number can only be updated on your main account.
                         <t t-if="commercial_address_update_url">
                             If you want to modify it, update
                             <a t-att-href="commercial_address_update_url">your account details</a>.
@@ -296,7 +310,7 @@
             <select
                 id="o_country_id"
                 name="country_id"
-                class="form-select"
+                t-att-class="'pe-none opacity-50 form-select' if not can_edit_country else 'form-select'"
             >
                 <option value="">Country...</option>
                 <option
@@ -308,6 +322,13 @@
                     t-out="c.name"
                 />
             </select>
+            <div t-if="not can_edit_country" class="col-12 d-none d-lg-block mb-1">
+                <small class="form-text text-muted">
+                    Changing country is not allowed once document(s) have
+                    been issued for your account. Please contact us directly for this
+                    operation.
+                </small>
+            </div>
         </div>
         <div
             id="div_state"
