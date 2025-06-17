@@ -6,7 +6,7 @@ from datetime import date, datetime, timedelta
 from odoo.fields import Command
 from odoo.tests import Form, TransactionCase
 from odoo.tools import mute_logger
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 
 
 class TestProcRule(TransactionCase):
@@ -672,8 +672,27 @@ class TestProcRule(TransactionCase):
             mto_rule.rule_message,
             'The help message should correctly display information for MTSO.'
         )
-        
-        
+
+    def test_orderpoint_without_warehouse(self):
+        self.env['stock.picking'].search([]).unlink()
+        self.env['stock.rule'].search([]).unlink()
+        self.env['stock.warehouse'].search([]).unlink()
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'is_storable': True,
+        })
+
+        self.env['stock.quant'].create({
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'product_id': product.id,
+            'inventory_quantity': -10,
+        }).action_apply_inventory()
+
+        with self.assertRaises(RedirectWarning):
+            self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
+
+
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
         super(TestProcRuleLoad, cls).setUp()
