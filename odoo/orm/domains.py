@@ -1049,7 +1049,12 @@ class DomainCondition(Domain):
         return func if positive_operator == operator else lambda rec: not func(rec)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
-        return model._condition_to_sql(alias, self.field_expr, self.operator, self.value, query)
+        field_expr, operator, value = self.field_expr, self.operator, self.value
+        assert operator in STANDARD_CONDITION_OPERATORS, \
+            f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
+
+        field = model._fields[parse_field_expr(field_expr)[0]]
+        return field.condition_to_sql(field_expr, operator, value, model, alias, query)
 
 
 # --------------------------------------------------
