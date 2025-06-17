@@ -47,13 +47,8 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
 
         country_in_id = cls.env.ref("base.in").id
 
-        # ==== Partners ====
-        cls.partner_a.write({
-            'l10n_in_pan': 'ABCPM8965E'
-        })
         cls.partner_b.write({
             'vat': '27ABCPM8965E1ZE',
-            'l10n_in_pan': 'ABCPM8965E'
         })
         cls.partner_foreign_2 = cls.partner_foreign.copy()
 

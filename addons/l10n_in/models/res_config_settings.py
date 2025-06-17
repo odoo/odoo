@@ -40,6 +40,10 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_in_withholding_journal_id',
         readonly=False
     )
+    l10n_in_tan = fields.Char(
+        related='company_id.l10n_in_tan',
+        readonly=False
+    )
 
     # GST settings
     l10n_in_is_gst_registered = fields.Boolean(

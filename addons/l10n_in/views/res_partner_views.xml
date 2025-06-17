@@ -13,7 +13,8 @@
                 <field name="l10n_in_gst_treatment" invisible="'IN' not in fiscal_country_codes or not l10n_in_is_gst_registered_enabled" readonly="parent_id"/>
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" invisible="'IN' not in fiscal_country_codes" readonly="parent_id"/>
+                <field name="l10n_in_pan_entity_id" invisible="country_code != 'IN'" readonly="parent_id"/>
+                <field name="l10n_in_tan" invisible="country_code != 'IN' or not l10n_in_pan_entity_id" readonly="parent_id"/>
             </xpath>
             <xpath expr="//sheet" position="before">
                 <div class="alert alert-warning" role="alert"
@@ -29,6 +30,31 @@
                             type="object"/>
                 </div>
             </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_in_view_partner_tree" model="ir.ui.view">
+        <field name="name">l10n.in.res.partner.tree</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_in_pan_entity_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_in_view_res_partner_filter" model="ir.ui.view">
+        <field name="name">l10n.in.view.res.partner.filter.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="l10n_in_pan_entity_id"/>
+            </field>
+            <filter name="group_country" position="after">
+                <filter name="l10n_in_pan_entity_id" string="PAN" context="{'group_by': 'l10n_in_pan_entity_id'}"/>
+            </filter>
         </field>
     </record>
 

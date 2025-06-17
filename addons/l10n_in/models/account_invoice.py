@@ -68,6 +68,7 @@ class AccountMove(models.Model):
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
     l10n_in_warning = fields.Json(compute="_compute_l10n_in_warning")
     l10n_in_is_gst_registered_enabled = fields.Boolean(related='company_id.l10n_in_is_gst_registered')
+    l10n_in_tds_deduction = fields.Selection(related='commercial_partner_id.l10n_in_pan_entity_id.tds_deduction', string="TDS Deduction")
 
     # withholding related fields
     l10n_in_is_withholding = fields.Boolean(
@@ -231,7 +232,7 @@ class AccountMove(models.Model):
         'invoice_line_ids.l10n_in_hsn_code',
         'company_id.l10n_in_hsn_code_digit',
         'invoice_line_ids.tax_ids',
-        'commercial_partner_id.l10n_in_pan',
+        'commercial_partner_id.l10n_in_pan_entity_id',
         'invoice_line_ids.price_total'
     )
     def _compute_l10n_in_warning(self):
@@ -411,7 +412,7 @@ class AccountMove(models.Model):
 
     def _get_l10n_in_invalid_tax_lines(self):
         self.ensure_one()
-        if self.country_code == 'IN' and not self.commercial_partner_id.l10n_in_pan:
+        if self.country_code == 'IN' and not self.commercial_partner_id.l10n_in_pan_entity_id:
             lines = self.env['account.move.line']
             for line in self.invoice_line_ids:
                 for tax in line.tax_ids:
@@ -430,11 +431,12 @@ class AccountMove(models.Model):
         default_domain = [
             ('account_id.l10n_in_tds_tcs_section_id', '=', section_alert.id),
             ('move_id.move_type', '!=', 'entry'),
-            ('company_id', 'child_of', self.company_id.root_id.id),
+            ('company_id.l10n_in_tds_feature', '!=', False),
+            ('company_id.l10n_in_tan', '=', self.company_id.l10n_in_tan),
             ('parent_state', '=', 'posted')
         ]
-        if commercial_partner_id.l10n_in_pan:
-            default_domain += [('move_id.commercial_partner_id.l10n_in_pan', '=', commercial_partner_id.l10n_in_pan)]
+        if commercial_partner_id.l10n_in_pan_entity_id:
+            default_domain += [('move_id.commercial_partner_id.l10n_in_pan_entity_id', '=', commercial_partner_id.l10n_in_pan_entity_id.id)]
         else:
             default_domain += [('move_id.commercial_partner_id', '=', commercial_partner_id.id)]
         frequency_domains = {
@@ -504,10 +506,14 @@ class AccountMove(models.Model):
         if self.country_code == 'IN' and self.move_type in ['in_invoice', 'out_invoice']:
             warning = set()
             commercial_partner_id = self.commercial_partner_id
+            if commercial_partner_id.l10n_in_pan_entity_id.tds_deduction == 'no':
+                invoice_lines = self.invoice_line_ids.filtered(lambda l: l.account_id.l10n_in_tds_tcs_section_id.tax_source_type != 'tds')
+            else:
+                invoice_lines = self.invoice_line_ids
             existing_section = (
                 self.l10n_in_withhold_move_ids.line_ids + self.line_ids
             ).tax_ids.l10n_in_section_id
-            for section_alert, lines in _group_by_section_alert(self.invoice_line_ids).items():
+            for section_alert, lines in _group_by_section_alert(invoice_lines).items():
                 if (
                     (section_alert not in existing_section
                     or self._get_tcs_applicable_lines(lines))
