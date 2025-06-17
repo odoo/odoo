@@ -136,3 +136,15 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='sol', **kw):
         return super().portal_my_timesheets(page, sortby, filterby, search, search_in, groupby, **kw)
+
+    def _get_page_view_values(self, document, access_token, values, session_history, no_breadcrumbs, **kwargs):
+        values = super()._get_page_view_values(document, access_token, values, session_history, no_breadcrumbs, **kwargs)
+        if document._name == 'sale.order':
+            domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
+            domain = expression.AND([
+                domain,
+                [('so_line', 'in', document.order_line.ids)]
+            ])
+            timesheets = request.env['account.analytic.line'].sudo().search(domain)
+            values['timesheets'] = timesheets
+        return values
