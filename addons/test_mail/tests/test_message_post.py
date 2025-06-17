@@ -1661,8 +1661,22 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 self.partner_admin,
             ),
             (
-                'partner_admin and user_employee_2 are in direct recipients and OOO',
+                'partner_admin and user_employee_2 are in direct recipients and OOO, but admin already sent it',
                 datetime(2025, 6, 17, 14, 15, 59),
+                self.user_employee,
+                (self.user_admin + self.user_employee_c2 + self.user_employee_c3 + self.user_portal).partner_id,
+                self.partner_employee_c2,
+            ),
+            (
+                'Do not send multiple OOO with same author/recipient in a 4 days timeframe',
+                datetime(2025, 6, 18, 14, 15, 59),
+                self.user_employee,
+                (self.user_admin + self.user_employee_c2 + self.user_employee_c3 + self.user_portal).partner_id,
+                self.env['res.partner'],
+            ),
+            (
+                'multiple OOO, more than 4 days after last OOO -> done',
+                datetime(2025, 6, 22, 14, 16, 0),
                 self.user_employee,
                 (self.user_admin + self.user_employee_c2 + self.user_employee_c3 + self.user_portal).partner_id,
                 self.partner_admin + self.partner_employee_c2,
