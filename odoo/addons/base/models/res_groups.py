@@ -138,7 +138,7 @@ class ResGroups(models.Model):
             if not group:
                 continue
             values = [v for v in group.split('/') if v]
-            group_name = values.pop().strip()
+            group_name = values.pop().strip() if values else ''
             privilege_name = '/'.join(values).strip() if values else group_name
             group_domain = Domain('name', operator, [group_name] if lst else group_name)
             privilege_ids = self.env['res.groups.privilege'].sudo()._search(

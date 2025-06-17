@@ -230,6 +230,9 @@ class TestGroups(TransactionCase):
         groups = all_groups.search([('full_name', '!=', False)])
         self.assertEqual(groups, all_groups)
 
+        groups = all_groups.search([('full_name', 'like', '/')])
+        self.assertTrue(groups, "did not match search for '/'")
+
     def test_res_group_has_cycle(self):
         # four groups with no cycle, check them all together
         a = self.env['res.groups'].create({'name': 'A'})
