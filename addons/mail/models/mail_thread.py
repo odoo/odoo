@@ -3117,6 +3117,7 @@ class MailThread(models.AbstractModel):
             'force_email_lang',
             'force_send',
             'mail_auto_delete',
+            'mail_headers',
             'model_description',
             'notify_author',
             'notify_author_mention',
@@ -3353,10 +3354,11 @@ class MailThread(models.AbstractModel):
         if not partners_data:
             return True
 
+        additional_values = {'auto_delete': mail_auto_delete}
+        if kwargs.get('mail_headers'):
+            additional_values['headers'] = kwargs['mail_headers']
         base_mail_values = self._notify_by_email_get_base_mail_values(
-            message,
-            partners_data,
-            additional_values={'auto_delete': mail_auto_delete}
+            message, partners_data, additional_values=additional_values,
         )
 
         # Clean the context to get rid of residual default_* keys that could cause issues during
@@ -3749,7 +3751,7 @@ class MailThread(models.AbstractModel):
             base_mail_values.update(additional_values)
 
         # prepare headers (as sudo as accessing mail.alias.domain, restricted)
-        headers = {}
+        headers = base_mail_values.get('headers') or {}
         # prepare external emails to modify Msg[To] and enable Reply-All including external people
         external_emails = [
             formataddr((r['name'], r['email_normalized']))
@@ -4296,6 +4298,10 @@ class MailThread(models.AbstractModel):
                 author_id=user.partner_id.id,
                 body=body,
                 email_from=user.email_formatted,
+                mail_headers={
+                    'Auto-Submitted': 'Auto-Replied',
+                    'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange
+                },
                 message_type='notification',  # TDE check: auto_comment ?
                 notify_author=True,  # as current user could be the one receiving the OOO message
                 notify_skip_followers=True,
