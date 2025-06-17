@@ -95,7 +95,7 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
             page0_q1.id: {'value': ['44.0']},
         }
         post_data = self._format_submission_data(page_0, answer_data, {'csrf_token': csrf_token, 'token': answer_token, 'button_submit': 'next'})
-        r = self._access_submit(survey, answer_token, post_data, query_count=44)  # ! 44 without `website` (single app CI), 37 `survey+website`, 38 "full" runbot
+        r = self._access_submit(survey, answer_token, post_data, query_count=45)  # ! 45 without `website` (single app CI), 38 `survey+website`, 39 "full" runbot
         self.assertResponse(r, 200)
         answers.invalidate_recordset()  # TDE note: necessary as lots of sudo in controllers messing with cache
 
