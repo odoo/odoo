@@ -311,7 +311,7 @@ class MailTemplate(models.Model):
                 for report in self.report_template_ids:
                     # generate content
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        report_content, report_format = self.env['ir.actions.report']._render_qweb_pdf(report, [res_id])
+                        report_content, report_format = self._render_report_qweb_pdf(report, res_id)
                     else:
                         render_res = self.env['ir.actions.report']._render(report, [res_id])
                         if not render_res:
@@ -348,6 +348,12 @@ class MailTemplate(models.Model):
                     render_results[res_id].setdefault('attachments', []).extend(additional_attachments['attachments'])
 
         return render_results
+
+    def _render_report_qweb_pdf(self, report, res_id):
+        """
+        Helper function will be overriden in event module to combine multiple report pdfs into a single pdf
+        """
+        return self.env['ir.actions.report']._render_qweb_pdf(report, [res_id])
 
     def _generate_template_recipients(self, res_ids, render_fields,
                                       allow_suggested=False,
