@@ -8,8 +8,8 @@
             tabindex="-1"
             t-ref="root"
         >
-            <t t-if="showNoContentHelper" t-call="web.ActionHelper">
-                <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+            <t t-if="showNoContentHelper">
+    			<ActionHelper noContentHelp="props.noContentHelp" showRibbon="props.list.model.useSampleModel"/>
             </t>
             <table t-attf-class="o_list_table table table-sm table-hover position-relative mb-0 {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
                 <thead>

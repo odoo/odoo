@@ -2729,6 +2729,41 @@ test("empty pivot view with action helper", async () => {
 });
 
 test.tags("desktop");
+test("reset filter button should appear when no data corresponding to facets", async () => {
+    Partner._views["pivot,false"] = `<pivot>
+		<field name="product_id" type="measure"/>
+		<field name="date" interval="month" type="col"/>
+	</pivot>`;
+    Partner._views["search,false"] = `<search>
+		<filter name="no_match" string="Match nothing" domain="[['id', '=', 0]]"/>
+	</search>`;
+
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        context: { search_default_small_than_0: true },
+        noContentHelp: markup(`<p class="abc">click to add a foo</p>`),
+        config: {
+            views: [[false, "search"]],
+        },
+    });
+
+    await contains(".o_pivot_view").click();
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Match nothing");
+
+    expect(".o_view_nocontent").toHaveCount(1);
+    expect(getFacetTexts()).not.toEqual([]);
+    expect(".o_reset_filter_button").toHaveCount(1);
+    expect(".o_reset_filter_button").toHaveText("Reset Filters");
+    expect(".o_facet_value").toHaveText("Match nothing");
+
+    await contains(".o_reset_filter_button").click();
+    expect(getFacetTexts()).toEqual([]);
+    expect(".o_reset_filter_button").not.toHaveCount(1);
+});
+
+test.tags("desktop");
 test("empty pivot view with sample data", async () => {
     Partner._views["pivot"] = `<pivot sample="1">
 		<field name="product_id" type="measure"/>
@@ -2750,9 +2785,12 @@ test("empty pivot view with sample data", async () => {
 
     expect(".o_pivot_view .o_content").toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(1);
+    expect(".ribbon").toHaveCount(1);
+    expect(".ribbon").toHaveText("SAMPLE DATA");
     await removeFacet();
     expect(".o_pivot_view .o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(0);
+    expect(".ribbon").toHaveCount(0);
     expect("table").toHaveCount(1);
 });
 
@@ -2776,11 +2814,13 @@ test("non empty pivot view with sample data", async () => {
 
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(0);
+    expect(".ribbon").toHaveCount(0);
     expect("table").toHaveCount(1);
     await toggleSearchBarMenu();
     await toggleMenuItem("Small Than 0");
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(1);
+    expect(".ribbon").toHaveCount(0);
     expect("table").toHaveCount(0);
 });
 

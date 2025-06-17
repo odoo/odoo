@@ -11,8 +11,8 @@
     </t>
 
     <t t-name="lunch.WebListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
-        <t t-call="web.ActionHelper" position="after">
+        <ActionHelper position="after">
             <t t-call="lunch.NoContentHelper"/>
-        </t>
+        </ActionHelper>
     </t>
 </templates>
