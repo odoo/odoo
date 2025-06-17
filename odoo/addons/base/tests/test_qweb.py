@@ -3208,6 +3208,390 @@ class TestQwebCache(TransactionCase):
         """
         self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 3')
 
+    def test_render_xml_nocache_in_nocache(self):
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <section t-cache="cache_a">
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <div><t t-out="counter"/></div>
+                        <article t-nocache="">
+                            <card t-cache="cache_b">
+                                <div><t t-out="counter"/></div>
+                                <div t-nocache="" t-nocache-a="counter"><t t-out="a"/></div>
+                                <div t-nocache=""><t t-out="counter"/></div>
+                            </card>
+                        </article>
+                    </section>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 1,
+        })
+        result = """
+            <section>
+                <div>101</div>
+                <article>
+                    <card>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 2,
+        })
+        result = """
+            <section>
+                <div>101</div>
+                <article>
+                    <card>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>2</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 2,
+            'counter': 3,
+        })
+        result = """
+            <section>
+                <div>101</div>
+                <article>
+                    <card>
+                        <div>3</div>
+                        <div>3</div>
+                        <div>3</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'cache_b': 2,
+            'counter': 4,
+        })
+        result = """
+            <section>
+                <div>104</div>
+                <article>
+                    <card>
+                        <div>3</div>
+                        <div>3</div>
+                        <div>4</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+    def test_render_xml_nocache_in_t_call_simple(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee',
+            'arch_db': '''
+                        <article t-nocache="">
+                            <card t-cache="cache_b">
+                                <div><t t-out="counter"/></div>
+                                <div t-nocache="" t-nocache-a="counter"><t t-out="a"/></div>
+                                <div t-nocache=""><t t-out="counter"/></div>
+                            </card>
+                        </article>
+            '''
+        })
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'key': 'base.testing_page',
+            'arch': """
+                <t t-name="template_page">
+                    <section t-cache="cache_a">
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <div><t t-out="counter"/></div>
+                        <t t-call="base.testing_callee"/>
+                    </section>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 1,
+        })
+        result = """
+            <section>
+                <div>101</div><article>
+                    <card>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 2,
+        })
+        result = """
+            <section>
+                <div>101</div><article>
+                    <card>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>2</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 2,
+            'counter': 3,
+        })
+        result = """
+            <section>
+                <div>101</div><article>
+                    <card>
+                        <div>3</div>
+                        <div>3</div>
+                        <div>3</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'cache_b': 2,
+            'counter': 4,
+        })
+        result = """
+            <section>
+                <div>104</div><article>
+                    <card>
+                        <div>3</div>
+                        <div>3</div>
+                        <div>4</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+    def test_render_xml_nocache_in_t_call(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee_1',
+            'arch_db': '''<div t-nocache="" t-nocache-a="counter"><t t-out="a"/> <t t-out="val"/></div>'''
+        })
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee_2',
+            'arch_db': '''<div t-nocache=""><t t-out="counter"/></div>'''
+        })
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee',
+            'arch_db': '''
+                        <article t-nocache="">
+                            <card t-cache="cache_b">
+                                <div><t t-out="counter"/></div>
+                                <t t-call="base.testing_callee_1"/>
+                                <t t-call="base.testing_callee_2"/>
+                            </card>
+                        </article>
+            '''
+        })
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'key': 'base.testing_page',
+            'arch': """
+                <t t-name="template_page">
+                    <section t-cache="cache_a">
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <div><t t-out="counter"/></div>
+                        <t t-call="base.testing_callee"/>
+                    </section>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 1,
+            'val': 1,
+        })
+        result = """
+            <section>
+                <div>101</div><article>
+                    <card>
+                        <div>1</div><div>1 1</div><div>1</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 1,
+            'counter': 2,
+            'val': 2,
+        })
+        result = """
+            <section>
+                <div>101</div><article>
+                    <card>
+                        <div>1</div><div>1 2</div><div>2</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'cache_b': 2,
+            'counter': 3,
+            'val': 3,
+        })
+        result = """
+            <section>
+                <div>101</div><article>
+                    <card>
+                        <div>3</div><div>3 3</div><div>3</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'cache_b': 2,
+            'counter': 4,
+            'val': 4,
+        })
+        result = """
+            <section>
+                <div>104</div><article>
+                    <card>
+                        <div>3</div><div>3 4</div><div>4</div>
+                    </card>
+                </article>
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+    def test_render_xml_nocache_in_t_call_0(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'key': 'base.testing_callee',
+            'arch_db': '<article><t t-out="0"/></article>'
+        })
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'key': 'base.testing_page',
+            'arch': """
+                <t t-name="template_page">
+                    <t t-set="counter" t-value="counter + 100"/>
+                    <section>
+                        <t t-cache="cache_a">
+                            <t t-call="base.testing_callee">
+                                <button><t t-out="counter"/> <t t-nocache="" t-out="counter"/></button>
+                            </t>
+                        </t>
+                    </section>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'counter': 1,
+        })
+        result = """
+            <section>
+                <article>
+                        <button>101 1</button>
+                    </article>
+
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 1,
+            'counter': 2,
+        })
+        result = """
+            <section>
+                <article>
+                        <button>101 2</button>
+                    </article>
+
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
+        render = IrQweb._render(template_page.id, {
+            'cache_a': 2,
+            'counter': 3,
+        })
+        result = """
+            <section>
+                <article>
+                        <button>103 3</button>
+                    </article>
+
+            </section>
+        """
+        self.assertEqual(dedent(str(render)).strip(), dedent(result).strip())
+
     def test_render_xml_conditional_cache(self):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",

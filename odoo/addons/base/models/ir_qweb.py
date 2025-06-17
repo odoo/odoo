@@ -605,12 +605,39 @@ class IrQweb(models.AbstractModel):
 
         safe_eval.check_values(values)
 
+        values['__qweb_loaded_functions'] = {}
+        root_values = values.copy()
+        values['__qweb_root_values'] = root_values['__qweb_root_values'] = root_values
+
         template_functions, def_name = irQweb._compile(template)
         render_template = template_functions[def_name]
         rendering = render_template(irQweb, values)
-        result = ''.join(rendering)
+
+        result = ''.join(self._render_iterall(rendering, values['__qweb_root_values'], values['__qweb_loaded_functions']))
 
         return Markup(result)
+
+    def _render_iterall(self, iterator, root_values, loaded_functions):
+        iterators = [iterator]
+        while iterators:
+            for item in iterators[-1]:
+                if isinstance(item, str):
+                    yield item
+                else:
+                    ref, function_name, additional_values = item
+
+                    sub_render_tempate = loaded_functions.get(function_name)
+                    if not sub_render_tempate:
+                        t_call_template_functions, def_name = self._compile(ref)
+                        sub_render_tempate = t_call_template_functions[function_name]
+
+                    values = root_values.copy()
+                    values.update(additional_values)
+
+                    iterators.append(sub_render_tempate(self, values))
+                    break
+            else:
+                iterators.pop()
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
@@ -781,13 +808,10 @@ class IrQweb(models.AbstractModel):
             compile_context['template_functions'][def_name] = [indent_code(f"""
                 def {def_name}(self, values):
                     try:
-                        if '__qweb_loaded_values' not in values:
-                            values['__qweb_loaded_values'] = {{}}
-                            values['__qweb_root_values'] = values.copy()
+                        if 'xmlid' not in values:
                             values['xmlid'] = {options['ref_name']!r}
                             values['viewid'] = {options['ref']!r}
-                        values['__qweb_loaded_values'].update(template_functions)
-
+                        values['__qweb_loaded_functions'].update(template_functions)
                         yield from {def_name}_content(self, values)
                     except QWebException:
                         raise
@@ -1744,22 +1768,7 @@ class IrQweb(models.AbstractModel):
                 if content:
                     def_name = compile_context['make_name']('t_set')
                     compile_context['template_functions'][def_name] = [f"def {def_name}(self, values):"] + content
-                    code.append(indent_code(f"""
-                            t_set = []
-                            for item in {def_name}(self, values):
-                                if isinstance(item, str):
-                                    t_set.append(item)
-                                else:
-                                    ref, function_name, cached_values = item
-                                    t_nocache_function = values['__qweb_loaded_values'].get(function_name)
-                                    if not t_nocache_function:
-                                        t_call_template_functions, def_name = self._compile(ref)
-                                        t_nocache_function = t_call_template_functions[function_name]
-
-                                    nocache_values = values['__qweb_root_values'].copy()
-                                    nocache_values.update(cached_values)
-                                    t_set.extend(t_nocache_function(self, nocache_values))
-                        """, level))
+                    code.append(indent_code(f"t_set = self._render_iterall({def_name}(self, values), values['__qweb_root_values'], values['__qweb_loaded_functions'])", level))
                     expr = "Markup(''.join(t_set))"
                 else:
                     expr = "''"
@@ -2352,7 +2361,7 @@ class IrQweb(models.AbstractModel):
             template_cache_key = {self._compile_expr(expr)} if not self.env.context.get('is_t_cache_disabled') else None
             cache_key = self._get_cache_key(template_cache_key) if template_cache_key else None
             uniq_cache_key = cache_key and ({str(self.env.context['__qweb_base_key_cache'])!r}, '{def_name}_cache', cache_key)
-            loaded_values = values['__qweb_loaded_values']
+            loaded_values = values['__qweb_loaded_functions']
             def {def_name}_cache():
                 content = []
                 text = []
@@ -2366,23 +2375,7 @@ class IrQweb(models.AbstractModel):
                 if text:
                     content.append(''.join(text))
                 return content
-            cache_content = self._load_values(uniq_cache_key, {def_name}_cache, loaded_values)
-            if values.get('__qweb_in_cache'):
-                yield from cache_content
-            else:
-                for item in cache_content:
-                    if isinstance(item, str):
-                        yield item
-                    else:
-                        ref, function_name, cached_values = item
-                        t_nocache_function = loaded_values.get(function_name)
-                        if not t_nocache_function:
-                            t_call_template_functions, def_name = self._compile(ref)
-                            t_nocache_function = t_call_template_functions[function_name]
-
-                        nocache_values = values['__qweb_root_values'].copy()
-                        nocache_values.update(cached_values)
-                        yield ''.join(t_nocache_function(self, nocache_values))
+            yield from self._load_values(uniq_cache_key, {def_name}_cache, loaded_values)
             """, level))
 
         return code
@@ -2408,7 +2401,7 @@ class IrQweb(models.AbstractModel):
 
         # t-nocache-* will generate the values to put in cache
         # must cosume this attributes before generate the cached content.
-        code_cache_values = []
+        code_cache_values = [indent_code("cached_values = {}", level)]
         for key in list(el.attrib):
             if key.startswith('t-nocache-'):
                 expr = el.attrib.pop(key)
@@ -2420,7 +2413,7 @@ class IrQweb(models.AbstractModel):
                     if cached_value is not None and not isinstance(cached_value, (str, int, float, bool)):
                         raise ValueError(f'''The value type of {key!r} cannot be cached: {{cached_value!r}}''')
                     cached_values[{varname!r}] = cached_value
-                """, level + 1))
+                """, level))
 
         # generate the cached content method
         def_name = compile_context['make_name']('t_nocache')
@@ -2440,18 +2433,8 @@ class IrQweb(models.AbstractModel):
             """, 1))
         compile_context['template_functions'][def_name] = def_code
 
-        # if the nocache is inside a cache return a tuple with the method name and the cached values
-        code.append(indent_code("""
-            if values.get('__qweb_in_cache'):
-                cached_values = {}
-            """, level))
         code.extend(code_cache_values)
-        code.append(indent_code(f"yield ({compile_context['template']!r}, {def_name!r}, cached_values)", level+1))
-        # else render the content
-        code.append(indent_code(f"""
-            else:
-                yield from {def_name}(self, values)
-            """, level))
+        code.append(indent_code(f"yield ({compile_context['template']!r}, {def_name!r}, cached_values)", level))
 
         return code
 
@@ -2798,7 +2781,7 @@ def render(template_name, values, load, **options):
         def _prepare_environment(self, values):
             values['true'] = True
             values['false'] = False
-            return self.with_context(is_t_cache_disabled=True, __qweb_loaded_values={})
+            return self.with_context(is_t_cache_disabled=True, __qweb_loaded_functions={})
 
         def _get_field(self, *args):
             raise NotImplementedError("Fields are not allowed in this rendering mode. Please use \"env['ir.qweb']._render\" method")
