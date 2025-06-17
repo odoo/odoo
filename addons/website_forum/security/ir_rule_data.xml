@@ -53,6 +53,20 @@
         <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
     </record>
 
+    <record id="website_forum_post_vote_own" model="ir.rule">
+        <field name="name">Website forum vote: own votes only</field>
+        <field name="model_id" ref="model_forum_post_vote"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="website_forum_post_vote_all" model="ir.rule">
+        <field name="name">Website forum vote: all votes</field>
+        <field name="model_id" ref="model_forum_post_vote"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+    </record>
+
     <record id="website_forum_public_tag" model="ir.rule">
         <field name="name">Website forum tag: Public user can only access to tag linked to public forum</field>
         <field name="model_id" ref="model_forum_tag"/>
