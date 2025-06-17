@@ -114,7 +114,7 @@ export class ProductConfiguratorPopup extends Component {
 
         if (hasVariants) {
             const selectedAttributeValuesIds = this.selectedValues.map(({ id }) => id);
-            product = this.pos.models["product.product"].find(
+            product = this.props.productTemplate.product_variant_ids.find(
                 (product) =>
                     product.product_template_variant_value_ids?.length > 0 &&
                     product.product_template_variant_value_ids.every(({ id }) =>
