@@ -19,9 +19,9 @@
                     t-att-class="{'no-image d-flex justify-content-center align-items-center text-center fs-4': !props.imageUrl}"
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
-                <h1 t-if="props.productCartQty"
+                <div t-if="props.productCartQty"
                     t-out="this.productQty"
-                    class="product-cart-qty text-muted display-6 fw-bolder m-0 mt-auto" />
+                    class="overflow-hidden lh-sm product-name my-2" />
             </div>
             <div t-if="props.comboExtraPrice" class="d-flex px-2 pb-1">
                 <span class="price-extra px-2 py-0 rounded-pill text-bg-info">
