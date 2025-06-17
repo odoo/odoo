@@ -121,10 +121,11 @@ export class DynamicGroupList extends DynamicList {
         sourceGroup._removeRecords([record.id]);
         targetGroup._addRecord(record, refIndex + 1);
         // step 2: update record value
-        const value =
-            targetGroup.groupByField.type === "many2one"
-                ? [targetGroup.value, targetGroup.displayName]
-                : targetGroup.value;
+        let value = targetGroup.value;
+        if (targetGroup.groupByField.type === "many2one") {
+            value = value ? [value, targetGroup.displayName] : false;
+        }
+
         const revert = () => {
             targetGroup._removeRecords([record.id]);
             sourceGroup._addRecord(record, oldIndex);
