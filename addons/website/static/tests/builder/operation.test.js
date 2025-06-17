@@ -172,8 +172,8 @@ describe("Async operations", () => {
         await setupWebsiteBuilder(`<div class="test-options-target">TEST</div>`);
         await contains(":iframe .test-options-target").click();
         await contains(".options-container [data-label='Type'] .btn-secondary ").click();
-        await hover(".options-container [data-action-value='first']");
-        await hover(".options-container [data-action-value='second']");
+        await hover(".popover [data-action-value='first']");
+        await hover(".popover [data-action-value='second']");
         await advanceTime(applyDelay + 50);
         expect.verifySteps(["apply first", "revert", "apply second"]);
         expect(":iframe .test-options-target").toHaveClass("second");
