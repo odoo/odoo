@@ -232,7 +232,7 @@ class Groups(models.Model):
         where = []
         for group in operand:
             values = [v for v in group.split('/') if v]
-            group_name = values.pop().strip()
+            group_name = values.pop().strip() if values else ''
             category_name = values and '/'.join(values).strip() or group_name
             group_domain = [('name', operator, lst and [group_name] or group_name)]
             category_ids = self.env['ir.module.category'].sudo()._search(
