@@ -45,4 +45,5 @@ class HrEmployee(models.Model):
             versions = self._get_versions_with_contract_overlap_with_period(date_start, date_stop)
         else:
             versions = self._get_all_versions_with_contract_overlap_with_period(date_start, date_stop)
+        versions = versions.filtered('resource_calendar_id')
         return versions.generate_work_entries(date_start, date_stop, force=force)
