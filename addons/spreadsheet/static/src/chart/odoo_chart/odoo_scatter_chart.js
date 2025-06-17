@@ -65,6 +65,7 @@ function createOdooChartRuntime(chart, getters) {
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
         locale,
         trendDataSetsValues,
+        axisType: definition.axisType || "category",
     };
 
     const config = {
