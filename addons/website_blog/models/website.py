@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import _, api, models
 
 
 class Website(models.Model):
     _inherit = "website"
+
+    @api.model
+    def get_available_snippets(self):
+        available_snippets = super().get_available_snippets()
+        available_snippets.add('website_blog.s_blog_posts')
+        return available_snippets
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()

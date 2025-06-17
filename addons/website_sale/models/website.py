@@ -219,6 +219,12 @@ class Website(models.Model):
     #=== BUSINESS METHODS ===#
 
     @api.model
+    def get_available_snippets(self):
+        available_snippets = super().get_available_snippets()
+        available_snippets.add('website_sale.s_dynamic_snippet_products')
+        return available_snippets
+
+    @api.model
     def get_configurator_shop_page_styles(self):
         """Format and return the ids and images of each shop page style for website onboarding.
 
@@ -241,6 +247,10 @@ class Website(models.Model):
             {'option': option, 'img_src': config['img_src'], 'title': config['title']}
             for option, config in const.PRODUCT_PAGE_STYLE_MAPPING.items()
         ]
+
+    @api.model
+    def get_requested_homepage(self):
+        return 'homepage_website_sale'
 
     @api.model
     def configurator_apply(

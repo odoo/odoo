@@ -7,6 +7,13 @@ export class BlogPosts extends DynamicSnippet {
     /**
      * @override
      */
+    getModelNameFilter() {
+        return 'blog.post';
+    }
+
+    /**
+     * @override
+     */
     getSearchDomain() {
         const searchDomain = super.getSearchDomain(...arguments);
         const filterByBlogId = parseInt(this.el.dataset.filterByBlogId);

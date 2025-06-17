@@ -485,6 +485,22 @@ class Website(models.Model):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
 
     @api.model
+    def get_available_snippets(self):
+        """Base method to be extended by other modules having dynamic snippet."""
+        return set()
+
+    @api.model
+    def get_requested_homepage(self):
+        return 'homepage'
+
+    @api.model
+    def get_snippet_view_key(self, snippet, page_code):
+        if '.' not in snippet:
+            return f'website.configurator_{page_code}_{snippet}'
+        snippets = self.get_available_snippets()
+        return snippet if snippet in snippets else None
+
+    @api.model
     def get_theme_configurator_snippets(self, theme_name):
         return {
             **get_manifest('website')['configurator_snippets'],
@@ -727,7 +743,7 @@ class Website(models.Model):
         )
 
         # Generate text for the pages
-        requested_pages = set(pages_views.keys()).union({'homepage'})
+        requested_pages = set(pages_views.keys()).union({website.get_requested_homepage()})
         configurator_snippets = website.get_theme_configurator_snippets(theme_name)
         industry = kwargs['industry_name']
 
@@ -849,7 +865,13 @@ class Website(models.Model):
         for page_code in requested_pages - {'privacy_policy'}:
             snippet_list = configurator_snippets.get(page_code, [])
             for snippet in snippet_list:
-                render, placeholders = _render_snippet(f'website.configurator_{page_code}_{snippet}')
+                snippet_key = website.get_snippet_view_key(snippet, page_code)
+                if not snippet_key:
+                    logger.warning(
+                        "Skipping snippet '%s' - not registered or module not installed", snippet,
+                    )
+                    continue
+                render, placeholders = _render_snippet(snippet_key)
                 for placeholder in placeholders:
                     generated_content[placeholder] = ''
         if text_must_be_translated_for_openai:
@@ -935,7 +957,7 @@ class Website(models.Model):
         # Configure the pages
         for page_code in requested_pages:
             snippet_list = configurator_snippets.get(page_code, [])
-            if page_code == 'homepage':
+            if page_code == website.get_requested_homepage():
                 page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
             else:
                 page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
@@ -943,7 +965,13 @@ class Website(models.Model):
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
                 try:
-                    render, placeholders = _render_snippet(f'website.configurator_{page_code}_{snippet}')
+                    snippet_key = website.get_snippet_view_key(snippet, page_code)
+                    if not snippet_key:
+                        logger.warning(
+                            "Skipping snippet '%s' - not registered or module not installed", snippet,
+                        )
+                        continue
+                    render, placeholders = _render_snippet(snippet_key)
                     # Fill rendered block with AI text
                     render = xml_translate(_format_replacement, render)
 
