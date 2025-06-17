@@ -8,11 +8,11 @@ class EventEvent(models.Model):
     image_1024 = fields.Image("PoS Image", max_width=1024, max_height=1024)
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return [('event_ticket_ids', 'in', [ticket['id'] for ticket in data['event.event.ticket']])]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id', 'name', 'seats_available', 'event_ticket_ids', 'registration_ids', 'seats_limited', 'write_date',
                 'question_ids', 'general_question_ids', 'specific_question_ids', 'seats_max',
                 'is_multi_slots', 'event_slot_ids']

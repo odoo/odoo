@@ -8,6 +8,6 @@ class PosOrderLine(models.Model):
     course_id = fields.Many2one('restaurant.order.course', string="Course Ref", ondelete="set null", index='btree_not_null')
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        result = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        result = super()._load_pos_data_fields(config)
         return result + ["course_id"]

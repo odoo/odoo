@@ -8,8 +8,8 @@ class PosPreset(models.Model):
     use_guest = fields.Boolean(string='Guest', default=False, help="Force guest selection when clicking on order button in PoS restaurant")
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        return super()._load_pos_data_fields(config_id) + ['use_guest']
+    def _load_pos_data_fields(self, config):
+        return super()._load_pos_data_fields(config) + ['use_guest']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_presets(self):
