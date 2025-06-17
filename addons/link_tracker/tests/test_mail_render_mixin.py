@@ -121,7 +121,7 @@ class TestMailRenderMixin(common.TransactionCase):
             'This is another: {base_url}/web#debug=1&more=2\n'
             'A third: {base_url}\n'
             'A forth: {base_url}\n'
-            'And a last, with question mark: https://boinc.berkeley.edu/forum_thread.php?id=14544&postid=106833'
+            'And a last, more complex: https://boinc.berkeley.edu/forum_thread.php?id=14544&postid=106833#options=2,3'
             .format(base_url=self.base_url)
         )
         expected_pattern = re.compile(
@@ -129,7 +129,7 @@ class TestMailRenderMixin(common.TransactionCase):
             'This is another: {base_url}/r/[\\w]+\n'
             'A third: {base_url}/r/([\\w]+)\n'
             'A forth: {base_url}/r/([\\w]+)\n'
-            'And a last, with question mark: {base_url}/r/([\\w]+)'
+            'And a last, more complex: {base_url}/r/([\\w]+)'
             .format(base_url=self.base_url)
         )
         new_content = self.env["mail.render.mixin"]._shorten_links_text(content, {})
