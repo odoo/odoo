@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <t t-name="hr.PivotView" t-inherit="web.PivotView">
-        <ActionHelper position="replace">
-            <t t-if="!model.hasData() or model.useSampleModel and props.info.noContentHelp">
-                <HrActionHelper
-                    noContentTitle.translate="Create an employee."
-                    noContentParagraph.translate="Find all the information on employees."
-                />
+        <t t-if="model.isReady and displayNoContent" position="replace">
+            <t t-if="showActionHelper or (!model.hasData() or model.useSampleModel and props.info.noContentHelp)">
+                <HrActionHelper/>
             </t>
-        </ActionHelper>
+        </t>
+    </t>
+
+    <t t-name="hr.PivotRenderer" t-inherit="web.PivotRenderer">
+        <table position="attributes">
+            <attribute name="t-attf-class">#{showActionHelper ? 'd-none' : ''}</attribute>
+        </table>
     </t>
 </odoo>

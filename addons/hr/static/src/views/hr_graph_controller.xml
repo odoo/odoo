@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <t t-name="hr.GraphView" t-inherit="web.GraphView">
-        <ActionHelper position="replace">
-            <t t-if="!model.hasData() or model.useSampleModel and props.info.noContentHelp">
-                <HrActionHelper
-                    noContentTitle.translate="Create an employee."
-                    noContentParagraph.translate="Find all the information on employees."
-                />
+        <t t-if="!model.hasData() or model.useSampleModel and props.info.noContentHelp" position="replace">
+            <t t-if="showActionHelper or (!model.hasData() or model.useSampleModel and props.info.noContentHelp)">
+                <HrActionHelper/>
             </t>
-        </ActionHelper>
+        </t>
+    </t>
+
+    <t t-name="hr.GraphRenderer" t-inherit="web.GraphRenderer">
+        <div t-ref="container" position="attributes">
+            <attribute name="t-attf-class">#{showActionHelper ? 'd-none' : ''}</attribute>
+        </div>
     </t>
 </odoo>

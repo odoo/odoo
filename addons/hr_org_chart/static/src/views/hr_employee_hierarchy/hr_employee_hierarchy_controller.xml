@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <t t-name="hr_org_chart.HierarchyView" t-inherit="web_hierarchy.HierarchyView" t-inherit-mode="primary">
-        <ActionHelper position="replace">
-            <t t-if="props.info.noContentHelp">
-                <HrActionHelper
-                    noContentTitle.translate="Create an employee."
-                    noContentParagraph.translate="Find all the information on employees."
-                />
+        <t t-if="displayNoContent" position="replace">
+            <t t-if="showActionHelper or displayNoContent">
+                <HrActionHelper/>
             </t>
-        </ActionHelper>
+        </t>
     </t>
 </odoo>

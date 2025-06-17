@@ -20,6 +20,10 @@ class Employee extends models.Model {
         { id: 4, name: "Louis", parent_id: 3, child_ids: [] },
     ];
 
+    show_action_helper() {
+        return false;
+    }
+
     _views = {
         hierarchy: `
             <hierarchy js_class="hr_employee_hierarchy">
