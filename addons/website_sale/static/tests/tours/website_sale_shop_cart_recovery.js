@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     },
     {
         content: "check the mail is sent, grab the recovery link, and logout",
-        trigger: "a:contains(/^Resume Order$/)",
+        trigger: "a:contains(/^Resume order$/)",
         run: function () {
             var link = queryOne('a:contains("Resume Order")').getAttribute('href');
             browser.localStorage.setItem(recoveryLinkKey, link);
