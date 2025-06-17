@@ -23,7 +23,7 @@ class ResConfigSettings(models.TransientModel):
 
     def nilvera_ping(self):
         """ Test the connection and the API key. """
-        self.check_access_rule('read')  # To make sure not everyone can call this method as it's public.
+        self.check_access('read')  # To make sure not everyone can call this method as it's public.
         with _get_nilvera_client(self.env.company) as client:
             # As there is no endpoint to ping Nilvera to make sure the connection works, try an endpoint to get the
             # company's data and this way we can verify the connection and the tax ID in the same step.
