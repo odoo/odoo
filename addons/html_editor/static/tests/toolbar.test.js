@@ -271,7 +271,11 @@ test("toolbar works: can select font", async () => {
 });
 
 test("toolbar works: show the right font name", async () => {
-    await setupEditor("<p>[test]</p>");
+    // Test raw `pre`, without the syntax highlighting plugin.
+    const config = {
+        Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+    };
+    await setupEditor("<p>[test]</p>", { config });
     await waitFor(".o-we-toolbar");
     const items = fontItems;
     for (const item of items) {

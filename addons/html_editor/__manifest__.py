@@ -81,6 +81,10 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/lib/cropperjs/cropper.js',
             'html_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
         ],
+        'html_editor.assets_prism': [
+            'html_editor/static/lib/prismjs/prism.css',
+            'html_editor/static/lib/prismjs/prism.js',
+        ],
     },
     'license': 'LGPL-3'
 }

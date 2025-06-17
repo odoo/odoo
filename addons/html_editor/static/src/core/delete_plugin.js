@@ -86,12 +86,16 @@ export class DeletePlugin extends Plugin {
             { id: "deleteForwardLine", run: () => this.delete("forward", "line") },
         ],
         shortcuts: [
-            { hotkey: "backspace", commandId: "deleteBackward" },
-            { hotkey: "delete", commandId: "deleteForward" },
-            { hotkey: "control+backspace", commandId: "deleteBackwardWord" },
-            { hotkey: "control+delete", commandId: "deleteForwardWord" },
-            { hotkey: "control+shift+backspace", commandId: "deleteBackwardLine" },
-            { hotkey: "control+shift+delete", commandId: "deleteForwardLine" },
+            { hotkey: "backspace", commandId: "deleteBackward", restricted: true },
+            { hotkey: "delete", commandId: "deleteForward", restricted: true },
+            { hotkey: "control+backspace", commandId: "deleteBackwardWord", restricted: true },
+            { hotkey: "control+delete", commandId: "deleteForwardWord", restricted: true },
+            {
+                hotkey: "control+shift+backspace",
+                commandId: "deleteBackwardLine",
+                restricted: true,
+            },
+            { hotkey: "control+shift+delete", commandId: "deleteForwardLine", restricted: true },
         ],
         /** Handlers */
         beforeinput_handlers: [

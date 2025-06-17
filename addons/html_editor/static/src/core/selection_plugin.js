@@ -195,7 +195,7 @@ export class SelectionPlugin extends Plugin {
     ];
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
-        shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
+        shortcuts: [{ hotkey: "control+a", commandId: "selectAll", restricted: true }],
         is_node_editable_predicates: (node) => node.parentElement?.isContentEditable,
     };
 
