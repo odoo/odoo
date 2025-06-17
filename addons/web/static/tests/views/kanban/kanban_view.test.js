@@ -3430,6 +3430,54 @@ test("quick create is disabled until record is created and read", async () => {
 });
 
 test.tags("desktop");
+test("kanban grouped by stage_id: move record from to the None column", async () => {
+    // Fake model: partner.stage (only for group headers)
+    const Stage = class extends models.Model {
+        _name = "partner.stage";
+        name = fields.Char();
+        _records = [{ id: 10, name: "New" }];
+    };
+    defineModels([Stage]);
+
+    // Set up a record with no stage initially
+    Partner._records = [
+        { id: 1, foo: "Task A", stage_id: false },
+        { id: 2, foo: "Task B", stage_id: 10},
+    ];
+    Partner._fields.stage_id = fields.Many2one({ relation: "partner.stage" });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["stage_id"],
+    });
+
+    expect(queryAll(".o_kanban_group")).toHaveCount(2); // None and New
+
+    await click(".o_kanban_group:first .o_kanban_header");
+    
+    // Drag a record to the "None" column
+    let dragActions = await contains(".o_kanban_record:contains(Task B)").drag();
+    await dragActions.moveTo(".o_kanban_group:nth-child(1) .o_kanban_header");
+    await dragActions.drop();
+
+    // Reload
+    await validateSearch();
+
+    // Assert it's back in "None"
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
+    expect(queryAllTexts(".o_kanban_record", { root: getKanbanColumn(0) })[1]).toBe("Task B");
+});
+
+test.tags("desktop");
 test("quick create record fail in grouped by many2one", async () => {
     Partner._views["form"] = `
         <form>
