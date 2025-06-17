@@ -425,6 +425,10 @@ class SaleOrderLine(models.Model):
                         so_line._timesheet_create_task(project)
                     so_line._handle_milestones(project)
 
+        for so_line in self:
+            if so_line.is_service and so_line.service_tracking == 'no' and so_line.order_id.project_id:
+                so_line._handle_milestones(so_line.order_id.project_id)
+
     def _handle_milestones(self, project):
         self.ensure_one()
         if self.product_id.service_policy != 'delivered_milestones':
