@@ -139,6 +139,15 @@ class RPC(Controller):
         result = dispatch_rpc(service, method, params)
         return dumps((result,))
 
+    def _xmlrpc_common(self, service, exception_handler):
+        """Extracted common logic for both xmlrpc_1 and xmlrpc_2."""
+        _check_request()
+        try:
+            response = self._xmlrpc(service)
+        except Exception as error:
+            response = exception_handler(error)
+        return Response(response=response, mimetype='text/xml')
+
     @route("/xmlrpc/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
     def xmlrpc_1(self, service):
         """XML-RPC service that returns faultCode as strings.
@@ -146,30 +155,12 @@ class RPC(Controller):
         This entrypoint is historical and non-compliant, but kept for
         backwards-compatibility.
         """
-        _check_request()
-        try:
-            response = self._xmlrpc(service)
-        except Exception as error:
-            error.error_response = Response(
-                response=xmlrpc_handle_exception_string(error),
-                mimetype='text/xml',
-            )
-            raise
-        return Response(response=response, mimetype='text/xml')
+        return self._xmlrpc_common(self, service, xmlrpc_handle_exception_string)
 
     @route("/xmlrpc/2/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
     def xmlrpc_2(self, service):
         """XML-RPC service that returns faultCode as int."""
-        _check_request()
-        try:
-            response = self._xmlrpc(service)
-        except Exception as error:
-            error.error_response = Response(
-                response=xmlrpc_handle_exception_int(error),
-                mimetype='text/xml',
-            )
-            raise
-        return Response(response=response, mimetype='text/xml')
+        return self._xmlrpc_common(self, service, xmlrpc_handle_exception_int)
 
     @route('/jsonrpc', type='json', auth="none", save_session=False)
     def jsonrpc(self, service, method, args):
