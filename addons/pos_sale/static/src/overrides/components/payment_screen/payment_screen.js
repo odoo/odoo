@@ -14,7 +14,7 @@ patch(PaymentScreen.prototype, {
                 "sale.order.line",
                 orders.flatMap((o) => o.order_line).map((ol) => ol.id)
             );
-            this.pos.data.synchronizeLocalDataInIndexedDB(this.pos.data.records);
+            this.pos.data.debouncedSynchronizeLocalDataInIndexedDB(this.pos.data.records);
         }
         await super.afterOrderValidation();
     },

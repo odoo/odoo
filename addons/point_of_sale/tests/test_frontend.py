@@ -4,7 +4,7 @@
 import logging
 from contextlib import contextmanager
 from unittest.mock import patch
-from odoo import Command
+from odoo import Command, api
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import tagged
@@ -2200,6 +2200,164 @@ class TestUi(TestPointOfSaleHttpCommon):
             'resource_calendar_id': resource_calendar
         })
         self.start_pos_tour('test_preset_timing_retail')
+
+    def test_pricelists_in_pos(self):
+        pos_limited_category = self.env['pos.category'].create({'name': 'Limited Category'})
+        pos_category = self.env['pos.category'].create({'name': 'test_pricelists_in_pos'})
+        product_category = self.env['product.category'].create({'name': 'test_pricelists_in_pos'})
+        orange_category = self.env['product.category'].create({'name': 'Orange Category'})
+
+        def generate_pricelist_items(pricelist, fixed_price, product=None, product_tmpl=None, product_category=None):
+            applied_on = '0_product_variant' if product else '1_product' if product_tmpl else '2_product_category' if product_category else '3_global'
+            return self.env['product.pricelist.item'].create({
+                'pricelist_id': pricelist.id,
+                'product_id': product.id if product else False,
+                'product_tmpl_id': product_tmpl.id if product_tmpl else False,
+                'categ_id': product_category.id if product_category else False,
+                'compute_price': 'fixed',
+                'applied_on': applied_on,
+                'fixed_price': fixed_price,
+            })
+
+        def generate_product_template_with_attributes(name, price, pos_category=None, product_category=None):
+            size_attribute = self.env['product.attribute'].create({
+                'name': 'Size',
+                'sequence': 4,
+                'value_ids': [(0, 0, {
+                    'name': 'BIG',
+                    'sequence': 1,
+                }), (0, 0, {
+                    'name': 'MEDIUM',
+                    'sequence': 2,
+                }), (0, 0, {
+                    'name': 'SMALL',
+                    'sequence': 3,
+                })],
+            })
+
+            product_tmpl = self.env['product.template'].create({
+                'name': name.capitalize(),
+                'available_in_pos': True,
+                'categ_id': product_category.id if product_category else False,
+                'pos_categ_ids': [(4, pos_category.id)] if pos_category else False,
+                'list_price': price,
+                'taxes_id': False,
+                'attribute_line_ids': [(0, 0, {
+                    'attribute_id': size_attribute.id,
+                    'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+                })],
+            })
+
+            for index, variant in enumerate(product_tmpl.product_variant_ids):
+                variant.write({'barcode': f'{name}_{index}'})
+
+            return product_tmpl
+
+        banana = generate_product_template_with_attributes('banana', 10.00, pos_category)
+        apple = generate_product_template_with_attributes('apple', 5.00, False, product_category)
+        pear = generate_product_template_with_attributes('pear', 2.00)
+        lime = generate_product_template_with_attributes('lime', 1.00)
+        orange = generate_product_template_with_attributes('orange', 3.00, False, orange_category)
+        kiwi = generate_product_template_with_attributes('kiwi', 4.00)
+
+        test_pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist',
+        })
+
+        percentage_pricelist = self.env['product.pricelist'].create({
+            'name': 'Percentage Pricelist',
+        })
+
+        generate_pricelist_items(test_pricelist, 20, False, banana)
+        generate_pricelist_items(test_pricelist, 100, banana.product_variant_ids[0])
+        generate_pricelist_items(test_pricelist, 150, banana.product_variant_ids[1])
+        generate_pricelist_items(test_pricelist, 500, False, False, product_category)
+        generate_pricelist_items(test_pricelist, 1000, False, False, orange_category)
+        generate_pricelist_items(test_pricelist, 100, apple.product_variant_ids[0])
+        generate_pricelist_items(test_pricelist, 20, pear.product_variant_ids[0])
+        generate_pricelist_items(test_pricelist, 40, pear.product_variant_ids[1])
+        generate_pricelist_items(test_pricelist, 60, pear.product_variant_ids[2])
+        generate_pricelist_items(test_pricelist, 100, False, lime)
+        generate_pricelist_items(test_pricelist, 200, lime.product_variant_ids[1])
+        generate_pricelist_items(test_pricelist, 400, lime.product_variant_ids[2])
+        generate_pricelist_items(test_pricelist, 600, orange.product_variant_ids[1])
+        generate_pricelist_items(test_pricelist, 500, orange.product_variant_ids[2])
+        generate_pricelist_items(test_pricelist, 10)
+        generate_pricelist_items(test_pricelist, 20, kiwi.product_variant_ids[0])
+
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': percentage_pricelist.id,
+            'base': 'pricelist',
+            'base_pricelist_id': test_pricelist.id,
+            'compute_price': 'percentage',
+            'percent_price': 50,
+            'applied_on': '3_global',
+        })
+
+        self.main_pos_config.write({
+            "limit_categories": True,
+            "iface_available_categ_ids": [(6, 0, [pos_limited_category.id])],
+            'available_pricelist_ids': [(6, 0, [test_pricelist.id, percentage_pricelist.id])],
+            'pricelist_id': test_pricelist.id,
+        })
+
+        load_product_from_pos_stats = {'count': 0, 'items': {}}
+        product_template = self.env.registry.models['product.template']
+
+        # Test product exclusion
+        cherry = generate_product_template_with_attributes('cherry', 2.00)
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'sequence': 5,
+            'value_ids': [(0, 0, {
+                'name': 'RED',
+                'sequence': 1,
+            }), (0, 0, {
+                'name': 'GREEN',
+                'sequence': 2,
+            }), (0, 0, {
+                'name': 'BLUE',
+                'sequence': 3,
+            })],
+        })
+        cherry.attribute_line_ids = [(0, 0, {
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
+        })]
+        color_attribute = cherry.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Color')
+        first_color_value = color_attribute.product_template_value_ids.filtered(lambda v: v.attribute_id.name == 'Color' and v.name == 'RED')
+        first_size_value = cherry.product_variant_ids.product_template_attribute_value_ids.filtered(lambda v: v.attribute_id.name == 'Size' and v.name == 'BIG')
+        first_color_value.exclude_for = [(0, 0, {
+            'product_tmpl_id': cherry.id,
+            'value_ids': first_size_value.ids,
+            'product_template_attribute_value_id': first_size_value.id
+        })]
+        for index, variant in enumerate(cherry.product_variant_ids):
+            variant.write({'barcode': f'cherry_{index}'})
+
+        @api.model
+        def load_product_from_pos_patch(self, config_id, domain, offset=0, limit=0):
+            load_product_from_pos_stats['count'] += 1
+            result = super(product_template, self).load_product_from_pos(config_id, domain, offset, limit)
+            lowered_name = result['product.template'][0]['display_name'].lower()
+            load_product_from_pos_stats['items'][lowered_name] = len(result['product.pricelist.item'])
+            return result
+
+        with patch.object(product_template, "load_product_from_pos", load_product_from_pos_patch):
+            self.start_pos_tour('test_pricelists_in_pos')
+
+        # Should load 6 different products, since 6 products were created
+        self.assertEqual(load_product_from_pos_stats['count'], 7)
+
+        # Length of loaded pricelist items should correspond to the number of items linked
+        # to the product template or product variant
+        # Global rules are loaded at starting of the PoS
+        self.assertEqual(load_product_from_pos_stats['items']['banana'], 3, "Banana should have 3 pricelist items")
+        self.assertEqual(load_product_from_pos_stats['items']['apple'], 1, "Apple should have 1 pricelist item")
+        self.assertEqual(load_product_from_pos_stats['items']['pear'], 3, "Pear should have 3 pricelist items")
+        self.assertEqual(load_product_from_pos_stats['items']['lime'], 3, "Lime should have 3 pricelist items")
+        self.assertEqual(load_product_from_pos_stats['items']['orange'], 2, "Orange should have 2 pricelist items")
+        self.assertEqual(load_product_from_pos_stats['items']['kiwi'], 1, "Kiwi should have 1 pricelist item")
 
 
 # This class just runs the same tests as above but with mobile emulation

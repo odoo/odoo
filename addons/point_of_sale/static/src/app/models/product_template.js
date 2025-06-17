@@ -186,21 +186,29 @@ export class ProductTemplate extends Base {
         const productTmpl = variant.product_tmpl_id || this;
         const standardPrice = variant ? variant.standard_price : this.standard_price;
         const basePrice = variant ? variant.lst_price : this.list_price;
-        const productTmplRules =
-            productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || [];
-        const productRules =
-            (product && product.backLink("<-product.pricelist.item.product_id")) || [];
-        const rulesIds = [...productTmplRules, ...productRules].map((rule) => rule.id);
-
         let price = basePrice + (price_extra || 0);
-        const rules =
-            pricelist?.item_ids?.filter(
-                (rule) =>
-                    (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
-                    (!rule.min_quantity || quantity >= rule.min_quantity) &&
-                    (!rule.product_id || rule.product_id.id === product?.id) &&
-                    (!rule.categ_id || productTmpl.parentCategories.includes(rule.categ_id.id))
-            ) || [];
+
+        if (!pricelist) {
+            return price;
+        }
+
+        const tmplRules = (
+            productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || []
+        ).filter(
+            (rule) =>
+                rule.pricelist_id.id === pricelist.id &&
+                (!rule.product_id || rule.product_id.id === this.id)
+        );
+        const productRules = (
+            product?.backLink?.("<-product.pricelist.item.product_id") || []
+        ).filter((rule) => rule.pricelist_id.id === pricelist.id);
+
+        const tmplRulesSet = new Set(tmplRules.map((rule) => rule.id));
+        const productRulesSet = new Set(productRules.map((rule) => rule.id));
+        const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
+        const rules = this.models["product.pricelist.item"]
+            .readMany([...productRulesSet, ...tmplRulesSet, ...generalRulesIds])
+            .filter((r) => r.min_quantity <= quantity);
 
         const rule = rules.length && rules[0];
         if (!rule) {
