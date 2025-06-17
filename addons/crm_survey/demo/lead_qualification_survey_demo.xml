@@ -10,9 +10,9 @@
         <field name="is_attempts_limited" eval="True"/>
         <field name="users_can_go_back" eval="False" />
         <field name="description" type="html">
-            <p>Welcome to this survey, <br/><br/>
-                You are receiving this survey because you are likely to become one of our partners.<br/>
-                Once you've submitted this survey, one of our managers will follow up the integration process based on your answers.</p>
+            <p>Welcome, <br/><br/>
+                You're receiving this survey because you're likely to become one of our partners.<br/>
+                Once submitted, one of our managers will follow up on the integration process based on your answers.</p>
         </field>
         <field name="description_done" type="html">
             <p>Thanks a lot for your participation!</p>
@@ -107,6 +107,7 @@
             <field name="question_id" ref="lead_qualification_survey_7"/>
             <field name="sequence">2</field>
             <field name="value">Manufacturing/Industry</field>
+            <field name="create_lead">True</field>
         </record>
         <record id="lead_qualification_survey_7_sug3" model="survey.question.answer">
             <field name="question_id" ref="lead_qualification_survey_7"/>
@@ -116,28 +117,6 @@
         <record id="lead_qualification_survey_7_sug4" model="survey.question.answer">
             <field name="question_id" ref="lead_qualification_survey_7"/>
             <field name="sequence">4</field>
-            <field name="value">IT</field>
-            <field name="create_lead">True</field>
-        </record>
-        <record id="lead_qualification_survey_7_sug5" model="survey.question.answer">
-            <field name="question_id" ref="lead_qualification_survey_7"/>
-            <field name="sequence">5</field>
-            <field name="value">Retail Store</field>
-        </record>
-        <record id="lead_qualification_survey_7_sug6" model="survey.question.answer">
-            <field name="question_id" ref="lead_qualification_survey_7"/>
-            <field name="sequence">6</field>
-            <field name="value">Administrative</field>
-        </record>
-        <record id="lead_qualification_survey_7_sug7" model="survey.question.answer">
-            <field name="question_id" ref="lead_qualification_survey_7"/>
-            <field name="sequence">7</field>
-            <field name="value">Research Lab</field>
-            <field name="create_lead">True</field>
-        </record>
-        <record id="lead_qualification_survey_7_sug8" model="survey.question.answer">
-            <field name="question_id" ref="lead_qualification_survey_7"/>
-            <field name="sequence">8</field>
             <field name="value">Other</field>
         </record>
 
@@ -186,32 +165,27 @@
         <field name="question_type">matrix</field>
         <field name="matrix_subtype">simple</field>
     </record>
-            <record model="survey.question.answer" id="lead_qualification_survey_col_1">
-                <field name="question_id" ref="lead_qualification_survey_10"/>
-                <field name="sequence">1</field>
-                <field name="value">Yes</field>
-                <field name="create_lead">True</field>
-            </record>
-            <record model="survey.question.answer" id="lead_qualification_survey_row_1">
-                <field name="matrix_question_id" ref="lead_qualification_survey_10"/>
-                <field name="sequence">1</field>
-                <field name="value">Our company in the past?</field>
-            </record>
-            <record model="survey.question.answer" id="lead_qualification_survey_row_2">
-                <field name="matrix_question_id" ref="lead_qualification_survey_10"/>
-                <field name="sequence">2</field>
-                <field name="value">One of our collaborators?</field>
-            </record>
-            <record model="survey.question.answer" id="lead_qualification_survey_row_3">
-                <field name="matrix_question_id" ref="lead_qualification_survey_10"/>
-                <field name="sequence">3</field>
-                <field name="value">An IT-oriented company?</field>
-            </record>
-            <record model="survey.question.answer" id="lead_qualification_survey_row_4">
-                <field name="matrix_question_id" ref="lead_qualification_survey_10"/>
-                <field name="sequence">4</field>
-                <field name="value">A client-relationship company?</field>
-            </record>
+        <record model="survey.question.answer" id="lead_qualification_survey_col_1">
+            <field name="question_id" ref="lead_qualification_survey_10"/>
+            <field name="sequence">1</field>
+            <field name="value">Yes</field>
+            <field name="create_lead">True</field>
+        </record>
+        <record model="survey.question.answer" id="lead_qualification_survey_row_1">
+            <field name="matrix_question_id" ref="lead_qualification_survey_10"/>
+            <field name="sequence">1</field>
+            <field name="value">Our company in the past?</field>
+        </record>
+        <record model="survey.question.answer" id="lead_qualification_survey_row_2">
+            <field name="matrix_question_id" ref="lead_qualification_survey_10"/>
+            <field name="sequence">2</field>
+            <field name="value">An IT-oriented company?</field>
+        </record>
+        <record model="survey.question.answer" id="lead_qualification_survey_row_3">
+            <field name="matrix_question_id" ref="lead_qualification_survey_10"/>
+            <field name="sequence">3</field>
+            <field name="value">A client-relationship company?</field>
+        </record>
 
     <record model="survey.question" id="lead_qualification_survey_11">
         <field name="survey_id" ref="lead_qualification_survey_template"/>

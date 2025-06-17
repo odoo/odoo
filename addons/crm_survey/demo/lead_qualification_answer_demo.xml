@@ -3,6 +3,8 @@
         <!-- Could you be our best partner? - Answer demo -->
         <record id="lead_qualification_survey_response_1" model="survey.user_input">
             <field name="survey_id" ref="lead_qualification_survey_template"/>
+            <field name="partner_id" ref="base.res_partner_address_4"/>
+            <field name="email">floyd.steward34@example.com</field>
             <field name="state">done</field>
         </record>
 
@@ -18,7 +20,7 @@
             <field name="user_input_id" ref="lead_qualification_survey_response_1"/>
             <field name="survey_id" ref="lead_qualification_survey_template"/>
             <field name="question_id" ref="lead_qualification_survey_2"/>
-            <field name="value_char_box">Marc Demo</field>
+            <field name="value_char_box">Floyd Steward</field>
             <field name="answer_type">char_box</field>
         </record>
 
@@ -26,7 +28,7 @@
             <field name="user_input_id" ref="lead_qualification_survey_response_1"/>
             <field name="survey_id" ref="lead_qualification_survey_template"/>
             <field name="question_id" ref="lead_qualification_survey_3"/>
-            <field name="value_char_box">mark.brown23@example.com</field>
+            <field name="value_char_box">floyd.steward34@example.com</field>
             <field name="answer_type">char_box</field>
         </record>
 
@@ -34,7 +36,7 @@
             <field name="user_input_id" ref="lead_qualification_survey_response_1"/>
             <field name="survey_id" ref="lead_qualification_survey_template"/>
             <field name="question_id" ref="lead_qualification_survey_4"/>
-            <field name="value_char_box">Farmer</field>
+            <field name="value_char_box">Analyst</field>
             <field name="answer_type">char_box</field>
         </record>
 
@@ -42,23 +44,23 @@
             <field name="user_input_id" ref="lead_qualification_survey_response_1"/>
             <field name="survey_id" ref="lead_qualification_survey_template"/>
             <field name="question_id" ref="lead_qualification_survey_6"/>
-            <field name="value_char_box">Demo Company</field>
+            <field name="value_char_box">Deco Addict</field>
             <field name="answer_type">char_box</field>
         </record>
 
-        <record id="input_line_q7_1" model="survey.user_input.line">
-            <field name="user_input_id" ref="lead_qualification_survey_response_1"/>
+        <record id="input_line_q7_3" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_survey_response_3"/>
             <field name="survey_id" ref="lead_qualification_survey_template"/>
             <field name="question_id" ref="lead_qualification_survey_7"/>
-            <field name="suggested_answer_id" ref="lead_qualification_survey_7_sug1"/>
+            <field name="suggested_answer_id" ref="lead_qualification_survey_7_sug3"/>
             <field name="answer_type">suggestion</field>
         </record>
 
         <record id="input_line_q8" model="survey.user_input.line">
-            <field name="user_input_id" ref="lead_qualification_survey_response_1"/>
+            <field name="user_input_id" ref="lead_qualification_survey_response_2"/>
             <field name="survey_id" ref="lead_qualification_survey_template"/>
             <field name="question_id" ref="lead_qualification_survey_8"/>
-            <field name="suggested_answer_id" ref="lead_qualification_survey_8_sug1"/>
+            <field name="suggested_answer_id" ref="lead_qualification_survey_8_sug2"/>
             <field name="answer_type">suggestion</field>
         </record>
 

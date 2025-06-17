@@ -6,13 +6,11 @@
     'category': 'Sales/CRM',
     'summary': 'Generate lead from survey',
     'description': """
-    It's a bridge between CRM and survey.
-    It allows to create a survey with lead-generating answers for questions with suggested answers.
-    If, at least, one answer of that has been chosen by the user, a lead is generated.
+    Bridge module between CRM and survey.
+    Enables the creation of a survey when the participant selects lead-generating answers.
+    An option on the suggested answers can be activated to make them lead-generating.
     """,
-    'depends': ['crm',
-                'survey',
-    ],
+    'depends': ['crm', 'survey'],
     'data': [
         'views/survey_question_views.xml',
         'views/survey_survey_views.xml',
