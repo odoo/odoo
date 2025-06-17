@@ -16,8 +16,8 @@ const OPERATOR_DESCRIPTIONS = {
     "=ilike": _t("=ilike"),
     like: _t("like"),
     "not like": _t("not like"),
-    ilike: _t("contains"),
-    "not ilike": _t("not contains"),
+    ilike: _t("ilike"),
+    "not ilike": _t("not ilike"),
     in: _t("equals"),
     "not in": _t("not equals"),
     child_of: _t("child of"),
@@ -27,8 +27,14 @@ const OPERATOR_DESCRIPTIONS = {
     set: _t("set"),
     not_set: _t("not set"),
 
+    "multi ilike": _t("contains"),
+    "multi not ilike": _t("not contains"),
+
     starts_with: _t("starts with"),
     ends_with: _t("ends with"),
+
+    "multi starts_with": _t("starts with"),
+    "multi ends_with": _t("ends with"),
 
     today: _t("today"),
     not_today: _t("not today"),

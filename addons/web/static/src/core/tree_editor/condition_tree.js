@@ -1078,39 +1078,137 @@ class OperatorPattern extends Pattern {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// in - not in
+// in - not in - multi ilike - multi not ilike - multi starts_with -
+// multi ends_with
 ////////////////////////////////////////////////////////////////////////////////
 
 function isPathOnDatetimeOption(path) {
     return ["__date", "__time"].includes(splitPath(path).lastPart);
 }
 
-function _introduceInForDatetimeOptions(c) {
-    const { path, operator, value, negate } = c;
-    if (value === false || !isPathOnDatetimeOption(path)) {
-        return;
-    }
-    if (operator === "=") {
-        return condition(path, "in", normalizeValue([value]), negate);
-    }
-    if (operator === "!=") {
-        return condition(path, "not in", normalizeValue([value]), negate);
-    }
-}
-
 function isSimplePathOnDatetimeOption(path) {
     return isPathOnDatetimeOption(path) && isSimplePath(path);
 }
 
-function _mergeInOperatorsForDatetimeOptions(c) {
-    const op = c.value === "|" ? "in" : "not in";
+const SUPPORT_STARTS_WITH = ["char", "text", "html", "many2one", "many2many", "one2many"];
+
+function supportStartsWith(path, options) {
+    return SUPPORT_STARTS_WITH.includes(getFieldType(path, options));
+}
+
+function supportIlike(path, options) {
+    return [...SUPPORT_STARTS_WITH, "integer", "float", "monetary", "json"].includes(
+        getFieldType(path, options)
+    );
+}
+
+const multiOperators = [
+    {
+        name: "multi ilike",
+        basicOperator: "ilike",
+        connector: "|",
+        canIntroduce: (c, options) => supportIlike(c.path, options),
+        canRemove: () => true,
+        canMerge: (c) => c === "|",
+    },
+    {
+        name: "multi not ilike",
+        basicOperator: "not ilike",
+        connector: "&",
+        canIntroduce: (c, options) => supportIlike(c.path, options),
+        canRemove: () => true,
+        canMerge: (c) => c === "&",
+    },
+    {
+        name: "multi starts_with",
+        basicOperator: "starts_with",
+        connector: "|",
+        canIntroduce: (c, options) => supportStartsWith(c.path, options),
+        canRemove: () => true,
+        canMerge: (c) => c === "|",
+    },
+    {
+        name: "multi ends_with",
+        basicOperator: "ends_with",
+        connector: "|",
+        canIntroduce: (c, options) => supportStartsWith(c.path, options),
+        canRemove: () => true,
+        canMerge: (c) => c === "|",
+    },
+    {
+        name: "in",
+        basicOperator: "=",
+        connector: "|",
+        canIntroduce: (c) => isPathOnDatetimeOption(c.path),
+        canRemove: (c) => isPathOnDatetimeOption(c.path),
+        canMerge: (c, cond) => c === "|" && isPathOnDatetimeOption(cond.path),
+    },
+    {
+        name: "not in",
+        basicOperator: "!=",
+        connector: "&",
+        canIntroduce: (c) => isPathOnDatetimeOption(c.path),
+        canRemove: (c) => isPathOnDatetimeOption(c.path),
+        canMerge: (c, cond) => c === "&" && isPathOnDatetimeOption(cond.path),
+    },
+];
+
+function _introduceMultiOperator(c, options) {
+    const { path, operator, value, negate } = c;
+    if (typeof path !== "string" || value === false) {
+        return;
+    }
+    const multiOperator = multiOperators.find(
+        (multiOperator) => multiOperator.basicOperator === operator
+    );
+    if (multiOperator && multiOperator.canIntroduce(c, options)) {
+        return condition(path, multiOperator.name, normalizeValue([value]), negate);
+    }
+}
+
+function _removeMultiOperator(c) {
+    const { path, operator, value, negate } = c;
+    if (typeof path !== "string" || !Array.isArray(value)) {
+        return;
+    }
+    const multiOperator = multiOperators.find((multiOperator) => multiOperator.name === operator);
+    if (multiOperator && multiOperator.canRemove(c)) {
+        const [initialPath, lastPart] = splitPath2(path);
+        return wrapInAny(
+            connector(
+                // @ts-ignore
+                multiOperator.connector,
+                value.map((v) =>
+                    condition(lastPart, multiOperator.basicOperator, normalizeValue(v))
+                )
+            ),
+            initialPath,
+            negate
+        );
+    }
+}
+
+function _mergeMultiOperators(c) {
+    const connector = c.value;
     const children = [];
     let currentCondition = null;
     for (let index = 0; index < c.children.length; index++) {
         const child = c.children[index];
-        if (isSimplePathOnDatetimeOption(child.path) && !child.negate && child.operator === op) {
-            if (!currentCondition || child.path !== currentCondition.path) {
-                currentCondition = condition(child.path, op, []);
+        const multiOperator = multiOperators.find(
+            (multiOperator) => multiOperator.name === child.operator
+        );
+        if (
+            !child.negate &&
+            isSimplePath(child.path) &&
+            multiOperator &&
+            multiOperator.canMerge(connector, child)
+        ) {
+            if (
+                !currentCondition ||
+                child.path !== currentCondition.path ||
+                child.operator !== currentCondition.operator
+            ) {
+                currentCondition = condition(child.path, child.operator, []);
                 children.push(currentCondition);
             }
             // @ts-ignore
@@ -1121,35 +1219,6 @@ function _mergeInOperatorsForDatetimeOptions(c) {
         }
     }
     return { ...c, children };
-}
-
-function _removeInForDatetimeOptions(c) {
-    const { path, operator, value, negate } = c;
-    if (!isPathOnDatetimeOption(path)) {
-        return;
-    }
-    const [initialPath, lastPart] = splitPath2(path);
-
-    if (operator === "in" && Array.isArray(value)) {
-        return wrapInAny(
-            connector(
-                "|",
-                value.map((v) => condition(lastPart, "=", normalizeValue(v)))
-            ),
-            initialPath,
-            negate
-        );
-    }
-    if (operator === "not in" && Array.isArray(value)) {
-        return wrapInAny(
-            connector(
-                "&",
-                value.map((v) => condition(lastPart, "!=", normalizeValue(v)))
-            ),
-            initialPath,
-            negate
-        );
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1827,16 +1896,14 @@ export function removeVirtualOperators(tree) {
     return operate(_removeVirtualOperator, tree);
 }
 
-export function introduceInForDatetimeOptions(tree) {
-    return operate(_introduceInForDatetimeOptions, tree);
+export function introduceMultiOperators(tree, options) {
+    tree = operate(_introduceMultiOperator, tree, options);
+    tree = operate(_mergeMultiOperators, tree, {}, "connector");
+    return tree;
 }
 
-export function mergeInOperatorsForDatetimeOptions(tree, options = {}) {
-    return operate(_mergeInOperatorsForDatetimeOptions, tree, options, "connector");
-}
-
-export function removeInOperatorsForDatetimeOptions(tree) {
-    return operate(_removeInForDatetimeOptions, tree);
+export function removeMultiOperators(tree) {
+    return operate(_removeMultiOperator, tree);
 }
 
 /**
@@ -1888,8 +1955,7 @@ function removeFalseTrueLeaves(tree) {
 const VIRTUAL_OPERATORS_INTRODUCTION = [createVirtualOperators, createBetweenOperators];
 export const FULL_VIRTUAL_OPERATORS_INTRODUCTION = [
     removeAnyOperators,
-    mergeInOperatorsForDatetimeOptions,
-    introduceInForDatetimeOptions,
+    introduceMultiOperators,
     ...VIRTUAL_OPERATORS_INTRODUCTION,
     createBetweenOperatorsForDatetimeOptions,
     createSpecialPaths,
@@ -1901,7 +1967,7 @@ export const FULL_VIRTUAL_OPERATORS_ELIMINATION = [
     removeDatetimeOptions,
     removeSpecialPaths,
     ...VIRTUAL_OPERATORS_ELIMINATION,
-    removeInOperatorsForDatetimeOptions,
+    removeMultiOperators,
     removeBetweenOperatorsForDatetimeOptions,
     removeComplexConditions,
 ];

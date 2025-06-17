@@ -310,11 +310,9 @@ test("building a domain with a m2o without following the relation", async () => 
             expect.step(domain);
         },
     });
-    expect.verifySteps([]);
-    expect(isNotSupportedValue()).toBe(true);
 
-    await clearNotSupported();
-    expect.verifySteps([`[("product_id", "ilike", "")]`]);
+    await contains(`${SELECTORS.valueEditor} .o_tag .o_delete`).click();
+    expect.verifySteps([`[(0, "=", 1)]`]);
 
     await contains(`${SELECTORS.valueEditor} input`).edit("pad");
     expect.verifySteps([`[("product_id", "ilike", "pad")]`]);
@@ -454,7 +452,7 @@ test("json field with operator change from 'equal' to 'ilike'", async () => {
     expect(getCurrentOperator()).toBe("=");
     expect(getCurrentValue()).toBe(`hey`);
 
-    await selectOperator("ilike");
+    await selectOperator("multi ilike");
     expect(getCurrentOperator()).toBe("contains");
 });
 
@@ -1577,13 +1575,13 @@ test("many2one field: operator switch (edit)", async () => {
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([`[("product_id", "not in", [])]`]);
 
-    await selectOperator("ilike");
+    await selectOperator("multi ilike");
     expect(getCurrentValue()).toBe("");
-    expect.verifySteps([`[("product_id", "ilike", "")]`]);
+    expect.verifySteps([`[(0, "=", 1)]`]);
 
-    await selectOperator("not ilike");
+    await selectOperator("multi not ilike");
     expect(getCurrentValue()).toBe("");
-    expect.verifySteps([`[("product_id", "not ilike", "")]`]);
+    expect.verifySteps([`[]`]);
 });
 
 test("many2one field and operator =/!= (edit)", async () => {
@@ -1685,21 +1683,26 @@ test("many2one field and operator ilike/not ilike (edit)", async () => {
     });
     expect(getCurrentOperator()).toBe("contains");
     expect(".o-autocomplete--input").toHaveCount(0);
-    expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
-    expect(getCurrentValue()).toBe("abc");
+    expect(`${SELECTORS.valueEditor} input`).toHaveCount(1);
+    expect(`${SELECTORS.valueEditor} input`).toHaveValue("");
+    expect(queryAllTexts(SELECTORS.tag)).toEqual(["abc"]);
     expect.verifySteps([]);
 
-    await contains(`${SELECTORS.valueEditor} .o_input`).edit("def");
+    await contains(`${SELECTORS.valueEditor} input`).edit("def");
     expect(getCurrentOperator()).toBe("contains");
-    expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
-    expect(getCurrentValue()).toBe("def");
-    expect.verifySteps([`[("product_id", "ilike", "def")]`]);
+    expect(`${SELECTORS.valueEditor} input`).toHaveCount(1);
+    expect(`${SELECTORS.valueEditor} input`).toHaveValue("");
+    expect(queryAllTexts(SELECTORS.tag)).toEqual(["abc", "def"]);
+    expect.verifySteps([`["|", ("product_id", "ilike", "abc"), ("product_id", "ilike", "def")]`]);
 
-    await selectOperator("not ilike");
+    await selectOperator("multi not ilike");
     expect(getCurrentOperator()).toBe("not contains");
-    expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
-    expect(getCurrentValue()).toBe("def");
-    expect.verifySteps([`[("product_id", "not ilike", "def")]`]);
+    expect(`${SELECTORS.valueEditor} input`).toHaveCount(1);
+    expect(`${SELECTORS.valueEditor} input`).toHaveValue("");
+    expect(queryAllTexts(SELECTORS.tag)).toEqual(["abc", "def"]);
+    expect.verifySteps([
+        `["&", ("product_id", "not ilike", "abc"), ("product_id", "not ilike", "def")]`,
+    ]);
 });
 
 test("many2many field and operator set/not set (edit)", async () => {
@@ -1785,17 +1788,17 @@ test("x2many field: operator switch (edit)", async () => {
     expect(getCurrentValue()).toBe("");
     expect.verifySteps([`[("product_ids", "not in", [])]`]);
 
-    await selectOperator("ilike");
+    await selectOperator("multi ilike");
     expect(getCurrentValue()).toBe("");
-    expect.verifySteps([`[("product_ids", "ilike", "")]`]);
+    expect.verifySteps([`[(0, "=", 1)]`]);
 
     await selectOperator("not_set");
     expect(".o_ds_value_cell").toHaveCount(0);
     expect.verifySteps([`[("product_ids", "=", False)]`]);
 
-    await selectOperator("not ilike");
+    await selectOperator("multi not ilike");
     expect(getCurrentValue()).toBe("");
-    expect.verifySteps([`[("product_ids", "not ilike", "")]`]);
+    expect.verifySteps([`[]`]);
 
     await selectOperator("set");
     expect(".o_ds_value_cell").toHaveCount(0);
@@ -1875,21 +1878,26 @@ test("many2many field: operator ilike/not ilike (edit)", async () => {
     });
     expect(getCurrentOperator()).toBe("contains");
     expect(".o-autocomplete--input").toHaveCount(0);
-    expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
-    expect(getCurrentValue()).toBe("abc");
+    expect(`${SELECTORS.valueEditor} input`).toHaveCount(1);
+    expect(`${SELECTORS.valueEditor} input`).toHaveValue("");
+    expect(queryAllTexts(SELECTORS.tag)).toEqual(["abc"]);
     expect.verifySteps([]);
 
-    await contains(`${SELECTORS.valueEditor} .o_input`).edit("def");
+    await contains(`${SELECTORS.valueEditor} input`).edit("def");
     expect(getCurrentOperator()).toBe("contains");
-    expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
-    expect(getCurrentValue()).toBe("def");
-    expect.verifySteps([`[("product_ids", "ilike", "def")]`]);
+    expect(`${SELECTORS.valueEditor} input`).toHaveCount(1);
+    expect(`${SELECTORS.valueEditor} input`).toHaveValue("");
+    expect(queryAllTexts(SELECTORS.tag)).toEqual(["abc", "def"]);
+    expect.verifySteps([`["|", ("product_ids", "ilike", "abc"), ("product_ids", "ilike", "def")]`]);
 
-    await selectOperator("not ilike");
+    await selectOperator("multi not ilike");
     expect(getCurrentOperator()).toBe("not contains");
-    expect(`${SELECTORS.valueEditor} .o_input`).toHaveCount(1);
-    expect(getCurrentValue()).toBe("def");
-    expect.verifySteps([`[("product_ids", "not ilike", "def")]`]);
+    expect(`${SELECTORS.valueEditor} input`).toHaveCount(1);
+    expect(`${SELECTORS.valueEditor} input`).toHaveValue("");
+    expect(queryAllTexts(SELECTORS.tag)).toEqual(["abc", "def"]);
+    expect.verifySteps([
+        `["&", ("product_ids", "not ilike", "abc"), ("product_ids", "not ilike", "def")]`,
+    ]);
 });
 
 test("many2many field: operator set/not set (edit)", async () => {
