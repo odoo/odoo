@@ -113,3 +113,44 @@ registry.category("web_tour.tours").add("test_attribute_order", {
             ),
         ].flat(),
 });
+<<<<<<< 2136e35704d580f959ca31cea18aabafb78bfd7f
+||||||| 507a629e045ca3545bd87715e0c131e8bc6ae248
+
+registry.category("web_tour.tours").add("test_exclusion_attribute_values", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            ProductConfigurator.pickColor("Red"),
+            ProductConfigurator.pickSelect("Metal"),
+            ProductConfigurator.isUnavailable("Other"),
+            ProductConfigurator.isUnavailable("Wool"),
+            Chrome.endTour(),
+        ].flat(),
+});
+=======
+
+registry.category("web_tour.tours").add("test_exclusion_attribute_values", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            ProductConfigurator.pickColor("Red"),
+            ProductConfigurator.pickSelect("Metal"),
+            ProductConfigurator.isUnavailable("Other"),
+            ProductConfigurator.isUnavailable("Wool"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_exclusion_attribute_values_after_deactivation", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            Chrome.endTour(),
+        ].flat(),
+});
+>>>>>>> fd298e5373e91317cb602cacea9e47b9ef6e44e4

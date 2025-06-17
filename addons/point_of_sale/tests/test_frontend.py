@@ -2162,6 +2162,60 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.start_pos_tour('test_preset_timing_retail')
 
+<<<<<<< 2136e35704d580f959ca31cea18aabafb78bfd7f
+||||||| 507a629e045ca3545bd87715e0c131e8bc6ae248
+    def test_exclusion_attribute_values(self):
+        chair_fabrics_other_ptav = self.configurable_chair.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.chair_fabrics_attribute.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.chair_fabrics_other.id)
+        chair_fabrics_wool_ptav = self.configurable_chair.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.chair_fabrics_attribute.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.chair_fabrics_wool.id)
+        chair_color_red_ptav = self.configurable_chair.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.chair_color_attribute.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.chair_color_red.id)
+
+        # Test the exclusion of attribute values
+        self.env['product.template.attribute.exclusion'].create({
+            'product_tmpl_id': self.configurable_chair.id,
+            'product_template_attribute_value_id': chair_color_red_ptav.id,
+            'value_ids': [Command.set([chair_fabrics_other_ptav.id])],
+        })
+
+        # # Test the exclusion of attribute values in the opposite direction
+        self.env['product.template.attribute.exclusion'].create({
+            'product_tmpl_id': self.configurable_chair.id,
+            'product_template_attribute_value_id': chair_fabrics_wool_ptav.id,
+            'value_ids': [Command.set([chair_color_red_ptav.id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_exclusion_attribute_values')
+
+=======
+    def test_exclusion_attribute_values(self):
+        chair_fabrics_other_ptav = self.configurable_chair.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.chair_fabrics_attribute.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.chair_fabrics_other.id)
+        chair_fabrics_wool_ptav = self.configurable_chair.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.chair_fabrics_attribute.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.chair_fabrics_wool.id)
+        chair_color_red_ptav = self.configurable_chair.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.chair_color_attribute.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.chair_color_red.id)
+
+        # Test the exclusion of attribute values
+        self.env['product.template.attribute.exclusion'].create({
+            'product_tmpl_id': self.configurable_chair.id,
+            'product_template_attribute_value_id': chair_color_red_ptav.id,
+            'value_ids': [Command.set([chair_fabrics_other_ptav.id])],
+        })
+
+        # # Test the exclusion of attribute values in the opposite direction
+        self.env['product.template.attribute.exclusion'].create({
+            'product_tmpl_id': self.configurable_chair.id,
+            'product_template_attribute_value_id': chair_fabrics_wool_ptav.id,
+            'value_ids': [Command.set([chair_color_red_ptav.id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_exclusion_attribute_values')
+
+        chair_color_red_ptav.write({
+            'ptav_active': False,
+        })
+
+        self.start_pos_tour('test_exclusion_attribute_values_after_deactivation')
+
+>>>>>>> fd298e5373e91317cb602cacea9e47b9ef6e44e4
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
