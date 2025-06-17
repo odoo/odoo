@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.exceptions import NotFound
+from datetime import datetime
 
 from odoo import http
 from odoo.http import request
@@ -40,6 +41,17 @@ class DiscussChannelWebclientController(WebclientController):
             request.update_context(channels=request.env.context["channels"] | channels)
         if name == "channels_as_member":
             channels = request.env["discuss.channel"]._get_channels_as_member()
+            if limit := params.get("limit") if params else False:
+                needaction_channels = channels.filtered(lambda c: c.message_needaction).sorted(
+                    key=lambda c: c.last_interest_dt or datetime.min,
+                    reverse=True,
+                )
+                history_channels = channels.filtered(lambda c: not c.message_needaction).sorted(
+                    key=lambda c: c.last_interest_dt or datetime.min,
+                    reverse=True,
+                )
+                channels = (needaction_channels + history_channels)
+                channels = channels[:limit]
             request.update_context(
                 channels=request.env.context["channels"] | channels, add_channels_last_message=True
             )

@@ -9,7 +9,17 @@ patch(MessagingMenu.prototype, {
     },
     beforeOpen() {
         const res = super.beforeOpen(...arguments);
-        this.store.channels.fetch();
+        if (!this.state.tabState["channel"][1] || !this.state.tabState["chat"][1]) {
+            const currentState = this.store.channels;
+            const limited_channels = this.store.makeCachedFetchData("channels_as_member", {
+                limit: this.store.FETCH_LIMIT,
+            });
+            this.store.channels = limited_channels;
+            // Wait for fetch to complete before restoring
+            limited_channels.fetch().then(() => {
+                this.store.channels = currentState;
+            });
+        }
         return res;
     },
     onClickNewMessage() {
@@ -18,19 +28,26 @@ patch(MessagingMenu.prototype, {
             this.dropdown.close();
         }
     },
+    get channelsContributionCount() {
+        const threads = Object.values(this.store.Thread.records).filter(
+            (thread) =>
+                thread.displayToSelf &&
+                !thread.isMuted &&
+                (thread.selfMember?.message_unread_counter || thread.message_needaction_counter)
+        );
+        if (!this.store.initChannelsUnreadCounter) {
+            return threads.length;
+        }
+        if (
+            this.store.channels.status !== "fetched"
+        ) {
+            return this.store.initChannelsUnreadCounter;
+        }
+        return threads.length;
+    },
     get counter() {
         const count = super.counter;
-        const channelsContribution =
-            this.store.channels.status !== "fetched"
-                ? this.store.initChannelsUnreadCounter
-                : Object.values(this.store.Thread.records).filter(
-                      (thread) =>
-                          thread.displayToSelf &&
-                          !thread.isMuted &&
-                          (thread.selfMember?.message_unread_counter ||
-                              thread.message_needaction_counter)
-                  ).length;
-        // Needactions are already counted in the super call, but we want to discard them for channel so that there is only +1 per channel.
+        const channelsContribution = this.channelsContributionCount;
         const channelsNeedactionCounter = Object.values(this.store.Thread.records).reduce(
             (acc, thread) =>
                 acc + (thread.model === "discuss.channel" ? thread.message_needaction_counter : 0),

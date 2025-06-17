@@ -14,8 +14,10 @@ import {
     triggerEvents,
     triggerHotkey,
     waitStoreFetch,
+    scroll,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { animationFrame } from "@odoo/hoot-dom";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockUserAgent } from "@odoo/hoot-mock";
@@ -28,6 +30,7 @@ import {
     serverState,
     waitForSteps,
     withUser,
+    getService,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -1391,4 +1394,185 @@ test("failure is removed from messaging menu when message is deleted", async () 
     });
     pyEnv["mail.message"].unlink([messageId]);
     await contains(".o-mail-NotificationItem", { count: 0 });
+});
+
+test("Inbox tab should be visible when notification_preference is 'inbox'", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, {
+        notification_type: "inbox",
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-MessagingMenu-headerFilter", { text: "Inbox" });
+    patchUiSize({ size: SIZES.SM });
+    await contains(".o-mail-MessagingMenu-tab", { text: "Inbox" });
+});
+
+test("Inbox tab should not be visible when notification_preference is not 'inbox'", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, {
+        notification_type: "email",
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await animationFrame();
+    await contains(".o-mail-MessagingMenu-headerFilter", {
+        text: "Inbox",
+        count: 0,
+    });
+    patchUiSize({ size: SIZES.SM });
+    await animationFrame();
+    await contains(".o-mail-MessagingMenu-tab", { text: "Inbox", count: 0 });
+});
+
+test("Load More functionality in 'All' tab", async () => {
+    const pyEnv = await startServer();
+    for (let i = 0; i < 5; i++) {
+        pyEnv["discuss.channel"].create({
+            name: `Channel ${i}`,
+            channel_type: "channel",
+        });
+    }
+    for (let i = 0; i < 20; i++) {
+        const partnerId = pyEnv["res.partner"].create({
+            name: `Thread Partner ${i}`,
+        });
+        const authorId = pyEnv["res.partner"].create({ name: `Author ${i}` });
+        const messageId = pyEnv["mail.message"].create({
+            body: `Test Message ${i}`,
+            model: "res.partner",
+            res_id: partnerId,
+            author_id: authorId,
+            message_type: "comment",
+            needaction: i < 17,
+        });
+        if (i < 17) {
+            pyEnv["mail.notification"].create({
+                mail_message_id: messageId,
+                res_partner_id: serverState.partnerId,
+                notification_status: "ready",
+                notification_type: "inbox",
+            });
+        }
+    }
+    listenStoreFetch(["channels_as_member", "load_messaging_menu_data"]);
+    await start();
+    const store = getService("mail.store");
+    store.FETCH_LIMIT = 15;
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await waitStoreFetch("channels_as_member");
+    await contains(".o-mail-MessagingMenu-headerFilter.o-active", {
+        text: "All",
+    });
+    await contains(".o-mail-NotificationItem.o-important", { count: 15 });
+    await contains(".o-mail-NotificationItem", { count: 20 });
+    await click(".o-mail-MessagingMenu-loadMore");
+    await waitStoreFetch("load_messaging_menu_data");
+    await contains(".o-mail-NotificationItem", { count: 20 });
+    await scroll(".o-mail-MessagingMenu-list", "bottom");
+    await waitStoreFetch("load_messaging_menu_data");
+    await contains(".o-mail-NotificationItem.o-important", { count: 17 });
+    await contains(".o-mail-NotificationItem", { count: 22 });
+    await contains(".o-mail-MessagingMenu-loadMore.d-none");
+});
+
+test("Load More functionality in 'Chat' tab", async () => {
+    const pyEnv = await startServer();
+    for (let i = 0; i < 25; i++) {
+        pyEnv["discuss.channel"].create({
+            name: `Chat ${i}`,
+            channel_type: "group",
+        });
+    }
+    listenStoreFetch(["channels_as_member", "load_messaging_menu_data"]);
+    await start();
+    const store = getService("mail.store");
+    store.discuss.activeTab = "chat";
+    store.FETCH_LIMIT = 15;
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await waitStoreFetch("channels_as_member");
+    await contains(".o-mail-MessagingMenu-headerFilter.o-active", {
+        text: "Chats",
+    });
+    await contains(".o-mail-NotificationItem", { count: 15 });
+    await click(".o-mail-MessagingMenu-loadMore");
+    await waitStoreFetch("load_messaging_menu_data");
+    await contains(".o-mail-NotificationItem", { count: 15 });
+    await scroll(".o-mail-MessagingMenu-list", "bottom");
+    await waitStoreFetch("load_messaging_menu_data");
+    await contains(".o-mail-NotificationItem", { count: 25 });
+    await contains(".o-mail-MessagingMenu-loadMore.d-none");
+});
+
+test("Load More functionality in 'Channel' tab", async () => {
+    const pyEnv = await startServer();
+    for (let i = 0; i < 25; i++) {
+        pyEnv["discuss.channel"].create({ name: `Channel ${i}` });
+    }
+    listenStoreFetch(["channels_as_member", "load_messaging_menu_data"]);
+    await start();
+    const store = getService("mail.store");
+    store.discuss.activeTab = "channel";
+    store.FETCH_LIMIT = 15;
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await waitStoreFetch("channels_as_member");
+    await contains(".o-mail-MessagingMenu-headerFilter.o-active", {
+        text: "Channels",
+    });
+    await contains(".o-mail-NotificationItem", { count: 15 });
+    await click(".o-mail-MessagingMenu-loadMore");
+    await waitStoreFetch("load_messaging_menu_data");
+    await contains(".o-mail-NotificationItem", { count: 15 });
+    await scroll(".o-mail-MessagingMenu-list", "bottom");
+    await waitStoreFetch("load_messaging_menu_data");
+    await contains(".o-mail-NotificationItem", { count: 25 });
+    await contains(".o-mail-MessagingMenu-loadMore.d-none");
+});
+
+test("Load More functionality in 'Inbox' tab", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, {
+        notification_type: "inbox",
+    });
+    for (let i = 0; i < 25; i++) {
+        const partnerId = pyEnv["res.partner"].create({
+            name: `Thread Partner ${i}`,
+        });
+        const authorId = pyEnv["res.partner"].create({ name: `Author ${i}` });
+        const messageId = pyEnv["mail.message"].create({
+            body: `Test Message ${i}`,
+            model: "res.partner",
+            res_id: partnerId,
+            author_id: authorId,
+            message_type: "comment",
+            needaction: i < 17,
+        });
+        if (i < 17) {
+            pyEnv["mail.notification"].create({
+                mail_message_id: messageId,
+                res_partner_id: serverState.partnerId,
+                notification_status: "ready",
+                notification_type: "inbox",
+            });
+        }
+    }
+    listenStoreFetch(["channels_as_member", "load_messaging_menu_data"]);
+    await start();
+    const store = getService("mail.store");
+    store.discuss.activeTab = "inbox";
+    store.FETCH_LIMIT = 15;
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await waitStoreFetch("channels_as_member");
+    await contains(".o-mail-MessagingMenu-headerFilter.o-active", {
+        text: "Inbox",
+    });
+    await contains(".o-mail-NotificationItem.o-important", { count: 15 });
+    await click(".o-mail-MessagingMenu-loadMore");
+    await waitStoreFetch("load_messaging_menu_data");
+    await contains(".o-mail-NotificationItem.o-important", { count: 15 });
+    await scroll(".o-mail-MessagingMenu-list", "bottom");
+    await waitStoreFetch("load_messaging_menu_data");
+    await contains(".o-mail-NotificationItem.o-important", { count: 17 });
+    await contains(".o-mail-NotificationItem", { count: 25 });
+    await contains(".o-mail-MessagingMenu-loadMore.d-none");
 });
