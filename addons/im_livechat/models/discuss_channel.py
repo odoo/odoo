@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _, tools
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
 
@@ -609,6 +610,49 @@ class DiscussChannel(models.Model):
 
     def _get_livechat_session_fields_to_store(self):
         return []
+
+    def _apply_livechat_feedback(self, rate, reason=None):
+        """Post customer feedback and apply its rating to the live chat session.
+
+        :param rate: Rate given by the customer.
+        :type rate: int
+        :param reason: Feedback received from the customer.
+        :type reason: str
+        """
+        self.ensure_one()
+        # sudo - rating.rating: live chat customers are allowed to update their rating
+        if rating_sudo := self.sudo().rating_ids[:1]:
+            rating_sudo.write({"rating": rate, "feedback": reason})
+        else:
+            partner, _ = self.env["res.partner"]._get_current_persona()
+            # sudo: rating.rating - live chat customers can create ratings
+            rating_values = {
+                "rating": rate,
+                "consumed": True,
+                "feedback": reason,
+                "is_internal": False,
+                "res_id": self.id,
+                "res_model_id": self.env["ir.model"]._get_id("discuss.channel"),
+                "rated_partner_id": self.livechat_agent_partner_ids[:1].id,
+                "partner_id": partner.id,
+            }
+            rating_sudo = self.env["rating.rating"].sudo().create(rating_values)
+        rating_body = Markup(
+            """<div class="o_mail_notification o_hide_author">"""
+            """%(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s"""
+            """</div>""",
+        ) % {
+            "rating": self.env._("Rating"),
+            "rating_url": rating_sudo.rating_image_url,
+            "reason": nl2br("\n" + reason) if reason else "",
+        }
+        # sudo: discuss.channel - live chat customers can post the rating message
+        self.sudo().message_post(
+            body=rating_body,
+            message_type="notification",
+            rating_id=rating_sudo.id,
+            subtype_xmlid="mail.mt_comment",
+        )
 
     # =======================
     # Chatbot

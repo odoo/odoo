@@ -130,7 +130,7 @@
             <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_9"/>
         </record>
-        <function model="discuss.channel" name="rating_apply"
-            eval="([ref('im_livechat.livechat_channel_session_9')], 5, 'LIVECHAT_9', None, 'Super Job')"/>
+        <function model="discuss.channel" name="_apply_livechat_feedback"
+            eval="([ref('im_livechat.livechat_channel_session_9')], 5, 'Super Job')"/>
     </data>
 </odoo>

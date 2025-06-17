@@ -77,7 +77,7 @@
             <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
             <field name="res_id" ref="im_livechat.livechat_channel_session_13"/>
         </record>
-        <function model="discuss.channel" name="rating_apply"
-            eval="([ref('im_livechat.livechat_channel_session_13')], 1, 'LIVECHAT_13', None, 'Personne ne m\'a répondu!')"/>
+        <function model="discuss.channel" name="_apply_livechat_feedback"
+            eval="([ref('im_livechat.livechat_channel_session_13')], 1, 'Personne ne m\'a répondu!')"/>
     </data>
 </odoo>

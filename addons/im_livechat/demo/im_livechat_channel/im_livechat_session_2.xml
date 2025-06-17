@@ -123,7 +123,7 @@
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function model="discuss.channel" name="rating_apply"
-            eval="([ref('im_livechat.livechat_channel_session_2')], 5, 'LIVECHAT_2', None, 'Super Job')"/>
+        <function model="discuss.channel" name="_apply_livechat_feedback"
+            eval="([ref('im_livechat.livechat_channel_session_2')], 5, 'Super Job')"/>
     </data>
 </odoo>

@@ -7,7 +7,6 @@ from pytz import timezone
 
 from odoo import http, _
 from odoo.http import content_disposition, request
-from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
@@ -184,55 +183,11 @@ class LivechatController(http.Controller):
             "channel_id": channel_id,
         }
 
-    def _post_feedback_message(self, channel, rating, reason):
-        body = Markup(
-            """<div class="o_mail_notification o_hide_author">"""
-            """%(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s"""
-            """</div>"""
-        ) % {
-            "rating": _("Rating"),
-            "rating_url": rating.rating_image_url,
-            "reason": nl2br("\n" + reason) if reason else "",
-        }
-        # sudo: discuss.channel - not necessary for posting, but necessary to update related rating
-        channel.sudo().message_post(
-            body=body,
-            message_type="notification",
-            rating_id=rating.id,
-            subtype_xmlid="mail.mt_comment",
-        )
-
     @http.route("/im_livechat/feedback", type="jsonrpc", auth="public")
     @add_guest_to_context
     def feedback(self, channel_id, rate, reason=None, **kwargs):
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
-            # limit the creation : only ONE rating per session
-            values = {
-                'rating': rate,
-                'consumed': True,
-                'feedback': reason,
-                'is_internal': False,
-            }
-            # sudo: rating.rating - visitor can access rating to check if
-            # feedback was already given
-            if not channel.sudo().rating_ids:
-                values.update({
-                    'res_id': channel.id,
-                    'res_model_id': request.env['ir.model']._get_id('discuss.channel'),
-                })
-                # sudo: res.partner - visitor must find the operator to rate
-                if channel.sudo().channel_partner_ids:
-                    values['rated_partner_id'] = channel.channel_partner_ids[0].id
-                # if logged in user, set its partner on rating
-                values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
-                # create the rating
-                rating = request.env['rating.rating'].sudo().create(values)
-            else:
-                rating = channel.rating_ids[0]
-                # sudo: rating.rating - guest or portal user can update their livechat rating
-                rating.sudo().write(values)
-            self._post_feedback_message(channel, rating, reason)
-            return rating.id
+            return channel._apply_livechat_feedback(rate, reason, **kwargs)
         return False
 
     @http.route("/im_livechat/history", type="jsonrpc", auth="public")
