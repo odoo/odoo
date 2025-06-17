@@ -1006,3 +1006,43 @@ class TestSalePrices(SaleCommon):
             line.price_unit * float_round(product_uom_qty, precision_digits=quantity_precision))
         self.assertAlmostEqual(line.price_subtotal, expected_price_subtotal)
         self.assertEqual(order.amount_total, order.tax_totals.get('amount_total'))
+
+    def test_price_included_tax_mapping_updates_price_unit(self):
+        """
+        Test that the price_unit is recomputed when updating
+        taxes for lines with price containing the tax
+        """
+        self.env.company.country_id = self.env.ref('base.us')
+        tax_group = self.env['account.tax.group'].create({'name': "Tax Group"})
+
+        tax_21, tax_0 = self.env['account.tax'].create([{
+            'name': f"Tax {amount}%",
+            'amount': amount,
+            'price_include': True,
+            'tax_group_id': tax_group.id,
+        } for amount in (21, 0)])
+
+        fpos_21_to_0 = self.env['account.fiscal.position'].create({
+            'name': "21 to 0",
+            'tax_ids': [Command.create({
+                'tax_src_id': tax_21.id,
+                'tax_dest_id': tax_0.id,
+            })]
+        })
+
+        self.product.write({
+            'list_price': 10.0,
+            'taxes_id': [Command.set([tax_21.id])],
+        })
+
+        order = self.empty_order
+        order.order_line = [
+            Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+            })
+        ]
+        self.assertEqual(order.order_line.price_unit, 10.0)
+        order.fiscal_position_id = fpos_21_to_0
+        order.action_update_taxes()
+        self.assertAlmostEqual(order.order_line.price_unit, 8.26)
