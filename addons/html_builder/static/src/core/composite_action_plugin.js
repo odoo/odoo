@@ -1,4 +1,8 @@
-import { convertParamToObject, isActionPreviewable } from "@html_builder/core/utils";
+import {
+    checkAndWarnForActionAsyncApplyInPreview,
+    convertParamToObject,
+    isActionPreviewable,
+} from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -121,6 +125,7 @@ class CompositeAction extends BuilderAction {
         dependencyManager,
         selectableContext,
     }) {
+        const actionProms = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
             if (action.apply && (!isPreviewing || isActionPreviewable(action))) {
@@ -132,9 +137,13 @@ class CompositeAction extends BuilderAction {
                     dependencyManager,
                     selectableContext,
                 });
-                await action.apply(actionDescr);
+                actionProms.push([action, action.apply(actionDescr)]);
             }
         }
+        if (isPreviewing) {
+            checkAndWarnForActionAsyncApplyInPreview(actionProms);
+        }
+        return Promise.all(actionProms.map(([action, prom]) => prom));
     }
     async clean({
         isPreviewing,
@@ -146,6 +155,7 @@ class CompositeAction extends BuilderAction {
         selectableContext,
         nextAction,
     }) {
+        const actionProms = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
             const actionDescr = this._getActionDescription({
@@ -158,16 +168,22 @@ class CompositeAction extends BuilderAction {
                 nextAction,
             });
             if (!isPreviewing || isActionPreviewable(action)) {
+                let prom;
                 if (action.clean) {
-                    await action.clean(actionDescr);
+                    prom = action.clean(actionDescr);
                 } else if (action.apply) {
                     if (loadResult && loadResult[actionDef.action]) {
                         actionDescr.loadResult = loadResult[actionDef.action];
                     }
-                    await action.apply(actionDescr);
+                    prom = action.apply(actionDescr);
                 }
+                actionProms.push([action, prom]);
             }
         }
+        if (isPreviewing) {
+            checkAndWarnForActionAsyncApplyInPreview(actionProms);
+        }
+        return Promise.all(actionProms.map(([action, prom]) => prom));
     }
     _getActionDescription(action) {
         const { action: actionId, actionParam, actionValue, value, loadResult } = action;

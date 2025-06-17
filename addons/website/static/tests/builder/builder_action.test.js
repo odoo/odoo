@@ -193,6 +193,7 @@ describe("HTML builder tests", () => {
         test("BuilderButtonGroup (useSelectableComponent, useClickableBuilderComponent)", async () => {
             addBuilderAction({
                 invertAction: {
+                    suppressPreviewableAsyncWarning: true,
                     isApplied: ({ editingElement }) => editingElement.dataset.applied !== "true",
                     apply: async () => {
                         expect.step("invert apply sync");
@@ -263,6 +264,125 @@ describe("HTML builder tests", () => {
                 "save async",
                 "reload",
             ]);
+        });
+
+        describe("warn on use async apply or async clean on previewable action", () => {
+            beforeEach(async () => {
+                patchWithCleanup(console, {
+                    warn() {
+                        console.log("console.warn call: ", ...arguments);
+                        expect.step("warn");
+                    },
+                });
+                addBuilderAction({
+                    incorrectApply: {
+                        getValue: () => "hello",
+                        isApplied: ({ editingElement }) =>
+                            editingElement.dataset.incorrectApply === "true",
+                        apply: async ({ editingElement }) => {
+                            expect.step("async apply");
+                            editingElement.dataset.incorrectApply = "true";
+                        },
+                        clean: ({ editingElement }) => {
+                            expect.step("clean");
+                            delete editingElement.dataset.incorrectApply;
+                        },
+                    },
+                    incorrectClean: {
+                        isApplied: ({ editingElement }) =>
+                            editingElement.dataset.incorrectClean !== "true",
+                        apply: ({ editingElement }) => {
+                            expect.step("apply");
+                            delete editingElement.dataset.incorrectClean;
+                        },
+                        clean: async ({ editingElement }) => {
+                            expect.step("async clean");
+                            editingElement.dataset.incorrectClean = "true";
+                        },
+                    },
+                });
+                addBuilderOption({
+                    selector: ".test-options-target",
+                    template: xml`
+                        <p>useInputBuilderComponent</p>
+                        <BuilderTextInput action="'incorrectApply'"/>
+                        
+                        <p>useClickableBuilderComponent</p>
+                        <BuilderButton action="'incorrectApply'" className="'a'">Apply</BuilderButton>
+                        <BuilderButton action="'incorrectClean'" className="'b'">Clean</BuilderButton>
+                        
+                        <p>cleanSelectedItem</p>
+                        <BuilderButtonGroup>
+                            <BuilderButton action="'incorrectApply'" className="'c'">Apply</BuilderButton>
+                            <BuilderButton action="'incorrectClean'" className="'d'">Clean</BuilderButton>
+                        </BuilderButtonGroup>
+                    `,
+                });
+                await setupHTMLBuilder(`<section class="test-options-target">Test</section>`);
+                await contains(":iframe .test-options-target").click();
+            });
+
+            test("useInputBuilderComponent apply", async () => {
+                await contains("[data-action-id='incorrectApply'] input").edit("test");
+                expect.verifySteps([
+                    // Preview
+                    "async apply",
+                    "warn",
+
+                    // Commit
+                    "async apply",
+                ]);
+            });
+
+            test("useClickableBuilderComponent apply", async () => {
+                await contains(".a").click();
+                expect.verifySteps([
+                    // Preview
+                    "async apply",
+                    "warn",
+
+                    // Commit
+                    "async apply",
+                ]);
+            });
+
+            test("useClickableBuilderComponent clean", async () => {
+                await contains(".b").click();
+                expect.verifySteps([
+                    // Preview
+                    "async clean",
+                    "warn",
+
+                    // Commit
+                    "async clean",
+                ]);
+            });
+
+            test("useClickableBuilderComponent cleanSelectedItem", async () => {
+                await contains(".c").click();
+                expect.verifySteps([
+                    // Preview
+                    "async clean",
+                    "warn",
+                    "async apply",
+                    "warn",
+
+                    // Commit
+                    "async clean",
+                    "async apply",
+                ]);
+
+                await contains(".d").click();
+                expect.verifySteps([
+                    // Preview
+                    "clean",
+                    "apply",
+
+                    // Commit
+                    "clean",
+                    "apply",
+                ]);
+            });
         });
     });
 });
