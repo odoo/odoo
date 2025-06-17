@@ -64,3 +64,19 @@ class ResPartner(models.Model):
                 return True
 
         return False
+
+    def write(self, vals):
+        res = super().write(vals)
+        if {'country_id', 'vat', 'zip'} & vals.keys():
+            # Recompute fiscal position for open website orders
+            if orders_sudo := self.env['sale.order'].sudo().search([
+                ('state', '=', 'draft'),
+                ('website_id', '!=', False),
+                '|', ('partner_id', 'in', self.ids), ('partner_shipping_id', 'in', self.ids),
+            ]):
+                orders_by_fpos = orders_sudo.grouped('fiscal_position_id')
+                self.env.add_to_compute(orders_sudo._fields['fiscal_position_id'], orders_sudo)
+                orders_sudo.filtered(
+                    lambda so: so not in orders_by_fpos.get(so.fiscal_position_id, []),
+                )._recompute_taxes()
+        return res
