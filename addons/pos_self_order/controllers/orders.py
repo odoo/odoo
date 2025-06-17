@@ -71,14 +71,14 @@ class PosSelfOrderController(http.Controller):
 
         return tracking_prefix, ref_prefix
 
-    def _generate_return_values(self, order, config_id):
+    def _generate_return_values(self, order, config):
         return {
-            'pos.order': order.read(order._load_pos_data_fields(config_id.id), load=False),
-            'res.partner': order.partner_id.read(order.partner_id._load_pos_data_fields(config_id.id), load=False),
-            'pos.order.line': order.lines.read(order._load_pos_data_fields(config_id.id), load=False),
-            'pos.payment': order.payment_ids.read(order.payment_ids._load_pos_data_fields(order.config_id.id), load=False),
-            'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(order.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
-            'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(config_id.id), load=False),
+            'pos.order': self.env['pos.order']._load_pos_self_data_read(order, config),
+            'res.partner': self.env['res.partner']._load_pos_self_data_read(order.partner_id, config),
+            'pos.order.line': self.env['pos.order.line']._load_pos_self_data_read(order.lines, config),
+            'pos.payment': self.env['pos.payment']._load_pos_self_data_read(order.payment_ids, config),
+            'pos.payment.method': self.env['pos.payment.method']._load_pos_self_data_read(order.payment_ids.mapped('payment_method_id'), config),
+            'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_self_data_read(order.lines.custom_attribute_value_ids, config),
         }
 
     def _verify_line_price(self, lines, pos_config, preset_id):
@@ -130,7 +130,7 @@ class PosSelfOrderController(http.Controller):
 
         if existing_partner and existing_partner.exists():
             return {
-                'res.partner': existing_partner.read(existing_partner._load_pos_data_fields(pos_config.id), load=False),
+                'res.partner': self.env['res.partner']._load_pos_self_data_read(existing_partner, pos_config),
             }
 
         state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
@@ -148,7 +148,7 @@ class PosSelfOrderController(http.Controller):
         })
 
         return {
-            'res.partner': partner_sudo.read(partner_sudo._load_pos_data_fields(pos_config.id), load=False),
+            'res.partner': self.env['res.partner']._load_pos_self_data_read(partner_sudo, pos_config),
         }
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
@@ -208,7 +208,7 @@ class PosSelfOrderController(http.Controller):
         if not status:
             raise BadRequest("Something went wrong")
 
-        return {'order': order_sudo.read(order_sudo._load_pos_data_fields(pos_config.id), load=False), 'payment_status': status}
+        return {'order': self.env['pos.order']._load_pos_self_data_read(order_sudo, pos_config)}
 
     @http.route('/pos-self-order/change-printer-status', auth='public', type='jsonrpc', website=True)
     def change_printer_status(self, access_token, has_paper):

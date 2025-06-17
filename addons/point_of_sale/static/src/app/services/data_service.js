@@ -243,7 +243,7 @@ export class PosData extends Reactive {
         ) {
             try {
                 const limitedLoading = this.isLimitedLoading();
-                const serverDate = localData["pos.session"]?.[0]?._data_server_date;
+                const serverDate = localData["pos.config"]?.[0]?._data_server_date;
                 const lastConfigChange = DateTime.fromSQL(odoo.last_data_change);
                 const serverDateTime = DateTime.fromSQL(serverDate);
 

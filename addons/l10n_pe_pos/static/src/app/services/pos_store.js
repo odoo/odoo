@@ -18,7 +18,7 @@ patch(PosStore.prototype, {
         const order = super.createNewOrder(...arguments);
 
         if (this.isPeruvianCompany() && !order.partner_id) {
-            order.partner_id = this.session._consumidor_final_anonimo_id;
+            order.partner_id = this.config._consumidor_final_anonimo_id;
         }
 
         return order;

@@ -21,7 +21,7 @@ class PosOrder(models.Model):
             domain += [('uuid', '=', order.get('uuid'))]
         return self.env["pos.order"].search(domain, limit=1, order='id desc')
 
-    def read_pos_data(self, data, config_id):
-        result = super().read_pos_data(data, config_id)
-        result['restaurant.order.course'] = self.course_ids.read(self.course_ids._load_pos_data_fields(config_id), load=False) if config_id else []
+    def read_pos_data(self, data, config):
+        result = super().read_pos_data(data, config)
+        result['restaurant.order.course'] = self.env['restaurant.order.course']._load_pos_data_read(self.course_ids, config)
         return result

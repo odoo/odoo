@@ -70,11 +70,11 @@ class PosPaymentMethod(models.Model):
         }
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return ['|', ('active', '=', False), ('active', '=', True)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr']
 
     @api.depends('type', 'payment_method_type')

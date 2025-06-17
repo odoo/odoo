@@ -12,11 +12,11 @@ class ProductCombo(models.Model):
     qty_free = fields.Integer(string="Free quantity", default=1, help="Number of free items included in the combo.")
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return [('id', 'in', list(set().union(*[product.get('combo_ids') for product in data['product.template']])))]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id', 'name', 'combo_item_ids', 'base_price', 'qty_free', 'qty_max']
 
     @api.constrains('qty_max')

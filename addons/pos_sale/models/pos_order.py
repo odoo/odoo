@@ -204,8 +204,8 @@ class PosOrderLine(models.Model):
                     order_line.qty_delivered = 0
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
         params += ['sale_order_origin_id', 'sale_order_line_id', 'down_payment_details']
         return params
 

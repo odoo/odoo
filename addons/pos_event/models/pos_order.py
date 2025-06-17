@@ -17,26 +17,22 @@ class PosOrder(models.Model):
         action['domain'] = [('pos_order_id', 'in', self.ids)]
         return action
 
-    def read_pos_data(self, data, config_id):
-        results = super().read_pos_data(data, config_id)
+    def read_pos_data(self, data, config):
+        results = super().read_pos_data(data, config)
         paid_orders = self.filtered_domain([('state', 'in', ['paid', 'done', 'invoiced'])])
 
         if not paid_orders:
             return results
 
         lines_with_event = paid_orders.mapped('lines').filtered(lambda line: line.event_ticket_id)
-        event_event_fields = self.env['event.event']._load_pos_data_fields(paid_orders[0].config_id.id)
-        event_ticket_fields = self.env['event.event.ticket']._load_pos_data_fields(paid_orders[0].config_id.id)
-        event_slot_fields = self.env['event.slot']._load_pos_data_fields(paid_orders[0].config_id.id)
-        event_registrations_fields = self.env['event.registration']._load_pos_data_fields(paid_orders[0].config_id.id)
-        event_registrations_answer_fields = self.env['event.registration.answer']._load_pos_data_fields(paid_orders[0].config_id.id)
-        results['event.registration'] = lines_with_event.event_registration_ids.read(event_registrations_fields, load=False)
-        results['event.event'] = lines_with_event.event_registration_ids.mapped('event_id').read(event_event_fields, load=False)
-        results['event.event.ticket'] = lines_with_event.event_registration_ids.mapped('event_ticket_id').read(event_ticket_fields, load=False)
-        results['event.slot'] = lines_with_event.event_registration_ids.mapped('event_slot_id').read(event_slot_fields, load=False)
-        results['event.registration.answer'] = lines_with_event.event_registration_ids.mapped('registration_answer_ids').read(event_registrations_answer_fields, load=False)
+        event_registration_ids = lines_with_event.event_registration_ids
+        results['event.registration'] = self.env['event.registration']._load_pos_data_read(event_registration_ids, config)
+        results['event.event'] = self.env['event.event']._load_pos_data_read(event_registration_ids.mapped('event_id'), config)
+        results['event.event.ticket'] = self.env['event.event.ticket']._load_pos_data_read(event_registration_ids.mapped('event_ticket_id'), config)
+        results['event.slot'] = self.env['event.slot']._load_pos_data_read(event_registration_ids.mapped('event_slot_id'), config)
+        results['event.registration.answer'] = self.env['event.registration.answer']._load_pos_data_read(event_registration_ids.mapped('registration_answer_ids'), config)
 
-        for registration in lines_with_event.event_registration_ids:
+        for registration in event_registration_ids:
             if registration.email:
                 registration.action_send_badge_email()
 

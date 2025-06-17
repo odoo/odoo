@@ -14,11 +14,13 @@ class PosSession(models.Model):
         return data
 
     @api.model
-    def _load_pos_self_data_domain(self, data):
-        return [('config_id', '=', data['pos.config'][0]['id']), ('state', '=', 'opened')]
+    def _load_pos_self_data_domain(self, data, config):
+        return [('config_id', '=', config.id), ('state', '=', 'opened')]
 
-    def _post_read_pos_data(self, data):
-        data[0]['_self_ordering'] = (
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        record = read_records[0]
+        record['_self_ordering'] = (
             self.env["pos.config"]
             .sudo()
             .search_count(
@@ -31,10 +33,4 @@ class PosSession(models.Model):
             )
             > 0
         )
-        return super()._post_read_pos_data(data)
-
-    def _post_read_pos_self_data(self, data):
-        if data:
-            data[0]['_base_url'] = self.get_base_url()
-            data[0]['_self_order_pos'] = True
-        return super()._post_read_pos_self_data(data)
+        return read_records
