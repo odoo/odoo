@@ -12,7 +12,6 @@ export class MediaVideo extends Interaction {
         if (this.el.dataset.needCookiesApproval) {
             this.sizeContainerEl = this.el.querySelector(":scope > .media_iframe_video_size");
             this.sizeContainerEl.classList.add("d-none");
-            this.addListener(document, "optionalCookiesAccepted", this.sizeContainerEl.classList.remove("d-none"))
             this.registerCleanup(() => this.sizeContainerEl.classList.remove("d-none"));
         }
     }
@@ -33,6 +32,7 @@ export class MediaVideo extends Interaction {
                 this.waitFor(promise).then(this.protectSyncAfterAsync(() => triggerAutoplay(iframeEl)));
             }
         }
+        this.addListener(document, "optionalCookiesAccepted", () => this.sizeContainerEl.classList.remove("d-none"))
     }
 
     generateIframe() {
