@@ -760,7 +760,7 @@ export function isHtmlContentSupported(node) {
 function prependOriginToImages(doc, origin) {
     doc.querySelectorAll("img").forEach((img) => {
         const src = img.getAttribute("src");
-        if (src && !src.startsWith("http") && !src.startsWith("//")) {
+        if (src && !/^(http|\/\/|data:)/.test(src)) {
             img.src = origin + (src.startsWith("/") ? src : "/" + src);
         }
     });
