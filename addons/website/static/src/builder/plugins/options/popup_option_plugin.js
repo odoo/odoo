@@ -43,6 +43,7 @@ class PopupOptionPlugin extends Plugin {
         on_cloned_handlers: this.onCloned.bind(this),
         on_remove_handlers: this.onRemove.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        no_parent_containers: ".s_popup",
     };
 
     onCloned({ cloneEl }) {
