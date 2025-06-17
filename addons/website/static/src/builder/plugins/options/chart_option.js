@@ -1,5 +1,5 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { useState } from "@odoo/owl";
+import { onMounted, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export const DATASET_KEY_PREFIX = "chart_dataset_";
@@ -13,18 +13,40 @@ export class ChartOption extends BaseOptionComponent {
 
     setup() {
         super.setup();
-
+        this.table = useRef("tableBody");
+        onMounted(() => {
+            this.setDefaultState();
+        });
         // Here for compatibility with previous versions (< 18.3).
         this.env.getEditingElement().dataset.data = JSON.stringify(
             this.prepareData(this.env.getEditingElement())
         );
 
-        this.state = useState({ currentCell: {} });
+        this.state = useState({ currentCell: {}, indexes: [0, 0] });
 
         this.domState = useDomState((editingElement) => ({
             data: this.getData(editingElement),
             isPieChart: this.isPieChart(editingElement),
         }));
+    }
+
+    setDefaultState() {
+        const datasetIndex = this.state.indexes[0];
+        const dataIndex = this.state.indexes[1];
+        let backgroundLabel = _t("Dataset Color");
+        let borderLabel = _t("Dataset Border");
+        if (this.domState.isPieChart) {
+            backgroundLabel = _t("Data Color");
+            borderLabel = _t("Data Border");
+        }
+        this.table.el
+            ?.querySelector(".o_builder_matrix_selected_cell")
+            ?.classList.remove("o_builder_matrix_selected_cell");
+        const tr = this.table.el.children[dataIndex];
+        tr.querySelector(`td:nth-child(${2 + datasetIndex})`)?.classList.add(
+            "o_builder_matrix_selected_cell"
+        );
+        this.state.currentCell = { datasetIndex, dataIndex, backgroundLabel, borderLabel };
     }
 
     getData(editingElement) {
@@ -57,7 +79,9 @@ export class ChartOption extends BaseOptionComponent {
             // Pie charts set color on a data cell basis, whereas the
             // other ones set it on a dataset basis. Just reset the
             // current cell to avoid bugs.
-            this.state.currentCell = {};
+            if (Object.keys(this.state.currentCell).length) {
+                this.setDefaultState();
+            }
         }
         return isPieChart;
     }
@@ -112,7 +136,7 @@ export class ChartOption extends BaseOptionComponent {
                 return;
             }
         }
-
+        this.state.indexes = [datasetIndex, dataIndex];
         let backgroundLabel = _t("Dataset Color");
         let borderLabel = _t("Dataset Border");
         if (this.domState.isPieChart) {

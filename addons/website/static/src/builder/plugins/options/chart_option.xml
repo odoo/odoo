@@ -59,7 +59,7 @@
                 </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody t-ref="tableBody">
             <tr t-foreach="domState.data.labels" t-as="label" t-key="label_index">
                 <th>
                     <BuilderTextInput action="'updateLabelName'" actionParam="label_index"/>
