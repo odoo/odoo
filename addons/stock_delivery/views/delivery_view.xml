@@ -18,7 +18,7 @@
             <field name="arch" type="xml">
               <data>
                 <xpath expr="//group[@name='other_infos']" position="before">
-                    <group name='carrier_data' string="Shipping Information">
+                    <group name='carrier_data' string="Shipping Information" groups="stock.group_stock_user">
                         <field name="is_return_picking" invisible="1"/>
                         <field name="carrier_id" readonly="state in ('done', 'cancel')" options="{'no_create': True, 'no_open': True}"/>
                         <field name="integration_level" invisible="1"/>
@@ -45,10 +45,12 @@
                          invisible="not carrier_tracking_ref or not carrier_id or delivery_type == 'grid'" />
                 </div>
                 <xpath expr="/form/header/button[last()]" position="after">
-                    <button name="send_to_shipper" string="Send to Shipper" type="object" invisible="carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state != 'done' or picking_type_code == 'incoming'" data-hotkey="shift+v"/>
+                    <button name="send_to_shipper" string="Send to Shipper" type="object" data-hotkey="shift+v" groups="stock.group_stock_user"
+                            invisible="carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state != 'done' or picking_type_code == 'incoming'"/>
                 </xpath>
                 <xpath expr="/form/header/button[last()]" position="after">
-                    <button name="print_return_label" string="Print Return Label" type="object" invisible="not is_return_picking or state == 'done' or picking_type_code != 'incoming'" data-hotkey="shift+o"/>
+                    <button name="print_return_label" string="Print Return Label" type="object" data-hotkey="shift+o" groups="stock.group_stock_user"
+                            invisible="not is_return_picking or state == 'done' or picking_type_code != 'incoming'"/>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="attributes">
                     <attribute name="required">carrier_id and integration_level == 'rate_and_ship'</attribute>

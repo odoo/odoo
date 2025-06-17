@@ -63,13 +63,13 @@
     <record id="purchase_user_account_move_line_rule" model="ir.rule">
         <field name="name">Purchase User Account Move Line</field>
         <field name="model_id" ref="account.model_account_move_line"/>
-        <field name="domain_force">[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]</field>
+        <field name="domain_force">['&amp;', ('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), ('move_id.line_ids.purchase_order_id', '!=', False)]</field>
         <field name="groups" eval="[(4, ref('purchase.group_purchase_user'))]"/>
     </record>
     <record id="purchase_user_account_move_rule" model="ir.rule">
         <field name="name">Purchase User Account Move</field>
         <field name="model_id" ref="account.model_account_move"/>
-        <field name="domain_force">[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]</field>
+        <field name="domain_force">['&amp;', ('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), ('line_ids.purchase_order_id', '!=', False)]</field>
         <field name="groups" eval="[(4, ref('purchase.group_purchase_user'))]"/>
     </record>
     <record id="portal_purchase_order_line_rule" model="ir.rule">
