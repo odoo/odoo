@@ -144,7 +144,7 @@ class RPC(Controller):
         _check_request()
         try:
             response = self._xmlrpc(service)
-        except Exception as error: # noqa: BLE001
+        except Exception as error:  # noqa: BLE001
             response = exception_handler(error)
         return Response(response=response, mimetype='text/xml')
 
