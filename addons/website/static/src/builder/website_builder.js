@@ -42,17 +42,24 @@ export class WebsiteBuilder extends Component {
         const websitePlugins = this.props.translation
             ? TRANSLATION_PLUGINS
             : registry.category("website-plugins").getAll();
-        const mainEditorPlugins = removePlugins(
-            [...MAIN_EDITOR_PLUGINS],
-            [
-                "PowerButtonsPlugin",
-                "DoubleClickImagePreviewPlugin",
-                "SeparatorPlugin",
-                "StarPlugin",
-                "BannerPlugin",
-                "MoveNodePlugin",
-            ]
-        );
+        const mainEditorPluginsToRemove = [
+            "PowerButtonsPlugin",
+            "DoubleClickImagePreviewPlugin",
+            "SeparatorPlugin",
+            "StarPlugin",
+            "BannerPlugin",
+            "MoveNodePlugin",
+        ];
+        const pluginsBlockedInTranslationMode = [
+            "PowerboxPlugin",
+            "SearchPowerboxPlugin",
+            "YoutubePlugin",
+            "ImagePlugin",
+        ];
+        const pluginsToRemove = this.props.translation
+            ? [...mainEditorPluginsToRemove, ...pluginsBlockedInTranslationMode]
+            : mainEditorPluginsToRemove;
+        const mainEditorPlugins = removePlugins([...MAIN_EDITOR_PLUGINS], pluginsToRemove);
         const coreBuilderPlugins = this.props.translation ? [] : CORE_BUILDER_PLUGINS;
         const Plugins = [...mainEditorPlugins, ...coreBuilderPlugins, ...(websitePlugins || [])];
         builderProps.Plugins = Plugins;
