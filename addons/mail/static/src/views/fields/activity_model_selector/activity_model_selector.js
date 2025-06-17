@@ -53,8 +53,6 @@ class ActivityModelSelector extends Component {
                          * likely to fill out the wizard in order).
                          * To prevent this, current summary and notes are saved and will be recovered after the model
                          * has been changed.
-                         *
-                         * todo guce make cleaner
                          */
                         const persistDataThroughModelChange = {
                             summary: this.props.record.data.summary,
