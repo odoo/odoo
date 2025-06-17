@@ -424,7 +424,7 @@
             <field name="model">hr.employee</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban class="o_hr_employee_kanban" sample="1">
+                <kanban class="o_hr_employee_kanban" sample="1" js_class="hr_employee_kanban">
                     <field name="show_hr_icon_display"/>
                     <field name="image_128" />
                     <field name="company_id"/>
@@ -453,7 +453,10 @@
                                     </div>
                                     <field class="fw-bold fs-5" name="name" placeholder="Employee's Name"/>
                                 </div>
-                                <field t-if="record.job_title.raw_value" name="job_title"/>
+                                <div t-if="record.job_title.raw_value" class="text-truncate">
+                                    <i class="fa fa-fw me-2 fa-suitcase text-primary" title="Job Position"/>
+                                    <field name="job_title"/>
+                                </div>
                                 <div t-if="record.work_email.raw_value" class="text-truncate">
                                     <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                     <field name="work_email" />
@@ -603,6 +606,15 @@
             <field name="code">
                 if records:
                     action = records.action_create_users_confirmation()
+            </field>
+        </record>
+
+        <record id="action_hr_employee_load_demo_data" model="ir.actions.server">
+            <field name="name">Load Sample Data</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model._load_demo_data()
             </field>
         </record>
 

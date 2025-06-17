@@ -9,6 +9,9 @@
                 displayName="row.parentNode.data.display_name || row.parentNode.data.name"
             />
         </xpath>
+        <div t-ref="renderer" position="attributes">
+            <attribute name="t-attf-class">#{showActionHelper ? 'd-none' : ''}</attribute>
+        </div>
     </t>
 
 </templates>

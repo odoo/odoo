@@ -65,14 +65,6 @@
             sequence="100"/>
 
             <menuitem
-                id="menu_config_plan_plan"
-                name="Activity Plan"
-                action="mail_activity_plan_action"
-                parent="menu_human_resources_configuration"
-                groups="group_hr_manager"
-                sequence="9"/>
-
-            <menuitem
                 id="menu_config_employee"
                 name="Employee"
                 parent="menu_human_resources_configuration"
@@ -84,6 +76,14 @@
                 action="hr_department_kanban_action"
                 parent="menu_hr_root"
                 groups="base.group_user"/>
+
+            <menuitem
+                id="menu_config_plan_plan"
+                name="Onboarding / Offboarding"
+                action="mail_activity_plan_action"
+                parent="menu_config_employee"
+                groups="group_hr_manager"
+                sequence="1"/>
 
             <menuitem
                 id="menu_hr_work_location_tree"
