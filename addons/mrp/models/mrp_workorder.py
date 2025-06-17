@@ -487,8 +487,8 @@ class MrpWorkorder(models.Model):
             new_workcenter = self.env['mrp.workcenter'].browse(values['workcenter_id'])
             for workorder in self:
                 if workorder.workcenter_id.id != values['workcenter_id']:
-                    if workorder.state in ('progress', 'done', 'cancel'):
-                        raise UserError(_('You cannot change the workcenter of a work order that is in progress or done.'))
+                    if workorder.state in ('done', 'cancel'):
+                        raise UserError(_('You cannot change the workcenter of a work order that is done.'))
                     workorder.leave_id.resource_id = new_workcenter.resource_id
                     workorder.duration_expected = workorder._get_duration_expected()
                     if workorder.date_start:
