@@ -470,6 +470,22 @@ class DiscussChannel(models.Model):
     def _get_livechat_session_fields_to_store(self):
         return []
 
+    def rating_apply(self, rate, token=None, rating=None, feedback=None, subtype_xmlid=None, notify_delay_send=False):
+        """Override rating_apply to customize rating body for demo data of livechat channels"""
+        rating = super().rating_apply(rate, token, rating, feedback, subtype_xmlid, notify_delay_send)
+        rating_body = Markup("""
+            <div class="o_mail_notification o_hide_author">
+                %(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>
+                <p>%(feedback)s</p>
+            </div>
+        """) % {
+            "rating": self.env._("Rating"),
+            "rating_url": rating.rating_image_url,
+            "feedback": feedback or "",
+        }
+        rating.message_id.write({'body': rating_body})
+        return rating
+
     # =======================
     # Chatbot
     # =======================
