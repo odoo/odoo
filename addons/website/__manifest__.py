@@ -346,6 +346,7 @@
         ],
         'web.assets_unit_tests': [
             'web/static/src/legacy/js/public/minimal_dom.js',
+            'website/static/src/client_actions/website_preview/website_builder_action_test_mode.js',
             'website/static/tests/core/**/*',
             'website/static/tests/helpers.js',
             'website/static/tests/interactions/**/*',

@@ -1,6 +1,6 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, Deferred, waitFor } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, click, Deferred, queryOne, waitFor } from "@odoo/hoot-dom";
 import { useState, xml } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
@@ -84,6 +84,36 @@ describe("website tests", () => {
         expect.verifySteps([
             'getRecordInfo {"resModel":"ir.ui.view","resId":"539","field":"arch"}',
         ]);
+    });
+
+    test("elements within iframe can't be clicked while the builder is being set up", async () => {
+        const def = new Deferred();
+        patchWithCleanup(WebsiteBuilderClientAction.prototype, {
+            async loadIframeAndBundles(isEditing) {
+                super.loadIframeAndBundles(isEditing);
+                await def;
+            },
+        });
+        await setupWebsiteBuilder(
+            `<section class="test-section"><button onclick="window.step()">Click me</button></section>`,
+            { openEditor: false }
+        );
+        const iframeEl = queryOne("iframe");
+        iframeEl.contentWindow.step = () => expect.step("button clicked");
+        await contains(":iframe .test-section button").click();
+        expect.verifySteps(["button clicked"]);
+        // Reimplementation of openBuilderSidebar().
+        await click(".o-website-btn-custo-primary");
+        // The button should not be clickable.
+        await expect(click(":iframe .test-section button")).rejects.toThrow(
+            "HootDomError: found 0 elements instead of 1: 1 element, including 0 interactive"
+        );
+        expect.verifySteps([]);
+        def.resolve();
+        await advanceTime(200);
+        await contains(":iframe .test-section button").click();
+        await animationFrame();
+        expect.verifySteps(["button clicked"]);
     });
 });
 

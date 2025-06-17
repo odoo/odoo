@@ -246,10 +246,20 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     async onEditPage() {
-        await this.iframeLoaded;
-        await this.publicRootReady;
-        await this.loadAssetsEditBundle();
+        this.blockIframe();
+        await this.loadIframeAndBundles(true);
+        this.unblockIframe();
         this.state.isEditing = true;
+    }
+    /**
+     * @param {Boolean} isEditing
+     */
+    async loadIframeAndBundles(isEditing) {
+        await this.iframeLoaded;
+        if (isEditing) {
+            await this.publicRootReady;
+            await this.loadAssetsEditBundle();
+        }
     }
 
     async loadAssetsEditBundle() {
@@ -348,6 +358,13 @@ export class WebsiteBuilderClientAction extends Component {
         if (this.withLoader) {
             this.websiteService.hideLoader();
         }
+    }
+
+    blockIframe() {
+        this.websiteContent.el.setAttribute("inert", "");
+    }
+    unblockIframe() {
+        this.websiteContent.el.removeAttribute("inert");
     }
 
     setupClickListener() {
@@ -469,11 +486,7 @@ export class WebsiteBuilderClientAction extends Component {
         } else {
             this.websiteContent.el.contentWindow.location.reload();
         }
-        await this.iframeLoaded;
-        if (isEditing) {
-            await this.publicRootReady;
-            await this.loadAssetsEditBundle();
-        }
+        await this.loadIframeAndBundles(isEditing);
         this.ui.unblock();
     }
 
