@@ -71,8 +71,17 @@ class MemorySessionStore(SessionStore):
         for sid in sid_to_remove:
             self.store.pop(sid)
 
-    def rotate(self, session, env):
-        FilesystemSessionStore.rotate(self, session, env)
+    def delete_old_sessions(self, session):
+        return
+
+    def rotate(self, session, env, soft=None):
+        FilesystemSessionStore.rotate(self, session, env, soft)
+
+    def generate_key(self, salt=None):
+        return FilesystemSessionStore.generate_key(self, salt)
+
+    def is_valid_key(self, key):
+        return FilesystemSessionStore.is_valid_key(self, key)
 
     def vacuum(self):
         return

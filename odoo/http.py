@@ -233,6 +233,7 @@ DEFAULT_LANG = 'en_US'
 def get_default_session():
     return {
         'context': {},  # 'lang': request.default_lang()  # must be set at runtime
+        'create_time': time.time(),
         'db': None,
         'debug': '',
         'login': None,
@@ -293,6 +294,19 @@ if parse_version(importlib.metadata.version('werkzeug')) >= parse_version('2.0.2
 # server-side as well with a threshold that can be set via an optional
 # config parameter `sessions.max_inactivity_seconds` (default: SESSION_LIFETIME)
 SESSION_LIFETIME = 60 * 60 * 24 * 7
+
+# The default duration (3h) before a session is rotated, changing the
+# session id (also on the cookie) but keeping the same content.
+SESSION_ROTATION_INTERVAL = 60 * 60 * 3
+
+# After a session is rotated, the session should be kept for a couple of
+# seconds to account for network delay between multiple requests which are
+# made at the same time and all use the same old cookie.
+SESSION_DELETION_TIMER = 120
+
+# The amount of bytes of the session that will remain static and can be used
+# for calculating the csrf token and be stored inside the database.
+STORED_SESSION_BYTES = 42
 
 # The cache duration for static content from the filesystem, one week.
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -913,7 +927,7 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
 # =========================================================
 
 _base64_urlsafe_re = re.compile(r'^[A-Za-z0-9_-]{84}$')
-_session_identifier_re = re.compile(r'^[A-Za-z0-9_-]{42}$')
+_session_identifier_re = re.compile(r'^[A-Za-z0-9_-]{%s}$' % STORED_SESSION_BYTES)
 
 
 class FilesystemSessionStore(sessions.FilesystemSessionStore):
@@ -935,6 +949,16 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                 os.mkdir(dirname, 0o0755)
         super().save(session)
 
+    def delete_old_sessions(self, session):
+        if 'previous_sid' in session:
+            if session['create_time'] + SESSION_DELETION_TIMER < time.time():
+                self.delete_old_sessions(self.get(session['previous_sid']))
+                fn = self.get_session_filename(session['previous_sid'])
+                with contextlib.suppress(OSError):
+                    os.unlink(fn)
+                del session['previous_sid']
+                self.save(session)
+
     def get(self, sid):
         # retro compatibility
         old_path = super().get_session_filename(sid)
@@ -946,14 +970,40 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                     os.mkdir(dirname, 0o0755)
             with contextlib.suppress(OSError):
                 os.rename(old_path, session_path)
-        return super().get(sid)
+        session = super().get(sid)
+        return session
 
-    def rotate(self, session, env):
-        self.delete(session)
-        session.sid = self.generate_key()
+    def rotate(self, session, env, soft=False):
+        # With a soft rotation, things like the CSRF token will still work. It's used for rotating
+        # the session in a way that half the bytes remain to identify the user and the other half
+        # to authenticate the user. Meanwhile with a hard rotation the entire session id is changed,
+        # which is useful in cases such as logging the user out.
+        if soft:
+            # Multiple network requests can occur at the same time, all using the old session.
+            # We don't want to create a new session for each request, it's better to reference the one already made.
+            static = session.sid[:STORED_SESSION_BYTES]
+            recent_session = self.get(session.sid)
+            if 'next_sid' in recent_session:
+                # A new session has already been saved on disk by a concurrent request,
+                # the _save_session is going to simply use session.sid to set a new cookie.
+                session.sid = recent_session['next_sid']
+                return
+            next_sid = static + self.generate_key()[STORED_SESSION_BYTES:]
+            session['next_sid'] = next_sid
+            session['deletion_time'] = time.time() + SESSION_DELETION_TIMER
+            self.save(session)
+            # Now prepare the new session
+            session['previous_sid'] = session.sid
+            session.sid = next_sid
+            del session['deletion_time']
+            del session['next_sid']
+        else:
+            self.delete(session)
+            session.sid = self.generate_key()
         if session.uid and env:
             session.session_token = security.compute_session_token(session, env)
         session.should_rotate = False
+        session['create_time'] = time.time()
         self.save(session)
 
     def vacuum(self, max_lifetime=SESSION_LIFETIME):
@@ -1205,6 +1255,9 @@ class Session(collections.abc.MutableMapping):
         self['_trace'].append(new_trace)
         self.is_dirty = True
         return new_trace
+
+    def _delete_old_sessions(self):
+        root.session_store.delete_old_sessions(self)
 
 
 # =========================================================
@@ -1797,7 +1850,7 @@ class Request:
 
         # if no `time_limit` => distant 1y expiry so max_ts acts as salt, e.g. vs BREACH
         max_ts = int(time.time() + (time_limit or CSRF_TOKEN_SALT))
-        msg = f'{self.session.sid}{max_ts}'.encode('utf-8')
+        msg = f'{self.session.sid[:STORED_SESSION_BYTES]}{max_ts}'.encode()
 
         hm = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
         return f'{hm}o{max_ts}'
@@ -1818,7 +1871,7 @@ class Request:
             raise ValueError("CSRF protection requires a configured database secret")
 
         hm, _, max_ts = csrf.rpartition('o')
-        msg = f'{self.session.sid}{max_ts}'.encode('utf-8')
+        msg = f'{self.session.sid[:STORED_SESSION_BYTES]}{max_ts}'.encode()
 
         if max_ts:
             try:
@@ -2014,6 +2067,8 @@ class Request:
 
         if sess.should_rotate:
             root.session_store.rotate(sess, self.env)  # it saves
+        elif sess.uid and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL:
+            root.session_store.rotate(sess, self.env, True)
         elif sess.is_dirty:
             root.session_store.save(sess)
 
