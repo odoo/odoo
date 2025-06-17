@@ -35,6 +35,8 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 'amount_residual': discounted_amount,
                 'landing_route': invoice.get_portal_url(),
                 'transaction_route': f'/invoice/transaction/{invoice.id}',
+                'installment_state': values.get('installment_state'),
+                'next_amount_to_pay': values.get('next_amount_to_pay'),
             },
             access_token=access_token,
             **kwargs)
@@ -103,6 +105,8 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 'payment_reference': batch_name,
                 'landing_route': '/my/invoices/',
                 'transaction_route': '/invoice/transaction/overdue',
+                'installment_state': 'overude',
+                'next_amount_to_pay': total_amount,
             },
             **kwargs)
         values |= common_view_values
@@ -125,6 +129,20 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             currency_id=invoices_data['currency'].id,
             report=availability_report,
         )  # In sudo mode to read the fields of providers and partner (if logged out).
+
+        # Get compatible providers using minor amount
+        use_next_amount_to_pay = invoices_data['installment_state'] in ('next', 'overdue') and invoices_data['total_amount'] != invoices_data['next_amount_to_pay']
+        hidden_total = False
+        if len(providers_sudo) == 0 and use_next_amount_to_pay:
+            providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
+                invoice_company.id,
+                partner_sudo.id,
+                invoices_data['next_amount_to_pay'],
+                currency_id=invoices_data['currency'].id,
+                report=availability_report,
+            )
+            hidden_total = len(providers_sudo) != 0
+
         payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
             providers_sudo.ids,
             partner_sudo.id,
@@ -160,6 +178,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             'landing_route': invoices_data['landing_route'],
             'access_token': access_token,
             'payment_reference': invoices_data.get('payment_reference', False),
+            'hidden_total': hidden_total
         }
         # Merge the dictionaries while allowing the redefinition of keys.
         values = portal_page_values | payment_form_values | payment_context | self._get_extra_payment_form_values(**kwargs)

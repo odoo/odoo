@@ -160,7 +160,7 @@
                                             t-options="{'widget': 'monetary', 'display_currency': currency}"
                                         />
                                     </button>
-                                    <button class="btn btn-outline-primary o_btn_payment_tab"
+                                    <button t-if="not hidden_total" class="btn btn-outline-primary o_btn_payment_tab"
                                         id="o_payment_full_tab"
                                         data-bs-toggle="pill"
                                         data-bs-target="#o_payment_full"
