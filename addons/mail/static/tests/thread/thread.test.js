@@ -332,10 +332,14 @@ test("mark channel as fetched when a new message is loaded and thread is focused
             Command.create({ partner_id: partnerId }),
         ],
     });
+    let hasMarkAsRead = false;
     onRpc("/discuss/channel/messages", () => asyncStep("/discuss/channel/messages"));
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
         expect(args.channel_id).toBe(channelId);
-        asyncStep("rpc:mark_as_read");
+        if (!hasMarkAsRead) {
+            asyncStep("rpc:mark_as_read");
+            hasMarkAsRead = true;
+        }
     });
     onRpc("discuss.channel", "channel_fetched", ({ args }) => {
         if (args[0] === channelId) {
