@@ -9,7 +9,7 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
 
-const ALLOWED_ELEMENTS = "h1, h2, h3, p, hr, pre, blockquote";
+const ALLOWED_ELEMENTS = "h1, h2, h3, p, hr, pre, blockquote, figure";
 
 export class MoveNodePlugin extends Plugin {
     static id = "movenode";
