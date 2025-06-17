@@ -1,5 +1,7 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, clear, click, fill, queryFirst } from "@odoo/hoot-dom";
+import { Deferred } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
@@ -9,7 +11,6 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -88,6 +89,33 @@ test("input with classAction and styleAction", async () => {
     expect(":iframe .test-options-target").toHaveStyle({
         "--custom-property": "2",
     });
+});
+
+test("input kept on async action", async () => {
+    const def = new Deferred();
+    addActionOption({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.dataset.test;
+            }
+            async apply({ editingElement, value }) {
+                await def;
+                editingElement.dataset.test = value;
+            }
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target" data-test="1">Hello</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input").edit("2");
+    await contains(".options-container input").fill(3, { confirm: false });
+    def.resolve();
+    await animationFrame();
+    expect(".options-container input").toHaveValue("23");
 });
 
 describe("default value", () => {
