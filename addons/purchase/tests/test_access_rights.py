@@ -69,6 +69,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
 
     def test_read_purchase_order(self):
         """ Check that a purchase user can read all purchase order and 'in' invoices"""
+        self.purchase_user.write({'group_ids': [(4, self.env.ref('account.group_account_readonly').id)]})
         purchase_user_2 = self.purchase_user.sudo().copy({
             'name': 'Purchase user 2',
             'login': 'purchaseUser2',
