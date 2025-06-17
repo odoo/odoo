@@ -242,11 +242,10 @@ class MrpWorkorder(models.Model):
             workorder.qty_producing = workorder.production_id.qty_producing
 
     def _set_production_qty_producing(self):
-        for production in self.production_id:
-            min_wo_qty_producing = min(production.workorder_ids.mapped(lambda w: w.qty_produced + w.qty_reported_from_previous_wo))
-            if production.product_uom_id.compare(min_wo_qty_producing, production.qty_producing) != 0:
-                production.qty_producing = min_wo_qty_producing
-            production._set_qty_producing(False)
+        for workorder in self:
+            if workorder.qty_producing != 0 and workorder.product_uom_id.compare(workorder.production_id.qty_producing, workorder.qty_producing) != 0:
+                workorder.production_id.qty_producing = workorder.qty_producing
+                workorder.production_id._set_qty_producing(False)
 
     @api.depends('blocked_by_workorder_ids.qty_produced', 'blocked_by_workorder_ids.state', 'production_state')
     def _compute_qty_ready(self):
@@ -492,7 +491,7 @@ class MrpWorkorder(models.Model):
                 raise UserError(_('The quantity produced must be positive.'))
             for workorder in self:
                 workorder.qty_producing = values['qty_produced'] + workorder.qty_reported_from_previous_wo
-                if workorder.state != 'progress':
+                if workorder.state != 'progress' and self.product_uom_id.compare(values['qty_produced'], 0) > 0:
                     workorder.state = 'progress'
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
