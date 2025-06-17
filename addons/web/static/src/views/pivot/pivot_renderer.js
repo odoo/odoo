@@ -302,6 +302,15 @@ export class PivotRenderer extends Component {
      * @param {Object} context
      */
     openView(domain, views, context, newWindow) {
+        if (this.model.metaData.openAction) {
+            const { action } = this.model.metaData.openAction;
+            this.actionService.loadAction(action, context).then(loadedAction => {
+                loadedAction.domain = domain;
+                this.actionService.doAction(loadedAction, {
+                    viewType: "list",
+                });
+            });
+        }
         this.actionService.doAction(
             {
                 type: "ir.actions.act_window",

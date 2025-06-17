@@ -39,6 +39,10 @@ export class GraphArchParser {
                     if (title) {
                         archInfo.title = title;
                     }
+                    const action = node.getAttribute("drilldown_action");
+                    if (action) {
+                        archInfo.openAction = { action: action };
+                    }
                     break;
                 }
                 case "field": {

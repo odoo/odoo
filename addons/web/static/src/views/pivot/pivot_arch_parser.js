@@ -32,6 +32,9 @@ export class PivotArchParser {
                             node.getAttribute("display_quantity")
                         );
                     }
+                    if (node.hasAttribute("drilldown_action")) {
+                        archInfo.openAction = { action: node.getAttribute("drilldown_action") };
+                    }
                     break;
                 }
                 case "field": {
