@@ -2308,6 +2308,7 @@ class MailThread(models.AbstractModel):
             subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         )
         if author_subscribe:
+            # TDE note: somehow propagate "real author" ?
             real_author = self._message_compute_real_author(msg_values['author_id'])
             if real_author and not real_author.partner_share:
                 self._message_subscribe(partner_ids=[real_author.id])
@@ -3262,6 +3263,8 @@ class MailThread(models.AbstractModel):
             self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
             self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
             self._notify_thread_by_web_push(message, recipients_data, msg_vals=msg_vals, **kwargs)
+            # check for automated content (OOO)
+            self._notify_thread_with_out_of_office(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
         return recipients_data
 
@@ -4237,6 +4240,70 @@ class MailThread(models.AbstractModel):
             link = self[0].get_base_url() + link
 
         return link
+
+    def _notify_thread_with_out_of_office(self, message, recipients_data, msg_vals=False, **kwargs):
+        """ Out-of-office automated answer at posting time. """
+        ooo_messages = self.env['mail.message']
+        # limit OOO generation to comments on valid threads
+        if not self or self._transient:
+            return ooo_messages
+        message_type = msg_vals['message_type'] if 'message_type' in (msg_vals or {}) else message.message_type
+        if message_type != 'comment':
+            return ooo_messages
+
+        # extract internal users being notified to check their OOO status
+        # done manually (not when computing recipients data) as it would be costly
+        # and difficult with potential inheritance (calendar, ...)
+        pids = msg_vals['partner_ids'] if 'partner_ids' in (msg_vals or {}) else message.partner_ids.ids
+        internal_uids = [
+            r['uid'] for r in recipients_data if (
+                r['active'] and
+                r['id'] and r['id'] in pids and
+                r['uid'] and not r['share']
+            )
+        ]
+        ooo_users = self.env['res.users'].sudo()
+        if internal_uids:
+            users = self.env['res.users'].sudo().browse(internal_uids)
+            users.fetch(['is_out_of_office'])
+            ooo_users = users.filtered(lambda u: u.is_out_of_office and not is_html_empty(u.out_of_office_message))
+        if not ooo_users:
+            return ooo_messages
+
+        # message real author is either a customer, either an internal user using emails only
+        author_id = msg_vals.get('author_id') or message.author_id.id
+        real_author_su = self._message_compute_real_author(author_id).sudo()
+        if not real_author_su.partner_share and not all(u.notification_type == 'email' for u in real_author_su.user_ids):
+            return ooo_messages
+
+        # finally send OOO messages
+        original_subject = msg_vals['subject'] if 'subject' in (msg_vals or {}) else message.subject
+        for user in ooo_users:
+            body = self.env['ir.qweb']._render(
+                'mail.message_notification_out_of_office',
+                {
+                    # content
+                    'out_of_office_message': Markup(user.out_of_office_message),
+                    'replied_body': msg_vals['body'] if 'body' in (msg_vals or {}) else message.body,
+                    'signature': user.signature,
+                    # tools
+                    'is_html_empty': is_html_empty,
+                },
+                minimal_qcontext=True,
+                raise_if_not_found=False,
+            )
+            ooo_messages += self.message_post(
+                author_id=user.partner_id.id,
+                body=body,
+                email_from=user.email_formatted,
+                message_type='notification',  # TDE check: auto_comment ?
+                notify_author=True,  # as current user could be the one receiving the OOO message
+                notify_skip_followers=True,
+                partner_ids=real_author_su.ids,
+                subject=_('Auto: %(subject)s', subject=(original_subject or self.display_name)),
+                subtype_id=self.env.ref('mail.mt_comment').id,  # TDE check: note ? but what about portal / internal ?
+            )
+        return ooo_messages
 
     # Notify tools and helpers
     # ------------------------------------------------------------

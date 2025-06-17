@@ -772,7 +772,7 @@ class TestMessageLog(TestMessagePostCommon):
             )
 
 
-@tagged('mail_post')
+@tagged('mail_post', 'post_install', '-at_install')
 class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
     def test_assert_initial_values(self):
@@ -1541,6 +1541,79 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(reply.notified_partner_ids, self.user_employee.partner_id)
         self.assertEqual(reply.parent_id, msg)
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
+
+    @users('employee')
+    def test_post_with_out_of_office(self):
+        """ Test out of office support. Test setup :
+         * record followers: user_employee_c2
+         * OOO users: user_admin, user_employee_c2, user_portal
+        """
+        # note that even if somehow portal achieved to be OOO we don't care
+        self._setup_out_of_office(self.user_admin + self.user_employee_c2 + self.user_portal)
+        self.user_employee.notification_type = 'email'  # potential limitation of from, to check
+
+        for user in self.user_admin + self.user_employee_c2:
+            self.assertTrue(user.is_out_of_office)
+        for user in self.user_employee + self.user_employee_c3 + self.user_portal:
+            self.assertFalse(user.is_out_of_office, 'Unset or portal')
+
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        test_record.message_subscribe(self.user_employee_c2.partner_id.ids)
+
+        for post_dt, recipients, exp_ooo_authors in [
+            # portal user should not generate OOO messages
+            (
+                datetime(2025, 6, 17, 14, 15, 59),
+                self.user_portal.partner_id,
+                self.env['res.partner'],
+            ),
+            # partner_admin is in direct recipients and OOO
+            (
+                datetime(2025, 6, 17, 14, 15, 59),
+                (self.user_admin + self.user_employee_c3 + self.user_portal).partner_id,
+                self.partner_admin,
+            ),
+        ]:
+            with self.subTest(post_dt=post_dt, recipients=recipients):
+                with self.mock_mail_gateway(), self.mock_mail_app(), self.mock_datetime_and_now(post_dt):
+                    message = test_record.message_post(
+                        body="We need admin NOW !",
+                        message_type='comment',
+                        partner_ids=recipients.ids,
+                        subtype_id=self.env.ref('mail.mt_comment').id,
+                    )
+                # classic post
+                self.assertEqual(
+                    message.notified_partner_ids,
+                    recipients + self.user_employee_c2.partner_id
+                )
+                # OOO messages: from: OOO recipient to message author
+                self.assertEqual(len(self._new_msgs), 1 + len(exp_ooo_authors), 'Posted message + OOO from expected authors')
+                ooo_messages = self._new_msgs[1:]
+                for ooo_author, ooo_message in zip(exp_ooo_authors, ooo_messages, strict=True):
+                    self.assertMailNotifications(
+                        ooo_message,
+                        [{
+                            'content': "Le numéro que vous avez composé n'est plus attribué.",
+                            'email_values': {
+                                'subject': f'Auto: {test_record.name}',
+                            },
+                            'message_type': 'notification',
+                            'message_values': {
+                                'author_id': ooo_author,
+                                'email_from': ooo_author.email_formatted,
+                                'model': test_record._name,
+                                'partner_ids': self.partner_employee,
+                                'notified_partner_ids': self.partner_employee,
+                                'res_id': test_record.id,
+                                'subject': f'Auto: {test_record.name}',
+                            },
+                            'notif': [
+                                {'partner': self.partner_employee, 'type': 'email'},
+                            ],
+                            'subtype': 'mail.mt_comment',
+                        }],
+                    )
 
 
 @tagged('mail_post')
