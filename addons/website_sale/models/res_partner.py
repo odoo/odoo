@@ -44,3 +44,21 @@ class ResPartner(models.Model):
                     "Also, the cart might not be visible for the customer until you update the pricelist of that cart."
                 ),
             }}
+
+    def write(self, vals):
+        if {'city', 'zip', 'country_id', 'vat'} & vals.keys():
+            # Recompute fiscal position for open website orders
+            orders = self.env['sale.order'].sudo().search([
+                ('state', '=', 'draft'),
+                ('website_id', '!=', False),
+                '|', ('partner_id', 'in', self.ids), ('partner_shipping_id', 'in', self.ids),
+            ])
+            if orders:
+                fpos_by_order = {so: so.fiscal_position_id for so in orders}
+                res = super().write(vals)
+                self.env.add_to_compute(orders._fields['fiscal_position_id'], orders)
+                orders.filtered(
+                    lambda so: so.fiscal_position_id != fpos_by_order[so],
+                )._recompute_taxes()
+                return res
+        return super().write(vals)
