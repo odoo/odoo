@@ -47,6 +47,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
             'available_in_pos': True,
             'list_price': 10,
             'taxes_id': [Command.set([tax_10_inc.id, tax_10_excl.id])],
+            'public_description': 'Nice Product',
         })
 
         # With preset location choices

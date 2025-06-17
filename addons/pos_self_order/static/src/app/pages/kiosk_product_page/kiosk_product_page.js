@@ -102,6 +102,9 @@ export class KioskProductPage extends Component {
     }
 
     hasMissingAttributeValues() {
+        if (!this.productTemplate.attribute_line_ids.length) {
+            return false;
+        }
         const selection = this.state.selectedValues[this.productTemplate.id];
         if (!selection) {
             return true;
