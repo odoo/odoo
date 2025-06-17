@@ -134,10 +134,11 @@ describe("Async operations", () => {
         });
     });
 
-    test("In clickable component, revert is awaited before applying the next apply", async() => {
+    test("In clickable component, revert is awaited before applying the next apply", async () => {
         const applyDelay = 1000;
         addActionOption({
             customAction: {
+                suppressPreviewableAsyncWarning: true,
                 apply: async ({ editingElement, value }) => {
                     await new Promise((resolve) => setTimeout(resolve, applyDelay));
                     editingElement.classList.add(value);
@@ -178,12 +179,13 @@ describe("Async operations", () => {
         expect.verifySteps(["revert"]);
     });
 
-    test("In ColorPicker, revert is awaited before applying the next apply", async() => {
+    test("In ColorPicker, revert is awaited before applying the next apply", async () => {
         const applyDelay = 1000;
         addActionOption({
             customAction: {
                 apply: async ({ editingElement }) => {
-                    let color = getComputedStyle(editingElement).getPropertyValue("background-color");
+                    let color =
+                        getComputedStyle(editingElement).getPropertyValue("background-color");
                     if (color === "rgb(255, 0, 0)") {
                         color = "red";
                         await new Promise((resolve) => setTimeout(resolve, applyDelay));
