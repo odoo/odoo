@@ -587,3 +587,17 @@ class TestProjectSubtasks(TestProjectCommon):
             subtask_form.parent_id = task
 
         self.assertTrue(subtask_2.display_in_project)
+
+    def test_subtasks_inherits_tags_of_parent(self):
+        task = self.env['project.task'].create({
+            'name': 'Parent task',
+            'project_id': self.project_goats.id,
+            'tag_ids': [Command.create({'name': 'tag1', 'color': 0}), Command.create({'name': 'tag2', 'color': 1})],
+        })
+
+        subtask1 = self.env['project.task'].with_context({'default_parent_id': task.id}).create({
+            'name': 'Sub-task 1',
+            'project_id': self.project_goats.id,
+        })
+
+        self.assertEqual(subtask1.tag_ids, task.tag_ids, "Subtask should inherit tags from parent task")
