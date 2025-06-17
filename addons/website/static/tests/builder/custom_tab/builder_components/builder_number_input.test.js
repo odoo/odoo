@@ -132,8 +132,8 @@ describe("default value", () => {
 
         await clear();
         await click(".options-container");
-        expect("[data-action-id='customAction'] input").toHaveValue("");
-        expect(":iframe .test-options-target").toHaveInnerHTML("");
+        expect("[data-action-id='customAction'] input").toHaveValue("0");
+        expect(":iframe .test-options-target").toHaveInnerHTML("0");
     });
     test("clear BuilderNumberInput with default value", async () => {
         addActionOption({
