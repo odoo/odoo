@@ -76,6 +76,7 @@ export class Builder extends Component {
                 "SeparatorPlugin",
                 "StarPlugin",
                 "BannerPlugin",
+                "MoveNodePlugin",
             ]
         );
         const corePlugins = this.props.isTranslation ? [] : CORE_PLUGINS;
