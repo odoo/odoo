@@ -3,7 +3,7 @@ import { rpc } from "@web/core/network/rpc";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
-import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
+import { Component, useState, useRef, onMounted } from "@odoo/owl";
 
 class VideoOption extends Component {
     static template = "html_editor.VideoOption";
@@ -109,7 +109,7 @@ export class VideoSelector extends Component {
         });
         this.urlInputRef = useRef("url-input");
 
-        onWillStart(async () => {
+        onMounted(async () => {
             if (this.props.media) {
                 const src =
                     this.props.media.dataset.oeExpression ||
@@ -127,9 +127,8 @@ export class VideoSelector extends Component {
                     });
                 }
             }
+            await this.prepareVimeoPreviews();
         });
-
-        onMounted(async () => this.prepareVimeoPreviews());
 
         useAutofocus();
 

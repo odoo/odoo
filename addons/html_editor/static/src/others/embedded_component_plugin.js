@@ -160,7 +160,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (getEditableDescendants) {
             env.getEditableDescendants = getEditableDescendants;
         }
-        this.dispatchTo("mount_component_handlers", { name, env, props });
+        this.dispatchTo("mount_component_handlers", { name, env, props, host });
         const root = this.app.createRoot(Component, {
             props,
             env,
