@@ -3133,7 +3133,7 @@ class MailThread(models.AbstractModel):
         In order to ease coding kwargs are frequently used. This method
         acts like a filter, allowing to spot parameters that are not
         supported. """
-        return {
+        valid = {
             'force_email_company',
             'force_email_lang',
             'force_record_name',
@@ -3148,6 +3148,10 @@ class MailThread(models.AbstractModel):
             'skip_existing',
             'subtitles',
         }
+        # limit mail headers to internal users
+        if not self.env.user.share or self.env.su:
+            valid |= {'mail_headers'}
+        return valid
 
     @api.model
     def _is_notification_scheduled(self, notify_scheduled_date):
@@ -3384,10 +3388,11 @@ class MailThread(models.AbstractModel):
         if not partners_data:
             return True
 
+        additional_values = {'auto_delete': mail_auto_delete}
+        if kwargs.get('mail_headers'):
+            additional_values['headers'] = kwargs['mail_headers']
         base_mail_values = self._notify_by_email_get_base_mail_values(
-            message,
-            partners_data,
-            additional_values={'auto_delete': mail_auto_delete}
+            message, partners_data, additional_values=additional_values,
         )
         base_notification_values = self._notify_by_email_get_base_notification_values(message)
 
@@ -3789,8 +3794,8 @@ class MailThread(models.AbstractModel):
         if additional_values:
             base_mail_values.update(additional_values)
 
-        # prepare headers
-        headers = {}
+        # prepare headers (as sudo as accessing mail.alias.domain, restricted)
+        headers = base_mail_values.get('headers') or {}
         # prepare external emails to modify Msg[To] and enable Reply-All by
         # including external people (aka share partners to notify + emails
         # notified by incoming email (incoming_email_cc and incoming_email_to)
@@ -4397,6 +4402,10 @@ class MailThread(models.AbstractModel):
                 author_id=user.partner_id.id,
                 body=body,
                 email_from=user.email_formatted,
+                mail_headers={
+                    'Auto-Submitted': 'auto-replied',
+                    'X-Auto-Response-Suppress': 'All',  # avoid out-of-office (and other automated) replies from MS Exchange
+                },
                 message_type='out_of_office',  # do not use 'auto_comment', like acknowledgements, notably to ease finding them / avoid repetitions
                 notify_author=True,  # as current user could be the one receiving the OOO message
                 notify_skip_followers=True,
