@@ -131,8 +131,12 @@ export class Builder extends Component {
                 getRecordInfo: (editableEl) => {
                     if (!editableEl) {
                         editableEl = closestElement(
-                            this.editor.shared.selection.getEditableSelection().anchorNode
+                            this.editor.shared.selection.getEditableSelection().anchorNode,
+                            "[data-oe-model]"
                         );
+                        if (!editableEl) {
+                            return {};
+                        }
                     }
                     return {
                         resModel: editableEl.dataset["oeModel"],
