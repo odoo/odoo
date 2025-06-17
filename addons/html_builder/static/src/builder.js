@@ -68,16 +68,26 @@ export class Builder extends Component {
 
         const editorBus = new EventBus();
 
-        const mainPlugins = removePlugins(
-            [...MAIN_PLUGINS],
-            [
-                "PowerButtonsPlugin",
-                "DoubleClickImagePreviewPlugin",
-                "SeparatorPlugin",
-                "StarPlugin",
-                "BannerPlugin",
-            ]
-        );
+        const basePluginsToRemove = [
+            "PowerButtonsPlugin",
+            "DoubleClickImagePreviewPlugin",
+            "SeparatorPlugin",
+            "StarPlugin",
+            "BannerPlugin"
+        ];
+
+        const translationExtraPlugins = [
+            "PowerboxPlugin",
+            "SearchPowerboxPlugin",
+            "YoutubePlugin",
+            "ImagePlugin"
+        ];
+
+        const pluginsToRemove = this.props.isTranslation
+            ? [...basePluginsToRemove, ...translationExtraPlugins]
+            : basePluginsToRemove;
+
+        const mainPlugins = removePlugins([...MAIN_PLUGINS], pluginsToRemove);
         const corePlugins = this.props.isTranslation ? [] : CORE_PLUGINS;
         const Plugins = [...mainPlugins, ...corePlugins, ...(this.props.Plugins || [])];
         // TODO: maybe do a different config for the translate mode and the
