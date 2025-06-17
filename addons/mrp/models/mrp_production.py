@@ -1338,8 +1338,7 @@ class MrpProduction(models.Model):
             if move.sudo()._should_bypass_set_qty_producing():
                 continue
 
-            new_qty = move.product_uom.round((max(self.workorder_ids.mapped(lambda w: w.qty_produced - w.qty_reported_from_previous_wo))) * move.unit_factor)
-            # new_qty = move.product_uom.round((self.qty_producing - self.qty_produced) * move.unit_factor)
+            new_qty = move.product_uom.round((self.qty_producing - self.qty_produced) * move.unit_factor)
             move._set_quantity_done(new_qty)
             if (not move.manual_consumption or pick_manual_consumption_moves) \
                     and move.quantity \
