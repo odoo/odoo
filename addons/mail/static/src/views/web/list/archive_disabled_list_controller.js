@@ -1,11 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
 import { ListController } from "@web/views/list/list_controller";
 
-/* todo guce:
- * Should this component be renamed?
- * The logic for activity creation without a record set has been applied here because it was useful in the same places
- * that not showing an archival option made sense, but the component is misnommed as a result.
- */
 export class ArchiveDisabledListController extends ListController {
     setup() {
         super.setup();
