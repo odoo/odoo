@@ -110,6 +110,8 @@ export class ImageShapeOptionPlugin extends Plugin {
 
         // Get the svg element.
         const svg = await this.computeShape(shapeSvgText, {
+            ...img.dataset,
+            ...newDataset,
             shapeId,
             shapeFlip: getData("shapeFlip") || "",
             shapeRotate: getData("shapeRotate") || 0,

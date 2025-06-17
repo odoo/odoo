@@ -134,7 +134,12 @@ class ImageToolOptionPlugin extends Plugin {
         return false;
     }
     isImageSupportedForShapes(img, dataset = img.dataset) {
-        return dataset.originalId && isImageSupportedForProcessing(getMimetype(img));
+        // todo: The hover effect code should probably be define somewhere else.
+        const isHoverEffect = !!dataset["hoverEffect"];
+        return (
+            isHoverEffect ||
+            (dataset.originalId && isImageSupportedForProcessing(getMimetype(img)))
+        );
     }
 }
 

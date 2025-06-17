@@ -9,9 +9,9 @@ export const imageShapeDefinitions = {
                 shapes: {
                     // todo: find it's proper place when implementing
                     // hovering an image without shape.
-                    // "html_builder/geometric/geo_square": {
-                    //     transform: false,
-                    // },
+                    "html_builder/geometric/geo_square": {
+                        transform: false,
+                    },
                     "html_builder/geometric/geo_shuriken": {
                         selectLabel: _t("Shuriken"),
                         transform: false,

@@ -4,20 +4,23 @@ import { convertCSSColorToRgba } from "@web/core/utils/colors";
 
 export class ImageHoverPlugin extends Plugin {
     static id = "imageHover";
+    static shared = ["setHoverEffect"];
+    static dependencies = ["imagePostProcess"];
     resources = {
         builder_actions: {
             setHoverEffect: {
-                load: async () => {},
-                apply: async (params) => {},
+                load: async ({ editingElement: imgEl }) => {},
+                apply: async ({ editingElement: imgEl }) => {},
             },
         },
+        system_attributes: ["data-original-src-before-hover"],
         post_compute_shape_listeners: async (svg, params) => {
             let rgba = null;
             let rbg = null;
             let opacity = null;
             // Add the required parts for the hover effects to the SVG.
             const hoverEffectName = params.hoverEffect;
-            await this.getHoverEffects();
+            await this.getSvgHoverEffects();
             const hoverEffectEls = this.hoverEffectsSvg.querySelectorAll(`#${hoverEffectName} > *`);
             hoverEffectEls.forEach((hoverEffectEl) => {
                 svg.appendChild(hoverEffectEl.cloneNode(true));
@@ -126,13 +129,54 @@ export class ImageHoverPlugin extends Plugin {
             }
         },
     };
+    async setHoverEffect(imgEl, hoverEffectId = "overlay") {
+        // delete imgEl.dataset.hoverEffectColor;
+        // delete imgEl.dataset.hoverEffectIntensity;
+        // delete imgEl.dataset.hoverEffectStrokeWidth;
+
+        // if (params.name === "hover_effect_overlay_opt") {
+        //     imgEl.dataset.hoverEffectColor = this._getCSSColorValue("black-25");
+        // } else if (params.name === "hover_effect_outline_opt") {
+        //     imgEl.dataset.hoverEffectColor = this._getCSSColorValue("primary");
+        //     imgEl.dataset.hoverEffectStrokeWidth = 10;
+        // } else {
+        // imgEl.dataset.hoverEffectIntensity = 20;
+
+        //     if (params.name !== "hover_effect_mirror_blur_opt") {
+        //         imgEl.dataset.hoverEffectColor = "rgba(0, 0, 0, 0)";
+        //     }
+        // }
+        const defaultHoverlayColors = {
+            // overlay: this._getCSSColorValue("black-25"),
+            // outline: this._getCSSColorValue("primary"),
+            overlay: "rgba(0, 0, 0, 0.25)",
+            image_mirror_blur: undefined,
+        };
+
+        const newData = {
+            hoverEffectColor:
+                (hoverEffectId in defaultHoverlayColors && defaultHoverlayColors[hoverEffectId]) ||
+                "rgba(0, 0, 0, 0)",
+            hoverEffectStrokeWidth: undefined,
+            hoverEffectIntensity: "20",
+            hoverEffect: "overlay",
+        };
+        if (!imgEl.dataset.shape) {
+            newData.shape = "html_builder/geometric/geo_square";
+        }
+        const updateAttributes = await this.dependencies.imagePostProcess.processImage({
+            img: imgEl,
+            newDataset: newData,
+        });
+        updateAttributes();
+    }
     /**
      * Gets the hover effects list.
      *
      * @private
      * @returns {Promise<SVGElement>}
      */
-    async getHoverEffects() {
+    async getSvgHoverEffects() {
         if (this.hoverEffectsSvg) {
             return this.hoverEffectsSvg;
         }

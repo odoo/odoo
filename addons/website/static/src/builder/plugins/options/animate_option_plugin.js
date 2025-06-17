@@ -13,7 +13,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
-    static dependencies = ["imageToolOption", "history", "selection", "split"];
+    static dependencies = ["imageToolOption", "history", "selection", "split", "imageHover"];
     static shared = ["forceAnimation", "getDirectionsItems", "getEffectsItems"];
     animateOptionProps = {
         getDirectionsItems: this.getDirectionsItems.bind(this),
@@ -385,7 +385,8 @@ export class SetAnimationModeAction extends BuilderAction {
             this._setImagesLazyLoading(editingElement);
         }
     }
-    apply({ editingElement, value: effectName, params: { forceAnimation } }) {
+
+    async apply({ editingElement, value: effectName, params: { forceAnimation } }) {
         if (this.animationWithFadein.includes(effectName)) {
             editingElement.classList.add("o_anim_fade_in");
         }
@@ -394,6 +395,7 @@ export class SetAnimationModeAction extends BuilderAction {
             editingElement.dataset.scrollZoneEnd = 100;
         }
         if (effectName === "onHover") {
+            await this.dependencies.imageHover.setHoverEffect(editingElement);
             // todo: to implement
             // Pause the history until the hover effect is applied in
             // "setImgShapeHoverEffect". This prevents saving the intermediate
@@ -405,7 +407,7 @@ export class SetAnimationModeAction extends BuilderAction {
             // });
         }
         if (forceAnimation) {
-            this.dependencies.animateOption.forceAnimation(editingElement);
+            this.forceAnimation(editingElement);
         }
     }
     /**
