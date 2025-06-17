@@ -103,7 +103,7 @@ class AccountMove(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         result = super()._load_pos_data_fields(config_id)
-        return result or ['id']
+        return result or ['id', 'name']
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

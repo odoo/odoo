@@ -1150,7 +1150,7 @@ class PosOrder(models.Model):
 
     def read_pos_data(self, data, config_id):
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
-
+        account_moves = self.account_move | self.payment_ids.account_move_id
         return {
             'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.session': [],
@@ -1158,6 +1158,7 @@ class PosOrder(models.Model):
             'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             "product.attribute.custom.value": self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'account.move': account_moves.sudo().read(self.account_move._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
 
     @api.model
