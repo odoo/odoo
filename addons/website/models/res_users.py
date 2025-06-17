@@ -4,6 +4,7 @@ import logging
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -18,22 +19,33 @@ class ResUsers(models.Model):
         'You can not have two users with the same login!',
     )
 
-    @api.constrains('login', 'website_id')
+    @api.constrains('login', 'active', 'website_id')
     def _check_login(self):
-        """ Do not allow two users with the same login without website """
-        self.flush_model(['login', 'website_id'])
-        self.env.cr.execute(
-            """SELECT login
+        """ Do not allow two users with the similar login without website """
+        self.flush_model(['login', 'active', 'website_id'])
+
+        self.env.cr.execute(SQL(
+            """SELECT lower(login)
                  FROM res_users
-                WHERE login IN (SELECT login FROM res_users WHERE id IN %s AND website_id IS NULL)
+                WHERE lower(login) IN (SELECT lower(login) FROM res_users WHERE id IN %(ids)s AND active = TRUE)
+                  AND active = TRUE
+             GROUP BY lower(login), website_id
+               HAVING COUNT(*) > 1
+
+                UNION
+
+               SELECT login
+                 FROM res_users
+                WHERE login IN (SELECT login FROM res_users WHERE id IN %(ids)s AND website_id IS NULL)
                   AND website_id IS NULL
              GROUP BY login
                HAVING COUNT(*) > 1
             """,
-            (tuple(self.ids),)
-        )
+            ids=tuple(self.ids),
+        ))
+
         if self.env.cr.rowcount:
-            raise ValidationError(_('You can not have two users with the same login!'))
+            raise ValidationError(_('User with similar login already exists!'))
 
     @api.model
     def _get_login_domain(self, login):

@@ -3,6 +3,7 @@
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tests.common import get_db_name, HOST, HttpCase, new_test_user, Opener, tagged
+from random import choice
 
 
 class TestWebLoginCommon(HttpCase):
@@ -59,6 +60,19 @@ class TestWebLogin(TestWebLoginCommon):
 
         # log in using the above form, it should still be valid
         self.login('internal_user', 'internal_user', csrf_token)
+
+    def test_web_login_with_similars(self):
+        # test login is case insensitive
+        login = ''.join([choice([c, c.upper()]) for c in 'internal_user'])
+        res_post = self.login(login, 'internal_user')
+        # ensure we are logged-in
+        self.url_open(
+            '/web/session/check',
+            headers={'Content-Type': 'application/json'},
+            data='{}'
+        ).raise_for_status()
+        # ensure we end up on the right page for internal users.
+        self.assertEqual(res_post.request.path_url, '/odoo')
 
 
 @tagged('post_install', '-at_install')

@@ -25,7 +25,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, DEFAULT_LANG
-from odoo.tools import is_html_empty, frozendict, reset_cached_properties, SQL
+from odoo.tools import is_html_empty, frozendict, reset_cached_properties, SQL, escape_psql
 
 
 _logger = logging.getLogger(__name__)
@@ -539,6 +539,23 @@ class ResUsers(models.Model):
         if system and not system.user_ids:
             raise ValidationError(_("You must have at least an administrator user."))
 
+    @api.constrains('login', 'active')
+    def _check_login(self):
+        """ Check that no two users have the similar logins."""
+        self.flush_model(['login', 'active'])
+        self.env.cr.execute(
+            """SELECT lower(login)
+                 FROM res_users
+                WHERE lower(login) IN (SELECT lower(login) FROM res_users WHERE id IN %s)
+                  AND active = TRUE
+             GROUP BY lower(login)
+               HAVING COUNT(*) > 1
+            """,
+            (tuple(self.ids),)
+        )
+        if self.env.cr.rowcount:
+            raise ValidationError(_('User with similar login already exists!'))
+
     def onchange(self, values, field_names, fields_spec):
         # Hacky fix to access fields in `SELF_READABLE_FIELDS` in the onchange logic.
         # Put field values in the cache.
@@ -729,7 +746,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_login_domain(self, login):
-        return [('login', '=', login)]
+        return [('login', '=ilike', escape_psql(login))]
 
     @api.model
     def _get_email_domain(self, email):
@@ -744,6 +761,7 @@ class ResUsers(models.Model):
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         try:
             with self._assert_can_auth(user=login):
+                login = login.strip()
                 user = self.sudo().search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
                 if not user:
                     # ruff: noqa: TRY301
