@@ -2517,7 +2517,7 @@ class IrQweb(models.AbstractModel):
                 # element: {path!r} , {xml!r}'
                 template_cache_key = {self._compile_expr(expr)} if not self.env.context.get('is_t_cache_disabled') else None
                 cache_key = self._get_cache_key(template_cache_key) if template_cache_key else None
-                uniq_cache_key = cache_key and ({str(self.env.context['__qweb_base_key_cache'])!r}, '{def_name}_cache', cache_key)
+                uniq_cache_key = cache_key and ({self.env.context['__qweb_base_key_cache']!r}, '{def_name}_cache', cache_key)
                 def {def_name}_cache():
                     text = []
                     result = []
@@ -2714,6 +2714,9 @@ class IrQweb(models.AbstractModel):
             cache_key = (cache_key,)
         keys = []
         for item in cache_key:
+            if item is None or isinstance(item, (int, bool)):
+                keys.append(item)
+                continue
             try:
                 # use try catch instead of isinstance to detect lazy values
                 keys.append(item._name)
