@@ -48,19 +48,17 @@ class ResPartner(models.Model):
             new_partners = self.search(domain, offset=offset, limit=100)
         fiscal_positions = new_partners.fiscal_position_id
         return {
-            'res.partner': new_partners.read(self._load_pos_data_fields(config_id), load=False),
-            'account.fiscal.position': fiscal_positions.read(self.env['account.fiscal.position']._load_pos_data_fields(config_id), load=False)
+            'res.partner': self._load_pos_data_read(new_partners, config),
+            'account.fiscal.position': self.env['account.fiscal.position']._load_pos_data_read(fiscal_positions, config),
         }
 
     @api.model
-    def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
-
+    def _load_pos_data_domain(self, data, config):
         # Collect partner IDs from loaded orders
         loaded_order_partner_ids = {order['partner_id'] for order in data['pos.order']}
 
         # Extract partner IDs from the tuples returned by get_limited_partners_loading
-        limited_partner_ids = {partner[0] for partner in config_id.get_limited_partners_loading()}
+        limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading()}
 
         limited_partner_ids.add(self.env.user.partner_id.id)  # Ensure current user is included
         partner_ids = limited_partner_ids.union(loaded_order_partner_ids)
@@ -71,7 +69,7 @@ class ResPartner(models.Model):
             partner.fiscal_position_id = self.env['account.fiscal.position'].with_company(self.env.company)._get_fiscal_position(partner)
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return [
             'id', 'name', 'street', 'street2', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
             'barcode', 'write_date', 'property_product_pricelist', 'parent_name', 'pos_contact_address',

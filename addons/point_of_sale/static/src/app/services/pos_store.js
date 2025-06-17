@@ -1165,7 +1165,7 @@ export class PosStore extends WithLazyGetterTrap {
         return !this.config.restrict_price_control || this.getCashier()._role == "manager";
     }
     get showCashMoveButton() {
-        return Boolean(this.config.cash_control && this.session._has_cash_move_perm);
+        return Boolean(this.config.cash_control && this.config._has_cash_move_perm);
     }
     createNewOrder(data = {}, onGetNextOrderRefs = () => {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find(
@@ -2403,14 +2403,14 @@ export class PosStore extends WithLazyGetterTrap {
     getExcludedProductIds() {
         return [
             this.config.tip_product_id?.product_tmpl_id?.id,
-            ...this.session._pos_special_products_ids.map(
+            ...this.config._pos_special_products_ids.map(
                 (id) => this.models["product.product"].get(id)?.product_tmpl_id?.id
             ),
         ].filter(Boolean);
     }
 
     areAllProductsSpecial(products) {
-        const specialDisplayProductIds = this.session._pos_special_display_products_ids || [];
+        const specialDisplayProductIds = this.config._pos_special_display_products_ids || [];
         return (
             specialDisplayProductIds.length >= products.length &&
             products.every((product) => specialDisplayProductIds.includes(product.id))

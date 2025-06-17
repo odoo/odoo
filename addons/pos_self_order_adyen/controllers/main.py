@@ -49,8 +49,8 @@ class PosSelfAdyenController(PosAdyenController):
             order.config_id._notify('PAYMENT_STATUS', {
                 'payment_result': payment_result,
                 'data': {
-                    'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                    'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
+                    'pos.order': order.read(order._load_pos_self_data_fields(order.config_id), load=False),
+                    'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id), load=False),
                 }
             })
         return request.make_json_response('[accepted]') # https://docs.adyen.com/point-of-sale/design-your-integration/choose-your-architecture/cloud/#guarantee

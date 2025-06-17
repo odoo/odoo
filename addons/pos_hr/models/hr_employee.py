@@ -12,30 +12,28 @@ class HrEmployee(models.Model):
     _inherit = ['hr.employee', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
-        return config_id._employee_domain(config_id.current_user_id.id)
+    def _load_pos_data_domain(self, data, config):
+        return config._employee_domain(config.current_user_id.id)
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['name', 'user_id', 'work_contact_id']
 
     def _server_date_to_domain(self, domain):
         return domain
 
-    def _post_read_pos_data(self, data):
-        employee_ids = [employee['id'] for employee in data]
-        employees = self.browse(employee_ids)
-        config_id = self.env['pos.config'].browse(self.env.context['config_id'])
-        manager_ids = employees.filtered(lambda emp: config_id.group_pos_manager_id.id in emp.user_id.all_group_ids.ids).ids
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        manager_ids = records.filtered(lambda emp: config.group_pos_manager_id.id in emp.user_id.all_group_ids.ids).ids
 
-        employees_barcode_pin = employees.get_barcodes_and_pin_hashed()
+        employees_barcode_pin = records.get_barcodes_and_pin_hashed()
         bp_per_employee_id = {bp_e['id']: bp_e for bp_e in employees_barcode_pin}
 
-        for employee in data:
-            if employee['id'] in manager_ids or employee['id'] in config_id.advanced_employee_ids.ids:
+        for employee in read_records:
+            if employee['id'] in manager_ids or employee['id'] in config.advanced_employee_ids.ids:
                 role = 'manager'
-            elif employee['id'] in config_id.minimal_employee_ids.ids:
+            elif employee['id'] in config.minimal_employee_ids.ids:
                 role = 'minimal'
             else:
                 role = 'cashier'
@@ -44,7 +42,7 @@ class HrEmployee(models.Model):
             employee['_barcode'] = bp_per_employee_id[employee['id']]['barcode']
             employee['_pin'] = bp_per_employee_id[employee['id']]['pin']
 
-        return super()._post_read_pos_data(data)
+        return read_records
 
     def get_barcodes_and_pin_hashed(self):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):

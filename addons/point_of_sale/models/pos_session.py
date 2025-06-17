@@ -8,7 +8,6 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare, plaintext2html, split_every
 from odoo.tools.constants import PREFETCH_MAX
-from odoo.service.common import exp_version
 from odoo.osv.expression import AND
 
 
@@ -134,7 +133,7 @@ class PosSession(models.Model):
         return relations
 
     @api.model
-    def _load_pos_data_models(self, config_id):
+    def _load_pos_data_models(self, config):
         return ['pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.template.attribute.exclusion', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
@@ -142,43 +141,26 @@ class PosSession(models.Model):
             'account.cash.rounding', 'account.fiscal.position', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return [('id', '=', self.id)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return [
             'id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at',
             'payment_method_ids', 'state', 'update_stock_at_closing', 'cash_register_balance_start', 'access_token'
         ]
 
-    def _load_pos_data(self, data):
-        domain = self._load_pos_data_domain(data)
-        fields = self._load_pos_data_fields(self.config_id.id)
-        data = self.search_read(domain, fields, load=False, limit=1)
-        return data
-
-    def _post_read_pos_data(self, data):
-        server_date = self.env.context.get('pos_last_server_date')
-        data[0]['_partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
-        data[0]['_server_version'] = exp_version()
-        data[0]['_base_url'] = self.get_base_url()
-        data[0]['_data_server_date'] = server_date or self.env.cr.now()
-        data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
-        data[0]['_has_available_products'] = self._pos_has_valid_product()
-        data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
-        return super()._post_read_pos_data(data)
-
     def load_data(self, models_to_load):
         response = {}
-        response['pos.session'] = self._post_read_pos_data(self._load_pos_data(response))
+        response['pos.session'] = self._load_pos_data_search_read(response, self.config_id)
 
-        for model in self._load_pos_data_models(self.config_id.id):
+        for model in self._load_pos_data_models(self.config_id):
             if models_to_load and model not in models_to_load:
                 continue
 
             try:
-                response[model] = self.env[model].with_context(config_id=self.config_id.id)._post_read_pos_data(self.env[model]._load_pos_data(response))
+                response[model] = self.env[model]._load_pos_data_search_read(response, self.config_id)
             except AccessError:
                 response[model] = []
 
@@ -186,14 +168,14 @@ class PosSession(models.Model):
 
     def load_data_params(self):
         response = {}
-        fields = self._load_pos_data_fields(self.config_id.id)
+        fields = self._load_pos_data_fields(self.config_id)
         response['pos.session'] = {
             'fields': fields,
             'relations': self._load_pos_data_relations('pos.session', fields)
         }
 
-        for model in self._load_pos_data_models(self.config_id.id):
-            fields = self.env[model]._load_pos_data_fields(self.config_id.id)
+        for model in self._load_pos_data_models(self.config_id):
+            fields = self.env[model]._load_pos_data_fields(self.config_id)
             response[model] = {
                 'fields': fields,
                 'relations': self._load_pos_data_relations(model, fields)
@@ -207,7 +189,7 @@ class PosSession(models.Model):
             existing_records = self.env[model].browse(ids).exists()
 
             non_existent_ids = set(ids) - set(existing_records.ids)
-            inactive_ids = set(existing_records.with_context(config_id=self.config_id.id)._unrelevant_records())
+            inactive_ids = set(existing_records._unrelevant_records(self.config_id))
 
             response[model] = list(non_existent_ids | inactive_ids)
         return response
@@ -226,8 +208,9 @@ class PosSession(models.Model):
         }
 
     def get_pos_ui_product_pricelist_item_by_product(self, product_tmpl_ids, product_ids, config_id):
-        pricelist_fields = self.env['product.pricelist']._load_pos_data_fields(config_id)
-        pricelist_item_fields = self.env['product.pricelist.item']._load_pos_data_fields(config_id)
+        pos_config = self.env['pos.config'].browse(config_id)
+        pricelist_fields = self.env['product.pricelist']._load_pos_data_fields(pos_config)
+        pricelist_item_fields = self.env['product.pricelist.item']._load_pos_data_fields(pos_config)
         today = fields.Date.today()
         pricelist_item_domain = [
             '&',

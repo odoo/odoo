@@ -7,7 +7,7 @@ class ProductAttribute(models.Model):
     _inherit = ['product.attribute', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['name', 'display_type', 'template_value_ids', 'attribute_line_ids', 'create_variant']
 
 
@@ -18,11 +18,11 @@ class ProductAttributeCustomValue(models.Model):
     pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade', index='btree_not_null')
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['custom_value', 'custom_product_template_attribute_value_id', 'pos_order_line_id', 'write_date']
 
 
@@ -31,11 +31,11 @@ class ProductTemplateAttributeLine(models.Model):
     _inherit = ['product.template.attribute.line', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['display_name', 'attribute_id', 'product_template_value_ids']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
         return [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
 
@@ -45,7 +45,7 @@ class ProductTemplateAttributeValue(models.Model):
     _inherit = ['product.template.attribute.value', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         ptav_ids = {ptav_id for p in data['product.product'] for ptav_id in p['product_template_variant_value_ids']}
         ptav_ids.update({ptav_id for ptal in data['product.template.attribute.line'] for ptav_id in ptal['product_template_value_ids']})
         return AND([
@@ -55,7 +55,7 @@ class ProductTemplateAttributeValue(models.Model):
         ])
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra', 'name', 'is_custom', 'html_color', 'image', 'exclude_for']
 
 class ProductTemplateAttributeExclusion(models.Model):
@@ -63,7 +63,7 @@ class ProductTemplateAttributeExclusion(models.Model):
     _inherit = ['product.template.attribute.exclusion', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
         loaded_ptav_ids = list({ptav['id'] for ptav in data['product.template.attribute.value']})
         return [('product_tmpl_id', 'in', loaded_product_tmpl_ids), ('product_template_attribute_value_id', 'in', loaded_ptav_ids)]
