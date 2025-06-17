@@ -26,7 +26,7 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMessagePostCommon, cls).setUpClass()
+        super().setUpClass()
 
         # portal user, notably for ACLS / notifications
         cls.user_portal = cls._create_portal_user()
@@ -73,7 +73,7 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
         cls.user_admin.write({'notification_type': 'email'})
 
     def setUp(self):
-        super(TestMessagePostCommon, self).setUp()
+        super().setUp()
         # patch registry to simulate a ready environment; see ``_message_auto_subscribe_notify``
         self.patch(self.env.registry, 'ready', True)
 
@@ -632,7 +632,7 @@ class TestMessageLog(TestMessagePostCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMessageLog, cls).setUpClass()
+        super().setUpClass()
         cls.test_records, cls.test_partners = cls._create_records_for_batch(
             'mail.test.ticket',
             10,
@@ -771,7 +771,7 @@ class TestMessageLog(TestMessagePostCommon):
             )
 
 
-@tagged('mail_post')
+@tagged('mail_post', 'post_install', '-at_install')
 class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
     def test_assert_initial_values(self):
@@ -1599,13 +1599,107 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(reply.parent_id, msg)
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
 
+    @users('employee')
+    def test_post_with_out_of_office(self):
+        """ Test out of office support. Test setup :
+         * record followers: user_employee_c2
+         * OOO users: user_admin, user_employee_c2, user_portal
+        """
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        test_record.message_subscribe(self.user_employee_c2.partner_id.ids)
+        # post history with partner_admin, should not prevent first OOO message to be generated
+        with self.mock_datetime_and_now(datetime(2025, 6, 17, 11, 10, 0)):
+            test_record.with_user(self.user_admin).message_post(
+                body='Posting before leaving on holidays',
+                message_type='comment',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+        test_record.message_unsubscribe(self.partner_admin.ids)
+
+        # note that even if somehow portal achieved to be OOO we don't care
+        self._setup_out_of_office(self.user_admin + self.user_employee_c2 + self.user_portal)
+        self.user_employee.notification_type = 'email'  # potential limitation of from, to check
+        self.user_admin.notification_type = 'email'  # potential limitation of from, to check
+
+        for user in self.user_admin + self.user_employee_c2:
+            self.assertTrue(user.is_out_of_office)
+        for user in self.user_employee + self.user_employee_c3 + self.user_portal:
+            self.assertFalse(user.is_out_of_office, 'Unset or portal')
+
+        for msg, post_dt, author_user, recipients, exp_ooo_authors in [
+            (
+                'partner_admin should not OOO himself when replying to its own message',
+                datetime(2025, 6, 17, 14, 16, 5),
+                self.user_admin,
+                self.user_admin.partner_id,
+                self.env['res.partner'],
+            ),
+            (
+                'Portal user should not generate OOO messages, admin should as original message author',
+                datetime(2025, 6, 17, 14, 15, 59),
+                self.user_employee,
+                self.user_portal.partner_id,
+                self.partner_admin,
+            ),
+            (
+                'partner_admin and user_employee_2 are in direct recipients and OOO',
+                datetime(2025, 6, 17, 14, 15, 59),
+                self.user_employee,
+                (self.user_admin + self.user_employee_c2 + self.user_employee_c3 + self.user_portal).partner_id,
+                self.partner_admin + self.partner_employee_c2,
+            ),
+        ]:
+            with self.subTest(msg=msg, post_dt=post_dt, recipients=recipients):
+                with self.mock_mail_gateway(), self.mock_mail_app(), self.mock_datetime_and_now(post_dt):
+                    # avoid subscribing author, eases tests in successive order
+                    message = test_record.with_user(author_user).with_context(mail_post_autofollow_author_skip=True).message_post(
+                        body="We need admin NOW !",
+                        message_type='email',
+                        partner_ids=recipients.ids,
+                        subtype_id=self.env.ref('mail.mt_comment').id,
+                    )
+                # classic post
+                self.assertEqual(
+                    message.notified_partner_ids,
+                    recipients - author_user.partner_id + self.user_employee_c2.partner_id,
+                )
+                # OOO messages: from: OOO recipient to message author
+                self.assertEqual(len(self._new_msgs), 1 + len(exp_ooo_authors), 'Posted message + OOO from expected authors')
+                ooo_messages = self._new_msgs[1:]
+                self.assertEqual(ooo_messages.author_id, exp_ooo_authors)
+                for ooo_author in exp_ooo_authors:
+                    ooo_message = ooo_messages.filtered(lambda m: m.author_id == ooo_author)
+                    self.assertMailNotifications(
+                        ooo_message,
+                        [{
+                            'content': "<p>Le numéro que vous avez composé n'est plus attribué.</p>",
+                            'email_values': {
+                                'subject': f'Auto: {test_record.name}',
+                            },
+                            'message_type': 'out_of_office',
+                            'message_values': {
+                                'author_id': ooo_author,
+                                'email_from': ooo_author.email_formatted,
+                                'model': test_record._name,
+                                'partner_ids': author_user.partner_id,
+                                'notified_partner_ids': author_user.partner_id,
+                                'res_id': test_record.id,
+                                'subject': f'Auto: {test_record.name}',
+                            },
+                            'notif': [
+                                {'partner': author_user.partner_id, 'type': 'email'},
+                            ],
+                            'subtype': 'mail.mt_comment',
+                        }],
+                    )
+
 
 @tagged('mail_post')
 class TestMessagePostHelpers(TestMessagePostCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMessagePostHelpers, cls).setUpClass()
+        super().setUpClass()
         cls.test_records, cls.test_partners = cls._create_records_for_batch(
             'mail.test.ticket',
             10,
@@ -1929,7 +2023,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMessagePostLang, cls).setUpClass()
+        super().setUpClass()
 
         cls.test_records = cls.env['mail.test.lang'].create([
             {'customer_id': False,

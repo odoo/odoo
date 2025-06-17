@@ -2322,10 +2322,11 @@ class MailThread(models.AbstractModel):
         # customers should be proposed through suggested recipients.
         author_subscribe = (
             not self.env.context.get('mail_post_autofollow_author_skip') and
-            msg_values['message_type'] not in ('notification', 'user_notification', 'auto_comment') and
+            msg_values['message_type'] not in ('notification', 'user_notification', 'auto_comment', 'out_of_office') and
             subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         )
         if author_subscribe:
+            # TDE note: somehow propagate "real author" ?
             real_author = self._message_compute_real_author(msg_values['author_id'])
             if real_author and not real_author.partner_share:
                 self._message_subscribe(partner_ids=[real_author.id])
@@ -3262,12 +3263,18 @@ class MailThread(models.AbstractModel):
         )
 
         recipients_data = self._notify_get_recipients(message, msg_vals=msg_vals, **kwargs)
-        if not recipients_data:
-            return recipients_data
         # cache data fetched by manual query to avoid extra queries when reading user.partner_id
         uid2pid = {r['uid']: r['id'] for r in recipients_data if r['id'] and r['uid']}
         users = self.env['res.users'].browse(uid2pid)
         users._fields['partner_id']._insert_cache(users, uid2pid.values())
+
+        # check for automated content (OOO), before shortcutting if no recipients
+        # as OOO may include more people (parent message author, responsible)
+        self._notify_thread_with_out_of_office(message, recipients_data, msg_vals=msg_vals, **kwargs)
+
+        if not recipients_data:
+            return recipients_data
+
         # if scheduled for later: add in queue instead of generating notifications
         scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
         if scheduled_date:
@@ -3767,7 +3774,7 @@ class MailThread(models.AbstractModel):
         history_ancestors = ancestors.sorted(lambda m: (
             not m.is_internal and not m.subtype_id.internal,
             m.message_type in outgoing_types,
-            m.message_type != 'user_notification',  # user notif -> avoid if possible
+            m.message_type not in ('user_notification', 'out_of_office'),  # user notif / out of office -> avoid if possible
         ), reverse=True)  # False before True unless reverse
         # order from oldest to newest
         ancestors = history_ancestors[:3].sorted('id')
@@ -4329,6 +4336,99 @@ class MailThread(models.AbstractModel):
             link = self[0].get_base_url() + link
 
         return link
+
+    def _notify_thread_with_out_of_office(self, message, recipients_data, msg_vals=False, **kwargs):
+        """ Out-of-office automated answer at posting time. """
+        ooo_messages = self.env['mail.message']
+        # limit OOO generation to incoming emails on valid threads
+        if not self or self._transient:
+            return ooo_messages
+        message_type = msg_vals['message_type'] if 'message_type' in (msg_vals or {}) else message.message_type
+        if message_type not in ('comment', 'email'):
+            return ooo_messages
+
+        # message author to notify is either a valid partner, either an email only
+        # (e.g. mail gateway, portal with token)
+        recipient = self._message_compute_real_author((msg_vals or {}).get('author_id') or message.author_id.id).sudo()
+        email_to = (msg_vals.get('email_from') or message.email_from) if not recipient else False
+        if not recipient and not email_to:
+            return ooo_messages
+
+        # extract internal users being notified to check their OOO status
+        # done manually (not when computing recipients data) as it would be costly
+        # and difficult with potential inheritance (calendar, ...)
+        pids = msg_vals['partner_ids'] if 'partner_ids' in (msg_vals or {}) else message.partner_ids.ids
+        internal_uids = [
+            r['uid'] for r in recipients_data if (
+                r['active'] and
+                r['id'] and r['id'] in pids and
+                r['id'] not in recipient.ids and  # don't OOO myself
+                r['uid'] and not r['share']
+            )
+        ]
+        additional_users_su = self._notify_thread_with_out_of_office_get_additional_users(
+            message, recipients_data, recipient, msg_vals=msg_vals,
+        )
+        users_to_check = self.env['res.users'].sudo().browse(internal_uids) | additional_users_su
+        ooo_users = self.env['res.users'].sudo()
+        if users_to_check:
+            users_to_check.fetch(['is_out_of_office', 'out_of_office_message'])
+            ooo_users = users_to_check.filtered(lambda u: u.is_out_of_office and not is_html_empty(u.out_of_office_message))
+        if not ooo_users:
+            return ooo_messages
+
+        # finally send OOO messages
+        original_subject = msg_vals['subject'] if 'subject' in (msg_vals or {}) else message.subject
+        for user in ooo_users:
+            body = self.env['ir.qweb']._render(
+                'mail.message_notification_out_of_office',
+                {
+                    # content
+                    'out_of_office_message': user.out_of_office_message,
+                    'replied_body': msg_vals['body'] if 'body' in (msg_vals or {}) else message.body,
+                    'signature': user.signature,
+                    # tools
+                    'is_html_empty': is_html_empty,
+                },
+                minimal_qcontext=True,
+                raise_if_not_found=False,
+            )
+            ooo_messages += self.message_post(
+                author_id=user.partner_id.id,
+                body=body,
+                email_from=user.email_formatted,
+                message_type='out_of_office',  # do not use 'auto_comment', like acknowledgements, notably to ease finding them / avoid repetitions
+                notify_author=True,  # as current user could be the one receiving the OOO message
+                notify_skip_followers=True,
+                outgoing_email_to=email_to,
+                partner_ids=recipient.ids,
+                subject=_('Auto: %(subject)s', subject=(original_subject or self.display_name)),
+                subtype_id=self.env.ref('mail.mt_comment').id,  # TDE check: note ? but what about portal / internal ?
+            )
+        return ooo_messages
+
+    def _notify_thread_with_out_of_office_get_additional_users(self, message, recipients_data, ooo_author, msg_vals=False):
+        """ Fetch additional users which should send their OOO message.
+        This includes users that are not directly pinged by message but
+        are important for functional flows :
+
+          - record responsible
+          - parent message author (if internal user)
+        """
+        pids = [r['id'] for r in recipients_data if r['id']]
+        additional_users_su = self.env['res.users'].sudo()
+        if self and 'user_id' in self:
+            additional_users_su += self.user_id.sudo().filtered(lambda u: u.partner_id != ooo_author)
+
+        parent_msg = self.env['mail.message'].sudo()
+        if (msg_vals or {}).get('parent_id'):
+            parent_msg = self.env['mail.message'].sudo().browse(msg_vals['parent_id'])
+        elif 'parent_id' not in (msg_vals or {}):
+            parent_msg = message.parent_id
+        parent_author = parent_msg.author_id if parent_msg.author_id.active else self.env['res.partner']
+        if parent_author and parent_author.id not in pids and parent_author != ooo_author and not parent_msg.author_id.partner_share:
+            additional_users_su |= parent_msg.author_id.main_user_id
+        return additional_users_su
 
     # Notify tools and helpers
     # ------------------------------------------------------------
