@@ -276,7 +276,10 @@ class PurchaseOrderLine(models.Model):
                 po_lines_without_requisition |= pol
                 continue
             for line in pol.order_id.requisition_id.line_ids:
-                if line.product_id == pol.product_id:
+                line_name = line.display_name
+                if line.product_description_variants:
+                    line_name += "\n" + line.product_description_variants
+                if line.product_id == pol.product_id and line_name == pol.name:
                     pol.price_unit = line.product_uom_id._compute_price(line.price_unit, pol.product_uom)
                     partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
                     params = {'order_id': pol.order_id}

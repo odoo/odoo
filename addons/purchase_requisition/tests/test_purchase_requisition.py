@@ -537,3 +537,35 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
         alt_po = self.env['purchase.order'].browse(alt_po_id)
         self.assertEqual(orig_po.order_line.taxes_id, alt_po.order_line.taxes_id)
+
+    def test_several_lines_same_product(self):
+        """
+        Check that PO lines of PO generated from a BO keep their descriptions
+        """
+        requisition_type = self.env['purchase.requisition.type'].create({
+            'name': 'Blanket test',
+            'quantity_copy': 'none',
+        })
+
+        bo_form = Form(self.env['purchase.requisition'])
+        bo_form.vendor_id = self.res_partner_1
+        bo_form.type_id = requisition_type
+        for i in range(2):
+            with bo_form.line_ids.new() as line:
+                line.product_id = self.product_09
+                line.product_qty = 5.0
+                line.price_unit = 21
+                line.product_description_variants = f"Custom Description {i}"
+        bo = bo_form.save()
+        bo.action_in_progress()
+
+        # lazy reproduction of clicking on "New Quotation" act_window button
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": bo.id, "default_user_id": False}))
+        po = po_form.save()
+
+        bo_line_a, bo_line_b = bo.line_ids
+        po_line_a, po_line_b = po.order_line
+        self.assertIn(bo_line_a.product_description_variants, po_line_a.name)
+        self.assertIn(bo_line_b.product_description_variants, po_line_b.name)
+        self.assertEqual(bo_line_a.price_unit, po_line_a.price_unit)
+        self.assertEqual(bo_line_b.price_unit, po_line_b.price_unit)
