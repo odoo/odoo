@@ -2051,24 +2051,28 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(n_draft_order, 0, 'There should be no draft orders created')
 
     def test_quantity_package_of_non_basic_unit(self):
-        pack_of_12_inch = self.env['uom.uom'].create({
-            'name': 'Pack of 12_inch',
+        test_uom_unit = self.env['uom.uom'].create({
+            "name": "test unit uom",
+            "relative_factor": "1.0",
+        })
+        pack_of_12_unit = self.env['uom.uom'].create({
+            'name': 'Pack of 12 unit',
             'relative_factor': 12,
-            'relative_uom_id': self.env.ref('uom.product_uom_inch').id,
+            'relative_uom_id': test_uom_unit.id,
             'is_pos_groupable': True,
         })
         product_cord = self.env['product.product'].create({
             'name': 'Cord',
             'is_storable': True,
             'available_in_pos': True,
-            'uom_id': self.env.ref('uom.product_uom_inch').id,
-            'uom_ids': [pack_of_12_inch.id],
+            'uom_id': test_uom_unit.id,
+            'uom_ids': [pack_of_12_unit.id],
             'lst_price': 10.0,
         })
         self.env['product.uom'].create({
             'barcode': '555555',
             'product_id': product_cord.id,
-            'uom_id': pack_of_12_inch.id,
+            'uom_id': pack_of_12_unit.id,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_quantity_package_of_non_basic_unit', login="pos_user")
