@@ -2,7 +2,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
     selectElementInWeSelectWidget,
-    selectFullText,
+    clickToolbarButton,
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("text_highlights", {
@@ -14,12 +14,7 @@ registerWebsitePreviewTour("text_highlights", {
         name: "Cover",
         groupName: "Intro",
     }),
-    selectFullText("snippet title", ".s_cover h1"),
-    {
-        content: "Click on the 'Highlight Effects' button to activate the option",
-        trigger: "div.o_we_text_highlight",
-        run: "click",
-    },
+    ...clickToolbarButton("snippet title", ".s_cover h1", "Apply highlight", true),
     {
         content: "Check that the highlight was applied",
         trigger: ":iframe .s_cover h1 span.o_text_highlight > .o_text_highlight_item > svg:has(.o_text_highlight_path_underline)",
