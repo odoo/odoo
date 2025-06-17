@@ -40,7 +40,7 @@ class AccountMove(models.Model):
     def _compute_l10n_in_ewaybill_details(self):
         for move in self:
             ewaybill = move.l10n_in_ewaybill_ids and move.l10n_in_ewaybill_ids[0]
-            if move.country_code == 'IN' and move.l10n_in_ewaybill_ids.state == 'generated':
+            if move.country_code == 'IN' and ewaybill.state == 'generated':
                 move.l10n_in_ewaybill_name = ewaybill.name
                 move.l10n_in_ewaybill_expiry_date = ewaybill.ewaybill_expiry_date
             else:
