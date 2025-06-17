@@ -91,7 +91,7 @@ test("pressing tab with incomplete text will create a product", async () => {
     ]);
 });
 
-test("On outdated form, product name should stay hidden", async () => {
+test("On updated form, product name should stay hidden", async () => {
     const product = saleModels.ProductProduct._records[0];
     const pyEnv = await startServer();
     const soId = pyEnv["sale.order"].create({
@@ -112,7 +112,7 @@ test("On outdated form, product name should stay hidden", async () => {
     expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
 });
 
-test("On outdated form, translated product name should be hidden if present", async () => {
+test("On updated form, translated product name should be hidden if present", async () => {
     const product = saleModels.ProductProduct._records[0];
     const pyEnv = await startServer();
     const translatedProductName = "Produit de test";
@@ -134,7 +134,7 @@ test("On outdated form, translated product name should be hidden if present", as
     expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
 });
 
-test("On updated form, should continue to hide product name", async () => {
+test("On outdated form, should continue to hide product name", async () => {
     const product = saleModels.ProductProduct._records[0];
     const pyEnv = await startServer();
     const soId = pyEnv["sale.order"].create({
@@ -155,7 +155,7 @@ test("On updated form, should continue to hide product name", async () => {
     expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
 });
 
-test("On updated form and translated product name already in the SOL name, should not hide the translated product name", async () => {
+test("On outdated form and translated product name already in the SOL name, should not hide the translated product name", async () => {
     const product = saleModels.ProductProduct._records[0];
     const pyEnv = await startServer();
     const translatedProductName = "Produit de test";
@@ -179,7 +179,7 @@ test("On updated form and translated product name already in the SOL name, shoul
     );
 });
 
-test("On updated form, editing the description should work as before", async () => {
+test("On outdated form, editing the description should work as before", async () => {
     const product = saleModels.ProductProduct._records[0];
     const pyEnv = await startServer();
     const translatedProductName = "Produit de test";
@@ -210,7 +210,7 @@ test("On updated form, editing the description should work as before", async () 
     expect(sol.name).toBe(product.name.concat("\nA description"));
 });
 
-test("On outdated form, editing the description shouldn't show the translated product name", async () => {
+test("On updated form, editing the description shouldn't show the translated product name", async () => {
     const product = saleModels.ProductProduct._records[0];
     const pyEnv = await startServer();
     const translatedProductName = "Produit de test";
@@ -239,4 +239,48 @@ test("On outdated form, editing the description shouldn't show the translated pr
 
     expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
     expect(sol.name).toBe(translatedProductName.concat("\nA description"));
+});
+
+test("No description should be shown if there does not exist one apart from the product name", async () => {
+    const product = saleModels.ProductProduct._records[0];
+    const pyEnv = await startServer();
+    const translatedProductName = "Produit de test";
+    const soId = pyEnv["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [Command.create({
+            product_id: product.id,
+            name: product.name,
+            translated_product_name: translatedProductName,
+        })],
+    });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: WithTranslatedNameForm,
+    });
+
+    expect(".o_field_product_label_section_and_note_cell textarea").not.toBeDisplayed();
+});
+
+test("No description should be shown if there does not exist one apart from the translated product name", async () => {
+    const product = saleModels.ProductProduct._records[0];
+    const pyEnv = await startServer();
+    const translatedProductName = "Produit de test";
+    const soId = pyEnv["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [Command.create({
+            product_id: product.id,
+            name: translatedProductName,
+            translated_product_name: translatedProductName,
+        })],
+    });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: WithTranslatedNameForm,
+    });
+
+    expect(".o_field_product_label_section_and_note_cell textarea").not.toBeDisplayed();
 });
