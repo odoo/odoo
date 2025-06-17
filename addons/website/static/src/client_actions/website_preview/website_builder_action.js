@@ -219,9 +219,11 @@ export class WebsiteBuilder extends Component {
     }
 
     async onEditPage() {
+        this.blockIframe();
         await this.iframeLoaded;
         await this.publicRootReady;
         await this.loadAssetsEditBundle();
+        this.unblockIframe();
         this.state.isEditing = true;
     }
 
@@ -284,6 +286,13 @@ export class WebsiteBuilder extends Component {
             this.websiteService.hideLoader();
             this.props.action.context.params.with_loader = false;
         }
+    }
+
+    blockIframe() {
+        this.websiteContent.el.setAttribute("inert", "");
+    }
+    unblockIframe() {
+        this.websiteContent.el.removeAttribute("inert");
     }
 
     setupClickListener() {
