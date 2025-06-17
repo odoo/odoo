@@ -187,3 +187,47 @@ test("On updated form, editing the description shouldn't show the translated pro
     expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue("A description");
     expect(sol.name).toBe(translatedProductName.concat("\nA description"));
 });
+
+test("No description should be shown if there does not exist one apart from the product name", async () => {
+    const product = ProductProduct._records[0];
+    const pyEnv = await startServer();
+    const translatedProductName = "Produit de test";
+    const soId = pyEnv["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [Command.create({
+            product_id: product.id,
+            name: product.name,
+            translated_product_name: translatedProductName,
+        })],
+    });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: WithTranslatedNameForm,
+    });
+
+    expect(".o_field_product_label_section_and_note_cell textarea").not.toBeDisplayed();
+});
+
+test("No description should be shown if there does not exist one apart from the translated product name", async () => {
+    const product = ProductProduct._records[0];
+    const pyEnv = await startServer();
+    const translatedProductName = "Produit de test";
+    const soId = pyEnv["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [Command.create({
+            product_id: product.id,
+            name: translatedProductName,
+            translated_product_name: translatedProductName,
+        })],
+    });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: WithTranslatedNameForm,
+    });
+
+    expect(".o_field_product_label_section_and_note_cell textarea").not.toBeDisplayed();
+});
