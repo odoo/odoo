@@ -72,7 +72,7 @@ class TestSnippets(HttpCase):
             'social_tiktok': 'https://www.tiktok.com/@odoo',
             'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
         })
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image.webp')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_social_media', login="admin")
         self.assertEqual(
             self.env['website'].browse(1).social_instagram,
@@ -91,8 +91,8 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_table_of_content', login='admin')
 
     def test_09_snippet_image_gallery(self):
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image.jpg', 's_default_image.jpg')
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image.jpg', 's_default_image2.jpg')
+        create_image_attachment(self.env, '/web/image/website.s_banner_default_image.webp', 's_default_image.webp')
+        create_image_attachment(self.env, '/web/image/website.s_banner_default_image.webp', 's_default_image2.webp')
         self.start_tour("/", "snippet_image_gallery_remove", login='admin')
 
     def test_10_parallax(self):
@@ -130,7 +130,7 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), "snippet_image_gallery_reorder", login='admin')
 
     def test_snippet_image_gallery_thumbnail_update(self):
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.webp')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_image_gallery_thumbnail_update', login='admin')
 
     def test_dropdowns_and_header_hide_on_scroll(self):
@@ -141,7 +141,7 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin')
 
     def test_snippet_image(self):
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.webp')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_image', login='admin')
 
     def test_rating_snippet(self):
