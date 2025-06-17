@@ -13,7 +13,12 @@
                 <field name="l10n_in_gst_treatment" invisible="'IN' not in fiscal_country_codes or not l10n_in_is_gst_registered_enabled" readonly="parent_id"/>
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" invisible="'IN' not in fiscal_country_codes" readonly="parent_id"/>
+                <label for="l10n_in_pan_entity_id" invisible="'IN' not in fiscal_country_codes"/>
+                <div class="o_row" invisible="'IN' not in fiscal_country_codes">
+                    <field name="l10n_in_pan_entity_id" placeholder="Create Manually or from GSTIN"/>
+                    <button name="create_pan_entity" icon="fa-plus" title="Create a PAN entity from the GSTIN"
+                    type="object" class="oe_edit_only btn-link" invisible="l10n_in_pan_entity_id or not vat"/>
+                </div>
             </xpath>
             <xpath expr="//sheet" position="before">
                 <div class="alert alert-warning" role="alert"

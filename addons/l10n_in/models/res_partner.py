@@ -23,9 +23,10 @@ class ResPartner(models.Model):
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
         ], string="GST Treatment")
-
-    l10n_in_pan = fields.Char(
-        string="PAN",
+    l10n_in_pan_entity_id = fields.Many2one(
+        comodel_name='l10n_in.pan.entity',
+        string="PAN Entity",
+        ondelete='restrict',
         help="PAN enables the department to link all transactions of the person with the department.\n"
              "These transactions include taxpayments, TDS/TCS credits, returns of income/wealth/gift/FBT,"
              " specified transactions, correspondence, and so on.\n"
@@ -63,10 +64,10 @@ class ResPartner(models.Model):
             else:
                 partner.l10n_in_gst_state_warning = False
 
-    @api.depends('l10n_in_pan')
+    @api.depends('l10n_in_pan_entity_id')
     def _compute_display_pan_warning(self):
         for partner in self:
-            partner.display_pan_warning = partner.vat and partner.l10n_in_pan and partner.l10n_in_pan != partner.vat[2:12]
+            partner.display_pan_warning = partner.vat and partner.l10n_in_pan_entity_id and partner.l10n_in_pan_entity_id.name != partner.vat[2:12]
 
     @api.depends('company_id.l10n_in_is_gst_registered', 'company_id.l10n_in_gstin_status_feature')
     def _compute_l10n_in_gst_registered_and_status(self):
@@ -180,13 +181,13 @@ class ResPartner(models.Model):
             state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', self.vat[:2])], limit=1)
             if state_id:
                 self.state_id = state_id
-            if self.vat[2].isalpha():
-                self.l10n_in_pan = self.vat[2:12]
+            pan_entity_id = self.env['l10n_in.pan.entity'].search([('name', '=', self.vat[2:12])], limit=1)
+            if pan_entity_id:
+                self.l10n_in_pan_entity_id = pan_entity_id.id
 
     @api.model
     def _commercial_fields(self):
-        res = super()._commercial_fields()
-        return res + ['l10n_in_gst_treatment', 'l10n_in_pan']
+        return super()._commercial_fields() + ['l10n_in_gst_treatment', 'l10n_in_pan_entity_id']
 
     def check_vat_in(self, vat):
         """
@@ -218,3 +219,24 @@ class ResPartner(models.Model):
         self.state_id = state_id
         if self.ref_company_ids:
             self.ref_company_ids._update_l10n_in_fiscal_position()
+
+    def create_pan_entity(self):
+        self.ensure_one()
+        if self.check_vat_in(self.vat):
+            pan_number = self.vat[2:12].upper()
+            pan_entity = self.env['l10n_in.pan.entity'].search([('name', '=', pan_number)], limit=1)
+            if not pan_entity:
+                return {
+                    'type': 'ir.actions.act_window',
+                    'name': _('Create PAN Entity'),
+                    'res_model': 'l10n_in.pan.entity',
+                    'view_mode': 'form',
+                    'target': 'new',
+                    'context': {
+                        'default_name': pan_number,
+                        'default_partner_ids': [(6, 0, [self.id])],
+                    },
+                }
+            self.l10n_in_pan_entity_id = pan_entity.id
+        else:
+            raise UserError(_("Please enter a valid GSTIN to create a PAN Entity."))
