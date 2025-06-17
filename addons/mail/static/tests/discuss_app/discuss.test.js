@@ -1286,7 +1286,7 @@ test("new message in tab title has precedence over action name", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o_breadcrumb:contains(Inbox)"); // wait for action name being Inbox
+    await contains(".o-mail-AutoresizeInput[title='Inbox']"); // wait for action name being Inbox
     const titleService = getService("title");
     expect(titleService.current).toBe("Inbox");
     // simulate receiving a new message in chat 1 with odoo out-of-focused
