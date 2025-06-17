@@ -1081,7 +1081,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             picking.button_validate()
 
         if (sale.carrier).upper() == "COURIERSPLEASE":
-            tracking_url = f'https://auspost.com.au/mypost/track/details/{con_id}'
+            tracking_url = f'https://www.couriersplease.com.au/tools-track?no={con_id}'
         else:
             tracking_url = f'https://auspost.com.au/mypost/track/details/{con_id}'
         # Only need to write sale order fields once (they're shared for all picks)
