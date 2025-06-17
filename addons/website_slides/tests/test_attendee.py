@@ -595,7 +595,7 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
             'template_id': template.id,
         })
 
-        mail_vals = wizard._prepare_mail_values(slide_channel_jean)
+        mail_vals = wizard.prepare_mail_values(slide_channel_jean, compute_lang=True)[0]
         self.assertEqual(
             mail_vals['body_html'],
             '<p>fr</p>',

@@ -17,27 +17,14 @@
             You have been invited to take a new certification.
         </t>
         <t t-else="">
-            We are conducting a survey and your response would be appreciated.
+            We're running a quiz and your answer would be appreciated.
         </t>
-        <div style="margin: 16px 0px 16px 0px;">
-            <a t-att-href="(object.get_start_url())"
-                t-attf-style="background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;">
-                <t t-if="object.survey_id.certification">
-                    Start Certification
-                </t>
-                <t t-else="">
-                    Start Survey
-                </t>
-            </a>
-        </div>
-        <t t-if="object.deadline">
-            Please answer the survey for <t t-out="format_date(object.deadline) or ''">05/05/2021</t>.<br/><br/>
-        </t>
+        <br/><br/>
         <t t-if="object.survey_id.certification">
             We wish you good luck!
         </t>
         <t t-else="">
-            Thank you in advance for your participation.
+            Kind regards,
         </t>
     </p>
 </div>
