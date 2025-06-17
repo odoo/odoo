@@ -197,13 +197,13 @@ test("Can edit message comment in chatter", async () => {
     await press("Enter");
     await animationFrame();
     await contains(".o-mail-Message .o-mail-Composer-input"); // still editing message
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "edited again\n" });
+    await contains(".o-mail-Message .o-mail-Composer-input:value('edited again')"); // FIXME: even though value has trailing '\n', HOOT selector doesn't see it on the node
     await triggerHotkey("control+Enter"); // somehow press doesn't work :(
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
     // save without change should keep (edited)
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "edited again" });
+    await contains(".o-mail-Message .o-mail-Composer-input:value('edited again')");
     await contains(".o-mail-Message:contains('Escape to cancel, CTRL-Enter to save')");
     await triggerHotkey("control+Enter"); // somehow press doesn't work :(
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
