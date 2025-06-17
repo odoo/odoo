@@ -203,7 +203,6 @@ export class ProductScreen extends Component {
             const records = await this.pos.loadNewProducts([
                 ["product_variant_ids.barcode", "in", [code.base_code]],
             ]);
-            await this.pos.processProductAttributes();
 
             if (records && records["product.product"].length > 0) {
                 return records["product.product"][0];
@@ -360,7 +359,6 @@ export class ProductScreen extends Component {
         }
 
         const results = await this.pos.loadNewProducts(domain, this.state.currentOffset, 30);
-        await this.pos.processProductAttributes();
         return results["product.product"];
     }
 

@@ -563,6 +563,7 @@ export class PosStore extends WithLazyGetterTrap {
             offset,
             limit,
         ]);
+        this.computeProductAttributesExclusion();
         return result;
     }
 

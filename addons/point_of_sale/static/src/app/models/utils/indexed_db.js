@@ -10,7 +10,7 @@ export default class IndexedDB {
         this.dbVersion = dbVersion;
         this.dbStores = dbStores;
         this.dbInstance = null;
-        this.activeTransactions = 0;
+        this.activeTransactions = new Set();
         this.databaseEventListener(whenReady);
     }
 
@@ -49,10 +49,14 @@ export default class IndexedDB {
         if (!arrData?.length) {
             return;
         }
+
         // Batch processing for large arrays to avoid performance issues
         // or transaction failures due to large data sets
         const results = [];
         for (let i = 0; i < arrData.length; i += BATCH_SIZE) {
+            let timeoutId;
+            let finished = false;
+
             const batch = arrData.slice(i, i + BATCH_SIZE);
             const transaction = this.getNewTransaction([storeName], "readwrite");
 
@@ -61,18 +65,17 @@ export default class IndexedDB {
                 continue;
             }
 
-            let timeoutId;
-            let finished = false;
-
             const doneMethod = () => {
                 finished = true;
                 clearTimeout(timeoutId);
+                this.activeTransactions.delete(transaction);
             };
 
             // Mark transaction as finished in all cases
             transaction.oncomplete = doneMethod;
             transaction.onabort = doneMethod;
             transaction.onerror = doneMethod;
+            transaction.onsuccess = doneMethod;
 
             const batchPromise = new Promise((resolve, reject) => {
                 const store = transaction.objectStore(storeName);
@@ -92,29 +95,42 @@ export default class IndexedDB {
 
                 if (odoo.debug) {
                     console.debug(
-                        `%cIndexedDB: ${method} ${storeName} with ${batch.length} items`,
-                        "color: #ffb7a8"
+                        `[%cIndexedDB%c]: %c${method} ${batch.length}%c ${storeName}`,
+                        "color:lime;",
+                        "",
+                        "font-weight:bold;color:#e67e22",
+                        ""
                     );
                 }
 
-                batch.forEach((data) => {
-                    const request = store[method](data);
+                for (const data of batch) {
+                    try {
+                        const deepCloned = JSON.parse(JSON.stringify(data));
+                        const request = store[method](deepCloned);
 
-                    request.onsuccess = () => {
-                        completed++;
-                        if (completed === batch.length && !hasError && !finished) {
+                        request.onsuccess = () => {
+                            completed++;
+                            if (completed === batch.length && !hasError && !finished) {
+                                clearTimeout(timeoutId);
+                                resolve();
+                            }
+                        };
+
+                        request.onerror = (event) => {
+                            hasError = true;
                             clearTimeout(timeoutId);
-                            resolve();
+                            console.error("IndexedDB error:", event.target?.error);
+                            reject(event.target?.error || "Unknown error");
+                        };
+                    } catch {
+                        if (odoo.debug === "assets") {
+                            console.debug(
+                                `%cIndexedDB: Error processing ${method} for ${storeName}`,
+                                "color: #ffb7a8"
+                            );
                         }
-                    };
-
-                    request.onerror = (event) => {
-                        hasError = true;
-                        clearTimeout(timeoutId);
-                        console.error("IndexedDB error:", event.target?.error);
-                        reject(event.target?.error || "Unknown error");
-                    };
-                });
+                    }
+                }
             });
 
             results.push(batchPromise);
@@ -129,11 +145,8 @@ export default class IndexedDB {
                 return false;
             }
 
-            this.activeTransactions++;
             const transaction = this.db.transaction(dbStore, "readwrite");
-            transaction.onerror = () => this.activeTransactions--;
-            transaction.onabort = () => this.activeTransactions--;
-            transaction.oncomplete = () => this.activeTransactions--;
+            this.activeTransactions.add(transaction);
             return transaction;
         } catch (e) {
             console.info("DATABASE is not ready yet", e);
@@ -156,16 +169,24 @@ export default class IndexedDB {
         return this.promises(storeName, arrData, "put");
     }
 
-    readAll(storeName = [], retry = 0) {
-        const storeNames =
-            storeName.length > 0 ? storeName : this.dbStores.map((store) => store[1]);
+    readAll(store = [], retry = 0) {
+        const storeNames = store.length > 0 ? store : this.dbStores.map((store) => store[1]);
         const transaction = this.getNewTransaction(storeNames, "readonly");
 
         if (!transaction && retry < 5) {
-            return this.readAll(storeName, retry + 1);
+            return this.readAll(store, retry + 1);
         } else if (!transaction) {
             return new Promise((reject) => reject(false));
         }
+
+        const removeTransaction = () => {
+            this.activeTransactions.delete(transaction);
+        };
+
+        transaction.oncomplete = removeTransaction;
+        transaction.onabort = removeTransaction;
+        transaction.onerror = removeTransaction;
+        transaction.onsuccess = removeTransaction;
 
         const promises = storeNames.map(
             (store) =>
@@ -173,14 +194,19 @@ export default class IndexedDB {
                     const objectStore = transaction.objectStore(store);
                     const request = objectStore.getAll();
 
-                    request.onerror = () => {
-                        console.warn("Internal error reading data from the indexed database.");
-                        reject();
+                    const errorMethod = (event) => {
+                        console.error("Error reading data from the indexed database:", event);
+                        reject(event.target.error || "Unknown error");
                     };
-                    request.onsuccess = (event) => {
+
+                    const successMethod = (event) => {
                         const result = event.target.result;
                         resolve({ [store]: result });
                     };
+
+                    request.onerror = errorMethod;
+                    request.onabort = errorMethod;
+                    request.onsuccess = successMethod;
                 })
         );
 

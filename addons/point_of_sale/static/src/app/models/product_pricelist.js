@@ -8,8 +8,8 @@ export class ProductPricelist extends Base {
         super.setup(...arguments);
 
         this.uiState = {
-            generalRulesByCateg: {},
-            generalRules: {},
+            generalRulesIdsByCateg: {},
+            generalRulesIds: {},
         };
 
         // General rules can be computed only on starting since they
@@ -18,36 +18,37 @@ export class ProductPricelist extends Base {
         this.computeGeneralRulesByCateg();
     }
 
-    getGeneralRulesByCategories(categoryIds) {
+    getGeneralRulesIdsByCategories(categoryIds) {
         const rules = {};
 
         for (const id of categoryIds) {
-            if (this.uiState.generalRulesByCateg[id]) {
-                Object.assign(rules, this.uiState.generalRulesByCateg[id]);
+            if (this.uiState.generalRulesIdsByCateg[id]) {
+                Object.assign(rules, this.uiState.generalRulesIdsByCateg[id]);
             }
         }
 
-        Object.assign(rules, this.uiState.generalRules);
+        Object.assign(rules, this.uiState.generalRulesIds);
         return Object.values(rules);
     }
 
     computeGeneralRulesByCateg() {
-        for (const index in this.item_ids) {
+        for (const idx in this.item_ids) {
+            const index = parseInt(idx);
             const item = this.item_ids[index];
             if (item.product_id || item.product_tmpl_id) {
                 continue;
             }
 
             if (item.categ_id) {
-                if (!this.uiState.generalRulesByCateg[item.categ_id.id]) {
-                    this.uiState.generalRulesByCateg[item.categ_id.id] = {};
+                if (!this.uiState.generalRulesIdsByCateg[item.categ_id.id]) {
+                    this.uiState.generalRulesIdsByCateg[item.categ_id.id] = {};
                 }
 
-                this.uiState.generalRulesByCateg[item.categ_id.id][index] = item;
+                this.uiState.generalRulesIdsByCateg[item.categ_id.id][index] = item.id;
                 continue;
             }
 
-            this.uiState.generalRules[index] = item;
+            this.uiState.generalRulesIds[index] = item.id;
         }
     }
 }

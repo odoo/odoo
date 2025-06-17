@@ -60,6 +60,19 @@ class ProductTemplate(models.Model):
         domain_obj = Domain(domain)
         config = self.env['pos.config'].browse(config_id)
         product_tmpls = self._load_product_with_domain(domain_obj, False, offset, limit)
+
+        # product.combo and product.combo.item loading
+        for product_tmpl in product_tmpls:
+            if product_tmpl.type == 'combo':
+                product_tmpls += product_tmpl.combo_ids.combo_item_ids.product_id.product_tmpl_id
+
+        combo_domain = [('id', 'in', product_tmpls.combo_ids.ids)]
+        combo_fields = self.env['product.combo']._load_pos_data_fields(config.id)
+        combo_read = self.env['product.combo'].search_read(combo_domain, combo_fields, load=False)
+        combo_item_domain = [('combo_id', 'in', product_tmpls.combo_ids.ids)]
+        combo_item_fields = self.env['product.combo.item']._load_pos_data_fields(config.id)
+        combo_item_read = self.env['product.combo.item'].search_read(combo_item_domain, combo_item_fields, load=False)
+
         products = product_tmpls.product_variant_ids
 
         # product.pricelist_item & product.pricelist loading
@@ -85,18 +98,6 @@ class ProductTemplate(models.Model):
         product_tmpl_fields = self._load_pos_data_fields(config.id)
         product_tmpl_read = product_tmpls.read(product_tmpl_fields, load=False)
 
-        # product.combo and product.combo.item loading
-        for product_tmpl in product_tmpls:
-            if product_tmpl.type == 'combo':
-                product_tmpls += product_tmpl.combo_ids.combo_item_ids.product_id.product_tmpl_id
-
-        combo_domain = [('id', 'in', product_tmpls.combo_ids.ids)]
-        combo_fields = self.env['product.combo']._load_pos_data_fields(config.id)
-        combo_read = self.env['product.combo'].search_read(combo_domain, combo_fields, load=False)
-        combo_item_domain = [('combo_id', 'in', product_tmpls.combo_ids.ids)]
-        combo_item_fields = self.env['product.combo.item']._load_pos_data_fields(config.id)
-        combo_item_read = self.env['product.combo.item'].search_read(combo_item_domain, combo_item_fields, load=False)
-
         # product.uom loading
         packaging_domain = Domain([('product_id', 'in', products.ids)])
         conditions = list(domain_obj.iter_conditions())
@@ -107,7 +108,7 @@ class ProductTemplate(models.Model):
             flat = [item for sublist in barcode for item in sublist]
             packaging_domain = expression.OR([packaging_domain, [('barcode', 'in', flat)]])
 
-        packaging_fields = ['barcode', 'product_id', 'uom_id']
+        packaging_fields = self.env['product.uom']._load_pos_data_fields(config.id)
         packaging = self.env['product.uom'].search(packaging_domain)
         condition = packaging and packaging.product_id
 
