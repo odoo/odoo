@@ -1573,6 +1573,24 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 (self.user_admin + self.user_employee_c3 + self.user_portal).partner_id,
                 self.partner_admin,
             ),
+            # do not send multiple OOO with same author/recipient in a 4 days timeframe
+            (
+                datetime(2025, 6, 18, 14, 15, 59),
+                (self.user_admin + self.user_employee_c3 + self.user_portal).partner_id,
+                self.env['res.partner'],
+            ),
+            # user_employee_c2: follower but pinged = OOO candidate
+            (
+                datetime(2025, 6, 18, 14, 15, 59),
+                self.user_employee_c2.partner_id,
+                self.user_employee_c2.partner_id,
+            ),
+            # multiple OOO, more than 4 days after last OOO -> done
+            (
+                datetime(2025, 6, 22, 14, 16, 0),
+                (self.user_admin + self.user_employee_c2 + self.user_employee_c3 + self.user_portal).partner_id,
+                self.user_employee_c2.partner_id + self.partner_admin,
+            ),
         ]:
             with self.subTest(post_dt=post_dt, recipients=recipients):
                 with self.mock_mail_gateway(), self.mock_mail_app(), self.mock_datetime_and_now(post_dt):
@@ -1590,6 +1608,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 # OOO messages: from: OOO recipient to message author
                 self.assertEqual(len(self._new_msgs), 1 + len(exp_ooo_authors), 'Posted message + OOO from expected authors')
                 ooo_messages = self._new_msgs[1:]
+                self.assertEqual(ooo_messages.author_id, exp_ooo_authors)
                 for ooo_author, ooo_message in zip(exp_ooo_authors, ooo_messages, strict=True):
                     self.assertMailNotifications(
                         ooo_message,
