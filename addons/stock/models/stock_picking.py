@@ -1926,7 +1926,9 @@ class StockPicking(models.Model):
             'context': {
                 'default_product_ids': self.move_ids.product_id.ids,
                 'default_move_ids': self.move_ids.ids,
-                'default_move_quantity': 'move'},
+                'default_move_quantity': 'move',
+                'display_print_packaging_labels': True,
+            },
         }
 
     def action_open_label_type(self):

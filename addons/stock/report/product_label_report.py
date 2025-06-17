@@ -22,16 +22,17 @@ class ReportStockLabel_Product_Product_View(models.AbstractModel):
             raise UserError(_('Product model not defined, Please contact your administrator.'))
 
         quantity_by_product = defaultdict(list)
-        for p, q in data.get('quantity_by_product').items():
-            product = Product.browse(int(p))
-            default_code_markup = markupsafe.Markup(product.default_code) if product.default_code else ''
-            product_info = {
-                'barcode': markupsafe.Markup(product.barcode) if product.barcode else '',
-                'quantity': q,
-                'display_name_markup': markupsafe.Markup(product.display_name),
-                'default_code': (default_code_markup[:15], default_code_markup[15:30])
-            }
-            quantity_by_product[product].append(product_info)
+        for product_id, product_data in data.get('data_by_product_id').items():
+            product = Product.browse(int(product_id))
+            for p_data in product_data:
+                default_code_markup = markupsafe.Markup(product.default_code) if product.default_code else ''
+                product_info = {
+                    'barcode': p_data['barcode'],
+                    'quantity': p_data['quantity'],
+                    'display_name_markup': markupsafe.Markup(product.display_name),
+                    'default_code': (default_code_markup[:15], default_code_markup[15:30])
+                }
+                quantity_by_product[product].append(product_info)
         if data.get('custom_barcodes'):
             # we expect custom barcodes to be: {product: [(barcode, qty_of_barcode)]}
             for product, barcodes_qtys in data.get('custom_barcodes').items():
@@ -45,7 +46,7 @@ class ReportStockLabel_Product_Product_View(models.AbstractModel):
                         'default_code': (default_code_markup[:15], default_code_markup[15:30])
                     }
                     )
-        data['quantity'] = quantity_by_product
+        data['data_by_product_id'] = quantity_by_product
         layout_wizard = self.env['product.label.layout'].browse(data.get('layout_wizard'))
         data['pricelist'] = layout_wizard.pricelist_id
 

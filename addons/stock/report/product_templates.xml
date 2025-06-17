@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="label_product_product_view">
-            <t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
+            <t t-foreach="data_by_product_id.items()" t-as="barcode_and_qty_by_product">
                 <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
                 <t t-foreach="barcode_and_qty_by_product[1]" t-as="product_info">
                     <t t-set="barcode" t-value="product_info['barcode']"/>
