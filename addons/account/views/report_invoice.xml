@@ -33,6 +33,9 @@
                                     <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                                 </div>
+                                <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
+                                    ICE: <a t-field="o.partner_id.company_registry"/>
+                                </div>
                             </t>
                         </div>
                     </t>
@@ -288,7 +291,7 @@
                     <span t-esc="tax_totals['formatted_rounding_amount']"/>
                 </td>
             </t>
-            
+
             <!--Total amount with all taxes-->
             <tr class="border-black o_total">
                 <td><strong>Total</strong></td>
