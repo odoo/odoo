@@ -1058,6 +1058,10 @@ class AccountMoveLine(models.Model):
                     'display_type': 'discount',
                     'name': _("Discount"),
                     'amount_currency': amount,
+                    'balance': (
+                        self.company_currency_id.round(amount / line.currency_rate)
+                        if line.currency_id != self.company_currency_id else amount
+                    ),
                     'analytic_distribution': {
                         account_id: 100 * value / total
                         for account_id, value in dist.items()
