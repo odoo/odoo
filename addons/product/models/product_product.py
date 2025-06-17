@@ -746,7 +746,7 @@ class ProductProduct(models.Model):
             sellers |= seller
         return sellers
 
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='sequence', params=False):
         # Always sort by discounted price but another field can take the primacy through the `ordered_by` param.
         sort_key = ('price_discounted', 'sequence', 'id')
         if ordered_by != 'price_discounted':

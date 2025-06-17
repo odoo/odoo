@@ -6,6 +6,7 @@
         <t t-portal="`#product-${props.productId}-price`">
             <span t-if="showPrice" t-out="price" class="o_product_catalog_price fw-bold me-4"/>
             <span t-if="props.code" t-out="props.code" class="text-muted"/>
+            <span class="d-flex text-muted small" t-if="props.uomDisplayName != props.productUomDisplayName and props.productUnitPrice and props.productUomDisplayName" t-out="`${productPrice}/${props.productUomDisplayName}`"/>
         </t>
         <div 
             t-if="props.readOnly and props.warning"
@@ -36,7 +37,7 @@
                                 t-att-value="quantity"
                                 t-on-change="this.env.setQuantity"
                                 t-on-focus="_onFocus"/>
-                        <span class="fst-italic text-muted text-bg-light text-truncate w-50 border border-start-0 py-1" t-if="this.env.displayUoM" t-out="props.uomDisplayName"/>
+                        <span class="fst-italic text-muted text-bg-light text-truncate w-50 border border-start-0 py-5px" t-if="this.env.displayUoM" t-out="props.uomDisplayName"/>
                     </div>
                     <button class="btn btn-primary border"
                             t-on-click.stop="(ev) => this.env.increaseQuantity()">
