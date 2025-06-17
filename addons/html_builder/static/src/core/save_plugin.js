@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
@@ -26,6 +27,7 @@ export class SavePlugin extends Plugin {
             //     clean DOM before save (leaving edit mode)
             //     root is the clone of a node that was o_dirty
             // }
+            withSequence(99, ({ root }) => this.escapeTextNodes(root)),
         ],
         save_element_handlers: [
             // async (el) => {
@@ -78,6 +80,30 @@ export class SavePlugin extends Plugin {
         const willSaves = this.getResource("save_handlers").map((c) => c());
         await Promise.all(saveProms.concat(willSaves));
         this.lastSavedStep = this.dependencies.history.getHistorySteps().at(-1);
+    }
+
+    escapeTextNodes(el) {
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_ALL, (node) => {
+            if (
+                node.nodeType === Node.ELEMENT_NODE &&
+                (node.matches("object,iframe,script,style") ||
+                    (node.hasAttribute("data-oe-model") &&
+                        node.getAttribute("data-oe-model") !== "ir.ui.view"))
+            ) {
+                return NodeFilter.FILTER_REJECT; // Skip this node and its descendants
+            }
+            if (node.nodeType === Node.TEXT_NODE) {
+                return NodeFilter.FILTER_ACCEPT;
+            }
+            return NodeFilter.FILTER_SKIP; // Skip other nodes, but visit their children
+        });
+
+        const escaper = document.createElement("div");
+        let node;
+        while ((node = walker.nextNode())) {
+            escaper.textContent = node.nodeValue;
+            node.nodeValue = escaper.innerHTML;
+        }
     }
 
     isAlreadySaved() {
