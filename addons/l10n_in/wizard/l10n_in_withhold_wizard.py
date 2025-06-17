@@ -44,6 +44,16 @@ class L10n_InWithholdWizard(models.TransientModel):
         string="Payment",
         readonly=True,
     )
+    tds_deduction = fields.Selection(
+        selection=[
+            ('normal', 'Normal Deduction'),
+            ('lower', 'Lower Deduction'),
+            ('higher', 'Higher Deduction'),
+            ('no', 'No Deduction'),
+        ],
+        string="TDS Deduction",
+        compute='_compute_tds_deduction',
+    )
     company_id = fields.Many2one(
         comodel_name='res.company',
         string="Company",
@@ -70,11 +80,14 @@ class L10n_InWithholdWizard(models.TransientModel):
         compute='_compute_l10n_in_tds_tax_type'
     )
     l10n_in_withholding_warning = fields.Json(string="Withholding warning", compute='_compute_l10n_in_withholding_warning')
-    base = fields.Monetary(string="Base Amount")
+    base = fields.Monetary(string="Base Amount", compute='_compute_base', store=True, readonly=False)
     tax_id = fields.Many2one(
         comodel_name='account.tax',
         string="TDS Section",
         required=True,
+        compute='_compute_tax_id',
+        store=True,
+        readonly=False,
     )
     amount = fields.Monetary(
         string="TDS Amount",
@@ -103,6 +116,12 @@ class L10n_InWithholdWizard(models.TransientModel):
             wizard.l10n_in_tds_tax_type = l10n_in_tds_tax_type
 
     @api.depends('related_move_id', 'related_payment_id')
+    def _compute_tds_deduction(self):
+        for wizard in self:
+            related_partner = wizard.related_move_id.commercial_partner_id if wizard.related_move_id else wizard.related_payment_id.partner_id.commercial_partner_id
+            wizard.tds_deduction = related_partner.l10n_in_pan_entity_id.tds_deduction if related_partner and related_partner.l10n_in_pan_entity_id else 'higher'
+
+    @api.depends('related_move_id', 'related_payment_id')
     def _compute_type_name(self):
         for wizard in self:
             if wizard.related_payment_id:
@@ -125,7 +144,7 @@ class L10n_InWithholdWizard(models.TransientModel):
     def _compute_l10n_in_withholding_warning(self):
         for wizard in self:
             warnings = {}
-            if wizard.tax_id and wizard.l10n_in_tds_tax_type == 'tds_purchase' and not wizard.related_move_id.commercial_partner_id.l10n_in_pan \
+            if wizard.tax_id and wizard.l10n_in_tds_tax_type == 'tds_purchase' and not wizard.related_move_id.commercial_partner_id.l10n_in_pan_entity_id \
                 and wizard.tax_id.amount != max(wizard.tax_id.l10n_in_section_id.l10n_in_section_tax_ids, key=lambda t: abs(t.amount)).amount:
                 warnings['lower_tds_tax'] = {
                     'message': _("As the Partner's PAN missing/invalid, it's advisable to apply TDS at the higher rate.")
@@ -137,6 +156,43 @@ class L10n_InWithholdWizard(models.TransientModel):
                     'message': message
                 }
             wizard.l10n_in_withholding_warning = warnings
+
+    @api.depends('related_move_id', 'related_payment_id')
+    def _compute_tax_id(self):
+        for wizard in self:
+            sections = wizard.related_move_id._get_l10n_in_tds_tcs_applicable_sections()
+            if sections:
+                accounts_by_section = {}
+                for line in wizard.related_move_id.line_ids:
+                    section = line.account_id.l10n_in_tds_tcs_section_id
+                    if section in sections:
+                        accounts_by_section[section] = line.account_id
+                tax = self.env['account.tax']
+                for section, account in accounts_by_section.items():
+                    # Search for the last withhold move line that matches the pan entity and account and section
+                    withhold_move_line = self.env['account.move.line'].search([
+                        ('move_id.l10n_in_withholding_ref_move_id.commercial_partner_id.l10n_in_pan_entity_id', '=', wizard.related_move_id.commercial_partner_id.l10n_in_pan_entity_id.id),
+                        ('move_id.l10n_in_withholding_ref_move_id.line_ids.account_id', 'in', account.id),
+                        ('move_id.l10n_in_withholding_ref_move_id.line_ids.l10n_in_tds_tcs_section_id', 'in', section.id),
+                        ('move_id.state', '=', 'posted'),
+                        ('tax_ids.l10n_in_section_id', '=', section.id),
+                    ], limit=1, order='id desc')
+                    if withhold_move_line:
+                        tax = withhold_move_line.tax_ids.filtered(lambda t: t.l10n_in_section_id == section)
+                        break
+                if tax:
+                    wizard.tax_id = tax
+
+    @api.depends('tax_id')
+    def _compute_base(self):
+        for wizard in self:
+            if (
+                wizard.tax_id and
+                wizard.related_move_id and
+                wizard.tax_id.l10n_in_section_id not in (self.env.ref('l10n_in.tds_section_194q'), self.env.ref('l10n_in.tds_section_194n'))
+            ):
+                sign = -1 if wizard.related_move_id.is_inbound() else 1
+                wizard.base = sign * sum(wizard.related_move_id.line_ids.filtered(lambda l: l.account_id.l10n_in_tds_tcs_section_id == wizard.tax_id.l10n_in_section_id).mapped('balance'))
 
     @api.depends('tax_id', 'base')
     def _compute_amount(self):
