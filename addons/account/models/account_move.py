@@ -4284,7 +4284,8 @@ class AccountMove(models.Model):
         }
 
         def total_grouping_function(base_line, tax_data):
-            return not filter_tax_values_to_apply or filter_tax_values_to_apply(base_line, tax_data)
+            if tax_data:
+                return not filter_tax_values_to_apply or filter_tax_values_to_apply(base_line, tax_data)
 
         # Report the total amounts.
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, total_grouping_function)
@@ -4912,7 +4913,8 @@ class AccountMove(models.Model):
                 validation_msgs.add(_("A line of this move is using a deprecated account, you cannot post it."))
 
             # If the field autocheck_on_post is set, we want the checked field on the move to be checked
-            move.checked = move.journal_id.autocheck_on_post
+            if move.journal_id.autocheck_on_post:
+                move.checked = move.journal_id.autocheck_on_post
 
         if validation_msgs:
             msg = "\n".join([line for line in validation_msgs])

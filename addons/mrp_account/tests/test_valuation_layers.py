@@ -610,3 +610,38 @@ class TestMrpStockValuation(TestStockValuationBase):
         ], order='date, id')
         self.assertEqual(out_aml.credit, 100)
         self.assertEqual(in_aml.product_id, self.product1)
+
+    def test_average_cost_unbuild_component_change_move_qty(self):
+        """
+        Ensures that we can modify the quantity on the stock move of the components after an unbuild
+        """
+        avco_category = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+        comp_1, final_product = self.product1, self.product2
+        (comp_1 | final_product).categ_id = avco_category
+        final_product_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {
+                'product_id': comp_1.id,
+                'product_qty': 1,
+            })],
+        })
+        mo = self.env['mrp.production'].create({
+            'product_qty': 1.0,
+            'bom_id': final_product_bom.id,
+        })
+        mo.action_confirm()
+        mo.button_mark_done()
+        action = mo.button_unbuild()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.product_qty = 1
+        unbuild = wizard.save()
+        unbuild.action_validate()
+        # check that changing the quantity on the move form does not create an error
+        comp_move = mo.unbuild_ids.produce_line_ids.filtered(lambda move: move.product_id.id == comp_1.id)
+        with Form(comp_move.move_line_ids[0]) as form:
+            form.quantity = 0
