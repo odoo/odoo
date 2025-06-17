@@ -1116,16 +1116,21 @@ class MassMailing(models.Model):
                 **mailing._get_mass_mailing_context()
             ).create(composer_values)
 
-            # auto-commit except in testing mode
-            composer._action_send_mail(
-                auto_commit=not getattr(threading.current_thread(), 'testing', False)
-            )
+            composer._action_send_mail()
+
             mailing.write({
                 'state': 'done',
                 'sent_date': fields.Datetime.now(),
                 # send the KPI mail only if it's the first sending
                 'kpi_mail_required': not mailing.sent_date,
             })
+
+            # auto-commit except in testing mode
+            current_thread = threading.current_thread()
+            auto_commit = not (hasattr(current_thread, 'testing') and current_thread.testing)
+            if auto_commit is True:
+                self._cr.commit()
+
         return True
 
     def convert_links(self):
