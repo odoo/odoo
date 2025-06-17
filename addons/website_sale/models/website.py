@@ -750,7 +750,9 @@ class Website(models.Model):
                 email_vals = {} if template.email_to or template.partner_to else {
                     'email_to': sale_order.partner_id.email_formatted
                 }
-                template.send_mail(sale_order.id, email_values=email_vals)
+                template.with_context(
+                    show_recovery_button=True,
+                ).send_mail(sale_order.id, email_values=email_vals)
                 sale_order.cart_recovery_email_sent = True
 
     @api.model_create_multi
