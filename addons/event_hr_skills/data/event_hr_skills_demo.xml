@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="event.event_tag_category_3" model="event.tag.category">
+            <field name="hr_resume_line_type_id" eval="ref('hr_skills.resume_type_experience')"/>
+        </record>
+
+        <record id="event.event_2" model="event.event">
+            <field name="tag_ids" eval="[(4, ref('event.event_tag_category_3_tag_2'))]"/>
+        </record>
+    </data>
+</odoo>

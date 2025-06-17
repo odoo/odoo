@@ -1,28 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <odoo>
 
     <record id="event_tag_category_view_form" model="ir.ui.view">
-        <field name="name">event.tag.category.view.form.inherit.website</field>
+        <field name="name">event.tag.category.view.form.inherit.event.hr.skills</field>
         <field name="model">event.tag.category</field>
         <field name="inherit_id" ref="event.event_tag_category_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@id='left_header']" position="inside">
-                    <field name="is_published" string="Show on Website" widget="boolean_toggle"/>
-                    <field name="website_id" groups="website.group_multi_website" string="Website" invisible="not is_published"/>
+            <xpath expr="//group[@id='right_header']" position="inside">
+                <field name="hr_resume_line_type_id"/>
             </xpath>
-            <xpath expr="//group[@id='left_header']" position="attributes">
+            <xpath expr="//group[@id='right_header']" position="attributes">
                 <attribute name='invisible'>0</attribute>
             </xpath>
         </field>
     </record>
 
     <record id="event_tag_category_view_tree" model="ir.ui.view">
-        <field name="name">event.tag.category.view.list.inherit.website</field>
+        <field name="name">event.tag.category.view.list.inherit.event.hr.skills</field>
         <field name="model">event.tag.category</field>
         <field name="inherit_id" ref="event.event_tag_category_view_tree"/>
         <field name="arch" type="xml">
             <field name="tag_ids" position="after">
-                <field name="is_published" string="Show on Website"/>
+                <field name="hr_resume_line_type_id" optional="hide"/>
             </field>
         </field>
     </record>
