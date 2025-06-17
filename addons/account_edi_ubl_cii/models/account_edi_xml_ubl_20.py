@@ -1120,6 +1120,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 else 'credit_note' if invoice.move_type == 'out_refund'
                 else 'invoice',
 
+            'company': invoice.company_id,
+            'journal': invoice.journal_id,
+
             'supplier': supplier,
             'customer': customer,
             'partner_shipping': partner_shipping,
