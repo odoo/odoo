@@ -28,6 +28,15 @@
                                         <t t-if="not is_html_empty(user.signature)">
                                             <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="user.signature or ''">Mitchell Admin</t></div>
                                         </t>
+                                        <t t-if="'show_recovery_button' in ctx">
+                                            <div style="margin-bottom: 16px; font-size: 14px;">
+                                                <a t-attf-href="{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}"
+                                                    target="_blank"
+                                                    style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:14px;">
+                                                    Resume order
+                                                </a>
+                                            </div>
+                                        </t>
                                         <t t-if="object.order_line">
                                             <t t-foreach="object.website_order_line" t-as="line">
                                                 <div style="margin-bottom: 12px;">
@@ -78,9 +87,6 @@
                                                     </td>
                                                 </tr>
                                             </table>
-                                            <t t-if="'show_recovery_button' in ctx">
-
-                                            </t>
                                         </t>
                                         <t t-set="company" t-value="object.company_id or object.user_id.company_id or user.company_id"/>
                                     </td></tr>

@@ -175,7 +175,7 @@
                                                     <table width="100%" style="max-width: 590px; color: #454748; font-size: 14px; border-collapse: collapse;" role="presentation">
                                                         <tr>
                                                             <td width="24%" style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;">
-                                                                <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" style="width: 100px; height: 100px; object-fit: contain;" alt="Product image"></img>
+                                                                <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" style="width: 100px; height: 100px; object-fit: contain;" alt="Product image"/>
                                                             </td>
                                                             <td align="left" style="vertical-align: top; padding-bottom: 12px;">
                                                                 <h3 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};"><strong t-out="line.product_id.name or ''">Taking care of Trees Course</strong></h3>
@@ -305,20 +305,20 @@
                                     </t>
                                 </div>
                             </field>
-                                        <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]"/>
-                                        <field name="lang">{{ object.partner_id.lang }}</field>
-                                        <field name="auto_delete" eval="True"/>
-                                    </record>
+                            <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]"/>
+                            <field name="lang">{{ object.partner_id.lang }}</field>
+                            <field name="auto_delete" eval="True"/>
+                        </record>
 
-                                    <record id="mail_template_sale_payment_executed" model="mail.template">
-                                        <field name="name">Sales: Payment Done</field>
-                                        <field name="model_id" ref="sale.model_sale_order"/>
-                                        <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
-                                        <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
-                                        <field name="partner_to" eval="False"/>
-                                        <field name="use_default_to" eval="True"/>
-                                        <field name="description">Sent to customers when a payment is received but doesn't immediately confirm their order</field>
-                                        <field name="body_html" type="html">
+                        <record id="mail_template_sale_payment_executed" model="mail.template">
+                            <field name="name">Sales: Payment Done</field>
+                            <field name="model_id" ref="sale.model_sale_order"/>
+                            <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
+                            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+                            <field name="partner_to" eval="False"/>
+                            <field name="use_default_to" eval="True"/>
+                            <field name="description">Sent to customers when a payment is received but doesn't immediately confirm their order</field>
+                            <field name="body_html" type="html">
                             <div style="margin: 0px; padding: 0px;">
                                 <p style="margin: 0px; padding: 0px; font-size: 14px;">
                                     <t t-set="transaction_sudo" t-value="object.get_portal_last_transaction()"/>
