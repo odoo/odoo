@@ -425,6 +425,11 @@ export class PosStore extends Reactive {
                 return false;
             }
         }
+
+        if (order.uuid === this.selectedOrderUuid) {
+            this.selectEmptyOrder();
+        }
+
         const orderIsDeleted = await this.deleteOrders([order]);
         if (orderIsDeleted) {
             order.uiState.displayed = false;
@@ -1566,23 +1571,28 @@ export class PosStore extends Reactive {
     getOrderChanges(skipped = false, order = this.get_order()) {
         return getOrderChanges(order, skipped, this.orderPreparationCategories);
     }
+    getPreparationContext(order, cancelled = false) {}
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, cancelled = false) {
-        if (this.printers_category_ids_set.size) {
-            try {
-                const orderChange = changesToOrder(
-                    order,
-                    false,
-                    this.orderPreparationCategories,
-                    cancelled
-                );
-                this.printChanges(order, orderChange);
-            } catch (e) {
-                console.info("Failed in printing the changes in the order", e);
-            }
-        }
+        try {
+            const orderChange = changesToOrder(
+                order,
+                false,
+                this.orderPreparationCategories,
+                cancelled
+            );
 
-        order.updateLastOrderChange();
+            order.updateLastOrderChange();
+            await this.syncAllOrders({
+                orders: [order],
+                context: this.getPreparationContext(order, cancelled),
+            });
+
+            this.printChanges(order, orderChange);
+            order.uiState.noteHistory = {};
+        } catch (e) {
+            console.info("Failed in printing the changes in the order", e);
+        }
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         // Always display a "ConnectionLostError" when the user tries to send an order to the kitchen while offline
