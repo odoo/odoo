@@ -28,12 +28,12 @@ class ReportProjectTaskUser extends models.Model {
     ];
     _views = {
         graph: /* xml */ `
-            <graph string="Tasks Analysis" sample="1" js_class="project_task_analysis_graph">
+            <graph string="Tasks Analysis" sample="1">
                 <field name="project_id"/>
             </graph>
         `,
         pivot: /* xml */ `
-            <pivot string="Tasks Analysis" display_quantity="1" sample="1" js_class="project_task_analysis_pivot">
+            <pivot string="Tasks Analysis" display_quantity="1" sample="1">
                 <field name="project_id"/>
             </pivot>
         `,

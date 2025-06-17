@@ -1506,6 +1506,11 @@ export function makeActionManager(env, router = _router) {
             context.active_ids = params.resIds;
             context.active_model = params.resModel;
             action = await keepLast.add(_loadAction(params.name, context));
+            debugger
+            if (params.domain) {
+                const originalDomain = action.domain || [];
+                action.domain = Domain.and([originalDomain, params.domain]).toList();
+            }
         } else {
             if (blockUi) {
                 env.services.ui.unblock();
