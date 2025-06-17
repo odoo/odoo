@@ -18,6 +18,9 @@ export class ImageShapeHoverEffect extends Interaction {
     }
 
     destroy() {
+        if (this.isDestroyed) {
+            return;
+        }
         if (this.el.dataset.originalSrcBeforeHover && !this.el.classList.contains("o_modified_image_to_save")) {
             // Replace the image source by its original one if it has not been
             // modified in edit mode.
