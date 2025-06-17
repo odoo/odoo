@@ -150,12 +150,13 @@ class BaseModel(models.AbstractModel):
                 continue
 
             updated.add(col_name)
-            tracking_value_ids.append(
-                [0, 0, self.env['mail.tracking.value']._create_tracking_values(
-                    initial_value, new_value,
-                    col_name, tracked_fields[col_name],
-                    self
-                )])
+            tracking_values = self.env['mail.tracking.value']._create_tracking_values(
+                initial_value, new_value,
+                col_name, tracked_fields[col_name],
+                self
+            )
+            tracking_values = tracking_values if isinstance(tracking_values, list) else [tracking_values]
+            tracking_value_ids.extend([0, 0, t_values] for t_values in tracking_values)
 
         return updated, tracking_value_ids
 
