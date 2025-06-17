@@ -17,25 +17,20 @@ class LoyaltyProgram(models.Model):
         help="This is used to print the generated gift cards from PoS.")
 
     @api.model
-    def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
-        return [('id', 'in', config_id._get_program_ids().ids)]
+    def _load_pos_data_domain(self, data, config):
+        return [('id', 'in', config._get_program_ids().ids)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return [
             'name', 'trigger', 'applies_on', 'program_type', 'pricelist_ids', 'date_from',
             'date_to', 'limit_usage', 'max_usage', 'total_order_count', 'is_nominative',
             'portal_visible', 'portal_point_name', 'trigger_product_ids', 'rule_ids', 'reward_ids'
         ]
 
-    def _unrelevant_records(self):
-        config_id = self.env.context.get('config_id')
-        if config_id:
-            config = self.env['pos.config'].browse(config_id)
-            valid_record = config._get_program_ids()
-            return self.filtered(lambda record: record.id not in valid_record.ids).ids
-        return []
+    def _unrelevant_records(self, config):
+        valid_record = config._get_program_ids()
+        return self.filtered(lambda record: record.id not in valid_record.ids).ids
 
     @api.depends("communication_plan_ids.pos_report_print_id")
     def _compute_pos_report_print_id(self):

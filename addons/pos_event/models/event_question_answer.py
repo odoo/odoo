@@ -8,9 +8,9 @@ class EventQuestionAnswer(models.Model):
     _inherit = ['event.question.answer', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['question_id', 'name', 'sequence']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return [('question_id', 'in', [quest['id'] for quest in data['event.question']])]

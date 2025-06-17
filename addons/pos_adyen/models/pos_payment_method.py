@@ -36,8 +36,8 @@ class PosPaymentMethod(models.Model):
     )
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
         params += ['adyen_terminal_identifier']
         return params
 

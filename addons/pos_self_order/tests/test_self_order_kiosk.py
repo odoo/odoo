@@ -204,6 +204,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each',
             'available_pricelist_ids': [Command.set(pricelist.ids)],
+            'use_pricelist': True,
             'pricelist_id': pricelist.id,
         })
 

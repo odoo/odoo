@@ -31,11 +31,11 @@ class ResCompany(models.Model):
         required=True)
 
     @api.model
-    def _load_pos_data_domain(self, data):
-        return [('id', '=', data['pos.config'][0]['company_id'])]
+    def _load_pos_data_domain(self, data, config):
+        return [('id', '=', config.company_id.id)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return [
             'id', 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
             'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id', 'point_of_sale_use_ticket_qr_code',

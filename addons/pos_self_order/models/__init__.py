@@ -12,7 +12,6 @@ from . import product_tag
 from . import res_config_settings
 from . import pos_session
 from . import pos_load_mixin
-from . import account_fiscal_position
 from . import pos_preset
 from . import res_partner
 from . import res_country

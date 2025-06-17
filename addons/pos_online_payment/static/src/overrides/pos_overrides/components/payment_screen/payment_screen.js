@@ -118,7 +118,7 @@ patch(PaymentScreen.prototype, {
                     const onlinePaymentData = {
                         formattedAmount: this.env.utils.formatCurrency(onlinePaymentLineAmount),
                         qrCode: qrCodeSrc(
-                            `${this.pos.session._base_url}/pos/pay/${this.currentOrder.id}?access_token=${this.currentOrder.access_token}`
+                            `${this.pos.config._base_url}/pos/pay/${this.currentOrder.id}?access_token=${this.currentOrder.access_token}`
                         ),
                         orderName: this.currentOrder.name,
                     };

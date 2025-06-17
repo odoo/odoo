@@ -6,12 +6,12 @@ class ResourceCalendarAttendance(models.Model):
     _inherit = ['resource.calendar.attendance', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         attendance_ids = []
         for preset in data['pos.preset']:
             attendance_ids += preset['attendance_ids']
         return [('id', 'in', attendance_ids)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id', 'hour_from', 'hour_to', 'dayofweek', 'day_period']

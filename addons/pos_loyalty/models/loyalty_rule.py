@@ -20,12 +20,11 @@ class LoyaltyRule(models.Model):
     )
 
     @api.model
-    def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
-        return [('program_id', 'in', config_id._get_program_ids().ids)]
+    def _load_pos_data_domain(self, data, config):
+        return [('program_id', 'in', config._get_program_ids().ids)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['program_id', 'valid_product_ids', 'any_product', 'currency_id',
             'reward_point_amount', 'reward_point_split', 'reward_point_mode',
             'minimum_qty', 'minimum_amount', 'minimum_amount_tax_mode', 'mode', 'code']

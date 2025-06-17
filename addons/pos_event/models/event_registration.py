@@ -29,11 +29,11 @@ class EventRegistration(models.Model):
         super()._compute_registration_status()
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return False
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id', 'event_id', 'event_ticket_id', 'event_slot_id', 'pos_order_line_id', 'pos_order_id', 'phone',
                 'email', 'name', 'registration_answer_ids', 'registration_answer_choice_ids', 'write_date']
 

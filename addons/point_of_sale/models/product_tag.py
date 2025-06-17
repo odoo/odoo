@@ -11,7 +11,7 @@ class ProductTag(models.Model):
     has_image = fields.Boolean(compute='_compute_has_image')
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['name', 'pos_description', 'color', 'has_image', 'write_date']
 
     @api.depends('has_image')

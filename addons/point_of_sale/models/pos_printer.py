@@ -19,9 +19,9 @@ class PosPrinter(models.Model):
     pos_config_ids = fields.Many2many('pos.config', 'pos_config_printer_rel', 'printer_id', 'config_id')
 
     @api.model
-    def _load_pos_data_domain(self, data):
-        return [('id', 'in', data['pos.config'][0]['printer_ids'])]
+    def _load_pos_data_domain(self, data, config):
+        return [('id', 'in', config.printer_ids.ids)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id', 'name', 'proxy_ip', 'product_categories_ids', 'printer_type']

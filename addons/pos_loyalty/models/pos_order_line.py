@@ -21,7 +21,7 @@ class PosOrderLine(models.Model):
     points_cost = fields.Float(help="How many point this reward cost on the coupon.")
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
         params += ['is_reward_line', 'reward_id', 'reward_identifier_code', 'points_cost', 'coupon_id']
         return params

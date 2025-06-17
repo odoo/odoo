@@ -19,10 +19,9 @@ class ProductTemplate(models.Model):
         store=True
     )
 
-    def _load_pos_self_data(self, data):
-        domain = self._load_pos_self_data_domain(data)
-        fields = set(self._load_pos_self_data_fields(data['pos.config'][0]['id']))
-        config = self.env['pos.config'].browse(data['pos.config'][0]['id'])
+    def _load_pos_self_data_read(self, data, config):
+        domain = self._load_pos_self_data_domain(data, config)
+        fields = set(self._load_pos_self_data_fields(config))
         products = self.search_read(
             domain,
             fields,
@@ -44,10 +43,6 @@ class ProductTemplate(models.Model):
 
         return products
 
-    def _post_read_pos_self_data(self, data):
-        self._process_pos_self_ui_products(data)
-        return super()._post_read_pos_self_data(data)
-
     def _process_pos_self_ui_products(self, products):
         for product in products:
             product['_archived_combinations'] = []
@@ -56,14 +51,14 @@ class ProductTemplate(models.Model):
             product['image_128'] = bool(product['image_128'])
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
         params += ['self_order_available']
         return params
 
     @api.model
-    def _load_pos_self_data_domain(self, data):
-        domain = super()._load_pos_self_data_domain(data)
+    def _load_pos_self_data_domain(self, data, config):
+        domain = super()._load_pos_self_data_domain(data, config)
         return Domain.AND([domain, [('self_order_available', '=', True)]])
 
     @api.onchange('available_in_pos')
@@ -126,7 +121,7 @@ class ProductProduct(models.Model):
         for config in config_self:
             if config.current_session_id and config.access_token:
                 config._notify('PRODUCT_CHANGED', {
-                    'product.product': self.read(self._load_pos_self_data_fields(config.id), load=False)
+                    'product.product': self.read(self._load_pos_self_data_fields(config), load=False)
                 })
 
     def _can_return_content(self, field_name=None, access_token=None):
