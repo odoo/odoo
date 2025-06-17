@@ -68,6 +68,7 @@ class ResPartner(models.Model):
         """ Can't edit `country_id` if there is (non draft) issued SO. """
         return super()._can_edit_country() and not self._has_order(
             [
+                '|',
                 ('partner_invoice_id', '=', self.id),
                 ('partner_id', '=', self.id),
             ]
