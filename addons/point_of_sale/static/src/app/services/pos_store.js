@@ -367,11 +367,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
         this.config.iface_printers = !!this.unwatched.printers.length;
 
-        // Monitor product pricelist
-        this.models["product.product"].addEventListener(
-            "create",
-            this.computeProductPricelistCache.bind(this)
-        );
         this.models["product.pricelist.item"].addEventListener("create", () => {
             const order = this.getOrder();
             if (!order) {
@@ -520,6 +515,26 @@ export class PosStore extends WithLazyGetterTrap {
     async _onBeforeDeleteOrder(order) {
         return true;
     }
+
+    /**
+     * This method is used to load new products from the server.
+     * It also load pricelists, attributes and packagings
+     * @param {Array} domain
+     * @param {number} offset
+     * @param {number} limit
+     * @returns {Promise<Object>}
+     */
+    async loadNewProducts(domain, offset = 0, limit = 0) {
+        const result = await this.data.callRelated("product.template", "load_product_from_pos", [
+            odoo.pos_config_id,
+            domain,
+            offset,
+            limit,
+        ]);
+        return result;
+    }
+
+    // FIXME Dead code to be deleted in master
     computeProductPricelistCache(data) {
         if (!data) {
             return;
@@ -529,6 +544,7 @@ export class PosStore extends WithLazyGetterTrap {
         this._loadMissingPricelistItems(products);
     }
 
+    // FIXME Dead code to be deleted in master
     async _loadMissingPricelistItems(products) {
         const validProducts = products.filter((product) => typeof product.id === "number");
         if (!validProducts.length) {
@@ -1130,7 +1146,7 @@ export class PosStore extends WithLazyGetterTrap {
                 throw error;
             }
         } finally {
-            this.data.synchronizeLocalDataInIndexedDB();
+            this.data.debouncedSynchronizeLocalDataInIndexedDB();
         }
     }
     /**

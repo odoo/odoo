@@ -31,7 +31,7 @@ export function refresh() {
         await new Promise((resolve) => {
             const checkTransaction = () => {
                 const activeTransactions = posmodel.data.indexedDB.activeTransactions;
-                if (activeTransactions <= 0) {
+                if (activeTransactions.size === 0) {
                     window.location.reload();
                     resolve();
                 } else {
@@ -39,7 +39,11 @@ export function refresh() {
                 }
             };
 
-            checkTransaction();
+            // Wait indexedDB debouncer
+            setTimeout(() => {
+                checkTransaction();
+            }, 305);
+
             setTimeout(() => {
                 throw new Error("Timeout waiting indexedDB for transactions to finish");
             }, 2000);
