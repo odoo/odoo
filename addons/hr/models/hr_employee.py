@@ -85,10 +85,10 @@ class HrEmployee(models.Model):
         index='btree_not_null',
         ondelete='restrict')
     user_partner_id = fields.Many2one(related="user_id.partner_id", related_sudo=False, string="User's partner")
-    share = fields.Boolean(related="user_id.share", groups="hr.group_hr_user")
-    phone = fields.Char(related="user_id.phone", groups="hr.group_hr_user")
-    im_status = fields.Char(related="user_id.im_status", groups="hr.group_hr_user")
-    email = fields.Char(related="user_id.email", groups="hr.group_hr_user")
+    share = fields.Boolean(related="user_id.share")
+    phone = fields.Char(related="user_id.phone")
+    im_status = fields.Char(related="user_id.im_status")
+    email = fields.Char(related="user_id.email")
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),

@@ -105,7 +105,7 @@ class HrVersion(models.Model):
         help="Whether the employee is a member of the active user's department or one of it's child department.")
     job_id = fields.Many2one('hr.job', check_company=True, tracking=True)
     job_title = fields.Char(compute="_compute_job_title", inverse="_inverse_job_title", store=True, readonly=False,
-        string="Job Title", tracking=True, groups="hr.group_hr_user")
+        string="Job Title", tracking=True)
     is_custom_job_title = fields.Boolean(default=False, groups="hr.group_hr_user")
     address_id = fields.Many2one(
         'res.partner',
@@ -121,7 +121,7 @@ class HrVersion(models.Model):
     work_location_type = fields.Selection([
         ("home", "Home"),
         ("office", "Office"),
-        ("other", "Other")], compute="_compute_work_location_name_type", groups="hr.group_hr_user", tracking=True)
+        ("other", "Other")], compute="_compute_work_location_name_type", tracking=True)
 
     departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason",
                                           groups="hr.group_hr_user", copy=False, ondelete='restrict', tracking=True)
