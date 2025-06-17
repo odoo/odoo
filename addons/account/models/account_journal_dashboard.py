@@ -278,12 +278,11 @@ class AccountJournal(models.Model):
               JOIN account_move move ON move.id = st_line.move_id
              WHERE move.journal_id = ANY(%s)
                AND move.date > %s
-               AND move.date <= %s
                AND move.company_id = ANY(%s)
           GROUP BY move.date, move.journal_id
           ORDER BY move.date DESC
         """
-        self.env.cr.execute(query, (self.ids, last_month, today, self.env.companies.ids))
+        self.env.cr.execute(query, (self.ids, last_month, self.env.companies.ids))
         query_result = group_by_journal(self.env.cr.dictfetchall())
 
         result = {}
@@ -304,15 +303,16 @@ class AccountJournal(models.Model):
                     graph_key = _('Sample data')
             else:
                 last_balance = journal.current_statement_balance
-                data.append(build_graph_data(today, last_balance, currency))
+                # Make sure the last point in the graph is at least today or a future date
+                if not journal_result or journal_result[0]['date'] < today.date():
+                    data.append(build_graph_data(today, last_balance, currency))
                 date = today
                 amount = last_balance
                 #then we subtract the total amount of bank statement lines per day to get the previous points
                 #(graph is drawn backward)
                 for val in journal_result:
                     date = val['date']
-                    if date.strftime(DF) != today.strftime(DF):  # make sure the last point in the graph is today
-                        data[:0] = [build_graph_data(date, amount, currency)]
+                    data[:0] = [build_graph_data(date, amount, currency)]
                     amount -= val['amount']
 
                 # make sure the graph starts 1 month ago
