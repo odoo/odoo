@@ -4319,9 +4319,18 @@ class MailThread(models.AbstractModel):
         if not real_author_su.partner_share and not all(u.notification_type == 'email' for u in real_author_su.user_ids):
             return ooo_messages
 
+        # limit number of real author / recipient exchanges to 1 every 4 days
+        sent_su = self.env['mail.message'].sudo().search([
+            ('author_id', 'in', ooo_users.partner_id.ids),
+            ('message_type', '=', 'out_of_office'),
+            ('partner_ids', 'in', real_author_su.ids),
+            ('date', '>=', self.env.cr.now() - datetime.timedelta(days=4)),
+        ])
+        already_mailed = sent_su.author_id
+
         # finally send OOO messages
         original_subject = msg_vals['subject'] if 'subject' in (msg_vals or {}) else message.subject
-        for user in ooo_users:
+        for user in ooo_users.filtered(lambda u: u.partner_id not in already_mailed):
             body = self.env['ir.qweb']._render(
                 'mail.message_notification_out_of_office',
                 {

@@ -1546,6 +1546,17 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
          * record followers: user_employee_c2
          * OOO users: user_admin, user_employee_c2, user_portal
         """
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        test_record.message_subscribe(self.user_employee_c2.partner_id.ids)
+        # post history with partner_admin, should not prevent first OOO message to be generated
+        with self.mock_datetime_and_now(datetime(2025, 6, 17, 11, 10, 0)):
+            test_record.with_user(self.user_admin).message_post(
+                body='Posting before leaving on holidays',
+                message_type='comment',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+        test_record.message_unsubscribe(self.partner_admin.ids)
+
         # note that even if somehow portal achieved to be OOO we don't care
         self._setup_out_of_office(self.user_admin + self.user_employee_c2 + self.user_portal)
         self.user_employee.notification_type = 'email'  # potential limitation of from, to check
@@ -1554,9 +1565,6 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             self.assertTrue(user.is_out_of_office)
         for user in self.user_employee + self.user_employee_c3 + self.user_portal:
             self.assertFalse(user.is_out_of_office, 'Unset or portal')
-
-        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
-        test_record.message_subscribe(self.user_employee_c2.partner_id.ids)
 
         for post_dt, recipients, exp_ooo_authors in [
             # portal user should not generate OOO messages
@@ -1570,6 +1578,24 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 datetime(2025, 6, 17, 14, 15, 59),
                 (self.user_admin + self.user_employee_c3 + self.user_portal).partner_id,
                 self.partner_admin,
+            ),
+            # do not send multiple OOO with same author/recipient in a 4 days timeframe
+            (
+                datetime(2025, 6, 18, 14, 15, 59),
+                (self.user_admin + self.user_employee_c3 + self.user_portal).partner_id,
+                self.env['res.partner'],
+            ),
+            # user_employee_c2: follower but pinged = OOO candidate
+            (
+                datetime(2025, 6, 18, 14, 15, 59),
+                self.user_employee_c2.partner_id,
+                self.user_employee_c2.partner_id,
+            ),
+            # multiple OOO, more than 4 days after last OOO -> done
+            (
+                datetime(2025, 6, 22, 14, 16, 0),
+                (self.user_admin + self.user_employee_c2 + self.user_employee_c3 + self.user_portal).partner_id,
+                self.user_employee_c2.partner_id + self.partner_admin,
             ),
         ]:
             with self.subTest(post_dt=post_dt, recipients=recipients):
@@ -1588,6 +1614,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 # OOO messages: from: OOO recipient to message author
                 self.assertEqual(len(self._new_msgs), 1 + len(exp_ooo_authors), 'Posted message + OOO from expected authors')
                 ooo_messages = self._new_msgs[1:]
+                self.assertEqual(ooo_messages.author_id, exp_ooo_authors)
                 for ooo_author, ooo_message in zip(exp_ooo_authors, ooo_messages, strict=True):
                     self.assertMailNotifications(
                         ooo_message,
