@@ -34,10 +34,6 @@ class ProductsItemOptionPlugin extends Plugin {
         builder_actions: {
             SetItemSizeAction,
             ChangeSequenceAction,
-            SetRibbonAction,
-            CreateRibbonAction,
-            ModifyRibbonAction,
-            DeleteRibbonAction,
         },
     };
 

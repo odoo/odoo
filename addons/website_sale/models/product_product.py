@@ -428,25 +428,24 @@ class ProductProduct(models.Model):
 
     def _get_ribbon(self, get_product_prices):
         """
-        Retrieve the appropriate ribbon for the product based on manual or automatic assignment.
+        Retrieve a mapping from product id to it's assigned ribbon.
 
         This method first checks if a ribbon is manually set If no manual ribbon is set, it returns
         appropriate ribbon based on the priority assigned in product.ribbon.
 
         :param function get_product_prices: a lazy function that returns product's pricing info.
-        :return: The ribbon that matches the product's criteria or an empty ribbon record.
-        :rtype: `product.ribbon` recordset.
+        :rtype: dict.
         """
-        product_ribbon_sudo = self.env['product.ribbon'].sudo()
+        ProductRibbon = self.env['product.ribbon']
         if not self:
-            return {False: product_ribbon_sudo}
+            return {False: ProductRibbon}
 
         product_ribbon_map = {}
-        auto_assign_ribbons = product_ribbon_sudo.search([('assign', '!=', 'manual')])
+        auto_assign_ribbons = ProductRibbon.search([('assign', '!=', 'manual')])
         for product in self:
-            product_ribbon_map[product.id] = product_ribbon_sudo
+            product_ribbon_map[product.id] = ProductRibbon
             manually_set_ribbon = (
-                product.product_tmpl_id.website_ribbon_id or product.variant_ribbon_id
+                product.variant_ribbon_id or product.product_tmpl_id.website_ribbon_id
             )
 
             if manually_set_ribbon:

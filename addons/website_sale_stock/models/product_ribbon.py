@@ -7,7 +7,7 @@ class ProductRibbon(models.Model):
     _inherit = 'product.ribbon'
 
     assign = fields.Selection(
-        selection_add=[('out_of_stock', "Out of stock")],
+        selection_add=[('out_of_stock', "when out of stock")],
         ondelete={'out_of_stock': 'cascade'},
     )
 

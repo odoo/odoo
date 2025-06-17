@@ -30,22 +30,28 @@ class ProductRibbon(models.Model):
         string="Assign",
         selection=[
             ('manual', "Manually"),
-            ('sale', "Sale"),
-            ('new', "New"),
+            ('sale', "on sale"),
+            ('new', "when new"),
         ],
         required=True,
         default='manual',
         help=(
             "Defines how this ribbon is assigned to products:\n"
             "- Manually: You assign the ribbon manually to products.\n"
-            "- Sale: Automatically applies the ribbon when the product is on sale.\n"
-            "- New: Automatically applies ribbon when the product is created within new period."
+            "- Sale: Applied when the product is visibly on sale.\n"
+            "- New: Applied based on the New period you will define.\n"
+            "- Out Of Stock: Applied when the product is out of stock."
         ),
     )
     new_period = fields.Integer(default=30)
 
     @api.constrains('assign')
     def _check_assign(self):
+        """
+        Ensure only one ribbon exists per automatic assign type.
+        This prevents duplicates, since automatic assignment logic always uses the first ribbon
+        with a given assign value.
+        """
         for ribbon in self:
             if ribbon.assign != 'manual':
                 existing_ribbons = self.search([
@@ -61,6 +67,10 @@ class ProductRibbon(models.Model):
                     )
 
     def _get_css_classes(self):
+        """
+        Return the CSS classes for this ribbon based on style and position.
+        rtype: str
+        """
         css_classes = ""
         match self.style:
             case 'ribbon':
@@ -86,7 +96,7 @@ class ProductRibbon(models.Model):
         for ribbon in self:
             # Check if a discount is applied to the product using a pricelist, comparison price, or
             # others.
-            is_sale_assign = (
+            if (
                 ribbon.assign == 'sale'
                 and product_prices
                 and (
@@ -97,18 +107,19 @@ class ProductRibbon(models.Model):
                     )
                     # for /product page
                     or (
-                        "compare_list_price" in product_prices
+                        'compare_list_price' in product_prices
                         and product_prices['compare_list_price'] > product_prices['price']
                     )
                     or product_prices.get('has_discounted_price')
                 )
-            )
+            ):
+                return ribbon
+
             # Check if the product is published within the ribbon's new period.
-            is_new_assign = (
+            if (
                 ribbon.assign == 'new'
                 and ribbon.new_period >= (fields.Datetime.today() - product.publish_date).days
-            )
-
-            if is_sale_assign or is_new_assign:
+            ):
                 return ribbon
+
         return self.env['product.ribbon']
