@@ -92,7 +92,13 @@ function transformAction(component, id, action) {
         /** Closes this action. */
         close() {
             if (this.toggle) {
-                component.threadActions.activeAction = component.threadActions.actionStack.pop();
+                const active = component.threadActions.activeAction;
+                if (active?.popover && active.popover.id === this.id) {
+                    active.popover = null;
+                } else if (active?.id === this.id) {
+                    const previous = component.threadActions.actionStack.pop();
+                    component.threadActions.activeAction = previous || null;
+                }
             }
             action.close?.(component, this);
         },
@@ -131,6 +137,10 @@ function transformAction(component, id, action) {
         id,
         /** States whether this action is currently active. */
         get isActive() {
+            const active = component.threadActions.activeAction;
+            if (active?.popover) {
+                return this.id === active.popover.id || this.id === active.id;
+            }
             return id === component.threadActions.activeAction?.id;
         },
         /** Name of this action, displayed to the user. */
@@ -163,13 +173,19 @@ function transformAction(component, id, action) {
          * */
         open({ keepPrevious } = {}) {
             if (this.toggle) {
-                if (component.threadActions.activeAction) {
+                const current = component.threadActions.activeAction;
+                if (current) {
                     if (keepPrevious) {
                         component.threadActions.actionStack.push(
-                            component.threadActions.activeAction
+                            current
                         );
-                    } else {
-                        component.threadActions.activeAction.close();
+                    } else if (this.popover && component.threadActions.activeAction.isSidebar) {
+                        component.threadActions.activeAction = {
+                            ...current,
+                            popover: this,
+                        };
+                        action.open?.(component, this);
+                        return;
                     }
                 }
                 component.threadActions.activeAction = this;
@@ -180,6 +196,9 @@ function transformAction(component, id, action) {
             return typeof action.panelOuterClass === "function"
                 ? action.panelOuterClass(component)
                 : action.panelOuterClass;
+        },
+        get isSidebar() {
+            return this.popover == null;
         },
         /** Determines whether this is a popover linked to this action. */
         popover: null,

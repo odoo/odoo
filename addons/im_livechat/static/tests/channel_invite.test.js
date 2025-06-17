@@ -41,7 +41,6 @@ test("Can invite a partner to a livechat channel", async () => {
         text: "Mitch (FR) invited James to the channel",
     });
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
-    await click("button[title='Members']");
     await contains(".o-discuss-ChannelMember", { text: "James" });
 });
 
