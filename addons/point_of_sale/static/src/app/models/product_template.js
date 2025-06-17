@@ -18,13 +18,6 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
 export class ProductTemplate extends Base {
     static pythonModel = "product.template";
 
-    setup(_vals) {
-        super.setup(...arguments);
-        this.uiState = {
-            applicablePricelistRules: {},
-        };
-    }
-
     prepareProductBaseLineForTaxesComputationExtraValues(
         price,
         pricelist = false,
@@ -169,19 +162,8 @@ export class ProductTemplate extends Base {
         const filter = (r) => r.pricelist_id.id === pricelist.id;
         const rules = (this["<-product.pricelist.item.product_tmpl_id"] || []).filter(filter);
         const rulesSet = new Set(rules.map((r) => r.id));
-
-        if (this.uiState.applicablePricelistRules[pricelist.id] && !rulesSet.size) {
-            return this.uiState.applicablePricelistRules[pricelist.id];
-        }
-
-        const generalRules = pricelist.getGeneralRulesByCategories(this.parentCategories);
-
-        this.uiState.applicablePricelistRules[pricelist.id] = [
-            ...rulesSet,
-            ...generalRules.map((rule) => rule.id),
-        ];
-
-        return this.uiState.applicablePricelistRules[pricelist.id];
+        const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
+        return [...rulesSet, ...generalRulesIds];
     }
 
     // Port of _get_product_price on product.pricelist.

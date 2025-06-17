@@ -10,13 +10,6 @@ import { Base } from "./related_models";
 export class ProductProduct extends Base {
     static pythonModel = "product.product";
 
-    setup() {
-        super.setup(...arguments);
-        this.uiState = {
-            applicablePricelistRules: {},
-        };
-    }
-
     getImageUrl() {
         return (
             (this.image_128 &&
@@ -26,24 +19,20 @@ export class ProductProduct extends Base {
     }
 
     getApplicablePricelistRules(pricelist) {
-        const filter = (r) => r.pricelist_id.id === pricelist.id;
         const tmpl = this.product_tmpl_id;
-        const rules = (tmpl["<-product.pricelist.item.product_tmpl_id"] || []).filter(filter);
-        const productRules = (this["<-product.pricelist.item.product_id"] || []).filter(filter);
-        const rulesSet = new Set([...rules.map((r) => r.id), ...productRules.map((r) => r.id)]);
+        const tmplRules = (tmpl["<-product.pricelist.item.product_tmpl_id"] || []).filter(
+            (rule) =>
+                rule.pricelist_id.id === pricelist.id &&
+                (!rule.product_id || rule.product_id.id === this.id)
+        );
+        const productRules = (this["<-product.pricelist.item.product_id"] || []).filter(
+            (rule) => rule.pricelist_id.id === pricelist.id
+        );
 
-        if (this.uiState.applicablePricelistRules[pricelist.id] && !rulesSet.size) {
-            return this.uiState.applicablePricelistRules[pricelist.id];
-        }
-
-        const generalRules = pricelist.getGeneralRulesByCategories(this.parentCategories);
-
-        this.uiState.applicablePricelistRules[pricelist.id] = [
-            ...rulesSet,
-            ...generalRules.map((rule) => rule.id),
-        ];
-
-        return this.uiState.applicablePricelistRules[pricelist.id];
+        const tmplRulesSet = new Set(tmplRules.map((rule) => rule.id));
+        const productRulesSet = new Set(productRules.map((rule) => rule.id));
+        const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
+        return [...tmplRulesSet, ...productRulesSet, ...generalRulesIds];
     }
 }
 
