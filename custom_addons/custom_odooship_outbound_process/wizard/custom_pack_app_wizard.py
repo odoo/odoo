@@ -1080,13 +1080,17 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             picking.write({'current_state': 'pack'})
             picking.button_validate()
 
+        if (sale.carrier).upper() == "COURIERSPLEASE":
+            tracking_url = f'https://auspost.com.au/mypost/track/details/{con_id}'
+        else:
+            tracking_url = f'https://auspost.com.au/mypost/track/details/{con_id}'
         # Only need to write sale order fields once (they're shared for all picks)
         sale.write({
             'carrier': carrier,
             'pick_status': 'packed',
             'consignment_number': con_id,
             'status': label_url,
-            'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
+            'tracking_url': tracking_url,
         })
 
         self.send_tracking_update_to_ot_orders(
@@ -1565,6 +1569,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             else:
                 _logger.warning(f"[PRINT API] No label_url found in response for multi-pick: {order_number}")
             # Update DB
+            if (sale.carrier).upper() == "COURIERSPLEASE":
+                tracking_url = f'https://www.couriersplease.com.au/tools-track?no={con_id}'
+            else:
+                tracking_url = f'https://auspost.com.au/mypost/track/details/{con_id}'
             picking.write({'current_state': 'pack'})
             sale.write({
                 'carrier': carrier,
@@ -1572,7 +1580,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 # 'delivery_status': 'partial',
                 'consignment_number': con_id,
                 'status': label_url,
-                'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
+                'tracking_url': tracking_url,
             })
             picking.button_validate()
 
@@ -1821,10 +1829,13 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         if not picking:
             raise UserError(_("Picking %s not found for tracking update.") % pick_number)
 
-        track_url = f"https://auspost.com.au/mypost/track/details/{tracking_number}"
+        if (sale_order.carrier).upper() == "COURIERSPLEASE":
+            tracking_url = f'https://www.couriersplease.com.au/tools-track?no={tracking_number}'
+        else:
+            tracking_url = f'https://auspost.com.au/mypost/track/details/{tracking_number}'
         sale_order.write({
             'consignment_number': tracking_number,
-            'tracking_url': track_url,
+            'tracking_url': tracking_url,
             'carrier': carrier_name,
             'pick_status': "packed",
             'delivery_status': "partial",
