@@ -414,7 +414,11 @@ function isNodeHidden(node) {
 
 /** @type {NodeFilter} */
 function isNodeInteractive(node) {
-    return getStyle(node).pointerEvents !== "none";
+    return (
+        getStyle(node).pointerEvents !== "none" &&
+        !node.closest("[inert]") &&
+        !node.ownerDocument.defaultView.frameElement?.matches("[inert]")
+    );
 }
 
 /**
