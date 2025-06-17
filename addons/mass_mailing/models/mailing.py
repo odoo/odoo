@@ -1117,15 +1117,20 @@ class MailingMailing(models.Model):
             ).create(composer_values)
 
             # auto-commit except in testing mode
-            composer._action_send_mail(
-                auto_commit=not getattr(threading.current_thread(), 'testing', False)
-            )
+            auto_commit = not getattr(threading.current_thread(), 'testing', False)
+            composer._action_send_mail(auto_commit=auto_commit)
+
             mailing.write({
                 'state': 'done',
                 'sent_date': fields.Datetime.now(),
                 # send the KPI mail only if it's the first sending
                 'kpi_mail_required': not mailing.sent_date,
             })
+
+            # ensure mailing state update after auto-commit
+            if auto_commit is True:
+                self.env.cr.commit()
+
         return True
 
     def convert_links(self):
