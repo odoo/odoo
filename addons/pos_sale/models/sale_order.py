@@ -30,11 +30,7 @@ class SaleOrder(models.Model):
         product_ids = self.order_line.product_id.ids
         product_tmpls = self.env['product.template'].load_product_from_pos(
             config_id,
-            [
-                '|',
-                ('product_variant_ids.id', 'in', product_ids),
-                ('id', 'in', product_ids),
-            ]
+            [('product_variant_ids.id', 'in', product_ids)]
         )
         sale_order_fields = self._load_pos_data_fields(config_id)
         sale_order_read = self.read(sale_order_fields, load=False)

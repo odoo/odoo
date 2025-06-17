@@ -26,29 +26,23 @@ export class ProductProduct extends Base {
     }
 
     getApplicablePricelistRules(pricelist) {
-        const productTmplRules =
-            this.product_tmpl_id["<-product.pricelist.item.product_tmpl_id"] || [];
-        const productRules = this["<-product.pricelist.item.product_id"] || [];
-        const rulesIds = [...new Set([...productTmplRules, ...productRules])]
-            .filter((rule) => rule.pricelist_id.id === pricelist.id)
-            .map((rule) => rule.id);
-        if (
-            this.uiState.applicablePricelistRules[pricelist.id] &&
-            (!rulesIds.length ||
-                this.uiState.applicablePricelistRules[pricelist.id].includes(rulesIds[0]))
-        ) {
+        const filter = (r) => r.pricelist_id.id === pricelist.id;
+        const tmpl = this.product_tmpl_id;
+        const rules = (tmpl["<-product.pricelist.item.product_tmpl_id"] || []).filter(filter);
+        const productRules = (this["<-product.pricelist.item.product_id"] || []).filter(filter);
+        const rulesSet = new Set([...rules.map((r) => r.id), ...productRules.map((r) => r.id)]);
+
+        if (this.uiState.applicablePricelistRules[pricelist.id] && !rulesSet.size) {
             return this.uiState.applicablePricelistRules[pricelist.id];
         }
 
-        const parentCategoryIds = this.parentCategories;
-        const availableRules =
-            pricelist.item_ids?.filter(
-                (rule) =>
-                    (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
-                    (!rule.product_id || rule.product_id.id === this.id) &&
-                    (!rule.categ_id || parentCategoryIds.includes(rule.categ_id.id))
-            ) || [];
-        this.uiState.applicablePricelistRules[pricelist.id] = availableRules.map((rule) => rule.id);
+        const generalRules = pricelist.getGeneralRulesByCategories(this.parentCategories);
+
+        this.uiState.applicablePricelistRules[pricelist.id] = [
+            ...rulesSet,
+            ...generalRules.map((rule) => rule.id),
+        ];
+
         return this.uiState.applicablePricelistRules[pricelist.id];
     }
 }
