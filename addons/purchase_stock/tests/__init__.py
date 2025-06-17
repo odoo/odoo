@@ -19,6 +19,7 @@ from . import test_purchase_order_process
 from . import test_purchase_order_suggest
 from . import test_purchase_stock_accrued_entries
 from . import test_purchase_stock_report
+from . import test_purchase_user_access_flow
 from . import test_reordering_rule
 from . import test_replenish_wizard
 from . import test_routes
