@@ -512,35 +512,6 @@ class MrpBom(models.Model):
 
         return self.env['product.product'].browse(product_id).standard_price
 
-    # -------------------------------------------------------------------------
-    # DOCUMENT
-    # -------------------------------------------------------------------------
-
-    def _get_mail_thread_data_attachments(self):
-        res = super()._get_mail_thread_data_attachments()
-        return res | self._get_extra_attachments()
-
-    def _get_extra_attachments(self):
-        final_domain = []
-        bom_domain = [('attached_on_mrp', '=', 'bom')]
-        is_byproduct = self.env.user.has_group('mrp.group_mrp_byproducts')
-        for bom in self:
-            product_subdomain = ['|',
-                '&', ('res_model', '=', 'product.product'), ('res_id', '=', bom.product_id.id),
-                '&', ('res_model', '=', 'product.template'), ('res_id', '=', bom.product_tmpl_id.id)]
-            if is_byproduct:
-                product_domain = OR([product_subdomain, [
-                    '|',
-                    '&', ('res_model', '=', 'product.product'), ('res_id', 'in', bom.byproduct_ids.product_id.ids),
-                    '&', ('res_model', '=', 'product.template'), ('res_id', 'in', bom.byproduct_ids.product_id.product_tmpl_id.ids)]])
-            else:
-                product_domain = product_subdomain
-            prod_final_domain = AND([bom_domain, product_domain])
-            final_domain = OR([final_domain, prod_final_domain]) if final_domain else prod_final_domain
-
-        attachements = self.env['product.document'].search(final_domain).ir_attachment_id
-        return attachements
-
     @api.model
     def _skip_for_no_variant(self, product, bom_attribule_values, never_attribute_values=False):
         """ Controls if a Component/Operation/Byproduct line should be skipped based on the 'no_variant' attributes
@@ -624,7 +595,6 @@ class MrpBomLine(models.Model):
     child_line_ids = fields.One2many(
         'mrp.bom.line', string="BOM lines of the referred bom",
         compute='_compute_child_line_ids')
-    attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
     tracking = fields.Selection(related='product_id.tracking')
 
     _bom_qty_zero = models.Constraint(
@@ -644,16 +614,6 @@ class MrpBomLine(models.Model):
                 line.child_bom_id = False
             else:
                 line.child_bom_id = bom_by_product.get(line.product_id, False)
-
-    @api.depends('product_id')
-    def _compute_attachments_count(self):
-        for line in self:
-            nbr_attach = self.env['product.document'].search_count([
-                '&', '&', ('attached_on_mrp', '=', 'bom'), ('active', '=', 't'),
-                '|',
-                '&', ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id),
-                '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_tmpl_id.id)])
-            line.attachments_count = nbr_attach
 
     @api.depends('child_bom_id')
     def _compute_child_line_ids(self):
@@ -688,39 +648,6 @@ class MrpBomLine(models.Model):
             return False
 
         return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)
-
-    def action_see_attachments(self):
-        domain = [
-            '&', ('attached_on_mrp', '=', 'bom'),
-            '|',
-            '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_id.id),
-            '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_id.product_tmpl_id.id)]
-        attachments = self.env['product.document'].search(domain)
-        nbr_product_attach = len(attachments.filtered(lambda a: a.res_model == 'product.product'))
-        nbr_template_attach = len(attachments.filtered(lambda a: a.res_model == 'product.template'))
-        context = {'default_res_model': 'product.product',
-            'default_res_id': self.product_id.id,
-            'default_company_id': self.company_id.id,
-            'attached_on_bom': True,
-            'search_default_context_variant': not (nbr_product_attach == 0 and nbr_template_attach > 0) if self.env.user.has_group('product.group_product_variant') else False
-        }
-
-        return {
-            'name': _('Attachments'),
-            'domain': domain,
-            'res_model': 'product.document',
-            'type': 'ir.actions.act_window',
-            'view_mode': 'kanban,list,form',
-            'target': 'current',
-            'help': _('''<p class="o_view_nocontent_smiling_face">
-                        Upload files to your product
-                    </p><p>
-                        Use this feature to store any files, like drawings or specifications.
-                    </p>'''),
-            'limit': 80,
-            'context': context,
-            'search_view_id': self.env.ref('product.product_document_search').ids
-        }
 
     # -------------------------------------------------------------------------
     # CATALOG
