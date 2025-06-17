@@ -15,10 +15,12 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.PublicHoliday = cls.env['resource.calendar.leaves']
         cls.calendar_1 = cls.env['resource.calendar'].create({
             'name': 'Classic 40h/week',
             'tz': 'UTC',
             'hours_per_day': 8.0,
+            'company_id': cls.company.id,
             'attendance_ids': [
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
@@ -51,13 +53,13 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             ]
         })
 
-        cls.global_leave = cls.env['resource.calendar.leaves'].create({
+        cls.global_leave = cls.PublicHoliday.create({
             'name': 'Global Time Off',
             'date_from': date(2022, 3, 7),
             'date_to': date(2022, 3, 7),
         })
 
-        cls.calendar_leave = cls.env['resource.calendar.leaves'].create({
+        cls.calendar_leave = cls.PublicHoliday.create({
             'name': 'Global Time Off',
             'date_from': date(2022, 3, 8),
             'date_to': date(2022, 3, 8),
@@ -66,7 +68,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
 
     def test_leave_on_global_leave(self):
         with self.assertRaises(ValidationError):
-            self.env['resource.calendar.leaves'].create({
+            self.PublicHoliday.create({
                 'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 7),
                 'date_to': date(2022, 3, 7),
@@ -74,14 +76,14 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             })
 
         with self.assertRaises(ValidationError):
-            self.env['resource.calendar.leaves'].create({
+            self.PublicHoliday.create({
                 'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 7),
                 'date_to': date(2022, 3, 7),
             })
 
     def test_leave_on_calendar_leave(self):
-        self.env['resource.calendar.leaves'].create({
+        self.PublicHoliday.create({
                 'name': 'Correct Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
@@ -89,14 +91,14 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             })
 
         with self.assertRaises(ValidationError):
-            self.env['resource.calendar.leaves'].create({
+            self.PublicHoliday.create({
                 'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
             })
 
         with self.assertRaises(ValidationError):
-            self.env['resource.calendar.leaves'].create({
+            self.PublicHoliday.create({
                 'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
@@ -116,7 +118,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'attendance_ids': []
         })
         self.env.user.tz = 'Europe/Brussels'
-        global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
+        global_leave = self.PublicHoliday.with_user(self.env.user).create({
             'name': 'Public holiday',
             'date_from': "2023-05-15 06:00:00", # utc from 8:00:00 for Europe/Brussels (UTC +02:00)
             'date_to': "2023-05-15 15:00:00", # utc from 17:00:00 for Europe/Brussels (UTC +02:00)
@@ -136,7 +138,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             Check that leaves stored in memory (and not in the database)
             take into account global leaves.
         """
-        global_leave = self.env['resource.calendar.leaves'].create({
+        global_leave = self.PublicHoliday.create({
             'name': 'Global Time Off',
             'date_from': datetime(2024, 1, 3, 6, 0, 0),
             'date_to': datetime(2024, 1, 3, 19, 0, 0),
@@ -208,7 +210,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
         partially_covered_leave.action_approve()
 
-        global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
+        global_leave = self.PublicHoliday.with_user(self.env.user).create({
             'name': 'Public holiday',
             'date_from': "2024-12-04 06:00:00",
             'date_to': "2024-12-04 23:00:00",
@@ -216,7 +218,43 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
 
         # retrieve resource leaves linked to the employee's leave
-        resource_leaves = self.env['resource.calendar.leaves'].search([
+        resource_leaves = self.PublicHoliday.search([
             ('holiday_id', '=', partially_covered_leave.id)
         ])
         self.assertTrue(resource_leaves, 'Resource leaves linked to the employee leave should exist.')
+
+    @freeze_time('2025-04-01')
+    def test_load_public_holidays(self):
+        self.company.country_id = self.env.ref('base.in')
+        self.PublicHoliday.load_public_holidays(companies=self.company, convert_datetime=False)
+
+        current_year = datetime.now().year
+        holidays = self.PublicHoliday.search_count([
+            ('company_id', '=', self.company.id),
+            ('resource_id', '=', False),
+            ('date_from', '>=', datetime(current_year, 1, 1)),
+            ('date_to', '<=', datetime(current_year + 4, 12, 31)),
+        ])
+        self.assertEqual(holidays, 78, "Public holidays not created for the next 5 years.")
+
+    @freeze_time('2025-04-01')
+    def test_load_public_holidays_with_existing_holidays(self):
+        self.company.country_id = self.env.ref('base.in')
+        self.PublicHoliday.create({
+            'name': 'Christmas Day',
+            'date_from': datetime(2025, 1, 26, 8, 0, 0),
+            'date_to': datetime(2025, 1, 26, 17, 0, 0),
+            'resource_id': False,
+            'calendar_id': self.company.resource_calendar_id.id,
+        })
+        self.PublicHoliday.load_public_holidays(companies=self.company, convert_datetime=False)
+
+        current_year = datetime.now().year
+        holidays = self.PublicHoliday.search_count([
+            ('company_id', '=', self.company.id),
+            ('resource_id', '=', False),
+            ('date_from', '>=', datetime(current_year, 1, 1)),
+            ('date_to', '<=', datetime(current_year + 4, 12, 31)),
+        ])
+        # check that it will not create a new public holiday for the existing one
+        self.assertEqual(holidays, 78, "Public holidays not created for the next 5 years.")
