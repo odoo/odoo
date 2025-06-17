@@ -22,8 +22,8 @@ _logger = logging.getLogger(__name__)
 compress = functools.partial(re.sub, r'\s', '')
 
 TOTP_RATE_LIMITS = {
-    'send_email': (10, 3600),
-    'code_check': (10, 3600),
+    'send_email': (5, 3600),
+    'code_check': (5, 3600),
 }
 
 
