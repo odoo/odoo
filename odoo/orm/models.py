@@ -1466,7 +1466,7 @@ class BaseModel(metaclass=MetaModel):
             elif isinstance(value, COLLECTION_TYPES):
                 typed_value = []
                 for v in value:
-                    with contextlib.suppress(ValueError):
+                    with contextlib.suppress(ValueError, TypeError):
                         typed_value.append(field.convert_to_write(v, self))
                 domains.append([(field_name, operator, typed_value)])
             else:
