@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent, queryAllTexts } from "@odoo/hoot-dom";
 import { contains, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, invisibleEl, setupWebsiteBuilder } from "./website_helpers";
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 
 defineWebsiteModels();
 
@@ -184,6 +185,21 @@ test("translate select", async () => {
     expect(queryAllTexts(":iframe [data-initial-translation-value='Option 1']")).toEqual([
         "Option fr",
     ]);
+});
+
+test("test that powerbox should not open in translate mode", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable("&nbsp;"),
+    });
+    const editor = getEditor();
+    const textNode = editor.editable.querySelector("span").firstChild;
+    expect(textNode.nodeType).toBe(Node.TEXT_NODE);
+    setSelection({ anchorNode: textNode, anchorOffset: 0 });
+    await animationFrame();
+    // Simulate typing `/`
+    await insertText(editor, "/");
+    await animationFrame();
+    await expectElementCount(".o-we-powerbox", 0);
 });
 
 describe("save translation", () => {
