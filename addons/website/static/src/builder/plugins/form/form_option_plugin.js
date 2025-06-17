@@ -535,8 +535,8 @@ export class FormOptionPlugin extends Plugin {
                 },
             },
             setFormCustomFieldValueList: {
-                apply: ({ editingElement: fieldEl, value }) => {
-                    const fields = [];
+                load: this.prepareFields.bind(this),
+                apply: ({ editingElement: fieldEl, value, loadResult: fields }) => {
                     const field = getActiveField(fieldEl, { fields });
                     field.records = JSON.parse(value);
                     this.replaceField(fieldEl, field, fields);

@@ -62,6 +62,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         tx_sudo.is_donation = True
         if use_public_partner:
             fields = tx_sudo._fields
+            extra_fields = {}
             for key, value in details.items():
                 # Find matching field key
                 match_key = f'partner_{key}' if f'partner_{key}' in fields else key
@@ -71,8 +72,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
                         tx_sudo.update({match_key: int(value)})
                     else:
                         tx_sudo.update({match_key: value})
+                else:
+                    extra_fields[key] = value
+            if extra_fields:
+                tx_sudo.extra_fields = extra_fields
         elif not tx_sudo.partner_country_id:
-            tx_sudo.partner_country_id = int(details['partner_country_id'])
+            tx_sudo.partner_country_id = int(kwargs['partner_details']['partner_country_id'])
         # the user can change the donation amount on the payment page,
         # therefor we need to recompute the access_token
         access_token = payment_utils.generate_access_token(

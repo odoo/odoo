@@ -9,6 +9,7 @@ class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
     is_donation = fields.Boolean(string="Is donation")
+    extra_fields = fields.Json(string="Extra fields")
 
     def _post_process(self):
         super()._post_process()
@@ -37,6 +38,11 @@ class PaymentTransaction(models.Model):
                         if hasattr(value, 'name'):
                             value = value.name
                         msg.append(Markup('<br/>- %s: %s') % (field_name, value))
+                elif donation_tx.extra_fields and match_key in donation_tx.extra_fields:
+                    value = donation_tx.extra_fields[match_key]
+                    if value:
+                        field_label = match_key.replace('_', ' ').title()
+                        msg.append(Markup('<br/>- %s: %s') % (field_label, value))
             donation_tx.payment_id._message_log(body=Markup().join(msg))
 
     def _send_donation_email(self, is_internal_notification=False, comment=None, recipient_email=None):

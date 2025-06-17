@@ -512,7 +512,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {Element | null} The inline form of the selected payment option, if any.
      */
     _getInlineForm(radio) {
-        const inlineFormContainer = radio.closest('[name="o_payment_option"]');
+        const inlineFormContainer = radio?.closest('[name="o_payment_option"]');
         return inlineFormContainer?.querySelector('[name="o_payment_inline_form"]');
     },
 

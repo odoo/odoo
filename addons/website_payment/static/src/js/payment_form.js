@@ -53,8 +53,8 @@ PaymentForm.include({
         ev.stopPropagation();
         ev.preventDefault();
 
-        const donationAmountInputEl = this.el.querySelector("#other_amount_value");
-        const otherAmountRadioEl = this.el.querySelector("#other_amount");
+        const donationAmountInputEl = document.querySelector("#other_amount_value");
+        const otherAmountRadioEl = document.querySelector("#other_amount");
         const considerAmountInput = otherAmountRadioEl ? otherAmountRadioEl.checked : true;
         if (
             donationAmountInputEl &&
@@ -62,8 +62,8 @@ PaymentForm.include({
             (!donationAmountInputEl.value || parseFloat(donationAmountInputEl.value) <= 0)
         ) {
             // If the warning message is already displayed, we don't need to display it again.
-            if (this.el.querySelector("#warning_min_message_id").classList.contains("d-none")) {
-                this.el.querySelector("#warning_message_id").classList.remove("d-none");
+            if (document.querySelector("#warning_min_message_id").classList.contains("d-none")) {
+                document.querySelector("#warning_message_id").classList.remove("d-none");
             }
             return donationAmountInputEl.focus();
         }
