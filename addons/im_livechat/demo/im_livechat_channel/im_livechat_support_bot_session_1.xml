@@ -202,7 +202,7 @@
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function model="discuss.channel" name="rating_apply"
-            eval="[ref('im_livechat.support_bot_session_1_demo')], 5, 'BOT_SESSION_1', None, 'Bon travail'"/>
+        <function model="discuss.channel" name="_apply_livechat_feedback"
+            eval="[ref('im_livechat.support_bot_session_1_demo')], 5, 'Bon travail'"/>
     </data>
 </odoo>

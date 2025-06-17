@@ -85,7 +85,7 @@
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function model="discuss.channel" name="rating_apply"
-            eval="([ref('im_livechat.livechat_channel_session_3')], 5, 'LIVECHAT_3', None, 'Mega Job')"/>
+        <function model="discuss.channel" name="_apply_livechat_feedback"
+            eval="([ref('im_livechat.livechat_channel_session_3')], 5, 'Mega Job')"/>
     </data>
 </odoo>

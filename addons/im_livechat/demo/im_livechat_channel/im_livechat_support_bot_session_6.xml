@@ -145,7 +145,7 @@
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function model="discuss.channel" name="rating_apply"
-            eval="[ref('im_livechat.support_bot_session_6_demo')], 3, 'BOT_SESSION_6', None, 'OK'"/>
+        <function model="discuss.channel" name="_apply_livechat_feedback"
+            eval="[ref('im_livechat.support_bot_session_6_demo')], 3, 'OK'"/>
     </data>
 </odoo>

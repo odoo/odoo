@@ -94,7 +94,7 @@
             <field eval="False" name="partner_id"/>
             <field eval="True" name="consumed"/>
         </record>
-        <function model="discuss.channel" name="rating_apply"
-            eval="([ref('im_livechat.livechat_channel_session_6')], 5, 'LIVECHAT_6', None, 'Good Job')"/>
+        <function model="discuss.channel" name="_apply_livechat_feedback"
+            eval="([ref('im_livechat.livechat_channel_session_6')], 5, 'Good Job')"/>
     </data>
 </odoo>
