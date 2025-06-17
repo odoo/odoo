@@ -234,6 +234,11 @@ export class LinkPlugin extends Plugin {
         before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         after_paste_handlers: this.onPasteNormalizeLink.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
+        selection_leave_handlers: () => {
+            if (!this.LinkPopoverState.editing && this.currentOverlay?.isOpen) {
+                this.closeLinkTools(this.dependencies.selection.preserveSelection());
+            }
+        },
         clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
         normalize_handlers: this.normalizeLink.bind(this),
         after_insert_handlers: this.handleAfterInsert.bind(this),
@@ -553,6 +558,7 @@ export class LinkPlugin extends Plugin {
                 this.dependencies.selection.focusEditable();
             },
             onEdit: () => {
+                this.LinkPopoverState.editing = true;
                 this.restoreSavePoint = this.dependencies.history.makeSavePoint();
             },
             getInternalMetaData: this.getInternalMetaData,
@@ -596,12 +602,14 @@ export class LinkPlugin extends Plugin {
         if (this.currentOverlay.isOpen && document.querySelector(".o-we-linkpopover")) {
             this.currentOverlay.close();
             if (link && link.isConnected) {
-                this.dependencies.selection.setSelection({
-                    anchorNode: link,
-                    anchorOffset: 0,
-                    focusNode: link,
-                    focusOffset: nodeSize(link),
-                });
+                if (!cursors) {
+                    this.dependencies.selection.setSelection({
+                        anchorNode: link,
+                        anchorOffset: 0,
+                        focusNode: link,
+                        focusOffset: nodeSize(link),
+                    });
+                }
                 const saveCustomStyle = link.getAttribute("style");
                 link.removeAttribute("style");
                 this.dependencies.color.removeAllColor();
