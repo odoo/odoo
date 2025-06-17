@@ -1594,6 +1594,10 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         [{
                             'content': "<p>Le numéro que vous avez composé n'est plus attribué.</p>",
                             'email_values': {
+                                'headers': {
+                                    'Auto-Submitted': 'auto-replied',
+                                    'X-Auto-Response-Suppress': 'All',
+                                },
                                 'subject': f'Auto: {test_record.name}',
                             },
                             'message_type': 'out_of_office',
