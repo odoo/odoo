@@ -101,9 +101,7 @@ export class SavePlugin extends Plugin {
         const context = {
             website_id: this.services.website.currentWebsite.id,
             lang: this.services.website.currentWebsite.metadata.lang,
-            // TODO: Restore the delay translation feature once it's
-            // fixed, see commit msg for more info.
-            delay_translations: false,
+            delay_translations: true,
         };
 
         return this.services.orm.call(
