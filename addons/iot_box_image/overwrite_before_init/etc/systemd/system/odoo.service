@@ -15,7 +15,7 @@ ExecStartPre=sudo /bin/chown odoo:odoo /run/odoo
 ExecStartPre=sudo timedatectl set-ntp true
 ExecStart=/usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf
 Restart=on-failure
-RestartSec=5s
+RestartSec=10s
 StandardOutput=null
 StandardError=append:/var/log/odoo/odoo-server.log
 
