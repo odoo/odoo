@@ -28,7 +28,7 @@ patch(PaymentScreen.prototype, {
                 if (!order.partner_id) {
                     const setPricelist =
                         this.pos.config.pricelist_id?.id != order.pricelist_id?.id
-                            ? order.pricelist_id.id
+                            ? order.pricelist_id
                             : false;
                     order.setPartner(this.pos.config.simplified_partner_id);
                     if (setPricelist) {

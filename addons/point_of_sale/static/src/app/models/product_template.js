@@ -157,6 +157,43 @@ export class ProductTemplate extends Base {
         return current;
     }
 
+<<<<<<< da6a48fac521743a746513f58d6d1775b5b2bcc0
+||||||| 8eaef759bde13f134d8c3da6d24cf0a22604dbd9
+    getApplicablePricelistRules(pricelist) {
+        const productTmplRules = this["<-product.pricelist.item.product_tmpl_id"] || [];
+        const rulesIds = [...new Set([...productTmplRules])]
+            .filter((rule) => rule.pricelist_id.id === pricelist.id)
+            .map((rule) => rule.id);
+        if (
+            this.uiState.applicablePricelistRules[pricelist.id] &&
+            (!rulesIds.length ||
+                this.uiState.applicablePricelistRules[pricelist.id].includes(rulesIds[0]))
+        ) {
+            return this.uiState.applicablePricelistRules[pricelist.id];
+        }
+
+        const parentCategoryIds = this.parentCategories;
+        const availableRules =
+            pricelist.item_ids?.filter(
+                (rule) =>
+                    (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
+                    (!rule.product_tmpl_id || rule.product_tmpl_id.id === this.id) &&
+                    (!rule.categ_id || parentCategoryIds.includes(rule.categ_id.id))
+            ) || [];
+        this.uiState.applicablePricelistRules[pricelist.id] = availableRules.map((rule) => rule.id);
+        return this.uiState.applicablePricelistRules[pricelist.id];
+    }
+
+=======
+    getApplicablePricelistRules(pricelist) {
+        const filter = (r) => r.pricelist_id.id === pricelist.id;
+        const rules = (this["<-product.pricelist.item.product_tmpl_id"] || []).filter(filter);
+        const rulesSet = new Set(rules.map((r) => r.id));
+        const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
+        return [...rulesSet, ...generalRulesIds];
+    }
+
+>>>>>>> e8a8ae09a975c8e84663bb17b4e3385f2bc32a7c
     // Port of _get_product_price on product.pricelist.
     //
     // Anything related to UOM can be ignored, the POS will always use
