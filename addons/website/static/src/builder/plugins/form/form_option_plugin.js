@@ -536,13 +536,32 @@ export class FormOptionPlugin extends Plugin {
             setFormCustomFieldValueList: {
                 apply: ({ editingElement: fieldEl, value }) => {
                     const fields = [];
+                    let valueList = JSON.parse(value);
+                    valueList = valueList.filter(
+                        (value) => value.id !== "" || value.display_name !== ""
+                    );
+                    const hasDefault = valueList.some((value) => value.selected);
+                    if (valueList.length && !hasDefault) {
+                        valueList.unshift({
+                            id: "",
+                            display_name: "",
+                            selected: true,
+                        });
+                    }
                     const field = getActiveField(fieldEl, { fields });
-                    field.records = JSON.parse(value);
+                    field.records = valueList;
                     this.replaceField(fieldEl, field, fields);
                 },
                 getValue: ({ editingElement: fieldEl }) => {
                     const fields = [];
                     const field = getActiveField(fieldEl, { fields });
+                    if (
+                        field.records.length &&
+                        field.records[0].display_name === "" &&
+                        field.records[0].selected === true
+                    ) {
+                        field.records.shift();
+                    }
                     return JSON.stringify(field.records);
                 },
             },
