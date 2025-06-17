@@ -253,7 +253,7 @@ class PosController(PortalAccount):
 
     def _validate_extra_form_details(self, addtional_form_values, additional_required_fields):
         """ Ensure that all additional required fields have a value in the data. """
-        missing_fields = {}
+        missing_fields = set()
         error_messages = []
         for field in additional_required_fields:
             if field.name not in addtional_form_values or not addtional_form_values[field.name]:
