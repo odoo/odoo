@@ -78,14 +78,9 @@ export class PropertiesField extends Component {
                 if (!canChangeDefinition) {
                     canChangeDefinition = await this.checkDefinitionWriteAccess();
                     if (!canChangeDefinition) {
-                        this.notification.add(
-                            _t('Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".', {
-                                parentName: this.props.record.data[this.definitionRecordField].display_name,
-                                parentFieldLabel:
-                                    this.props.record.fields[this.definitionRecordField].string,
-                            }),
-                            { type: "warning" }
-                        );
+                        this.notification.add(this._getPropertyEditWarningText(), {
+                            type: "warning",
+                        });
                     }
                 }
                 const isInEditMode = canChangeDefinition && !this.props.readonly;
@@ -995,6 +990,17 @@ export class PropertiesField extends Component {
         if (separator) {
             this._unfoldSeparators([separator.name], true);
         }
+    }
+
+    /**
+     * Returns the text for the warning raised in the "PROPERTY_FIELD:EDIT"
+     * bus event, if the PropertiesField component cannot enter edit mode.
+     */
+    _getPropertyEditWarningText() {
+        return _t('Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".', {
+            parentName: this.props.record.data[this.definitionRecordField].display_name,
+            parentFieldLabel: this.props.record.fields[this.definitionRecordField].string,
+        });
     }
 }
 
