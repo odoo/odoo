@@ -47,6 +47,7 @@ export class FormOptionPlugin extends Plugin {
             {
                 Component: FormOptionAddFieldButton,
                 selector: ".s_website_form",
+                exclude: ".o_payment_form_field_container",
                 applyTo: "form",
                 props: {
                     addField: (formEl) => this.addFieldToForm(formEl),
@@ -534,8 +535,8 @@ export class FormOptionPlugin extends Plugin {
                 },
             },
             setFormCustomFieldValueList: {
-                apply: ({ editingElement: fieldEl, value }) => {
-                    const fields = [];
+                load: this.prepareFields.bind(this),
+                apply: ({ editingElement: fieldEl, value, loadResult: fields }) => {
                     const field = getActiveField(fieldEl, { fields });
                     field.records = JSON.parse(value);
                     this.replaceField(fieldEl, field, fields);
