@@ -11,10 +11,6 @@ _logger = logging.getLogger(__name__)
 
 
 class SmsApiTwilio(SmsApiBase):
-    PROVIDER_TO_SMS_FAILURE_TYPE = SmsApiBase.PROVIDER_TO_SMS_FAILURE_TYPE | {
-        'twilio_authentication': 'sms_twilio_authentication',
-    }
-
     def _sms_twilio_send_request(self, to_number, body, uuid):
         company_sudo = self.env.company.sudo()
         company_sudo._assert_twilio_sid()
@@ -72,8 +68,6 @@ class SmsApiTwilio(SmsApiBase):
         error_code = response_json.get('code') or response_json.get('error_code')
         if error_code in (21604, 21211, 21614, 21265):  # See https://www.twilio.com/docs/errors/xxxxx
             return "wrong_number_format"
-        elif error_code == 20003:
-            return "twilio_authentication"
         elif error_code == 21609:
             raise UserError(_("The Twilio StatusCallback URL is incorrect"))
         _logger.warning('Twilio SMS: Unknown error "%s" (code: %s)', response_json.get('message'), error_code)

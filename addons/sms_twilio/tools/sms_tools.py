@@ -17,7 +17,9 @@ def get_twilio_from_number(company, to_number):
         ('country_code', '=', country_code),
     ], limit=1)
     if not from_number:
-        from_number = company.env['sms.twilio.number'].search([], limit=1)
+        from_number = company.env['sms.twilio.number'].search([
+            ('company_id', '=', company.id)
+        ], limit=1)
     return from_number
 
 

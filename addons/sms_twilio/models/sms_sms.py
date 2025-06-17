@@ -6,13 +6,6 @@ class SmsSms(models.Model):
 
     sms_twilio_sid = fields.Char(related="sms_tracker_id.sms_twilio_sid", depends=['sms_tracker_id'])
 
-    failure_type = fields.Selection(
-        selection_add=[
-            ('sms_twilio_authentication', 'Authentication error')
-        ],
-        ondelete={'sms_twilio_authentication': 'cascade'},
-    )
-
     def _get_batch_size(self):
         if self.mail_message_id and self.mail_message_id.record_company_id and self.mail_message_id.record_company_id.sms_provider == 'twilio':
             return int(self.env['ir.config_parameter'].sudo().get_param('sms_twilio.session.batch.size', 10))
