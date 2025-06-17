@@ -14,6 +14,8 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.env.user.company_id.resource_calendar_id.tz = "Europe/Brussels"
 
         cls.company = cls.env['res.company'].create({'name': 'Test company'})
+        cls.external_company = cls.env['res.company'].create({'name': 'External Test company'})
+
         cls.env.user.company_id = cls.company
 
         # The available time off types are the ones whose:
@@ -43,7 +45,8 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.user_responsible_id = cls.user_responsible.id
         cls.user_employee = mail_new_test_user(cls.env, login='enguerran', password='enguerran', groups='base.group_user')
         cls.user_employee_id = cls.user_employee.id
-
+        cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')
+        cls.external_user_employee_id = cls.external_user_employee.id
         # Hr Data
         Department = cls.env['hr.department'].with_context(tracking_disable=True)
 
@@ -65,8 +68,16 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'user_id': cls.user_employee_id,
             'leave_manager_id': cls.user_responsible_id,
             'department_id': cls.rd_dept.id,
+            'company_id': cls.company.id,
         })
         cls.employee_emp_id = cls.employee_emp.id
+
+        cls.employee_external = cls.env['hr.employee'].create({
+            'name': 'external Employee',
+            'user_id': cls.external_user_employee_id,
+            'company_id': cls.external_company.id,
+        })
+        cls.external_employee_id = cls.employee_external.id
 
         cls.employee_hruser = cls.env['hr.employee'].create({
             'name': 'Armande HrUser',
