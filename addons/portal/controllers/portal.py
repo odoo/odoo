@@ -218,12 +218,16 @@ class CustomerPortal(Controller):
         """Display the user's addresses."""
         partner_sudo = request.env.user.partner_id  # env.user is always sudoed
         address_data = self._prepare_address_data(partner_sudo, **query_params)
+        has_invoice_type_address = any(
+            address.type == 'invoice'
+            for address in address_data['billing_addresses']
+        )
         values = {
             'partner_sudo': partner_sudo,
             **address_data,
             'page_name': 'my_addresses',
             # One unique address
-            'use_delivery_as_billing': len(address_data['billing_addresses']) == 1,
+            'use_delivery_as_billing': not has_invoice_type_address,
             'address_url': '/my/address',
         }
         return request.render('portal.my_addresses', values)
@@ -243,16 +247,16 @@ class CustomerPortal(Controller):
         """
         partner_sudo = partner_sudo.with_context(show_address=1)
         commercial_partner_sudo = partner_sudo.commercial_partner_id
-        billing_partners_sudo = partner_sudo | partner_sudo.search([
+        billing_partners_sudo = partner_sudo.search([
             ('id', 'child_of', commercial_partner_sudo.ids),
             '|',
             ('type', 'in', ['invoice', 'other']),
             ('id', '=', commercial_partner_sudo.id),
-        ], order='id desc')
-        delivery_partners_sudo = partner_sudo | partner_sudo.search(
+        ], order='id desc') | partner_sudo
+        delivery_partners_sudo = partner_sudo.search(
             commercial_partner_sudo._get_delivery_address_domain(),
             order='id desc',
-        )
+        ) | partner_sudo
 
         if partner_sudo != commercial_partner_sudo:  # Child of the commercial partner.
             # Don't display the commercial partner's addresses if they are not complete, as its
@@ -424,6 +428,7 @@ class CustomerPortal(Controller):
             'current_partner': current_partner,
             'commercial_partner': current_partner.commercial_partner_id,
             'is_commercial_address': not current_partner or partner_sudo == commercial_partner,
+            'is_main_address': not current_partner or (partner_sudo and partner_sudo == current_partner),
             'commercial_address_update_url': (
                 # Only redirect to account update if the logged in user is their own commercial
                 # partner.
@@ -431,6 +436,7 @@ class CustomerPortal(Controller):
             ),
             'address_type': address_type,
             'can_edit_vat': can_edit_vat,
+            'can_edit_country': not partner_sudo or partner_sudo._can_edit_country(),
             'callback': callback,
             'country': country_sudo,
             'countries': request.env['res.country'].sudo().search([]),
@@ -550,6 +556,19 @@ class CustomerPortal(Controller):
                 # The `phone_validation` module is installed.
                 partner_sudo._onchange_phone_validation()
 
+        if (
+            'company_name' in address_values
+            and partner_sudo.commercial_partner_id != partner_sudo
+            and partner_sudo.commercial_partner_id.is_company
+        ):
+            # If partner is an individual, update existing company's name or remove one
+            company_name = address_values['company_name']
+            parent_company = partner_sudo.commercial_partner_id
+            partner_sudo.company_name = False
+
+            if company_name and parent_company and parent_company.name != company_name:
+                parent_company.name = company_name
+
         self._handle_extra_form_data(extra_form_data, address_values)
 
         return partner_sudo, {'redirectUrl': callback}
@@ -620,17 +639,22 @@ class CustomerPortal(Controller):
                 and partner_sudo.name
                 and address_values['name'] != partner_sudo.name
             )
+            country_change = (
+                'country_id' in address_values
+                and partner_sudo.country_id
+                and address_values['country_id'] != partner_sudo.country_id.id
+            )
             email_change = (
                 'email' in address_values
                 and partner_sudo.email
                 and address_values['email'] != partner_sudo.email
             )
 
-            # Prevent changing the partner name if documents have been issued.
-            if name_change and not partner_sudo._can_edit_name():
-                invalid_fields.add('name')
+            # Prevent changing the partner country if documents have been issued.
+            if country_change and not partner_sudo._can_edit_country():
+                invalid_fields.add('country_id')
                 error_messages.append(_(
-                    "Changing your name is not allowed once document(s) have been issued for your"
+                    "Changing your country is not allowed once document(s) have been issued for your"
                     " account. Please contact us directly for this operation."
                 ))
 
@@ -673,10 +697,10 @@ class CustomerPortal(Controller):
                     else:
                         address_values.pop(commercial_field_name, None)
 
-                # Company name shouldn't be updated on a child address, even if it's not in the
-                # fields returned by _commercial_fields.
-                address_values.pop('company_name', None)
-
+                # Company name shouldn't be updated anywhere but the main and company address, even
+                # if it's not in the fields returned by _commercial_fields.
+                if partner_sudo != request.env['res.partner']._get_current_partner(**kwargs):
+                    address_values.pop('company_name', None)
             # Prevent changing the VAT number on a commercial partner if documents have been issued.
             elif (
                 'vat' in address_values
