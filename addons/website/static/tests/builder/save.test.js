@@ -1,7 +1,7 @@
-import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click } from "@odoo/hoot-dom";
+import { animationFrame, click, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
 import {
     defineWebsiteModels,
     exampleWebsiteContent,
@@ -9,6 +9,8 @@ import {
     setupWebsiteBuilder,
     wrapExample,
 } from "./website_helpers";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 
 defineWebsiteModels();
 
@@ -69,6 +71,24 @@ test("disable discard button when clicking on save", async () => {
     await setupWebsiteBuilder();
     await click(".o-snippets-top-actions button[data-action='save']");
     expect(".o-snippets-top-actions button[data-action='cancel']").toHaveAttribute("disabled", "");
+});
+
+test("content is escaped twice", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`<div class="my_content">hey</div>`);
+    const editor = getEditor();
+    const div = queryOne(":iframe .my_content");
+    setSelection({ anchorNode: div.firstChild, anchorOffset: 0 });
+    await insertText(editor, "<div>html</div>");
+
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        const savedView = args[1];
+        // we expect the html sent to have doubly escaped text content
+        expect(savedView).toInclude(
+            `<div class="my_content">&amp;lt;div&amp;gt;html&amp;lt;/div&amp;gt;hey</div>`
+        );
+        return true;
+    });
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
 });
 
 function setupSaveAndReloadIframe() {
