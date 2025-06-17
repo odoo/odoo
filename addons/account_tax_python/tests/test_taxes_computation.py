@@ -30,7 +30,7 @@ class TestTaxesComputation(TestTaxCommonAccountTaxPython):
                     (102.7, 27.3),
                 ),
             },
-            price_include='tax_included',
+            price_include_override='tax_included',
         )
         self.assert_python_taxes_computation(
             "product.volume * quantity * 0.35",
