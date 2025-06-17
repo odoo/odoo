@@ -14,8 +14,8 @@ class PosPaymentMethod(models.Model):
     type = fields.Selection(selection_add=[('online', 'Online')])
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
         params += ['is_online_payment']
         return params
 

@@ -133,8 +133,8 @@ class PosPaymentMethod(models.Model):
                 'config_id': pos_session_sudo.config_id.id
             })
 
-    def _load_pos_data_fields(self, config_id):
-        return [*super()._load_pos_data_fields(config_id), 'viva_com_terminal_id']
+    def _load_pos_data_fields(self, config):
+        return [*super()._load_pos_data_fields(config), 'viva_com_terminal_id']
 
     def viva_com_send_payment_request(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):

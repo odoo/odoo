@@ -28,11 +28,11 @@ class RestaurantTable(models.Model):
             table.identifier = self._get_identifier()
 
     @api.model
-    def _load_pos_self_data_fields(self, config_id):
+    def _load_pos_self_data_fields(self, config):
         return ['table_number', 'identifier', 'floor_id']
 
     @api.model
-    def _load_pos_self_data_domain(self, data):
+    def _load_pos_self_data_domain(self, data, config):
         return [('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']])]
 
 
@@ -40,9 +40,9 @@ class RestaurantFloor(models.Model):
     _inherit = "restaurant.floor"
 
     @api.model
-    def _load_pos_self_data_fields(self, config_id):
+    def _load_pos_self_data_fields(self, config):
         return ['name', 'table_ids']
 
     @api.model
-    def _load_pos_self_data_domain(self, data):
-        return [('id', 'in', data['pos.config'][0]['floor_ids'])]
+    def _load_pos_self_data_domain(self, data, config):
+        return [('id', 'in', config.floor_ids.ids)]

@@ -22,9 +22,9 @@ class RestaurantOrderCourse(models.Model):
         return super().write(vals)
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return [('order_id', 'in', [order['id'] for order in data['pos.order']])]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['uuid', 'fired', 'order_id', 'line_ids', 'index', 'write_date']

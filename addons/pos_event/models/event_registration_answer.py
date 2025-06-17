@@ -8,10 +8,10 @@ class EventRegistrationAnswer(models.Model):
     _inherit = ['event.registration.answer', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['question_id', 'registration_id', 'value_answer_id', 'value_text_box', 'partner_id',
                 'write_date', 'event_id']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return False

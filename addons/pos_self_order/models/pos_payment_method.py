@@ -9,8 +9,8 @@ class PosPaymentMethod(models.Model):
         pass
 
     @api.model
-    def _load_pos_self_data_domain(self, data):
-        if data['pos.config'][0]['self_ordering_mode'] == 'kiosk':
+    def _load_pos_self_data_domain(self, data, config):
+        if config.self_ordering_mode == 'kiosk':
             return [('use_payment_terminal', 'in', ['adyen', 'stripe']), ('id', 'in', data['pos.config'][0]['payment_method_ids']) ]
         else:
             [('id', '=', False)]

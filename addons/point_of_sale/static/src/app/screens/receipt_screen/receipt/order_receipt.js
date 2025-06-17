@@ -34,7 +34,7 @@ export class OrderReceipt extends Component {
     }
 
     get qrCode() {
-        const baseUrl = this.order.session._base_url;
+        const baseUrl = this.order.config._base_url;
         return (
             this.order.company.point_of_sale_use_ticket_qr_code &&
             this.order.finalized &&
@@ -55,7 +55,7 @@ export class OrderReceipt extends Component {
     }
 
     getPortalURL() {
-        return `${this.order.session._base_url}/pos/ticket`;
+        return `${this.order.config._base_url}/pos/ticket`;
     }
 
     get vatText() {

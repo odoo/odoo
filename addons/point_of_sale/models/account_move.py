@@ -101,8 +101,8 @@ class AccountMove(models.Model):
         return action
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        result = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        result = super()._load_pos_data_fields(config)
         return result or ['id']
 
 class AccountMoveLine(models.Model):

@@ -11,5 +11,5 @@ class ProductTag(models.Model):
         return super()._can_return_content(field_name, access_token)
 
     @api.model
-    def _load_pos_self_data_domain(self, data):
+    def _load_pos_self_data_domain(self, data, config):
         return [('visible_to_customers', '=', True)]

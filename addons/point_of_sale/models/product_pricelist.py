@@ -7,13 +7,12 @@ class ProductPricelist(models.Model):
     _inherit = ['product.pricelist', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
+    def _load_pos_data_domain(self, data, config):
         pricelist_ids = [preset['pricelist_id'] for preset in data['pos.preset']]
-        return [('id', 'in', config_id._get_available_pricelists().ids + pricelist_ids)]
+        return [('id', 'in', config._get_available_pricelists().ids + pricelist_ids)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id', 'name', 'display_name', 'item_ids']
 
 
@@ -22,7 +21,7 @@ class ProductPricelistItem(models.Model):
     _inherit = ['product.pricelist.item', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
         product_ids = [p['id'] for p in data['product.product']]
         product_categ = [c['id'] for c in data['product.category']]
@@ -38,7 +37,7 @@ class ProductPricelistItem(models.Model):
         ]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['product_tmpl_id', 'product_id', 'pricelist_id', 'price_surcharge', 'price_discount', 'price_round',
                 'price_min_margin', 'price_max_margin', 'company_id', 'currency_id', 'date_start', 'date_end', 'compute_price',
                 'fixed_price', 'percent_price', 'base_pricelist_id', 'base', 'categ_id', 'min_quantity']
