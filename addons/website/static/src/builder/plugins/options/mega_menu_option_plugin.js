@@ -20,6 +20,7 @@ export class MegaMenuOptionPlugin extends Plugin {
             }),
         ],
         save_handlers: this.saveMegaMenuClasses.bind(this),
+        no_parent_containers: ".o_mega_menu",
     };
 
     getTemplatePrefix() {
