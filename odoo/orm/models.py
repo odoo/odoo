@@ -59,7 +59,6 @@ from odoo.tools.lru import LRU
 from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
 from odoo.tools.translate import _, LazyTranslate
 
-from . import domains
 from . import decorators as api
 from .commands import Command
 from .domains import Domain, NEGATIVE_CONDITION_OPERATORS
@@ -2720,22 +2719,6 @@ class BaseModel(metaclass=MetaModel):
 
         # if the key is not present in the dict, fallback to false instead of none
         return SQL("COALESCE(%s, 'false')", sql_property)
-
-    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
-        """ Return an :class:`SQL` object that represents the domain condition
-        given by the triple ``(field_expr, operator, value)`` with the given
-        table alias, and in the context of the given query.
-
-        The method is also responsible for checking that the field is accessible
-        for reading, and should include metadata in the result object to make
-        sure that the necessary fields are flushed before executing the final
-        SQL query.
-        """
-        assert operator in domains.STANDARD_CONDITION_OPERATORS, \
-            f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
-
-        field = self._fields[parse_field_expr(field_expr)[0]]
-        return field.condition_to_sql(field_expr, operator, value, self, alias, query)
 
     @api.model
     def get_property_definition(self, full_name: str) -> dict:
