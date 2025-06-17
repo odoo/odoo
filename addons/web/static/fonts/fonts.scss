@@ -73,21 +73,36 @@ $google-font-path: './google';
 
 @mixin google-font($family, $type, $weight, $style) {
     @font-face {
+        $style_name: if($weight == 400 and $style == italic, "Italic", "#{$type}#{if($style != normal, $style, "")}");
+        $file_name: "#{$family}-#{$style_name}.ttf";
+
         font-family: $family;
-        src: url('#{$google-font-path}/#{$family}/#{$family}-#{$type}.ttf') format('truetype');
+        src: url('#{$google-font-path}/#{$family}/#{$file_name}') format('truetype');
         font-weight: $weight;
         font-style: $style;
     }
 }
 
-@mixin google-font-pair($family) {
-    @include google-font('#{$family}', 'Regular', 400, normal);
+@mixin google-font-pair($family, $italic: true, $font-weights: (
+    'Regular': 400,
+    'Medium': 500,
+    'Bold': 700)) {
+
+    @each $type, $weight in $font-weights {
+        @include google-font('#{$family}', $type, $weight, normal);
+        @if $italic {
+            @include google-font('#{$family}', $type, $weight, italic);
+        }
+    }
 }
 
 @include google-font-pair('Montserrat');
-@include google-font-pair('Open_Sans');
-@include google-font-pair('Oswald');
+@include google-font-pair('Open_Sans', $font-weights: (
+    'Regular': 400,
+    'Bold': 700,
+));
+@include google-font-pair('Oswald', $italic: false);
 @include google-font-pair('Raleway');
 @include google-font-pair('Roboto');
-@include google-font-pair('Tajawal');
-@include google-font-pair('Fira_Mono');
+@include google-font-pair('Tajawal', $italic: false);
+@include google-font-pair('Fira_Mono', $italic: false);
