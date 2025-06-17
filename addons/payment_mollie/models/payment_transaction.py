@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pprint
 
 from werkzeug import urls
 
@@ -33,8 +32,11 @@ class PaymentTransaction(models.Model):
             return res
 
         payload = self._mollie_prepare_payment_request_payload()
-        _logger.info("sending '/payments' request for link creation:\n%s", pprint.pformat(payload))
-        payment_data = self.provider_id._mollie_make_request('/payments', data=payload)
+        try:
+            payment_data = self.provider_id._make_request('POST', '/payments', json_payload=payload)
+        except ValidationError as error:
+            self._set_error(str(error))
+            return {}
 
         # The provider reference is set now to allow fetching the payment status after redirection
         self.provider_reference = payment_data.get('id')
@@ -78,27 +80,10 @@ class PaymentTransaction(models.Model):
             'webhookUrl': f'{webhook_url}?ref={self.reference}',
         }
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of payment to find the transaction based on Mollie data.
-
-        :param str provider_code: The code of the provider that handled the transaction
-        :param dict notification_data: The notification data sent by the provider
-        :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'mollie' or len(tx) == 1:
-            return tx
-
-        tx = self.search(
-            [('reference', '=', notification_data.get('ref')), ('provider_code', '=', 'mollie')]
-        )
-        if not tx:
-            raise ValidationError("Mollie: " + _(
-                "No transaction found matching reference %s.", notification_data.get('ref')
-            ))
-        return tx
+    def _get_ref_from_tx_notification_data(self, provider_code, notification_data):
+        if provider_code != 'mollie':
+            return super()._get_ref_from_tx_notification_data(provider_code, notification_data)
+        return notification_data.get('ref')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Mollie data.

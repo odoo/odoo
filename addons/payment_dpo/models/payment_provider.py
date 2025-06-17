@@ -1,13 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pprint
 
-import requests
 import xml.etree.ElementTree as ET
 
-from odoo import _, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 
 from odoo.addons.payment_dpo import const
 
@@ -27,32 +24,19 @@ class PaymentProvider(models.Model):
     )
 
     # === BUSINESS METHODS === #
+    def _build_request_url(self, endpoint, **kwargs):
+        if self.code != 'dpo':
+            return super()._build_request_url(endpoint, **kwargs)
+        return 'https://secure.3gdirectpay.com/API/v6/'
 
-    def _dpo_make_request(self, payload=None):
-        """ Make a request to DPO API to create or verify the Transaction Token.
+    def _prepare_request_headers(self, **kwargs):
+        if self.code != 'dpo':
+            return super()._prepare_request_headers(**kwargs)
+        return {'Content-Type': 'application/xml; charset=utf-8'}
 
-        Note: self.ensure_one()
-
-        :param dict payload: The payload of the request.
-        :return: The JSON-formatted content of the response.
-        :rtype: dict
-        :raise ValidationError: If an HTTP error occurs.
-        """
-        self.ensure_one()
-        api_url = 'https://secure.3gdirectpay.com/API/v6/'
-        headers = {'Content-Type': 'application/xml; charset=utf-8'}
-        try:
-            response = requests.post(url=api_url, data=payload, headers=headers, timeout=10)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "Invalid API request at %s with data:\n%s", api_url, pprint.pformat(payload)
-                )
-                raise ValidationError("DPO: " + _("The communication with the API failed."))
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            _logger.exception("Unable to reach %s", api_url)
-            raise ValidationError("DPO: " + _("The communication with the API failed."))
+    def _parse_response_content(self, response, **kwargs):
+        if self.code != 'dpo':
+            return super()._parse_response_content(response, **kwargs)
         root = ET.fromstring(response.content.decode('utf-8'))
         transaction_data = {element.tag: element.text for element in root}
 

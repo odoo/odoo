@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pprint
 from urllib.parse import quote as url_quote
 
 from werkzeug import urls
@@ -35,13 +34,17 @@ class PaymentTransaction(models.Model):
 
         # Initiate the payment and retrieve the payment link data.
         payload = self._mercado_pago_prepare_preference_request_payload()
-        _logger.info(
-            "Sending '/checkout/preferences' request for link creation:\n%s",
-            pprint.pformat(payload),
-        )
-        api_url = self.provider_id._mercado_pago_make_request(
-            '/checkout/preferences', payload=payload
-        )['init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point']
+        try:
+            response_content = self.provider_id._make_request(
+                'POST', '/checkout/preferences', json_payload=payload
+            )
+        except ValidationError as error:
+            self._set_error(str(error))
+            return {}
+
+        api_url = response_content[
+            'init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point'
+        ]
 
         # Extract the payment link URL and params and embed them in the redirect form.
         parsed_url = urls.url_parse(api_url)
@@ -98,30 +101,10 @@ class PaymentTransaction(models.Model):
             },
         }
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of `payment` to find the transaction based on Mercado Pago data.
-
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: recordset of `payment.transaction`
-        :raise ValidationError: If inconsistent data were received.
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'mercado_pago' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('external_reference')
-        if not reference:
-            raise ValidationError("Mercado Pago: " + _("Received data with missing reference."))
-
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'mercado_pago')])
-        if not tx:
-            raise ValidationError(
-                "Mercado Pago: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
+    def _get_ref_from_tx_notification_data(self, provider_code, notification_data):
+        if provider_code != 'mercado_pago':
+            return super()._get_ref_from_tx_notification_data(provider_code, notification_data)
+        return notification_data.get('external_reference')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Mercado Pago data.
@@ -151,7 +134,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data were received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'mercado_pago':
@@ -160,7 +142,8 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         payment_id = notification_data.get('id')
         if not payment_id:
-            raise ValidationError("Mercado Pago: " + _("Received data with missing payment id."))
+            self._set_error(_("Received data with missing payment id."))
+            return
         self.provider_reference = payment_id
 
         # Update the payment method.
@@ -181,7 +164,8 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         payment_status = notification_data.get('status')
         if not payment_status:
-            raise ValidationError("Mercado Pago: " + _("Received data with missing status."))
+            self._set_error(_("Received data with missing status"))
+            return
 
         if payment_status in const.TRANSACTION_STATUS_MAPPING['pending']:
             self._set_pending()

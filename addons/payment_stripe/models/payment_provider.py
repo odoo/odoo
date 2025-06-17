@@ -2,9 +2,7 @@
 
 import json
 import logging
-import uuid
 
-import requests
 from werkzeug.urls import url_encode, url_join, url_parse
 
 from odoo import _, api, fields, models
@@ -193,8 +191,8 @@ class PaymentProvider(models.Model):
             message = _("You cannot create a Stripe Webhook if your Stripe Secret Key is not set.")
             notification_type = 'danger'
         else:
-            webhook = self._stripe_make_request(
-                'webhook_endpoints', payload={
+            webhook = self._make_request(
+                'POST', 'webhook_endpoints', data={
                     'url': self._get_stripe_webhook_url(),
                     'enabled_events[]': const.HANDLED_WEBHOOK_EVENTS,
                     'api_version': const.API_VERSION,
@@ -230,7 +228,7 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         web_domain = url_parse(self.get_base_url()).netloc
-        response_content = self._stripe_make_request('apple_pay/domains', payload={
+        response_content = self._make_request('POST', 'apple_pay/domains', data={
             'domain_name': web_domain
         })
         if not response_content['livemode']:
@@ -252,25 +250,22 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
-    def _stripe_make_request(
-        self, endpoint, payload=None, method='POST', offline=False, idempotency_key=None
+    def _build_request_url(self, endpoint, *, is_proxy_request=False, version=1, **kwargs):
+        if self.code != 'stripe':
+            return super()._build_request_url(endpoint, **kwargs)
+        if is_proxy_request:
+            return url_join(const.PROXY_URL, f'{version}/{endpoint}')
+        return url_join('https://api.stripe.com/v1/', endpoint)
+
+    def _prepare_request_headers(
+        self, *, method=None, idempotency_key=None, is_proxy_request=False, **kwargs
     ):
-        """ Make a request to Stripe API at the specified endpoint.
-
-        Note: self.ensure_one()
-
-        :param str endpoint: The endpoint to be reached by the request
-        :param dict payload: The payload of the request
-        :param str method: The HTTP method of the request
-        :param bool offline: Whether the operation of the transaction being processed is 'offline'
-        :param str idempotency_key: The idempotency key to pass in the request.
-        :return The JSON-formatted content of the response
-        :rtype: dict
-        :raise: ValidationError if an HTTP error occurs
-        """
-        self.ensure_one()
-
-        url = url_join('https://api.stripe.com/v1/', endpoint)
+        if self.code != 'stripe':
+            return super()._prepare_request_headers(
+                method=method, idempotency_key=idempotency_key, **kwargs
+            )
+        if is_proxy_request:
+            return None
         headers = {
             'AUTHORIZATION': f'Bearer {stripe_utils.get_secret_key(self)}',
             'Stripe-Version': const.API_VERSION,  # SetupIntent requires a specific version.
@@ -278,32 +273,17 @@ class PaymentProvider(models.Model):
         }
         if method == 'POST' and idempotency_key:
             headers['Idempotency-Key'] = idempotency_key
-        try:
-            response = requests.request(method, url, data=payload, headers=headers, timeout=60)
-            # Stripe can send 4XX errors for payment failures (not only for badly-formed requests).
-            # Check if an error code is present in the response content and raise only if not.
-            # See https://stripe.com/docs/error-codes.
-            # If the request originates from an offline operation, don't raise to avoid a cursor
-            # rollback and return the response as-is for flow-specific handling.
-            if not response.ok \
-                    and not offline \
-                    and 400 <= response.status_code < 500 \
-                    and response.json().get('error'):  # The 'code' entry is sometimes missing
-                try:
-                    response.raise_for_status()
-                except requests.exceptions.HTTPError:
-                    _logger.exception("invalid API request at %s with data %s", url, payload)
-                    error_msg = response.json().get('error', {}).get('message', '')
-                    raise ValidationError(
-                        "Stripe: " + _(
-                            "The communication with the API failed.\n"
-                            "Stripe gave us the following info about the problem:\n'%s'", error_msg
-                        )
-                    )
-        except requests.exceptions.ConnectionError:
-            _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Stripe: " + _("Could not establish the connection to the API."))
-        return response.json()
+        return headers
+
+    def _parse_response_error(self, response):
+        if self.code != 'stripe':
+            return super()._parse_response_error(response)
+        return response.json().get('error', {}).get('message', '')
+
+    def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
+        if self.code != 'stripe' and not is_proxy_request:
+            return super()._parse_response_content(response, **kwargs)
+        return self._parse_proxy_response(response)
 
     def _get_stripe_extra_request_headers(self):
         """ Return the extra headers for the Stripe API request.
@@ -325,8 +305,11 @@ class PaymentProvider(models.Model):
         :return: The connected account
         :rtype: dict
         """
-        return self._stripe_make_proxy_request(
-            'accounts', payload=self._stripe_prepare_connect_account_payload()
+        proxy_payload = self._prepare_proxy_request_payload(
+            self._stripe_prepare_connect_account_payload()
+        )
+        return self._make_request(
+            'POST', 'accounts', json_payload=proxy_payload, is_proxy_request=True
         )
 
     def _stripe_prepare_connect_account_payload(self):
@@ -377,54 +360,28 @@ class PaymentProvider(models.Model):
         return_params = dict(provider_id=self.id, menu_id=menu_id)
         refresh_params = dict(**return_params, account_id=connected_account_id)
 
-        account_link = self._stripe_make_proxy_request('account_links', payload={
+        payload = {
             'account': connected_account_id,
             'return_url': f'{url_join(base_url, return_url)}?{url_encode(return_params)}',
             'refresh_url': f'{url_join(base_url, refresh_url)}?{url_encode(refresh_params)}',
             'type': 'account_onboarding',
-        })
+        }
+        proxy_payload = self._prepare_proxy_request_payload(payload)
+
+        account_link = self._make_request(
+            'POST', 'account_links', json_payload=proxy_payload, is_proxy_request=True
+        )
         return account_link['url']
 
-    def _stripe_make_proxy_request(self, endpoint, payload=None, version=1):
-        """ Make a request to the Stripe proxy at the specified endpoint.
-
-        :param str endpoint: The proxy endpoint to be reached by the request
-        :param dict payload: The payload of the request
-        :param int version: The proxy version used
-        :return The JSON-formatted content of the response
-        :rtype: dict
-        :raise: ValidationError if an HTTP error occurs
-        """
-        proxy_payload = {
-            'jsonrpc': '2.0',
-            'id': uuid.uuid4().hex,
-            'method': 'call',
-            'params': {
-                'payload': payload,  # Stripe data.
-                'proxy_data': self._stripe_prepare_proxy_data(stripe_payload=payload),
-            },
+    def _prepare_proxy_request_payload(self, payload=None):
+        res = super()._prepare_proxy_request_payload(payload=payload)
+        if self.code != 'stripe':
+            return res
+        res['params'] = {
+            'payload': payload,  # Stripe data.
+            'proxy_data': self._stripe_prepare_proxy_data(stripe_payload=payload),
         }
-        url = url_join(const.PROXY_URL, f'{version}/{endpoint}')
-        try:
-            response = requests.post(url=url, json=proxy_payload, timeout=60)
-            response.raise_for_status()
-        except requests.exceptions.ConnectionError:
-            _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError(_("Stripe Proxy: Could not establish the connection."))
-        except requests.exceptions.HTTPError:
-            _logger.exception("invalid API request at %s with data %s", url, payload)
-            raise ValidationError(
-                _("Stripe Proxy: An error occurred when communicating with the proxy.")
-            )
-
-        # Stripe proxy endpoints always respond with HTTP 200 as they implement JSON-RPC 2.0
-        response_content = response.json()
-        if response_content.get('error'):  # An exception was raised on the proxy
-            error_data = response_content['error']['data']
-            _logger.warning("request forwarded with error: %s", error_data['message'])
-            raise ValidationError(_("Stripe Proxy error: %(error)s", error=error_data['message']))
-
-        return response_content.get('result', {})
+        return res
 
     def _stripe_prepare_proxy_data(self, stripe_payload=None):
         """ Prepare the contextual data passed to the proxy when making a request.

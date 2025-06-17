@@ -46,11 +46,15 @@ class RazorpayController(Controller):
         # Request and set the OAuth tokens on the provider.
         action = request.env.ref('payment.action_payment_provider')
         redirect_url = f'/odoo/action-{action.id}/{int(provider_sudo.id)}'
-        if not authorization_code: # The user cancelled the authorization.
+        if not authorization_code:  # The user cancelled the authorization.
             return request.redirect(redirect_url)
+
+        proxy_payload = self.env['payment.provider']._prepare_proxy_request_payload(
+            payload={'authorization_code': authorization_code}
+        )
         try:
-            response_content = provider_sudo._razorpay_make_proxy_request(
-                '/get_access_token', payload={'authorization_code': authorization_code}
+            response_content = provider_sudo._make_request(
+                'POST', '/get_access_token', json_payload=proxy_payload
             )
         except ValidationError as e:
             return request.render(

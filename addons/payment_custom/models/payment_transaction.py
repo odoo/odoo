@@ -3,7 +3,6 @@
 import logging
 
 from odoo import _, models
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_custom.controllers.main import CustomController
 
@@ -49,27 +48,6 @@ class PaymentTransaction(models.Model):
         elif hasattr(self, 'sale_order_ids') and self.sale_order_ids:
             communication = self.sale_order_ids[0].reference
         return communication or self.reference
-
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of payment to find the transaction based on custom data.
-
-        :param str provider_code: The code of the provider that handled the transaction
-        :param dict notification_data: The notification feedback data
-        :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'custom' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('reference')
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'custom')])
-        if not tx:
-            raise ValidationError(
-                "Wire Transfer: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to skip the transaction comparison for custom flows.

@@ -5,6 +5,7 @@ import pprint
 
 from odoo import http
 from odoo.http import request
+from odoo.exceptions import ValidationError
 
 
 _logger = logging.getLogger(__name__)
@@ -35,6 +36,9 @@ class DPOController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'dpo', data
         )
+        if not tx_sudo:
+            return
+
         payload = (
             f'<?xml version="1.0" encoding="utf-8"?>'
             f'<API3G>'
@@ -43,9 +47,12 @@ class DPOController(http.Controller):
                 f'<TransactionToken>{data.get("TransID")}</TransactionToken>'
             f'</API3G>'
         )
-        # Verify the notification data.
-        verified_data = tx_sudo.provider_id._dpo_make_request(payload=payload)
-        data.update(verified_data)
-
-        # Handle the notification data.
-        tx_sudo._handle_notification_data('dpo', data)
+        try:
+            # Verify the notification data.
+            verified_data = tx_sudo.provider_id._make_request('POST', '', data=payload)
+        except ValidationError:
+            _logger.exception("Unable to verify the notification data")
+        else:
+            data.update(verified_data)
+            # Handle the notification data.
+            tx_sudo._handle_notification_data('dpo', data)

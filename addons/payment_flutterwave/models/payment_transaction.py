@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pprint
 
 from werkzeug import urls
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_flutterwave import const
@@ -68,11 +67,17 @@ class PaymentTransaction(models.Model):
                 self.payment_method_code, self.payment_method_code
             ),
         }
-        payment_link_data = self.provider_id._flutterwave_make_request('payments', payload=payload)
+        try:
+            payment_link_data = self.provider_id._make_request(
+                'POST', 'payments', json_payload=payload
+            )
+        except ValidationError as error:
+            self._set_error(str(error))
+            return {}
 
         # Extract the payment link URL and embed it in the redirect form.
         rendering_values = {
-            'api_url': payment_link_data['data']['link'],
+            'api_url': payment_link_data['link'],
         }
         return rendering_values
 
@@ -87,10 +92,6 @@ class PaymentTransaction(models.Model):
         super()._send_payment_request()
         if self.provider_code != 'flutterwave':
             return
-
-        # Prepare the payment request to Flutterwave.
-        if not self.token_id:
-            raise UserError("Flutterwave: " + _("The transaction is not linked to a token."))
 
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         base_url = self.provider_id.get_base_url()
@@ -107,42 +108,21 @@ class PaymentTransaction(models.Model):
             'redirect_url': urls.url_join(base_url, FlutterwaveController._auth_return_url),
         }
 
-        # Make the payment request to Flutterwave.
-        response_content = self.provider_id._flutterwave_make_request(
-            'tokenized-charges', payload=data
-        )
-
-        # Handle the payment request response.
-        _logger.info(
-            "payment request response for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(response_content)
-        )
-        self._handle_notification_data('flutterwave', response_content['data'])
-
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of payment to find the transaction based on Flutterwave data.
-
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: recordset of `payment.transaction`
-        :raise ValidationError: If inconsistent data were received.
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'flutterwave' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('tx_ref') or notification_data.get('txRef')
-        if not reference:
-            raise ValidationError("Flutterwave: " + _("Received data with missing reference."))
-
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'flutterwave')])
-        if not tx:
-            raise ValidationError(
-                "Flutterwave: " + _("No transaction found matching reference %s.", reference)
+        try:
+            # Make the payment request to Flutterwave.
+            response_content = self.provider_id._make_request(
+                'POST', 'tokenized-charges', json_payload=data
             )
-        return tx
+        except ValidationError as error:
+            self._set_error(str(error))
+            return
+
+        self._handle_notification_data('flutterwave', response_content)
+
+    def _get_ref_from_tx_notification_data(self, provider_code, notification_data):
+        if provider_code != 'flutterwave':
+            return super()._get_ref_from_tx_notification_data(provider_code, notification_data)
+        return notification_data.get('tx_ref') or notification_data.get('txRef')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Flutterwave data.
@@ -166,7 +146,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data were received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'flutterwave':

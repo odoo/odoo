@@ -4,10 +4,7 @@ import json
 import logging
 import re
 
-import requests
-
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import const
@@ -77,64 +74,37 @@ class PaymentProvider(models.Model):
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
-    def _adyen_make_request(self, endpoint, endpoint_param=None, payload=None, method='POST', idempotency_key=None):
-        """ Make a request to Adyen API at the specified endpoint.
-
-        Note: self.ensure_one()
-
-        :param str endpoint: The endpoint to be reached by the request
-        :param str endpoint_param: A variable required by some endpoints which are interpolated with
-                                   it if provided. For example, the provider reference of the source
-                                   transaction for the '/payments/{}/refunds' endpoint.
-        :param dict payload: The payload of the request
-        :param str method: The HTTP method of the request
-        :param str idempotency_key: The idempotency key to pass in the request.
-        :return: The JSON-formatted content of the response
-        :rtype: dict
-        :raise: ValidationError if an HTTP error occurs
+    def _build_request_url(self, endpoint, *, endpoint_param=None, **kwargs):
+        """Override of `payment` to build the request URL from the API URL prefix.
+        The final URL follows this pattern: `<_base>/V<_version>/<_endpoint>`.
         """
-
-        def _build_url(prefix_, version_, endpoint_):
-            """ Build an API URL by appending the version and endpoint to a base URL.
-
-            The final URL follows this pattern: `<_base>/V<_version>/<_endpoint>`.
-
-            :param str prefix_: The API URL prefix of the account.
-            :param int version_: The version of the endpoint.
-            :param str endpoint_: The endpoint of the URL.
-            :return: The final URL.
-            :rtype: str
-            """
-            prefix_ = prefix_.rstrip('/')  # Remove potential trailing slash
-            endpoint_ = endpoint_.lstrip('/')  # Remove potential leading slash
-            test_mode_ = self.state == 'test'
-            prefix_ = f'{prefix_}.adyen' if test_mode_ else f'{prefix_}-checkout-live.adyenpayments'
-            return f'https://{prefix_}.com/checkout/V{version_}/{endpoint_}'
-
-        self.ensure_one()
+        if self.code != 'adyen':
+            return self._build_request_url(endpoint, endpoint_param=endpoint_param, **kwargs)
 
         version = const.API_ENDPOINT_VERSIONS[endpoint]
         endpoint = endpoint if not endpoint_param else endpoint.format(endpoint_param)
-        url = _build_url(self.adyen_api_url_prefix, version, endpoint)
+        prefix_ = self.adyen_api_url_prefix.rstrip('/')  # Remove potential trailing slash
+        endpoint = endpoint.lstrip('/')  # Remove potential leading slash
+        test_mode_ = self.state == 'test'
+        prefix_ = f'{prefix_}.adyen' if test_mode_ else f'{prefix_}-checkout-live.adyenpayments'
+        return f'https://{prefix_}.com/checkout/V{version}/{endpoint}'
+
+    def _prepare_request_headers(self, *, method=None, idempotency_key=None, **kwargs):
+        """Override of `payment`."""
+        if self.code != 'adyen':
+            return self._prepare_request_headers(
+                method=method, idempotency_key=idempotency_key, **kwargs
+            )
         headers = {'X-API-Key': self.adyen_api_key}
         if method == 'POST' and idempotency_key:
             headers['idempotency-key'] = idempotency_key
-        try:
-            response = requests.request(method, url, json=payload, headers=headers, timeout=60)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "invalid API request at %s with data %s: %s", url, payload, response.text
-                )
-                msg = response.json().get('message', '')
-                raise ValidationError(
-                    "Adyen: " + _("The communication with the API failed. Details: %s", msg)
-                )
-        except requests.exceptions.ConnectionError:
-            _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Adyen: " + _("Could not establish the connection to the API."))
-        return response.json()
+        return headers
+
+    def _parse_response_error(self, response):
+        """Override of `payment`."""
+        if self.code != 'adyen':
+            return super()._parse_response_error(response)
+        return response.json().get('message', '')
 
     def _adyen_compute_shopper_reference(self, partner_id):
         """ Compute a unique reference of the partner for Adyen.

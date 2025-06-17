@@ -4,7 +4,6 @@ import logging
 import pprint
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_authorize import const
@@ -64,9 +63,6 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'authorize':
             return
 
-        if not self.token_id.authorize_profile:
-            raise UserError("Authorize.Net: " + _("The transaction is not linked to a token."))
-
         authorize_API = AuthorizeAPI(self.provider_id)
         if self.provider_id.capture_manually:
             res_content = authorize_API.authorize(self, token=self.token_id)
@@ -99,10 +95,11 @@ class PaymentTransaction(models.Model):
         authorize_api = AuthorizeAPI(self.provider_id)
         tx_details = authorize_api.get_transaction_details(self.provider_reference)
         if 'err_code' in tx_details:  # Could not retrieve the transaction details.
-            raise ValidationError("Authorize.Net: " + _(
+            self._set_error(_(
                 "Could not retrieve the transaction details. (error code: %(error_code)s; error_details: %(error_message)s)",
                 error_code=tx_details['err_code'], error_message=tx_details.get('err_msg'),
             ))
+            return self
 
         refund_tx = self.env['payment.transaction']
         tx_status = tx_details.get('transaction', {}).get('transactionStatus')
@@ -138,7 +135,7 @@ class PaymentTransaction(models.Model):
             data = {'reference': tx_to_process.reference, 'response': res_content}
             tx_to_process._handle_notification_data('authorize', data)
         else:
-            raise ValidationError("Authorize.net: " + _(
+            _logger.warning(_(
                 "The transaction is not in a status to be refunded. (status: %(status)s, details: %(message)s)",
                 status=tx_status, message=tx_details.get('messages', {}).get('message'),
             ))
@@ -176,26 +173,6 @@ class PaymentTransaction(models.Model):
         self._handle_notification_data('authorize', {'response': res_content})
 
         return child_void_tx
-
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Find the transaction based on Authorize.net data.
-
-        :param str provider_code: The code of the provider that handled the transaction
-        :param dict notification_data: The notification data sent by the provider
-        :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'authorize' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('reference')
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'authorize')])
-        if not tx:
-            raise ValidationError(
-                "Authorize.Net: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Authorize data.

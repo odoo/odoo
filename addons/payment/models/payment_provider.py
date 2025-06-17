@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import uuid
+
+import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -579,6 +582,137 @@ class PaymentProvider(models.Model):
             )
 
         return providers
+
+    # TODO ANVCHU move at the right place in the file
+    def _make_request(
+        self, method, endpoint, *, params=None, data=None, json_payload=None, **kwargs
+    ):
+        """Make a request at the given endpoint.
+
+        Note: self.ensure_one()
+
+        :param str method: The HTTP method to use for the request
+        :param str endpoint: The endpoint to be reached by the request
+        :param dict params: The query parameters of the request
+        :param any data: The payload of the request
+        :param dict json_payload: The payload in JSON format of the request
+        :param dict kwargs: Optional data
+        :return The formatted content of the response
+        :rtype: dict
+        :raise: ValidationError if an HTTP error occurs
+        """
+        self.ensure_one()
+
+        url = self._build_request_url(endpoint, **kwargs)
+        headers = self._prepare_request_headers(method=method, endpoint=endpoint, **kwargs)
+        auth = self._prepare_request_auth(**kwargs)
+        response = None
+        _logger.info("Sending to %s data: %s", endpoint, params or data or json_payload)
+        try:
+            response = requests.request(
+                method, url, params=params, data=data, json=json_payload, headers=headers,
+                auth=auth, timeout=10
+            )
+            response.raise_for_status()
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.exception("Unable to reach endpoint at %s", url)
+            raise ValidationError(_("Could not establish the connection to the API."))
+        except requests.exceptions.HTTPError:
+            error_msg = self._parse_response_error(response)
+            _logger.exception("Invalid API request at %s with response:\n%s", url, response.text)
+            raise ValidationError(_(
+                "The API request failed with the following error: %s", error_msg
+            ))
+        _logger.info("Received from %s data: %s", url, response.text)
+        return self._parse_response_content(response, **kwargs)
+
+    def _build_request_url(self, endpoint, **kwargs):
+        """Build the URL for the request.
+
+        This function is used as a hook to allow providers to build the URL for a request.
+
+        :param str endpoint: The endpoint to be reached by the request.
+        :param dict kwargs: Optional data
+        :return: The URL for the request.
+        :rtype: str
+        """
+        return ''
+
+    def _prepare_request_headers(self, **kwargs):
+        """Prepares and returns the headers for a request.
+
+        This function is used as a hook to allow providers to prepare the headers for a request.
+
+        :param kwargs: Dictionary of keyword arguments to customize the headers.
+        :return: The headers to be included in the request.
+        :rtype: dict
+        """
+        return {}
+
+    def _prepare_request_auth(self, **kwargs):
+        """Prepares the authentication data for a request.
+
+        This function is used as a hook to allow providers to prepare the authentication data for a
+        request.
+
+        :param kwargs: Arbitrary keyword arguments providing additional data needed
+            for authentication preparation.
+        :return: tuple|None. The authentication data for the request if needed, None otherwise.
+        """
+        return None
+
+    def _parse_response_error(self, response):
+        """Parse the error message from the response object.
+
+        This function is used as a hook to allow providers to extract the text content from a
+        response object to provide the error details.
+
+        :param any response: The response object containing the error message.
+        :return: The text content of the response object.
+        :rtype: str
+        """
+        return response.text
+
+    def _parse_response_content(self, response, **kwargs):
+        """Parse the content from the response object.
+
+        This function is used as a hook to allow providers to parse the response object.
+
+        :param any response: The response object containing the content.
+        :return: The text content of the response object.
+        :rtype: json|any
+        """
+        return response.json()
+
+    def _prepare_proxy_request_payload(self, payload=None):
+        """Prepare the contextual data passed to the proxy when making a request.
+
+        :param dict payload: The part of the request payload to be forwarded to Razorpay.
+        :return: The proxy data.
+        :rtype: dict
+        """
+        return {
+            'jsonrpc': '2.0',
+            'id': uuid.uuid4().hex,
+            'method': 'call',
+            'params': payload,
+        }
+
+    @staticmethod
+    def _parse_proxy_response(response):
+        """Parse the response from the proxy.
+
+        :param response: The JSON-formatted content of the response
+        :return: The content of the response
+        :rtype: dict
+        """
+        # Proxy endpoints always respond with HTTP 200 as they implement JSON-RPC 2.0
+        response_content = response.json()
+        if response_content.get('error'):  # An exception was raised on the proxy
+            error_data = response_content['error']['data']
+            _logger.warning("Request forwarded with error: %s", error_data['message'])
+            raise ValidationError(_("Proxy error: %(error)s", error=error_data['message']))
+        return response['result']
 
     def _get_supported_currencies(self):
         """ Return the supported currencies for the payment provider.

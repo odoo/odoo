@@ -347,7 +347,7 @@ class PaymentTransaction(models.Model):
             # Replace special characters by their ASCII alternative (é -> e ; ä -> a ; ...)
             prefix = unicodedata.normalize('NFKD', prefix).encode('ascii', 'ignore').decode('utf-8')
         if not prefix:  # Prefix not provided or voided above, compute it based on the kwargs.
-            prefix = self.sudo()._compute_reference_prefix(provider_code, separator, **kwargs)
+            prefix = self.sudo()._compute_reference_prefix(separator, **kwargs)
         if not prefix:  # Prefix not computed from the kwargs, fallback on time-based value
             prefix = payment_utils.singularize_reference_prefix()
 
@@ -386,13 +386,12 @@ class PaymentTransaction(models.Model):
         return reference
 
     @api.model
-    def _compute_reference_prefix(self, provider_code, separator, **values):
+    def _compute_reference_prefix(self, separator, **values):
         """ Compute the reference prefix from the transaction values.
 
         Note: This method should be called in sudo mode to give access to the documents (invoices,
         sales orders) referenced in the transaction values.
 
-        :param str provider_code: The code of the provider handling the transaction.
         :param str separator: The custom separator used to separate parts of the computed
                               reference prefix.
         :param dict values: The transaction values used to compute the reference prefix.
@@ -445,7 +444,7 @@ class PaymentTransaction(models.Model):
             redirect_form_view = self.provider_id._get_redirect_form_view(
                 is_validation=self.operation == 'validation'
             )
-            if redirect_form_view:  # Some provider don't need a redirect form.
+            if redirect_form_view:  # Some providers don't need a redirect form.
                 rendering_values = self._get_specific_rendering_values(processing_values)
                 _logger.info(
                     "provider-specific rendering values for transaction with reference "
@@ -455,6 +454,10 @@ class PaymentTransaction(models.Model):
                 redirect_form_html = self.env['ir.qweb']._render(redirect_form_view.id, rendering_values)
                 processing_values.update(redirect_form_html=redirect_form_html)
 
+        processing_values.update({
+            'state': self.state,
+            'state_message': self.state_message,
+        })
         return processing_values
 
     def _get_specific_processing_values(self, processing_values):
@@ -634,23 +637,45 @@ class PaymentTransaction(models.Model):
         :return: The transaction.
         :rtype: recordset of `payment.transaction`
         """
-        tx = self._get_tx_from_notification_data(provider_code, notification_data)
-        tx._compare_notification_data(notification_data)
-        tx._process_notification_data(notification_data)
+        tx = self or self._get_tx_from_notification_data(provider_code, notification_data)
+        if tx:
+            tx._compare_notification_data(notification_data)
+            tx._process_notification_data(notification_data)
         return tx
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Find the transaction based on the notification data.
-
-        For a provider to handle transaction processing, it must overwrite this method and return
-        the transaction matching the notification data.
 
         :param str provider_code: The code of the provider handling the transaction.
         :param dict notification_data: The notification data sent by the provider.
         :return: The transaction, if found.
         :rtype: recordset of `payment.transaction`
         """
-        return self
+        reference = self._get_ref_from_tx_notification_data(provider_code, notification_data)
+        if not reference:
+            _logger.warning(
+                "Received notification from provider %s with missing reference", provider_code
+            )
+            return self
+        tx = self.search(self._prepare_domain_tx_from_reference(provider_code, reference))
+        if not tx:
+            _logger.warning("No transaction found matching reference %s.", reference)
+        return tx
+
+    def _prepare_domain_tx_from_reference(self, provider_code, reference):
+        return [('reference', '=', reference), ('provider_code', '=', provider_code)]
+
+    def _get_ref_from_tx_notification_data(self, provider_code, notification_data):
+        """Extract the reference from the notification data.
+
+        This method must be overwritten by providers to extract the reference from the notification
+        in order to find the transaction based on it.
+
+        :param str provider_code: The code of the provider handling the transaction.
+        :param dict notification_data: The notification data sent by the provider.
+        :return: The reference of the transaction.
+        """
+        return notification_data.get('reference')
 
     def _compare_notification_data(self, notification_data):
         """ Compare the transaction's amount and currency with the notification data.

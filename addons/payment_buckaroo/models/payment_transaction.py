@@ -5,7 +5,6 @@ import logging
 from werkzeug import urls
 
 from odoo import _, models
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_buckaroo import const
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
@@ -50,27 +49,10 @@ class PaymentTransaction(models.Model):
         )
         return rendering_values
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of payment to find the transaction based on Buckaroo data.
-
-        :param str provider_code: The code of the provider that handled the transaction
-        :param dict notification_data: The normalized notification data sent by the provider
-        :return: The transaction if found
-        :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if the data match no transaction
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'buckaroo' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('brq_invoicenumber')
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'buckaroo')])
-        if not tx:
-            raise ValidationError(
-                "Buckaroo: " + _("No transaction found matching reference %s.", reference)
-            )
-
-        return tx
+    def _get_ref_from_tx_notification_data(self, provider_code, notification_data):
+        if provider_code != 'buckaroo':
+            return super()._get_ref_from_tx_notification_data(provider_code, notification_data)
+        return notification_data.get('brq_invoicenumber')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Buckaroo data.
@@ -94,7 +76,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The normalized notification data sent by the provider
         :return: None
-        :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'buckaroo':
@@ -103,7 +84,8 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         transaction_keys = notification_data.get('brq_transactions')
         if not transaction_keys:
-            raise ValidationError("Buckaroo: " + _("Received data with missing transaction keys"))
+            self._set_error("Received data with missing transaction keys")
+            return
         # BRQ_TRANSACTIONS can hold multiple, comma-separated, tx keys. In practice, it holds only
         # one reference. So we split for semantic correctness and keep the first transaction key.
         self.provider_reference = transaction_keys.split(',')[0]

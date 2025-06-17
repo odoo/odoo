@@ -49,7 +49,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
         # Send the refund request
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._make_request',
             new=lambda *args, **kwargs: {'pspReference': "refund_reference", 'status': "received"}
         ):
             tx._send_refund_request()
@@ -218,7 +218,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(flow='direct', state='authorized')
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._make_request',
             return_value={'status': 'received', 'pspreference': 'dummy ref'},
         ):
             child_tx = source_tx._send_capture_request()
@@ -230,7 +230,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(flow='direct', state='authorized')
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._make_request',
             return_value={'status': 'received', 'pspreference': 'dummy ref'},
         ):
             child_tx = source_tx._send_capture_request(amount_to_capture=10)
@@ -251,7 +251,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         tx = self._create_transaction('direct', state='authorized')
 
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._make_request',
             return_value={'status': 'received'},
         ):
             tx._send_capture_request()
@@ -268,7 +268,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         tx = self._create_transaction('direct', state='authorized')
 
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._make_request',
             return_value={'status': 'received'},
         ):
             tx._send_capture_request(amount_to_capture=10)
@@ -289,7 +289,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(flow='direct', state='authorized')
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._make_request',
             return_value={'status': 'received', 'pspreference': 'dummy ref'},
         ):
             child_tx = source_tx._send_void_request()
@@ -301,7 +301,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.provider.capture_manually = True
         source_tx = self._create_transaction(flow='direct', state='authorized')
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._make_request',
             return_value={'status': 'received', 'pspreference': 'dummy ref'},
         ):
             child_tx = source_tx._send_void_request(amount_to_void=10)
@@ -322,7 +322,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         tx = self._create_transaction('direct', state='authorized')
 
         with patch(
-            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._make_request',
             return_value={'status': 'received'},
         ):
             tx._send_void_request()

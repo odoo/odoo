@@ -3,7 +3,6 @@
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -18,8 +17,8 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     def test_processing_values(self):
         tx = self._create_transaction(flow='direct')
         with patch(
-            'odoo.addons.payment_paypal.models.payment_provider.PaymentProvider'
-            '._paypal_make_request', return_value={'id': self.order_id},
+            'odoo.addons.payment.models.payment_provider.PaymentProvider'
+            '._make_request', return_value={'id': self.order_id},
         ):
             processing_values = tx._get_processing_values()
         self.assertEqual(processing_values['order_id'], self.order_id)
@@ -46,9 +45,6 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         normalized_data = PaypalController._normalize_paypal_data(
             self, self.notification_data.get('resource'), from_webhook=True
         )
-        # Unknown transaction
-        with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_notification_data('paypal', normalized_data)
 
         # Confirmed transaction
         tx = self._create_transaction('direct')

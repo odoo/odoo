@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pprint
 
 from werkzeug import urls
 
@@ -77,40 +76,18 @@ class PaymentTransaction(models.Model):
                 f'</Services>'
             f'</API3G>'
         )
-        _logger.info(
-            "Sending 'createToken' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payload)
-        )
-        transaction_data = self.provider_id._dpo_make_request(payload=payload)
-        _logger.info(
-            "Response of 'createToken' request for transaction with reference %s:\n%s",
-            self.reference,
-            f"{transaction_data.get('Result')}: {transaction_data.get('ResultExplanation')}"
-        )
 
+        try:
+            transaction_data = self.provider_id._make_request('POST', '', data=payload)
+        except ValidationError as e:
+            self._set_error(str(e))
+            return None
         return transaction_data.get('TransToken')
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of `payment` to find the transaction based on DPO data.
-
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: payment.transaction
-        :raise ValidationError: If inconsistent data are received.
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'dpo' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('CompanyRef')
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'dpo')])
-        if not tx:
-            raise ValidationError(
-                "DPO: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
+    def _get_ref_from_tx_notification_data(self, provider_code, notification_data):
+        if provider_code != 'dpo':
+            return super()._get_ref_from_tx_notification_data(provider_code, notification_data)
+        return notification_data.get('CompanyRef')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on DPO data.

@@ -33,17 +33,18 @@ class PaypalController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'paypal', {'reference_id': reference}
         )
-        idempotency_key = payment_utils.generate_idempotency_key(
-            tx_sudo, scope='payment_request_controller'
-        )
-        response = tx_sudo.provider_id._paypal_make_request(
-            f'/v2/checkout/orders/{order_id}/capture', idempotency_key=idempotency_key
-        )
-        normalized_response = self._normalize_paypal_data(response)
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-            'paypal', normalized_response
-        )
-        tx_sudo._handle_notification_data('paypal', normalized_response)
+        if tx_sudo:
+            idempotency_key = payment_utils.generate_idempotency_key(
+                tx_sudo, scope='payment_request_controller'
+            )
+            response = tx_sudo.provider_id._make_request(
+                'POST', f'/v2/checkout/orders/{order_id}/capture', idempotency_key=idempotency_key
+            )
+            normalized_response = self._normalize_paypal_data(response)
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'paypal', normalized_response
+            )
+            tx_sudo._handle_notification_data('paypal', normalized_response)
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
     def paypal_webhook(self):
@@ -56,24 +57,16 @@ class PaypalController(http.Controller):
         """
         data = request.get_json_data()
         if data.get('event_type') in const.HANDLED_WEBHOOK_EVENTS:
-            normalized_data = self._normalize_paypal_data(
-                data.get('resource'), from_webhook=True
-            )
             _logger.info("Notification received from PayPal with data:\n%s", pprint.pformat(data))
-            try:
-                # Check the origin and integrity of the notification.
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                    'paypal', normalized_data
-                )
+            normalized_data = self._normalize_paypal_data(data.get('resource'), from_webhook=True)
+            # Check the origin and integrity of the notification.
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'paypal', normalized_data
+            )
+            if tx_sudo:
                 self._verify_notification_origin(data, tx_sudo)
-
-                # Handle the notification data.
-                tx_sudo._handle_notification_data('paypal', normalized_data)
-            except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-                _logger.warning(
-                    "Unable to handle the notification data; skipping to acknowledge.",
-                    exc_info=True,
-                )
+            # Handle the notification data.
+            tx_sudo._handle_notification_data('paypal', normalized_data)
         return request.make_json_response('')
 
     def _normalize_paypal_data(self, data, from_webhook=False):
@@ -106,7 +99,7 @@ class PaypalController(http.Controller):
                     'txn_type': 'CAPTURE',
                 })
             else:
-                raise ValidationError("PayPal: " + _("Invalid response format, can't normalize."))
+                _logger.warning(_("Invalid response format, can't normalize."))
         return result
 
     def _verify_notification_origin(self, notification_data, tx_sudo):
@@ -130,9 +123,14 @@ class PaypalController(http.Controller):
             'webhook_id': tx_sudo.provider_id.paypal_webhook_id,
             'webhook_event': notification_data,
         })
-        verification = tx_sudo.provider_id._paypal_make_request(
-            '/v1/notifications/verify-webhook-signature', data=data
-        )
+        try:
+            verification = tx_sudo.provider_id._make_request(
+                'POST', '/v1/notifications/verify-webhook-signature', data=data
+            )
+        except ValidationError:
+            tx_sudo._set_error(_("Unable to verify the notification data"))
+            return
+
         if verification.get('verification_status') != 'SUCCESS':
             _logger.warning("Received notification that was not verified by PayPal.")
             raise Forbidden()

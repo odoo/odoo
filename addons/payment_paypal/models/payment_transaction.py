@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import pprint
 
 from odoo import _, fields, models
 from odoo.exceptions import ValidationError
@@ -37,20 +36,17 @@ class PaymentTransaction(models.Model):
 
         payload = self._paypal_prepare_order_payload()
 
-        _logger.info(
-            "Sending '/checkout/orders' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payload)
-        )
         idempotency_key = payment_utils.generate_idempotency_key(
             self, scope='payment_request_order'
         )
-        order_data = self.provider_id._paypal_make_request(
-            '/v2/checkout/orders', json_payload=payload, idempotency_key=idempotency_key
-        )
-        _logger.info(
-            "Response of '/checkout/orders' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(order_data)
-        )
+        try:
+            order_data = self.provider_id._make_request(
+                'POST', '/v2/checkout/orders', json_payload=payload, idempotency_key=idempotency_key
+            )
+        except ValidationError as e:
+            self._set_error(str(e))
+            return {}
+
         return {'order_id': order_data['id']}
 
     def _paypal_prepare_order_payload(self):
@@ -108,26 +104,10 @@ class PaymentTransaction(models.Model):
 
         return payload
 
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of `payment` to find the transaction based on Paypal data.
-
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: payment.transaction
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'paypal' or len(tx) == 1:
-            return tx
-
-        reference = notification_data.get('reference_id')
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'paypal')])
-        if not tx:
-            raise ValidationError(
-                "PayPal: " + _("No transaction found matching reference %s.", reference)
-            )
-        return tx
+    def _get_ref_from_tx_notification_data(self, provider_code, notification_data):
+        if provider_code != 'paypal':
+            return super()._get_ref_from_tx_notification_data(provider_code, notification_data)
+        return notification_data.get('reference_id')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on PayPal data.
@@ -152,7 +132,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data were received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'paypal':
@@ -166,12 +145,11 @@ class PaymentTransaction(models.Model):
         txn_id = notification_data.get('id')
         txn_type = notification_data.get('txn_type')
         if not all((txn_id, txn_type)):
-            raise ValidationError(
-                "PayPal: " + _(
-                    "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
-                    txn_id=txn_id, txn_type=txn_type
-                )
-            )
+            self._set_error(_(
+                "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s).",
+                txn_id=txn_id, txn_type=txn_type
+            ))
+            return
         self.provider_reference = txn_id
         self.paypal_type = txn_type
 

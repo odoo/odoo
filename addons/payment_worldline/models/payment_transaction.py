@@ -168,17 +168,10 @@ class PaymentTransaction(models.Model):
                     },
                 }
 
-        _logger.info(
-            "Sending '/hostedcheckouts' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payload)
+        checkout_session_data = self.provider_id._make_request(
+            'POST', 'hostedcheckouts', json_payload=payload
         )
-        checkout_session_data = self.provider_id._worldline_make_request(
-            'hostedcheckouts', payload=payload
-        )
-        _logger.info(
-            "Response of '/hostedcheckouts' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(checkout_session_data)
-        )
+
         return checkout_session_data
 
     def _send_payment_request(self):
@@ -194,9 +187,6 @@ class PaymentTransaction(models.Model):
             return
 
         # Prepare the payment request to Worldline.
-        if not self.token_id:
-            raise UserError("Worldline: " + _("The transaction is not linked to a token."))
-
         payload = {
             'cardPaymentMethodSpecificInput': {
                 'authorizationMode': 'SALE',  # Force the capture.
@@ -215,52 +205,29 @@ class PaymentTransaction(models.Model):
             },
         }
 
-        # Make the payment request to Worldline.
-        response_content = self.provider_id._worldline_make_request(
-            'payments',
-            payload=payload,
-            idempotency_key=payment_utils.generate_idempotency_key(
-                self, scope='payment_request_token'
+        try:
+            # Make the payment request to Worldline.
+            response_content = self.provider_id._make_request(
+                'POST',
+                'payments',
+                json_payload=payload,
+                idempotency_key=payment_utils.generate_idempotency_key(
+                    self, scope='payment_request_token'
+                )
             )
-        )
+        except ValidationError as e:
+            self._set_error(str(e))
+        else:
+            self._handle_notification_data('worldline', response_content)
 
-        # Handle the payment request response.
-        _logger.info(
-            "Response of /payment request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(response_content)
-        )
-        self._handle_notification_data('worldline', response_content)
-
-    def _get_tx_from_notification_data(self, provider_code, notification_data):
-        """ Override of `payment` to find the transaction based on Worldline data.
-
-        :param str provider_code: The code of the provider that handled the transaction.
-        :param dict notification_data: The notification data sent by the provider.
-        :return: The transaction if found.
-        :rtype: payment.transaction
-        :raise ValidationError: If inconsistent data are received.
-        :raise ValidationError: If the data match no transaction.
-        """
-        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
-        if provider_code != 'worldline' or len(tx) == 1:
-            return tx
+    def _get_ref_from_tx_notification_data(self, provider_code, notification_data):
+        if provider_code != 'worldline':
+            return super()._get_ref_from_tx_notification_data(provider_code, notification_data)
 
         # In case of failed payment, paymentResult could be given as a separate key
         payment_result = notification_data.get('paymentResult', notification_data)
         payment_output = payment_result.get('payment', {}).get('paymentOutput', {})
-        reference = payment_output.get('references', {}).get('merchantReference', '')
-        if not reference:
-            raise ValidationError(
-                "Worldline: " + _("Received data with missing reference %(ref)s.", ref=reference)
-            )
-
-        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'worldline')])
-        if not tx:
-            raise ValidationError(
-                "Worldline: " + _("No transaction found matching reference %s.", reference)
-            )
-
-        return tx
+        return payment_output.get('references', {}).get('merchantReference', '')
 
     def _compare_notification_data(self, notification_data):
         """ Override of `payment` to compare the transaction based on Worldline data.
@@ -291,7 +258,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data are received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'worldline':
@@ -320,9 +286,8 @@ class PaymentTransaction(models.Model):
         status = payment_data.get('status')
         has_token_data = 'token' in payment_method_data
         if not status:
-            raise ValidationError("Worldline: " + _("Received data with missing payment state."))
-
-        if status in const.PAYMENT_STATUS_MAPPING['pending']:
+            self._set_error(_("Received data with missing payment state."))
+        elif status in const.PAYMENT_STATUS_MAPPING['pending']:
             if status == 'AUTHORIZATION_REQUESTED':
                 self._set_error("Worldline: " + status)
             elif self.operation == 'validation' \
