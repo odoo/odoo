@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import html
+from http import HTTPStatus
 from base64 import b64encode
+from urllib.parse import parse_qs, urlsplit
 
 from datetime import date
 
@@ -262,12 +264,13 @@ class TestHttpWebJson_1(TestHttpBase):
             env['test_http.stargate']
                 .web_search_read(domain, {'name': {}, 'sgc_designation': {}})
         )
-        # we should find one redirect with the domain in the URL
-        [hist] = res.history
-        self.assertEqual(hist.status_code, 307)
-        str_domain = str(domain).replace(' ', '+')
-        self.assertIn("limit=80", res.url)
-        self.assertIn(f"domain={str_domain}", res.url)
+        self.assertEqual(len(res.history), 1, "should had been redirected")
+        self.assertEqual(res.history[0].status_code, HTTPStatus.TEMPORARY_REDIRECT)
+        self.assertEqual(parse_qs(urlsplit(res.url).query), {
+            'domain': ["[('name', 'ilike', 'earth')]"],
+            'offset': ['0'],
+            'limit': ['80'],
+        })
 
     def test_webjson_pivot(self):
         env = self.authenticate_demo()
