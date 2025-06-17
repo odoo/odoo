@@ -618,7 +618,7 @@ stepUtils.autoExpandMoreButtons(),
 ...stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps('crm.crm_menu_root', markup(_t('Organize your sales activities with the <b>CRM app</b>.'))),
 {
-    trigger: '.o_opportunity_kanban',
+    trigger: '.o_opportunity_kanban .o_kanban_renderer',
 },
 {
     trigger: ".o-kanban-button-new",
