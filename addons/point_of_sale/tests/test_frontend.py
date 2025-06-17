@@ -2186,6 +2186,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_exclusion_attribute_values')
 
+        chair_color_red_ptav.write({
+            'ptav_active': False,
+        })
+
+        self.start_pos_tour('test_exclusion_attribute_values_after_deactivation')
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

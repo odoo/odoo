@@ -127,3 +127,12 @@ registry.category("web_tour.tours").add("test_exclusion_attribute_values", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_exclusion_attribute_values_after_deactivation", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            Chrome.endTour(),
+        ].flat(),
+});
