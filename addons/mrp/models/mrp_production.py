@@ -1320,6 +1320,8 @@ class MrpProduction(models.Model):
             if qty_producing_uom != qty_production_uom and not (qty_producing_uom == 0 and self._origin.qty_producing != self.qty_producing):
                 self.qty_producing = self.product_id.uom_id._compute_quantity(len(self.lot_producing_ids), self.product_uom_id, rounding_method='HALF-UP')
 
+    # def _update_moves_qty_done(self, pick_manual_consumption_moves=True):
+        """ Updates the quantity done of the raw and finished moves based on the workorders. """
         # waiting for a preproduction move before assignement
         is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
 
@@ -1336,7 +1338,8 @@ class MrpProduction(models.Model):
             if move.sudo()._should_bypass_set_qty_producing():
                 continue
 
-            new_qty = move.product_uom.round((self.qty_producing - self.qty_produced) * move.unit_factor)
+            new_qty = move.product_uom.round((max(self.workorder_ids.mapped(lambda w: w.qty_produced - w.qty_reported_from_previous_wo))) * move.unit_factor)
+            # new_qty = move.product_uom.round((self.qty_producing - self.qty_produced) * move.unit_factor)
             move._set_quantity_done(new_qty)
             if (not move.manual_consumption or pick_manual_consumption_moves) \
                     and move.quantity \
@@ -2078,6 +2081,7 @@ class MrpProduction(models.Model):
         moves_to_consume.write({'picked': True})
 
         workorders_to_cancel = self.env['mrp.workorder']
+        self.workorder_ids.duration_expected = 0.0  # Reset duration_expected to allow recomputation of original WO
         for production in self:
             initial_qty = initial_qty_by_production[production]
             initial_workorder_remaining_qty = []

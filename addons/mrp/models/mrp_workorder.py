@@ -87,7 +87,7 @@ class MrpWorkorder(models.Model):
         store=True, copy=False)
     duration_expected = fields.Float(
         'Expected Duration', digits=(16, 2), compute='_compute_duration_expected',
-        readonly=False, store=True) # in minutes
+        readonly=False, store=True, copy=False) # in minutes
     duration = fields.Float(
         'Real Duration', compute='_compute_duration', inverse='_set_duration',
         readonly=False, store=True, copy=False)
@@ -156,15 +156,17 @@ class MrpWorkorder(models.Model):
             has_qty_ready = workorder.product_uom_id.compare(workorder.qty_ready, 0) > 0
             is_fully_consumed = workorder.product_uom_id.compare(workorder.qty_remaining, 0) <= 0
             if has_qty_ready or is_fully_consumed:
-                workorder.write({'state': 'ready'})
+                workorder.state = 'ready'
             else:
-                workorder.write({'state': 'blocked'})
+                workorder.state = 'blocked'
 
     def set_state(self, state):
         ids_to_update = []
         for wo in self:
             if wo.state == state or 'done' in (wo.state, wo.production_state):
                 continue
+            if wo.state == 'progress' and wo.is_user_working and state in ('ready', 'blocked'):
+                wo.button_pending()
             if wo.is_user_working and state in ('done', 'cancel'):
                 wo.end_all()
             elif wo.state in ('done', 'cancel') and state == 'progress':
@@ -244,7 +246,7 @@ class MrpWorkorder(models.Model):
             min_wo_qty_producing = min(production.workorder_ids.mapped(lambda w: w.qty_produced + w.qty_reported_from_previous_wo))
             if production.product_uom_id.compare(min_wo_qty_producing, production.qty_producing) != 0:
                 production.qty_producing = min_wo_qty_producing
-                production._set_qty_producing(False)
+            production._set_qty_producing(False)
 
     @api.depends('blocked_by_workorder_ids.qty_produced', 'blocked_by_workorder_ids.state', 'production_state')
     def _compute_qty_ready(self):
@@ -254,6 +256,9 @@ class MrpWorkorder(models.Model):
                 continue
             if not workorder.blocked_by_workorder_ids or all(wo.state == 'cancel' for wo in workorder.blocked_by_workorder_ids):
                 workorder.qty_ready = workorder.qty_remaining
+                continue
+            if workorder.product_tracking == 'serial':
+                workorder.qty_ready = 1 if all(wo.state == 'done' for wo in workorder.blocked_by_workorder_ids) else 0
                 continue
             workorder_qty_ready = workorder.qty_remaining + workorder.qty_produced + workorder.qty_reported_from_previous_wo
             for wo in workorder.blocked_by_workorder_ids:
@@ -487,6 +492,8 @@ class MrpWorkorder(models.Model):
                 raise UserError(_('The quantity produced must be positive.'))
             for workorder in self:
                 workorder.qty_producing = values['qty_produced'] + workorder.qty_reported_from_previous_wo
+                if workorder.state != 'progress':
+                    workorder.state = 'progress'
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
         if 'workcenter_id' in values:
