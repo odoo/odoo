@@ -448,8 +448,15 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         for (const exclusion of this.models["product.template.attribute.exclusion"].getAll()) {
+            if (!exclusion.product_template_attribute_value_id) {
+                continue;
+            }
             const ptavId = exclusion.product_template_attribute_value_id.id;
-            for (const { id: valueId } of exclusion.value_ids) {
+            for (const value of exclusion.value_ids) {
+                if (!value) {
+                    continue;
+                }
+                const valueId = value.id;
                 addExclusion(ptavId, valueId);
                 addExclusion(valueId, ptavId);
             }
