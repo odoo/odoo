@@ -658,6 +658,40 @@ test(`form with o2m having a selection field with fieldDependencies`, async () =
     expect(`.modal .o_form_view .o_field_widget[name=display_name]`).toHaveCount(1);
 });
 
+test(`form view: widget having a o2m field as fieldDependencies`, async () => {
+    class MyWidget extends Component {
+        static template = xml`<span>My custom widget</span>`;
+        static props = ["*"];
+    }
+    widgetsRegistry.add("my_widget", {
+        component: MyWidget,
+        fieldDependencies: [{ name: "child_ids", type: "one2many" }],
+    });
+
+    await mountView({
+        resModel: "res.users",
+        type: "form",
+        arch: `
+            <form>
+                <field name="partner_ids" >
+                    <list>
+                        <field name="name"/>
+                        <widget name="my_widget" />
+                    </list>
+                    <form>
+                        <field name="name"/>
+                        <widget name="my_widget" />
+                    </form>
+                </field>
+            </form>
+        `,
+        resId: 17,
+    });
+
+    await contains(`.o_list_view .o_field_cell[name="name"]`).click();
+    expect(`.modal .o_form_view .o_widget_my_widget`).toHaveCount(1);
+});
+
 test(`fieldDependencies are readonly by default`, async () => {
     class MyField extends CharField {}
     fieldsRegistry.add("my_widget", {
