@@ -196,9 +196,18 @@ export class DateFilterDropdown extends Component {
             case "year":
                 this.props.update(this.selectedValues.year);
                 break;
-            case "range":
+            case "range": {
+                const { from, to } = this.selectedValues.range;
+                if (from && to) {
+                    // Ensure 'to' is after 'from'
+                    if (DateTime.fromISO(from) > DateTime.fromISO(to)) {
+                        this.selectedValues.range.to = from;
+                        this.selectedValues.range.from = to;
+                    }
+                }
                 this.props.update(this.selectedValues.range);
                 break;
+            }
             default:
                 this.props.update(undefined);
         }
