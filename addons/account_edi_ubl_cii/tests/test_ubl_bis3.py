@@ -1,4 +1,4 @@
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tools import misc
@@ -61,6 +61,29 @@ class TestUblBis3(AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(invoice.ubl_cii_xml_id.raw),
             self.get_xml_tree_from_string(expected_content),
         )
+
+    def assert_same_invoice(self, invoice1, invoice2, **invoice_kwargs):
+        self.assertEqual(len(invoice1.invoice_line_ids), len(invoice2.invoice_line_ids))
+        self.assertRecordValues(invoice2, [{
+            'partner_id': invoice1.partner_id.id,
+            'invoice_date': fields.Date.from_string(invoice1.date),
+            'currency_id': invoice1.currency_id.id,
+            'amount_untaxed': invoice1.amount_untaxed,
+            'amount_tax': invoice1.amount_tax,
+            'amount_total': invoice1.amount_total,
+            **invoice_kwargs,
+        }])
+
+        default_invoice_line_kwargs_list = [{}] * len(invoice1.invoice_line_ids)
+        invoice_line_kwargs_list = invoice_kwargs.get('invoice_line_ids', default_invoice_line_kwargs_list)
+        self.assertRecordValues(invoice2.invoice_line_ids, [{
+            'quantity': line.quantity,
+            'price_unit': line.price_unit,
+            'discount': line.discount,
+            'product_id': line.product_id.id,
+            'product_uom_id': line.product_uom_id.id,
+            **invoice_line_kwargs,
+        } for line, invoice_line_kwargs in zip(invoice1.invoice_line_ids, invoice_line_kwargs_list)])
 
     # -------------------------------------------------------------------------
     # TAXES
@@ -369,3 +392,108 @@ class TestUblBis3(AccountTestInvoicingCommon):
         invoice.action_post()
         self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_early_pay_discount_with_discount_on_lines')
+
+    # -------------------------------------------------------------------------
+    # CASH ROUDNING
+    # -------------------------------------------------------------------------
+
+    def test_export_import_cash_rounding(self):
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21_sale = self.percent_tax(21.0)
+        _tax_21_purchase = self.percent_tax(21.0, type_tax_use='purchase')  # for the import
+        currency = self.setup_other_currency('USD', rounding=0.001)
+        cash_rounding_line = self.env['account.cash.rounding'].create({
+            'name': '1.0 Line',
+            'rounding': 1.00,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': self.company_data['default_account_expense'].copy().id,
+            'rounding_method': 'HALF-UP',
+        })
+
+        cash_rounding_tax = self.env['account.cash.rounding'].create({
+            'name': '1.0 Tax',
+            'rounding': 1.00,
+            'strategy': 'biggest_tax',
+            'rounding_method': 'HALF-UP',
+        })
+
+        test_data = [
+            {
+                'invoice_cash_rounding_id': cash_rounding_tax,
+                'expected': {
+                    'xml_file': 'bis3/test_cash_rounding_tax',
+                    'xpaths': None,
+                },
+                'expected_rounding_invoice_line_values': None,
+            },
+            {
+                'invoice_cash_rounding_id': cash_rounding_line,
+                'expected': {
+                    'xml_file': 'bis3/test_cash_rounding_line',
+                    'xpaths': None,
+                },
+                # We create an invoice line for the rounding amount.
+                # (This adjusts the base amount of the invoice.)
+                'expected_rounding_invoice_line_values': {
+                    'display_type': 'product',
+                    'name': 'Rounding',
+                    'quantity': 1,
+                    'product_id': False,
+                    'price_unit': 0.30,
+                    'amount_currency': -0.30,
+                    'balance': -0.15,
+                    'currency_id': currency.id,
+                }
+            },
+        ]
+        for test in test_data:
+            cash_rounding_method = test['invoice_cash_rounding_id']
+            with self.subTest(sub_test_name=f"cash rounding method: {cash_rounding_method.name}"):
+                invoice = self.env['account.move'].create({
+                    'move_type': 'out_invoice',
+                    'partner_id': self.partner_a.id,
+                    'currency_id': currency.id,
+                    'invoice_date': '2017-01-01',
+                    'invoice_cash_rounding_id': cash_rounding_method.id,
+                    'invoice_line_ids': [
+                        Command.create({
+                            'product_id': self.product_a.id,
+                            'quantity': 1,
+                            'price_unit': 70.00,
+                            'tax_ids': [Command.set([tax_21_sale.id])],
+                        }),
+                    ],
+                })
+                invoice.action_post()
+                self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+
+                attachment = invoice.ubl_cii_xml_id
+                self.assertTrue(attachment)
+                self._assert_invoice_ubl_file(invoice, test['expected']['xml_file'])
+
+                # Check that importing yields the expected results.
+
+                # For the 'add_invoice_line' strategy we create a dedicated invoice line for the cash rounding.
+                rounding_invoice_line_values = test['expected_rounding_invoice_line_values']
+                if rounding_invoice_line_values:
+                    invoice.button_draft()
+                    invoice.invoice_cash_rounding_id = False  # Do not round twice
+                    invoice.invoice_line_ids.create([{
+                        'company_id': invoice.company_id.id,
+                        'move_id': invoice.id,
+                        'partner_id': invoice.partner_id.id,
+                        **rounding_invoice_line_values,
+                    }])
+                    invoice.action_post()
+
+                invoice.journal_id.create_document_from_attachment(attachment.ids)
+                imported_invoice = self.env['account.move'].search([], order='id desc', limit=1)
+                self.assert_same_invoice(invoice, imported_invoice)
+
+                # Check that importing a bill yields the expected results.
+
+                imported_bill = self.company_data['default_journal_purchase']._create_document_from_attachment(attachment.ids)
+                self.assertTrue(imported_bill)
+                self.assert_same_invoice(invoice, imported_bill, partner_id=self.env.company.partner_id.id)
