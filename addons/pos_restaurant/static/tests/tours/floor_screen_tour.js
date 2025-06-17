@@ -18,6 +18,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
         [
             // check floors if they contain their corresponding tables
             Chrome.startPoS(),
+            FloorScreen.isShown(),
             FloorScreen.selectedFloorIs("Main Floor"),
             FloorScreen.hasTable("2"),
             FloorScreen.hasTable("4"),

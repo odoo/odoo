@@ -12,6 +12,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ProductScreen.isShown(),
             // New Ticket button should not be in the ticket screen if no table is selected.
             Chrome.clickOrders(),
             Chrome.clickPlanButton(),
@@ -23,7 +24,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("5", "1"),
             Chrome.clickOrders(),
-            TicketScreen.deleteOrder("001"),
+            TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),

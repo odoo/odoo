@@ -48,6 +48,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'company_id': cls.env.company.id,
             'journal_id': test_sale_journal_2.id,
             'invoice_journal_id': test_sale_journal_2.id,
+            'default_screen': 'tables',
             'payment_method_ids': [
                 (4, cls.bank_payment_method.id),
                 (0, 0, {
@@ -242,6 +243,7 @@ class TestFrontend(TestFrontendCommon):
 
     def test_04_ticket_screen(self):
         self.pos_config.is_order_printer = False
+        self.pos_config.default_screen = 'register'
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosResTicketScreenTour')
 

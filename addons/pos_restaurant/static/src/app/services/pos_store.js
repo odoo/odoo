@@ -36,7 +36,9 @@ patch(PosStore.prototype, {
                 tables: "FloorScreen",
             };
             screen.page = screens[this.config.default_screen];
-            screen.params = {};
+            if (screen.page === "FloorScreen") {
+                screen.params = {};
+            }
         }
         return screen;
     },
