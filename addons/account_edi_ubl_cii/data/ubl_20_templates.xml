@@ -336,6 +336,7 @@
                         t-out="format_float(foreach_vals.get('price_amount'), foreach_vals.get('price_amount_dp'))"/>
                     <cbc:PriceTypeCode
                         t-out="foreach_vals.get('price_type_code')"/>
+                    <cbc:PriceType t-out="foreach_vals.get('price_type')"/>
                 </cac:AlternativeConditionPrice>
             </cac:PricingReference>
             <cac:TaxTotal t-foreach="vals.get('tax_total_vals', [])" t-as="foreach_vals">

@@ -458,6 +458,10 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         """
         return self._get_invoice_tax_totals_vals_list(line.move_id, taxes_vals)
 
+    def _get_invoice_line_pricing_reference_vals(self, line):
+        """ Method used to fill the cac:PricingReference node on a line level."""
+        return dict()
+
     def _get_invoice_line_vals(self, line, line_id, taxes_vals):
         """ Method used to fill the cac:{Invoice,CreditNote,DebitNote}Line node.
         It provides information about the document line.
@@ -486,6 +490,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             'line_quantity_attrs': {'unitCode': uom},
             'line_extension_amount': line.price_subtotal + total_fixed_tax_amount,
             'allowance_charge_vals': allowance_charge_vals_list,
+            'pricing_reference_vals': self._get_invoice_line_pricing_reference_vals(line),
             'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line),
