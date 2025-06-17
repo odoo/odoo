@@ -16,6 +16,7 @@ export class BadgeSelectionField extends Component {
             validate: (s) => ["sm", "md", "lg"].includes(s),
             default: "md",
         },
+        colorField: { type: String, optional: true },
     };
 
     setup() {
@@ -63,6 +64,32 @@ export class BadgeSelectionField extends Component {
         return JSON.stringify(value);
     }
 
+    get spanClass() {
+        if (this.props.colorField && this.props.record.data[this.props.name]) {
+            return `badge rounded-pill o_badge_color_${
+                this.props.record.data[this.props.colorField]
+            }`;
+        }
+        return "";
+    }
+
+    badgeSelectionClass(value) {
+        const badgeClass = [];
+        if (["sm", "lg"].includes(this.props.size)) {
+            badgeClass.push(`btn-{this.props.size}`);
+        }
+        if (this.props.colorField) {
+            badgeClass.push("badge rounded-pill");
+            if (this.value === value) {
+                badgeClass.push("o_badge_border border");
+            }
+        }
+        if (this.value === value) {
+            badgeClass.push("active");
+        }
+        return badgeClass.join(" ");
+    }
+
     /**
      * @param {string | number | false} value
      */
@@ -108,11 +135,19 @@ export const badgeSelectionField = {
             ],
             default: "md",
         },
+        {
+            label: _t("Color field"),
+            name: "color_field",
+            type: "field",
+            availableTypes: ["integer"],
+            help: _t("Set an integer field to use colors with the badge."),
+        },
     ],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps: (fieldInfo, dynamicInfo) => ({
         domain: dynamicInfo.domain,
         size: fieldInfo.options.size,
+        colorField: fieldInfo.options.color_field,
     }),
 };
 
