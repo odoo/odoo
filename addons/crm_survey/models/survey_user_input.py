@@ -60,7 +60,7 @@ class SurveyUser_Input(models.Model):
                         description += ', ' + str(answer)
 
                 # Check if answer should create a lead
-                if not is_lead_answer and answer_id.suggested_answer_id and answer_id.suggested_answer_id.create_lead:
+                if not is_lead_answer and answer_id.suggested_answer_id and answer_id.suggested_answer_id.is_create_lead:
                     is_lead_answer = True
 
                 # Check if the question has a nickname recorded

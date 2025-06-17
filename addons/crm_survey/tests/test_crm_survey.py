@@ -43,9 +43,9 @@ class TestCrmSurvey(common.TestSurveyCommon, MockEmail, HttpCase):
                 sequence=1,
                 constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=survey.id,
                 labels=[
-                    {'value': '18-30', 'create_lead': False},
-                    {'value': '30-50', 'create_lead': False},
-                    {'value': '50+', 'create_lead': False},
+                    {'value': '18-30', 'is_create_lead': False},
+                    {'value': '30-50', 'is_create_lead': False},
+                    {'value': '50+', 'is_create_lead': False},
                 ])
 
             q02 = self._add_question(
@@ -53,10 +53,10 @@ class TestCrmSurvey(common.TestSurveyCommon, MockEmail, HttpCase):
                 sequence=2,
                 constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=survey.id,
                 labels=[
-                    {'value': 'Assembly', 'create_lead': True},
-                    {'value': 'Java', 'create_lead': False},
-                    {'value': 'C', 'create_lead': False},
-                    {'value': 'Python', 'create_lead': False},
+                    {'value': 'Assembly', 'is_create_lead': True},
+                    {'value': 'Java', 'is_create_lead': False},
+                    {'value': 'C', 'is_create_lead': False},
+                    {'value': 'Python', 'is_create_lead': False},
                 ])
 
             q03 = self._add_question(
@@ -64,9 +64,9 @@ class TestCrmSurvey(common.TestSurveyCommon, MockEmail, HttpCase):
                 sequence=3,
                 constr_mandatory=True, constr_error_msg='Please select an answer', survey_id=survey.id,
                 labels=[
-                    {'value': '0-1 year', 'create_lead': True},  # Newbie power
-                    {'value': '2-5 years', 'create_lead': False},
-                    {'value': '6+ years', 'create_lead': False},
+                    {'value': '0-1 year', 'is_create_lead': True},  # Newbie power
+                    {'value': '2-5 years', 'is_create_lead': False},
+                    {'value': '6+ years', 'is_create_lead': False},
                 ])
 
             q04 = self._add_question(
@@ -74,9 +74,9 @@ class TestCrmSurvey(common.TestSurveyCommon, MockEmail, HttpCase):
                 sequence=4,
                 constr_mandatory=False, survey_id=survey.id,
                 labels=[
-                    {'value': 'No.', 'create_lead': False},
-                    {'value': 'NO', 'create_lead': False},
-                    {'value': 'OK, btw', 'create_lead': False},
+                    {'value': 'No.', 'is_create_lead': False},
+                    {'value': 'NO', 'is_create_lead': False},
+                    {'value': 'OK, btw', 'is_create_lead': False},
                 ])
 
             q05 = self._add_question(
@@ -219,7 +219,7 @@ class TestCrmSurvey(common.TestSurveyCommon, MockEmail, HttpCase):
         for message in last_lead_created.message_ids:
             self.assertEqual(message.author_id.name, self.env.ref('base.user_root').name)
 
-    # Override common test survey class for adding "create_lead" attribute
+    # Override common test survey class for adding "is_create_lead" attribute
     def _add_question(self, page, name, qtype, **kwargs):
         constr_mandatory = kwargs.pop('constr_mandatory', True)
         constr_error_msg = kwargs.pop('constr_error_msg', 'TestError')
@@ -241,17 +241,17 @@ class TestCrmSurvey(common.TestSurveyCommon, MockEmail, HttpCase):
                     'value': label['value'],
                     'answer_score': label.get('answer_score', 0),
                     'is_correct': label.get('is_correct', False),
-                    'create_lead': label.get('create_lead', False)
+                    'is_create_lead': label.get('is_create_lead', False)
                 }) for label in kwargs.pop('labels')
             ]
         elif qtype == 'matrix':
             base_qvalues['matrix_subtype'] = kwargs.pop('matrix_subtype', 'simple')
             base_qvalues['suggested_answer_ids'] = [
-                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0), 'create_lead': label.get('create_lead', False)})
+                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0), 'is_create_lead': label.get('is_create_lead', False)})
                 for label in kwargs.pop('labels')
             ]
             base_qvalues['matrix_row_ids'] = [
-                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0), 'create_lead': label.get('create_lead', False)})
+                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0), 'is_create_lead': label.get('is_create_lead', False)})
                 for label in kwargs.pop('labels_2')
             ]
         base_qvalues.update(kwargs)

@@ -38,15 +38,15 @@ class SurveySurvey(models.Model):
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
                             'value': _('1-10 employees'),
-                            'create_lead': False
+                            'is_create_lead': False
                         }),
                         (0, 0, {  # survey.question.answer
                             'value': _('11-100 employees'),
-                            'create_lead': True
+                            'is_create_lead': True
                         }),
                         (0, 0, {  # survey.question.answer
                             'value': _('100+ employees'),
-                            'create_lead': False
+                            'is_create_lead': False
                         })
                     ]
                 }),
@@ -57,15 +57,15 @@ class SurveySurvey(models.Model):
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
                             'value': _('Improving efficiency'),
-                            'create_lead': True
+                            'is_create_lead': True
                         }),
                         (0, 0, {  # survey.question.answer
                             'value': _('Reducing costs'),
-                            'create_lead': False
+                            'is_create_lead': False
                         }),
                         (0, 0, {  # survey.question.answer
                             'value': _('Expanding sales'),
-                            'create_lead': True
+                            'is_create_lead': True
                         })
                     ]
                 }),
@@ -76,15 +76,15 @@ class SurveySurvey(models.Model):
                     'suggested_answer_ids': [
                         (0, 0, {  # survey.question.answer
                             'value': _('Me'),
-                            'create_lead': True
+                            'is_create_lead': True
                         }),
                         (0, 0, {  # survey.question.answer
                             'value': _('My Manager/Executive'),
-                            'create_lead': True
+                            'is_create_lead': True
                         }),
                         (0, 0, {  # survey.question.answer
                             'value': _('A team/committee'),
-                            'create_lead': False
+                            'is_create_lead': False
                         })
                     ]
                 }),

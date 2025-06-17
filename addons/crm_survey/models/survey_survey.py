@@ -4,14 +4,14 @@ from odoo import api, fields, models
 class SurveySurvey(models.Model):
     _inherit = "survey.survey"
 
-    created_leads = fields.Integer("Leads", compute='_compute_created_leads')
+    lead_count = fields.Integer("# Leads", compute='_compute_lead_count')
 
-    @api.depends('created_leads', 'title')
-    def _compute_created_leads(self):
+    @api.depends('lead_count')
+    def _compute_lead_count(self):
         for survey in self:
             domain = [('survey_id', 'in', survey.ids)]
             leads = self.env['crm.lead'].search_count(domain)
-            survey.created_leads = leads
+            survey.lead_count = leads
 
     def action_survey_user_input_leads(self):
         """This method will show the leads created from the current survey"""
