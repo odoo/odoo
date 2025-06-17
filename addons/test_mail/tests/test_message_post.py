@@ -1599,6 +1599,25 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(reply.parent_id, msg)
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
 
+    def test_post_parameters(self):
+        """ Test limitations / support of notification and post parameters """
+        portal_record = self.env['mail.test.access'].create({
+            'access': 'logged',
+            'name': 'Portal enabled',
+        })
+        with self.mock_mail_gateway():
+            # headers not allowed for portal users
+            with self.assertRaises(ValueError):
+                _msg = portal_record.with_user(self.user_portal).message_post(
+                    body='My Body',
+                    mail_headers={
+                        'X-Portal': 'myself',
+                    },
+                    message_type='comment',
+                    subject='My Subject',
+                    subtype_xmlid='mail.mt_comment',
+                )
+
     @users('employee')
     def test_post_with_out_of_office(self):
         """ Test out of office support. Test setup :
@@ -1674,6 +1693,10 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         [{
                             'content': "<p>Le numéro que vous avez composé n'est plus attribué.</p>",
                             'email_values': {
+                                'headers': {
+                                    'Auto-Submitted': 'auto-replied',
+                                    'X-Auto-Response-Suppress': 'All',
+                                },
                                 'subject': f'Auto: {test_record.name}',
                             },
                             'message_type': 'out_of_office',
