@@ -253,7 +253,7 @@ class PrinterDriver(PrinterDriverBase):
     def _action_default(self, data):
         _logger.debug("_action_default called for printer %s", self.device_name)
         self.print_raw(b64decode(data['document']))
-        return {'print_id': data['print_id']}
+        return {'print_id': data['print_id']} if 'print_id' in data else {}
 
     def _cancel_job_with_error(self, job_id, error_message):
         self.job_ids.remove(job_id)
