@@ -318,7 +318,7 @@ export class Thread extends Record {
         return (
             !this.isTransient &&
             this.typesAllowingCalls.includes(this.channel_type) &&
-            !this.correspondent?.persona.eq(this.store.odoobot)
+            !this.correspondent?.partner_id?.eq(this.store.odoobot)
         );
     }
 
@@ -889,7 +889,7 @@ export class Thread extends Record {
     async leaveChannel({ force = false } = {}) {
         if (
             this.channel_type !== "group" &&
-            this.create_uid?.eq(this.store.self.main_user_id) &&
+            this.create_uid?.eq(this.store.self_partner.main_user_id) &&
             !force
         ) {
             await this.askLeaveConfirmation(

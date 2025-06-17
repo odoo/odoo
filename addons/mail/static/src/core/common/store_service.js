@@ -69,8 +69,8 @@ export class Store extends BaseStore {
     /** This is the current logged partner / guest */
     self_partner = fields.One("res.partner");
     self_guest = fields.One("mail.guest");
-    get self() {
-        return this.self_partner || this.self_guest;
+    get selfAvatarUrl() {
+        return this.self_partner?.avatarUrl || this.self_guest?.avatarUrl;
     }
     allChannels = fields.Many("Thread", {
         inverse: "storeAsAllChannels",

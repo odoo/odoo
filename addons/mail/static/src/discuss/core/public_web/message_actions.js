@@ -5,7 +5,7 @@ messageActionsRegistry.add("create-or-view-thread", {
     condition: (component) =>
         component.message.thread?.eq(component.props.thread) &&
         component.message.thread.hasSubChannelFeature &&
-        component.store.self.main_user_id?.share === false,
+        component.store.self_partner?.main_user_id?.share === false,
     icon: "fa fa-comments-o",
     onClick: (component) => {
         if (component.message.linkedSubChannel) {

@@ -166,7 +166,7 @@ export class Message extends Record {
      * @returns {boolean}
      */
     get allowsEdition() {
-        return this.store.self.main_user_id?.is_admin || this.isSelfAuthored;
+        return this.store.self_partner?.main_user_id?.is_admin || this.isSelfAuthored;
     }
 
     get bubbleColor() {
@@ -236,7 +236,7 @@ export class Message extends Record {
     }
 
     get isSelfMentioned() {
-        return this.store.self.in(this.partner_ids);
+        return this.store.self_partner?.in(this.partner_ids);
     }
 
     get isHighlightedFromMention() {
@@ -245,10 +245,13 @@ export class Message extends Record {
 
     isSelfAuthored = fields.Attr(false, {
         compute() {
-            if (!this.author) {
+            if (!this.author_id && !this.author_guest_id) {
                 return false;
             }
-            return this.author.eq(this.store.self);
+            return (
+                this.author_id?.eq(this.store.self_partner) ||
+                this.author_guest_id?.eq(this.store.self_guest)
+            );
         },
     });
 
@@ -399,8 +402,7 @@ export class Message extends Record {
             !this.is_transient &&
                 !this.isPending &&
                 this.thread &&
-                this.store.self_partner &&
-                this.store.self.main_user_id?.share === false
+                this.store.self_partner?.main_user_id?.share === false
         );
     }
 

@@ -34,8 +34,6 @@ export class MailGuest extends Record {
     avatar_128_access_token;
     /** @type {number} */
     id;
-    /** @type {string} */
-    phone;
     debouncedSetImStatus;
     displayName = fields.Attr(undefined, {
         compute() {
@@ -95,10 +93,6 @@ export class MailGuest extends Record {
             return channel;
         },
     });
-    /** @type {boolean} */
-    is_public;
-    isAdmin = false;
-    isInternalUser = false;
     write_date = fields.Datetime();
 
     _computeDisplayName() {
@@ -107,7 +101,7 @@ export class MailGuest extends Record {
 
     get avatarUrl() {
         const accessTokenParam = {};
-        if (this.store.self.main_user_id?.share !== false) {
+        if (this.store.self_partner?.main_user_id?.share !== false) {
             accessTokenParam.access_token = this.avatar_128_access_token;
         }
         if (this.id === -1) {

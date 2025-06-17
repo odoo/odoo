@@ -123,7 +123,7 @@ patch(Thread.prototype, {
                 );
             }
             const temporaryMsg = this.store["mail.message"].insert({
-                author_id: this.store.self,
+                author_id: this.store.self_partner || this.store.self_guest,
                 body: await prettifyMessageContent(body, { allowEmojiLoading: false }),
                 id: this.store.getNextTemporaryId(),
                 model: "discuss.channel",
@@ -133,7 +133,7 @@ patch(Thread.prototype, {
             this.messages.push(temporaryMsg);
             this?.chatbot?._simulateTyping(2 ** 31 - 1);
             const thread = await this.store.env.services["im_livechat.livechat"].persist(this);
-            temporaryMsg.author_id = this.store.self; // Might have been created after persist.
+            temporaryMsg.author_id = this.store.self_partner || this.store.self_guest; // Might have been created after persist.
             if (!thread) {
                 return;
             }
