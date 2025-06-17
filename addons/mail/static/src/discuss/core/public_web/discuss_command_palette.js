@@ -39,7 +39,7 @@ class CreateChatDialog extends Component {
 
     onClickConfirm() {
         const selectedPartnersId = this.invitePeopleState.selectedPartners.map((p) => p.id);
-        const partners_to = [...new Set([this.store.self.id, ...selectedPartnersId])];
+        const partners_to = [...new Set([this.store.self_partner.id, ...selectedPartnersId])];
         if (partners_to.length === 1) {
             this.store.createGroupChat({ partners_to });
         } else {
@@ -91,7 +91,7 @@ class DiscussCommand extends Component {
         executeCommand: Function,
         imgUrl: { String, optional: true },
         name: String,
-        persona: { type: Object, optional: true },
+        partner: { type: Object, optional: true },
         channel: { type: Object, optional: true },
         action: { type: Object, optional: true },
         searchValue: String,
@@ -172,7 +172,7 @@ export class DiscussCommandPalette {
             ? this.store.self_partner
             : undefined;
         if (selfPartner) {
-            // selfPersona filtered here to put at the bottom as lowest priority
+            // selfPartner filtered here to put at the bottom as lowest priority
             partners = partners.filter((p) => p.notEq(selfPartner));
         }
         const channels = Object.values(this.store.Thread.records)
@@ -193,14 +193,14 @@ export class DiscussCommandPalette {
             })
             .slice(0, TOTAL_LIMIT);
         // balance remaining: half personas, half channels
-        const elligiblePersonas = [];
+        const elligiblePartner = [];
         const elligibleChannels = [];
         let i = 0;
         while ((channels.length || partners.length) && i < remaining) {
             const p = partners.shift();
             const c = channels.shift();
             if (p) {
-                elligiblePersonas.push(p);
+                elligiblePartner.push(p);
                 i++;
             }
             if (i >= remaining) {
@@ -211,8 +211,8 @@ export class DiscussCommandPalette {
                 i++;
             }
         }
-        for (const persona of elligiblePersonas) {
-            this.commands.push(this.makeDiscussCommand(persona));
+        for (const partner of elligiblePartner) {
+            this.commands.push(this.makeDiscussCommand(partner));
         }
         for (const channel of elligibleChannels) {
             this.commands.push(this.makeDiscussCommand(channel));
@@ -223,10 +223,10 @@ export class DiscussCommandPalette {
         }
     }
 
-    makeDiscussCommand(threadOrPersona, category) {
-        if (threadOrPersona?.Model?.name === "Thread") {
+    makeDiscussCommand(threadOrPartner, category) {
+        if (threadOrPartner?.Model?.name === "Thread") {
             /** @type {import("models").Thread} */
-            const thread = threadOrPersona;
+            const thread = threadOrPartner;
             return {
                 Component: DiscussCommand,
                 action: async () => {
@@ -238,31 +238,32 @@ export class DiscussCommandPalette {
                 props: {
                     imgUrl: thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl,
                     channel: thread.channel_type !== "chat" ? thread : undefined,
-                    persona:
-                        thread.channel_type === "chat" ? thread.correspondent.persona : undefined,
+                    partner:
+                        thread.channel_type === "chat"
+                            ? thread.correspondent?.partner_id
+                            : undefined,
                     counter: thread.importantCounter,
                 },
             };
         }
-        if (threadOrPersona?.Model?._name === "res.partner") {
-            /** @type {import("models").Persona} */
-            const persona = threadOrPersona;
-            const chat = persona.searchChat();
+        if (threadOrPartner?.Model?._name === "res.partner") {
+            const partner = threadOrPartner;
+            const chat = partner.searchChat();
             return {
                 Component: DiscussCommand,
                 action: () => {
-                    this.store.openChat({ partnerId: persona.id });
+                    this.store.openChat({ partnerId: partner.id });
                 },
-                name: persona.displayName,
+                name: partner.displayName,
                 category,
                 props: {
-                    imgUrl: persona.avatarUrl,
-                    persona,
+                    imgUrl: partner.avatarUrl,
+                    partner,
                     counter: chat ? chat.importantCounter : undefined,
                 },
             };
         }
-        if (threadOrPersona === NEW_CHANNEL) {
+        if (threadOrPartner === NEW_CHANNEL) {
             return {
                 Component: DiscussCommand,
                 action: async () => {
@@ -278,7 +279,7 @@ export class DiscussCommandPalette {
                 props: { action: { icon: "fa fa-fw fa-hashtag", searchValueSuffix: true } },
             };
         }
-        if (threadOrPersona === NEW_GROUP_CHAT) {
+        if (threadOrPartner === NEW_GROUP_CHAT) {
             const name = this.options.searchValue.trim();
             return {
                 Component: DiscussCommand,
@@ -290,7 +291,7 @@ export class DiscussCommandPalette {
                 props: { action: { icon: "fa fa-fw fa-users" } },
             };
         }
-        throw new Error(`Unsupported use of makeDiscussCommand("${threadOrPersona}")`);
+        throw new Error(`Unsupported use of makeDiscussCommand("${threadOrPartner}")`);
     }
 }
 

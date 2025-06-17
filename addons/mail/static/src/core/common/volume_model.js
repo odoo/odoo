@@ -5,9 +5,6 @@ export class Volume extends Record {
 
     partner_id = fields.One("res.partner");
     guest_id = fields.One("mail.guest");
-    get persona() {
-        return this.partner_id || this.guest_id;
-    }
     volume = 1;
 }
 

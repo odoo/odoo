@@ -57,14 +57,14 @@
             </div>
             <t t-if="this.store.inPublicPage and !this.store.self_partner">
                 <button class="btn ps-1" t-if="!state.editingGuestName">
-                    <img class="o-mail-Discuss-selfAvatar rounded-circle object-fit-cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl" t-on-click="() => state.editingGuestName = true"/>
+                    <img class="o-mail-Discuss-selfAvatar rounded-circle object-fit-cover flex-shrink-0" alt="Avatar" t-att-src="store.selfAvatarUrl" t-on-click="() => state.editingGuestName = true"/>
                 </button>
                 <AutoresizeInput
                     t-if="state.editingGuestName"
                     className="'py-1 me-2'"
                     autofocus="true"
                     onValidate.bind="renameGuest"
-                    value="store.self.name"
+                    value="store.self_guest.name"
                 />
             </t>
         </div>

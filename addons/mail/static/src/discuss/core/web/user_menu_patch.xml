@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">  
+<templates xml:space="preserve">
     <t t-inherit="web.UserMenu" t-inherit-mode="extension">
         <xpath expr="//img[hasclass('o_user_avatar')]" position="replace">
             <div class="position-relative d-flex flex-shrink-0 bg-inherit">
                 <t>$0</t>
-                <ImStatus className="'o-web-UserMenu-imStatus position-absolute'" persona="store.self" size="'md'"/>
+                <ImStatus className="'o-web-UserMenu-imStatus position-absolute'" partner="store.self_partner" size="'md'"/>
             </div>
         </xpath>
     </t>

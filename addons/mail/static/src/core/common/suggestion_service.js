@@ -267,10 +267,10 @@ export class SuggestionService {
     }
 
     /**
-     * @param {[import("models").Persona | import("@mail/core/common/store_service").SpecialMention]} [partners]
+     * @param {[import("models").ResPartner | import("@mail/core/common/store_service").SpecialMention]} [partners]
      * @param {String} [searchTerm]
      * @param {import("models").Thread} thread
-     * @returns {[import("models").Persona]}
+     * @returns {[import("models").ResPartner]}
      */
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = cleanTerm(searchTerm);

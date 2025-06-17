@@ -22,12 +22,12 @@ patch(Thread.prototype, {
             this.custom_notifications || this.store.settings.channel_notifications;
         if (
             !this.mute_until_dt &&
-            !this.store.self.im_status.includes("busy") &&
+            !this.store.self_partner?.im_status.includes("busy") &&
             (this.channel_type !== "channel" ||
                 (this.channel_type === "channel" &&
                     (channel_notifications === "all" ||
                         (channel_notifications === "mentions" &&
-                            message.partner_ids?.includes(this.store.self)))))
+                            message.partner_ids?.includes(this.store.self_partner)))))
         ) {
             if (this.model === "discuss.channel") {
                 await this.store.chatHub.initPromise;

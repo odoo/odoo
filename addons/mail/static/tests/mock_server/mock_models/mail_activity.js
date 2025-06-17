@@ -94,7 +94,7 @@ export class MailActivity extends models.ServerModel {
                 makeKwArgs({ fields: ["name"] })
             );
             const [user] = ResUsers.browse(activity.user_id);
-            data.persona = mailDataHelpers.Store.one(ResPartner.browse(user.partner_id));
+            data.partner_id = mailDataHelpers.Store.one(ResPartner.browse(user.partner_id));
             store.add(this.browse(activity.id), data);
         }
     }

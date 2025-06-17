@@ -75,8 +75,8 @@ export class DiscussSidebarCallParticipants extends Component {
     get sessions() {
         const sessions = [...this.props.thread.rtc_session_ids];
         return sessions.sort((s1, s2) => {
-            const persona1 = s1.channel_member_id?.persona;
-            const persona2 = s2.channel_member_id?.persona;
+            const persona1 = s1.channel_member_id?.partner_id || s1.channel_member_id?.guest_id;
+            const persona2 = s2.channel_member_id?.partner_id || s2.channel_member_id?.guest_id;
             return (
                 persona1?.name?.localeCompare(persona2?.name) ||
                 s1.channel_member_id?.id - s2.channel_member_id?.id ||
@@ -86,7 +86,7 @@ export class DiscussSidebarCallParticipants extends Component {
     }
 
     /**
-     * @param {import("models").Persona} persona
+     * @param {import("models").ResPartner|import("models").MailGuest} persona
      */
     avatarClass(persona) {
         return persona.currentRtcSession?.isActuallyTalking

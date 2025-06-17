@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="discuss.GifPicker">
         <div class="o-discuss-GifPicker d-flex flex-column" t-attf-class="{{ props.className }}" t-att-class="{ 'h-100': props.mobile }" t-on-focusin="() => state.focused = true" t-on-focusout="() => state.focused = false">
-            <div t-if="!store.hasGifPickerFeature and store.self.main_user_id?.is_admin" class="d-flex flex-column align-items-center justify-content-center m-3 h-100">
+            <div t-if="!store.hasGifPickerFeature and store.self_partner?.main_user_id?.is_admin" class="d-flex flex-column align-items-center justify-content-center m-3 h-100">
                 <span class="o-discuss-GifPicker-bigEmoji">🧑‍🍳🌶️</span>
                 <span class="fs-5 text-muted">Want to spice up your conversations with GIFs? Activate the feature in the settings!</span>
             </div>
@@ -88,7 +88,7 @@
     <t t-name="discuss.GifPicker.gif">
         <div class="o-discuss-Gif position-relative mt-1 fs-5 cursor-pointer rounded overflow-hidden">
             <i
-                t-if="store.self.type === 'partner'"
+                t-if="store.self_partner"
                 class="position-absolute top-0 end-0 me-3 mt-3 p-2 o-bg-black bg-opacity-75 fa cursor-pointer opacity-0"
                 t-att-class="{ 'o-text-white fa-star-o': !isFavorite(gif_value), 'fa-star o-starred': isFavorite(gif_value) }"
                 t-on-click="() => this.onClickFavorite(gif_value)"

@@ -113,7 +113,11 @@ export class DiscussCoreCommon {
                 }
             }
         }
-        if (channel.channel_type !== "channel" && this.store.self_partner && channel.selfMember) {
+        if (
+            channel.channel_type !== "channel" &&
+            this.store.self_partner &&
+            channel.selfMember
+        ) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
             channel.markAsFetched();
@@ -122,15 +126,16 @@ export class DiscussCoreCommon {
             !channel.loadNewer &&
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
-            this.store.self_partner &&
+            (this.store.self_partner || this.store.self_guest) &&
             channel.newestPersistentMessage?.eq(channel.newestMessage) &&
             !channel.markedAsUnread
         ) {
             channel.markAsRead();
         }
         this.env.bus.trigger("discuss.channel/new_message", { channel, message, silent });
-        const authorMember = channel.channel_member_ids.find(({ persona }) =>
-            persona?.eq(message.author)
+        const authorMember = channel.channel_member_ids.find(
+            ({ partner_id, guest_id }) =>
+                partner_id?.eq(message.author) || guest_id?.eq(message.author_guest_id)
         );
         if (authorMember) {
             authorMember.seen_message_id = message;
