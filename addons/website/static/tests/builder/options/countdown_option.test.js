@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
+import { queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "../website_helpers";
 
@@ -7,9 +7,8 @@ defineWebsiteModels();
 
 async function setLayout(layout, selectorAdd = "") {
     await waitFor("[data-label='At The End']");
-    await click("[data-label='At The End'] button.o-dropdown");
-    await waitFor(`[data-action-value='${layout}']`);
-    await click(`[data-action-value='${layout}']`);
+    await contains("[data-label='At The End'] button.o-dropdown").click();
+    await contains(`.popover [data-action-value='${layout}']`).click();
     expect(`:iframe .s_countdown${selectorAdd}`).toHaveAttribute("data-end-action", layout);
 }
 
