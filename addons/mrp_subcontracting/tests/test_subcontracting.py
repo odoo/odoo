@@ -1183,7 +1183,6 @@ class TestSubcontractingTracking(TransactionCase):
         })
         bom_form = Form(cls.env['mrp.bom'])
         bom_form.type = 'subcontract'
-        bom_form.consumption = 'strict'
         bom_form.subcontractor_ids.add(cls.subcontractor_partner1)
         bom_form.product_tmpl_id = cls.finished_product.product_tmpl_id
         with bom_form.bom_line_ids.new() as bom_line:
@@ -1193,6 +1192,7 @@ class TestSubcontractingTracking(TransactionCase):
             bom_line.product_id = cls.comp2
             bom_line.product_qty = 1
         cls.bom_tracked = bom_form.save()
+        cls.bom_tracked.consumption = 'strict'
 
     def test_flow_tracked_1(self):
         """ This test mimics test_flow_1 but with a BoM that has tracking included in it.
@@ -1647,7 +1647,6 @@ class TestSubcontractingPortal(TransactionCase):
         })
         bom_form = Form(cls.env['mrp.bom'])
         bom_form.type = 'subcontract'
-        bom_form.consumption = 'warning'
         bom_form.subcontractor_ids.add(cls.subcontractor_partner1)
         bom_form.product_tmpl_id = cls.finished_product.product_tmpl_id
         with bom_form.bom_line_ids.new() as bom_line:
