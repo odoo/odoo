@@ -50,12 +50,12 @@ async function start() {
 }
 
 test("Insert by passing only single-id value (non-relational)", async () => {
-    (class Persona extends Record {
+    (class ResPartner extends Record {
         static id = "name";
         name;
     }).register(localRegistry);
     const store = await start();
-    const john = store.Persona.insert("John");
+    const john = store.ResPartner.insert("John");
     expect(john.name).toBe("John");
 });
 
@@ -306,20 +306,20 @@ test("Computed fields", async () => {
                 }
             },
         });
-        admin = fields.One("Persona", {
+        admin = fields.One("ResPartner", {
             compute() {
                 return this.members[0];
             },
         });
-        members = fields.Many("Persona");
+        members = fields.Many("ResPartner");
     }).register(localRegistry);
-    (class Persona extends Record {
+    (class ResPartner extends Record {
         static id = "name";
         name;
     }).register(localRegistry);
     const store = await start();
     const thread = store.Thread.insert("General");
-    const [john, marc, antony] = store.Persona.insert(["John", "Marc", "Antony"]);
+    const [john, marc, antony] = store.ResPartner.insert(["John", "Marc", "Antony"]);
     Object.assign(thread, { members: [john, marc] });
     expectRecord(thread.admin).toEqual(john);
     expect(thread.type).toBe("dm chat");
@@ -359,9 +359,9 @@ test("Computed fields: lazy (default) vs. eager", async () => {
             },
             eager: true,
         });
-        members = fields.Many("Persona");
+        members = fields.Many("ResPartner");
     }).register(localRegistry);
-    (class Persona extends Record {
+    (class ResPartner extends Record {
         static id = "name";
         name;
     }).register(localRegistry);
@@ -1089,7 +1089,7 @@ test("record.toData() returns flat data", async () => {
 
 test("Methods are bound to records", async () => {
     // Allows to simply `t-on-click="record.method"`
-    (class Persona extends Record {
+    (class ResPartner extends Record {
         static id = "name";
         name;
         saysName() {
@@ -1097,7 +1097,7 @@ test("Methods are bound to records", async () => {
         }
     }).register(localRegistry);
     const store = await start();
-    const john = store.Persona.insert("John");
+    const john = store.ResPartner.insert("John");
     expect(john.saysName()).toBe("John");
     const saysName = john.saysName;
     expect(saysName()).toBe("John");
@@ -1176,28 +1176,28 @@ test("insert with id relation keeps existing field values", async () => {
 });
 
 test("Inserting single-id data on non-single id Model throws human-readable error", async () => {
-    (class Persona extends Record {
+    (class ResFake extends Record {
         static id = AND("partner_id", "guest_id");
     }).register(localRegistry);
     (class Message extends Record {
         static id = "id";
         id;
-        author = fields.One("Persona");
+        author = fields.One("ResFake");
     }).register(localRegistry);
     const store = await start();
     store.warnErrors = false;
-    const paul = store.Persona.insert({ partner_id: 1 });
-    store.Persona.insert({ guest_id: 2 });
-    expect(store.Persona.get({ partner_id: 1 }).exists()).toBe(true);
-    expect(store.Persona.get({ guest_id: 2 }).exists()).toBe(true);
-    expect(store.Persona.get(1)).toBe(undefined);
-    expect(store.Persona.get(2)).toBe(undefined);
-    expect(() => store.Persona.insert(3)).toThrow(
-        `Cannot insert "3" on model "Persona": this model doesn't support single-id data!`
+    const paul = store.ResFake.insert({ partner_id: 1 });
+    store.ResFake.insert({ guest_id: 2 });
+    expect(store.ResFake.get({ partner_id: 1 }).exists()).toBe(true);
+    expect(store.ResFake.get({ guest_id: 2 }).exists()).toBe(true);
+    expect(store.ResFake.get(1)).toBe(undefined);
+    expect(store.ResFake.get(2)).toBe(undefined);
+    expect(() => store.ResFake.insert(3)).toThrow(
+        `Cannot insert "3" on model "ResFake": this model doesn't support single-id data!`
     );
     const msg = store.Message.insert(100);
     expect(() => (msg.author = 1)).toThrow(
-        `Cannot insert "1" on relational field "Message/author": target model "Persona" doesn't support single-id data!`
+        `Cannot insert "1" on relational field "Message/author": target model "ResFake" doesn't support single-id data!`
     );
     msg.author = { partner_id: 1 };
     expectRecord(msg.author).toEqual(paul);

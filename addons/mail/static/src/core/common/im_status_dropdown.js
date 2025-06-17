@@ -27,7 +27,7 @@ export class ImStatusDropdown extends Component {
     }
 
     get readableImStatus() {
-        const imStatus = this.store.self.im_status || "offline";
+        const imStatus = this.store.self_partner?.im_status || "offline";
         for (const status in this.readableImStatusByCode) {
             if (imStatus.includes(status)) {
                 return this.readableImStatusByCode[status];

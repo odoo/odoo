@@ -48,7 +48,8 @@ patch(Thread.prototype, {
     get showCorrespondentCountry() {
         if (this.channel_type === "livechat") {
             return (
-                this.livechat_operator_id?.eq(this.store.self) && Boolean(this.correspondentCountry)
+                this.livechat_operator_id?.eq(this.store.self_partner) &&
+                Boolean(this.correspondentCountry)
             );
         }
         return super.showCorrespondentCountry;

@@ -24,7 +24,10 @@ const messagePatch = {
             /** @this {import("models").Message} */
             compute() {
                 return this.thread?.channel_member_ids.some(
-                    (m) => m.persona.notEq(this.author) && m.fetched_message_id?.id >= this.id
+                    (m) =>
+                        (m.partner_id?.notEq(this.author_id) ||
+                            m.guest_id?.notEq(this.author_guest_id)) &&
+                        m.fetched_message_id?.id >= this.id
                 );
             },
         });
@@ -32,7 +35,10 @@ const messagePatch = {
             /** @this {import("models").Message} */
             compute() {
                 return this.thread?.membersThatCanSeen
-                    .filter(({ persona }) => !persona.eq(this.author))
+                    .filter(
+                        ({ partner_id, guest_id }) =>
+                            partner_id?.notEq(this.author) || guest_id?.notEq(this.author_guest_id)
+                    )
                     .some((m) => m.hasSeen(this));
             },
         });
@@ -52,7 +58,9 @@ const messagePatch = {
     /** @returns {import("models").ChannelMember[]} */
     get channelMemberHaveSeen() {
         return this.thread.membersThatCanSeen.filter(
-            (m) => m.hasSeen(this) && m.persona.notEq(this.author)
+            (m) =>
+                m.hasSeen(this) &&
+                (m.partner_id?.notEq(this.author) || m.guest_id?.notEq(this.author_guest_id))
         );
     },
     /**

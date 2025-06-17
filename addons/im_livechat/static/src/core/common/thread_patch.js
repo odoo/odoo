@@ -32,7 +32,8 @@ patch(Thread.prototype, {
     },
     get showVisitorDisconnected() {
         return (
-            this.store.self.notEq(this.props.thread.livechatVisitorMember?.persona) &&
+            (this.store.self_partner?.notEq(this.props.thread.livechatVisitorMember?.persona) ||
+                this.store.self_guest?.notEq(this.props.thread.livechatVisitorMember?.persona)) &&
             !this.props.thread.livechat_end_dt &&
             this.props.thread.livechatVisitorMember &&
             this.state.isVisitorOffline

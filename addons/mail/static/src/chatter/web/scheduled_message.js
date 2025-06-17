@@ -68,7 +68,7 @@ export class ScheduledMessage extends Component {
     onClickAuthor(ev) {
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(ev.currentTarget, {
-                id: this.props.scheduledMessage.author_id.main_user_id?.id,
+                id: this.props.scheduledMessage.author_id?.main_user_id?.id,
             });
         }
     }

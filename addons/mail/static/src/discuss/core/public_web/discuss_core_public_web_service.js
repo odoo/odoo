@@ -36,7 +36,11 @@ export class DiscussCorePublicWeb {
             this.store.insert(data);
             await this.store.fetchChannel(channel_id);
             const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
-            if (thread && invitedByUserId && invitedByUserId !== this.store.self.main_user_id?.id) {
+            if (
+                thread &&
+                invitedByUserId &&
+                invitedByUserId !== this.store.self_partner?.main_user_id?.id
+            ) {
                 this.notificationService.add(
                     _t("You have been invited to #%s", thread.displayName),
                     { type: "info" }

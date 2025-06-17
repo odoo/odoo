@@ -86,7 +86,7 @@ export class DiscussSidebarCallParticipants extends Component {
     }
 
     /**
-     * @param {import("models").Persona} persona
+     * @param {import("models").ResPartner|import("models").MailGuest} persona
      */
     avatarClass(persona) {
         return persona.currentRtcSession?.isActuallyTalking

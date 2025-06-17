@@ -14,7 +14,7 @@ export class WelcomePage extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = useState({
-            userName: this.store.self.name || _t("Guest"),
+            userName: this.store.self_partner?.name || this.store.self_guest?.name || _t("Guest"),
             audioStream: null,
             videoStream: null,
         });
@@ -125,6 +125,6 @@ export class WelcomePage extends Component {
         }
     }
     getLoggedInAsText() {
-        return _t("Logged in as %s", this.store.self.name);
+        return _t("Logged in as %s", this.store.self_partner?.name || this.store.self_guest?.name);
     }
 }

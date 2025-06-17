@@ -185,7 +185,7 @@ export class ChannelInvitation extends Component {
         } else if (this.props.thread.channel_type === "group") {
             return _t("Invite to Group Chat");
         } else if (this.props.thread.channel_type === "chat") {
-            if (this.props.thread.correspondent?.persona.eq(this.store.self)) {
+            if (this.props.thread.correspondent?.persona.eq(this.store.self_partner)) {
                 if (this.selectedPartners.length === 0) {
                     return _t("Invite");
                 }

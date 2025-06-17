@@ -33,7 +33,10 @@ export class ChannelMember extends Record {
     channel_id = fields.One("Thread", { inverse: "channel_member_ids" });
     threadAsSelf = fields.One("Thread", {
         compute() {
-            if (this.store.self?.eq(this.persona)) {
+            if (
+                this.store.self_partner?.eq(this.partner_id) ||
+                this.store.self_guest?.eq(this.guest_id)
+            ) {
                 return this.channel_id;
             }
         },
@@ -116,7 +119,11 @@ export class ChannelMember extends Record {
      * @param {import("models").Message} message
      */
     hasSeen(message) {
-        return this.persona.eq(message.author) || this.seen_message_id?.id >= message.id;
+        return (
+            this.partner_id?.eq(message.author_id) ||
+            this.guest_id?.eq(message.author_guest_id) ||
+            this.seen_message_id?.id >= message.id
+        );
     }
     get lastSeenDt() {
         return this.last_seen_dt

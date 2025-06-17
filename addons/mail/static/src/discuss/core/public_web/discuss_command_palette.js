@@ -39,7 +39,7 @@ class CreateChatDialog extends Component {
 
     onClickConfirm() {
         const selectedPartnersId = this.invitePeopleState.selectedPartners.map((p) => p.id);
-        const partners_to = [...new Set([this.store.self.id, ...selectedPartnersId])];
+        const partners_to = [...new Set([this.store.self_partner.id, ...selectedPartnersId])];
         if (partners_to.length === 1) {
             this.store.createGroupChat({ partners_to });
         } else {
@@ -91,7 +91,7 @@ class DiscussCommand extends Component {
         executeCommand: Function,
         imgUrl: { String, optional: true },
         name: String,
-        persona: { type: Object, optional: true },
+        partner: { type: Object, optional: true },
         channel: { type: Object, optional: true },
         action: { type: Object, optional: true },
         searchValue: String,
@@ -172,7 +172,7 @@ export class DiscussCommandPalette {
             ? this.store.self_partner
             : undefined;
         if (selfPartner) {
-            // selfPersona filtered here to put at the bottom as lowest priority
+            // selfPartner filtered here to put at the bottom as lowest priority
             partners = partners.filter((p) => p.notEq(selfPartner));
         }
         const channels = Object.values(this.store.Thread.records)
@@ -193,14 +193,14 @@ export class DiscussCommandPalette {
             })
             .slice(0, TOTAL_LIMIT);
         // balance remaining: half personas, half channels
-        const elligiblePersonas = [];
+        const elligiblePartner = [];
         const elligibleChannels = [];
         let i = 0;
         while ((channels.length || partners.length) && i < remaining) {
             const p = partners.shift();
             const c = channels.shift();
             if (p) {
-                elligiblePersonas.push(p);
+                elligiblePartner.push(p);
                 i++;
             }
             if (i >= remaining) {
@@ -211,7 +211,7 @@ export class DiscussCommandPalette {
                 i++;
             }
         }
-        for (const persona of elligiblePersonas) {
+        for (const persona of elligiblePartner) {
             this.commands.push(this.makeDiscussCommand(persona));
         }
         for (const channel of elligibleChannels) {

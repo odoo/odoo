@@ -71,8 +71,8 @@ export class Store extends BaseStore {
     /** This is the current logged partner / guest */
     self_partner = fields.One("res.partner");
     self_guest = fields.One("mail.guest");
-    get self() {
-        return this.self_partner || this.self_guest;
+    get selfAvatarUrl() {
+        return this.self_partner?.avatarUrl || this.self_guest?.avatarUrl;
     }
     allChannels = fields.Many("Thread", {
         inverse: "storeAsAllChannels",
@@ -347,7 +347,7 @@ export class Store extends BaseStore {
     async startMeeting() {
         const thread = await this.createGroupChat({
             default_display_mode: "video_full_screen",
-            partners_to: [this.self.id],
+            partners_to: [this.self_partner.id],
         });
         await this.store.chatHub.initPromise;
         this.ChatWindow.get(thread)?.update({ autofocus: 0 });
@@ -572,7 +572,7 @@ export class Store extends BaseStore {
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
-     * @returns {Promise<import("models").Persona> | undefined}
+     * @returns {Promise<import("models").ResPartner> | undefined}
      */
     async getPartner({ userId, partnerId }) {
         if (userId) {

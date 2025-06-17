@@ -34,8 +34,10 @@ messageActionsRegistry
             component.reactionPicker = useEmojiPicker(undefined, {
                 onSelect: (emoji) => {
                     const reaction = component.props.message.reactions.find(
-                        ({ content, personas }) =>
-                            content === emoji && component.props.thread.effectiveSelf.in(personas)
+                        ({ content, partners, guests }) =>
+                            content === emoji &&
+                            (component.store.self_partner?.in(partners) ||
+                                component.store.self_guest?.in(guests))
                     );
                     if (!reaction) {
                         component.props.message.react(emoji);
@@ -137,7 +139,7 @@ messageActionsRegistry
     .add("download_files", {
         condition: (component) =>
             component.message.attachment_ids.length > 1 &&
-            component.store.self.main_user_id?.share === false,
+            component.store.self_partner?.main_user_id?.share === false,
         icon: "fa fa-download",
         title: _t("Download Files"),
         onClick: (component) =>

@@ -90,8 +90,8 @@ export class ChatWindow extends Component {
 
     get attClass() {
         return {
-            'w-100 h-100 o-mobile': this.ui.isSmall,
-            'rounded-4 border border-dark mb-2': !this.ui.isSmall,
+            "w-100 h-100 o-mobile": this.ui.isSmall,
+            "rounded-4 border border-dark mb-2": !this.ui.isSmall,
         };
     }
 
@@ -176,8 +176,8 @@ export class ChatWindow extends Component {
 
     async renameGuest(name) {
         const newName = name.trim();
-        if (this.store.self.name !== newName) {
-            await this.store.self.updateGuestName(newName);
+        if (this.store.self_guest?.name !== newName) {
+            await this.store.self_guest?.updateGuestName(newName);
         }
         this.state.editingGuestName = false;
     }

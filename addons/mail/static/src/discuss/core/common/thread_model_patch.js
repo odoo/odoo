@@ -135,7 +135,11 @@ const threadPatch = {
                     return;
                 }
                 return this.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
-                    if (member.persona.notEq(this.store.self) && member.seen_message_id) {
+                    if (
+                        (member.persona?.notEq(this.store.self_partner) ||
+                            member.persona?.notEq(this.store.self_guest)) &&
+                        member.seen_message_id
+                    ) {
                         return lastMessageSeenByAllId
                             ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
                             : member.seen_message_id.id;
@@ -255,7 +259,11 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember[]} */
     get correspondents() {
-        return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
+        return this.channel_member_ids.filter(
+            (member) =>
+                member.persona?.notEq(this.store.self_partner) ||
+                member.persona?.notEq(this.store.self_guest)
+        );
     },
     get displayName() {
         if (this.supportsCustomChannelName && this.selfMember?.custom_channel_name) {
