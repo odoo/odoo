@@ -56,4 +56,9 @@ from . import test_mail_tracking_value
 from . import test_res_partner_merge
 from . import test_account_merge_wizard
 from . import test_account_move_attachment
+<<<<<<< 088f669d008a528c36ddf43fd4c5671c22e1048f
 from . import test_account_bill_deductibility
+||||||| 54204e664ed1924f512ba4626be010e39c2d17a3
+=======
+from . import test_account_move_auto_post
+>>>>>>> 07b93adc318309c991377ac59e80f8cff332c914
