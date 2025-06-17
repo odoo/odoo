@@ -12,9 +12,11 @@ import time
 
 from ast import literal_eval
 from contextlib import contextmanager
+from datetime import timedelta
 from freezegun import freeze_time
 from functools import partial
 from lxml import html
+from markupsafe import Markup
 from random import randint
 from unittest.mock import patch
 from urllib.parse import urlparse, urlencode, parse_qsl
@@ -1364,6 +1366,14 @@ class MailCase(common.TransactionCase, MockEmail):
             results.append(unfollow_urls[0] if unfollow_urls else False)
         self.assertEqual(len(results), len(partner_ids))
         return results
+
+    def _setup_out_of_office(self, users, ooo_from=None, ooo_to=None):
+        now = self.env.cr.now()
+        users.sudo().write({
+            'out_of_office_message': Markup("<p>Le numéro que vous avez composé n'est plus attribué.</p>"),
+            'out_of_office_from': ooo_from or now - timedelta(days=1),
+            'out_of_office_to': ooo_to or now + timedelta(days=10),
+        })
 
     def _url_update_query_parameters(self, url, **kwargs):
         parsed_url = urlparse(url)

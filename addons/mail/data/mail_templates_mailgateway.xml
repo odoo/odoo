@@ -12,6 +12,17 @@
             <p>Kind Regards</p>
         </template>
 
+        <!-- Out-Of-Office content layout -->
+        <template id="message_notification_out_of_office">
+            <div t-out="out_of_office_message"/>
+            <div class="o_mail_reply_container">
+                <div class="o_mail_reply_content">
+                    <blockquote t-out="replied_body"/>
+                </div>
+            </div>
+            <div t-if="signature and not is_html_empty(signature)" t-out="signature" class="o_signature"/>
+        </template>
+
         <template id="mail_bounce_catchall">
 <div>
     <p>Hello <t t-esc="message['email_from']"/>,</p>
