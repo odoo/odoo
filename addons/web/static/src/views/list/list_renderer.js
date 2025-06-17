@@ -36,7 +36,7 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_list";
-
+import { ActionHelper } from "@web/views/action_helper";
 /**
  * @typedef {import('@web/model/relational_model/dynamic_list').DynamicList} DynamicList
  * @typedef {import('@web/model/relational_model/group').Group} Group
@@ -96,8 +96,18 @@ export class ListRenderer extends Component {
     static groupRowTemplate = "web.ListRenderer.GroupRow";
     static useMagicColumnWidths = true;
     static LONG_TOUCH_THRESHOLD = 400;
-    static components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, Widget };
+    static components = {
+        DropdownItem,
+        Field,
+        ViewButton,
+        CheckBox,
+        Dropdown,
+        Pager,
+        Widget,
+        ActionHelper,
+    };
     static defaultProps = { allowSelectors: false, cycleOnTab: true };
+
     static props = [
         "activeActions?",
         "list",

@@ -514,6 +514,20 @@ export class SearchModel extends EventBus {
     }
 
     /**
+     * Removes filter, field and favorite facets but keeps groupBy ones
+     */
+    clearFilters() {
+        this.blockNotification = true;
+        this.facets.forEach((facet) => {
+            if (facet.type !== "groupBy") {
+                this.deactivateGroup(facet.groupId);
+            }
+        });
+        this.blockNotification = false;
+        this._notify();
+    }
+
+    /**
      * Create a new filter of type 'favorite' and activate it.
      * A new group containing only that filter is created.
      * The query is emptied before activating the new favorite.

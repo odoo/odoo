@@ -840,7 +840,10 @@ test("SelectCreateDialog empty list, default no content helper", async () => {
     expect(".o_dialog .o_list_view .o_data_row").toHaveCount(0);
     expect(".o_dialog .o_list_view .o_view_nocontent").toHaveCount(1);
     expect(queryOne(".o_dialog .o_list_view .o_view_nocontent")).toHaveInnerHTML(
-        `<div class="o_nocontent_help"><p>No record found</p><p>Adjust your filters or create a new record.</p></div>`
+        `<div class="o_nocontent_help">
+            <p>No record found</p>
+            <p>Adjust your filters or create a new record.</p>
+        </div>`
     );
 });
 test.tags("mobile");
@@ -857,7 +860,10 @@ test("SelectCreateDialog empty kanban, default no content helper", async () => {
     expect(".o_dialog .o_kanban_view .o_kanban_record[data-id]").toHaveCount(0);
     expect(".o_dialog .o_kanban_view .o_view_nocontent").toHaveCount(1);
     expect(queryOne(".o_dialog .o_kanban_view .o_view_nocontent")).toHaveInnerHTML(
-        `<div class="o_nocontent_help"><p>No record found</p><p>Adjust your filters or create a new record.</p></div>`
+        `<div class="o_nocontent_help">
+            <p>No record found</p>
+            <p>Adjust your filters or create a new record.</p>
+        </div>`
     );
 });
 
@@ -886,7 +892,10 @@ test("SelectCreateDialog empty list, noContentHelp props", async () => {
     expect(".o_dialog .o_list_view .o_data_row").toHaveCount(0);
     expect(".o_dialog .o_list_view .o_view_nocontent").toHaveCount(1);
     expect(queryOne(".o_dialog .o_list_view .o_view_nocontent")).toHaveInnerHTML(
-        `<div class="o_nocontent_help"><p class="custom_classname">Hello</p><p>I'm an helper</p></div>`
+        `<div class="o_nocontent_help">
+            <p class="custom_classname">Hello</p>
+            <p>I'm an helper</p>  
+        </div>`
     );
 });
 

@@ -7,6 +7,7 @@ import {
     defineModels,
     editFavoriteName,
     fields,
+    getFacetTexts,
     getService,
     makeMockServer,
     mockService,
@@ -2177,6 +2178,42 @@ test("graph view sort by measure for multiple grouped data", async () => {
     ]);
 });
 
+test("reset filter button should appear when no data corresponding to facets", async () => {
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph sample="1">
+                <field name="product_id" />
+                <field name="date" />
+            </graph>
+        `,
+        context: {
+            search_default_false_domain: 1,
+        },
+        searchViewArch: /* xml */ `
+            <search>
+                <filter name="no_match" string="Match nothing" domain="[['id', '=', 0]]"/>
+            </search>
+        `,
+        noContentHelp: /* xml */ `<p class="abc">click to add a foo</p>`,
+    });
+
+    await contains(".o_graph_view").click();
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Match nothing");
+
+    expect(".o_view_nocontent").toHaveCount(1);
+    expect(getFacetTexts()).not.toEqual([]);
+    expect(".o_reset_filter_button").toHaveCount(1);
+    expect(".o_reset_filter_button").toHaveText("Reset Filters");
+    expect(".o_facet_value").toHaveText("Match nothing");
+
+    await contains(".o_reset_filter_button").click();
+    expect(getFacetTexts()).toEqual([]);
+    expect(".o_reset_filter_button").not.toHaveCount(1);
+});
+
 test("empty graph view with sample data", async () => {
     await mountView({
         type: "graph",
@@ -2200,6 +2237,8 @@ test("empty graph view with sample data", async () => {
 
     expect(".o_graph_view .o_content").toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(1);
+    expect(".ribbon").toHaveCount(1);
+    expect(".ribbon").toHaveText("SAMPLE DATA");
     expect(".o_graph_canvas_container canvas").toHaveCount(1);
 
     await toggleSearchBarMenu();
@@ -2207,6 +2246,7 @@ test("empty graph view with sample data", async () => {
 
     expect(".o_graph_view .o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(0);
+    expect(".ribbon").toHaveCount(0);
     expect(".o_graph_canvas_container canvas").toHaveCount(1);
 });
 
@@ -2231,6 +2271,7 @@ test("non empty graph view with sample data", async () => {
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(0);
     expect(".o_graph_canvas_container canvas").toHaveCount(1);
+    expect(".ribbon").toHaveCount(0);
 
     await toggleSearchBarMenu();
     await toggleMenuItem("False Domain");
@@ -2238,6 +2279,7 @@ test("non empty graph view with sample data", async () => {
     expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_graph_canvas_container canvas").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(1);
+    expect(".ribbon").toHaveCount(0);
 });
 
 test("empty graph view without sample data after filter", async () => {
