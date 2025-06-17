@@ -25,6 +25,7 @@ class ProductPricelistItem(models.Model):
     def _load_pos_data_domain(self, data):
         product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
         product_ids = [p['id'] for p in data['product.product']]
+        product_categ = [c['id'] for c in data['product.category']]
         pricelist_ids = [p['id'] for p in data['product.pricelist']]
         today = fields.Date.today()
         return [
@@ -32,7 +33,8 @@ class ProductPricelistItem(models.Model):
             '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
             '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
             '|', ('date_start', '=', False), ('date_start', '<=', today),
-            '|', ('date_end', '=', False), ('date_end', '>=', today)
+            '|', ('date_end', '=', False), ('date_end', '>=', today),
+            '|', ('categ_id', '=', False), ('categ_id', 'in', product_categ),
         ]
 
     @api.model

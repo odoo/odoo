@@ -609,7 +609,7 @@ export class SelfOrder extends Reactive {
                 this.currentOrder.delete();
                 uuid = result["pos.order"][0].uuid;
             }
-            this.data.synchronizeLocalDataInIndexedDB();
+            this.data.debouncedSynchronizeLocalDataInIndexedDB();
 
             if (this.config.self_ordering_pay_after === "each") {
                 this.selectedOrderUuid = null;
