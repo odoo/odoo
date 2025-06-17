@@ -166,27 +166,21 @@ export class ProductTemplate extends Base {
     }
 
     getApplicablePricelistRules(pricelist) {
-        const productTmplRules = this["<-product.pricelist.item.product_tmpl_id"] || [];
-        const rulesIds = [...new Set([...productTmplRules])]
-            .filter((rule) => rule.pricelist_id.id === pricelist.id)
-            .map((rule) => rule.id);
-        if (
-            this.uiState.applicablePricelistRules[pricelist.id] &&
-            (!rulesIds.length ||
-                this.uiState.applicablePricelistRules[pricelist.id].includes(rulesIds[0]))
-        ) {
+        const filter = (r) => r.pricelist_id.id === pricelist.id;
+        const rules = (this["<-product.pricelist.item.product_tmpl_id"] || []).filter(filter);
+        const rulesSet = new Set(rules.map((r) => r.id));
+
+        if (this.uiState.applicablePricelistRules[pricelist.id] && !rulesSet.size) {
             return this.uiState.applicablePricelistRules[pricelist.id];
         }
 
-        const parentCategoryIds = this.parentCategories;
-        const availableRules =
-            pricelist.item_ids?.filter(
-                (rule) =>
-                    (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
-                    (!rule.product_tmpl_id || rule.product_tmpl_id.id === this.id) &&
-                    (!rule.categ_id || parentCategoryIds.includes(rule.categ_id.id))
-            ) || [];
-        this.uiState.applicablePricelistRules[pricelist.id] = availableRules.map((rule) => rule.id);
+        const generalRules = pricelist.getGeneralRulesByCategories(this.parentCategories);
+
+        this.uiState.applicablePricelistRules[pricelist.id] = [
+            ...rulesSet,
+            ...generalRules.map((rule) => rule.id),
+        ];
+
         return this.uiState.applicablePricelistRules[pricelist.id];
     }
 
