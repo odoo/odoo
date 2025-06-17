@@ -264,7 +264,8 @@ class AccountPayment(models.Model):
             self.journal_id.default_account_id |
             self.payment_method_line_id.payment_account_id |
             self.journal_id.inbound_payment_method_line_ids.payment_account_id |
-            self.journal_id.outbound_payment_method_line_ids.payment_account_id
+            self.journal_id.outbound_payment_method_line_ids.payment_account_id |
+            self.outstanding_account_id
         )
 
     def _get_aml_default_display_name_list(self):
@@ -1002,29 +1003,35 @@ class AccountPayment(models.Model):
         need_move = self.filtered(lambda p: not p.move_id and p.outstanding_account_id)
         assert len(self) == 1 or (not write_off_line_vals and not force_balance and not line_ids)
 
-        move_vals = []
-        for pay in need_move:
-            move_vals.append({
-                'move_type': 'entry',
-                'ref': pay.memo,
-                'date': pay.date,
-                'journal_id': pay.journal_id.id,
-                'company_id': pay.company_id.id,
-                'partner_id': pay.partner_id.id,
-                'currency_id': pay.currency_id.id,
-                'partner_bank_id': pay.partner_bank_id.id,
-                'line_ids': line_ids or [
-                    Command.create(line_vals)
-                    for line_vals in pay._prepare_move_line_default_vals(
-                        write_off_line_vals=write_off_line_vals,
-                        force_balance=force_balance,
-                    )
-                ],
-                'origin_payment_id': pay.id,
-            })
+        move_vals = [
+            pay._generate_move_vals(write_off_line_vals, force_balance, line_ids)
+            for pay in need_move
+        ]
         moves = self.env['account.move'].create(move_vals)
         for pay, move in zip(need_move, moves):
             pay.write({'move_id': move.id, 'state': 'in_process'})
+
+    def _generate_move_vals(self, write_off_line_vals=None, force_balance=None, line_ids=None):
+        """ Prepare the values needed to create a move for self. """
+        self.ensure_one()
+        return {
+            'move_type': 'entry',
+            'ref': self.memo,
+            'date': self.date,
+            'journal_id': self.journal_id.id,
+            'company_id': self.company_id.id,
+            'partner_id': self.partner_id.id,
+            'currency_id': self.currency_id.id,
+            'partner_bank_id': self.partner_bank_id.id,
+            'line_ids': line_ids or [
+                Command.create(line_vals)
+                for line_vals in self._prepare_move_line_default_vals(
+                    write_off_line_vals=write_off_line_vals,
+                    force_balance=force_balance,
+                )
+            ],
+            'origin_payment_id': self.id,
+        }
 
     def _get_payment_receipt_report_values(self):
         """ Get the extra values when rendering the Payment Receipt PDF report.

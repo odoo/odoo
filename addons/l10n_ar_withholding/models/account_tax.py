@@ -54,16 +54,19 @@ class AccountTax(models.Model):
     @api.depends('type_tax_use', 'l10n_ar_withholding_payment_type')
     def _compute_l10n_ar_type_tax_use(self):
         for tax in self:
-            if tax.type_tax_use in ('sale', 'purchase'):
-                tax.l10n_ar_type_tax_use = tax.type_tax_use
-            elif tax.l10n_ar_withholding_payment_type in ('supplier', 'customer'):
-                tax.l10n_ar_type_tax_use = tax.l10n_ar_withholding_payment_type
+            if tax.country_code == 'AR':
+                if tax.type_tax_use in ('sale', 'purchase'):
+                    tax.l10n_ar_type_tax_use = tax.type_tax_use
+                elif tax.l10n_ar_withholding_payment_type in ('supplier', 'customer'):
+                    tax.l10n_ar_type_tax_use = tax.l10n_ar_withholding_payment_type
+                else:
+                    tax.l10n_ar_type_tax_use = 'none'
             else:
                 tax.l10n_ar_type_tax_use = 'none'
 
     @api.onchange('l10n_ar_type_tax_use')
     def _inverse_l10n_ar_type_tax_use(self):
-        for tax in self:
+        for tax in self.filtered(lambda t: t.country_code == 'AR'):
             if tax.l10n_ar_type_tax_use in ('sale', 'purchase'):
                 tax.type_tax_use = tax.l10n_ar_type_tax_use
                 tax.l10n_ar_tax_type = False

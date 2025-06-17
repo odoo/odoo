@@ -16,21 +16,21 @@
 # Cécile Collart <cco@odoo.com>, 2024
 # Jens Nymoen <jens@nettimport.no>, 2024
 # Martin Trigaux, 2025
-# Marius Stedjan <marius@stedjan.com>, 2025
 # Jens Nymoen <jens.nymoen@gmail.com>, 2025
 # Thor Arne Hvidsten <thor.arne.hvidsten@gmail.com>, 2025
 # Thor Arne Hvidsten, 2025
 # Rune Restad, 2025
 # Wil Odoo, 2025
 # Thomas Becquevort, 2025
+# Marius Stedjan <marius@stedjan.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:37+0000\n"
+"POT-Creation-Date: 2025-06-13 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thomas Becquevort, 2025\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -356,8 +356,7 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
-". Regnskapsføringen må beregnes av Odoo før den bokføres i selskapets "
-"valuta."
+". Regnskapsføringen må beregnes av Odoo før den bokføres i firmaets valuta."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2224,7 +2223,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create purchase receipt"
-msgstr "Aktiver for å opprette kjøpskvittering"
+msgstr "Aktiver oppretting av kjøpskvitteringer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2527,7 +2526,7 @@ msgstr "Alle våre kontraktsforhold vil utelukkende være underlagt"
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "All selected moves for reversal must belong to the same company."
-msgstr "Alle valgte bevegelser for reversering må tilhøre samme selskap."
+msgstr "Alle valgte bevegelser for reversering må tilhøre samme firma."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
@@ -2619,8 +2618,8 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the company "
 "currency."
 msgstr ""
-"Alltid positivt beløp som påvirkes av denne avstemmingen, uttrykt i "
-"selskapets valuta."
+"Alltid positivt beløp som påvirkes av denne avstemmingen, uttrykt i firmaets"
+" valuta."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__credit_amount_currency
@@ -2663,7 +2662,7 @@ msgstr "Beløp"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_company_currency_signed
 msgid "Amount Company Currency Signed"
-msgstr "Beløp i selskapets valuta med tegn."
+msgstr "Beløp i firmaets valuta med tegn."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount
@@ -2773,11 +2772,11 @@ msgid ""
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
 msgstr ""
-"En konto er en del av et hovedbokssystem som lar selskapet ditt registrere "
-"alle typer debet- og kredittransaksjoner. Selskaper presenterer sine "
+"En konto er en del av et hovedbokssystem som lar firmaet ditt registrere "
+"alle typer debet- og kredittransaksjoner. Firmaer presenterer sine "
 "årsregnskaper i to hoveddeler: balanse og resultatregnskap (resultat- og "
-"tap-konto). Årsregnskapet til et selskap er pålagt ved lov å offentliggjøre "
-"en viss mengde informasjon."
+"tap-konto). Årsregnskapet til et firma er pålagt ved lov å offentliggjøre en"
+" viss mengde informasjon."
 
 #. module: account
 #. odoo-python
@@ -4205,8 +4204,8 @@ msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
 " your account. Please contact us directly for this operation."
 msgstr ""
-"Endring av selskapsnavn er ikke tillatt når fakturaer er utstedt for kontoen"
-" din. Vennligst kontakt oss direkte for denne operasjonen."
+"Endring av firmanavn er ikke tillatt når fakturaer er utstedt for kontoen "
+"din. Vennligst kontakt oss direkte for denne operasjonen."
 
 #. module: account
 #. odoo-python
@@ -4563,13 +4562,13 @@ msgstr "Firmavaluta"
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
 msgid "Company Document Layout"
-msgstr "Selskapsdokument utseende"
+msgstr "Dokumentoppsett"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_fiscal_country_code
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__fiscal_country_codes
 msgid "Company Fiscal Country Code"
-msgstr "Selskaps skattemessige landkode"
+msgstr "Firmaets skattemessige landkode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
@@ -4579,7 +4578,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
 msgid "Company Storno Accounting"
-msgstr "Selskaps Storno-regnskap"
+msgstr "Firmaets Storno-regnskap"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_vat_placeholder
@@ -4796,7 +4795,7 @@ msgstr "Motparts regler"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a VAT number"
-msgstr "Landene der selskapet har et MVA-nummer."
+msgstr "Landene der firmaet har et MVA-nummer."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -4858,6 +4857,8 @@ msgid "Create Automatic Entries"
 msgstr "Opprett automatiske posteringer"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_bill
 msgid "Create Bill"
 msgstr "Opprett faktura"
@@ -5367,7 +5368,7 @@ msgstr "Valutaen for kredittjournalposten. Valutaen for debetjournalposten."
 #: model:ir.model.fields,help:account.field_account_move__invoice_currency_rate
 #: model:ir.model.fields,help:account.field_account_move_line__currency_rate
 msgid "Currency rate from company currency to document currency."
-msgstr "Valutakurs fra selskapsvaluta til dokumentvaluta."
+msgstr "Valutakurs fra firmavaluta til dokumentvaluta."
 
 #. module: account
 #: model:account.account,name:account.1_current_assets
@@ -5804,7 +5805,7 @@ msgstr "Standard incoterm"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Incoterm of your company"
-msgstr "Standard Incoterm for selskapet ditt"
+msgstr "Standard Incoterm for firmaet ditt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__default_opening_date_filter
@@ -6406,7 +6407,7 @@ msgstr "Digitalisering av dokument"
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
 msgid "Documents Layout"
-msgstr "Dokument layout"
+msgstr "Dokumentoppsett"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__business_domain
@@ -6756,7 +6757,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "Epost domene f.eks 'example.com' i 'odoo@example.com'"
+msgstr "E-postdomene f.eks 'example.com' i 'odoo@example.com'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_template_id
@@ -9402,7 +9403,7 @@ msgstr "Journal suspensjonskonto"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_code_company_uniq
 msgid "Journal codes must be unique per company."
-msgstr "Journal koder må være unike per selskap."
+msgstr "Journal koder må være unike per firma."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__line_ids
@@ -9438,8 +9439,7 @@ msgid ""
 "Journal where the opening entry of this company's accounting has been "
 "posted."
 msgstr ""
-"Journalen hvor åpningsposten for dette selskapets regnskap har blitt "
-"bokført."
+"Journalen hvor åpningsposten for dette firmaets regnskap har blitt bokført."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
@@ -9946,7 +9946,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr "Epost sporingsverdi"
+msgstr "E-post sporingsverdi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_main_attachment_id
@@ -10685,8 +10685,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
-"Ingen journal kunne bli funnet i selskapet %(company_name)s for noen av "
-"disse typene: %(journal_types)s"
+"Ingen journal kunne bli funnet i firmaet %(company_name)s for noen av disse "
+"typene: %(journal_types)s"
 
 #. module: account
 #. odoo-python
@@ -11042,12 +11042,12 @@ msgstr "Onboarding Bank konto"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_company_data
 msgid "Onboarding Company Data"
-msgstr "Onboarding selskaps Data"
+msgstr "Onboarding Firma Data"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_base_document_layout
 msgid "Onboarding Documents Layout"
-msgstr "Onboarding dokument utforming"
+msgstr "Onboarding dokumentoppsett"
 
 #. module: account
 #: model:ir.model,name:account.model_onboarding_onboarding_step
@@ -12459,7 +12459,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 #: model:res.groups,name:account.group_purchase_receipts
 msgid "Purchase Receipt"
-msgstr "Kjøps kvitteringen."
+msgstr "Kjøpskvittering"
 
 #. module: account
 #. odoo-python
@@ -12789,7 +12789,7 @@ msgstr "Registrer en bankregistrering"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
 msgid "Register a new purchase receipt"
-msgstr "Registrere et nytt kjøpskvittering"
+msgstr "Registrer ny kjøpskvittering"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_payments
@@ -13666,12 +13666,12 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
-msgstr "Send kvittering med epost"
+msgstr "Send kvittering med e-post"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
 msgid "Send receipts by email"
-msgstr "Send kvitteringer med epost"
+msgstr "Send kvitteringer med e-post"
 
 #. module: account
 #. odoo-javascript
@@ -13881,7 +13881,7 @@ msgstr "Sett opp kontoplan og poster åpningsbalansen."
 #. odoo-python
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 msgid "Set your company data"
-msgstr "Sett selskapsdata"
+msgstr "Sett firmadata"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_company_data
@@ -14600,7 +14600,7 @@ msgstr "Skattefordelingslinje"
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__tax_lock_date
 msgid "Tax Return Lock Date"
-msgstr "Skatteoppgjør låsedato"
+msgstr "Låsedato for mva-periode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
@@ -14660,7 +14660,7 @@ msgid ""
 "favor of the company."
 msgstr ""
 "Skatteløpskonto brukt som motstykke til skatteavslutningsposten når det er "
-"til fordel for selskapet."
+"til fordel for firmaet."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
@@ -14755,9 +14755,9 @@ msgid ""
 "tax-related features(hence the ones for which l10n modules need to show tax-"
 "related fields)."
 msgstr ""
-"Teknisk felt som inneholder landene som dette selskapet bruker "
-"skatterelaterte funksjoner for (derav de som l10n-moduler må vise "
-"skatterelaterte felt for)."
+"Teknisk felt som inneholder landene som dette firmaet bruker skatterelaterte"
+" funksjoner for (derav de som l10n-moduler må vise skatterelaterte felt "
+"for)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__company_lock_date
@@ -15092,7 +15092,7 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
-msgstr "Bankkontoen til en bankjournal må tilhøre samme selskap (%s)."
+msgstr "Bankkontoen til en bankjournal må tilhøre samme firma (%s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -15160,7 +15160,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
-msgstr "Selskapet denne distribusjonslinjen tilhører."
+msgstr "Firmaet denne distribusjonslinjen tilhører."
 
 #. module: account
 #. odoo-python
@@ -15197,7 +15197,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr "Landet å bruke skatterapportene fra for dette selskapet"
+msgstr "Landet å bruke skatterapportene fra for dette firmaet"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -15416,7 +15416,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "Innehaver av et tidsskrifts bankkonto må være selskapet (%s)."
+msgstr "Innehaver av et tidsskrifts bankkonto må være firmaet (%s)."
 
 #. module: account
 #. odoo-python
@@ -15567,7 +15567,7 @@ msgstr "Partneren kan ikke slettes fordi den brukes i Regnskap"
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
 msgstr ""
-"Partnerne til tidsskriftets selskap og den relaterte bankkontoen samsvarer "
+"Partnerne til tidsskriftets firma og den relaterte bankkontoen samsvarer "
 "ikke."
 
 #. module: account
@@ -15731,14 +15731,14 @@ msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
 msgstr ""
-"Restbeløpet på en journalpost uttrykt i dens valuta (eventuelt ikke "
-"selskapets valuta)."
+"Restbeløpet på en journalpost uttrykt i dens valuta (eventuelt ikke firmaets"
+" valuta)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
-msgstr "Restbeløpet på en journalpost uttrykt i selskapets valuta."
+msgstr "Restbeløpet på en journalpost uttrykt i firmaets valuta."
 
 #. module: account
 #. odoo-python
@@ -16212,8 +16212,8 @@ msgid ""
 "taxes configuration."
 msgstr ""
 "Denne oppføringen inneholder én eller flere skatter som er uforenlige med "
-"skattelandet ditt. Sjekk selskapets skatteland i innstillingene og "
-"skatteland i skattekonfigurasjonen."
+"skattelandet ditt. Sjekk firmaets skatteland i innstillingene og skatteland "
+"i skattekonfigurasjonen."
 
 #. module: account
 #. odoo-python
@@ -17452,7 +17452,7 @@ msgstr "Leverandørbetalingsvilkår"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Vendor Payments"
-msgstr "Leverandør betalinger"
+msgstr "Leverandørbetalinger"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -17545,8 +17545,8 @@ msgid ""
 "We can't leave this document without any company. Please select a company "
 "for this document."
 msgstr ""
-"Vi kan ikke forlate dette dokumentet uten noe selskap. Velg et selskap for "
-"dette dokumentet."
+"Vi kan ikke forlate dette dokumentet uten noe firma. Velg et firma for dette"
+" dokumentet."
 
 #. module: account
 #. odoo-python
@@ -17555,7 +17555,7 @@ msgid ""
 "We cannot find a chart of accounts for this company, you should configure it. \n"
 "Please go to Account Configuration and select or install a fiscal localization."
 msgstr ""
-"Vi finner ikke en kontoplan for dette selskapet, du bør konfigurere det. \n"
+"Vi finner ikke en kontoplan for dette firmaet, du bør konfigurere det. \n"
 "Gå til Kontokonfigurasjon og velg eller installer en finansiell lokalisering."
 
 #. module: account
@@ -17639,7 +17639,7 @@ msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
-"Når kjøpskvittering er bekreftet, kan du registrere\n"
+"Når kjøpskvitteringen er bekreftet, kan du registrere\n"
 "leverandørbetaling knyttet til denne kjøpskvitteringen."
 
 #. module: account
@@ -17866,7 +17866,7 @@ msgid ""
 "You can't change the company of your tax since there are some journal items "
 "linked to it."
 msgstr ""
-"Du kan ikke endre selskapet for skatten din siden det er noen journalposter "
+"Du kan ikke endre firmaet for skatten din siden det er noen journalposter "
 "knyttet til den."
 
 #. module: account
@@ -17906,7 +17906,7 @@ msgid ""
 "You can't create payments for entries belonging to different companies."
 msgstr ""
 "Du kan ikke opprette betalinger for oppføringer som tilhører forskjellige "
-"selskaper."
+"firmaer."
 
 #. module: account
 #. odoo-python
@@ -18023,7 +18023,7 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
-"Du kan ikke endre valutaen til selskapet siden noen journalposter allerede "
+"Du kan ikke endre valutaen til firmaet siden noen journalposter allerede "
 "eksisterer"
 
 #. module: account
@@ -18439,7 +18439,7 @@ msgid ""
 "companies."
 msgstr ""
 "Du kan ikke bruke denne veiviseren på journalposter som tilhører "
-"forskjellige selskaper."
+"forskjellige firmaer."
 
 #. module: account
 #. odoo-python
@@ -18513,7 +18513,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You must specify the Profit Account (company dependent)"
-msgstr "Du må spesifisere Profit Account (selskapsavhengig)"
+msgstr "Du må spesifisere inntektskonto (firmaavhengig)"
 
 #. module: account
 #. odoo-python
@@ -18942,7 +18942,7 @@ msgid ""
 "reserves the right to call on the services of a debt recovery company. All "
 "legal expenses will be payable by the client."
 msgstr ""
-"forbeholder seg retten til å benytte seg av et inkassoselskap. Alle "
+"forbeholder seg retten til å benytte seg av et inkassofirma. Alle "
 "advokatutgifter skal betales av klienten."
 
 #. module: account
@@ -18962,7 +18962,7 @@ msgstr "tagg domene"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "morselskapet"
+msgstr "morfirmaet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form

@@ -166,13 +166,6 @@ $-seen-urls: ();
         $custom-colors: append($custom-colors, $key);
     }
     @include print-variable('custom-colors', $custom-colors);
-
-    // A background color is set on <html> to prevent the fallback iframe used
-    // for navigation in the backend to be visible once the top iframe is loaded
-    // (see /website/iframefallback). Indeed, if the website <body> uses a
-    // transparent background color, the fallback iframe would be visible on
-    // some browsers (e.g. Chrome).
-    background-color: white;
 }
 
 @mixin body-image-bg-style() {
@@ -188,12 +181,32 @@ $-seen-urls: ();
     }
 };
 
+@mixin force-opaque-bg-color($color, $if-necessary, $background: white) {
+    $alpha: alpha($color);
+    @if not $if-necessary or $alpha < 0.999 {
+        background-color: mix(change-color($color, $alpha: 1), $background, percentage($alpha));
+    }
+}
+
 body {
     // The color behind the boxed layout is forced by Odoo. The box background
     // color uses the `$body-bg` variable.
     // grep: BOXED_BODY_BG_ODOO
+    //
+    // In any case, remove the transparency of the background color to apply as
+    // body background color to prevent the fallback iframe used for navigation
+    // in the backend to be visible once the top iframe is loaded (see the
+    // /website/iframefallback route). Indeed, if the website <body> uses a
+    // transparent background color, the fallback iframe would be visible on
+    // some // browsers (e.g. Chrome).
     @if o-website-value('layout') != 'full' {
-        background-color: o-color('body');
+        @include force-opaque-bg-color(o-color('body'), $if-necessary: false);
+    } @else {
+        // Only if necessary as, if already opaque, the background color of the
+        // body is already set by Bootstrap. We don't change $body-bg directly
+        // as it would impact other Bootstrap components that could take profit
+        // of the transparency.
+        @include force-opaque-bg-color($body-bg, $if-necessary: true);
     }
 }
 
@@ -1662,6 +1675,17 @@ header {
         z-index: -1;
         pointer-events: none;
         background: rgba(0, 0, 0, .05);
+    }
+}
+
+// For the "hamburger" and "sidebar" header, we set the mega menu columns to
+// 100% width when the breakpoint is above lg, because the menu keeps its mobile
+// width when displayed on desktop.
+@if index(("sidebar", "hamburger"), o-website-value("header-template")) {
+    @include media-breakpoint-up(lg) {
+        .o_mega_menu [class*="col-"] {
+            width: 100%;
+        }
     }
 }
 

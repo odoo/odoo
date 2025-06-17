@@ -4252,6 +4252,18 @@ options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
             .classList.value.split(' ').filter(cl => cl.startsWith('s_mega_menu'))[0];
         return `website.${templateDefiningClass}`;
     },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (params.optionsPossibleValues.selectClass?.includes("o_mega_menu_container_size")) {
+            const headerTemplate = weUtils.getCSSVariableValue("header-template");
+            if (["hamburger", "sidebar"].includes(headerTemplate.slice(1, -1))) {
+                return false;
+            }
+        }
+        return this._super(...arguments);
+    },
 });
 
 /**
