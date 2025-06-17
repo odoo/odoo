@@ -138,11 +138,23 @@ class MailThread(models.AbstractModel):
                 fields.Datetime.now() + datetime.timedelta(hours=2)
                 if notify_delay_send else None
             )
-            rating_body = (
-                    markupsafe.Markup(
-                        "<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
-                    ) % (rating.rating_image_url, rate, feedback)
-            )
+
+            if (hasattr(self, 'channel_type') and self.channel_type == 'livechat'):
+                rating_body = markupsafe.Markup(
+                        """<div class="o_mail_notification o_hide_author">"""
+                        """%(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(feedback)s"""
+                        """</div>""",
+                    ) % {
+                        "rating": _("Rating"),
+                        "rating_url": rating.rating_image_url,
+                        "feedback": feedback,
+                    }
+            else:
+                rating_body = (
+                        markupsafe.Markup(
+                            "<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s",
+                        ) % (rating.rating_image_url, rate, feedback)
+                )
 
             if rating.message_id:
                 self._message_update_content(
