@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError
+from odoo.tools import format_date
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -309,10 +310,11 @@ class HrVersion(models.Model):
                     version.with_context(sync_contract_dates=True).write(dates_vals)
         return super().write(new_vals)
 
+    @api.depends_context('lang')
     @api.depends('date_version')
     def _compute_display_name(self):
         for version in self:
-            version.display_name = version.name if not version.employee_id else date.strftime(version.date_version, '%-d %b %Y')
+            version.display_name = version.name if not version.employee_id else format_date(version.env, version.date_version, date_format='dd MMM yyyy')
 
     def _compute_state(self):
         for version in self:
