@@ -2,7 +2,7 @@ import {
     insertSnippet,
     goToTheme,
     registerWebsitePreviewTour,
-    selectFullText,
+    clickToolbarButton,
 } from '@website/js/tours/tour_utils';
 import {FONT_SIZE_CLASSES} from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
@@ -40,12 +40,12 @@ function checkComputedFontSize(fontSizeClass, stage) {
 function getFontSizeTestSteps(fontSizeClass) {
     return [
         ...insertSnippet({id: "s_text_block", name: "Text", groupName: "Text"}),
-        selectFullText(`text block first paragraph [${fontSizeClass}]`, ".s_text_block p"),
+        ...clickToolbarButton(
+            `text block first paragraph [${fontSizeClass}]`,
+            ".s_text_block p",
+            "Select font size"
+        ),
         {
-            content: `Open the font size dropdown to select ${fontSizeClass}`,
-            trigger: ".o-we-toolbar :iframe [name='font-size-input']",
-            run: "click",
-        }, {
             content: `Select ${fontSizeClass} in the dropdown`,
             trigger: `.o_font_size_selector_menu span:contains(${classNameInfo.get(fontSizeClass).start})`,
             run: "click",
