@@ -2,14 +2,14 @@ import re
 import sys
 import traceback
 import xmlrpc.client
+from collections import defaultdict
 from datetime import date, datetime
 
-from collections import defaultdict
 from markupsafe import Markup
 
 import odoo
-from odoo.http import Controller, route, dispatch_rpc, request, Response
-from odoo.fields import Date, Datetime, Command
+from odoo.fields import Command, Date, Datetime
+from odoo.http import Controller, Response, dispatch_rpc, request, route
 from odoo.tools import lazy
 from odoo.tools.misc import frozendict
 
@@ -144,7 +144,7 @@ class RPC(Controller):
         _check_request()
         try:
             response = self._xmlrpc(service)
-        except Exception as error:
+        except Exception as error: # noqa: BLE001
             response = exception_handler(error)
         return Response(response=response, mimetype='text/xml')
 
