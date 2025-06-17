@@ -78,6 +78,9 @@
                                                     </td>
                                                 </tr>
                                             </table>
+                                            <t t-if="'show_recovery_button' in ctx">
+
+                                            </t>
                                         </t>
                                         <t t-set="company" t-value="object.company_id or object.user_id.company_id or user.company_id"/>
                                     </td></tr>
