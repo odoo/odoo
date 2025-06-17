@@ -434,3 +434,26 @@ test("Can open date time picker to select a range", async function () {
     await contains("input.o_datetime_input:first").click();
     expect(".o_datetime_picker").toHaveCount(1);
 });
+
+test("Choosing a from after the to will re-order dates", async function () {
+    let firstCall = true;
+    const env = await makeMockEnv();
+    await mountDateFilterValue(env, {
+        value: { type: "range", from: "2023-01-30", to: "2023-01-31" },
+        update: (value) => {
+            if (firstCall) {
+                // Bypass the first call as it is just the initial value
+                // (activate when clicking on the input)
+                firstCall = false;
+                return;
+            }
+            expect(value).toEqual({ type: "range", from: "2023-01-01", to: "2023-01-30" });
+            expect.step("update");
+        },
+    });
+    await contains("input").click();
+    await contains("input.o_datetime_input:last").click();
+    // Select 1th of January 2023
+    await contains(".o_date_item_cell.o_datetime_button:first").click();
+    expect.verifySteps(["update"]);
+});
