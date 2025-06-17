@@ -2,8 +2,6 @@
 import logging
 from http import HTTPStatus
 
-import markupsafe
-
 import odoo.http
 from odoo.tests import tagged, get_db_name
 from odoo.tests.common import new_test_user, Like
@@ -72,7 +70,7 @@ class TestHttpModels(TestHttpBase):
         with self.assertLogs("odoo.http", level="WARNING") as logs:
             res = self.url_open(f'/test_http/{milky_way.id}/9999')  # unknown gate
         self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
-        self.assertIn(markupsafe.escape("The goauld destroyed the gate"), res.text)
+        self.assertIn("The goauld destroyed the gate", res.text)
         self.assertEqual(logs.output, ["WARNING:odoo.http:The goauld destroyed the gate"])
 
     def test_models4_stargate_setname(self):
