@@ -48,9 +48,6 @@ export class RtcSession extends Record {
             return this.channel_member_id?.guest_id;
         },
     });
-    get persona() {
-        return this.partner_id || this.guest_id;
-    }
     /** @type {boolean} */
     is_camera_on;
     /** @type {boolean} */

@@ -43,6 +43,10 @@ export class MessageReactionMenu extends Component {
         });
     }
 
+    get personas() {
+        return [...this.state.reaction.partners, ...this.state.reaction.guests];
+    }
+
     onKeydown(ev) {
         switch (ev.key) {
             case "Escape":

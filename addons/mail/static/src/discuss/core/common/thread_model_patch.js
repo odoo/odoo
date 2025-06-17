@@ -71,7 +71,11 @@ const threadPatch = {
         this.correspondentCountry = fields.One("res.country", {
             /** @this {import("models").Thread} */
             compute() {
-                return this.correspondent?.persona?.country_id ?? this.country_id;
+                return (
+                    this.correspondent?.partner_id?.country_id ??
+                    this.correspondent?.guest_id?.country_id ??
+                    this.country_id
+                );
             },
         });
         /** @type {"video_full_screen"|undefined} */
@@ -135,7 +139,11 @@ const threadPatch = {
                     return;
                 }
                 return this.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
-                    if (member.persona.notEq(this.store.self) && member.seen_message_id) {
+                    if (
+                        (member.partner_id?.notEq(this.store.self_partner) ||
+                            member.guest_id?.notEq(this.store.self_guest)) &&
+                        member.seen_message_id
+                    ) {
                         return lastMessageSeenByAllId
                             ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
                             : member.seen_message_id.id;
@@ -178,7 +186,11 @@ const threadPatch = {
             compute() {
                 return this.channel_member_ids
                     .filter((member) =>
-                        this.store.onlineMemberStatuses.includes(member.persona.im_status)
+                        this.store.onlineMemberStatuses.includes(
+                            member.partner_id?.im_status
+                        ) || this.store.onlineMemberStatuses.includes(
+                            member.guest_id?.im_status
+                        )
                     )
                     .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
             },
@@ -193,7 +205,17 @@ const threadPatch = {
         this.otherTypingMembers = fields.Many("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
-                return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
+                return this.typingMembers.filter(
+                    (member) => {
+                        if (member.partner_id?.eq(this.store.self_partner)) {
+                            return false;
+                        }
+                        if (member.guest_id?.eq(this.store.self_guest)) {
+                            return false;
+                        }
+                        return true;
+                    }
+                );
             },
         });
         this.selfMember = fields.One("discuss.channel.member", {
@@ -217,7 +239,9 @@ const threadPatch = {
     /** @returns {import("models").ChannelMember[]} */
     _computeOfflineMembers() {
         return this.channel_member_ids.filter(
-            (member) => !this.store.onlineMemberStatuses.includes(member.persona?.im_status)
+            (member) =>
+                !this.store.onlineMemberStatuses.includes(member.partner_id?.im_status) &&
+                !this.store.onlineMemberStatuses.includes(member.guest_id?.im_status)
         );
     },
     get areAllMembersLoaded() {
@@ -230,7 +254,7 @@ const threadPatch = {
             });
         }
         if (this.channel_type === "chat" && this.correspondent) {
-            return this.correspondent.persona.avatarUrl;
+            return this.correspondent.avatarUrl;
         }
         return super.avatarUrl;
     },
@@ -255,7 +279,11 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember[]} */
     get correspondents() {
-        return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
+        return this.channel_member_ids.filter(
+            (member) =>
+                member.partner_id?.notEq(this.store.self_partner) ||
+                member.guest_id?.notEq(this.store.self_guest)
+        );
     },
     get displayName() {
         if (this.supportsCustomChannelName && this.selfMember?.custom_channel_name) {

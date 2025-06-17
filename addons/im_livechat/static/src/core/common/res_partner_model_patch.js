@@ -2,7 +2,7 @@ import { ResPartner } from "@mail/core/common/res_partner_model";
 
 import { patch } from "@web/core/utils/patch";
 
-/** @type {import("models").Persona} */
+/** @type {import("models").ResPartner} */
 const resPartnerPatch = {
     setup() {
         super.setup();

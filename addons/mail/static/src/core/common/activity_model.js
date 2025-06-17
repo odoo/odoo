@@ -52,7 +52,7 @@ export class Activity extends Record {
     icon = "fa-tasks";
     mail_template_ids = fields.Many("mail.template");
     note = fields.Html("");
-    persona = fields.One("res.partner");
+    partner_id = fields.One("res.partner");
     /** @type {string} */
     res_model;
     /** @type {[number, string]} */
@@ -73,7 +73,7 @@ export class Activity extends Record {
     write_uid;
 
     serialize() {
-        return JSON.parse(JSON.stringify(this.toData(["persona"])));
+        return JSON.parse(JSON.stringify(this.toData(["partner_id"])));
     }
 }
 

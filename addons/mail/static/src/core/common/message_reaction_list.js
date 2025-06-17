@@ -28,7 +28,7 @@ export class MessageReactionList extends Component {
     /** @param {import("models").MessageReactions} reaction */
     previewText(reaction) {
         const { count, content: emoji } = reaction;
-        const personNames = reaction.personas
+        const personNames = [...reaction.partners, ...reaction.guests]
             .slice(0, 3)
             .map((persona) => this.props.message.getPersonaName(persona));
         const shortcode =
@@ -77,7 +77,10 @@ export class MessageReactionList extends Component {
     }
 
     hasSelfReacted(reaction) {
-        return this.props.message.effectiveSelf.in(reaction.personas);
+        return (
+            this.store.self_partner?.in(reaction.partners) ||
+            this.store.self_guest?.in(reaction.guests)
+        );
     }
 
     onClickReaction(reaction) {

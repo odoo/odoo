@@ -102,7 +102,7 @@ export class ResPartner extends Record {
 
     get avatarUrl() {
         const accessTokenParam = {};
-        if (this.store.self.main_user_id?.share !== false) {
+        if (this.store.self_partner?.main_user_id?.share !== false) {
             accessTokenParam.access_token = this.avatar_128_access_token;
         }
         return imageUrl("res.partner", this.id, "avatar_128", {
@@ -113,7 +113,7 @@ export class ResPartner extends Record {
 
     searchChat() {
         return Object.values(this.store.Thread.records).find(
-            (thread) => thread.channel_type === "chat" && thread.correspondent?.persona.eq(this)
+            (thread) => thread.channel_type === "chat" && thread.correspondent?.partner_id?.eq(this)
         );
     }
 

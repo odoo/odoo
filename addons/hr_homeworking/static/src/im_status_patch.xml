@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ImStatus" t-inherit-mode="extension">
         <xpath expr="//*[@name='icon']" position="replace">
-            <t t-if="persona.im_status">
-                <t t-if="persona.im_status.split('_').length == 2">
-                    <t t-set="location" t-value="persona.im_status.split('_')[0]"/>
+            <t t-if="im_status">
+                <t t-if="im_status.split('_').length == 2">
+                    <t t-set="location" t-value="im_status.split('_')[0]"/>
                     <t t-if="location == 'home' || location == 'office' || location == 'other'">
-                        <t t-set="status" t-value="persona.im_status.split('_')[1]"/>
+                        <t t-set="status" t-value="im_status.split('_')[1]"/>
                         <t t-set="location_map" t-value="{'home': 'fa-home', 'office': 'fa-building', 'other': 'fa-map-marker'}"/>
                         <t t-set="status_map" t-value="{'online': 'text-success', 'away': 'o-yellow', 'busy': 'text-danger', 'offline': 'text-body'}"/>
                         <t t-set="icon" t-value="location_map[location]"/>
@@ -23,11 +23,11 @@
 
     <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
         <xpath expr="//*[@name='chat_static']" position="replace">
-            <t t-if="correspondent.persona.im_status">
-                <t t-if="correspondent.persona.im_status.split('_').length >= 2">
-                    <t t-set="location" t-value="correspondent.persona.im_status.split('_')[0]"/>
+            <t t-if="correspondent.im_status">
+                <t t-if="correspondent.im_status.split('_').length >= 2">
+                    <t t-set="location" t-value="correspondent.im_status.split('_')[0]"/>
                     <t t-if="location == 'home' || location == 'office' || location == 'other'">
-                        <t t-set="status" t-value="correspondent.persona.im_status.split('_')[1]"/>
+                        <t t-set="status" t-value="correspondent.im_status.split('_')[1]"/>
                         <t t-set="location_map" t-value="{'home': 'fa-home', 'office': 'fa-building', 'other': 'fa-map-marker'}"/>
                         <t t-set="status_map" t-value="{'online': 'text-success', 'away': 'o-yellow', 'busy': 'text-danger', 'offline': 'text-body'}"/>
                         <t t-set="icon" t-value="location_map[location]"/>

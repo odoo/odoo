@@ -82,7 +82,7 @@ export class MailActivity extends models.ServerModel {
                 data.display_name = data.summary;
             }
             const [user] = ResUsers.browse(activity.user_id);
-            data.persona = mailDataHelpers.Store.one(ResPartner.browse(user.partner_id));
+            data.partner_id = mailDataHelpers.Store.one(ResPartner.browse(user.partner_id));
             store._add_record_fields(this.browse(activity.id), data);
         }
     }

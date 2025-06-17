@@ -83,13 +83,13 @@ export class Activity extends Component {
     }
 
     onClickAvatar(ev) {
-        if (!this.props.activity.persona) {
+        if (!this.props.activity.partner_id) {
             return;
         }
         const target = ev.currentTarget;
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(target, {
-                id: this.props.activity.persona.main_user_id?.id,
+                id: this.props.activity.partner_id.main_user_id?.id,
             });
         }
     }

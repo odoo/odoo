@@ -89,7 +89,9 @@ export class QuickReactionMenu extends Component {
 
     toggleReaction(emoji) {
         const reaction = this.props.message.reactions.find(
-            (r) => r.content === emoji && this.props.message.effectiveSelf.in(r.personas)
+            (r) =>
+                r.content === emoji &&
+                (this.store.self_partner?.in(r.partners) || this.store.self_guest?.in(r.guests))
         );
         if (reaction) {
             reaction.remove();
@@ -112,7 +114,10 @@ export class QuickReactionMenu extends Component {
 
     reactedBySelf(emoji) {
         return this.props.message.reactions.some(
-            (r) => r.content === emoji && this.props.message.effectiveSelf.in(r.personas)
+            (r) =>
+                r.content === emoji &&
+                (this.store.self_partner?.in(r.partner_ids) ||
+                    this.store.self_guest?.in(r.guest_ids))
         );
     }
 

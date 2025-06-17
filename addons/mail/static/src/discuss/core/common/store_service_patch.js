@@ -61,7 +61,7 @@ const storeServicePatch = {
         return Object.values(this.Thread.records)
             .filter((thread) => thread.channel_type === "chat" && thread.correspondent)
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
-            .map((thread) => thread.correspondent.persona.id);
+            .map((thread) => thread.correspondent.partner_id.id);
     },
     /**
      * @param {import("models").ChannelMember} m1
@@ -72,13 +72,13 @@ const storeServicePatch = {
     },
     /** @param {number[]} partnerIds */
     async startChat(partnerIds) {
-        const partners_to = [...new Set([this.self.id, ...partnerIds])];
+        const partners_to = [...new Set([this.self_partner?.id, ...partnerIds])];
         if (partners_to.length === 1) {
             const chat = await this.joinChat(partners_to[0], true);
             chat.open({ focus: true, bypassCompact: true });
         } else if (partners_to.length === 2) {
             const correspondentId = partners_to.find(
-                (partnerId) => partnerId !== this.store.self.id
+                (partnerId) => partnerId !== this.store.self_partner?.id
             );
             const chat = await this.joinChat(correspondentId, true);
             chat.open({ focus: true, bypassCompact: true });

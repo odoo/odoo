@@ -22,7 +22,7 @@ const urlRegexp =
 /**
  * @param {string|ReturnType<markup>} rawBody
  * @param {Object} validMentions
- * @param {import("models").Persona[]} validMentions.partners
+ * @param {import("models").ResPartner[]} validMentions.partners
  */
 export async function prettifyMessageContent(
     rawBody,

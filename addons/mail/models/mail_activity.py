@@ -621,7 +621,7 @@ class MailActivity(models.Model):
             "summary",
             Store.Many("attachment_ids", ["name"]),
             Store.Many("mail_template_ids", ["name"]),
-            Store.One("persona", value=lambda activity: activity.user_id.partner_id),
+            Store.One("res.partner", value=lambda activity: activity.user_id.partner_id),
         ]
 
     @api.readonly

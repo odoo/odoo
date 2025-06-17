@@ -10,7 +10,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 /**
  * @typedef SuggestedRecipient
  * @property {string} email
- * @property {import("models").Persona|false} persona
+ * @property {import("models").ResPartner|false} partner_id
  * @property {string} lang
  * @property {string} reason
  */
@@ -315,7 +315,7 @@ export class Thread extends Record {
         return (
             !this.isTransient &&
             this.typesAllowingCalls.includes(this.channel_type) &&
-            !this.correspondent?.persona.eq(this.store.odoobot)
+            !this.correspondent?.partner_id?.eq(this.store.odoobot)
         );
     }
 
@@ -323,7 +323,7 @@ export class Thread extends Record {
      * Return the name of the given persona to display in the context of this
      * thread.
      *
-     * @param {import("models").Persona} persona
+     * @param {import("models").ResPartner|import("models").MailGuest} persona
      */
     getPersonaName(persona) {
         return persona.displayName;
@@ -791,7 +791,12 @@ export class Thread extends Record {
 
     addOrReplaceMessage(message, tmpMsg) {
         // The message from other personas (not self) should not replace the tmpMsg
-        if (tmpMsg && tmpMsg.in(this.messages) && this.effectiveSelf.eq(message.author)) {
+        if (
+            tmpMsg &&
+            tmpMsg.in(this.messages) &&
+            (message.author_id?.eq(this.store.self_partner) ||
+                message.author_guest_id?.eq(this.store.self_guest))
+        ) {
             this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
             return;
         }
@@ -897,7 +902,7 @@ export class Thread extends Record {
     async leaveChannel({ force = false } = {}) {
         if (
             this.channel_type !== "group" &&
-            this.create_uid?.eq(this.store.self.main_user_id) &&
+            this.create_uid?.eq(this.store.self_partner?.main_user_id) &&
             !force
         ) {
             await this.askLeaveConfirmation(

@@ -548,7 +548,7 @@ export class Composer extends Component {
             // Reset signature when recovering an empty body.
             composer.emailAddSignature = true;
         }
-        let signature = this.thread.effectiveSelf.main_user_id?.signature;
+        let signature = this.store.self_partner?.main_user_id?.signature;
         if (signature) {
             const divElement = document.createElement("div");
             divElement.setAttribute("data-o-mail-quote", "1");
@@ -563,7 +563,6 @@ export class Composer extends Component {
             default_body,
             this.props.composer.emailAddSignature ? signature : ""
         );
-        console.log(allRecipients);
         const context = {
             default_attachment_ids: attachmentIds,
             default_body,

@@ -130,13 +130,11 @@ export class Call extends Component {
         raisingHandCards.sort((c1, c2) => c1.session.raisingHand - c2.session.raisingHand);
         sessionCards.sort(
             (c1, c2) =>
-                c1.session.channel_member_id?.persona?.name?.localeCompare(
-                    c2.session.channel_member_id?.persona?.name
+                c1.session.channel_member_id?.name?.localeCompare(
+                    c2.session.channel_member_id?.name
                 ) ?? 1
         );
-        invitationCards.sort(
-            (c1, c2) => c1.member.persona?.name?.localeCompare(c2.member.persona?.name) ?? 1
-        );
+        invitationCards.sort((c1, c2) => c1.member.name?.localeCompare(c2.member?.name) ?? 1);
         return raisingHandCards.concat(sessionCards, invitationCards);
     }
 

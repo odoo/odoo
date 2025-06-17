@@ -19,8 +19,10 @@ export class MessageReactions extends Component {
         this.emojiPicker = useEmojiPicker(this.addRef, {
             onSelect: (emoji) => {
                 const reaction = this.props.message.reactions.find(
-                    ({ content, personas }) =>
-                        content === emoji && this.props.message.effectiveSelf.in(personas)
+                    ({ content, partner_ids, guest_ids }) =>
+                        content === emoji &&
+                        (partner_ids.find((partner) => partner.eq(this.store.self_partner)) ||
+                            guest_ids.find((guest) => guest.eq(this.store.self_guest)))
                 );
                 if (!reaction) {
                     this.props.message.react(emoji);

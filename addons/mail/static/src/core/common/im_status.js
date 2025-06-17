@@ -2,12 +2,12 @@ import { Component } from "@odoo/owl";
 import { Typing } from "@mail/discuss/typing/common/typing";
 
 export class ImStatus extends Component {
-    static props = ["persona?", "className?", "style?", "member?", "slots?", "size?"];
+    static props = ["partner?", "guest?", "className?", "style?", "member?", "slots?", "size?"];
     static template = "mail.ImStatus";
     static defaultProps = { className: "", style: "", size: "lg" };
     static components = { Typing };
 
-    get persona() {
-        return this.props.persona ?? this.props.member?.persona;
+    get im_status() {
+        return this.props.partner?.im_status || this.props.guest?.im_status || this.props.member?.im_status;
     }
 }

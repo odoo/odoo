@@ -2,9 +2,10 @@ import { Component } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
- * @prop {(persona: import("models").Persona) => string} [avatarClass]
+ * @prop {(persona: import("models").ResPartner|import("models").MailGuest) => string} [avatarClass]
  * Function used to determine extra classes for the avatars.
- * @prop {Array} personas List of personas to display in the stack.
+ * @prop {Array} partners List of partner to display in the stack.
+ * @prop {Array} guests List of guests to display in the stack.
  * @prop {"v"|"h"} [direction] Determine the direction of the
  * stack (vertical or horizontal).
  * @prop {number} [max] Maximum number of personas to display in the stack. An
@@ -20,7 +21,8 @@ export class AvatarStack extends Component {
         avatarClass: { type: Function, optional: true },
         max: { type: Number, optional: true },
         onClick: { type: Function, optional: true },
-        personas: Array,
+        partners: Array,
+        guests: Array,
         size: { type: Number, optional: true },
         slots: { optional: true },
     };
@@ -32,6 +34,10 @@ export class AvatarStack extends Component {
         direction: "h",
     };
 
+    get personas() {
+        return [...this.props.partners, ...this.props.guests];
+    }
+
     getStyle(index) {
         const styles = [
             "box-sizing: content-box",
@@ -39,7 +45,7 @@ export class AvatarStack extends Component {
             "margin: 1px",
             `padding: 1.5px`,
             `width: ${this.props.size}px`,
-            `z-index: ${this.props.personas.length - index}`,
+            `z-index: ${this.personas.length - index}`,
         ];
         if (index !== 0) {
             // Compute cumulative offset,
