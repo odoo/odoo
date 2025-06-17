@@ -294,6 +294,9 @@ export class Message extends Component {
         if (this.props.message.message_type === "auto_comment") {
             return _t("Automated message");
         }
+        if (this.props.message.message_type === "out_of_office") {
+            return _t("Out-of-office message");
+        }
         if (
             !this.props.message.isDiscussion &&
             this.props.message.message_type !== "user_notification"

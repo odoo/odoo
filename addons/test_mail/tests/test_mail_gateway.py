@@ -15,13 +15,13 @@ from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.mail.models.mail_thread import MailThread
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.data import test_mail_data
-from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, THAI_EMAIL_WINDOWS_874
+from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, MAIL_TEMPLATE_EXTRA_HTML, THAI_EMAIL_WINDOWS_874
 from odoo.addons.test_mail.models.mail_test_ticket import MailTestTicket
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway, MailTestGatewayGroups
 from odoo.sql_db import Cursor
 from odoo.tests import Form, tagged, RecordCapturer
 from odoo.tools import mute_logger
-from odoo.tools.mail import email_split_and_format, formataddr
+from odoo.tools.mail import email_normalize, email_split_and_format, formataddr
 
 
 @tagged('mail_gateway')
@@ -2545,6 +2545,101 @@ class TestMailGatewayReplies(MailGatewayCommon):
                             'model': gateway_record._name,
                             'res_id': gateway_record.id,
                         })
+
+    def test_routing_with_out_of_office(self):
+        """ Test email exchanges with out-of-office messages activated, to check
+        gateway support """
+        self.user_admin.notification_type = 'email'
+
+        with self.mock_datetime_and_now(datetime(2025, 6, 17, 14, 15, 59)):
+            self._setup_out_of_office(self.user_employee)
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            record = self.format_and_process(
+                MAIL_TEMPLATE, self.email_from,
+                self.alias.alias_full_name,
+                subject='Gateway Creation',
+            )
+        record.with_user(self.user_admin).write({
+            'user_id': self.user_employee,
+        })
+        self.assertEqual(len(self._new_msgs), 1)
+        initial_msg = self._new_msgs
+        self.assertFalse(initial_msg.author_id)
+        self.assertEqual(initial_msg.email_from, self.email_from)
+
+        # intenal user email reply
+        with self.mock_datetime_and_now(datetime(2025, 6, 17, 14, 16, 00)):
+            with self.mock_mail_gateway(), self.mock_mail_app():
+                self.format_and_process(
+                    MAIL_TEMPLATE_EXTRA_HTML, self.user_admin.email_formatted,
+                    self.alias.alias_full_name,
+                    extra=f'In-Reply-To:{initial_msg.message_id}\nReferences:{initial_msg.message_id}\n',
+                    extra_html='Admin reply',
+                    subject='Admin reply',
+                )
+        self.assertEqual(len(self._new_msgs), 2, 'Reply + OOO message')
+        ooo_message = self._new_msgs[1]
+        self.assertMailNotifications(
+            ooo_message,
+            [{
+                'content': "<p>Le numéro que vous avez composé n'est plus attribué.</p>",
+                'email_values': {
+                    'subject': 'Auto: Admin reply',
+                },
+                'message_type': 'out_of_office',
+                'message_values': {
+                    'author_id': self.partner_employee,
+                    'email_from': self.partner_employee.email_formatted,
+                    'model': record._name,
+                    'partner_ids': self.partner_admin,
+                    'notified_partner_ids': self.partner_admin,
+                    'res_id': record.id,
+                    'subject': 'Auto: Admin reply',
+                },
+                'notif': [
+                    {'partner': self.partner_admin, 'type': 'email'},
+                ],
+                'subtype': 'mail.mt_comment',
+            }],
+        )
+
+        # customer reply
+        with self.mock_datetime_and_now(datetime(2025, 6, 17, 14, 16, 00)):
+            with self.mock_mail_gateway(), self.mock_mail_app():
+                self.format_and_process(
+                    MAIL_TEMPLATE_EXTRA_HTML, self.email_from,
+                    self.alias.alias_full_name,
+                    extra=f'In-Reply-To:{initial_msg.message_id}\nReferences:{initial_msg.message_id}\n',
+                    extra_html='Customer reply',
+                    subject='Customer reply',
+                )
+        self.assertEqual(len(self._new_msgs), 2, 'Reply + OOO message')
+        ooo_message = self._new_msgs[1]
+        self.assertMailNotifications(
+            ooo_message,
+            [{
+                'content': "<p>Le numéro que vous avez composé n'est plus attribué.</p>",
+                'email_values': {
+                    'subject': 'Auto: Customer reply',
+                },
+                'message_type': 'out_of_office',
+                'message_values': {
+                    'author_id': self.partner_employee,
+                    'email_from': self.partner_employee.email_formatted,
+                    'model': record._name,
+                    'outgoing_email_to': self.email_from,
+                    'partner_ids': self.env['res.partner'],
+                    'notified_partner_ids': self.env['res.partner'],
+                    'res_id': record.id,
+                    'subject': 'Auto: Customer reply',
+                },
+                'notif': [
+                    {'email_to': [email_normalize(self.email_from)], 'type': 'email'},
+                ],
+                'subtype': 'mail.mt_comment',
+            }],
+        )
 
 
 @tagged('mail_gateway', 'mail_thread')
