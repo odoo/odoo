@@ -66,7 +66,8 @@ export class Builder extends Component {
         this.ui = useService("ui");
         this.notification = useService("notification");
 
-        const editorBus = new EventBus();
+        this.lastTrigerUpdateId = 0;
+        this.editorBus = new EventBus();
 
         const mainPlugins = removePlugins(
             [...MAIN_PLUGINS],
@@ -92,8 +93,8 @@ export class Builder extends Component {
                         this.state.canUndo = this.editor.shared.history.canUndo();
                         this.state.canRedo = this.editor.shared.history.canRedo();
                         this.updateInvisibleEls();
-                        editorBus.trigger("UPDATE_EDITING_ELEMENT");
-                        editorBus.trigger("DOM_UPDATED");
+                        this.editorBus.trigger("UPDATE_EDITING_ELEMENT");
+                        this.triggerDomUpdated();
                     }
                 },
                 reloadEditor: async (param = {}) => {
@@ -107,10 +108,10 @@ export class Builder extends Component {
                 },
                 resources: {
                     trigger_dom_updated: () => {
-                        editorBus.trigger("DOM_UPDATED");
+                        this.triggerDomUpdated();
                     },
                     on_mobile_preview_clicked: withSequence(20, () => {
-                        editorBus.trigger("DOM_UPDATED");
+                        this.triggerDomUpdated();
                     }),
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
@@ -151,7 +152,7 @@ export class Builder extends Component {
                 updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
                 allowCustomStyle: true,
                 allowTargetBlank: true,
-                getAnimateTextConfig: () => ({ editor: this.editor, editorBus }),
+                getAnimateTextConfig: () => ({ editor: this.editor, editorBus: this.editorBus }),
             },
             this.env.services
         );
@@ -182,7 +183,8 @@ export class Builder extends Component {
 
         useSubEnv({
             editor: this.editor,
-            editorBus,
+            editorBus: this.editorBus,
+            triggerDomUpdated: this.triggerDomUpdated.bind(this),
         });
         // onMounted(() => {
         //     // actionService.setActionMode("fullscreen");
@@ -212,6 +214,16 @@ export class Builder extends Component {
         });
         // Fallback tab when no option is active.
         this.noSelectionTab = "blocks";
+    }
+    async triggerDomUpdated() {
+        this.lastTrigerUpdateId++;
+        const currentTriggerId = this.lastTrigerUpdateId;
+        const getStatePromises = [];
+        const { promise: updatePromise, resolve } = Promise.withResolvers();
+        this.editorBus.trigger("DOM_UPDATED", { getStatePromises, updatePromise });
+        await Promise.all(getStatePromises);
+        const isLastTriggerId = this.lastTrigerUpdateId === currentTriggerId;
+        resolve(isLastTriggerId);
     }
 
     setCSSVariables() {
