@@ -52,7 +52,7 @@ class MailRenderMixin(models.AbstractModel):
     lang = fields.Char(
         'Language',
         help="Optional translation language (ISO code) to select when sending out an email. "
-             "If not set, the english version will be used. This should usually be a placeholder expression "
+             "If not set, the main partner's language will be used. This should usually be a placeholder expression "
              "that provides the appropriate language, e.g. {{ object.partner_id.lang }}.")
     # rendering context
     render_model = fields.Char("Rendering Model", compute='_compute_render_model', store=False)
@@ -622,8 +622,14 @@ class MailRenderMixin(models.AbstractModel):
         :rtype: dict
         """
         self.ensure_one()
-
-        rendered_langs = self._render_template(self.lang, self.render_model, res_ids, engine=engine)
+        if self.lang:
+            rendered_langs = self._render_template(
+                self.lang, self.render_model, res_ids, engine=engine)
+        else:
+            rendered_langs = dict.fromkeys(res_ids, "")
+            for record in self.env[self.render_model].browse(res_ids):
+                partner = record._mail_get_customer()
+                rendered_langs[record.id] = partner.lang
         return dict(
             (res_id, lang)
             for res_id, lang in rendered_langs.items()
