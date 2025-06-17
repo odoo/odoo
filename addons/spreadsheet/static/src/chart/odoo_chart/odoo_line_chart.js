@@ -77,6 +77,7 @@ function createOdooChartRuntime(chart, getters) {
         locale,
         trendDataSetsValues,
         topPadding: getTopPaddingForDashboard(definition, getters),
+        axisType: definition.axisType || "category",
     };
 
     const chartJsDatasets = getLineChartDatasets(definition, chartData);
