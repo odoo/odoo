@@ -19,6 +19,12 @@
                                  string="TDS"
                                  documentation="/applications/finance/fiscal_localizations/india.html">
                             <field name="l10n_in_tds_feature"/>
+                            <div class="content-group" invisible="not l10n_in_tds_feature">
+                                <div class="row mt8">
+                                    <label for="l10n_in_tan" class="col-lg-5 o_light_label" string="TAN"/>
+                                    <field name="l10n_in_tan" required="l10n_in_tds_feature"/>
+                                </div>
+                            </div>
                         </setting>
                         <setting name="l10n_in_tcs"
                                  help="Enable this to activate the Tax Collected at Source (TCS) feature and the account-based TCS section suggestion."

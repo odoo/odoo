@@ -14,3 +14,4 @@ from . import res_partner
 from . import uom_uom
 from . import account_account
 from . import l10n_in_section_alert
+from . import l10n_in_pan_entity

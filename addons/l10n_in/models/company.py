@@ -16,7 +16,7 @@ class ResCompany(models.Model):
             ("8", "8 Digits"),
         ],
         string="HSN Code Digit",
-        compute="_compute_l10n_in_hsn_code_digit_and_l10n_in_pan",
+        compute="_compute_l10n_in_hsn_code_digit",
         store=True,
         readonly=False,
     )
@@ -26,9 +26,9 @@ class ResCompany(models.Model):
         groups="base.group_system",
         default=True,
     )
-    l10n_in_pan = fields.Char(
+    l10n_in_pan_entity_id = fields.Many2one(
+        related="partner_id.l10n_in_pan_entity_id",
         string="PAN",
-        compute="_compute_l10n_in_hsn_code_digit_and_l10n_in_pan",
         store=True,
         readonly=False,
         help="PAN enables the department to link all transactions of the person with the department.\n"
@@ -36,7 +36,8 @@ class ResCompany(models.Model):
              "specified transactions, correspondence, and so on.\n"
              "Thus, PAN acts as an identifier for the person with the tax department.",
     )
-    l10n_in_pan_type = fields.Char(string="PAN Type", compute="_compute_l10n_in_pan_type")
+    l10n_in_pan_type = fields.Selection(related="l10n_in_pan_entity_id.type", string="PAN Type")
+    l10n_in_tan = fields.Char(related="partner_id.l10n_in_tan", string="TAN", readonly=False)
     l10n_in_gst_state_warning = fields.Char(related="partner_id.l10n_in_gst_state_warning")
 
     # TDS/TCS settings
@@ -122,32 +123,16 @@ class ResCompany(models.Model):
             taxes.write({'active': True})
 
     @api.depends('vat')
-    def _compute_l10n_in_hsn_code_digit_and_l10n_in_pan(self):
+    def _compute_l10n_in_hsn_code_digit(self):
         for record in self:
             if record.country_code == "IN" and record.vat:
                 record.l10n_in_hsn_code_digit = "4"
-                record.l10n_in_pan = gstin.to_pan(record.vat) if gstin.is_valid(record.vat) else False
             else:
                 record.l10n_in_hsn_code_digit = False
-                record.l10n_in_pan = False
-
-    @api.depends('l10n_in_pan')
-    def _compute_l10n_in_pan_type(self):
-        for record in self:
-            if pan.is_valid(record.l10n_in_pan):
-                record.l10n_in_pan_type = pan.info(record.l10n_in_pan)['holder_type']
-            else:
-                record.l10n_in_pan_type = False
 
     @api.onchange('vat')
     def onchange_vat(self):
         self.partner_id.onchange_vat()
-
-    @api.constrains('l10n_in_pan')
-    def _check_l10n_in_pan(self):
-        for record in self:
-            if record.l10n_in_pan and not pan.is_valid(record.l10n_in_pan):
-                raise ValidationError(_('The entered PAN seems invalid. Please enter a valid PAN.'))
 
     @api.model_create_multi
     def create(self, vals_list):
