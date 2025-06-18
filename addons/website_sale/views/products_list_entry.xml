@@ -54,13 +54,24 @@
                 >
 
                 <t t-if="context and 'shop'">
-                    <span
-                        role="img"
-                        t-attf-alt="{{product.name}} image"
-                        t-field="image_holder.image_1920"
+                    <t t-set="image_holder" t-value="product._get_image_holder()"/>
+                    <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
+                    <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+                    <t t-set="product_variant" t-value="request.env['product.product'].browse(product_variant_id) if product_variant_id else None"/>
+                    <t t-set="all_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
+                    <t t-set="primary_image" t-value="all_images[0] if all_images else image_holder"/>
+                    <t t-set="secondary_image" t-value="all_images[1] if len(all_images) > 1 else None"/>
+
+                    <!-- Primary image -->
+                    <span t-field="primary_image.image_1920"
                         t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'oe_product_image_img h-100 w-100 position-absolute'}"
-                        class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"
-                    />
+                        class="oe_product_image_img_wrapper o_product_image_primary d-flex h-100 justify-content-center align-items-center position-absolute"/>
+
+                    <!-- Secondary image (shown on hover) -->
+                    <span t-if="secondary_image"
+                        t-field="secondary_image.image_1920"
+                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'oe_product_image_img_secondary h-100 w-100 position-absolute'}"
+                        class="oe_product_image_img_wrapper oe_product_image_img_wrapper_hover o_product_image_secondary d-flex h-100 justify-content-center align-items-center position-absolute"/>
                 </t>
                 <t t-else="">
                     <span
