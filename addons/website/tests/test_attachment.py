@@ -37,11 +37,13 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
         req = self.url_open(base + '/web/image/test.an_image_redirect_301', allow_redirects=True)
         self.assertEqual(req.status_code, 200)
 
-    @unittest.skip
+    # TODO master-mysterious-egg fix error
+    @unittest.skip("prepare mysterious-egg for merging")
     def test_02_image_quality(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_image_quality', login="admin")
 
-    @unittest.skip
+    # TODO master-mysterious-egg fix error
+    @unittest.skip("prepare mysterious-egg for merging")
     def test_03_link_to_document(self):
         text = b'Lorem Ipsum'
         self.env['ir.attachment'].create({
