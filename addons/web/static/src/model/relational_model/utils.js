@@ -519,6 +519,9 @@ export function parseServerValue(field, value) {
                       if (property.value !== undefined) {
                           property.value = parseServerValue(property, property.value ?? false);
                       }
+                      if (property.default !== undefined) {
+                          property.default = parseServerValue(property, property.default ?? false);
+                      }
                       return property;
                   })
                 : [];

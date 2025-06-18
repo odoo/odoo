@@ -617,22 +617,23 @@ export class Record extends DataPoint {
                 : false;
         } else if (fieldType === "properties") {
             return value.map((property) => {
-                let value;
-                if (property.type === "many2one") {
-                    value = property.value;
-                } else if (
-                    (property.type === "date" || property.type === "datetime") &&
-                    typeof property.value === "string"
-                ) {
-                    // TO REMOVE: need refactoring PropertyField to use the same format as the server
-                    value = property.value;
-                } else if (property.value !== undefined) {
-                    value = this._formatServerValue(property.type, property.value);
+                property = { ...property };
+                for (const key of ["value", "default"]) {
+                    let value;
+                    if (property.type === "many2one") {
+                        value = property[key];
+                    } else if (
+                        (property.type === "date" || property.type === "datetime") &&
+                        typeof property[key] === "string"
+                    ) {
+                        // TO REMOVE: need refactoring PropertyField to use the same format as the server
+                        value = property[key];
+                    } else if (property[key] !== undefined) {
+                        value = this._formatServerValue(property.type, property[key]);
+                    }
+                    property[key] = value;
                 }
-                return {
-                    ...property,
-                    value,
-                };
+                return property;
             });
         }
         return value;
