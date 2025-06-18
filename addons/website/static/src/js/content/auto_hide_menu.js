@@ -15,9 +15,6 @@ export function setupIgnoreDOMMutations(fn) {
  * @param {Array} [options.images=[]] images to wait for before menu update.
  * @param {Array} [options.loadingStyleClasses=[]] list of CSS classes to add while
  * updating the menu.
- * @param {function} [options.autoClose] returns a value that represents the
- * "auto-close" behaviour of the dropdown (e.g. used to prevent auto-closing in
- * "edit" mode).
 */
 async function autoHideMenu(el, options) {
     if (!el) {
@@ -36,7 +33,6 @@ async function autoHideMenu(el, options) {
         unfoldable: 'none',
         images: [],
         loadingStyleClasses: [],
-        autoClose: () => true,
     }, options || {});
 
     const isUserNavbar = el.parentElement.classList.contains('o_main_navbar');
@@ -234,9 +230,6 @@ async function autoHideMenu(el, options) {
         extraItemsToggle.appendChild(extraItemsToggleLink);
         extraItemsToggle.appendChild(dropdownMenu);
         el.insertBefore(extraItemsToggle, target);
-        if (!options.autoClose()) {
-            extraItemsToggleLink.setAttribute("data-bs-auto-close", "outside");
-        }
         return dropdownMenu;
     }
 
@@ -300,11 +293,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             unfoldable: unfoldable,
             images: images,
             loadingStyleClasses: ['o_menu_loading'],
-            // The "auto-hide" menu is closed when clicking inside the extra
-            // menu items. The goal here is to prevent this default behaviour
-            // on "edit" mode to allow correct editing of extra menu items, mega
-            // menu content...
-            autoClose: () => !document.body.classList.contains("editor_enable"),
         });
     }
 });
+
+// The purpose of the observer is to detect if we are in edit mode. If we are in
+// edit mode, we prevent the "auto-hide" menu from closing when clicking inside,
+// in order to allow editing of its items.
+if (document.body) {
+    const observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === "attributes" && mutation.attributeName === "class") {
+                const extraItemsToggleLink = document.querySelector(
+                    "a.nav-link.dropdown-toggle.o-no-caret"
+                );
+                if (document.body.classList.contains("editor_enable")) {
+                    extraItemsToggleLink?.setAttribute("data-bs-auto-close", "outside");
+                } else {
+                    extraItemsToggleLink?.removeAttribute("data-bs-auto-close");
+                }
+            }
+        }
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+}
