@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <list editable="bottom">
                     <field name="name"/>
-                    <field name="user_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    <field name="user_ids" widget="many2many_tags" options="{'no_create': True}" domain="[['all_group_ids', 'in', %(im_livechat.im_livechat_group_user)d]]"/>
                 </list>
             </field>
         </record>
@@ -20,7 +20,7 @@
                     <sheet>
                         <group>
                             <field name="name"/>
-                            <field name="user_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="user_ids" widget="many2many_tags" options="{'no_create': True}" domain="[['all_group_ids', 'in', %(im_livechat.im_livechat_group_user)d]]"/>
                         </group>
                     </sheet>
                 </form>
