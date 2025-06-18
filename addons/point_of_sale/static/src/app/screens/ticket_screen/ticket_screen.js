@@ -276,6 +276,10 @@ export class TicketScreen extends Component {
         // used by L10N, e.g: add a refund reason using a specific L10N field
         return Promise.resolve();
     }
+    // Used to override inside `pos_blackbox_be` and `pos_urban_piper`
+    async _doneOrder(order) {
+        return;
+    }
     async onDoRefund() {
         const order = this.getSelectedOrder();
 
