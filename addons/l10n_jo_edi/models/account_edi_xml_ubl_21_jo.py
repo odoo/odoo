@@ -62,6 +62,20 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         # Round to 9 decimals
         AccountTax._round_base_lines_tax_details(base_lines, company=invoice.company_id)
 
+        # raw_total_* values need to calculated with `round_globally` because these values should not be rounded per line
+        # However, taxes need to be calculated with `round_per_line` so that _round_base_lines_tax_details does not
+        # end up generating lines taxes using unrounded base amounts
+        new_base_lines = [base_line.copy() for base_line in base_lines]
+        for base_line, new_base_line in zip(base_lines, new_base_lines):
+            AccountTax._add_tax_details_in_base_line(new_base_line, new_base_line['record'].company_id, 'round_globally')
+            for key in [
+                'raw_total_excluded_currency',
+                'raw_total_excluded',
+                'raw_total_included_currency',
+                'raw_total_included',
+            ]:
+                base_line['tax_details'][key] = new_base_line['tax_details'][key]
+
         vals['base_lines'] = base_lines
 
     # -------------------------------------------------------------------------
@@ -379,7 +393,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         # OVERRIDE account_edi_xml_ubl_20.py
         discount_factor = 1 - (base_line['discount'] / 100.0)
         if discount_factor != 0.0:
-            gross_subtotal_currency = base_line['tax_details']['total_excluded_currency'] / discount_factor
+            gross_subtotal_currency = base_line['tax_details']['raw_total_excluded_currency'] / discount_factor
         else:
             gross_subtotal_currency = base_line['currency_id'].round(base_line['price_unit'] * base_line['quantity'])
 
