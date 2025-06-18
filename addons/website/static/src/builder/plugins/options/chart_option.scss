@@ -5,13 +5,18 @@ table.o_builder_matrix {
     td, th {
         text-align: center;
 
-        &.o_builder_matrix_selected_cell input {
-            background-color: darken($primary, 10%);
-        }
-
         > :is(div, button) {
             width: 100% !important;
         }
+
+        > div:has(input[style*="border:"]) {
+            padding: 0;
+        
+            input {
+                padding-right: 3px;
+            }
+        }
+
 
         .btn {
             padding: unset;
@@ -19,6 +24,7 @@ table.o_builder_matrix {
 
         input {
             background-color: $o-we-sidebar-content-field-input-bg;
+            margin-right: 0 !important;
         }
 
         &:last-child {

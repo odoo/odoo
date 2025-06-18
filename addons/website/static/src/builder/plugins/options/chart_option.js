@@ -25,6 +25,21 @@ export class ChartOption extends BaseOptionComponent {
             data: this.getData(editingElement),
             isPieChart: this.isPieChart(editingElement),
         }));
+        this.setDefaultState();
+    }
+
+    setDefaultState() {
+        if (!this.state.currentCell.datasetIndex || !this.state.currentCell.dataIndex) {
+            this.state.currentCell.datasetIndex = 0;
+            this.state.currentCell.dataIndex = 0;
+        }
+        let backgroundLabel = _t("Dataset Color");
+        let borderLabel = _t("Dataset Border");
+        if (this.domState.isPieChart) {
+            backgroundLabel = _t("Data Color");
+            borderLabel = _t("Data Border");
+        }
+        this.state.currentCell = { ...this.state.currentCell, backgroundLabel, borderLabel };
     }
 
     getData(editingElement) {
@@ -57,7 +72,13 @@ export class ChartOption extends BaseOptionComponent {
             // Pie charts set color on a data cell basis, whereas the
             // other ones set it on a dataset basis. Just reset the
             // current cell to avoid bugs.
-            this.state.currentCell = {};
+            let backgroundLabel = _t("Dataset Color");
+            let borderLabel = _t("Dataset Border");
+            if (isPieChart) {
+                backgroundLabel = _t("Data Color");
+                borderLabel = _t("Data Border");
+            }
+            this.state.currentCell = { ...this.state.currentCell, backgroundLabel, borderLabel };
         }
         return isPieChart;
     }
@@ -86,45 +107,95 @@ export class ChartOption extends BaseOptionComponent {
     }
     /**
      * Store in the state the coords of the cell that is currently focused.
-     * (Used to display the corresponding colorpickers.)
      *
      * @param {Event} ev
      */
     onTableFocusin(ev) {
         this.onTableMouseover(ev);
-        ev.currentTarget
-            .querySelector(".o_builder_matrix_selected_cell")
-            ?.classList.remove("o_builder_matrix_selected_cell");
-        const cellEl = ev.target.closest("td, th");
-        const cellSectionEl = cellEl.parentElement.parentElement;
-        const datasetIndex = [...cellEl.parentElement.children].indexOf(cellEl) - 1;
-        if (datasetIndex === -1 || datasetIndex === cellEl.parentElement.children.length - 2) {
-            // Dataset label cell or remove row button: no color to show.
-            this.state.currentCell = {};
+        this.handleCellFocus(ev);
+    }
+
+    /**
+     * (Used to display the corresponding colorpickers.)
+     *
+     * @param {Event} ev
+     */
+    handleCellFocus(ev) {
+        const { cellEl, cellSectionEl, datasetIndex, dataIndex } = this.getCellInfo(ev);
+        if (
+            dataIndex === cellSectionEl.children.length - 1 ||
+            datasetIndex === -1 ||
+            datasetIndex === cellEl.parentElement.children.length - 2 ||
+            cellSectionEl.tagName === "THEAD"
+        ) {
+            this.state.currentCell = {
+                ...this.state.currentCell,
+                datasetIndex: null,
+                dataIndex: null,
+            };
             return;
         }
-        let dataIndex;
-        if (cellSectionEl.tagName === "TBODY") {
-            dataIndex = [...cellSectionEl.children].indexOf(cellEl.parentElement);
-            if (dataIndex === cellSectionEl.children.length - 1) {
-                // Remove column button: no color to show.
-                this.state.currentCell = {};
-                return;
+
+        this.state.currentCell = { ...this.state.currentCell, datasetIndex, dataIndex };
+    }
+
+    getCellInfo(ev) {
+        const cellEl = ev.target.closest("td, th");
+        if (cellEl) {
+            const cellSectionEl = cellEl.parentElement.parentElement;
+            const datasetIndex = [...cellEl.parentElement.children].indexOf(cellEl) - 1;
+            let dataIndex;
+            if (cellSectionEl.tagName === "TBODY") {
+                dataIndex = [...cellSectionEl.children].indexOf(cellEl.parentElement);
             }
+            return { cellEl, cellSectionEl, datasetIndex, dataIndex };
+        }
+        return {};
+    }
+
+    onTableClick(ev) {
+        const { cellEl, cellSectionEl, datasetIndex, dataIndex } = this.getCellInfo(ev);
+
+        if (!cellEl) {
+            return;
         }
 
-        let backgroundLabel = _t("Dataset Color");
-        let borderLabel = _t("Dataset Border");
-        if (this.domState.isPieChart) {
-            backgroundLabel = _t("Data Color");
-            borderLabel = _t("Data Border");
-            if (cellSectionEl.tagName === "THEAD") {
-                this.state.currentCell = {};
-                return;
+        if (dataIndex === cellSectionEl.children.length - 1) {
+            // if we create a new row
+            if (datasetIndex === -1) {
+                this.state.currentCell = {
+                    ...this.state.currentCell,
+                    dataIndex,
+                    datasetIndex: 0,
+                };
+            } else if (datasetIndex === this.state.currentCell.datasetIndex) {
+                // if we delete a row
+                this.setDefaultState();
             }
+            return;
         }
-        cellEl.classList.add("o_builder_matrix_selected_cell");
-        this.state.currentCell = { datasetIndex, dataIndex, backgroundLabel, borderLabel };
+        if (datasetIndex === -1 || datasetIndex === cellEl.parentElement.children.length - 2) {
+            // if we create a new column
+            if (dataIndex === undefined) {
+                this.state.currentCell = {
+                    ...this.state.currentCell,
+                    datasetIndex,
+                    dataIndex: 0,
+                };
+            } else if (dataIndex === this.state.currentCell.dataIndex) {
+                // if we delete a column
+                this.setDefaultState();
+            }
+            return;
+        }
+        if (cellSectionEl.tagName === "THEAD") {
+            this.state.currentCell = {
+                ...this.state.currentCell,
+                datasetIndex: null,
+                dataIndex: null,
+            };
+            return;
+        }
     }
 
     onTableMouseoutOrFocusout(ev) {
