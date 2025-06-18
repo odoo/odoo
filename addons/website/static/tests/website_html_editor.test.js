@@ -25,7 +25,7 @@ test("autocomplete should shown and able to edit the link", async () => {
                     values: [
                         {
                             value: "/contactus",
-                            icon: "/website_crm/static/description/icon.png",
+                            icon: "/website/static/description/icon.png",
                             label: "/contactus (Contact Us)",
                         },
                     ],
@@ -48,10 +48,25 @@ test("autocomplete should shown and able to edit the link", async () => {
     await waitFor(".o-autocomplete--dropdown-menu", { timeout: 3000 });
     expect.verifySteps(["/website/get_suggested_links"]);
 
+    expect(".ui-autocomplete-category").toHaveCount(1);
+    expect(".o-autocomplete--dropdown-item img").toHaveCount(1);
+
     await click(".o-autocomplete--dropdown-item:first");
     await click(".o_we_apply_link");
     // the url should be applied after selecting a dropdown item
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         '<p>this is a <a href="/contactus">li[]nk</a></p>'
     );
+
+    await waitFor(".o_we_edit_link");
+    await click(".o_we_edit_link");
+    await animationFrame();
+    await contains(".o-autocomplete--input").focus();
+
+    await press(["ctrl", "a"]);
+    await press("#");
+    await waitFor(".o-autocomplete--dropdown-menu", { timeout: 3000 });
+    // check the default page anchors are in the autocomplete dropdown
+    expect(".o-autocomplete--dropdown-item:first").toHaveText("#top");
+    expect(".o-autocomplete--dropdown-item:last").toHaveText("#bottom");
 });
