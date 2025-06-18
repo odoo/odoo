@@ -1,5 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import {
+    Deferred,
+    animationFrame,
     hover,
     isInViewPort,
     isScrollable,
@@ -11,8 +13,8 @@ import {
     queryFirst,
     queryOne,
     queryRect,
+    runAllTimers,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -732,13 +734,13 @@ test("tab and shift+tab close the dropdown", async () => {
     expect(dropdown).toBeVisible();
     await press("Tab");
     await animationFrame();
-    expect(dropdown).not.toBeVisible();
+    expect(dropdown).not.toHaveCount();
     // Shift + Tab
     await contains(input).click();
     expect(dropdown).toBeVisible();
     await press("Tab", { shiftKey: true });
     await animationFrame();
-    expect(dropdown).not.toBeVisible();
+    expect(dropdown).not.toHaveCount();
 });
 
 test("autocomplete scrolls when moving with arrows", async () => {

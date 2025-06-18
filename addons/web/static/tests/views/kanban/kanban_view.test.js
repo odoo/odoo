@@ -13866,7 +13866,7 @@ test("hide pager in the kanban view with sample data", async () => {
     });
 
     expect(".o_content").toHaveClass("o_view_sample_data");
-    expect(".o_cp_pager").not.toBeVisible();
+    expect(".o_cp_pager").not.toHaveCount();
 });
 
 test.tags("desktop");
