@@ -58,6 +58,8 @@ export class TranslationPlugin extends Plugin {
         get_dirty_els: this.getDirtyTranslations.bind(this),
         after_setup_editor_handlers: () => {
             if (this.config.isTranslation) {
+                this.setupServicesIfNotSet();
+                this.prepareTranslation();
                 const translationSavableEls = getTranslationEditableEls(
                     this.services.website.pageDocument
                 );
@@ -66,8 +68,6 @@ export class TranslationPlugin extends Plugin {
                         translationSavableEl.classList.add("o_editable");
                     }
                 }
-                this.setupServicesIfNotSet();
-                this.prepareTranslation();
                 return true;
             }
         },

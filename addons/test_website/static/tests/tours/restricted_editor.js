@@ -3,6 +3,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnExtraMenuItem,
     registerWebsitePreviewTour,
+    insertSnippet
 } from '@website/js/tours/tour_utils';
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -99,21 +100,16 @@ registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     // Model item
     ...goToMenuItem,
     checkNoTranslate,
+    {
+        content: "wait for the page to load",
+        trigger: ".o_website_preview :iframe [data-view-xmlid='test_website.model_item']"
+    },
     ...clickOnEditAndWaitEditMode(),
     {
         content: "Check icons can be dragged",
         trigger: "#snippet_groups .o_snippet[name='Intro']:not(.o_disabled)",
     },
-    {
-        content: "Drag the Intro snippet group",
-        trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
-        run: "drag_and_drop :iframe [data-oe-expression='record.website_description']",
-    },
-    {
-        content: "Click on the s_banner snippet in the dialog",
-        trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_banner"]',
-        run: "click",
-    },
+    ...insertSnippet({ id: "s_banner", name: "Banner", groupName: "Intro" }),
     {
         content: "Change name",
         trigger: ":iframe [data-oe-expression='record.name']",
