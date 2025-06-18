@@ -43,7 +43,7 @@ import {
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
 import { destroy, makeFixtureManager } from "./fixture";
-import { LOG_LEVELS, logger } from "./logger";
+import { logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag, getTagSimilarities, getTags } from "./tag";
 import { Test, testError } from "./test";
@@ -1130,11 +1130,12 @@ export class Runner {
             const errorMessage = ["Some tests failed: see above for details"];
             if (this.config.headless) {
                 const ids = this.simplifyUrlIds({ test: this.state.failedIds });
-                const link = createUrlFromId(ids, { debug: false });
+                const link = createUrlFromId(ids, { debug: true });
                 // Tweak parameters to make debugging easier
                 link.searchParams.set("debug", "assets");
-                link.searchParams.set("loglevel", LOG_LEVELS.tests);
                 link.searchParams.delete("headless");
+                link.searchParams.delete("loglevel");
+                link.searchParams.delete("timeout");
                 errorMessage.push(`Failed tests link: ${link.toString()}`);
             }
             // Use console.dir for this log to appear on runbot sub-builds page
@@ -1441,6 +1442,7 @@ export class Runner {
     _include(values, ids, includeLevel, noIncrement = false) {
         const isRemovable = $abs(includeLevel) === INCLUDE_LEVEL.url;
         const shouldInclude = !!includeLevel;
+        let applied = 0;
         for (const id of ids) {
             let nId = normalize(id.toLowerCase());
             if (nId.startsWith(EXCLUDE_PREFIX)) {
@@ -1451,6 +1453,9 @@ export class Runner {
             }
             const previousValue = values[nId] || 0;
             const wasRemovable = $abs(previousValue) === INCLUDE_LEVEL.url;
+            if (wasRemovable) {
+                applied++;
+            }
             if (shouldInclude) {
                 if (previousValue === includeLevel) {
                     continue;
@@ -1482,6 +1487,7 @@ export class Runner {
                 }
             }
         }
+        return applied;
     }
 
     /**
@@ -1852,6 +1858,8 @@ export class Runner {
      */
     _simplifyIncludeSpecs(includeSpecs, valuesMaps) {
         let hasChanged = false;
+        const ignored = [];
+        const removed = [];
         for (const [configKey, valuesMap] of $entries(valuesMaps)) {
             const specs = includeSpecs[configKey];
             let remaining = $keys(specs);
@@ -1862,7 +1870,13 @@ export class Runner {
                 }
                 const item = valuesMap.get(id);
                 if (!item) {
-                    this._include(specs, [id], 0, true);
+                    const applied = this._include(specs, [id], 0, true);
+                    if (applied) {
+                        removed.push(`\n- ${configKey} "${id}"`);
+                    } else {
+                        ignored.push(`\n- ${configKey} "${id}"`);
+                    }
+                    hasChanged = true;
                 }
                 if (!item?.parent || item.parent.jobs.length < 1) {
                     // No parent or no need to simplify
@@ -1880,6 +1894,15 @@ export class Runner {
                     hasChanged = true;
                 }
             }
+        }
+        if (removed.length) {
+            logger.warn(
+                `The following IDs were not found and and have been removed from URL filters:`,
+                ...removed
+            );
+        }
+        if (ignored.length) {
+            logger.warn(`The following IDs were not found and and have been ignored:`, ...ignored);
         }
         return hasChanged;
     }
