@@ -180,14 +180,14 @@ class IrActionsReport(models.Model):
         :return: value that need to be shown in the final pdf.
         :rtype: str
         """
-        existing_mapping = json.loads(order.customizable_pdf_form_fields)
+        existing_mapping = json.loads(order.customizable_pdf_form_fields or '{}')
         if order_line:
             base_values = existing_mapping.get('line', {}).get(str(order_line.id), {})
         elif document.document_type == 'header':
             base_values = existing_mapping.get('header', {})
         else:
             base_values = existing_mapping.get('footer', {})
-        custom_form_fields = base_values.get(str(document.id), {}).get('custom_form_fields')
+        custom_form_fields = base_values.get(str(document.id), {}).get('custom_form_fields', {})
         return custom_form_fields.get(form_field_name, "")
 
     @api.model
