@@ -3248,7 +3248,10 @@
             </t>
 
             <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
-            <div t-if="tx_sudo.state in ['pending', 'done']" class="d-flex justify-content-between align-items-center">
+            <div
+                t-if="tx_sudo.state in ['pending', 'done'] or not order.amount_total"
+                class="d-flex justify-content-between align-items-center"
+            >
                 <h3>Thank you for your order.</h3>
                 <a
                     title="Print"
@@ -3274,7 +3277,7 @@
                 </p>
             </t>
             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_confirmation_1"/>
-            <t t-call="website_sale.payment_confirmation_status"/>
+            <t t-if="tx_sudo" t-call="website_sale.payment_confirmation_status"/>
             <div class="mt-3">
                 <t t-call="website_sale.address_on_checkout"/>
             </div>
