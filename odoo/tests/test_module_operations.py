@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import contextlib
 import logging.config
 import os
 import sys
@@ -9,7 +10,7 @@ import time
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
 
 from odoo import api
-from odoo.tools import config, topological_sort, unique
+from odoo.tools import config, topological_sort, unique, profiler
 from odoo.modules.registry import Registry
 from odoo.netsvc import init_logger
 from odoo.tests import standalone_tests
@@ -227,8 +228,16 @@ if __name__ == '__main__':
         }
     })
 
+    prof = contextlib.nullcontext()
+    if os.environ.get('ODOO_PROFILE_PRELOAD'):
+        interval = float(os.environ.get('ODOO_PROFILE_PRELOAD_INTERVAL', '0.1'))
+        collectors = [profiler.PeriodicCollector(interval=interval)]
+        if os.environ.get('ODOO_PROFILE_PRELOAD_SQL'):
+            collectors.append('sql')
+        prof = profiler.Profiler(db=args.database, collectors=collectors)
     try:
-        args.func(args)
+        with prof:
+            args.func(args)
     except Exception:
         _logger.error("%s tests failed", args.func.__name__[5:])
         raise
