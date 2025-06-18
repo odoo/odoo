@@ -483,26 +483,6 @@ class MailThread(models.AbstractModel):
         doc_name = self.env['ir.model']._get(self._name).name
         return _('%s created', doc_name)
 
-    @api.model
-    def _get_mail_message_access(self, res_ids, operation, model_name=None):
-        """ mail.message check permission rules for related document. This method is
-            meant to be inherited in order to implement addons-specific behavior.
-            A common behavior would be to allow creating messages when having read
-            access rule on the document, for portal document such as issues. """
-
-        DocModel = self.env[model_name] if model_name else self
-        create_allow = getattr(DocModel, '_mail_post_access', 'write')
-
-        if operation in ['write', 'unlink']:
-            check_operation = 'write'
-        elif operation == 'create' and create_allow in ['create', 'read', 'write', 'unlink']:
-            check_operation = create_allow
-        elif operation == 'create':
-            check_operation = 'write'
-        else:
-            check_operation = operation
-        return check_operation
-
     def _valid_field_parameter(self, field, name):
         # allow tracking on models inheriting from 'mail.thread'
         return name == 'tracking' or super()._valid_field_parameter(field, name)

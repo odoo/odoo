@@ -511,15 +511,14 @@ class MailMessage(models.Model):
 
         for model, docid_msgids in model_docid_msgids.items():
             documents = self.env[model].browse(docid_msgids)
-            if hasattr(documents, '_get_mail_message_access'):
-                doc_operation = documents._get_mail_message_access(docid_msgids, operation)  # why not giving model here?
-            else:
-                doc_operation = self.env['mail.thread']._get_mail_message_access(docid_msgids, operation, model_name=model)
-            doc_result = documents._check_access(doc_operation)
-            forbidden_doc_ids = set(doc_result[0]._ids) if doc_result else set()
-            for doc_id, msg_ids in docid_msgids.items():
-                if doc_id not in forbidden_doc_ids:
-                    for mid in msg_ids:
+            # group documents per operation to check, based on mail.message access
+            # note that some ids may be filtered out if (e.g. group limitation, ...)
+            operation_res_ids = documents._mail_group_by_operation_for_mail_message_operation(operation)
+            for record_operation, records in operation_res_ids.items():
+                check_result = records._check_access(record_operation)
+                forbidden_doc_ids = set(check_result[0]._ids) if check_result else set()
+                for res_id in (r.id for r in records if r.id not in forbidden_doc_ids):
+                    for mid in docid_msgids[res_id]:
                         messages_to_check.pop(mid)
 
         if not messages_to_check:
@@ -600,8 +599,9 @@ class MailMessage(models.Model):
                 return message
 
         if message.model and message.res_id:
-            thread_mode = self.env[message.model]._get_mail_message_access([message.res_id], mode)
-            if self.env[message.model]._get_thread_with_access(message.res_id, mode=thread_mode, **kwargs):
+            thread_su = self.env[message.model].browse(message.res_id).sudo()
+            access_mode = thread_su._mail_get_operation_for_mail_message_operation(mode)[thread_su]
+            if access_mode and self.env[message.model]._get_thread_with_access(message.res_id, mode=access_mode, **kwargs):
                 return message
 
         return self.browse()
