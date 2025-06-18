@@ -74,7 +74,7 @@ export class LinkPopover extends Component {
         );
         this.state = useState({
             editing: this.props.LinkPopoverState.editing,
-            url: this.props.linkElement.href || "",
+            url: this.props.linkElement.href || this.deduceUrl(textContent),
             label: labelEqualsUrl ? "" : textContent,
             previewIcon: {
                 /** @type {'fa'|'imgSrc'|'mimetype'} */
