@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_livechat.channelInfoList" t-inherit="im_livechat.channelInfoList" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-livechat-channelInfoList-outcome')]" position="after">
+            <t t-set="visitor" t-value="props.thread.livechat_visitor_id"/>
+            <div t-if="visitor and visitor.history" class="d-flex flex-column bg-inherit gap-1">
+                <h3 class="pt-3">Recent page views</h3>
+                <div class="mt-1">
+                    <i class="me-1 fa fa-history" aria-label="History"/>
+                    <span t-esc="visitor.history"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

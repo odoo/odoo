@@ -12,5 +12,6 @@ export class ChatbotScriptStep extends Record {
     step_type;
     isLast = false;
     answer_ids = fields.Many("chatbot.script.answer");
+    operator_expertise_ids = fields.Many("im_livechat.expertise");
 }
 ChatbotScriptStep.register();

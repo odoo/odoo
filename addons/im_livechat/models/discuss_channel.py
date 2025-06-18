@@ -20,6 +20,15 @@ class DiscussChannel(models.Model):
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
     livechat_lang_id = fields.Many2one("res.lang", string="Language", help="Lang of the visitor of the channel.")
+    livechat_status = fields.Selection(
+        selection=[
+            ("in_progress", "In progress"),
+            ("waiting", "Waiting for customer"),
+            ("need_help", "Looking for help"),
+        ],
+        default="in_progress",
+        groups="im_livechat.im_livechat_group_user",
+    )
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor or operator leaves the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator', index='btree_not_null')
@@ -90,6 +99,7 @@ class DiscussChannel(models.Model):
         string="Live Chat Session Failure",
     )
     livechat_is_escalated = fields.Boolean("Is session escalated", compute="_compute_livechat_is_escalated", store=True)
+    note = fields.Text("Note", help="Note about the livechat channel.")
     rating_last_text = fields.Selection(store=True)
 
     _livechat_operator_id = models.Constraint(
@@ -249,6 +259,12 @@ class DiscussChannel(models.Model):
         ]
         if self.env.user._is_internal():
             fields.append(Store.One("livechat_channel_id", ["name"], sudo=True))
+        if self.env.user.has_group("im_livechat.im_livechat_group_user"):
+            fields.append("livechat_failure")
+            fields.append("livechat_is_escalated")
+            fields.append("livechat_status")
+            fields.append("note")
+            fields.append(Store.Many("livechat_expertise_ids", ["name"]))
         return super()._to_store_defaults(for_current_user=for_current_user) + fields
 
     def _to_store(self, store: Store, fields):
@@ -480,6 +496,13 @@ class DiscussChannel(models.Model):
             )
         ):
             self.livechat_failure = "no_failure"
+        # sudo: discuss.channel - visitor can read access livechat status and write it when sending a message
+        if (
+            self.sudo().livechat_status == "waiting"
+            and message.author_id != self.livechat_operator_id
+        ):
+            self.sudo().livechat_status = "in_progress"
+            self._bus_send_store(self, "livechat_status")
 
         return super()._message_post_after_hook(message, msg_vals)
 
