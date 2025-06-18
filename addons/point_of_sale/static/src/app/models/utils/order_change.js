@@ -1,3 +1,19 @@
+export const getStrNotes = (note) => {
+    if (!note || typeof note !== "string") {
+        return "";
+    }
+
+    try {
+        const parsedNotes = JSON.parse(note);
+        if (Array.isArray(parsedNotes)) {
+            return parsedNotes.map((n) => n.text).join(", ");
+        }
+    } catch {
+        // If parsing fails, fallback to the original note
+    }
+    return note;
+};
+
 export const changesToOrder = (order, orderPreparationCategories, cancelled = false) => {
     const toAdd = [];
     const toRemove = [];
@@ -7,7 +23,8 @@ export const changesToOrder = (order, orderPreparationCategories, cancelled = fa
         ? Object.values(orderChanges.orderlines)
         : Object.values(order.last_order_preparation_change.lines);
 
-    for (const lineChange of linesChanges) {
+    for (let lineChange of linesChanges) {
+        lineChange = { ...lineChange, note: getStrNotes(lineChange.note) };
         if (lineChange["quantity"] > 0 && !cancelled) {
             toAdd.push(lineChange);
         } else {
@@ -68,7 +85,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 product_id: product.id,
                 attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
                 quantity: quantityDiff,
-                note: note,
+                note: getStrNotes(note),
                 pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
                 display_name: product.display_name,
@@ -118,7 +135,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                     basic_name: lineResume["basic_name"],
                     display_name: lineResume["display_name"],
                     isCombo: lineResume["isCombo"],
-                    note: lineResume["note"],
+                    note: getStrNotes(lineResume["note"]),
                     attribute_value_names: lineResume["attribute_value_names"],
                     group: lineResume["group"],
                     quantity: -quantity,
