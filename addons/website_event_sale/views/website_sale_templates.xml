@@ -20,7 +20,7 @@
     </template>
 
     <!-- If the sale order line concerns an event, we want to show an additional line with the event name even on small screens -->
-    <template id="cart_lines_inherit_website_event_sale" inherit_id="website_sale.cart_lines" name="Event Shopping Cart Lines">
+    <template id="cart_lines_inherit_website_event_sale" inherit_id="website_sale.cart_lines_price" name="Event Shopping Cart Lines">
         <xpath expr="//del" position="attributes">
             <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'd-none' or ''}"/>
         </xpath>
