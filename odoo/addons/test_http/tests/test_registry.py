@@ -31,14 +31,14 @@ The other "what could go wrong" I can think about:
 def duplicate_db(db_source, db_dest):
     query = SQL("CREATE DATABASE %s ENCODING 'unicode' TEMPLATE %s", SQL.identifier(db_dest), SQL.identifier(db_source))
     with closing(db_connect('postgres').cursor()) as cr:
-        cr._cnx.autocommit = True
+        cr._cnx__.autocommit = True
         cr.execute(query)
 
 
 def drop_db(db):
     query = SQL("DROP DATABASE IF EXISTS %s", SQL.identifier(db))
     with closing(db_connect('postgres').cursor()) as cr:
-        cr._cnx.autocommit = True
+        cr._cnx__.autocommit = True
         cr.execute(query)
 
 
