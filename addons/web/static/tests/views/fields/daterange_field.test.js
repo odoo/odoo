@@ -812,20 +812,8 @@ test("list daterange with start date and empty end date", async () => {
             </list>`,
     });
 
-    const arrowIcon = queryFirst(".fa-long-arrow-right");
-    const textSiblings = [...arrowIcon.parentNode.childNodes]
-        .map((node) => {
-            if (node === arrowIcon) {
-                return "->";
-            } else if (node.nodeType === Node.TEXT_NODE) {
-                return node.nodeValue.trim();
-            } else {
-                return node.innerText?.trim();
-            }
-        })
-        .filter(Boolean);
-
-    expect(textSiblings).toEqual(["02/03/2017", "->"]);
+    expect(".o_field_daterange").toHaveText("02/03/2017");
+    expect(".o_field_daterange .fa-long-arrow-right").toHaveCount(0);
 });
 
 test("list daterange with empty start date and end date", async () => {
@@ -842,20 +830,8 @@ test("list daterange with empty start date and end date", async () => {
             </list>`,
     });
 
-    const arrowIcon = queryFirst(".fa-long-arrow-right");
-    const textSiblings = [...arrowIcon.parentNode.childNodes]
-        .map((node) => {
-            if (node === arrowIcon) {
-                return "->";
-            } else if (node.nodeType === Node.TEXT_NODE) {
-                return node.nodeValue.trim();
-            } else {
-                return node.innerText?.trim();
-            }
-        })
-        .filter(Boolean);
-
-    expect(textSiblings).toEqual(["->", "02/03/2017"]);
+    expect(".o_field_daterange").toHaveText("02/03/2017");
+    expect(".o_field_daterange .fa-long-arrow-right").toHaveCount(0);
 });
 
 test("list daterange: column widths", async () => {
