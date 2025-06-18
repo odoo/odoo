@@ -134,7 +134,7 @@ class TestMailMessageAccess(MessageAccessCommon):
     # - Criterions
     #  - "private message" (no model, no res_id) -> deprecated
     #  - follower of document
-    #  - document-based (write or create, using '_get_mail_message_access'
+    #  - document-based (write or create, using '_mail_get_operation_for_mail_message_operation'
     #    hence '_mail_post_access' by default)
     #  - notified of parent message
     # ------------------------------------------------------------
@@ -204,14 +204,14 @@ class TestMailMessageAccess(MessageAccessCommon):
                         )
 
     def test_access_create_customized(self):
-        """ Test '_get_mail_message_access' support """
+        """ Test '_mail_get_operation_for_mail_message_operation' support """
         record = self.env['mail.test.access.custo'].with_user(self.user_employee).create({'name': 'Open'})
         for user in self.user_employee + self.user_portal:
             _message = record.message_post(
                 body='A message',
                 subtype_id=self.env.ref('mail.mt_comment').id,
             )
-        # lock -> see '_get_mail_message_access'
+        # lock -> see '_mail_get_operation_for_mail_message_operation'
         record.write({'is_locked': True})
         for user in self.user_employee + self.user_portal:
             with self.assertRaises(AccessError):
@@ -378,7 +378,7 @@ class TestMailMessageAccess(MessageAccessCommon):
     #  - author
     #  - creator (might post on behalf of someone else)
     #  - recipients / notified
-    #  - document-based: read, using '_get_mail_message_access'
+    #  - document-based: read, using '_mail_get_operation_for_mail_message_operation'
     # - share users: limited to 'not internal' (flag or subtype)
     # ------------------------------------------------------------
 
@@ -426,6 +426,26 @@ class TestMailMessageAccess(MessageAccessCommon):
                     msg.with_user(self.user_employee).read(['body'])
                 if msg_vals:
                     msg.write(original_vals)
+
+    def test_access_read_customized(self):
+        """ Test '_mail_get_operation_for_mail_message_operation' support """
+        records = self.env['mail.test.access.custo'].with_user(self.user_admin).create([
+            {'name': 'Open'},
+            {'is_locked': True, 'name': 'Locked'},
+        ])
+        messages_all = self.env['mail.message']
+        for record in records:
+            messages_all += record.with_user(self.user_admin).message_post(
+                body=f'AnchorForTest / A message from {self.user_admin.name}',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+        # lock -> see '_mail_get_operation_for_mail_message_operation', cannot read locked message
+        # without write access, with is not granted for employees
+        with self.assertRaises(AccessError):  # write access not granted on locked
+            messages_all.with_user(self.user_employee).read(['subject'])
+        messages_all[0].with_user(self.user_employee).read(['subject'])
+        with self.assertRaises(AccessError):  # no write access at all
+            messages_all.with_user(self.user_portal).read(['subject'])
 
     def test_access_read_portal(self):
         """ Read access check for portal users """
@@ -513,7 +533,7 @@ class TestMailMessageAccess(MessageAccessCommon):
 
     # ------------------------------------------------------------
     # UNLINK
-    # - Criterion: document-based (write or create), using '_get_mail_message_access'
+    # - Criterion: document-based (write or create), using '_mail_get_operation_for_mail_message_operation'
     # ------------------------------------------------------------
 
     def test_access_unlink(self):
@@ -565,7 +585,7 @@ class TestMailMessageAccess(MessageAccessCommon):
     # - Criterions
     #   - author
     #   - recipients / notified
-    #   - document-based (write or create), using '_get_mail_message_access'
+    #   - document-based (write or create), using '_mail_get_operation_for_mail_message_operation'
     # ------------------------------------------------------------
 
     def test_access_write(self):
@@ -711,6 +731,47 @@ class TestMailMessageAccess(MessageAccessCommon):
             with self.subTest(test_user=test_user.name, add_domain=add_domain):
                 domain = [('subject', 'like', '_ZTest')] + add_domain
                 self.assertEqual(self.env['mail.message'].with_user(test_user).search(domain), exp_messages)
+
+    def test_search_customized(self):
+        """ Test '_mail_get_operation_for_mail_message_operation' support in search """
+        records = self.env['mail.test.access.custo'].with_user(self.user_admin).create([
+            {'name': 'Open'},
+            {'name': 'Open (other)'},
+            {'name': 'Soonish Locked'},
+        ])
+        messages_all = self.env['mail.message'].sudo()
+        for user in self.user_employee + self.user_portal:
+            for record in records:
+                new = record.message_post(
+                    body=f'AnchorForSearch / A message from {user.name}',
+                    subtype_id=self.env.ref('mail.mt_comment').id,
+                )
+                messages_all += new.sudo()
+
+        found_emp = self.env['mail.message'].with_user(self.user_employee).search([
+            ('body', 'ilike', 'AnchorForSearch')
+        ])
+        self.assertEqual(found_emp, messages_all)
+        found_por = self.env['mail.message'].with_user(self.user_portal).search([
+            ('body', 'ilike', 'AnchorForSearch')
+        ])
+        self.assertEqual(found_por, messages_all)
+
+        # lock -> see '_mail_get_operation_for_mail_message_operation', which is not supported currently
+        # in the search, making it inconsistent with 'read'
+        records[2].write({'is_locked': True, 'name': 'Locked !'})
+        found_emp = self.env['mail.message'].with_user(self.user_employee).search([
+            ('body', 'ilike', 'AnchorForSearch')
+        ])
+        self.assertEqual(found_emp, messages_all, 'FIXME: should filter like read')
+        with self.assertRaises(AccessError):  # some unreadable messages
+            found_emp.read(['subject'])
+        found_por = self.env['mail.message'].with_user(self.user_portal).search([
+            ('body', 'ilike', 'AnchorForSearch')
+        ])
+        self.assertEqual(found_por, messages_all, 'FIXME: should filter like read')
+        with self.assertRaises(AccessError):  # some unreadable messages
+            found_por.read(['subject'])
 
 
 @tagged('mail_message', 'security', 'post_install', '-at_install')

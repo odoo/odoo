@@ -20,6 +20,10 @@ class Base(models.AbstractModel):
     _inherit = 'base'
     _mail_defaults_to_email = False
 
+    # ------------------------------------------------------------
+    # ORM
+    # ------------------------------------------------------------
+
     def _valid_field_parameter(self, field, name):
         # allow tracking on abstract models; see also 'mail.thread'
         return (
@@ -45,6 +49,41 @@ class Base(models.AbstractModel):
                 [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
             ).unlink()
         return result
+
+    # ------------------------------------------------------------
+    # CHECK ACCESS
+    # ------------------------------------------------------------
+
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        """ Give document permission based on mail.message check permission.
+        This is used when no other checks already granted permission (e.g.
+        being notified, being author, ...). """
+        valid_operations = {'read', 'write', 'unlink', 'create'}
+        if message_operation not in valid_operations:
+            raise ValueError('Invalid message operation, should be a valid ORM operation type')
+        mail_post_access = getattr(self, '_mail_post_access', 'write')
+        if mail_post_access not in valid_operations:
+            raise ValueError('Invalid _mail_post_access, should be a valid ORM operation type')
+
+        if message_operation == 'read':
+            check_access = 'read'
+        elif message_operation == 'create':
+            check_access = mail_post_access
+        else:
+            check_access = 'write'
+        return dict.fromkeys(self, check_access)
+
+    def _mail_group_by_operation_for_mail_message_operation(self, message_operation):
+        """ Globally reverse result of '_mail_get_operation_for_mail_message_operation'
+        aka return documents for a given access to check on them. """
+        document_operations = self._mail_get_operation_for_mail_message_operation(message_operation)
+        operation_documents = defaultdict(lambda: self.env[self._name])
+        for record, record_operation in document_operations.items():
+            operation_documents[record_operation] += record
+        # force prefetch in a post-loop as recordset concatenation may lose it
+        for operation, records in operation_documents.items():
+            records = records.with_prefetch(self.ids)
+        return operation_documents
 
     # ------------------------------------------------------------
     # FIELDS HELPERS
