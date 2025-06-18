@@ -123,7 +123,7 @@ test("[cache] write into the cache", async () => {
         },
         modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } },
         multi_lang: false,
-        hash: "5d62e6f31a2e19f1f128bd7f56d11088a746e001",
+        hash: "6b1bcfb1",
     };
     expect.verifySteps([
         "hash: ",
@@ -150,7 +150,7 @@ test("[cache] read from cache, and don't wait to render", async () => {
                 },
                 modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } },
                 multi_lang: false,
-                hash: "5d62e6f31a2e19f1f128bd7f56d11088a746e001",
+                hash: "30b70a0e",
             };
         },
     });
@@ -167,7 +167,7 @@ test("[cache] read from cache, and don't wait to render", async () => {
     expect("#main").toHaveText("Bonjour"); //Don't wait the end of the fetch to render
     def.resolve();
     await animationFrame();
-    expect.verifySteps(["hash: 5d62e6f31a2e19f1f128bd7f56d11088a746e001"]); //Fetch with the hash of the translation in cache
+    expect.verifySteps(["hash: 30b70a0e"]); //Fetch with the hash of the translation in cache
 });
 
 test("[cache] update the cache if hash are different - template", async () => {
@@ -187,7 +187,7 @@ test("[cache] update the cache if hash are different - template", async () => {
                 },
                 modules: { web: { messages: [{ id: "Hello", string: "Different Bonjour" }] } },
                 multi_lang: false,
-                hash: "5d62e6f31a2e",
+                hash: "30b",
             };
         },
         write(table, key, value) {
@@ -223,10 +223,10 @@ test("[cache] update the cache if hash are different - template", async () => {
         },
         modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } }, // value was updated in the cache
         multi_lang: false,
-        hash: "5d62e6f31a2e19f1f128bd7f56d11088a746e001", // hash was updated in the cache
+        hash: "6b1bcfb1", // hash was updated in the cache
     };
     expect.verifySteps([
-        "hash: 5d62e6f31a2e", //Fetch with the hash of the translation in cache
+        "hash: 30b", //Fetch with the hash of the translation in cache
         "table: /web/webclient/translations",
         'key: {"lang":"en"}',
         `value: ${JSON.stringify(expectedValue)}`,
@@ -260,7 +260,7 @@ test("[cache] update the cache if hash are different - js", async () => {
                     },
                 },
                 multi_lang: false,
-                hash: "5d62e6f31a2e",
+                hash: "30b",
             };
         },
         write(table, key, value) {
@@ -310,10 +310,10 @@ test("[cache] update the cache if hash are different - js", async () => {
             },
         }, // value was updated in the cache
         multi_lang: false,
-        hash: "267b5f5848b78a58ff6f57530b5f6fcdc46ecad0", // hash was updated in the cache
+        hash: "6b1bcfb1", // hash was updated in the cache
     };
     expect.verifySteps([
-        "hash: 5d62e6f31a2e", //Fetch with the hash of the translation in cache
+        "hash: 30b", //Fetch with the hash of the translation in cache
         "table: /web/webclient/translations",
         'key: {"lang":"en"}',
         `value: ${JSON.stringify(expectedValue)}`,
