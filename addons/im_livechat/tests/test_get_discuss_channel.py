@@ -285,24 +285,24 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
 
     def test_channel_not_pinned_for_operator_before_first_message(self):
         operator = self.operators[0]
-        params = {
-            "anonymous_name": "whatever",
-            "channel_id": self.livechat_channel.id,
-            "previous_operator_id": operator.partner_id.id
-        }
-        channel_id = self.make_jsonrpc_request("/im_livechat/get_session", params)[
-            "discuss.channel"
-        ][0]["id"]
-        member_domain = [("channel_id", "=", channel_id), ("is_self", "=", True)]
-        member = self.env["discuss.channel.member"].with_user(operator).search(member_domain)
-        self.assertEqual(len(member), 1, "operator should be member of channel")
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "whatever",
+                "channel_id": self.livechat_channel.id,
+                "previous_operator_id": operator.partner_id.id,
+            },
+        )
+        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        member = channel.with_user(operator).self_member_id
+        self.assertEqual(member.partner_id, operator.partner_id, "operator should be member of channel")
         self.assertFalse(member.is_pinned, "channel should not be pinned for operator initially")
-        self.env["discuss.channel"].browse(channel_id).message_post(body="cc")
+        channel.message_post(body="cc")
         self.assertTrue(member.is_pinned, "channel should be pinned for operator after visitor sent a message")
         self.authenticate(operator.login, self.password)
         data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["channels_as_member"]})
         channel_ids = [channel["id"] for channel in data["discuss.channel"]]
-        self.assertIn(channel_id, channel_ids, "channel should be fetched by operator on new page")
+        self.assertIn(channel.id, channel_ids, "channel should be fetched by operator on new page")
 
     def test_read_channel_unpined_for_operator_after_one_day(self):
         data = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'visitor', 'channel_id': self.livechat_channel.id})
