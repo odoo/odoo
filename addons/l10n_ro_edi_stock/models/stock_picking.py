@@ -832,7 +832,7 @@ class Picking(models.Model):
                         'codUnitateMasura': move.product_uom._get_unece_code(),
                         'greutateNeta': move.weight,
                         'greutateBruta': self._l10n_ro_edi_stock_get_gross_weight(move),
-                        'valoareLeiFaraTva': product.list_price,
+                        'valoareLeiFaraTva': self._l10n_ro_edi_compute_amount(move),
                     }
                     for move in data['stock_move_ids'] for product in move.product_id
                 ],
@@ -929,3 +929,17 @@ class Picking(models.Model):
         """
         self.ensure_one()
         self.message_post(body=_("Unhandled eTransport document state: %(state)s", state=state))
+
+    @api.model
+    def _l10n_ro_edi_compute_amount(self, move):
+        """
+        Computes the amount of a stock.move based on the product's list price and quantity.
+        This is used to calculate the 'valoareLeiFaraTva' field in the eTransport document."""
+        product = move.product_id
+        currency = product.currency_id
+        res = product.taxes_id.filtered(lambda t: t.company_id == self.env.company).compute_all(
+            product.list_price, product=product, partner=self.env['res.partner']
+        )
+        excluded = res['total_excluded']
+        amount = currency.round(excluded * move.product_qty)
+        return amount
