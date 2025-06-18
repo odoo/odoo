@@ -45,6 +45,12 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'work_contact_id': cls.expense_user_employee.partner_id.id,
         })
 
+        cls.expense_employee_manager = cls.env['hr.employee'].create({
+            'name': 'expense_employee_manager',
+            'user_id': cls.expense_user_manager.id,
+            'work_contact_id': cls.expense_user_manager.partner_id.id,
+        })
+
         # Allow the current accounting user to access the expenses.
         cls.env.user.group_ids |= group_expense_manager
 

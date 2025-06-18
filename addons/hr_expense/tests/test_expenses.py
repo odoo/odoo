@@ -987,3 +987,13 @@ class TestExpenses(TestExpenseCommon):
         expense.quantity = 0
         self.assertTrue(expense.currency_id.is_zero(expense.total_amount_currency))
         self.assertEqual(expense.company_currency_id.compare_amounts(expense.price_unit, self.product_b.standard_price), 0)
+
+    def test_empty_manager(self):
+        self.expense_employee.write({'parent_id': False})
+        self.assertFalse(self.expense_employee.expense_manager_id)
+        self.expense_employee.write({'parent_id': self.expense_employee_manager.id})
+        self.assertEqual(self.expense_employee.expense_manager_id, self.expense_user_manager)
+        self.expense_employee.write({'parent_id': False})
+        self.expense_employee_manager.write({'user_id': False})
+        self.expense_employee.write({'parent_id': self.expense_employee_manager.id})
+        self.assertFalse(self.expense_employee.expense_manager_id)
