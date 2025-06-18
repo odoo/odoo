@@ -21,7 +21,8 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
             'phone': "+1 555-555-5555",
         })
 
-    @unittest.skip
+    # TODO master-mysterious-egg fix error
+    @unittest.skip("prepare mysterious-egg for merging")
     def test_tour(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_form_editor_tour', login='admin', timeout=120)
         self.start_tour('/', 'website_form_editor_tour_submit')
@@ -60,8 +61,8 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     def test_website_form_editable_content(self):
         self.start_tour('/', 'website_form_editable_content', login="admin")
 
-    # TODO @mysterious-egg: new tour
-    @unittest.skip
+    # TODO master-mysterious-egg fix error
+    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_form_special_characters(self):
         self.start_tour('/', 'website_form_special_characters', login='admin')
         mail = self.env['mail.mail'].search([], order='id desc', limit=1)
