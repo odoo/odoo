@@ -52,7 +52,7 @@ class SurveyUser_Input(models.Model):
     predefined_question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
     scoring_percentage = fields.Float("Score (%)", compute="_compute_scoring_values", store=True, compute_sudo=True)  # stored for perf reasons
     scoring_total = fields.Float("Total Score", compute="_compute_scoring_values", store=True, compute_sudo=True, digits=(10, 2))  # stored for perf reasons
-    scoring_success = fields.Boolean('Quizz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
+    scoring_success = fields.Boolean('Quiz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
     survey_first_submitted = fields.Boolean(string='Survey First Submitted')
     # live sessions
     is_session_answer = fields.Boolean('Is in a Session', help="Is that user input part of a survey session or not.")
