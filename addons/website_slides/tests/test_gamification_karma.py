@@ -11,7 +11,7 @@ from odoo.tools import mute_logger
 class TestKarmaGain(common.SlidesCase):
 
     def setUp(self):
-        super(TestKarmaGain, self).setUp()
+        super().setUp()
 
         self.channel_2 = self.env['slide.channel'].with_user(self.user_officer).create({
             'name': 'Test Channel 2',

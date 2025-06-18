@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="slides_unsubscribe_form" name="Ask Opt-Out from Channel">
+        <t t-call="portal.frontend_layout">
+            <div class="container mb64">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3 mt-5">
+                        <form t-att-action="'/slides/channel/%s/opt_out/confirm' % (channel.id)" method="post">
+                            <p>Please confirm your want to unsubscribe from <span t-out="channel.name"/></p>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="attendee_id" t-att-value="attendee.id"/>
+                            <input type="hidden" name="token" t-att-value="attendee_token"/>
+                            <div class="mb-3 row">
+                                <div class="col-sm-10">
+                                    <button type="submit" class="btn btn-primary">Unsubscribe</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="slides_unsubscribe_done" name="Opt-Outed from Channel">
+        <t t-call="portal.frontend_layout">
+            <div class="container mb64">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3">
+                        <div class="alert alert-success text-center" role="status">
+                            <p>You have been successfully removed from <span t-out="channel.name"/></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

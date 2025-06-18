@@ -573,6 +573,20 @@ class SlideChannel(models.Model):
     # Mail Thread
     # ---------------------------------------------------------
 
+    @api.model
+    def _get_mail_message_access(self, res_ids, operation, model_name=None):
+        # Allow posting a message if user has read access on the channel when
+        # being an enrolled member of it. Due to method limitations they must
+        # be members of all channels.
+        if operation != 'create':
+            return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
+
+        default_create_allow = self._mail_post_access
+        for channel_su in self.sudo().browse(res_ids):
+            if self.env.user.partner_id not in channel_su.partner_ids:
+                return default_create_allow
+        return 'read'
+
     def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a
@@ -737,16 +751,6 @@ class SlideChannel(models.Model):
         # All fragments are in sudo.
         result_channel_partners = to_unarchived + to_update_as_joined + new_slide_channel_partners
 
-        # Subscribe partners joining the course to the chatter.
-        if member_status == 'joined':
-            result_channel_partners_map = defaultdict(list)
-            for channel_partner in result_channel_partners:
-                result_channel_partners_map[channel_partner.channel_id].append(channel_partner.partner_id.id)
-            for channel, partner_ids in result_channel_partners_map.items():
-                channel.message_subscribe(
-                    partner_ids=partner_ids,
-                    subtype_ids=[self.env.ref('website_slides.mt_channel_slide_published').id]
-                )
         return result_channel_partners
 
     def _filter_add_members(self, raise_on_access=False):

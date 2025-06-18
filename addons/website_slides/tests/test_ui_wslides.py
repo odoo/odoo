@@ -2,25 +2,28 @@
 
 import base64
 import logging
+import unittest
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import http, tests
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.gamification.tests.common import HttpCaseGamification
 from odoo.fields import Command, Datetime
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 from odoo.tools.misc import file_open
-import unittest
+
 
 _logger = logging.getLogger(__name__)
 
 
-class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
+class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        if not cls.user_demo.karma:
+            cls.user_demo.karma = 2500
         # remove demo data
         cls.env["slide.channel"].search([]).unlink()
 
@@ -112,7 +115,7 @@ class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
         })
 
 
-@tests.common.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'slides_ui')
 class TestUi(TestUICommon):
 
     @mute_logger("odoo.http", "odoo.addons.base.models.ir_rule", "werkzeug")
@@ -238,7 +241,7 @@ class TestUi(TestUICommon):
         )
 
 
-@tests.common.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'slides_ui')
 class TestUiPublisher(HttpCaseGamification):
 
     def fetch_proxy(self, url):
@@ -269,7 +272,7 @@ class TestUiPublisher(HttpCaseGamification):
         self.start_tour(self.env['website'].get_client_action_url('/slides'), 'course_publisher_standard', login=user_demo.login)
 
 
-@tests.common.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'slides_ui')
 class TestUiMemberInvited(TestUICommon):
 
     def setUp(self):
@@ -307,7 +310,7 @@ class TestUiMemberInvited(TestUICommon):
         self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_public', login=None)
 
 
-@tests.common.tagged('external', 'post_install', '-standard', '-at_install')
+@tagged('external', 'post_install', '-standard', '-at_install', 'slides_ui')
 class TestUiPublisherYoutube(HttpCaseGamification):
 
     def test_course_member_yt_employee(self):

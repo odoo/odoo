@@ -925,20 +925,6 @@ class WebsiteSlides(WebsiteProfile):
         channel._send_share_email(emails)
         return True
 
-    @http.route(['/slides/channel/subscribe'], type='jsonrpc', auth='user', website=True)
-    def slide_channel_subscribe(self, channel_id):
-        # Presentation Published subtype
-        subtype = request.env.ref("website_slides.mt_channel_slide_published", raise_if_not_found=False)
-        if subtype:
-            return request.env['slide.channel'].browse(channel_id).message_subscribe(
-                partner_ids=[request.env.user.partner_id.id], subtype_ids=subtype.ids)
-        return True
-
-    @http.route(['/slides/channel/unsubscribe'], type='jsonrpc', auth='user', website=True)
-    def slide_channel_unsubscribe(self, channel_id):
-        request.env['slide.channel'].browse(channel_id).message_unsubscribe(partner_ids=[request.env.user.partner_id.id])
-        return True
-
     # --------------------------------------------------
     # SLIDE.SLIDE MAIN / SEARCH
     # --------------------------------------------------

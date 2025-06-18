@@ -2,13 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCase
+from odoo.tests import HttpCase
 
 
-class SlidesCase(MailCase):
+class SlidesCase(MailCase, HttpCase):
 
     @classmethod
     def setUpClass(cls):
-        super(SlidesCase, cls).setUpClass()
+        # Test Data
+        # ------------------------------------------------------------
+        # CHANNEL   Test Channel, documentation, public
+        # 1 slide (doc), 1 category with 2 slides (doc), everything published
+        # SLIDE3 has a question
+        super().setUpClass()
 
         cls.env.ref('base.user_admin').write({
             'email': 'mitchell.admin@example.com',
@@ -47,6 +53,14 @@ class SlidesCase(MailCase):
             groups='base.group_portal',
             login='user_portal',
             name='Patrick Portal',
+            notification_type='email',
+        )
+        cls.user_portal_2 = mail_new_test_user(
+            cls.env,
+            email='portal.2@example.com',
+            groups='base.group_portal',
+            login='user_portal_2',
+            name='Paulette Portalle',
             notification_type='email',
         )
 
@@ -122,3 +136,56 @@ class SlidesCase(MailCase):
             'text_value': "Raw",
             'is_correct': False,
         })
+
+    def _add_member(self, channels, partner, add_vals=None):
+        return self.env['slide.channel.partner'].create([
+            {
+                'channel_id': channel.id,
+                'member_status': 'joined',
+                'partner_id': partner.id,
+                **(add_vals or {}),
+            } for channel in channels
+        ])
+
+    def _add_slide(self, channels, add_vals=None):
+        return self.env['slide.slide'].create([
+            {
+                'channel_id': self.channel.id,
+                'completion_time': 2.0,
+                'is_published': True,
+                'name': f'TestSlide {len(channel.slide_ids)} on {channel.name}',
+                'sequence': 10,
+                'slide_category': 'document',
+                **(add_vals or {}),
+            } for channel in channels
+        ])
+
+    def assertAttendeeStatus(
+            self, attendee, member_status='ongoing', completion=100, active=True,
+            channel_completion=100, channel_completed=True, channel_is_member=True,
+        ):
+        """ Check that the course completion is still accounted for, with given
+        member_status. Note that channel completion values may differ from
+        attendee status (less often updated, channel is more for display).
+        """
+        # attendee values
+        self.assertEqual(attendee.active, active)
+        self.assertEqual(attendee.member_status, member_status)
+        self.assertEqual(attendee.completion, completion)
+
+        # channel display values
+        attendee_user = attendee.partner_id.user_ids[0]
+        self.assertTrue(attendee_user)
+        channel = attendee.channel_id.with_user(attendee_user)
+        self.assertEqual(channel.completed, channel_completed)
+        self.assertEqual(channel.completion, channel_completion)
+        self.assertEqual(channel.is_member, channel_is_member)
+        self.assertEqual(channel.is_member_invited, member_status == 'invited')
+        if active:
+            self.assertIn(attendee, channel.sudo().channel_partner_all_ids)
+        else:
+            self.assertNotIn(attendee, channel.sudo().channel_partner_all_ids)
+        if member_status == 'invited' or not channel_is_member:
+            self.assertNotIn(attendee, channel.sudo().channel_partner_ids)
+        else:
+            self.assertIn(attendee, channel.sudo().channel_partner_ids)
