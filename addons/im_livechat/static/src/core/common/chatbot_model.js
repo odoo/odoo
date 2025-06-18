@@ -259,7 +259,7 @@ export class Chatbot extends Record {
             ONE_DAY_TTL
         );
         if (!redirectionAlreadyDone) {
-            browser.location.assign(answer.redirect_link);
+            browser.open(answer.redirect_link, "_blank");
         }
         return redirectionAlreadyDone || !isRedirecting;
     }
