@@ -85,7 +85,7 @@ class StockMoveLine(models.Model):
         return aggregated_properties
 
     def _compute_product_packaging_qty(self):
-        kit_lines = self.filtered(lambda move_line: move_line.move_id.bom_line_id.bom_id.type == 'phantom')
+        kit_lines = self.filtered(lambda ml: ml.move_id.bom_line_id.bom_id.type == 'phantom' and ml.move_id.product_packaging_id)
         for move_line in kit_lines:
             move = move_line.move_id
             bom_line = move.bom_line_id
