@@ -115,7 +115,7 @@ export class ConfirmationPage extends Component {
             } catch (e) {
                 if (e.errorCode === "EPTR_REC_EMPTY") {
                     this.dialog.add(OutOfPaperPopup, {
-                        title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
+                        message: e.body,
                         close: () => {
                             this.router.navigate("default");
                         },

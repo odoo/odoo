@@ -36,6 +36,7 @@ import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
 import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
+import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { DebugWidget } from "../utils/debug/debug_widget";
 
@@ -1662,6 +1663,9 @@ export class PosStore extends WithLazyGetterTrap {
         } else if (!order.nb_print) {
             order.nb_print = 0;
         }
+        if (result && result.successful && result.error) {
+            this.notification.add(_t("Receipt " + result.error.message?.body), { type: "warning" });
+        }
         return result;
     }
     get printOptions() {
@@ -1728,7 +1732,7 @@ export class PosStore extends WithLazyGetterTrap {
         return {
             reprint: reprint,
             pos_reference: order.getName(),
-            config_name: order.config_id.name,
+            config_name: order.config_id?.name || order.config?.name,
             time: DateTime.now().toFormat("HH:mm"),
             tracking_number: order.tracking_number,
             preset_name: order.preset_id?.name || "",
@@ -1767,25 +1771,27 @@ export class PosStore extends WithLazyGetterTrap {
         return { orderData, changes };
     }
 
-    async printChanges(order, orderChange, reprint = false) {
+    async printChanges(order, orderChange, reprint = false, printers = this.unwatched.printers) {
         const unsuccedPrints = [];
+        const retryPrinters = new Set();
 
-        for (const printer of this.unwatched.printers) {
+        for (const printer of printers) {
             const { orderData, changes } = this.generateOrderChange(
                 order,
                 orderChange,
                 printer.config.product_categories_ids,
                 reprint
             );
-
+            let result = {};
             if (changes.new.length) {
                 orderData.changes = {
                     title: _t("NEW"),
                     data: changes.new,
                 };
-                const result = await this.printOrderChanges(orderData, printer);
+                result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
+                    retryPrinters.add(printer);
+                    unsuccedPrints.push(printer.config.name + ": " + result.message.body);
                 }
             }
 
@@ -1794,9 +1800,10 @@ export class PosStore extends WithLazyGetterTrap {
                     title: _t("CANCELLED"),
                     data: changes.cancelled,
                 };
-                const result = await this.printOrderChanges(orderData, printer);
+                result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
+                    retryPrinters.add(printer);
+                    unsuccedPrints.push(printer.config.name + ": " + result.message.body);
                 }
             }
 
@@ -1806,28 +1813,39 @@ export class PosStore extends WithLazyGetterTrap {
                     title: noteUpdateTitle || _t("NOTE UPDATE"),
                     data: printNoteUpdateData ? changes.noteUpdate : [],
                 };
-                const result = await this.printOrderChanges(orderData, printer);
+                result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
+                    retryPrinters.add(printer);
+                    unsuccedPrints.push(printer.config.name + ": " + result.message.body);
                 }
                 orderData.changes.noteUpdate = [];
             }
 
             if (orderChange.internal_note || orderChange.general_customer_note) {
                 orderData.changes = {};
-                const result = await this.printOrderChanges(orderData, printer);
+                result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
+                    retryPrinters.add(printer);
+                    unsuccedPrints.push(printer.config.name + ": " + result.message.body);
                 }
+            }
+            // Show a warning if the printer almost runs out of paper
+            if (result && result.successful && result.error) {
+                this.notification.add(printer.config.name + " " + result.error.message.body, {
+                    type: "warning",
+                });
             }
         }
 
         // printing errors
         if (unsuccedPrints.length) {
-            const failedReceipts = unsuccedPrints.join(", ");
-            this.dialog.add(AlertDialog, {
-                title: _t("Printing failed"),
-                body: _t("Failed in printing %s changes of the order", failedReceipts),
+            const failedReceipts = unsuccedPrints.join("\n");
+            this.dialog.add(RetryPrintPopup, {
+                message: _t("Failed in printing \n%s", failedReceipts),
+                canRetry: true,
+                retry: () => {
+                    this.printChanges(order, orderChange, reprint, retryPrinters);
+                },
             });
         }
     }

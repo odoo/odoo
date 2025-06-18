@@ -71,11 +71,14 @@ export class EpsonPrinter extends BasePrinter {
             return {
                 result: response.getAttribute("success") === "true",
                 printerErrorCode: response.getAttribute("code"),
+                printerErrorStatus: parseInt(response.getAttribute("status")),
+                canRetry: true,
             };
         } catch {
             return {
                 result: false,
-                printerErrorCode: "Not found, the printer is not reachable",
+                canRetry: true,
+                printerErrorCode: _t("Not found, the printer is not reachable."),
             };
         }
     }
@@ -174,39 +177,34 @@ export class EpsonPrinter extends BasePrinter {
      */
     getResultsError(printResult) {
         const errorCode = printResult.printerErrorCode;
-        let message =
-            _t("The printer was successfully reached, but it wasn't able to print.") + "\n";
-        if (errorCode) {
-            message +=
-                "\n" + _t("The following error code was given by the printer:") + "\n" + errorCode;
-
-            const extra_messages = {
-                DeviceNotFound:
-                    _t(
-                        "Check on the printer configuration for the 'Device ID' setting. " +
-                            "It should be set to: "
-                    ) + "\nlocal_printer",
-                EPTR_REC_EMPTY: _t("No paper was detected by the printer"),
-            };
-            if (errorCode in extra_messages) {
-                message += "\n" + extra_messages[errorCode];
-            }
-            message +=
-                "\n" +
-                _t("To find more details on the error reason, please search online for:") +
-                "\n" +
-                " Epson Server Direct Print " +
-                errorCode;
+        const errorStatus = printResult.printerErrorStatus;
+        let message = "";
+        if (errorCode === "EPTR_REC_EMPTY" && [252444700, 252641308].includes(errorStatus)) {
+            message += _t("It seems that the printer runs out of paper.");
+        } else if (errorStatus === 251854870) {
+            message += _t("printer almost runs out of paper.");
+        } else if (errorCode === "DeviceNotFound") {
+            message += _t(
+                "Check the printer configuration for the 'Device ID' setting.\nIt should be set to: local_printer"
+            );
+        } else if (errorCode === "EPTR_COVER_OPEN") {
+            message += _t("Printer cover is open. Please close it and try again!");
         } else {
-            message += _t("Please check if the printer has enough paper and is ready to print.");
+            message +=
+                errorCode ||
+                _t(
+                    "Not able to connect with the printer.\nCheck the printer's network connection."
+                );
         }
         return {
             successful: false,
             errorCode: errorCode,
+            errorStatus: errorStatus,
             message: {
                 title: _t("Printing failed"),
                 body: message,
             },
+            canRetry: printResult.canRetry || false,
         };
     }
 }
