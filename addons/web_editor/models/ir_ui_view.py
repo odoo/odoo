@@ -360,7 +360,11 @@ class IrUiView(models.Model):
 
         views_to_return = view
 
-        node = etree.fromstring(view.arch)
+        try:
+            node = etree.fromstring(view.arch)
+        except etree.XMLSyntaxError:
+            return views_to_return
+
         xpath = "//t[@t-call]"
         if bundles:
             xpath += "| //t[@t-call-assets]"
