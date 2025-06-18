@@ -20,6 +20,9 @@ export class ShapeSelector extends BaseOptionComponent {
     getShapeUrl(shapePath) {
         return this.props.getShapeUrl ? this.props.getShapeUrl(shapePath) : getShapeURL(shapePath);
     }
+    getShapeClass(shapePath) {
+        return `o_${shapePath.replaceAll("/", "_")}`;
+    }
     scrollToShapes(id) {
         this.rootRef.el
             ?.querySelector(`[data-shape-group-id="${id}"]`)
