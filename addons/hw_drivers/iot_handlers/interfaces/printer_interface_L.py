@@ -13,6 +13,7 @@ from zeroconf import (
 )
 import logging
 import pyudev
+import time
 
 from odoo.addons.hw_drivers.interface import Interface
 
@@ -24,9 +25,12 @@ cups_lock = Lock()  # We can only make one call to Cups at a time
 
 
 class PrinterInterface(Interface):
-    _loop_delay = 120
     connection_type = 'printer'
-    printer_devices = {}
+    _loop_delay = 20  # Default delay between calls to get_devices
+
+    def __init__(self):
+        super().__init__()
+        self.start_time = time.time()
 
     def get_devices(self):
         discovered_devices = {}
@@ -48,25 +52,22 @@ class PrinterInterface(Interface):
         for path, device in devices.items():
             identifier, device = self.process_device(path, device)
             discovered_devices.update({identifier: device})
-        discovered_devices = self.deduplicate_printers(discovered_devices, self.printer_devices)
-        self.printer_devices.update(discovered_devices)
-        # Deal with devices which are on the list but were not found during this call of "get_devices"
-        # If they aren't detected 3 times consecutively, remove them from the list of available devices
-        for device in list(self.printer_devices):
-            if not discovered_devices.get(device):
-                disconnect_counter = self.printer_devices.get(device).get('disconnect_counter')
-                if disconnect_counter >= 2:
-                    self.printer_devices.pop(device, None)
-                else:
-                    self.printer_devices[device].update({'disconnect_counter': disconnect_counter + 1})
-        return dict(self.printer_devices)
+        discovered_devices = self.deduplicate_printers(discovered_devices)
+
+        # Let get_devices be called again every 20 seconds (get_devices of PrinterInterface
+        # takes between 4 and 15 seconds) but increase the delay to 2 minutes if it has been
+        # running for more than 1 hour
+        if self.start_time and time.time() - self.start_time > 3600:
+            self._loop_delay = 120
+            self.start_time = None  # Reset start_time to avoid changing the loop delay again
+
+        return discovered_devices
 
     def process_device(self, path, device):
         identifier = self.get_identifier(path)
         device.update({
             'identifier': identifier,
             'url': path,
-            'disconnect_counter': 0,
         })
         if device['device-class'] == 'direct':
             device.update(self.get_usb_info(path))
@@ -121,7 +122,7 @@ class PrinterInterface(Interface):
             return {}
 
     @staticmethod
-    def deduplicate_printers(discovered_printers, current_printers):
+    def deduplicate_printers(discovered_printers):
         result = []
         sorted_printers = sorted(discovered_printers.values(), key=lambda printer: str(printer.get('ip')))
 
@@ -129,11 +130,6 @@ class PrinterInterface(Interface):
             printers_with_same_ip = list(printers_with_same_ip)
             if ip is None or len(printers_with_same_ip) == 1:
                 result += printers_with_same_ip
-                continue
-
-            existing_printer = next((printer for printer in current_printers.values() if printer.get('ip') == ip), None)
-            if existing_printer:
-                result.append(existing_printer)
                 continue
 
             chosen_printer = next((
