@@ -84,6 +84,44 @@ class StockMoveLine(models.Model):
         aggregated_properties['line_key'] += f'_{bom.id if bom else ""}'
         return aggregated_properties
 
+<<<<<<< 6a38936a2f3723c9e62e5ea2b5f05629b09064a6
+||||||| 1a21f4eb71111b2850b18d7efc53ae6d3e3410da
+    def _compute_product_packaging_qty(self):
+        kit_lines = self.filtered(lambda move_line: move_line.move_id.bom_line_id.bom_id.type == 'phantom')
+        for move_line in kit_lines:
+            move = move_line.move_id
+            bom_line = move.bom_line_id
+            kit_bom = bom_line.bom_id
+
+            # Convert the move line quantity to the product's move uom
+            qty_move_uom = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.move_id.product_uom)
+            # Convert the product's move uom to the bom line's uom
+            qty_bom_uom = move.product_uom._compute_quantity(qty_move_uom, bom_line.product_uom_id)
+            # calculate the bom's kit qty in kit product uom qty
+            bom_qty_product_uom = kit_bom.product_uom_id._compute_quantity(kit_bom.product_qty, kit_bom.product_tmpl_id.uom_id)
+            # calculate the quantity needed of packging
+            move_line.product_packaging_qty = (qty_bom_uom / (bom_line.product_qty / bom_qty_product_uom)) / move_line.move_id.product_packaging_id.qty
+        super(StockMoveLine, self - kit_lines)._compute_product_packaging_qty()
+
+=======
+    def _compute_product_packaging_qty(self):
+        kit_lines = self.filtered(lambda ml: ml.move_id.bom_line_id.bom_id.type == 'phantom' and ml.move_id.product_packaging_id)
+        for move_line in kit_lines:
+            move = move_line.move_id
+            bom_line = move.bom_line_id
+            kit_bom = bom_line.bom_id
+
+            # Convert the move line quantity to the product's move uom
+            qty_move_uom = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.move_id.product_uom)
+            # Convert the product's move uom to the bom line's uom
+            qty_bom_uom = move.product_uom._compute_quantity(qty_move_uom, bom_line.product_uom_id)
+            # calculate the bom's kit qty in kit product uom qty
+            bom_qty_product_uom = kit_bom.product_uom_id._compute_quantity(kit_bom.product_qty, kit_bom.product_tmpl_id.uom_id)
+            # calculate the quantity needed of packging
+            move_line.product_packaging_qty = (qty_bom_uom / (bom_line.product_qty / bom_qty_product_uom)) / move_line.move_id.product_packaging_id.qty
+        super(StockMoveLine, self - kit_lines)._compute_product_packaging_qty()
+
+>>>>>>> 6c0b257c2d7a8d97e21af10969426c7ea8526908
     @api.model
     def _compute_packaging_qtys(self, aggregated_move_lines):
         non_kit_ml = {}
