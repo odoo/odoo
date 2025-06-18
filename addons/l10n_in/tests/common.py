@@ -89,6 +89,7 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
         cls.sgst_sale_18 = AccountChartTemplate.ref('sgst_sale_18')
         cls.igst_sale_18_rcm = AccountChartTemplate.ref('igst_sale_18_rc')
         cls.igst_sale_18_sez_exp_lut = AccountChartTemplate.ref('igst_sale_18_sez_exp_lut')
+        cls.igst_sale_18_sez_exp = AccountChartTemplate.ref('igst_sale_18_sez_exp')
 
         # === Products === #
         cls.product_a.write({
@@ -143,4 +144,22 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             partner=cls.sez_partner,
             products=cls.product_a,
             taxes=cls.igst_sale_18_sez_exp_lut
+        )
+        cls.invoice_with_sez_without_lut = cls.init_invoice(
+            "out_invoice",
+            partner=cls.sez_partner,
+            products=cls.product_a,
+            taxes=cls.igst_sale_18_sez_exp
+        )
+        cls.invoice_with_export_lut = cls.init_invoice(
+            "out_invoice",
+            partner=cls.partner_foreign,
+            products=cls.product_a,
+            taxes=cls.igst_sale_18_sez_exp_lut
+        )
+        cls.invoice_with_export_without_lut = cls.init_invoice(
+            "out_invoice",
+            partner=cls.partner_foreign,
+            products=cls.product_a,
+            taxes=cls.igst_sale_18_sez_exp
         )
