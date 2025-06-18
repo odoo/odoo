@@ -2,6 +2,7 @@
 
 import * as dom from "./helpers/dom";
 import * as events from "./helpers/events";
+import * as time from "./helpers/time";
 import { interactor } from "./hoot_dom_utils";
 
 /**
@@ -53,15 +54,12 @@ export {
 } from "./helpers/dom";
 export { on } from "./helpers/events";
 export {
-    advanceFrame,
-    advanceTime,
     animationFrame,
     cancelAllTimers,
     Deferred,
     delay,
     freezeTime,
     microTick,
-    runAllTimers,
     setFrameRate,
     tick,
     waitUntil,
@@ -104,6 +102,11 @@ export const setInputFiles = interactor("interaction", events.setInputFiles);
 export const setInputRange = interactor("interaction", events.setInputRange);
 export const uncheck = interactor("interaction", events.uncheck);
 export const unload = interactor("interaction", events.unload);
+
+// Time
+export const advanceFrame = interactor("time", time.advanceFrame);
+export const advanceTime = interactor("time", time.advanceTime);
+export const runAllTimers = interactor("time", time.runAllTimers);
 
 // Debug
 export { exposeHelpers } from "./hoot_dom_utils";

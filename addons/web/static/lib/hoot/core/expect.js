@@ -383,7 +383,7 @@ const FLAGS = {
 const LABEL_EXPECTED = "Expected:";
 const LABEL_RECEIVED = "Received:";
 /** @type {CaseEventType[]} */
-const CASE_EVENT_LOG_COLORS = ["assertion", "query", "step"];
+const CASE_EVENT_LOG_COLORS = ["assertion", "query", "step", "time"];
 const MAX_STACK_LENGTH = 10;
 
 /** @type {WeakMap<any, any>} */
@@ -584,7 +584,7 @@ export function makeExpect(params) {
         currentResultInErrorState = false;
         const listenedEvents = ["query"];
         if (!params.headless) {
-            listenedEvents.push("interaction", "server");
+            listenedEvents.push("interaction", "server", "time");
         }
         removeInteractionListener = addInteractionListener(listenedEvents, onInteraction);
     }

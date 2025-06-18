@@ -1869,6 +1869,11 @@ export const CASE_EVENT_TYPES = {
         icon: "fa-arrow-right text-sm",
         color: "orange",
     },
+    time: {
+        value: 0b1000000,
+        icon: "fa fa-hourglass text-sm",
+        color: "blue",
+    },
 };
 export const DEFAULT_EVENT_TYPES = CASE_EVENT_TYPES.assertion.value | CASE_EVENT_TYPES.error.value;
 export const EXACT_MARKER = `"`;

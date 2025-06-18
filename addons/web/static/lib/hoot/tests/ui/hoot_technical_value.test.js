@@ -1,8 +1,7 @@
 /** @odoo-module */
 
 import { after, describe, expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame, click, Deferred } from "@odoo/hoot-dom";
 import { Component, reactive, useState, xml } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
 
