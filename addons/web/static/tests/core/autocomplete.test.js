@@ -732,13 +732,13 @@ test("tab and shift+tab close the dropdown", async () => {
     expect(dropdown).toBeVisible();
     await press("Tab");
     await animationFrame();
-    expect(dropdown).not.toBeVisible();
+    expect(dropdown).not.toHaveCount();
     // Shift + Tab
     await contains(input).click();
     expect(dropdown).toBeVisible();
     await press("Tab", { shiftKey: true });
     await animationFrame();
-    expect(dropdown).not.toBeVisible();
+    expect(dropdown).not.toHaveCount();
 });
 
 test("autocomplete scrolls when moving with arrows", async () => {
@@ -826,11 +826,7 @@ test("items are selected only when the mouse moves, not just on enter", async ()
         static components = { AutoComplete };
         get source() {
             return {
-                options: [
-                    { label: "one" },
-                    { label: "two" },
-                    { label: "three" },
-                ],
+                options: [{ label: "one" }, { label: "two" }, { label: "three" }],
             };
         }
         onSelect(option) {}
@@ -843,22 +839,32 @@ test("items are selected only when the mouse moves, not just on enter", async ()
     queryOne(`.o-autocomplete input`).click();
     await animationFrame();
 
-    expect(".o-autocomplete--dropdown-item:nth-child(1) .dropdown-item").toHaveClass("ui-state-active");
+    expect(".o-autocomplete--dropdown-item:nth-child(1) .dropdown-item").toHaveClass(
+        "ui-state-active"
+    );
 
     const item2 = queryOne(".o-autocomplete--dropdown-item:nth-child(2)");
     await manuallyDispatchProgrammaticEvent(item2, "mouseenter");
     await animationFrame();
     // mouseenter should be ignored
-    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").not.toHaveClass("ui-state-active");
+    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").not.toHaveClass(
+        "ui-state-active"
+    );
 
     await press("arrowdown");
     await animationFrame();
-    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").toHaveClass("ui-state-active");
+    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").toHaveClass(
+        "ui-state-active"
+    );
 
     await manuallyDispatchProgrammaticEvent(item2, "mousemove");
     const item3 = queryOne(".o-autocomplete--dropdown-item:nth-child(3)");
     await manuallyDispatchProgrammaticEvent(item3, "mouseenter");
     await animationFrame();
-    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").not.toHaveClass("ui-state-active");
-    expect(".o-autocomplete--dropdown-item:nth-child(3) .dropdown-item").toHaveClass("ui-state-active");
+    expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").not.toHaveClass(
+        "ui-state-active"
+    );
+    expect(".o-autocomplete--dropdown-item:nth-child(3) .dropdown-item").toHaveClass(
+        "ui-state-active"
+    );
 });

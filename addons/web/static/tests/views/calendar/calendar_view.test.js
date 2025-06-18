@@ -427,7 +427,7 @@ test(`simple calendar rendering on desktop`, async () => {
 
     // test filters
     expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(2);
-    expect(`.o_calendar_filter:eq(1)`).toBeDisplayed();
+    expect(`.o_calendar_filter:eq(1)`).toBeVisible();
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item`).toHaveCount(3);
 
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item:eq(-1)`).not.toHaveAttribute(
@@ -436,7 +436,7 @@ test(`simple calendar rendering on desktop`, async () => {
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item:eq(-1)`).toHaveText("Undefined");
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item:eq(-1) label img`).toHaveCount(0);
 
-    expect(`.o_calendar_filter:eq(0)`).toBeDisplayed();
+    expect(`.o_calendar_filter:eq(0)`).toBeVisible();
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
     expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
 
@@ -529,7 +529,7 @@ test(`simple calendar rendering on mobile`, async () => {
     // test filters
     await displayCalendarPanel();
     expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(2);
-    expect(`.o_calendar_filter:eq(1)`).toBeDisplayed();
+    expect(`.o_calendar_filter:eq(1)`).toBeVisible();
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item`).toHaveCount(3);
 
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item:eq(-1)`).not.toHaveAttribute(
@@ -538,7 +538,7 @@ test(`simple calendar rendering on mobile`, async () => {
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item:eq(-1)`).toHaveText("Undefined");
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item:eq(-1) label img`).toHaveCount(0);
 
-    expect(`.o_calendar_filter:eq(0)`).toBeDisplayed();
+    expect(`.o_calendar_filter:eq(0)`).toBeVisible();
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
     expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
     await hideCalendarPanel();
