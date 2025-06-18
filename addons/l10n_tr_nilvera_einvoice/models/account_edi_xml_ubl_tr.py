@@ -52,14 +52,12 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _get_partner_party_identification_vals_list(self, partner):
         # EXTENDS account.edi.xml.ubl_21
-        vals = super()._get_partner_party_identification_vals_list(partner)
-        vals.append({
+        return [{
             'id_attrs': {
                 'schemeID': 'VKN' if partner.is_company else 'TCKN',
             },
             'id': partner.vat,
-        })
-        return vals
+        }]
 
     def _get_partner_address_vals(self, partner):
         # EXTENDS account.edi.xml.ubl_21
