@@ -11,9 +11,9 @@ import warnings
 from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 
-import odoo
-from odoo import api, fields, models
+from odoo import api, fields, models, sql_db
 from odoo.exceptions import LockError, UserError
+from odoo.modules import Manifest
 from odoo.modules.registry import Registry
 from odoo.tools import SQL
 from odoo.tools.constants import GC_UNLINK_LIMIT
@@ -24,7 +24,7 @@ if typing.TYPE_CHECKING:
 
 _logger = logging.getLogger(__name__)
 
-BASE_VERSION = odoo.modules.get_manifest('base')['version']
+BASE_VERSION = Manifest.for_addon('base')['version']
 MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
 MIN_RUNS_PER_JOB = 10
 MIN_TIME_PER_JOB = 10  # seconds
@@ -143,7 +143,7 @@ class IrCron(models.Model):
     def _process_jobs(db_name: str) -> None:
         """ Execute every job ready to be run on this database. """
         try:
-            db = odoo.sql_db.db_connect(db_name)
+            db = sql_db.db_connect(db_name)
             threading.current_thread().dbname = db_name
             with db.cursor() as cron_cr:
                 cls = IrCron
@@ -725,7 +725,7 @@ class IrCron(models.Model):
         The ODOO_NOTIFY_CRON_CHANGES environment variable allows to force the notifydb on both
         IrCron modification and on trigger creation (regardless of call_at)
         """
-        with odoo.sql_db.db_connect('postgres').cursor() as cr:
+        with sql_db.db_connect('postgres').cursor() as cr:
             cr.execute(SQL("SELECT %s('cron_trigger', %s)", SQL.identifier(ODOO_NOTIFY_FUNCTION), self.env.cr.dbname))
         _logger.debug("cron workers notified")
 
