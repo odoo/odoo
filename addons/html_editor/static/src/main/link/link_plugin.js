@@ -36,8 +36,18 @@ function isLinkActive(selection) {
 /**
  * @param {EditorSelection} selection
  */
-function isSelectionHasLink(selection) {
-    return findInSelection(selection, "a") ? true : false;
+function hasNoOrEditableLink(selection) {
+    // Either no link OR editable link
+    return !findInSelection(selection, "a")?.dataset.linkNotEditable;
+}
+
+/**
+ * @param {EditorSelection} selection
+ */
+function hasEditableLink(selection) {
+    // Link present AND editable
+    const link = findInSelection(selection, "a");
+    return link && !link?.dataset.linkNotEditable;
 }
 
 /**
@@ -152,6 +162,7 @@ export class LinkPlugin extends Plugin {
                 title: _t("Link"),
                 description: _t("Add a link"),
                 icon: "fa-link",
+                isAvailable: hasNoOrEditableLink,
                 run: ({ link, type } = {}) => this.openLinkTools(link, type),
             },
             {
@@ -159,7 +170,7 @@ export class LinkPlugin extends Plugin {
                 title: _t("Remove Link"),
                 description: _t("Remove Link"),
                 icon: "fa-unlink",
-                isAvailable: isSelectionHasLink,
+                isAvailable: hasEditableLink,
                 run: this.removeLinkFromSelection.bind(this),
             },
         ],

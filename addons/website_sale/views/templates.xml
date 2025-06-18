@@ -1694,9 +1694,9 @@
                     <div class="row align-items-center">
                         <div class="col d-flex align-items-center order-1 order-lg-0">
                             <ol class="o_wsale_breadcrumb breadcrumb p-0 mb-4 m-lg-0">
-                                <li class="o_not_editable breadcrumb-item d-none d-lg-inline-block">
-                                    <a t-att-href="keep(shop_path)">
-                                        <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/>All Products
+                                <li class="breadcrumb-item d-none d-lg-inline-block">
+                                    <a t-att-href="keep(shop_path)" data-link-not-editable="true">
+                                        <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-call="website_sale.all_products_link_name"/>
                                     </a>
                                 </li>
                                 <li
@@ -1711,9 +1711,9 @@
                                         <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="category.name"/>
                                     </a>
                                 </li>
-                                <li t-else="" class="o_not_editable breadcrumb-item d-lg-none">
-                                    <a class="py-2 py-lg-0" t-att-href="keep(shop_path)">
-                                        <i class="oi oi-chevron-left me-1" role="presentation"/>All Products
+                                <li t-else="" class="breadcrumb-item d-lg-none">
+                                    <a class="py-2 py-lg-0" t-att-href="keep(shop_path)" data-link-not-editable="true">
+                                        <i class="oi oi-chevron-left me-1" role="presentation"/><t t-call="website_sale.all_products_link_name"/>
                                     </a>
                                 </li>
                                 <li class="breadcrumb-item d-none d-lg-inline-block active">
@@ -1909,6 +1909,10 @@
                 <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
             </div>
         </t>
+    </template>
+
+    <template id="all_products_link_name" name="All Products name">
+        <span placeholder="All products">All products</span>
     </template>
 
     <template id="product_accordion" name="Accordion On Product Page">
