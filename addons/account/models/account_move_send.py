@@ -18,7 +18,7 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_default_sending_method(self, move) -> set:
+    def _get_default_sending_method(self, move) -> str:
         """ By default, we use the sending method set on the partner or email. """
         return move.partner_id.with_company(move.company_id).invoice_sending_method or 'email'
 
@@ -57,8 +57,8 @@ class AccountMoveSend(models.AbstractModel):
             return custom_settings.get(key) if key in custom_settings else move.sending_data.get(key) if from_cron else default_value
 
         vals = {
-            'sending_methods': get_setting('sending_methods', default_value={self._get_default_sending_method(move)}) or {},
-            'extra_edis': get_setting('extra_edis', default_value=self._get_default_extra_edis(move)) or {},
+            'sending_methods': get_setting('sending_methods', default_value=[self._get_default_sending_method(move)]) or [],
+            'extra_edis': get_setting('extra_edis', default_value=list(self._get_default_extra_edis(move))) or [],
             'pdf_report': get_setting('pdf_report') or self._get_default_pdf_report_id(move),
             'author_user_id': get_setting('author_user_id', from_cron=from_cron) or self.env.user.id,
             'author_partner_id': get_setting('author_partner_id', from_cron=from_cron) or self.env.user.partner_id.id,
