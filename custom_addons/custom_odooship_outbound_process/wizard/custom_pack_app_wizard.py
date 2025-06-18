@@ -1018,7 +1018,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         {"category": "length", "unit": "m", "value": 0.1},
                         {"category": "width", "unit": "m", "value": 0.2},
                         {"category": "height", "unit": "m", "value": 0.3},
-                        {"category": "weight", "unit": "KG", "value": total_weight}
+                        {"category": "weight", "unit": "KG", "value": round(total_weight, 2)}
                     ]
                 }
 
@@ -1456,7 +1456,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     {"category": "length", "unit": "m", "value": 0.1},
                     {"category": "width", "unit": "m", "value": 0.2},
                     {"category": "height", "unit": "m", "value": 0.3},
-                    {"category": "weight", "unit": "KG", "value": line.weight or 0.4}
+                    {"category": "weight", "unit": "KG", "value": round(line.weight or 0.4, 2)}
                 ]
             })
 

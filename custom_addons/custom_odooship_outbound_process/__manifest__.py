@@ -24,9 +24,13 @@
         'wizard/custom_pack_app_wizard_view.xml',
 
     ],
+    'assets': {
+        'web.assets_backend': [
+            'your_module_name/static/src/js/disable_pack_button.js',
+        ],
+    },
     'installable': True,
     'application': True,
     'auto_install': True,
     'license': 'LGPL-3',
 }
-
