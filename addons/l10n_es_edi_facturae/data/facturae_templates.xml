@@ -112,7 +112,7 @@
                 <ItemDescription t-out="line['ItemDescription']"/>
                 <Quantity t-out="line['Quantity']"/>
                 <UnitOfMeasure t-out="line.get('UnitOfMeasure')"/>
-                <UnitPriceWithoutTax t-out="float_repr(refund_multiplier*line['UnitPriceWithoutTax'], file_currency.decimal_places)"/>
+                <UnitPriceWithoutTax t-out="float_repr(refund_multiplier*line['UnitPriceWithoutTax'], unit_price_decimals)"/>
                 <TotalCost t-out="float_repr(refund_multiplier*line['TotalCost'], file_currency.decimal_places)"/>
                 <DiscountsAndRebates t-if="line.get('DiscountsAndRebates')">
                     <t t-foreach="line['DiscountsAndRebates']" t-as="discount">
