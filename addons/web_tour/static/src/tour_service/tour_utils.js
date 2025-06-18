@@ -207,8 +207,11 @@ export const stepUtils = {
                 isActive: ["auto", "mobile"],
                 trigger: ".o_statusbar_buttons",
                 run: (actions) => {
+                    const buttonOutSideDropdownMenu = hoot.queryFirst(
+                        `.o_statusbar_buttons button:enabled:contains('${innerTextButton}')`
+                    );
                     const node = hoot.queryFirst(".o_statusbar_buttons button:has(.oi-ellipsis-v)");
-                    if (node) {
+                    if (!buttonOutSideDropdownMenu && node) {
                         hoot.click(node);
                     }
                 },
