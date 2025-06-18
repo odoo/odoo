@@ -336,7 +336,7 @@ class HrEmployee(models.Model):
                 version = employee.current_version_id
             employee.version_id = version
 
-    @api.depends('version_ids.date_version')
+    @api.depends('version_ids.date_version', 'version_ids.active')
     def _compute_current_version_id(self):
         for employee in self:
             version = self.env['hr.version'].search(
