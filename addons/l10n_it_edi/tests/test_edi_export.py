@@ -473,7 +473,7 @@ class TestItEdiExport(TestItEdi):
         if self.env['ir.module.module']._get('sale').state != 'installed':
             self.skipTest("sale module is not installed")
 
-        sale_order = self.env['sale.order'].with_company(self.company).create({
+        sale_order = self.env['sale.order'].with_company(self.company).sudo().create({
             'partner_id': self.italian_partner_a.id,
             'order_line': [
                 Command.create({'product_id': self.service_product.id, 'price_unit': 200.00}),
@@ -483,7 +483,7 @@ class TestItEdiExport(TestItEdi):
 
         for amount in (50, 100):
             self.env['account.move'].with_company(self.company).browse(
-                self.env['sale.advance.payment.inv'].create([{
+                self.env['sale.advance.payment.inv'].sudo().create([{
                     'advance_payment_method': 'fixed',
                     'fixed_amount': amount,
                     'sale_order_ids': [Command.link(sale_order.id)],
@@ -491,7 +491,7 @@ class TestItEdiExport(TestItEdi):
             ).action_post()
 
         invoice = self.env['account.move'].with_company(self.company).browse(
-            self.env['sale.advance.payment.inv'].create([{
+            self.env['sale.advance.payment.inv'].sudo().create([{
                 'advance_payment_method': 'delivered',
                 'sale_order_ids': [Command.link(sale_order.id)],
             }]).create_invoices()['res_id']
