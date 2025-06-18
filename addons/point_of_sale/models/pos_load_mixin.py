@@ -37,4 +37,7 @@ class PosLoadMixin(models.AbstractModel):
 
     def _read_pos_record(self, ids, config_id):
         fields = self._load_pos_data_fields(self.id)
-        return self.with_context(config_id=config_id)._post_read_pos_data(self.browse(ids).read(fields, load=False))
+        record_ids = self.browse(ids).exists()
+        if not record_ids:
+            return []
+        return self.with_context(config_id=config_id)._post_read_pos_data(record_ids.read(fields, load=False))
