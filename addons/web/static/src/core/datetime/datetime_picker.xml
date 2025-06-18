@@ -47,21 +47,25 @@
                 </div>
             </t>
         </div>
-        <div t-attf-class="position-relative d-flex flex-column flex-md-row gap-4 gap-md-3 {{ props.type === 'datetime' ? 'justify-content-center' : 'justify-content-end' }}">
-            <div t-attf-class="d-flex gap-3 w-100 {{ props.type === 'datetime' ? 'justify-content-around' : 'd-none' }}">
-                <t t-if="props.type === 'datetime'">
-                    <t t-foreach="state.timeValues" t-as="timeValue" t-key="timeValue_index">
-                        <TimePicker
-                            t-if="timeValue"
-                            value="timeValue"
-                            onChange="(newTime) => this.onTimeChange(timeValue_index, newTime)"
-                            minutesRounding="props.rounding"
-                            showSeconds="props.rounding === 0"
-                        />
-                    </t>
-                </t>
+        <div t-if="props.type === 'datetime'" class="d-flex gap-3 justify-content-between">
+            <div class="d-flex gap-1 align-items-center">
+                <TimePicker
+                    t-if="state.timeValues[0]"
+                    value="state.timeValues[0]"
+                    onChange="(newTime) => this.onTimeChange(0, newTime)"
+                    minutesRounding="props.rounding"
+                    showSeconds="props.rounding === 0"
+                />
+                <i t-if="state.timeValues[0] and state.timeValues[1]" class="fa fa-long-arrow-right"/>
+                <TimePicker
+                    t-if="state.timeValues[1]"
+                    value="state.timeValues[1]"
+                    onChange="(newTime) => this.onTimeChange(1, newTime)"
+                    minutesRounding="props.rounding"
+                    showSeconds="props.rounding === 0"
+                />
             </div>
-            <div t-attf-class="o_datetime_buttons {{ props.type === 'datetime' ? 'position-md-absolute h-100 end-0' : '' }}">
+            <div class="o_datetime_buttons d-flex gap-2">
                 <t t-slot="buttons" />
             </div>
         </div>

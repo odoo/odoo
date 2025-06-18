@@ -514,6 +514,20 @@ describe("DateTimeInput (datetime)", () => {
         expect(".o_datetime_picker").toHaveCount(1);
     });
 
+    test("Clicking apply button closes datetime picker", async () => {
+        await mountWithCleanup(DateTimeInputComp, {
+            props: {
+                value: DateTime.fromFormat("09/01/1997 12:30:01", "dd/MM/yyyy HH:mm:ss"),
+                type: "datetime",
+                format: "dd MMM, yyyy HH:mm:ss",
+            },
+        });
+        await contains(".o_datetime_input").click();
+        await contains(".o_datetime_picker .o_datetime_buttons .btn-primary").click();
+
+        expect(".o_datetime_picker").toHaveCount(0);
+    });
+
     test("check datepicker in localization with textual month format", async () => {
         defineParams({
             lang_parameters: {

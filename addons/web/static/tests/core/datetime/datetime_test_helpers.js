@@ -43,12 +43,11 @@ export function assertDateTimePicker(expectedParams) {
         expect(".o_time_picker").toHaveCount(time.length);
         for (let i = 0; i < time.length; i++) {
             const expectedTime = time[i];
-            expect(`.o_time_picker:nth-child(${i + 1}) .o_time_picker_input`).toHaveValue(
-                expectedTime,
-                {
-                    message: `time values should be [${expectedTime}]`,
-                }
-            );
+            expect(
+                `.o_time_picker:nth-child(${i + 1} of .o_time_picker) .o_time_picker_input`
+            ).toHaveValue(expectedTime, {
+                message: `time values should be [${expectedTime}]`,
+            });
         }
     } else {
         expect(".o_time_picker").toHaveCount(0);

@@ -1178,7 +1178,7 @@ test("update the selected input datetime after clearing the existing date", asyn
         resId: 1,
     });
     await contains("input[data-field=datetime]").click();
-    await contains(".o_datetime_buttons button.btn-secondary:contains('Clear')").click();
+    await contains(".o_datetime_buttons button.btn-secondary > .fa-eraser").click();
     expect(".o_time_picker_input").toHaveCount(1);
 
     await contains(getPickerCell("12")).click();
