@@ -1,18 +1,17 @@
 {
-    'name': 'Jordan E-Invoicing',
+    'name': 'Jordan E-Invoicing Extended Features',
     'countries': ['jo'],
     'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
-    'summary': 'Electronic Invoicing for Jordan UBL 2.1',
-    'author': 'Odoo S.A., Smart Way Business Solutions',
+    'summary': 'Extended features for JoFotara',
     'description': """
-       Allows the users to integrate with JoFotara.
+This module improves the Jordan E-invoicing (JoFotara) by the following:
+       1. Adds support for different invoice types and payment methods.
+       2. Introduces demo mode.
     """,
-    'depends': ['account_edi_ubl_cii', 'l10n_jo'],
+    'depends': ['l10n_jo_edi'],
     'data': [
-        'data/ubl_jo_templates.xml',
         'views/account_move_views.xml',
-        'views/report_invoice.xml',
         'views/res_config_settings_views.xml',
         'wizard/account_move_send_views.xml',
     ],
@@ -20,6 +19,6 @@
         'demo/demo_company.xml',
     ],
     'installable': True,
-    'auto_install': ['l10n_jo'],
+    'auto_install': True,
     'license': 'LGPL-3',
 }

@@ -19,7 +19,7 @@ class AccountMoveSend(models.TransientModel):
     @api.depends("move_ids")
     def _compute_l10n_jo_edi_is_visible(self):
         for wizard in self:
-            wizard.l10n_jo_edi_is_visible = any(move.l10n_jo_edi_is_needed and move.l10n_jo_edi_state != 'sent' for move in wizard.move_ids)
+            wizard.l10n_jo_edi_is_visible = any(move.l10n_jo_edi_is_needed and move.l10n_jo_edi_state not in move._l10n_jo_edi_state_sent_options() for move in wizard.move_ids)
 
     @api.depends("l10n_jo_edi_is_visible")
     def _compute_l10n_jo_edi_is_enabled(self):

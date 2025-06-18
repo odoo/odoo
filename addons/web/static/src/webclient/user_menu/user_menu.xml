@@ -20,15 +20,16 @@
                         dataset="{ menu: element.id }"
                         onSelected="element.callback"
                     >
+                    <div class="d-flex justify-content-between p-0 w-100">
+                        <t t-out="element.description"/>
                         <CheckBox
                             t-if="element.type == 'switch'"
                             value="element.isChecked"
-                            className="'form-switch d-flex flex-row-reverse justify-content-between p-0 w-100'"
+                            className="'form-switch ms-2'"
                             onChange="element.callback"
                         >
-                            <t t-out="element.description"/>
                         </CheckBox>
-                        <t t-else="" t-out="element.description"/>
+                    </div>
                     </DropdownItem>
                     <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
                 </t>
