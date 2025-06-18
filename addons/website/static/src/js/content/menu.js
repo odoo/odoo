@@ -672,7 +672,11 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
     _dropdownHover: function () {
         this.$dropdownMenus.attr('data-bs-popper', 'none');
         if (uiUtils.getSize() >= SIZES.LG) {
-            this.$dropdownMenus.css('margin-top', '0');
+            for (const menuEl of this.$dropdownMenus) {
+                if (!menuEl.closest('.o_mega_menu_is_offcanvas')) {
+                    menuEl.style.setProperty('margin-top', '0', 'important');
+                }
+            }
             this.$dropdownMenus.css('top', 'unset');
         } else {
             this.$dropdownMenus.css('margin-top', '');
