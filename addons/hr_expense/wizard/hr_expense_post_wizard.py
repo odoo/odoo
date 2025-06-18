@@ -45,15 +45,15 @@ class HrExpensePostWizard(models.TransientModel):
         expenses = self.env['hr.expense'].browse(self.env.context['active_ids'])
         if not self.env['account.move'].has_access('create'):
             raise UserError(_("You don't have the rights to create accounting entries."))
-        expense_bill_vals_list  = [
+        expense_receipt_vals_list = [
             {
-                **new_bill_vals,
+                **new_receipt_vals,
                 'journal_id': self.employee_journal_id.id,
                 'invoice_date': self.accounting_date,
             }
-            for new_bill_vals in expenses._prepare_bills_vals()
+            for new_receipt_vals in expenses._prepare_receipts_vals()
         ]
-        moves = self.env['account.move'].sudo().create(expense_bill_vals_list)
+        moves = self.env['account.move'].sudo().create(expense_receipt_vals_list)
         for move in moves:
             move._message_set_main_attachment_id(move.attachment_ids, force=True, filter_xml=False)
         moves.action_post()
