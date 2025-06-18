@@ -205,6 +205,14 @@ class ResPartner(models.Model):
             self.peppol_eas,
             self_partner._get_peppol_edi_format(),
         )
+<<<<<<< 7bdb7b2348123a27599caf008cf77b49beca66ba
+||||||| 938b772ab60501ac7028da0edf2f66a758004363
+        if self_partner.peppol_verification_state == 'valid':
+            self_partner.invoice_sending_method = 'peppol'
+=======
+        if self_partner.peppol_verification_state == 'valid' and not self_partner.invoice_sending_method:
+            self_partner.invoice_sending_method = 'peppol'
+>>>>>>> 3dacda8687d2be6a49df91291311c2db4522fdf1
 
         self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)
         return False
