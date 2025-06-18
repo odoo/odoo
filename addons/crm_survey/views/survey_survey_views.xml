@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="survey.survey_survey_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_survey_user_input_completed']" position="after">
-                <button name="action_survey_user_input_leads"
+                <button name="action_survey_leads"
                     groups="sales_team.group_sale_salesman"
                     type="object"
                     class="oe_stat_button"
@@ -33,7 +33,7 @@
             <xpath expr="//div[a[@name='action_survey_user_input_completed']]" position="after">
                 <div t-if="!selection_mode and record.lead_count.raw_value > 0" class="col-lg-1 col-sm-4 col-6 py-0 my-2">
                     <a type="object"
-                       name="action_survey_user_input_leads"
+                       name="action_survey_leads"
                        class="fw-bold">
                         <field name="lead_count"/><br/>
                         <span class="text-muted" t-if="record.lead_count.raw_value == 1">Lead</span>

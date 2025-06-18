@@ -1169,6 +1169,7 @@ class SurveySurvey(models.Model):
         if not self.env.user.has_group('survey.group_survey_user'):
             raise AccessError(_('Only survey users can manage sessions.'))
 
+        self.ensure_one()
         self.sudo().write({'session_state': False})
         self.user_input_ids.sudo().write({'state': 'done'})
         self.env['bus.bus']._sendone(self.access_token, 'end_session', {})

@@ -8,7 +8,7 @@ class SurveyUser_Input(models.Model):
         """ Inherit the super method when a answer (except session in live) is submitted """
         super()._mark_done()
 
-        # Generate lead (note: live_session matches here to a live session survey shared (as a normal survey), not a session in live, in that cas, see action_end_session function)
+        # Generate lead (note: live_session matches here to a live session survey shared (as a normal survey), not a session that is in live, in that case, see action_end_session function from survey.survey)
         for user_input in self:
             if (user_input.survey_id.survey_type in ['survey', 'live_session', 'custom']):
                 user_input._lead_qualification_check()
