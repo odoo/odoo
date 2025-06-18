@@ -1,0 +1,84 @@
+.o-mail-DiscussActions-group {
+    &.o-inline {
+        outline: 1px solid $gray-300;
+    }
+    &:not(.o-inline) {
+        gap: 1px;
+    }
+}
+
+
+@mixin mail-DiscussActions-buttonMixin {
+    z-index: 1;
+    --btn-disabled-opacity: 0.25;
+    --mail-DiscussSidebarChannelActions-activeBorderColor: #{mix($gray-200, $gray-300)};
+
+    &.o-danger {
+        color: darken($danger, 5%) !important;
+    }
+
+    &.o-success {
+        color: darken($success, 5%) !important;
+    }
+
+    &.o-inline {
+        background-color: mail-DiscussPanel-bgColor() !important;
+    }
+    
+    &.o-inline i {
+        opacity: 65%;
+    }
+
+    &:not(.o-inline) i {
+        opacity: 75%;
+    }
+
+    .o-mail-DiscussActions-actionLabel {
+        opacity: 75%;
+    }
+
+    &:hover:not(.o-dropdown-item), &.o-isActive, &.focus {
+        .o-mail-DiscussActions-actionLabel {
+            opacity: 100%;
+        }
+
+        background-color: var(--mail-DiscussSidebarChannelActions-activeBgColor, mix($gray-100, $gray-200)) !important;
+        color: var(--mail-DiscussSidebarChannelActions-activeColor, black) !important;
+        &.o-danger {
+            // background-color: rgba(lighten($danger, 5%), .85) !important;
+            background-color: mix(lighten($danger, 5%), mail-DiscussPanel-bgColor(), 85%) !important;
+            color: white !important;
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+            outline: 1px solid rgba(lighten($danger, 5%), 1) !important;
+        }
+        &.o-success {
+            // background-color: rgba(lighten($success, 5%), .65) !important;
+            background-color: mix(lighten($success, 5%), mail-DiscussPanel-bgColor(), 65%) !important;
+            color: white !important;
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+            outline: 1px solid rgba(lighten($success, 5%), .75) !important;
+        }
+        z-index: 2 !important;
+        i {
+            opacity: 100%;
+        }
+
+        outline: 1px solid mail-DiscussMenu-activeItemOutlineColor() !important;
+        background-color: mail-DiscussMenu-activeItemBgColor() !important;
+        color: mail-DiscussMenu-activeItemColor() !important;
+        &:not(.o-inline) {
+            outline-offset: -1px;
+        }
+        box-shadow: $box-shadow-sm;
+    }
+}
+
+.o-mail-DiscussActions {
+    hr {
+        opacity: 12.5% !important;
+    }
+
+    button {
+        @include mail-DiscussActions-buttonMixin;    
+    }
+}

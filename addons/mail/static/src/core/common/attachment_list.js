@@ -127,18 +127,29 @@ export class AttachmentList extends Component {
 
     getActions(attachment) {
         const res = [];
-        if (this.showDelete) {
-            res.push({
-                label: _t("Remove"),
-                icon: "fa fa-trash",
-                onSelect: () => this.onClickUnlink(attachment),
-            });
-        }
         if (this.canDownload(attachment)) {
             res.push({
+                id: "download",
+                /** @deprecated, use `name` instead */
                 label: _t("Download"),
+                name: _t("Download"),
                 icon: "fa fa-download",
+                /** @deprecated, use `onSelected` instead */
                 onSelect: () => this.onClickDownload(attachment),
+                onSelected: () => this.onClickDownload(attachment),
+            });
+        }
+        if (this.showDelete) {
+            res.push({
+                id: "remove",
+                /** @deprecated, use `name` instead */
+                label: _t("Remove"),
+                name: _t("Remove"),
+                danger: true,
+                icon: "fa fa-trash",
+                /** @deprecated, use `onSelected` instead */
+                onSelect: () => this.onClickUnlink(attachment),
+                onSelected: () => this.onClickUnlink(attachment),
             });
         }
         return res;

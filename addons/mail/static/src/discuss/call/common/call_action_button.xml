@@ -7,7 +7,7 @@
             t-att-data-hotkey="props.action.hotkey"
             t-att-aria-label="props.action.name"
             t-att-title="title"
-            t-on-click="props.action.select">
+            t-on-click="(ev) => this.props.action.select(ev)">
             <i class="fa fa-fw m-2 fa-fw" t-att-class="{
                 'fa-lg': !props.isSmall,
                 [props.action.inactiveIcon]: !props.isActive,
