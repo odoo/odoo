@@ -87,13 +87,13 @@
                             <field name="allocation_validation_type" string="Approval" widget="radio" invisible="not requires_allocation"/>
                         </group>
                     </group>
-                    <group>
+                    <group style="justify-content: unset;">
                         <group name="configuration" id="configuration" string="Configuration">
-                            <div class="d-flex flex-row" colspan="2">
+                            <div class="o_cell o_wrap_label text-break text-900 d-flex flex-row" colspan="2">
                                 <div class="d-flex flex-column gap-2">
-                                    <label for="include_public_holidays_in_duration" class="fw-bold me-4"/>
-                                    <label for="hide_on_dashboard" class="fw-bold me-4"/>
-                                    <label for="support_document" class="fw-bold me-4" string="Require Supporting Document"/>
+                                    <label for="include_public_holidays_in_duration" class="me-4"/>
+                                    <label for="hide_on_dashboard" class="me-4"/>
+                                    <label for="support_document" class="me-4" string="Require Supporting Document"/>
                                 </div>
                                 <div class="d-flex flex-column gap-1">
                                     <field name="include_public_holidays_in_duration" class="mb-2" nolabel="1"/>
@@ -102,18 +102,20 @@
                                 </div>
                             </div>
                         </group>
-                        <group name="negative_cap" id="negative_cap" string="Negative Cap"
-                            invisible="not requires_allocation">
-                            <div class="o_row" colspan="2">
-                                <label for="allows_negative" class="fw-bold me-4" readonly="0"/>
-                                <field name="allows_negative" nolabel="1"/>
-                                <div invisible="not allows_negative">
-                                    <span class="mx-2">up to</span>
-                                    <field name="max_allowed_negative" class="oe_inline"/>
-                                    <span class="mx-2" invisible="request_unit == 'hour'">days</span>
-                                    <span class="mx-2" invisible="request_unit != 'hour'">hours</span>
+                        <group>
+                            <group name="negative_cap" id="negative_cap" string="Negative Cap"
+                                invisible="not requires_allocation" colspan="2">
+                                <div class="o_row o_cell o_wrap_label text-break text-900" colspan="2">
+                                    <label for="allows_negative" class="me-4" readonly="0"/>
+                                    <field name="allows_negative" nolabel="1"/>
+                                    <div invisible="not allows_negative">
+                                        <span class="mx-2">up to</span>
+                                        <field name="max_allowed_negative" class="oe_inline"/>
+                                        <span class="mx-2" invisible="request_unit == 'hour'">days</span>
+                                        <span class="mx-2" invisible="request_unit != 'hour'">hours</span>
+                                    </div>
                                 </div>
-                            </div>
+                            </group>
                         </group>
                     </group>
                     <group name="visual" id="visual" string="Display Option" class="mw-100 col-lg-12">
