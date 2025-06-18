@@ -204,6 +204,9 @@ class Im_LivechatChannel(models.Model):
     def _get_livechat_discuss_channel_vals(
         self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None
     ):
+        # use the same "now" in the whole function to ensure unpin_dt > last_interest_dt
+        now = fields.Datetime.now()
+        last_interest_dt = now - timedelta(seconds=1)
         user_operator = False
         if chatbot_script:
             if chatbot_script.id not in self.browse(self.ids).mapped('rule_ids.chatbot_script_id.id'):
@@ -216,7 +219,13 @@ class Im_LivechatChannel(models.Model):
         # partner to add to the discuss.channel
         operator_partner_id = user_operator.partner_id.id if user_operator else chatbot_script.operator_partner_id.id
         members_to_add = [
-            Command.create({"partner_id": operator_partner_id, "unpin_dt": fields.Datetime.now()})
+            Command.create(
+                {
+                    "last_interest_dt": last_interest_dt,
+                    "partner_id": operator_partner_id,
+                    "unpin_dt": now,
+                }
+            )
         ]
         visitor_user = False
         if user_id:
