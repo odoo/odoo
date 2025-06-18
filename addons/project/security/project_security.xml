@@ -72,7 +72,7 @@
         <field name="name">Project: employees: following required for follower-only projects</field>
         <field name="model_id" ref="model_project_project"/>
         <field name="domain_force">['|',
-                                        ('privacy_visibility', '!=', 'followers'),
+                                        ('privacy_visibility', 'in', ['employees', 'portal']),
                                         ('message_partner_ids', 'in', [user.partner_id.id])
                                     ]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
@@ -92,7 +92,7 @@
                 '&amp;',
                     ('project_id', '!=', False),
                     '|',
-                        ('project_id.privacy_visibility', '!=', 'followers'),
+                        ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
                         ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 '|',
                     ('message_partner_ids', 'in', [user.partner_id.id]),
@@ -152,7 +152,7 @@
         <field name="name">Project: See private tasks</field>
         <field name="model_id" ref="project.model_project_task"/>
         <field name="domain_force">[
-            ('project_id.privacy_visibility', '!=', 'followers'),
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
             '|', '|', ('project_id', '!=', False),
                       ('parent_id', '!=', False),
                  ('user_ids', 'in', user.id),
@@ -229,7 +229,7 @@
         <field name="model_id" ref="model_project_update"/>
         <field name="domain_force">[
         '|',
-            ('project_id.privacy_visibility', '!=', 'followers'),
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
             '|',
                 ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 '|',
@@ -244,7 +244,7 @@
         <field name="model_id" ref="model_report_project_task_user"/>
         <field name="domain_force">[
         '|',
-            ('project_id.privacy_visibility', '!=', 'followers'),
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
             '|',
                 ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 '|',
@@ -273,7 +273,7 @@
         <field name="model_id" ref="model_project_task_burndown_chart_report"/>
         <field name="domain_force">[
         '|',
-            ('project_id.privacy_visibility', '!=', 'followers'),
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
             '|',
                 ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 ('user_ids', 'in', user.id),
@@ -299,7 +299,7 @@
         <field name="model_id" ref="model_project_milestone"/>
         <field name="domain_force">[
         '|',
-            ('project_id.privacy_visibility', '!=', 'followers'),
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
             '|',
                 ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 ('project_id.user_id', '=', user.id),
