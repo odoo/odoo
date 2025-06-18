@@ -53,7 +53,7 @@ export class BuilderFontFamilyPicker extends Component {
     }
     forwardProps(fontValue) {
         const result = Object.assign({}, this.props, {
-            [this.props.valueParamName]: fontValue.fontFamily,
+            [this.props.valueParamName]: fontValue.fontFamilyValue,
         });
         delete result.selectMethod;
         delete result.valueParamName;

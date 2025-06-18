@@ -178,11 +178,12 @@ class FontPlugin extends Plugin {
             const fontKey = getCSSVariableValue(`font-number-${realFontNb}`, style);
             allFonts.push(fontKey);
             let fontName = fontKey.slice(1, -1); // Unquote
-            let fontFamily = fontName;
+            const fontFamilyValue = fontName;
+            let styleFontFamily = fontName;
             const isSystemFonts = fontName === "SYSTEM_FONTS";
             if (isSystemFonts) {
                 fontName = _t("System Fonts");
-                fontFamily = "var(--o-system-fonts)";
+                styleFontFamily = "var(--o-system-fonts)";
             }
 
             let type = "cloud";
@@ -199,7 +200,8 @@ class FontPlugin extends Plugin {
             _fonts.push({
                 type,
                 indexForType,
-                fontFamily,
+                fontFamilyValue,
+                styleFontFamily,
                 string: fontName,
             });
         }
