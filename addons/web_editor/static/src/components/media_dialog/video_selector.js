@@ -32,7 +32,7 @@ export class VideoSelector extends Component {
             autoplay: {
                 label: _t("Autoplay"),
                 description: _t("Videos are muted when autoplay is enabled"),
-                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.dailymotion, this.PLATFORMS.vimeo],
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
                 urlParameter: 'autoplay=1',
             },
             loop: {
@@ -42,7 +42,7 @@ export class VideoSelector extends Component {
             },
             hide_controls: {
                 label: _t("Hide player controls"),
-                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.dailymotion, this.PLATFORMS.vimeo],
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
                 urlParameter: 'controls=0',
             },
             hide_fullscreen: {
@@ -50,16 +50,6 @@ export class VideoSelector extends Component {
                 platforms: [this.PLATFORMS.youtube],
                 urlParameter: 'fs=0',
                 isHidden: () => this.state.options.filter(option => option.id === 'hide_controls')[0].value,
-            },
-            hide_dm_logo: {
-                label: _t("Hide Dailymotion logo"),
-                platforms: [this.PLATFORMS.dailymotion],
-                urlParameter: 'ui-logo=0',
-            },
-            hide_dm_share: {
-                label: _t("Hide sharing button"),
-                platforms: [this.PLATFORMS.dailymotion],
-                urlParameter: 'sharing-enable=0',
             },
         };
 
