@@ -4,7 +4,12 @@ import { DEFAULT_PALETTE } from "@html_editor/utils/color";
 import { isCSSColor } from "@web/core/utils/colors";
 import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { getShapeURL } from "./image_helpers";
-import { activateCropper, createDataURL, loadImage } from "@html_editor/utils/image_processing";
+import {
+    activateCropper,
+    createDataURL,
+    loadImage,
+    loadImageInfo,
+} from "@html_editor/utils/image_processing";
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { imageShapeDefinitions } from "./image_shapes_definition";
 import {
@@ -67,7 +72,9 @@ export class ImageShapeOptionPlugin extends Plugin {
         return shapeSvgText;
     }
     async loadShape(img, newData = {}) {
-        return this.dependencies.imagePostProcess.processImage({ img, newDataset: newData });
+        Object.assign(newData, await loadImageInfo(img));
+        await loadImage(newData.originalSrc, img);
+        return this.dependencies.imagePostProcess.processImage(img, newData);
         //todo: handle hover effect before
         // todo: is it still needed?
         // await loadImage(shapeDataURL, img);

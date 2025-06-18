@@ -614,7 +614,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'interaction_lifecycle', login='admin')
 
-    @unittest.skip
     def test_drop_404_ir_attachment_url(self):
         website_snippets = self.env.ref('website.snippets')
         self.env['ir.ui.view'].create([{
