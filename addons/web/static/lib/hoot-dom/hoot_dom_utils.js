@@ -19,7 +19,7 @@
  *
  * @typedef {[string, any[], any]} InteractionDetails
  *
- * @typedef {"interaction" | "query" | "server"} InteractionType
+ * @typedef {"interaction" | "query" | "server" | "time"} InteractionType
  */
 
 /**
