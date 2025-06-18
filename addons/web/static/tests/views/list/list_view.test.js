@@ -10755,7 +10755,6 @@ test(`list daterange with empty start date and end date`, async () => {
         `,
     });
     expect(queryAllTexts(`.o_data_row:eq(0) .o_field_widget[name=date] span`)).toEqual([
-        "",
         "01/25/2017",
     ]);
 });
