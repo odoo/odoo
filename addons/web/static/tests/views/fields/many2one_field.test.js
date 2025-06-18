@@ -1040,7 +1040,7 @@ test("many2one in edit mode", async () => {
 
     // change the value of the m2o with a suggestion of the dropdown
     await selectFieldDropdownItem("trululu", "first record");
-    expect(".o_field_many2one[name='trululu'] .dropdown-menu").not.toBeVisible();
+    expect(".o_field_many2one[name='trululu'] .dropdown-menu").not.toHaveCount();
     expect(".o_field_many2one input").toHaveValue("first record");
 
     // change the value of the m2o with a record in the 'Search More' modal
@@ -1063,7 +1063,7 @@ test("many2one in edit mode", async () => {
     // choose a record
     await contains(".modal .o_data_cell[data-tooltip='Partner 20']").click();
     expect(".modal").toHaveCount(0);
-    expect(".o_field_many2one[name='trululu'] .dropdown-menu").not.toBeVisible();
+    expect(".o_field_many2one[name='trululu'] .dropdown-menu").not.toHaveCount();
     expect(".o_field_many2one input").toHaveValue("Partner 20");
 
     // save

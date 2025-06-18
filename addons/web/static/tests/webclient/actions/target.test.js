@@ -620,15 +620,15 @@ describe("fullscreen", () => {
         await mountWithCleanup(WebClient);
         await getService("action").doAction(6);
         await animationFrame(); // for the webclient to react and remove the navbar
-        expect(".o_main_navbar").not.toBeVisible();
+        expect(".o_main_navbar").not.toHaveCount();
 
         await contains("button[name='15']").click();
         await animationFrame();
-        expect(".o_main_navbar").not.toBeVisible();
+        expect(".o_main_navbar").not.toHaveCount();
 
         await contains(".breadcrumb li a").click();
         await animationFrame();
-        expect(".o_main_navbar").not.toBeVisible();
+        expect(".o_main_navbar").not.toHaveCount();
     });
 
     test.tags("desktop");
