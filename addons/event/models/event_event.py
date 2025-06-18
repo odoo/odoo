@@ -771,6 +771,23 @@ class EventEvent(models.Model):
     # ACTIONS
     # ------------------------------------------------------------
 
+    def action_open_slot_calendar(self):
+        self.ensure_one()
+        return {
+            'type': "ir.actions.act_window",
+            'name': _("Slots"),
+            'view_mode': "calendar,list,form",
+            'mobile_view_mode': "list",
+            'res_model': "event.slot",
+            'target': "current",
+            'domain': [('event_id', '=', self.id)],
+            'context': {
+                'event_start_date': self.date_begin,
+                'event_end_date': self.date_end,
+                'default_event_id': self.id,
+            },
+        }
+
     def action_set_done(self):
         """
         Action which will move the events
