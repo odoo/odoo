@@ -93,10 +93,10 @@ class StockPicking(models.Model):
 
     sale_id = fields.Many2one('sale.order', compute="_compute_sale_id", inverse="_set_sale_id", string="Sales Order", store=True, index='btree_not_null')
 
-    @api.depends('move_ids.reference_ids')
+    @api.depends('move_ids.sale_line_id')
     def _compute_sale_id(self):
         for picking in self:
-            picking.sale_id = picking.reference_ids.sale_ids[:1]
+            picking.sale_id = picking.move_ids.sale_line_id.order_id
 
     @api.depends('move_ids.sale_line_id')
     def _compute_move_type(self):

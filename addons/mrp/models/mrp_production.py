@@ -787,7 +787,10 @@ class MrpProduction(models.Model):
     @api.depends('product_id', 'bom_id', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids', 'never_product_template_attribute_value_ids')
     def _compute_move_finished_ids(self):
         production_with_move_finished_ids_to_unlink_ids = OrderedSet()
+        ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
         for production in self:
+            if production.id in ignored_mo_ids:
+                continue
             if production.state != 'draft':
                 updated_values = {}
                 if production.date_finished:
@@ -1512,12 +1515,12 @@ class MrpProduction(models.Model):
         moves_to_confirm = self.env['stock.move'].browse(sorted(moves_ids_to_confirm))
         workorder_to_confirm = self.env['mrp.workorder'].browse(sorted(workorder_ids_to_confirm))
 
+        ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
         move_raws_to_adjust._adjust_procure_method()
-        moves_to_confirm._action_confirm(merge=False)
+        moves_to_confirm.with_context(ignore_mo_ids=ignored_mo_ids + self.ids)._action_confirm(merge=False)
         workorder_to_confirm._action_confirm()
         workorder_to_confirm._set_cost_mode()
         # run scheduler for moves forecasted to not have enough in stock
-        ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
         self.move_raw_ids.with_context(ignore_mo_ids=ignored_mo_ids + self.ids)._trigger_scheduler()
         self.picking_ids.filtered(
             lambda p: p.state not in ['cancel', 'done']).action_confirm()
@@ -2409,6 +2412,15 @@ class MrpProduction(models.Model):
             'origin': ",".join(sorted([production.name for production in self])),
         })
 
+        # update linked picking
+        self.env['stock.move'].search([
+            ('production_group_id', 'in', self.production_group_id.ids),
+        ]).production_group_id = production.production_group_id
+
+        # update linked mos
+        production.production_group_id.parent_ids = [Command.set(self.production_group_id.parent_ids.ids)]
+        production.production_group_id.child_ids = [Command.set(self.production_group_id.child_ids.ids)]
+
         for move in production.move_raw_ids:
             for field, vals in origs[move.bom_line_id.id].items():
                 move[field] = vals
@@ -2424,6 +2436,7 @@ class MrpProduction(models.Model):
             production.action_confirm()
 
         self.with_context(skip_activity=True)._action_cancel()
+        self.production_group_id.unlink()
         # set the new deadline of origin moves (stock to pre prod)
         production.move_raw_ids.move_orig_ids.with_context(date_deadline_propagate_ids=set(production.move_raw_ids.ids)).write({'date_deadline': production.date_start})
         for p in self:

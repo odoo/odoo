@@ -258,6 +258,7 @@ class SaleOrderLine(models.Model):
         date_deadline = self.order_id.commitment_date or self._expected_date()
         date_planned = date_deadline - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
+            'origin': self.order_id.name,
             'reference_ids': self.order_id.stock_reference_ids,
             'sale_line_id': self.id,
             'date_planned': date_planned,

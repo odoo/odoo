@@ -56,7 +56,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         self.sale_order1.action_confirm()
 
         # confirm the purchase order
-        self.purchase_order1 = self.env['purchase.order'].search([('reference_ids', '=', self.sale_order1.reference_ids.id)])
+        self.purchase_order1 = self.env['purchase.order'].search([('reference_ids', '=', self.sale_order1.stock_reference_ids.id)])
         self.purchase_order1.button_confirm()
 
         # validate the dropshipping picking

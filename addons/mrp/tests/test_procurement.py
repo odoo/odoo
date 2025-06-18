@@ -597,14 +597,16 @@ class TestProcurement(TestMrpCommon):
         # Create procurement to decrease quantity in the initial move but not in the related MO.
         create_run_procurement(product, -5.00, {
             'reference_ids': reference,
+            'warehouse_id': self.warehouse_1,
+            'partner_id': vendor,
         })
         self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should have been decreased when merged with the procurement.')
-        self.assertEqual(manufacturing_order.product_qty, 5, 'The demand on the manufacturing order should not have been decreased.')
+        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the manufacturing order should not have been decreased.')
 
-        # Create procurement to increase quantity on the initial move and should create a new MO for the missing qty.
+        # Create procurement without reference to increase quantity on the initial move and should create a new MO for the missing qty.
         create_run_procurement(product, 2.00)
         self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should not have been increased since it should be a new move.')
-        self.assertEqual(manufacturing_order.product_qty, 5, 'The demand on the initial manufacturing order should not have been increased.')
+        self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the initial manufacturing order should not have been increased.')
         manufacturing_orders = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertEqual(len(manufacturing_orders), 2, 'A new MO should have been created for missing demand.')
 
@@ -990,9 +992,6 @@ class TestProcurement(TestMrpCommon):
                 })],
             })
             picking.action_confirm()
-            if not mo:
-                mo = self.env['mrp.production'].search([('product_id', '=', product_1.id)])
-            self.assertEqual(delta_hours(mo.date_finished - mo.date_start), i * 15)
-
-        # Check the generated MO
-        self.assertEqual(mo.product_qty, 45)
+            mo = self.env['mrp.production'].search([('product_id', '=', product_1.id)])
+            self.assertEqual(len(mo), i, 'One mo per picking')
+            self.assertEqual(delta_hours(mo[i-1].date_finished - mo[i-1].date_start), 15)

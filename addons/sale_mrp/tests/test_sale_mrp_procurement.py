@@ -172,7 +172,9 @@ class TestSaleMrpProcurement(TransactionCase):
         sale_order_so0.action_confirm()
 
         # Verify buttons are working as expected
-        self.assertEqual(sale_order_so0.mrp_production_count, 3, "2 Mos for the 2 sale order line + 1 child Mo for the complex product")
+        self.assertEqual(sale_order_so0.mrp_production_count, 2, "2 Mos for the 2 sale order line")
+        self.assertEqual(sale_order_so0.mrp_production_ids[0].product_qty, 1)
+        self.assertEqual(sale_order_so0.mrp_production_ids[1].product_qty, 2)
 
         pickings = sale_order_so0.picking_ids
 
@@ -273,13 +275,15 @@ class TestSaleMrpProcurement(TransactionCase):
 
     def test_so_reordering_rule_02(self):
         """
-        Have a manufactured product in kg unit of measure with the manufacturing route
-        and a reordering rule (RR) set to min=max=0, and a BoM in grams.
+        Have a manufactured product in kg unit of measure with the manufacturing route,
+        the mto route and a BoM in grams.
         Confirm a SO with that product in 510 grams -> It should generate a MO with 510g.
         Create a second SO with 510g -> It should update the MO to 1020g.
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         manufacture_route = warehouse.manufacture_pull_id.route_id
+        mto_route = warehouse.mto_pull_id.route_id
+        mto_route.active = True
 
         uom_kg = self.env.ref('uom.product_uom_kgm')
         uom_gram = self.env.ref('uom.product_uom_gram')
@@ -288,7 +292,10 @@ class TestSaleMrpProcurement(TransactionCase):
             'name': 'Finished',
             'is_storable': True,
             'uom_id': uom_kg.id,
-            'route_ids': [(6, 0, manufacture_route.ids)],
+            'route_ids': [
+                Command.link(manufacture_route.id),
+                Command.link(mto_route.id),
+            ],
         }, {
             'name': 'Component',
             'type': 'consu',
@@ -303,20 +310,6 @@ class TestSaleMrpProcurement(TransactionCase):
             'bom_line_ids': [
                 (0, 0, {'product_id': component.id, 'product_qty': 1}),
             ],
-        })
-
-        self.env['stock.warehouse.orderpoint'].create({
-            'name': product.name,
-            'location_id': warehouse.lot_stock_id.id,
-            'product_id': product.id,
-            'product_min_qty': 0,
-            'product_max_qty': 0,
-            'trigger': 'auto',
-            'replenishment_uom_id': self.env['uom.uom'].create({
-                'name': 'test uom',
-                'relative_factor': 0.01,
-                'relative_uom_id': uom_gram.id,
-            }).id,
         })
 
         so = self.env['sale.order'].create({
@@ -338,19 +331,7 @@ class TestSaleMrpProcurement(TransactionCase):
         self.assertEqual(mo.product_uom_id, uom_gram)
         self.assertEqual(mo.product_qty, 510)
 
-        so_2 = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Super Partner'}).id,
-            'order_line': [
-                (0, 0, {
-                    'name': product.name,
-                    'product_id': product.id,
-                    'product_uom_qty': 510,
-                    'product_uom_id': uom_gram.id,
-                    'price_unit': 1,
-                })],
-        })
-        so_2.action_confirm()
-        self.assertEqual(so_2.state, 'sale')
+        so.order_line.product_uom_qty = 510 * 2
         self.assertEqual(mo.product_uom_id, uom_gram)
         self.assertEqual(mo.product_qty, 1020)
 

@@ -314,4 +314,4 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         alt_po_wizard = alt_po_wizard_form.save()
         alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
         alt_po = self.env['purchase.order'].browse(alt_po_id)
-        self.assertEqual(alt_po.group_id, orig_po.group_id)
+        self.assertEqual(alt_po.reference_ids, orig_po.reference_ids)

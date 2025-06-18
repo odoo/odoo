@@ -123,7 +123,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         # Change the purchased quantity to 2
         po.order_line.write({'product_qty': 2})
         # Check that a single delivery with the two components for the subcontractor have been created
-        picking_deliveries = self.env['stock.picking'].search([('origin', '=', origin)])
+        picking_deliveries = mo.picking_ids
         self.assertEqual(len(picking_deliveries), 1)
         self.assertEqual(picking_deliveries.picking_type_id, wh.subcontracting_resupply_type_id)
         self.assertEqual(picking_deliveries.partner_id, self.subcontractor_partner1)

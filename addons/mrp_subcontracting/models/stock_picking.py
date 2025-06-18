@@ -138,6 +138,10 @@ class StockPicking(models.Model):
 
     def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
         subcontract_move.ensure_one()
+        reference = self.env['stock.reference'].create({
+            'name': self.name,
+            'move_ids': [Command.link(subcontract_move.id)],
+        })
         product = subcontract_move.product_id
         warehouse = self._get_warehouse(subcontract_move)
         subcontracting_location = \
@@ -156,6 +160,7 @@ class StockPicking(models.Model):
             'picking_type_id': warehouse.subcontracting_type_id.id,
             'date_start': subcontract_move.date - relativedelta(days=bom.produce_delay),
             'origin': self.name,
+            'reference_ids': [Command.link(reference.id)],
         }
         return vals
 

@@ -644,7 +644,7 @@ class StockWarehouseOrderpoint(models.Model):
                             values = orderpoint._prepare_procurement_values(date=date)
                             procurements.append(self.env['stock.rule'].Procurement(
                                 orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
-                                orderpoint.location_id, orderpoint.name, orderpoint.name,
+                                orderpoint.location_id, orderpoint.name, origin,
                                 orderpoint.company_id, values))
 
                     try:

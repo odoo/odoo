@@ -1513,6 +1513,7 @@ class TestReorderingRule(TransactionCase):
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
         buy_product.route_ids |= mto_route
+        reference = self.env['stock.reference'].create({'name': 'test_backorder_mto_buy'})
         self.env["stock.rule"].run(
             [self.env['stock.rule'].Procurement(
                 buy_product, 100, buy_product.uom_id,
@@ -1520,9 +1521,10 @@ class TestReorderingRule(TransactionCase):
                 self.env.company,
                 {
                     "warehouse_id": self.env.ref('stock.warehouse0'),
+                    "reference_ids": reference
                 },
             )])
-        po_line = self.env["purchase.order.line"].search([("product_id", "=", buy_product.id)], limit=1)
+        po_line = reference.purchase_ids.order_line
         self.assertEqual(po_line.product_uom_qty, 100)
         delivery = po_line.move_dest_ids.picking_id
         # Deliver only 30 units and backorder the rest
@@ -1535,8 +1537,8 @@ class TestReorderingRule(TransactionCase):
         self.assertRecordValues(delivery.backorder_ids.move_ids, [{
             'product_uom_qty': 70, 'procure_method': 'make_to_order', 'state': 'waiting', 'created_purchase_line_ids': purchase_order_line.ids,
         }])
-        # Check that the backorder belongs to the same procurement group
-        self.assertEqual(delivery.backorder_ids.group_id, delivery.group_id)
+        # Check that the backorder belongs to the same reference
+        self.assertEqual(delivery.backorder_ids.reference_ids, delivery.reference_ids)
         # Check that the qty of the PO was not updated but that both pickings are referenced by the current
         self.assertRecordValues(purchase_order_line, [
             {'product_uom_qty': 100, 'move_dest_ids': [delivery.move_ids.id, delivery.backorder_ids.move_ids.id]}
