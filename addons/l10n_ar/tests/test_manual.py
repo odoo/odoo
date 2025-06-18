@@ -255,7 +255,7 @@ class TestManual(common.TestAr):
     def test_19_invoice_b_tax_breakdown_2(self):
         """ Display only Other Taxes (VAT taxes are 0) """
         invoice = self._create_invoice_from_dict({
-            'ref': 'test_invoice_21:  inal Consumer Invoice B with 0 tax and internal tax',
+            'ref': 'test_invoice_21: Final Consumer Invoice B with 0 tax and internal tax',
             "move_type": 'out_invoice',
             "partner_id": self.partner_cf,
             "company_id": self.company_ri,
@@ -270,8 +270,14 @@ class TestManual(common.TestAr):
             {
                 'tax_amount_currency': 300.00,
                 'formatted_tax_amount_currency': '300.00',
-                'name': 'Other National Ind. Taxes $',
+                'name': 'Other National Ind. Taxes $'
             },
+            {
+                'formatted_tax_amount_currency': '0.00',
+                'name': 'VAT Content $',
+                'tax_amount_currency': 0.0
+            }
+
         ])
         self._assert_tax_totals_summary(invoice._l10n_ar_get_invoice_totals_for_report(), {
             'same_tax_base': True,
@@ -279,6 +285,36 @@ class TestManual(common.TestAr):
             'base_amount_currency': 10300.0,
             'tax_amount_currency': 0.0,
             'total_amount_currency': 10300.0,
+            'subtotals': [],
+        })
+
+    def test_20_invoice_b_tax_breakdown_3(self):
+        """ Display only Other Taxes (VAT taxes are 0 and non other taxes) """
+        invoice = self._create_invoice_from_dict({
+            'ref': 'test_invoice_22: Final Consumer Invoice B with only 0 tax',
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_cf,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_no_gravado.id])]},
+            ],
+        })
+        results = invoice._l10n_ar_get_invoice_custom_tax_summary_for_report()
+        self.assertEqual(results, [
+            {
+                'tax_amount_currency': 0.0,
+                'formatted_tax_amount_currency': '0.00',
+                'name': 'VAT Content $'
+            },
+        ])
+        self._assert_tax_totals_summary(invoice._l10n_ar_get_invoice_totals_for_report(), {
+            'same_tax_base': True,
+            'currency_id': self.currency.id,
+            'base_amount_currency': 10000.0,
+            'tax_amount_currency': 0.0,
+            'total_amount_currency': 10000.0,
             'subtotals': [],
         })
 
