@@ -4,6 +4,7 @@ import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
 import { Record as RelationalRecord } from "./record";
 import { resequence } from "./utils";
+import { rpc } from "@web/core/network/rpc";
 
 /**
  * @typedef {import("./record").Record} RelationalRecord
@@ -329,7 +330,12 @@ export class DynamicList extends DataPoint {
             const resIds = unique(validSelection.map((r) => r.resId));
             const context = this.context;
             try {
-                await this.model.orm.write(this.resModel, resIds, changes, { context });
+                await rpc("/web/view/save_multi", {
+                    model: this.resModel,
+                    ids: resIds,
+                    changes,
+                    context,
+                });
             } catch (e) {
                 record._discard();
                 this.model._updateConfig(record.config, { mode: "readonly" }, { reload: false });

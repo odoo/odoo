@@ -4,6 +4,7 @@ import { Field, fieldVisualFeedback } from "@web/views/fields/field";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 import { Component } from "@odoo/owl";
+import { FieldOperator } from "@web/core/utils/field_operator";
 
 export class ListConfirmationDialog extends Component {
     static template = "web.ListView.ConfirmationModal";
@@ -11,12 +12,9 @@ export class ListConfirmationDialog extends Component {
     static props = {
         close: Function,
         title: {
-            validate: (m) => {
-                return (
-                    typeof m === "string" ||
-                    (typeof m === "object" && typeof m.toString === "function")
-                );
-            },
+            validate: (m) =>
+                typeof m === "string" ||
+                (typeof m === "object" && typeof m.toString === "function"),
             optional: true,
         },
         confirm: { type: Function, optional: true },
@@ -74,5 +72,13 @@ export class ListConfirmationDialog extends Component {
             ...field.fieldNode,
             readonly: true,
         }).empty;
+    }
+
+    isValueFieldOperator(field, record) {
+        const fieldOperator = record.data[field.name];
+        if (fieldOperator instanceof FieldOperator) {
+            return `${field.label} ${fieldOperator.operator} ${fieldOperator.increment}`;
+        }
+        return false;
     }
 }

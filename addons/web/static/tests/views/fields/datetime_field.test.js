@@ -276,6 +276,12 @@ test("DatetimeField in editable list view", async () => {
 });
 test.tags("desktop");
 test("multi edition of DatetimeField in list view: edit date in input", async () => {
+    onRpc("/web/view/save_multi", async function (request) {
+        const { params } = await request.json();
+        const { changes, ids, model } = params;
+        this.env[model].write(ids, changes);
+        expect.step("save_multi");
+    });
     onRpc("has_group", () => true);
 
     await mountView({
@@ -306,10 +312,17 @@ test("multi edition of DatetimeField in list view: edit date in input", async ()
 
     expect(".o_data_row:first-child .o_data_cell:first").toHaveText("10/02/2019 09:00");
     expect(".o_data_row:nth-child(2) .o_data_cell:first").toHaveText("10/02/2019 09:00");
+    expect.verifySteps(["save_multi"]);
 });
 
 test.tags("desktop");
 test("multi edition of DatetimeField in list view: clear date in input", async () => {
+    onRpc("/web/view/save_multi", async function (request) {
+        const { params } = await request.json();
+        const { changes, ids, model } = params;
+        this.env[model].write(ids, changes);
+        expect.step("save_multi");
+    });
     Partner._records[1].datetime = "2017-02-08 10:00:00";
     onRpc("has_group", () => true);
 
@@ -341,6 +354,7 @@ test("multi edition of DatetimeField in list view: clear date in input", async (
 
     expect(".o_data_row:first-child .o_data_cell:first").toHaveText("");
     expect(".o_data_row:nth-child(2) .o_data_cell:first").toHaveText("");
+    expect.verifySteps(["save_multi"]);
 });
 
 test("DatetimeField remove value", async () => {

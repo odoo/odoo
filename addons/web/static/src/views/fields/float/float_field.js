@@ -7,6 +7,7 @@ import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component, useState } from "@odoo/owl";
+import { FieldOperator } from "@web/core/utils/field_operator";
 
 export class FloatField extends Component {
     static template = "web.FloatField";
@@ -58,6 +59,9 @@ export class FloatField extends Component {
             (this.props.inputType === "number" && !this.props.readonly && this.value)
         ) {
             return this.value;
+        }
+        if (this.value instanceof FieldOperator) {
+            return this.value.operation;
         }
         const options = {
             digits: this.props.digits,

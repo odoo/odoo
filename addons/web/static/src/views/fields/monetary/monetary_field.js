@@ -9,6 +9,7 @@ import { nbsp } from "@web/core/utils/strings";
 
 import { Component, useState, useEffect } from "@odoo/owl";
 import { getCurrency } from "@web/core/currency";
+import { FieldOperator } from "@web/core/utils/field_operator";
 
 export class MonetaryField extends Component {
     static template = "web.MonetaryField";
@@ -82,6 +83,9 @@ export class MonetaryField extends Component {
     get formattedValue() {
         if (this.props.inputType === "number" && !this.props.readonly && this.value) {
             return this.value;
+        }
+        if (this.value instanceof FieldOperator) {
+            return this.value.operation;
         }
         return formatMonetary(this.value, {
             digits: this.currencyDigits,

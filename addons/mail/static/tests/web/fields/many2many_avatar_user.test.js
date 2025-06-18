@@ -150,6 +150,12 @@ test('many2one_avatar_user widget edited by the smart action "Assign to me"', as
 });
 
 test('many2one_avatar_user widget edited by the smart action "Assign to me" in list view', async () => {
+    onRpc("/web/view/save_multi", async function (request) {
+        const { params } = await request.json();
+        const { changes, ids, model } = params;
+        this.env[model].write(ids, changes);
+        expect.step("save_multi");
+    });
     const pyEnv = await startServer();
     const [userId_1, userId_2] = pyEnv["res.users"].create([
         { partner_id: pyEnv["res.partner"].create({ name: "Mario" }) },
@@ -203,6 +209,7 @@ test('many2one_avatar_user widget edited by the smart action "Assign to me" in l
     // Confirm
     await click(".o_dialog .modal-footer button:nth-child(1)");
     await contains(".o_field_many2one_avatar_user .o_form_uri", { count: 0 });
+    expect.verifySteps(["save_multi", "save_multi"]);
 });
 
 test('many2many_avatar_user widget edited by the smart action "Assign to me"', async () => {
