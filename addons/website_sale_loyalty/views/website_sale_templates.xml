@@ -153,7 +153,7 @@
         </xpath>
     </template>
 
-    <template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines">
+    <template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines_price">
         <xpath expr="//del" position="attributes">
             <attribute name="t-if">not line.is_reward_line</attribute>
         </xpath>
