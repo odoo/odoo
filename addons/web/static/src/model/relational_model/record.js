@@ -672,6 +672,7 @@ export class Record extends DataPoint {
                 : false;
         } else if (fieldType === "properties") {
             return value.map((property) => {
+<<<<<<< 9fbffe2ffbca8684e4e772caf87ce4dc2e2f49b9
                 let value;
                 if (property.type === "many2one") {
                     value = property.value && [property.value.id, property.value.display_name];
@@ -683,11 +684,37 @@ export class Record extends DataPoint {
                     value = property.value;
                 } else if (property.value !== undefined) {
                     value = this._formatServerValue(property.type, property.value);
+||||||| 220826960761a036884afd130fe2fc8b6cd319b8
+                let value;
+                if (property.type === "many2one") {
+                    value = property.value;
+                } else if (
+                    (property.type === "date" || property.type === "datetime") &&
+                    typeof property.value === "string"
+                ) {
+                    // TO REMOVE: need refactoring PropertyField to use the same format as the server
+                    value = property.value;
+                } else if (property.value !== undefined) {
+                    value = this._formatServerValue(property.type, property.value);
+=======
+                property = { ...property };
+                for (const key of ["value", "default"]) {
+                    let value;
+                    if (property.type === "many2one") {
+                        value = property[key];
+                    } else if (
+                        (property.type === "date" || property.type === "datetime") &&
+                        typeof property[key] === "string"
+                    ) {
+                        // TO REMOVE: need refactoring PropertyField to use the same format as the server
+                        value = property[key];
+                    } else if (property[key] !== undefined) {
+                        value = this._formatServerValue(property.type, property[key]);
+                    }
+                    property[key] = value;
+>>>>>>> 1769a369e36cd39afc3dff77db48a961a4a91196
                 }
-                return {
-                    ...property,
-                    value,
-                };
+                return property;
             });
         }
         return value;
