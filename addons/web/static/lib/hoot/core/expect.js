@@ -19,6 +19,7 @@ import {
 import { Deferred } from "@web/../lib/hoot-dom/helpers/time";
 import {
     addInteractionListener,
+    getColorHex,
     isFirefox,
     isIterable,
     R_WHITE_SPACE,
@@ -43,6 +44,7 @@ import {
     S_NONE,
     strictEqual,
 } from "../hoot_utils";
+import { logger } from "./logger";
 import { Test } from "./test";
 
 /**
@@ -136,6 +138,7 @@ const {
     Promise,
     setTimeout,
     TypeError,
+    WeakMap,
 } = globalThis;
 /** @type {Performance["now"]} */
 const $now = performance.now.bind(performance);
@@ -297,6 +300,9 @@ function listJoin(list, separator, lastSeparator) {
 /** @type {typeof makeLabel} */
 function makeLabelOrString(...args) {
     const label = makeLabel(...args);
+    if (logger.allows("debug")) {
+        debugLabelCache.set(label, args[0]);
+    }
     return label[1] === null ? label[0] : label;
 }
 
@@ -376,8 +382,12 @@ const FLAGS = {
 };
 const LABEL_EXPECTED = "Expected:";
 const LABEL_RECEIVED = "Received:";
+/** @type {CaseEventType[]} */
+const CASE_EVENT_LOG_COLORS = ["assertion", "query", "step"];
 const MAX_STACK_LENGTH = 10;
 
+/** @type {WeakMap<any, any>} */
+const debugLabelCache = new WeakMap();
 /** @type {Set<Matcher>} */
 const unconsumedMatchers = new Set();
 
@@ -995,6 +1005,20 @@ export class CaseResult {
             }
         }
         if (caseEvent) {
+            if (logger.allows("debug") && CASE_EVENT_LOG_COLORS.includes(type)) {
+                const colorName = caseEvent.pass === false ? "rose" : CASE_EVENT_TYPES[type].color;
+                const logArgs = [[caseEvent.label, getColorHex(colorName)]];
+                for (const part of caseEvent.message) {
+                    if (isLabel(part)) {
+                        // Get and consume cached original values
+                        logArgs.push(debugLabelCache.get(part) ?? part[0]);
+                        debugLabelCache.delete(part);
+                    } else {
+                        logArgs.push(part);
+                    }
+                }
+                logger.logTestEvent(...logArgs);
+            }
             this.events.push(caseEvent);
         }
     }
