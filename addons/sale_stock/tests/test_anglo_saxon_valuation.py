@@ -1805,3 +1805,113 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             {'debit': 0, 'credit': 60, 'account_id': account_stock_out.id, 'reconciled': True},
             {'debit': 60, 'credit': 0, 'account_id': account_expense.id, 'reconciled': False},
         ])
+
+    def test_anglo_saxon_cogs_with_return_in_out_invoice(self):
+        """Create a SO with 2 products invoiced on delivered quantity.
+        Deliver a part of first product with a backorder and invoice it
+        then return the delivered part and deliver second product and
+        invoice all."""
+        self.product.invoice_policy = 'delivery'
+        self.product.standard_price = 50.0
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'inventory_quantity': 20,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+        }).action_apply_inventory()
+
+        self.product2 = self.env['product.product'].create({
+            'name': 'product2',
+            'type': 'product',
+            'invoice_policy': 'delivery',
+            'standard_price': 60.0,
+            'categ_id': self.stock_account_product_categ.id,
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product2.id,
+            'inventory_quantity': 20,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+        }).action_apply_inventory()
+
+        # Create a SO with 2 products invoiced on delivered quantity
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 2.0,
+                    'product_uom': self.product.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                }),
+                (0, 0, {
+                    'name': self.product2.name,
+                    'product_id': self.product2.id,
+                    'product_uom_qty': 2.0,
+                    'product_uom': self.product2.uom_id.id,
+                    'price_unit': 120,
+                    'tax_id': False,
+                })
+            ],
+        })
+        so_line_product = so.order_line.filtered(lambda sol: sol.product_id == self.product)
+        so_line_product2 = so.order_line.filtered(lambda sol: sol.product_id == self.product2)
+        so.action_confirm()
+
+        # Deliver a part of first product with a backorder
+        first_picking = so.picking_ids
+        so_line_product.move_ids.quantity_done = 1.0
+        so_line_product2.move_ids.quantity_done = 0.0
+        backorder_wizard_dict = so.picking_ids.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+        backorder = so.picking_ids.filtered(lambda p: p.state != 'done')
+
+        invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
+        invoice_wizard.create_invoices()
+        first_invoice = so.invoice_ids.filtered(lambda i: i.state != 'posted')
+        first_invoice.action_post()
+        # Return first picking, deliver product2 and invoice all
+        stock_return_picking_form = Form(
+            self.env['stock.return.picking'].with_context(
+                active_ids=first_picking.ids, active_id=first_picking.id, active_model='stock.picking'
+            )
+        )
+        return_wiz = stock_return_picking_form.save()
+        return_wiz.product_return_moves.quantity = 1
+        return_wiz.product_return_moves.to_refund = True
+        res = return_wiz.create_returns()
+
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.move_ids.write({'quantity_done': 1})
+        return_pick.button_validate()
+
+        backorder.move_ids.filtered(lambda sm: sm.product_id == self.product).quantity_done = 0.0
+        backorder.move_ids.filtered(lambda sm: sm.product_id == self.product2).quantity_done = 2.0
+        backorder2_wizard_dict = backorder.button_validate()
+        backorder2_wizard = Form(self.env[backorder2_wizard_dict['res_model']].with_context(backorder2_wizard_dict['context'])).save()
+        backorder2_wizard.process()
+        so.picking_ids.filtered(lambda p: p.state != 'done')
+
+        second_invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
+        second_invoice_wizard.create_invoices()
+
+        second_invoice = so.invoice_ids.filtered(lambda i: i.state != 'posted')
+        second_invoice.action_post()
+
+        # Check the resulting accounting entries
+        account_stock_out = self.company_data['default_account_stock_out']
+        account_expense = self.company_data['default_account_expense']
+        invoice_1_cogs = first_invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        invoice_2_cogs = second_invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertEqual(len(invoice_2_cogs), 4)
+        self.assertRecordValues(invoice_1_cogs, [
+            {'debit': 0, 'credit': 50, 'account_id': account_stock_out.id, 'reconciled': True},
+            {'debit': 50, 'credit': 0, 'account_id': account_expense.id, 'reconciled': False},
+        ])
+        self.assertRecordValues(invoice_2_cogs, [
+            {'debit': 50, 'credit': 0, 'account_id': account_stock_out.id, 'reconciled': True},
+            {'debit': 0, 'credit': 50, 'account_id': account_expense.id, 'reconciled': False},
+            {'debit': 0, 'credit': 120, 'account_id': account_stock_out.id, 'reconciled': True},
+            {'debit': 120, 'credit': 0, 'account_id': account_expense.id, 'reconciled': False},
+        ])
