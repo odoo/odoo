@@ -103,7 +103,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         for invoice_line_id, invoice_line in enumerate(invoice_lines, 1):
             if line.product_id == invoice_line.product_id \
                     and line.name == invoice_line.name \
-                    and line.price_unit == invoice_line.price_unit:
+                    and line.price_unit == invoice_line.price_unit \
+                    and line.discount == invoice_line.discount:
                 line_id = invoice_line_id
                 break
         if line_id == -1:
