@@ -161,6 +161,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         portal_page_values = {
             'company_mismatch': company_mismatch,
             'expected_company': invoice_company,
+            'hidden_total': hidden_total
         }
         payment_form_values = {
             'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(
@@ -178,7 +179,6 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             'landing_route': invoices_data['landing_route'],
             'access_token': access_token,
             'payment_reference': invoices_data.get('payment_reference', False),
-            'hidden_total': hidden_total
         }
         # Merge the dictionaries while allowing the redefinition of keys.
         values = portal_page_values | payment_form_values | payment_context | self._get_extra_payment_form_values(**kwargs)
