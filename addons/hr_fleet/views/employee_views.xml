@@ -42,7 +42,7 @@
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_open_employee_cars" type="object"
                         class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
-                        invisible="employee_cars_count == 0">
+                        invisible="employee_cars_count == 0 or not context.get('fleet.fleet_group_manager')">
                     <field name="employee_cars_count" widget="statinfo" string="Cars History" />
                 </button>
             </xpath>
