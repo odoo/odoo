@@ -468,13 +468,14 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
 
         if supplier.country_id.code == 'SA':
             if not tax or tax.amount == 0:
-                exemption_codes = dict(tax._fields["l10n_sa_exemption_reason_code"]._description_selection(self.env))
-                if tax.l10n_sa_exemption_reason_code in TAX_EXEMPTION_CODES:
-                    return _exemption_reason('E', tax.l10n_sa_exemption_reason_code)
-                elif tax.l10n_sa_exemption_reason_code in TAX_ZERO_RATE_CODES:
-                    return _exemption_reason('Z', tax.l10n_sa_exemption_reason_code)
+                exemption_codes = dict(tax._fields["ubl_cii_tax_exemption_reason_code"]._description_selection(self.env))
+                if tax.ubl_cii_tax_exemption_reason_code in TAX_EXEMPTION_CODES:
+                    tax.ubl_cii_tax_category_code = 'E'
+                elif tax.ubl_cii_tax_exemption_reason_code in TAX_ZERO_RATE_CODES:
+                    tax.ubl_cii_tax_category_code = 'Z'
                 else:
-                    return _exemption_reason('O', tax.l10n_sa_exemption_reason_code)
+                    tax.ubl_cii_tax_category_code = 'O'
+                return _exemption_reason(tax.ubl_cii_tax_category_code, tax.ubl_cii_tax_exemption_reason_code)
             else:
                 return {
                     'tax_category_code': 'S',
