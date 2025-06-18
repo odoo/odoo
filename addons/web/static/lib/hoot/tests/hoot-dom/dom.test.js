@@ -892,8 +892,16 @@ describe(parseUrl(import.meta.url), () => {
             expect(() => $("invalid:pseudo-selector")).toThrow();
             // Perform in-between valid query with custom pseudo selectors
             expect($`.modal:visible:contains('Tung Tung Tung Sahur')`).toBe(null);
+
+            // queryOne error messages
+            expect(() => $1()).toThrow(`found 0 elements instead of 1`);
+            expect(() => $$([], { exact: 18 })).toThrow(`found 0 elements instead of 18`);
+            expect(() => $1("")).toThrow(`found 0 elements instead of 1: 0 matching ""`);
+            expect(() => $$(".tralalero", { exact: -20 })).toThrow(
+                `found 1 element instead of -20: 1 matching ".tralalero"`
+            );
             expect(() => $1`.tralalero:contains(Tralala):visible:scrollable:first`).toThrow(
-                `found 0 elements instead of 1: 0 matching ".tralalero:contains(Tralala):visible:scrollable:first" (1 element with text "Tralala" > 1 visible element > 0 scrollable elements > 0 first elements)`
+                `found 0 elements instead of 1: 0 matching ".tralalero:contains(Tralala):visible:scrollable:first" (1 element with text "Tralala" > 1 visible element > 0 scrollable elements)`
             );
             expect(() =>
                 $1(".tralalero", {
@@ -903,7 +911,7 @@ describe(parseUrl(import.meta.url), () => {
                     first: true,
                 })
             ).toThrow(
-                `found 0 elements instead of 1: 1 matching ".tralalero", including 1 element with text "Tralala", including 1 visible element, including 0 scrollable elements, including 0 first elements`
+                `found 0 elements instead of 1: 1 matching ".tralalero", including 1 element with text "Tralala", including 1 visible element, including 0 scrollable elements`
             );
         });
     });

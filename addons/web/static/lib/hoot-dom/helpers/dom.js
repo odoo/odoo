@@ -317,6 +317,11 @@ function getFiltersDescription(modifierInfo) {
         } else {
             description.push(`${count} ${modifier} ${elements}`);
         }
+        if (!count) {
+            // Stop at first null count to avoid situations like:
+            // "found 0 elements, including 0 visible elements, including 0 ..."
+            break;
+        }
     }
     return description;
 }
@@ -835,22 +840,24 @@ function registerQueryMessage(filteredNodes, expectedCount) {
 
         // Next message part: initial element count (with selector if string)
         const rootModifierInfo = globalModifierInfo.shift();
-        const [rootModifier, rootContent, initialCount = 0] = rootModifierInfo;
-        if (rootContent) {
-            lastQueryMessage += `: ${initialCount} ${rootModifier} ${JSON.stringify(rootContent)}`;
-        } else {
+        const [, rootContent, initialCount = 0] = rootModifierInfo;
+        if (typeof rootContent === "string") {
+            lastQueryMessage += `: ${initialCount} matching ${JSON.stringify(rootContent)}`;
+            if (selectorFilterDescriptors.size) {
+                // Selector filters will only be available with a custom selector
+                const selectorModifierInfo = [...selectorFilterDescriptors.values()];
+                lastQueryMessage += ` (${getFiltersDescription(selectorModifierInfo).join(" > ")})`;
+            }
+        } else if (filteredCount !== initialCount) {
+            // Do not report count if same as announced initially
             lastQueryMessage += `: ${initialCount} ${plural("element", initialCount)}`;
         }
-
-        if (selectorFilterDescriptors.size) {
-            const selectorModifierInfo = [...selectorFilterDescriptors.values()];
-            lastQueryMessage += ` (${getFiltersDescription(selectorModifierInfo).join(" > ")})`;
+        if (initialCount) {
+            // Next message parts: each count associated with each modifier
+            lastQueryMessage += getFiltersDescription(globalModifierInfo)
+                .map((part) => `, including ${part}`)
+                .join("");
         }
-
-        // Next message parts: each count associated with each modifier
-        lastQueryMessage += getFiltersDescription(globalModifierInfo)
-            .map((part) => `, including ${part}`)
-            .join("");
     } else {
         lastQueryMessage = "";
     }
@@ -893,10 +900,6 @@ function _guardedQueryAll(target, options) {
  * @param {QueryOptions} options
  */
 function _queryAll(target, options) {
-    if (!target) {
-        return [];
-    }
-
     queryAllLevel++;
 
     const { exact, root, ...modifiers } = options || {};
@@ -906,16 +909,18 @@ function _queryAll(target, options) {
     let selector;
 
     if (typeof target === "string") {
-        nodes = root ? _queryAll(root) : [getDefaultRoot()];
+        if (target) {
+            nodes = root ? _queryAll(root) : [getDefaultRoot()];
+        }
         selector = target.trim();
         // HTMLSelectElement is iterable ¯\_(ツ)_/¯
     } else if (isIterable(target) && !isNode(target)) {
         nodes = filterUniqueNodes(target);
-    } else {
+    } else if (target) {
         nodes = filterUniqueNodes([target]);
     }
 
-    globalFilterDescriptors.set("root", ["matching", typeof target === "string" ? target : null]);
+    globalFilterDescriptors.set("root", ["", target]);
     if (selector && nodes.length) {
         if (rCustomPseudoClass.test(selector)) {
             nodes = queryWithCustomSelector(nodes, selector);
