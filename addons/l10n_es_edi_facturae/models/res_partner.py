@@ -74,3 +74,10 @@ class Partner(models.Model):
                 partner.l10n_es_edi_facturae_residence_type = 'U'
             else:
                 partner.l10n_es_edi_facturae_residence_type = 'E'
+
+    def _get_suggested_invoice_edi_format(self):
+        """ Set the default invoice EDI format to 'es_facturae' if the partner is Spanish. """
+        res = super()._get_suggested_invoice_edi_format()
+        if self.env.company.country_code == 'ES' and self.country_code == 'ES':
+            return 'es_facturae'
+        return res
