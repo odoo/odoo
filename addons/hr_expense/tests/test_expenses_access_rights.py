@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import HttpCase, tagged, new_test_user
@@ -68,6 +69,15 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         # The expense employee is able to submit the expense sheet.
         sheets.with_user(self.expense_user_employee).action_submit_sheet()
         self.assertRecordValues(sheets, [{'state': 'submit'}, {'state': 'submit'}])
+
+        with self.assertRaises(AccessError):
+            self.env['ir.attachment'].with_user(self.expense_user_employee).create({
+                'name': 'receipt.pdf',
+                'res_model': 'hr.expense.sheet',
+                'res_id': expense_sheet_approve.id,
+                'datas': base64.b64encode(b'content'),
+                'mimetype': 'application/pdf',
+            })
 
         # The expense employee is not able to approve itself the expense sheet.
         with self.assertRaises(UserError):

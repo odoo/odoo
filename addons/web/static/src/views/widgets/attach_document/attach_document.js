@@ -45,8 +45,10 @@ export class AttachDocumentWidget extends Component {
             "text"
         );
         const parsedFileData = JSON.parse(fileData);
-        if (parsedFileData.error) {
-            throw new Error(parsedFileData.error);
+        const errorItem = parsedFileData.find(item => item && item.error);
+        if (errorItem) {
+            throw new Error(errorItem.error);
+            return
         }
         await this.onFileUploaded(parsedFileData);
     }
