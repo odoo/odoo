@@ -96,7 +96,7 @@ class TestExpenses(TestExpenseCommon):
             {'state': 'approved', 'account_move_id': False},
             {'state': 'approved', 'account_move_id': False},
         ])
-        # Post a payment for 'company_account' (and its move(s)) and a vendor bill for 'own_account'
+        # Post a payment for 'company_account' (and its move(s)) and a receipt  for 'own_account'
         expenses_by_company.action_post()
         self.post_expenses_with_wizard(expenses_by_employee[0], date=date(2021, 10, 10))
         self.post_expenses_with_wizard(expenses_by_employee[1], date=date(2021, 10, 31))
