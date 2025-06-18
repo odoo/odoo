@@ -213,14 +213,6 @@ export function toSelector(node, options) {
 }
 
 export class HootDebugHelpers {
-    get $() {
-        return this.queryFirst;
-    }
-
-    get $$() {
-        return this.queryAll;
-    }
-
     /**
      * @param  {...any} helpers
      */
