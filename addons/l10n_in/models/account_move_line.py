@@ -204,7 +204,6 @@ class AccountMoveLine(models.Model):
                         return 'sale_cdnur_exp_wp'
                     elif tags_have_categ(tags, 'igst_lut'):
                         return 'sale_cdnur_exp_wop'
-
             # If none of the above match, default to out of scope
             return 'sale_out_of_scope'
 
@@ -216,8 +215,6 @@ class AccountMoveLine(models.Model):
         if not indian_moves_lines:
             return
         tax_tags_ids = self.get_l10n_in_tax_tag_ids()
+        print("Calculate:", len(indian_moves_lines))
         for move_line in indian_moves_lines:
-            move_line.write({'l10n_in_gstr_section': get_section(move_line)})
-
-
-
+            move_line.l10n_in_gstr_section = get_section(move_line)

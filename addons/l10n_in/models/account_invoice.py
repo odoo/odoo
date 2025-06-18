@@ -703,15 +703,13 @@ class AccountMove(models.Model):
             _("Buy Credits")
         )
 
+    def _make_sync_stack(self, stack, invoice_container, tax_container, misc_container):
+        super()._make_sync_stack(stack, invoice_container, tax_container, misc_container)
+        stack.enter_context(self._sync_india(invoice_container))
+
     @contextmanager
-    def _sync_dynamic_lines(self, container):
-        with (
-            super()._sync_dynamic_lines(container),
-            self._disable_recursion(container, 'l10n_in_skip_invoice_sync') as disabled
-        ):
-            yield
-            if disabled:
-                return
-            for invoice in container['records']:
-                # we set the section on the invoice lines
-                invoice.line_ids._set_l10n_in_gstr_section()
+    def _sync_india(self, container):
+        yield
+        for invoice in container['records']:
+            # we set the section on the invoice lines
+            invoice.line_ids._set_l10n_in_gstr_section()
