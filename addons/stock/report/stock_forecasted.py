@@ -244,13 +244,15 @@ class StockForecasted(models.AbstractModel):
                 'taken_from_stock': taken_from_stock_out,
             }
 
-        def _reconcile_out_with_ins(lines, out, ins, demand, product_rounding, only_matching_move_dest=True, read=True):
+        def _reconcile_out_with_ins(lines, out, ins, demand, product_rounding, only_matching_move_dest=True, read=True, match_group_id=False):
             index_to_remove = []
             for index, in_ in enumerate(ins):
                 if float_is_zero(in_['qty'], precision_rounding=product_rounding):
                     index_to_remove.append(index)
                     continue
                 if only_matching_move_dest and in_['move_dests'] and out.id not in in_['move_dests']:
+                    continue
+                if match_group_id and (in_['group_id'] != out.group_id.id or not in_['group_id']):
                     continue
                 taken_from_in = min(demand, in_['qty'])
                 demand -= taken_from_in
@@ -312,7 +314,8 @@ class StockForecasted(models.AbstractModel):
             ins_per_product[in_.product_id.id].append({
                 'qty': in_.product_qty,
                 'move': in_,
-                'move_dests': in_._rollup_move_dests()
+                'move_dests': in_._rollup_move_dests(),
+                'group_id': in_.group_id.id,
             })
 
         qties = self.env['stock.quant']._read_group([('location_id', 'in', wh_location_ids), ('quantity', '>', 0), ('product_id', 'in', outs.product_id.ids)],
@@ -386,6 +389,9 @@ class StockForecasted(models.AbstractModel):
                 # Reconcile with the ins.
                 if not float_is_zero(demand_out, precision_rounding=product_rounding):
                     demand_out = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand_out, product_rounding, only_matching_move_dest=True, read=read)
+                # If there is still demand left, we try to reconcile with ins that have the same group_id.
+                if not float_is_zero(demand_out, precision_rounding=product_rounding):
+                    demand_out = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand_out, product_rounding, only_matching_move_dest=False, match_group_id=True, read=read)
                 if not float_is_zero(demand_out, precision_rounding=product_rounding):
                     unreconciled_outs.append((demand_out, out))
 
