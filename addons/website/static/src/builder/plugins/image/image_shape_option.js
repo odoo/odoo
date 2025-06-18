@@ -1,5 +1,6 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
+import { _t } from "@web/core/l10n/translation";
 import { ShapeSelector } from "../shape/shape_selector";
 
 export class ImageShapeOption extends BaseOptionComponent {
@@ -44,6 +45,8 @@ export class ImageShapeOption extends BaseOptionComponent {
             this.env.getEditingElements(),
             {
                 shapeActionId: "setImageShape",
+                buttonWrapperClassName: "o-hb-img-shape-btn",
+                selectorTitle: _t("Shapes"),
                 shapeGroups: this.imageShapeOption.getImageShapeGroups(),
             }
         );

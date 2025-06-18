@@ -41,7 +41,7 @@ test("change the background shape of elements", async () => {
     await contains(":iframe .selector").click();
     await contains("[data-label='Shape'] button").click();
     await contains(
-        ".o_pager_container .button_shape:nth-child(2) [data-action-id='setBackgroundShape']"
+        ".o_pager_container .o-hb-bg-shape-btn:nth-child(2) [data-action-id='setBackgroundShape']"
     ).click();
     expect(":iframe .selector div#first").toHaveAttribute(
         "data-oe-shape-data",

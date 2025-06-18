@@ -1,6 +1,7 @@
 import { getValueFromVar, isMobileView } from "@html_builder/utils/utils";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { backgroundShapesDefinition } from "./background_shapes_definition";
@@ -293,7 +294,8 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     showBackgroundShapes(editingElements) {
         this.dependencies.customizeTab.openCustomizeComponent(ShapeSelector, editingElements, {
             shapeActionId: "setBackgroundShape",
-            buttonWrapperClassName: "button_shape",
+            buttonWrapperClassName: "o-hb-bg-shape-btn",
+            selectorTitle: _t("Background Shapes"),
             shapeGroups: this.getBackgroundShapeGroups(),
             imgThroughDiv: true,
             getShapeUrl: this.getShapeStyleUrl.bind(this),
