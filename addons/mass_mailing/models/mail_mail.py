@@ -26,13 +26,14 @@ class MailMail(models.Model):
         body = super(MailMail, self)._send_prepare_body()
 
         if self.mailing_id and body and self.mailing_trace_ids:
+            base_url_parsed = werkzeug.urls.url_parse(self.get_base_url(), scheme='http')
             for match in set(re.findall(tools.URL_REGEX, self.body_html)):
                 href = match[0]
                 url = match[1]
 
                 parsed = werkzeug.urls.url_parse(url, scheme='http')
 
-                if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
+                if parsed.scheme.startswith('http') and base_url_parsed.host == parsed.host and parsed.path.startswith('/r/'):
                     new_href = href.replace(url, url + '/m/' + str(self.mailing_trace_ids[0].id))
                     body = body.replace(href, new_href)
 

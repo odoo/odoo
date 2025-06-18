@@ -17,6 +17,7 @@ from odoo.exceptions import ValidationError
 from odoo.sql_db import Cursor
 from odoo.tests.common import users, Form, HttpCase, tagged
 from odoo.tools import mute_logger
+from odoo import Command
 
 BASE_64_STRING = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='
 
@@ -497,6 +498,51 @@ class TestMassMailValues(MassMailCommon):
 
         self.assertFalse(mailing.body_html)
         self.assertEqual(mailing.mailing_model_name, 'res.partner')
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_campaign_test_url_replacement(self):
+        """ Test the urls after sending mail process for mailing campaign tests (internal, tracked and external links) """
+
+        base_url = self.env['mailing.mailing'].get_base_url()
+
+        base_internal_tracked_link = base_url + '/r/001'
+        base_internal_link = base_url
+        base_external_link = 'https://www.reddit.com/r/Odoo'
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'Test',
+            'subject': 'Test',
+            'body_html': f"""
+                <p><a id=\"internal_link\" href=\"{base_internal_link}\">Internal Test Link</a></p>
+                <p><a id=\"internal_tracked_link\" href=\"{base_internal_tracked_link}\">Internal Test Tracked Link</a></p>
+                <p><a id=\"external_link\" href=\"{base_external_link}\">External Test Link</a></p>
+            """,
+            'contact_list_ids': [Command.set(self.mailing_list_1.ids)],
+        })
+
+        # We don't want to create link trackers for tests
+        def patched_get_link_tracker_values(self):
+            self.ensure_one()
+            return {}
+
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+        with patch("odoo.addons.mass_mailing.models.mailing.MassMailing._get_link_tracker_values",
+                   new=patched_get_link_tracker_values):
+            with self.mock_mail_gateway(mail_unlink_sent=True):
+                mailing.action_send_mail()
+
+        self.assertTrue(self._mails)
+        new_mail = self._mails[0]
+
+        mail_internal_tracked_link = self._get_href_from_anchor_id(new_mail['body'], 'internal_tracked_link')
+        self.assertIn(base_internal_tracked_link + '/m/', mail_internal_tracked_link, "Tracked url should contains the base tracked url and a /m/ parameter")
+
+        mail_internal_link = self._get_href_from_anchor_id(new_mail['body'], 'internal_link')
+        self.assertEqual(base_internal_link, mail_internal_link, "The url should not change if not tracked")
+
+        mail_external_link = self._get_href_from_anchor_id(new_mail['body'], 'external_link')
+        self.assertEqual(base_external_link, mail_external_link, "An external link can't be modified")
 
 
 @tagged("mass_mailing", "utm")
