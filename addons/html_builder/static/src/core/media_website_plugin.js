@@ -3,6 +3,9 @@ import { MEDIA_SELECTOR, isProtected } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
+import { Tooltip } from "@web/core/tooltip/tooltip";
+import { Mutex } from "@web/core/utils/concurrency";
+
 
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
@@ -63,14 +66,52 @@ export class MediaWebsitePlugin extends Plugin {
                 this.onDblClickEditableMedia(targetEl);
             }
         });
+
+        this.showTooltip = false;
+        this.saving_mutex = new Mutex();
+        this.popover = this.services.popover;
+
+        this.addDomListener(this.editable, "mousedown", (ev) => {
+            const targetEl = ev.target.closest(mediaSelector);
+            if (!targetEl) {
+                return;
+            }
+            let isEditable = (targetEl.parentElement && targetEl.parentElement.isContentEditable);
+
+            if (!isEditable && targetEl.classList.contains("o_editable_media")) {
+                isEditable = shouldEditableMediaBeEditable(targetEl);
+            }
+            if (
+                isEditable &&
+                !isProtected(this.dependencies.selection.getEditableSelection().anchorNode)
+            ) {
+                this.onMousedownEditableMedia(targetEl);
+            }
+        });
     }
 
     onDblClickEditableMedia(mediaEl) {
+        this.showTooltip = false;
         const params = { node: mediaEl };
         const sel = this.dependencies.selection.getEditableSelection();
 
         const editableEl =
             closestElement(params.node || sel.startContainer, ".o_editable") || this.editable;
         this.dependencies.media.openMediaDialog(params, editableEl);
+    }
+
+    onMousedownEditableMedia(mediaEl) {
+        this.showTooltip = true;
+        setTimeout(() => {
+            // Do not show tooltip on double-click (TODO: and if there is already one)
+            if (!this.showTooltip) {
+                return;
+            }
+            // Tooltips need to be cleared before leaving the editor.
+            this.saving_mutex.exec(() => {
+                const removeTooltip = this.popover.add(mediaEl, Tooltip, { tooltip: _t('Double-click to edit')});
+                setTimeout(() => removeTooltip(), 800);
+            });
+        }, 400);
     }
 }
