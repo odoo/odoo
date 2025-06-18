@@ -772,6 +772,24 @@ class TestSaleOrder(SaleCommon):
         })
         self.assertEqual(new_order.order_line.price_unit, 22.0)
 
+    def test_sale_order_duplicate_unit_price_recompute(self):
+        """Ensure price_unit is correctly recomputed in duplicated SO
+           when the original SO line had a manually changed price and the product is
+           changed after duplication.
+        """
+        product2 = self.env['product.product'].create({
+            'name': 'Test Product2',
+            'list_price': 50.0,
+        })
+        # Manually change the price on the original SO line
+        self.sale_order.order_line[0].price_unit = 100
+        new_so = self.sale_order.copy()
+        new_sol = new_so.order_line[0]
+        new_sol.product_id = product2
+        # Expected price_total = list_price * quantity + tax
+        expected_total = (product2.list_price * new_sol.product_uom_qty) + new_sol.price_tax
+        self.assertEqual(new_sol.price_total, expected_total)
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):

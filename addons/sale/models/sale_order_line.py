@@ -1352,6 +1352,13 @@ class SaleOrderLine(models.Model):
             raise UserError(_("Once a sales order is confirmed, you can't remove one of its lines (we need to track if something gets invoiced or delivered).\n\
                 Set the quantity to 0 instead."))
 
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        for val in vals_list:
+            val["technical_price_unit"] = val['price_unit']
+        return vals_list
+
     #=== ACTION METHODS ===#
 
     def action_add_from_catalog(self):
