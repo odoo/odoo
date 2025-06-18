@@ -62,29 +62,16 @@ class StockMove(models.Model):
        subcontracted_moves = self.filtered(lambda m: m.is_subcontract)
        super(StockMove, self - subcontracted_moves)._compute_picked()
 
-    def _set_quantity_done(self, qty):
-        to_set_moves = self
-        for move in self:
-            if move.is_subcontract and move._subcontracting_possible_record():
-                # If 'done' quantity is changed through the move, record components as if done through the wizard.
-                move._auto_record_components(qty)
-                to_set_moves -= move
-        if to_set_moves:
-            super(StockMove, to_set_moves)._set_quantity_done(qty)
-
     def _set_quantity(self):
-        to_set_moves = self
         for move in self:
             if move.is_subcontract and move._subcontracting_possible_record():
                 move_line_quantities = sum(move.move_line_ids.filtered(lambda ml: ml.picked).mapped('quantity'))
                 delta_qty = move.quantity - move_line_quantities
                 if float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
                     move._auto_record_components(delta_qty)
-                    to_set_moves -= move
                 elif float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) < 0:
                     move.with_context(transfer_qty=True)._reduce_subcontract_order_qty(abs(delta_qty))
-        if to_set_moves:
-            super(StockMove, to_set_moves)._set_quantity()
+        super()._set_quantity()
 
     def _auto_record_components(self, qty):
         self.ensure_one()
