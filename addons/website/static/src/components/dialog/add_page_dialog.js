@@ -18,7 +18,9 @@ export class AddPageConfirmDialog extends Component {
     static props = {
         close: Function,
         createPage: Function,
+        createPageWithAI: Function,
         name: String,
+        isBlankTemplate: Boolean,
     };
     static components = {
         Switch,
@@ -32,6 +34,7 @@ export class AddPageConfirmDialog extends Component {
         this.state = useState({
             addMenu: true,
             name: this.props.name,
+            isBlankTemplate: this.props.isBlankTemplate,
         });
     }
 
@@ -426,9 +429,16 @@ export class AddPageDialog extends Component {
         } else {
             this.dialogs.add(AddPageConfirmDialog, {
                 createPage: (...args) => this.createPage(sectionsArch, ...args),
+                createPageWithAI: (...args) => this.createPageWithAI(sectionsArch, ...args),
                 name: name || this.lastTabName,
+                isBlankTemplate: !sectionsArch,
             });
         }
+    }
+
+    async createPageWithAI(sectionsArch, name = "", pageDescription = "", addMenu = false) {
+        // This method is overriden in enterprise/ai_website module to enable pages' AI generation
+        await this.createPage(sectionsArch, name, addMenu);
     }
 
     async createPage(sectionsArch, name = "", addMenu = false) {
