@@ -234,6 +234,9 @@ class AccountAnalyticLine(models.Model):
             ))
 
         account_id_per_fname = dict.fromkeys(self._get_plan_fnames(), False)
+        for plan in account_id_per_fname:
+            if vals.get(plan):
+                account_id_per_fname[plan] = vals.get(plan)
         for account in accounts:
             account_id_per_fname[account.root_plan_id._column_name()] = account.id
         return account_id_per_fname
