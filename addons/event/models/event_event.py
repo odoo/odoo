@@ -3,7 +3,7 @@
 import logging
 import pytz
 import textwrap
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
 from markupsafe import escape
@@ -770,6 +770,24 @@ class EventEvent(models.Model):
     # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
+
+    def action_open_slot_calendar(self):
+        self.ensure_one()
+        return {
+            'type': "ir.actions.act_window",
+            'name': _("Slots"),
+            'view_mode': "calendar,list,form",
+            'mobile_view_mode': "list",
+            'res_model': "event.slot",
+            'target': "current",
+            'domain': [('event_id', '=', self.id)],
+            'context': {
+                'default_event_id': self.id,
+                'event_start_date': self.date_begin,
+                'event_end_date': self.date_end,
+                'initial_date': min(max(datetime.now(), self.date_begin), self.date_end),
+            },
+        }
 
     def action_set_done(self):
         """
