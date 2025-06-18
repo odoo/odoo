@@ -1,7 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
-import { session } from "@web/session";
 import { mountView, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { session } from "@web/session";
 
 import { HRTimesheet, defineTimesheetModels, patchSession } from "./hr_timesheet_models";
 
@@ -22,7 +21,7 @@ test("hr.timesheet (form): FloatTimeField is used when current company uom uses 
         resModel: "account.analytic.line",
         resId: 1,
     });
-    expect(queryOne('div[name="unit_amount"] input').value).toBe("01:00", {
+    expect('div[name="unit_amount"] input').toHaveValue("01:00", {
         message: "unit_amount should be displayed as time",
     });
 });
@@ -36,7 +35,7 @@ test("hr.timesheet (form): FloatTimeField is not dependent of timesheet_uom_fact
         resModel: "account.analytic.line",
         resId: 1,
     });
-    expect(queryOne('div[name="unit_amount"] input').value).toBe("01:00", {
+    expect('div[name="unit_amount"] input').toHaveValue("01:00", {
         message: "timesheet_uom_factor shouldn't be taken into account",
     });
 });
@@ -48,7 +47,7 @@ test("hr.timesheet (form): FloatToggleField is used when current company uom use
         resModel: "account.analytic.line",
         resId: 1,
     });
-    expect('div[name="unit_amount"] .o_field_float_toggle').toBeDisplayed({
+    expect('div[name="unit_amount"] .o_field_float_toggle').toBeVisible({
         message: "unit_amount should be displayed as float toggle",
     });
 });
@@ -63,7 +62,7 @@ test("hr.timesheet (form): FloatToggleField is dependent on timesheet_uom_factor
         resModel: "account.analytic.line",
         resId: 1,
     });
-    expect('div[name="unit_amount"] .o_field_float_toggle').toBeDisplayed({
+    expect('div[name="unit_amount"] .o_field_float_toggle').toBeVisible({
         message: "timesheet_uom_factor should be taken into account",
     });
 });
@@ -75,13 +74,13 @@ test("hr.timesheet (form): FloatFactorField is used when the current_company uom
         resModel: "account.analytic.line",
         resId: 1,
     });
-    expect('div[name="unit_amount"] input[inputmode="decimal"]').toBeDisplayed({
+    expect('div[name="unit_amount"] input[inputmode="decimal"]').toBeVisible({
         message: "unit_amount is displayed as float",
     });
-    expect(queryOne('div[name="unit_amount"] input').value).toBe("1.00", {
+    expect('div[name="unit_amount"] input').toHaveValue("1.00", {
         message: "unit_amount is not displayed as float and not as time",
     });
-    expect('div[name="unit_amount"].o_field_float_toggle').not.toBeDisplayed({
+    expect('div[name="unit_amount"].o_field_float_toggle').not.toHaveCount(null, {
         message: "unit_amount is not displayed as float toggle",
     });
 });
@@ -96,7 +95,7 @@ test("hr.timesheet (form): FloatFactorField is dependent on timesheet_uom_factor
         resModel: "account.analytic.line",
         resId: 1,
     });
-    expect(queryOne('div[name="unit_amount"] input').value).toBe("2.00", {
+    expect('div[name="unit_amount"] input').toHaveValue("2.00", {
         message: "timesheet_uom_factor is taken into account",
     });
 });
