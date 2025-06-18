@@ -4,6 +4,7 @@
 from cups import Connection as CupsConnection
 from re import sub
 from threading import Lock
+import time
 
 from odoo.addons.hw_drivers.interface import Interface
 
@@ -13,9 +14,12 @@ cups_lock = Lock()  # We can only make one call to Cups at a time
 
 
 class PrinterInterface(Interface):
-    _loop_delay = 120
     connection_type = 'printer'
-    printer_devices = {}
+    _loop_delay = 20  # Default delay between calls to get_devices
+
+    def __init__(self):
+        super().__init__()
+        self.start_time = time.time()
 
     def get_devices(self):
         discovered_devices = {}
@@ -39,20 +43,17 @@ class PrinterInterface(Interface):
             device.update({
                 'identifier': identifier,
                 'url': path,
-                'disconnect_counter': 0,
             })
             discovered_devices.update({identifier: device})
-        self.printer_devices.update(discovered_devices)
-        # Deal with devices which are on the list but were not found during this call of "get_devices"
-        # If they aren't detected 3 times consecutively, remove them from the list of available devices
-        for device in list(self.printer_devices):
-            if not discovered_devices.get(device):
-                disconnect_counter = self.printer_devices.get(device).get('disconnect_counter')
-                if disconnect_counter >= 2:
-                    self.printer_devices.pop(device, None)
-                else:
-                    self.printer_devices[device].update({'disconnect_counter': disconnect_counter + 1})
-        return dict(self.printer_devices)
+
+        # Let get_devices be called again every 20 seconds (get_devices of PrinterInterface
+        # takes between 4 and 15 seconds) but increase the delay to 2 minutes if it has been
+        # running for more than 1 hour
+        if self.start_time and time.time() - self.start_time > 3600:
+            self._loop_delay = 120
+            self.start_time = None  # Reset start_time to avoid changing the loop delay again
+
+        return discovered_devices
 
     def get_identifier(self, path):
         """
