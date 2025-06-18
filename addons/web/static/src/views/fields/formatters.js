@@ -76,7 +76,7 @@ export function formatChar(value, options) {
     if (options && options.escape) {
         value = escape(value);
     }
-    return value;
+    return value || "";
 }
 formatChar.extractOptions = ({ attrs }) => ({
     isPassword: exprToBoolean(attrs.password),
