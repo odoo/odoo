@@ -17,7 +17,7 @@ class UomUom(models.Model):
 
     def _unprotected_uom_xml_ids(self):
         return [
-            "product_uom_hour",  # NOTE: this uom is protected when hr_timesheet is installed.
+            "product_uom_hour",  # NOTE: this uom is protected when hr_timesheet and sale_planning is installed.
             "product_uom_dozen",
             "product_uom_pack_6",
         ]
