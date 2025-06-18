@@ -3465,16 +3465,26 @@ test("no class 'o_view_sample_data' when real data are presented", async () => {
 });
 
 test("group by properties in pivot view", async () => {
-    onRpc("/web/dataset/call_kw/partner/web_search_read", async (request) => {
-        const { params } = await request.json();
-        if (params.kwargs.specification?.properties_definition) {
+    onRpc("partner", "web_search_read", ({ kwargs }) => {
+        if (kwargs.specification?.properties_definition) {
             expect.step("fetch_definition");
         }
     });
+<<<<<<< 1978124798cd3b2f51565363d5c252d4df52b6ae
     onRpc("/web/dataset/call_kw/partner/formatted_read_group", async (request) => {
         const { params } = await request.json();
         if (params.kwargs.groupby?.includes("properties.my_char")) {
             expect.step("formatted_read_group");
+||||||| 3dee077d0a884809ea5e2af201bb2bacda9ca9d8
+    onRpc("/web/dataset/call_kw/partner/read_group", async (request) => {
+        const { params } = await request.json();
+        if (params.kwargs.groupby?.includes("properties.my_char")) {
+            expect.step("read_group");
+=======
+    onRpc("partner", "read_group", ({ kwargs }) => {
+        if (kwargs.groupby?.includes("properties.my_char")) {
+            expect.step("read_group");
+>>>>>>> f9a235e39c72df01c0001f42a1012d789a53925a
             return [
                 {
                     "properties.my_char": false,

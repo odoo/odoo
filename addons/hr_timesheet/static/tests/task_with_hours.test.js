@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, edit, queryAll, queryOne } from "@odoo/hoot-dom";
+import { click, edit } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { mountView } from "@web/../tests/web_test_helpers";
 
@@ -16,13 +16,11 @@ defineTimesheetModels();
 describe.current.tags("desktop");
 
 async function _expectCreateAndEdit(rowN) {
-    const taskField = queryOne(
-        `.o_list_table .o_data_row:nth-of-type(${rowN}) .o_list_many2one[name=task_id]`
-    );
+    const taskField = `.o_list_table .o_data_row:nth-of-type(${rowN}) .o_list_many2one[name=task_id]`;
     await click(taskField);
     await animationFrame();
     await edit("NonExistingTask", { confirm: false });
-    await click("input", { root: taskField });
+    await click(`${taskField} input`);
     await animationFrame();
     return expect(
         '.o_list_many2one[name=task_id] .dropdown ul li:contains(Create "NonExistingTask")'
@@ -34,7 +32,7 @@ test("hr.timesheet (tree): quick create is enabled when project_id is set", asyn
         resModel: "account.analytic.line",
         type: "list",
     });
-    (await _expectCreateAndEdit(2)).toBeDisplayed();
+    (await _expectCreateAndEdit(2)).toBeVisible();
 });
 
 test("hr.timesheet (tree): quick create is no enabled when project_id is not set", async () => {
@@ -42,7 +40,7 @@ test("hr.timesheet (tree): quick create is no enabled when project_id is not set
         resModel: "account.analytic.line",
         type: "list",
     });
-    (await _expectCreateAndEdit(3)).not.toBeDisplayed();
+    (await _expectCreateAndEdit(3)).not.toHaveCount();
 });
 
 test("hr.timesheet (tree): the text of the task includes hours in the drop down but not in the line", async () => {
@@ -50,19 +48,13 @@ test("hr.timesheet (tree): the text of the task includes hours in the drop down 
         resModel: "account.analytic.line",
         type: "list",
     });
-    const taskField = queryOne(
-        ".o_list_table .o_data_row:first-of-type .o_list_many2one[name=task_id]"
-    );
+    const taskField = ".o_list_table .o_data_row:first-of-type .o_list_many2one[name=task_id]";
     expect(taskField).toHaveText("Task 3");
     await click(taskField);
     await animationFrame();
-    await click("input", { root: taskField });
+    await click(`${taskField} input`);
     await animationFrame();
-    expect(
-        queryAll('.dropdown ul li:contains("AdditionalInfo")', {
-            root: taskField,
-        })
-    ).toHaveCount(3);
+    expect(`${taskField} .dropdown ul li:contains("AdditionalInfo")`).toHaveCount(3);
 });
 
 test("project.task (tree): progress bar color", async () => {

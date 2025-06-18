@@ -50,22 +50,30 @@ const {
 /**
  * @param {string} query
  */
-const addExact = (query) => EXACT_MARKER + query + EXACT_MARKER;
+function addExact(query) {
+    return EXACT_MARKER + query + EXACT_MARKER;
+}
 
 /**
  * @param {string} query
  */
-const addRegExp = (query) => REGEX_MARKER + query + REGEX_MARKER;
+function addRegExp(query) {
+    return REGEX_MARKER + query + REGEX_MARKER;
+}
 
 /**
  * @param {string} query
  */
-const removeExact = (query) => query.replaceAll(EXACT_MARKER, "");
+function removeExact(query) {
+    return query.replaceAll(EXACT_MARKER, "");
+}
 
 /**
  * @param {string} query
  */
-const removeRegExp = (query) => query.slice(1, -1);
+function removeRegExp(query) {
+    return query.slice(1, -1);
+}
 
 /**
  * /!\ Requires "job" and "category" to be in scope
@@ -149,13 +157,13 @@ const templateIncludeWidget = (tagName) => /* xml */ `
  *
  * @param {ReturnType<typeof useRef<HTMLInputElement>>} ref
  */
-const useKeepSelection = (ref) => {
+function useKeepSelection(ref) {
     /**
      * @param {number} nextOffset
      */
-    const keepSelection = (nextOffset) => {
+    function keepSelection(nextOffset) {
         offset = nextOffset || 0;
-    };
+    }
 
     let offset = null;
     let start = 0;
@@ -177,7 +185,7 @@ const useKeepSelection = (ref) => {
     });
 
     return keepSelection;
-};
+}
 
 const EMPTY_SUITE = new Suite(null, "…", []);
 const SECRET_SEQUENCE = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
@@ -573,6 +581,22 @@ export class HootSearch extends Component {
     isTag(item) {
         return item instanceof Tag;
     }
+    /**
+     * @param {number} inc
+     */
+    navigate(inc) {
+        const elements = [
+            this.searchInputRef.el,
+            ...this.rootRef.el.querySelectorAll("input[type=radio]:checked:enabled"),
+        ];
+        let nextIndex = elements.indexOf(getActiveElement(document)) + inc;
+        if (nextIndex >= elements.length) {
+            nextIndex = 0;
+        } else if (nextIndex < -1) {
+            nextIndex = -1;
+        }
+        elements.at(nextIndex).focus();
+    }
 
     /**
      * @param {SearchFilter} categoryId
@@ -595,30 +619,14 @@ export class HootSearch extends Component {
      * @param {KeyboardEvent} ev
      */
     onKeyDown(ev) {
-        /**
-         * @param {number} inc
-         */
-        const navigate = (inc) => {
-            ev.preventDefault();
-            const elements = [
-                this.searchInputRef.el,
-                ...this.rootRef.el.querySelectorAll("input[type=radio]:checked:enabled"),
-            ];
-            let nextIndex = elements.indexOf(getActiveElement(document)) + inc;
-            if (nextIndex >= elements.length) {
-                nextIndex = 0;
-            } else if (nextIndex < -1) {
-                nextIndex = -1;
-            }
-            elements.at(nextIndex).focus();
-        };
-
         switch (ev.key) {
             case "ArrowDown": {
-                return navigate(+1);
+                ev.preventDefault();
+                return this.navigate(+1);
             }
             case "ArrowUp": {
-                return navigate(-1);
+                ev.preventDefault();
+                return this.navigate(-1);
             }
             case "Enter": {
                 return refresh();

@@ -220,7 +220,7 @@ test("file name field is not defined", async () => {
     expect(`.o_field_binary`).toHaveText("", {
         message: "there should be no text since the name field is not in the view",
     });
-    expect(`.o_field_binary .fa-download`).toBeDisplayed({
+    expect(`.o_field_binary .fa-download`).toBeVisible({
         message: "download icon should be visible",
     });
 });

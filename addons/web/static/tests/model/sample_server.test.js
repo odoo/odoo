@@ -323,8 +323,42 @@ describe("RPC calls", () => {
             model: "hobbit",
             groupBy: ["profession", "age"],
         });
+<<<<<<< 1978124798cd3b2f51565363d5c252d4df52b6ae
         expect("profession" in result[0]).toBe(true);
         expect("age" in result[0]).toBe(true);
+||||||| 3dee077d0a884809ea5e2af201bb2bacda9ca9d8
+        expect("profession" in result[0]).toBe(true);
+        expect("age" in result[0]).toBe(false);
+    });
+
+    test("'read_group': multiple groupBys and not lazy", async () => {
+        const server = new DeterministicSampleServer("hobbit", fields.hobbit);
+        const result = await server.mockRpc({
+            method: "read_group",
+            model: "hobbit",
+            fields: [],
+            groupBy: ["profession", "age"],
+            lazy: false,
+        });
+        expect("profession" in result[0]).toBe(true);
+        expect("age" in result[0]).toBe(true);
+=======
+        expect(result[0]).toInclude("profession");
+        expect(result[0]).not.toInclude("age");
+    });
+
+    test("'read_group': multiple groupBys and not lazy", async () => {
+        const server = new DeterministicSampleServer("hobbit", fields.hobbit);
+        const result = await server.mockRpc({
+            method: "read_group",
+            model: "hobbit",
+            fields: [],
+            groupBy: ["profession", "age"],
+            lazy: false,
+        });
+        expect(result[0]).toInclude("profession");
+        expect(result[0]).toInclude("age");
+>>>>>>> f9a235e39c72df01c0001f42a1012d789a53925a
     });
 
     test("'formatted_read_group': multiple groupBys among which a many2many", async () => {

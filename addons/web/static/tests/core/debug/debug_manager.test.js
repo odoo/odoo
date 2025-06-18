@@ -38,16 +38,11 @@ class DebugMenuParent extends Component {
 
 const debugRegistry = registry.category("debug");
 
-onRpc(async (args) => {
-    if (args.method === "has_access") {
-        return true;
-    }
-    if (args.route === "/web/dataset/call_kw/ir.attachment/regenerate_assets_bundles") {
-        expect.step("ir.attachment/regenerate_assets_bundles");
-        return true;
-    }
+onRpc("has_access", () => true);
+onRpc("ir.attachment", "regenerate_assets_bundles", () => {
+    expect.step("ir.attachment/regenerate_assets_bundles");
+    return true;
 });
-
 beforeEach(() => {
     // Remove this service to clear the debug menu from anything else than what the test insert into
     registry.category("services").remove("profiling");
@@ -103,8 +98,7 @@ describe("DebugMenu", () => {
         expect(children.map((el) => el.tagName)).toEqual(["DIV", "SPAN", "SPAN", "DIV", "SPAN"]);
         expect(queryAllTexts(children)).toEqual(["a", "Item 2", "Item 1", "b", "Item 3"]);
 
-        const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
-        for (const item of items) {
+        for (const item of queryAll(".dropdown-menu .dropdown-item")) {
             await click(item);
         }
 
@@ -146,8 +140,12 @@ describe("DebugMenu", () => {
             });
         await mountWithCleanup(DebugMenuParent);
         await contains("button.dropdown-toggle").click();
-        const items = [...queryAll(".dropdown-menu .dropdown-item")];
-        expect(items.map((el) => el.textContent)).toEqual(["Item 1", "Item 2", "Item 3", "Item 4"]);
+        expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual([
+            "Item 1",
+            "Item 2",
+            "Item 3",
+            "Item 4",
+        ]);
     });
 
     test("Don't display the DebugMenu if debug mode is disabled", async () => {
@@ -211,8 +209,8 @@ describe("DebugMenu", () => {
         await contains(".o_dialog .o_debug_manager button").click();
         expect(".dropdown-menu .dropdown-item").toHaveCount(2);
         // Check that global debugManager elements are not displayed (global_1)
-        const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
-        expect(items.map((el) => el.textContent)).toEqual(["Item 1", "Item 2"]);
+        const items = queryAll(".dropdown-menu .dropdown-item");
+        expect(queryAllTexts(items)).toEqual(["Item 1", "Item 2"]);
         for (const item of items) {
             await click(item);
         }

@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { getColorHex } from "../../hoot-dom/hoot_dom_utils";
 import { stringify } from "../hoot_utils";
 import { urlParams } from "./url";
 
@@ -30,26 +31,23 @@ const {
  * @param {string} [prefix]
  * @param {string} [prefixColor]
  */
-const styledArguments = (args, prefix, prefixColor) => {
-    const fullPrefix = `%c[${prefix || "HOOT"}]%c`;
-    const styles = [`color:${prefixColor || "#ff0080"};font-weight:bold`, ""];
-    let firstArg = args.shift() ?? "";
-    if (typeof firstArg === "function") {
-        firstArg = firstArg();
-    }
+function styledArguments(args, prefix, prefixColor) {
+    const fullPrefix = `%c[${prefix || DEFAULT_PREFIX[0]}]%c`;
+    const styles = [`color:${prefixColor || DEFAULT_PREFIX[1]};font-weight:bold`, ""];
+    const firstArg = args.shift() ?? "";
     if (typeof firstArg === "string") {
         args.unshift(`${fullPrefix} ${firstArg}`, ...styles);
     } else {
         args.unshift(fullPrefix, ...styles, firstArg);
     }
     return args;
-};
+}
 
 /**
  * @param {any[]} args
  */
-const unstyledArguments = (args) => {
-    const prefix = `[HOOT]`;
+function unstyledArguments(args) {
+    const prefix = `[${DEFAULT_PREFIX[0]}]`;
     const firstArg = args.shift() ?? "";
     if (typeof firstArg === "string") {
         args.unshift(`${prefix} ${firstArg}`);
@@ -57,11 +55,12 @@ const unstyledArguments = (args) => {
         args.unshift(prefix, firstArg);
     }
     return [args.join(" ")];
-};
+}
 
-const DEBUG_PREFIX = ["DEBUG", "#ffb000"];
-const ERROR_PREFIX = ["ERROR", "#9f1239"];
-const WARNING_PREFIX = ["WARNING", "#f59e0b"];
+const DEBUG_PREFIX = ["DEBUG", getColorHex("purple")];
+const DEFAULT_PREFIX = ["HOOT", getColorHex("primary")];
+const ERROR_PREFIX = ["ERROR", getColorHex("rose")];
+const WARNING_PREFIX = ["WARNING", getColorHex("amber")];
 let nextNetworkLogId = 1;
 
 //-----------------------------------------------------------------------------
@@ -80,7 +79,7 @@ export function makeNetworkLogger(prefix, title) {
          * @param {() => any} getData
          */
         async logRequest(getData) {
-            if (logger.level < LOG_LEVELS.debug) {
+            if (!logger.allows("debug")) {
                 return;
             }
             const color = `color: #66e`;
@@ -94,7 +93,7 @@ export function makeNetworkLogger(prefix, title) {
          * @param {() => any} getData
          */
         async logResponse(getData) {
-            if (logger.level < LOG_LEVELS.debug) {
+            if (!logger.allows("debug")) {
                 return;
             }
             const color = `color: #f80`;
@@ -112,7 +111,8 @@ export const LOG_LEVELS = {
 };
 
 export const logger = {
-    level: urlParams.loglevel ?? LOG_LEVELS.runner,
+    /** @private */
+    currentLevel: urlParams.loglevel ?? LOG_LEVELS.runner,
     suppressed: "",
 
     // Standard console methods
@@ -175,34 +175,16 @@ export const logger = {
      * @param {...any} args
      */
     logDebug(...args) {
-        if (logger.level < LOG_LEVELS.debug) {
+        if (!logger.allows("debug")) {
             return;
         }
         $debug(...styledArguments(args, ...DEBUG_PREFIX));
     },
     /**
-     * @param {import("./test").Test} test
-     */
-    logTest(test) {
-        if (logger.level < LOG_LEVELS.tests) {
-            return;
-        }
-        const { fullName, lastResults } = test;
-        $log(
-            ...styledArguments([
-                `Test ${stringify(fullName)} passed (assertions:`,
-                lastResults.counts.assertion || 0,
-                `/ time:`,
-                lastResults.duration,
-                `ms)`,
-            ])
-        );
-    },
-    /**
      * @param {import("./suite").Suite} suite
      */
     logSuite(suite) {
-        if (logger.level < LOG_LEVELS.suites) {
+        if (!logger.allows("suites")) {
             return;
         }
         const args = [`${stringify(suite.fullName)} ended`];
@@ -228,10 +210,35 @@ export const logger = {
         $log(...styledArguments(args));
     },
     /**
+     * @param {import("./test").Test} test
+     */
+    logTest(test) {
+        if (!logger.allows("tests")) {
+            return;
+        }
+        const { fullName, lastResults } = test;
+        $log(
+            ...styledArguments([
+                `Test ${stringify(fullName)} passed (assertions:`,
+                lastResults.counts.assertion || 0,
+                `/ time:`,
+                lastResults.duration,
+                `ms)`,
+            ])
+        );
+    },
+    /**
+     * @param {[label: string, color: string]} prefix
+     * @param {...any} args
+     */
+    logTestEvent(prefix, ...args) {
+        $log(...styledArguments(args, ...prefix));
+    },
+    /**
      * @param {...any} args
      */
     logRun(...args) {
-        if (logger.level < LOG_LEVELS.runner) {
+        if (!logger.allows("runner")) {
             return;
         }
         $log(...styledArguments(args));
@@ -258,13 +265,24 @@ export const logger = {
     // Other methods
 
     /**
+     * @param {keyof typeof LOG_LEVELS} level
+     */
+    allows(level) {
+        return logger.currentLevel >= LOG_LEVELS[level];
+    },
+    /**
+     * @param {keyof typeof LOG_LEVELS} level
+     */
+    setLevel(level) {
+        logger.currentLevel = LOG_LEVELS[level];
+    },
+    /**
      * @param {string} reason
      */
     suppressIssues(reason) {
-        const restore = () => {
+        logger.suppressed = reason || "(suppressed)";
+        return function restore() {
             logger.suppressed = "";
         };
-        logger.suppressed = reason || "(suppressed)";
-        return restore;
     },
 };
