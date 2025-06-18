@@ -47,7 +47,6 @@ There are 2 main Payment Methods additions:
         'base_vat',
     ],
     'data': [
-        'data/account_payment_method_data.xml',
         'wizards/l10n_latam_payment_mass_transfer_views.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
@@ -57,4 +56,5 @@ There are 2 main Payment Methods additions:
         'wizards/account_payment_register_views.xml',
     ],
     'installable': True,
+    'post_init_hook': '_post_init_hook',
 }

@@ -1763,6 +1763,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'payment_date': '2016-01-01',
                 'amount': 90.0,
                 'currency_id': foreign_curr.id,
+                'journal_id': self.bank_journal_for_payment.id,
             })\
             ._create_payments()
 
@@ -2067,6 +2068,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 1907.17,
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
+            'journal_id': self.bank_journal_for_payment.id,
         })
         pay1.action_post()
         pay1_liquidity_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
@@ -2085,6 +2087,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 0.09,
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
+            'journal_id': self.bank_journal_for_payment.id,
         })
         pay2.action_post()
         pay2_rec_line = pay2.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
@@ -2368,6 +2371,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 1907.17,
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
+            'journal_id': self.bank_journal_for_payment.id,
         })
         pay1.action_post()
         pay1_liquidity_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
@@ -2386,6 +2390,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 0.09,
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
+            'journal_id': self.bank_journal_for_payment.id,
         })
         pay2.action_post()
         pay2_rec_line = pay2.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
@@ -2700,7 +2705,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         # Pay it with 100.0 USD
         self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({'amount': 100.0, 'currency_id': self.company_data['currency'].id})\
+            .create({
+                'amount': 100.0,
+                'currency_id': self.company_data['currency'].id,
+                'journal_id': self.bank_journal_for_payment.id,
+            })\
             ._create_payments()
 
         self.assertTrue(invoice.payment_state in ('in_payment', 'paid'))
@@ -3100,6 +3109,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=inv.ids).create({
             'payment_date': inv.date,
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
 
         # initially, no caba move is created because the tax on the draft invoice isn't cash basis
@@ -3694,8 +3704,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         # Rate 3/2 in 2017. Full payment of 110 in foreign currency
         pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=caba_inv.ids).create({
             'payment_date': '2017-01-01',
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'journal_id': self.bank_journal_for_payment.id,
+            'payment_method_id': self.inbound_payment_method.id,
         })
         pmt_wizard._create_payments()
         partial_rec = caba_inv.mapped('line_ids.matched_credit_ids')
@@ -3772,6 +3782,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'payment_date': '2017-01-01',
                 'currency_id': currency_id,
                 'amount': 110.0,
+                'journal_id': self.bank_journal_for_payment.id,
             })\
             ._create_payments()
 
@@ -4505,8 +4516,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=caba_inv.ids).create({
             'payment_date': caba_inv.date,
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'journal_id': self.bank_journal_for_payment.id,
+            'payment_method_id': self.inbound_payment_method.id,
         })
         pmt_wizard._create_payments()
 
@@ -4548,8 +4559,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'amount': 320,
             'payment_date': invoice.date,
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'journal_id': self.bank_journal_for_payment.id,
+            'payment_method_id': self.inbound_payment_method.id,
         })
 
         pmt_wizard._create_payments()
@@ -4583,8 +4594,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=caba_inv.ids).create({
             'amount': 600,
             'payment_date': caba_inv.date,
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'journal_id': self.bank_journal_for_payment.id,
+            'payment_method_id': self.inbound_payment_method.id,
         })
         pmt_wizard._create_payments()
 
@@ -4638,7 +4649,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         # Register a payment creating the CABA journal entry on the fly and reconcile it with the tax line.
         self.env['account.payment.register']\
             .with_context(active_ids=bill.ids, active_model='account.move')\
-            .create({})\
+            .create({'journal_id': self.bank_journal_for_payment.id,})\
             ._create_payments()
 
         bill.button_draft()
@@ -4698,6 +4709,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.env['account.payment.register'].with_context(active_ids=invoice.ids, active_model='account.move').create({
             'payment_date': invoice.date,
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
 
         caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
@@ -4769,7 +4781,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         invoice.action_post()
 
-        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({})
+        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'journal_id': self.bank_journal_for_payment.id,
+        })
         pmt_wizard._create_payments()
 
         caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
@@ -4847,6 +4861,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
 
         # check caba move
@@ -4972,6 +4987,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 800.0,
             'currency_id': foreign_currency.id,
             'partner_id': self.partner_a.id,
+            'journal_id': self.bank_journal_for_payment.id,
         })
         payment.action_post()
         # unlink the rate to simulate a custom rate on the payment
@@ -5012,7 +5028,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         invoice_no_diff.action_post()
         wizard_no_diff = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice_no_diff.ids)\
-            .create({**payment_vals, 'payment_date': '2017-01-01', 'amount': 3000})  # 3000 EUR = 1000 USD.
+            .create({
+                **payment_vals,
+                'payment_date': '2017-01-01',
+                'amount': 3000,
+                'journal_id': self.bank_journal_for_payment.id,
+            })  # 3000 EUR = 1000 USD.
         wizard_no_diff._create_payments()
 
         # Then check that an error is raised when trying to create a payment with an exchange difference.
@@ -5022,7 +5043,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         invoice_diff.action_post()
         wizard_diff = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice_diff.ids)\
-            .create({**payment_vals, 'payment_date': '2018-01-01', 'amount': 2000})  # 2000 EUR = 1000 USD.
+            .create({
+                **payment_vals,
+                'payment_date': '2018-01-01',
+                'amount': 2000,
+                'journal_id': self.bank_journal_for_payment.id,
+            })  # 2000 EUR = 1000 USD.
         with self.assertRaises(UserError):
             wizard_diff._create_payments()
 
@@ -5134,6 +5160,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
 
         # Check the caba move lines.
@@ -5321,6 +5348,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
 
         # Check the caba move lines.
@@ -5410,10 +5438,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
     def test_partial_payments_auto_validation(self):
         # We add an account on the first payment method in the common setup, but we also need a method witout an account
-        self.company_data['default_journal_bank'].inbound_payment_method_line_ids += self.env['account.payment.method.line'].create({
-            'name': 'Manual without outstanding',
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
-        })
         with patch.object(self.env.registry['account.move'], '_get_invoice_in_payment_state', return_value='in_payment'):
             def create_move_payment(move, payment_amount, with_outstanding_account=False):
                 payment = self.env['account.payment.register'].with_context(
@@ -5421,9 +5445,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     active_ids=move.ids
                 ).create({
                     'amount': payment_amount,
-                    'payment_method_line_id': self.company_data['default_journal_bank'].inbound_payment_method_line_ids.filtered_domain([
-                        ('payment_account_id', '!=' if with_outstanding_account else "=", False),
-                    ])[0].id,
+                    'payment_method_id': self.inbound_payment_method.id,
+                    'journal_id': self.bank_journal_for_payment.id if with_outstanding_account else None,
                 })._create_payments()
                 self.assertEqual(payment.state, 'in_process')
                 return payment
@@ -5541,6 +5564,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         for amount in [100.1, 100.1, 100.1, 100.1, 400.2]:
             pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
                 'amount': amount,
+                'journal_id': self.bank_journal_for_payment.id,
             })
             pmt_wizard._create_payments()
 

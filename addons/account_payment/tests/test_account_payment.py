@@ -187,18 +187,10 @@ class TestAccountPayment(AccountPaymentCommon):
             msg="source transactions with done or cancel children should not create payments.",
         )
 
-    def test_prevent_unlink_apml_with_active_provider(self):
-        """ Deleting an account.payment.method.line that is related to a provider in 'test' or 'enabled' state
-        should raise an error.
-        """
-        self.assertEqual(self.dummy_provider.state, 'test')
-        with self.assertRaises(UserError):
-            self.dummy_provider.journal_id.inbound_payment_method_line_ids.unlink()
-
     def test_provider_journal_assignation(self):
         """ Test the computation of the 'journal_id' field and so, the link with the accounting side. """
-        def get_payment_method_line(provider):
-            return self.env['account.payment.method.line'].search([('payment_provider_id', '=', provider.id)])
+        def get_payment_method(provider):
+            return self.env['account.payment.method'].search([('code', '=', provider.code)])
 
         with self.mocked_get_payment_method_information():
             journal = self.company_data['default_journal_bank']
@@ -207,10 +199,10 @@ class TestAccountPayment(AccountPaymentCommon):
 
             # Test changing the journal.
             copy_journal = journal.copy()
-            payment_method_line = get_payment_method_line(provider)
+            payment_method = get_payment_method(provider)
             provider.journal_id = copy_journal
             self.assertRecordValues(provider, [{'journal_id': copy_journal.id}])
-            self.assertRecordValues(payment_method_line, [{'journal_id': copy_journal.id}])
+            self.assertRecordValues(payment_method, [{'journal_id': copy_journal.id}])
 
             # Test duplication of the provider.
             payment_method_line.payment_account_id = self.inbound_payment_method_line.payment_account_id

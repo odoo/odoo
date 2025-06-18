@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account.action_payment_method" model="ir.actions.act_window">
+        <field name="name">Payment Methods</field>
+        <field name="res_model">account.payment.method</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('code','!=','online_payment_provider')]</field>
+    </record>
+
+</odoo>

@@ -11,8 +11,8 @@ import uuid
 from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.addons.l10n_it_edi.models.account_payment_method_line import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
+from odoo.addons.l10n_it_edi.models.account_payment_method import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo.exceptions import LockError, UserError
 from odoo.tools import cleanup_xml_node, float_compare, float_is_zero, float_repr, html2plaintext
 from odoo.tools.sql import column_exists, create_column
@@ -115,9 +115,9 @@ class AccountMove(models.Model):
     # Technical field for showing the above fields or not
     l10n_it_partner_pa = fields.Boolean(compute='_compute_l10n_it_partner_pa')
 
-    l10n_it_payment_method = fields.Selection(
+    l10n_it_payment_method_code = fields.Selection(
         selection=L10N_IT_PAYMENT_METHOD_SELECTION,
-        compute='_compute_l10n_it_payment_method',
+        compute='_compute_l10n_it_payment_method_code',
         store=True,
         readonly=False,
     )
@@ -131,10 +131,10 @@ class AccountMove(models.Model):
     )
 
     def _auto_init(self):
-        # Create compute stored field l10n_it_document_type and l10n_it_payment_method
+        # Create compute stored field l10n_it_document_type and l10n_it_payment_method_code
         # here to avoid timeout error on large databases.
-        if not column_exists(self.env.cr, 'account_move', 'l10n_it_payment_method'):
-            create_column(self.env.cr, 'account_move', 'l10n_it_payment_method', 'varchar')
+        if not column_exists(self.env.cr, 'account_move', 'l10n_it_payment_method_code'):
+            create_column(self.env.cr, 'account_move', 'l10n_it_payment_method_code', 'varchar')
         if not column_exists(self.env.cr, 'account_move', 'l10n_it_document_type'):
             create_column(self.env.cr, 'account_move', 'l10n_it_document_type', 'integer')
         return super()._auto_init()
@@ -145,7 +145,7 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     @api.depends('line_ids.matching_number', 'payment_state', 'matched_payment_ids')
-    def _compute_l10n_it_payment_method(self):
+    def _compute_l10n_it_payment_method_code(self):
         if self.env.company.account_fiscal_country_id.code != 'IT':
             return
 
@@ -160,16 +160,16 @@ class AccountMove(models.Model):
                 # We use matching_numbers[0] directly, assuming there's a valid key in the dictionary.
                 matching_lines = move_lines_per_matching_number.get(matching_numbers[0])
                 if matching_lines and matching_lines.payment_id:
-                    payment_method_line = matching_lines.payment_id.payment_method_line_id[0]
-                    if payment_method_line:
-                        move.l10n_it_payment_method = payment_method_line.l10n_it_payment_method
+                    payment_method = matching_lines.payment_id.payment_method_id[0]
+                    if payment_method:
+                        move.l10n_it_payment_method_code = payment_method.l10n_it_payment_method_code
                         continue  # Skip to the next move
             if linked_payment := move.matched_payment_ids.filtered(lambda p: p.state != 'draft')[:1]:
-                move.l10n_it_payment_method = linked_payment.payment_method_line_id.l10n_it_payment_method
+                move.l10n_it_payment_method_code = linked_payment.payment_method_id.l10n_it_payment_method_code
                 continue
 
             # Default handling if no valid matching lines found or if conditions don't match
-            move.l10n_it_payment_method = move.origin_payment_id.payment_method_line_id.l10n_it_payment_method or move.l10n_it_payment_method or 'MP05'
+            move.l10n_it_payment_method_code = move.origin_payment_id.payment_method_id.l10n_it_payment_method_code or move.l10n_it_payment_method_code or 'MP05'
 
     @api.depends('state')
     def _compute_l10n_it_document_type(self):
@@ -1292,10 +1292,10 @@ class AccountMove(models.Model):
             if amount_total := sum(float(x) for x in get_text(tree, './/ImportoPagamento', many=True) if x):
                 message_to_log.append(_("Total amount from the XML File: %s", amount_total))
 
-            # l10n_it_payment_method
-            if payment_method := get_text(data['xml_tree'], '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
-                if payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code():
-                    self.l10n_it_payment_method = payment_method
+            # l10n_it_payment_method_code
+            if payment_method_code := get_text(data['xml_tree'], '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
+                if payment_method_code in self.env['account.payment.method']._get_l10n_it_payment_method_selection_code():
+                    self.l10n_it_payment_method_code = payment_method_code
 
             # Bank account. <2.4.2.13>
             if self.move_type not in ('out_invoice', 'in_refund'):

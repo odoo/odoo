@@ -218,18 +218,22 @@ class HrExpense(models.Model):
     # Account fields
     journal_id = fields.Many2one(
         comodel_name='account.journal',
-        related='payment_method_line_id.journal_id',
-        readonly=True,
+        check_company=True,
+        domain="[('id', 'in', available_journal_ids)]",
     )
-    selectable_payment_method_line_ids = fields.Many2many(
-        comodel_name='account.payment.method.line',
-        compute='_compute_selectable_payment_method_line_ids',
+    available_journal_ids = fields.Many2many(
+        comodel_name='account.journal',
+        compute='_compute_available_journal_ids'
     )
-    payment_method_line_id = fields.Many2one(
-        comodel_name='account.payment.method.line',
+    selectable_payment_method_ids = fields.Many2many(
+        comodel_name='account.payment.method',
+        compute='_compute_selectable_payment_method_ids',
+    )
+    payment_method_id = fields.Many2one(
+        comodel_name='account.payment.method',
         string="Payment Method",
-        compute='_compute_payment_method_line_id', store=True, readonly=False,
-        domain="[('id', 'in', selectable_payment_method_line_ids)]",
+        compute='_compute_payment_method_id', store=True, readonly=False,
+        domain="[('id', 'in', selectable_payment_method_ids)]",
         help="The payment method used when the expense is paid by the company.",
     )
     account_move_id = fields.Many2one(
@@ -653,22 +657,21 @@ class HrExpense(models.Model):
             else:
                 expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
 
-    @api.depends('selectable_payment_method_line_ids')
-    def _compute_payment_method_line_id(self):
+    @api.depends('selectable_payment_method_ids')
+    def _compute_payment_method_id(self):
         for expense in self:
-            expense.payment_method_line_id = expense.selectable_payment_method_line_ids[:1]
+            expense.payment_method_id = expense.selectable_payment_method_ids[:1]
 
     @api.depends('company_id')
-    def _compute_selectable_payment_method_line_ids(self):
+    def _compute_selectable_payment_method_ids(self):
         for expense in self:
-            allowed_method_line_ids = expense.company_id.company_expense_allowed_payment_method_line_ids
-            if allowed_method_line_ids:
-                expense.selectable_payment_method_line_ids = allowed_method_line_ids
+            allowed_method_ids = expense.company_id.company_expense_allowed_payment_method_ids
+            if allowed_method_ids:
+                expense.selectable_payment_method_ids = allowed_method_ids
             else:
-                expense.selectable_payment_method_line_ids = self.env['account.payment.method.line'].search([
-                    # The journal is the source of the payment method line company
-                    *self.env['account.journal']._check_company_domain(expense.company_id),
+                expense.selectable_payment_method_ids = self.env['account.payment.method'].search([
                     ('payment_type', '=', 'outbound'),
+                    ('company_id', '=', self.env.company.id),
                 ])
 
     @api.depends('product_id', 'company_id')
@@ -793,6 +796,22 @@ class HrExpense(models.Model):
         cannot_reason_per_record_id = self._get_cannot_approve_reason()
         for expense in self:
             expense.can_approve = not cannot_reason_per_record_id[expense.id]
+
+    @api.depends('payment_method_id')
+    def _compute_available_journal_ids(self):
+        """
+        Get all journals that have an outstanding account and fit the payment method domain.
+        """
+        journals = self.env['account.journal'].search([
+            '|',
+            ('company_id', 'parent_of', self.env.company.id),
+            ('company_id', 'child_of', self.env.company.id),
+            ('type', 'in', ('bank', 'cash', 'credit')),
+        ])
+        for expense in self:
+            expense.available_journal_ids = journals.filtered(
+                'outstanding_payment_account_id'
+            ).filtered(lambda j: j._is_payment_method_available(expense.payment_method_id.code))
 
     # ----------------------------------------
     # ORM Overrides
@@ -1602,8 +1621,8 @@ class HrExpense(models.Model):
         self.ensure_one()
 
         journal = self.journal_id
-        payment_method_line = self.payment_method_line_id
-        if not payment_method_line:
+        payment_method = self.payment_method_id
+        if not payment_method:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
 
         AccountTax = self.env['account.tax']
@@ -1664,7 +1683,7 @@ class HrExpense(models.Model):
             'partner_type': 'supplier',
             'partner_id': self.vendor_id.id,
             'currency_id': self.currency_id.id,
-            'payment_method_line_id': payment_method_line.id,
+            'payment_method_id': payment_method.id,
             'company_id': self.company_id.id,
         }
         move_vals = {
@@ -1759,16 +1778,16 @@ class HrExpense(models.Model):
     def _get_expense_account_destination(self):
         self.ensure_one()
         if self.payment_mode == 'company_account':
-            journal = self.payment_method_line_id.journal_id
+            journal = self.journal_id
             account_dest = (
-                self.payment_method_line_id.payment_account_id
+                journal.outstanding_payment_account_id
                 or journal.company_id.expense_outstanding_account_id
             )
             if not account_dest:
                 error_msg = _(
                     "A default outstanding account must be defined in the settings for company-paid expenses. "
                     "You can alternatively specify one in the Journal for the %(method)s payment method.",
-                    method=self.payment_method_line_id.display_name,
+                    method=self.payment_method_id.display_name,
                 )
                 if self.env['res.config.settings'].has_access('write'):
                     action = self.env.ref('hr_expense.action_hr_expense_configuration')

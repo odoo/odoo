@@ -23,9 +23,6 @@ class AccountPayment(models.Model):
         comodel_name='account.payment.withholding.line',
         inverse_name='payment_id',
     )
-    withholding_payment_account_id = fields.Many2one(related="payment_method_line_id.payment_account_id")
-    # We may need to manually set an account, for this we want it to not be readonly by default.
-    outstanding_account_id = fields.Many2one(readonly=False)
     withholding_hide_tax_base_account = fields.Boolean(compute='_compute_withholding_hide_tax_base_account')
 
     # --------------------------------
@@ -65,11 +62,6 @@ class AccountPayment(models.Model):
         """
         for payment in self:
             payment.withholding_hide_tax_base_account = bool(payment.company_id.withholding_tax_base_account_id)
-
-    @api.depends('should_withhold_tax')
-    def _compute_outstanding_account_id(self):
-        """ Update the computation to reset the account when should_withhold_tax is unchecked. """
-        super()._compute_outstanding_account_id()
 
     # ----------------------------
     # Onchange, Constraint methods
