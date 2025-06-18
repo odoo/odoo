@@ -846,7 +846,7 @@ class AccountMove(models.Model):
             'base_invoice': base_invoice if base_invoice != self else None,
             'supplier': supplier,
             'supplier_vat_data': get_vat_data(supplier, self.fiscal_position_id.foreign_vat),
-            'supplierBankAccountNumber': format_bank_account_number(self.partner_bank_id or supplier.bank_ids[:1]),
+            'supplierBankAccountNumber': format_bank_account_number(supplier.bank_ids[:1]),
             'individualExemption': self.company_id.l10n_hu_tax_regime == 'ie',
             'customer': customer,
             'customerVatStatus': (not customer.is_company and 'PRIVATE_PERSON') or (customer.country_code == 'HU' and 'DOMESTIC') or 'OTHER',
