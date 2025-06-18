@@ -2395,7 +2395,7 @@ class HttpCase(TransactionCase):
                 browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
 
             browser.navigate_to(url, wait_stop=not bool(ready))
-            atexit.callback(browser.stop)
+            # atexit.callback(browser.stop)
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
