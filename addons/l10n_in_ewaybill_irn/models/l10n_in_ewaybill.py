@@ -27,6 +27,17 @@ class L10nInEwaybill(models.Model):
                 )
             )
 
+    def _check_configuration(self):
+        error_message = super()._check_configuration()
+        if self.is_process_through_irn:
+            l10n_in_edi_response_irn = self.account_move_id._get_l10n_in_edi_response_json().get('Irn')
+            if not l10n_in_edi_response_irn:
+                error_message.append(_(
+                "You cannot generate E-way bill without an IRN number. "
+                "Please process the E-invoice first before generating the E-way bill."
+            ))
+        return error_message
+
     def _prepare_ewaybill_transportation_json_payload(self):
         if self.is_process_through_irn:
             return dict(
@@ -99,13 +110,6 @@ class L10nInEwaybill(models.Model):
 
     def _ewaybill_generate_by_irn(self, json_payload):
         self.ensure_one()
-        if not json_payload.get('Irn'):
-            raise EWayBillError({
-                'error': [{
-                    'code': 'waiting',
-                    'message': _("waiting For IRN generation To create E-waybill")
-                }]
-            })
         if not (token := self.company_id._l10n_in_edi_get_token()):
             raise EWayBillError({
                 'error': [{
