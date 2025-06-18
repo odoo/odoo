@@ -34,10 +34,7 @@ const {
 function styledArguments(args, prefix, prefixColor) {
     const fullPrefix = `%c[${prefix || DEFAULT_PREFIX[0]}]%c`;
     const styles = [`color:${prefixColor || DEFAULT_PREFIX[1]};font-weight:bold`, ""];
-    let firstArg = args.shift() ?? "";
-    if (typeof firstArg === "function") {
-        firstArg = firstArg();
-    }
+    const firstArg = args.shift() ?? "";
     if (typeof firstArg === "string") {
         args.unshift(`${fullPrefix} ${firstArg}`, ...styles);
     } else {
