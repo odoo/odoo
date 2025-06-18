@@ -177,6 +177,12 @@ class MailActivitySchedule(models.TransientModel):
             else:
                 scheduler.plan_id = False
 
+    @api.onchange('plan_id')
+    def _onchange_plan_id(self):
+        """ Reset UX """
+        if self.plan_id:
+            self.activity_type_id = False
+
     @api.depends('res_model', 'res_ids')
     def _compute_plan_date(self):
         self.plan_date = fields.Date.context_today(self)
@@ -253,6 +259,12 @@ class MailActivitySchedule(models.TransientModel):
                 scheduler.activity_type_id.res_model and scheduler.res_model and scheduler.activity_type_id.res_model != scheduler.res_model
             ):
                 scheduler.activity_type_id = scheduler.env['mail.activity']._default_activity_type_for_model(scheduler.res_model)
+
+    @api.onchange('activity_type_id')
+    def _onchange_activity_type_id(self):
+        """ Reset UX """
+        if self.activity_type_id:
+            self.plan_id = False
 
     @api.depends('activity_type_id')
     def _compute_date_deadline(self):
