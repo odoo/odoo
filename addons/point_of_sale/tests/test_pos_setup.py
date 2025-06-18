@@ -36,8 +36,8 @@ class TestPoSSetup(TestPoSCommon):
 
     def test_product_categories(self):
         # check basic product category
-        # it is expected to have standard and manual_periodic valuation
-        self.assertEqual(self.categ_basic.property_cost_method, 'standard')
+        # it is expected to have an empty cost method (to use company default) and manual_periodic valuation
+        self.assertEqual(self.categ_basic.property_cost_method, False)
         self.assertEqual(self.categ_basic.property_valuation, 'manual_periodic')
         # check anglo saxon product category
         # this product categ is expected to have fifo and real_time valuation

@@ -41,6 +41,16 @@ class ResCompany(models.Model):
         string='Day of the month', default=31,
         help="""Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.
         If greater than the last day of a month, then the last day of the month will be selected instead.""")
+    cost_method = fields.Selection(
+        string="Cost Method",
+        selection=[
+            ('standard', "Standard Price"),
+            ('fifo', "First In First Out (FIFO)"),
+            ('average', "Average Cost (AVCO)"),
+        ],
+        default='standard',
+        required=True,
+    )
 
     def _create_transit_location(self):
         '''Create a transit location with company_id being the given company_id. This is needed
