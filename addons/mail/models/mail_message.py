@@ -355,19 +355,39 @@ class MailMessage(models.Model):
         return Domain(['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)])
 
     @api.model
-    def _find_allowed_model_wise(self, doc_model, doc_dict):
-        doc_ids = list(doc_dict)
-        allowed_doc_ids = self.env[doc_model].with_context(active_test=False).search([('id', 'in', doc_ids)]).ids
-        return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
-
-    @api.model
     def _find_allowed_doc_ids(self, model_ids):
+        """ Filter out message user cannot read due to missing document access.
+
+        :param dict model_ids: dictionary like {
+            'document_model_name': {
+                'document_id_1': set(message IDs),
+                'document_id_2': set(message IDs),
+            },
+            [...]
+        }
+
+        :return: set of allowed message IDs to read, based on document check
+        :rtype: set
+        """
         IrModelAccess = self.env['ir.model.access']
         allowed_ids = set()
         for doc_model, doc_dict in model_ids.items():
             if not IrModelAccess.check(doc_model, 'read', False):
                 continue
-            allowed_ids |= self._find_allowed_model_wise(doc_model, doc_dict)
+            records_all = self.env[doc_model].with_context(active_test=False).search([('id', 'in', list(doc_dict))])
+            allowed_documents = self.env[doc_model]
+            # _mail_group_by_operation_for_mail_message_operation set prefetch to records_all.ids
+            # hence should be good, no need to force it again
+            operation_res_ids = records_all._mail_group_by_operation_for_mail_message_operation('read')
+            # filter for each operation
+            for record_operation, records in operation_res_ids.items():
+                if record_operation == "read":  # already implied by 'search'
+                    allowed_documents += records
+                else:
+                    allowed_documents += records._filtered_access(record_operation)
+            allowed_ids |= {
+                msg_id for document_id in allowed_documents.ids for msg_id in doc_dict[document_id]
+            }
         return allowed_ids
 
     def _check_access(self, operation: str) -> tuple | None:
