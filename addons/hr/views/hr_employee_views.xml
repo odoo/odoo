@@ -337,7 +337,7 @@
             <field name="name">hr.employee.view.graph</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <graph string="New Employees Over Time" type="line" sample="1" js_class="hr_graph_view">
+                <graph string="New Employees Over Time" type="line" sample="1">
                     <field name="contract_date_start" interval="month"/>
                     <field name="id"/>
                     <field name="color" type="measure" invisible="1"/>
@@ -352,7 +352,7 @@
             <field name="name">hr.employee.view.pivot</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <pivot string="New Employees Over Time" sample="1" js_class="hr_pivot_view">
+                <pivot string="New Employees Over Time" sample="1">
                     <field name="job_id" type="row"/>
                     <field name="contract_date_start" interval="year" type="col"/>
                     <field name="id"/>
@@ -424,7 +424,7 @@
             <field name="model">hr.employee</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban class="o_hr_employee_kanban" sample="1" js_class="hr_employee_kanban">
+                <kanban class="o_hr_employee_kanban" sample="1">
                     <field name="show_hr_icon_display"/>
                     <field name="image_128" />
                     <field name="company_id"/>
@@ -537,6 +537,15 @@
             </field>
         </record>
 
+        <record id="action_hr_employee_load_demo_data" model="ir.actions.server">
+            <field name="name">Load Sample Data</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model._load_demo_data()
+            </field>
+        </record>
+
         <record id="open_view_employee_list_my" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="path">employees</field>
@@ -546,11 +555,107 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Create an employee.
-                </p><p>
-                    Find all the information on employees.
-                </p>
+                <div class="o_view_nocontent">
+                    <div class="o_nocontent_help">
+                        <div>
+                            <p class="text-center fs-1">
+                                Ready to start your experience?
+                            </p>
+                            <div class="px-2 py-2 row justify-content-center g-2">
+                                <div class="col-12 col-md-3">
+                                    <a class="btn btn-primary w-100 text-nowrap text-overflow-ellipsis" type="action" name="%(action_hr_employee_load_demo_data)d" tabindex="-1">Load sample data.</a>
+                                </div>
+                            </div>
+                            <hr class="my-4"/>
+                        </div>
+                        <div>
+                            <div class="container">
+                                <div class="row text-center">
+                                    <div class="col-12 col-sm-4">
+                                        <p class="fs-2 mb-0">Hiring</p>
+                                    </div>
+                                    <div class="col-12 col-sm-4">
+                                        <p class="fs-2 mb-0">Experience</p>
+                                    </div>
+                                    <div class="col-12 col-sm-4">
+                                        <p class="fs-2 mb-0">Development</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container mt-4 d-none d-md-block">
+                                <div class="row text-center">
+                                    <div class="col-md-4 d-flex flex-column align-items-center gap-4 mb-4">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/hr_recruitment/static/description/icon.png" width="60"/>
+                                            <small>Hiring</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/sign/static/description/icon.png" width="60"/>
+                                            <small>Sign</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/hr_referral/static/description/icon.png" width="60"/>
+                                            <small>Referral</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-wrap justify-content-center gap-4 mb-4">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/ai/static/description/icon.png" width="60"/>
+                                            <small>AI</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/hr_payroll/static/description/icon.png" width="60"/>
+                                            <small>Payroll</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/planning/static/description/icon.png" width="60"/>
+                                            <small>Planning</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/hr_holidays/static/description/icon.png" width="60"/>
+                                            <small>Leaves</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/fleet/static/description/icon.png" width="60"/>
+                                            <small>Fleet</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/lunch/static/description/icon.png" width="60"/>
+                                            <small>Lunch</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-wrap justify-content-center gap-4 mb-4">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/hr_appraisal/static/description/icon.png" width="60"/>
+                                            <small>Performance</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/hr_skills/static/description/icon.png" width="60"/>
+                                            <small>Talent</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/website_slides/static/description/icon.png" width="60"/>
+                                            <small>eLearning</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/event/static/description/icon.png" width="60"/>
+                                            <small>Trainings</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/documents/static/description/icon.png" width="60"/>
+                                            <small>Documents</small>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <img src="/board/static/description/icon.png" width="60"/>
+                                            <small>Dashboard</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </field>
         </record>
 
@@ -634,15 +739,6 @@
             <field name="code">
                 if records:
                     action = records.action_create_users_confirmation()
-            </field>
-        </record>
-
-        <record id="action_hr_employee_load_demo_data" model="ir.actions.server">
-            <field name="name">Load Sample Data</field>
-            <field name="model_id" ref="model_hr_employee"/>
-            <field name="state">code</field>
-            <field name="code">
-                action = model._load_demo_data()
             </field>
         </record>
 

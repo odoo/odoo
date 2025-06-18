@@ -638,14 +638,6 @@ class HrEmployee(models.Model):
     def _get_related_partners(self):
         return self.work_contact_id | self.user_id.partner_id
 
-    @api.model
-    def show_action_helper(self):
-        admin_employee = self.env.ref('hr.employee_admin', raise_if_not_found=False)
-        domain = [('company_id', 'in', self.env.companies.ids)]
-        if admin_employee:
-            domain += [('id', '!=', admin_employee.id)]
-        return not self.env['hr.employee'].search_count(domain, limit=1)
-
     def action_related_contacts(self):
         related_partners = self._get_related_partners()
         action = {
@@ -868,13 +860,17 @@ class HrEmployee(models.Model):
         return super(HrEmployee, self.sudo())._search([('id', 'in', ids)], order=order)
 
     def _load_demo_data(self):
-        convert.convert_file(env=self.env, module='hr', filename='data/scenarios/hr_scenario.xml', idref=None, mode='init', kind="data")
-        if 'resume_line_ids' in self:
-            convert.convert_file(env=self.env, module='hr_skills', filename='data/scenarios/hr_skills_scenario.xml', idref=None, mode='init', kind="data")
-        return {
+        dep_rd = self.env.ref('hr.dep_rd', raise_if_not_found=False)
+        action_reload = {
             'type': 'ir.actions.client',
             'tag': 'reload',
         }
+        if dep_rd:
+            return action_reload
+        convert.convert_file(env=self.env, module='hr', filename='data/scenarios/hr_scenario.xml', idref=None, mode='init', kind="data")
+        if 'resume_line_ids' in self:
+            convert.convert_file(env=self.env, module='hr_skills', filename='data/scenarios/hr_skills_scenario.xml', idref=None, mode='init', kind="data")
+        return action_reload
 
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """
