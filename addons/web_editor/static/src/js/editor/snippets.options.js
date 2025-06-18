@@ -5720,11 +5720,27 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
      * @override
      */
     start: function () {
-        var $buttons = this.$el.find('we-button');
+        // TODO: remove in master, handle the same in respective template.
+        const tooltips = {
+            move_up_opt: _t("Move up"),
+            move_down_opt: _t("Move down"),
+            move_left_opt: _t("Move left"),
+            move_right_opt: _t("Move right"),
+        };
+        const buttonEls = this.el.querySelectorAll("we-button");
+        for (const buttonEl of buttonEls) {
+            const tooltip = tooltips[buttonEl.dataset.name];
+            if (tooltip) {
+                Object.assign(buttonEl.dataset, {
+                    tooltip,
+                    tooltipPosition: "top"
+                });
+            }
+        }
         var $overlayArea = this.$overlay.find('.o_overlay_move_options');
         // Putting the arrows side by side.
-        $overlayArea.prepend($buttons[1]);
-        $overlayArea.prepend($buttons[0]);
+        $overlayArea.prepend(buttonEls[1]);
+        $overlayArea.prepend(buttonEls[0]);
 
         // Needed for compatibility (with already dropped snippets).
         const parentEl = this.$target[0].parentElement;
