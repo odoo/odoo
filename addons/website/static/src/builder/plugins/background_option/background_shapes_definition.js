@@ -2,10 +2,10 @@ import { _t } from "@web/core/l10n/translation";
 
 export const backgroundShapesDefinition = {
     basic: {
-        label: "Basic",
+        label: _t("Basic"),
         subgroups: {
             connections: {
-                label: "Connections",
+                label: _t("Connections"),
                 shapes: {
                     "web_editor/Connections/01": { selectLabel: _t("Connections 01") },
                     "web_editor/Connections/02": { selectLabel: _t("Connections 02") },
@@ -30,7 +30,7 @@ export const backgroundShapesDefinition = {
                 },
             },
             containers: {
-                label: "Containers",
+                label: _t("Containers"),
                 shapes: {
                     "web_editor/Containers/01": { selectLabel: _t("Container 01") },
                     "web_editor/Containers/02": { selectLabel: _t("Container 02") },
@@ -41,7 +41,7 @@ export const backgroundShapesDefinition = {
                 },
             },
             bold: {
-                label: "Bold",
+                label: _t("Bold"),
                 shapes: {
                     "web_editor/Bold/16": { selectLabel: _t("Bold 01") },
                     "web_editor/Bold/21": { selectLabel: _t("Bold 02") },
@@ -58,7 +58,7 @@ export const backgroundShapesDefinition = {
                 },
             },
             angular: {
-                label: "Angular",
+                label: _t("Angular"),
                 shapes: {
                     "web_editor/Angular/01": { selectLabel: _t("Angular 01") },
                     "web_editor/Angular/02": { selectLabel: _t("Angular 02") },
@@ -73,7 +73,7 @@ export const backgroundShapesDefinition = {
                 },
             },
             blobs: {
-                label: "Blobs",
+                label: _t("Blobs"),
                 shapes: {
                     "web_editor/Blobs/02": { selectLabel: _t("Blob 01") },
                     "web_editor/Blobs/05_001": { selectLabel: _t("Blob 02") },
@@ -96,10 +96,10 @@ export const backgroundShapesDefinition = {
         },
     },
     linear: {
-        label: "Linear",
+        label: _t("Linear"),
         subgroups: {
             airy: {
-                label: "Airy",
+                label: _t("Airy"),
                 shapes: {
                     "web_editor/Airy/01_001": { selectLabel: _t("Airy 01") },
                     "web_editor/Airy/06_001": { selectLabel: _t("Airy 02") },
@@ -118,7 +118,7 @@ export const backgroundShapesDefinition = {
                 },
             },
             grids: {
-                label: "Grids",
+                label: _t("Grids"),
                 shapes: {
                     "web_editor/Grids/01": { selectLabel: _t("Grid 01") },
                     "web_editor/Grids/02": { selectLabel: _t("Grid 02") },
@@ -133,10 +133,10 @@ export const backgroundShapesDefinition = {
         },
     },
     creative: {
-        label: "Creative",
+        label: _t("Creative"),
         subgroups: {
             patterns: {
-                label: "Patterns",
+                label: _t("Patterns"),
                 shapes: {
                     "web_editor/Patterns/01": { selectLabel: _t("Pattern 01") },
                     "web_editor/Patterns/02": { selectLabel: _t("Pattern 02") },
@@ -147,7 +147,7 @@ export const backgroundShapesDefinition = {
                 },
             },
             blurry: {
-                label: "Blurry",
+                label: _t("Blurry"),
                 shapes: {
                     "web_editor/Blurry/01": { selectLabel: _t("Blurry 01") },
                     "web_editor/Blurry/02": { selectLabel: _t("Blurry 02") },
@@ -159,7 +159,7 @@ export const backgroundShapesDefinition = {
             },
 
             wavy: {
-                label: "Wavy",
+                label: _t("Wavy"),
                 shapes: {
                     "web_editor/Wavy/03": { selectLabel: _t("Wavy 01") },
                     "web_editor/Wavy/10": { selectLabel: _t("Wavy 02") },
@@ -178,7 +178,7 @@ export const backgroundShapesDefinition = {
                 },
             },
             blockAndRainy: {
-                label: "Block & Rainy",
+                label: _t("Block & Rainy"),
                 shapes: {
                     "web_editor/Blocks/02_001": { selectLabel: _t("Blocks 01") },
                     "web_editor/Rainy/01_001": { selectLabel: _t("Rainy 01"), animated: true },
@@ -195,7 +195,7 @@ export const backgroundShapesDefinition = {
                 },
             },
             miscellaneous: {
-                label: "Miscellaneous",
+                label: _t("Miscellaneous"),
                 shapes: {
                     "web_editor/Floats/01": { selectLabel: _t("Miscellaneous 01"), animated: true },
                     "web_editor/Floats/02": { selectLabel: _t("Miscellaneous 02"), animated: true },
