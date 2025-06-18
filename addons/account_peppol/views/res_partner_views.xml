@@ -12,7 +12,8 @@
                     <field name="available_peppol_edi_formats" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='invoice_sending_method']" position="attributes">
-                    <attribute name="widget">filterable_selection</attribute>
+                    <attribute name="placeholder">e-Invoicing &amp; Email</attribute>
+                    <attribute name="widget">account_sending_method_selection</attribute>
                     <attribute name="options">{'whitelist_fname': 'available_peppol_sending_methods'}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='invoice_edi_format']" position="attributes">
