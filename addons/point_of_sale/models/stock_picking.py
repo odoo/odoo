@@ -209,7 +209,7 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
-        return keys + (self.reference_ids.pos_order_id,)
+        return keys + (self.reference_ids.pos_order_ids,)
 
     @api.model
     def _prepare_lines_data_dict(self, order_lines):
