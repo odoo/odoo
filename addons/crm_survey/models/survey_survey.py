@@ -33,4 +33,4 @@ class SurveySurvey(models.Model):
 
         user_inputs = self.user_input_ids.filtered(
             lambda user_input: user_input.create_date >= self.session_start_time)
-        user_inputs._lead_qualification_check()
+        user_inputs._create_lead_if_generative_answer()

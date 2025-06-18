@@ -49,7 +49,7 @@
         </record>
 
         <record id="input_line_q7_3" model="survey.user_input.line">
-            <field name="user_input_id" ref="lead_qualification_survey_response_3"/>
+            <field name="user_input_id" ref="lead_qualification_survey_response_1"/>
             <field name="survey_id" ref="lead_qualification_survey_template"/>
             <field name="question_id" ref="lead_qualification_survey_7"/>
             <field name="suggested_answer_id" ref="lead_qualification_survey_7_sug3"/>
@@ -57,11 +57,18 @@
         </record>
 
         <record id="input_line_q8" model="survey.user_input.line">
-            <field name="user_input_id" ref="lead_qualification_survey_response_2"/>
+            <field name="user_input_id" ref="lead_qualification_survey_response_1"/>
             <field name="survey_id" ref="lead_qualification_survey_template"/>
             <field name="question_id" ref="lead_qualification_survey_8"/>
             <field name="suggested_answer_id" ref="lead_qualification_survey_8_sug2"/>
             <field name="answer_type">suggestion</field>
+        </record>
+
+        <record id="input_line_q10" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_survey_response_1"/>
+            <field name="survey_id" ref="lead_qualification_survey_template"/>
+            <field name="question_id" ref="lead_qualification_survey_10"/>
+            <field name="skipped" eval="True"/>
         </record>
 
         <record id="input_line_q11" model="survey.user_input.line">
