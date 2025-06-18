@@ -22,3 +22,8 @@ if [ -d /home/pi/odoo/addons/point_of_sale ]; then
       echo "server_wide_modules=hw_drivers,hw_posbox_homepage,web" >> $odoo_conf
   fi
 fi
+
+if [ -d /home/pi/odoo/addons/iot_drivers ]; then
+  # TODO: remove this when v18.0 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)
+  sed -i 's|hw_drivers,hw_posbox_homepage|iot_drivers|g' /home/pi/odoo.conf
+fi
