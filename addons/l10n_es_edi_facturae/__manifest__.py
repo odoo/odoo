@@ -38,6 +38,6 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
     ],
     'post_init_hook': '_l10n_es_edi_facturae_post_init_hook',
     'installable': True,
-    'auto_install': ['l10n_es'],
+    'auto_install': False,
     'license': 'LGPL-3',
 }
