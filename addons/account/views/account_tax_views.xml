@@ -11,6 +11,7 @@
                     <field name="name"/>
                     <field name="description" optional="show"/>
                     <field name="type_tax_use"/>
+                    <field name="original_tax_ids" widget="many2many_tax_tags" optional="hide"/>
                     <field name="tax_scope"/>
                     <field name="invoice_label"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -60,6 +61,7 @@
             <field name="arch" type="xml">
                 <list string="Account Tax">
                     <field name="display_name" string="Name"/>
+                    <field name="original_tax_ids" widget="many2many_tax_tags"/>
                     <field name="tax_scope"/>
                     <field name="description"/>
                 </list>
