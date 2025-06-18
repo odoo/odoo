@@ -11,7 +11,7 @@ from odoo.tests.common import HttpCase
 from odoo.tests import tagged
 
 
-@tagged('link_tracker')
+@tagged('link_tracker', '-standard', 'external')
 class TestMailingControllers(MassMailCommon, HttpCase):
 
     @classmethod

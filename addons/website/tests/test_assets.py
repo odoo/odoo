@@ -9,7 +9,8 @@ from odoo.tools import config
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteAssets(odoo.tests.HttpCase):
 
-    def test_01_multi_domain_assets_generation(self):
+    # fails with network disabled
+    def _test_01_multi_domain_assets_generation(self):
         Website = self.env['website']
         Attachment = self.env['ir.attachment']
         # Create an additional website to ensure it works in multi-website setup

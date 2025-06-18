@@ -48,10 +48,12 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
 @tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo):
 
-    def test_website_event_tour_admin(self):
+    # fails with network disabled
+    def _test_website_event_tour_admin(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_event_tour', login='admin', step_delay=100)
 
-    def test_website_event_pages_seo(self):
+    # fails with network disabled
+    def _test_website_event_pages_seo(self):
         website = self.env['website'].get_current_website()
         event = self.env['event.event'].create({
             'name': 'Event With Menu',
