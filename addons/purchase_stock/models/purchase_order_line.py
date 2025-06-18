@@ -325,8 +325,12 @@ class PurchaseOrderLine(models.Model):
         line_description = ''
         if values.get('product_description_variants'):
             line_description = values['product_description_variants']
-        supplier = values.get('supplier')
-        res = self._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, supplier, po)
+        if values.get('supplier'):
+            partner = values.get('supplier').partner_id
+        else:
+            partner = values["group_id"].partner_id
+
+        res = self._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, partner, po)
         # We need to keep the vendor name set in _prepare_purchase_order_line. To avoid redundancy
         # in the line name, we add the line_description only if different from the product name.
         # This way, we shoud not lose any valuable information.

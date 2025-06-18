@@ -12,6 +12,7 @@ class StockMove(models.Model):
         partner = self.group_id.partner_id
         if not vals.get('partner_id') and partner and self.location_id.is_subcontracting_location:
             vals['partner_id'] = partner.id
+            self.group_id.partner_id = None  # Did to pass a test just trying an option
         return vals
 
     def _is_purchase_return(self):

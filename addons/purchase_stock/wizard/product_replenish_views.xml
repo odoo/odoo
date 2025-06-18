@@ -6,10 +6,15 @@
         <field name="inherit_id" ref="stock.view_product_replenish"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='route_id']" position="after">
-                <label for="supplier_id" invisible="not show_vendor"/>
+                <label for="partner_id" invisible="not show_vendor"/>
                 <div class="o_row">
                     <field name="show_vendor" invisible="1"/>
-                    <field name="supplier_id" invisible="not show_vendor" required="show_vendor" domain="[('product_tmpl_id', '=', product_tmpl_id)]" options="{'no_open': 1, 'no_create': 1}"/>
+                    <field name="partner_id" 
+                        required="show_vendor" 
+                        invisible="not show_vendor"
+                        context="{'product_id': product_id}" 
+                        options="{'no_open': 1, 'no_create': 0, 'no_quick_create':1}"
+                    />
                 </div>
             </xpath>
         </field>

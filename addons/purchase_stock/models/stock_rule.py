@@ -67,16 +67,17 @@ class StockRule(models.Model):
                     date=max(procurement_date_planned.date(), fields.Date.today()),
                     uom_id=procurement.product_uom)
 
-            # Fall back on a supplier for which no price may be defined. Not ideal, but better than
-            # blocking the user.
-            supplier = supplier or procurement.product_id._prepare_sellers(False).filtered(
-                lambda s: not s.company_id or s.company_id == company_id
-            )[:1]
+            group = procurement.values.get('group_id')
+            if not (group and group.partner_id):
+                # Fall back on a supplier for which no price may be defined, if no partner or suppier
+                supplier = supplier or procurement.product_id._prepare_sellers(False).filtered(
+                    lambda s: not s.company_id or s.company_id == company_id
+                )[:1]
 
             if not supplier and self.env.context.get('from_orderpoint'):
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.', procurement.product_id.display_name)
                 errors.append((procurement, msg))
-            elif not supplier:
+            elif not supplier and not (group and group.partner_id):
                 # If the supplier is not set, we cannot create a PO.
                 moves = procurement.values.get('move_dest_ids') or self.env['stock.move']
                 if moves.propagate_cancel:
@@ -85,7 +86,7 @@ class StockRule(models.Model):
                 self._notify_responsible(procurement)
                 return
 
-            partner = supplier.partner_id
+            partner = (group and group.partner_id) or (supplier and supplier.partner_id)
             # we put `supplier_info` in values for extensibility purposes
             procurement.values['supplier'] = supplier
             procurement.values['propagate_cancel'] = rule.propagate_cancel
@@ -154,12 +155,13 @@ class StockRule(models.Model):
                     # If it does not exist a PO line for current procurement.
                     # Generate the create values for it and add it to a list in
                     # order to create it in batch.
-                    partner = procurement.values['supplier'].partner_id
                     po_line_values.append(self.env['purchase.order.line']._prepare_purchase_order_line_from_procurement(
                         *procurement, po))
                     # Check if we need to advance the order date for the new line
+                    supplier = procurement.values.get('supplier')
+                    delay = supplier.delay or 0 if supplier else 0
                     order_date_planned = procurement.values['date_planned'] - relativedelta(
-                        days=procurement.values['supplier'].delay)
+                        days=delay)
                     if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
                         po.date_order = order_date_planned
             self.env['purchase.order.line'].sudo().create(po_line_values)
@@ -296,8 +298,13 @@ class StockRule(models.Model):
         # the common procurements values. The common values are taken from an
         # arbitrary procurement. In this case the first.
         values = values[0]
-        partner = values['supplier'].partner_id
-        currency = values['supplier'].currency_id
+        supplier = values.get('supplier')
+        if supplier:
+            partner = supplier.partner_id
+            currency_id = supplier.currency_id
+        elif values.get('group_id'):
+            partner = values['group_id'].partner_id
+            currency_id = partner.with_company(company_id).property_purchase_currency_id or company_id.currency_id
 
         fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
 
@@ -310,7 +317,7 @@ class StockRule(models.Model):
             'user_id': partner.buyer_id.id,
             'picking_type_id': self.picking_type_id.id,
             'company_id': company_id.id,
-            'currency_id': currency.id or partner.with_company(company_id).property_purchase_currency_id.id or company_id.currency_id.id,
+            'currency_id': currency_id.id,
             'dest_address_id': values.get('partner_id', False),
             'origin': ', '.join(origins),
             'payment_term_id': partner.with_company(company_id).property_supplier_payment_term_id.id,
