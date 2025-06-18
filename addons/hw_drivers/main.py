@@ -87,13 +87,13 @@ class Manager(Thread):
             helpers.check_git_branch()
             helpers.generate_password()
 
-        certificate.ensure_validity()
-
         # We first add the IoT Box to the connected DB because IoT handlers cannot be downloaded if
         # the identifier of the Box is not found in the DB. So add the Box to the DB.
         self.send_all_devices()
         helpers.download_iot_handlers()
         helpers.load_iot_handlers()
+
+        certificate.ensure_validity()
 
         for interface in interfaces.values():
             interface().start()
