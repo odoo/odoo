@@ -181,10 +181,10 @@ class HrEmployeePublic(models.Model):
 
     @api.model
     def _get_fields(self):
-        return 'e.id AS id,e.name AS name,' + ','.join(
+        return 'e.id AS id,e.name AS name,e.active AS active,' + ','.join(
             ('v.%s' if name in self.env['hr.version']._fields and self.env['hr.version']._fields[name].store else 'e.%s') % name
             for name, field in self._fields.items()
-            if field.store and field.type not in ['many2many', 'one2many'] and name not in ['id', 'name'])
+            if field.store and field.type not in ['many2many', 'one2many'] and name not in ['id', 'name', 'active'])
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
