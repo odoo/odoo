@@ -1,4 +1,4 @@
-from odoo import tools, fields
+from odoo import tools, fields, Command
 from odoo.tests.common import tagged
 from odoo.addons.l10n_hu_edi.tests.common import L10nHuEdiTestCommon
 
@@ -14,6 +14,17 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
     def setUpClass(cls, chart_template_ref='hu'):
         with freeze_time('2024-02-01'):
             super().setUpClass(chart_template_ref=chart_template_ref)
+
+            cls.company_data['company'].write({
+                'bank_ids': [Command.create({
+                    'acc_number': 'HU0123456789',
+                })]
+            })
+            cls.partner_company.write({
+                'bank_ids': [Command.create({
+                    'acc_number': 'HU6666666666',
+                })]
+            })
 
     def test_invoice_and_credit_note(self):
         with freeze_time('2024-02-01'):
