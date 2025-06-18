@@ -41,7 +41,9 @@ export class BuilderButton extends Component {
 
     get className() {
         let className = this.props.className || "";
-        className += ` btn-${this.props.type}`;
+        if (this.props.type) {
+            className += ` btn-${this.props.type}`;
+        }
         if (this.state.isActive) {
             className = `active ${className}`;
             if (this.props.classActive) {
