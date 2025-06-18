@@ -48,5 +48,15 @@ registerWebsitePreviewTour(
                 }
             },
         },
+        {
+            content: "Click on the 'Second Blog Post' to view its details.",
+            trigger: ":iframe article a:contains('Second Blog Post')",
+            run: "click",
+        },
+        {
+            content:
+                "Verify that 'Add some' button has the correct URL for navigating to the backend.",
+            trigger: ":iframe #edit-in-backend[href*='/odoo/website/blog.post/']",
+        },
     ]
 );
