@@ -44,6 +44,7 @@ class HrEmployee(models.Model):
     hr_icon_display = fields.Selection(selection_add=[
         ('presence_holiday_absent', 'On leave'),
         ('presence_holiday_present', 'Present but on leave')])
+    leave_ids = fields.One2many('hr.leave', 'employee_id', groups="hr.group_hr_user")
 
     def _compute_current_leave(self):
         self.current_leave_id = False
