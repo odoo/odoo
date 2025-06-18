@@ -347,19 +347,38 @@ class MailMessage(models.Model):
         return Domain(['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)])
 
     @api.model
-    def _find_allowed_model_wise(self, doc_model, doc_dict):
-        doc_ids = list(doc_dict)
-        allowed_doc_ids = self.env[doc_model].with_context(active_test=False).search([('id', 'in', doc_ids)]).ids
-        return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
-
-    @api.model
     def _find_allowed_doc_ids(self, model_ids):
+        """ Filter out message user cannot read due to missing document access.
+
+        :param dict model_ids: dictionary like {
+            'document_model_name': {
+                'document_id_1': set(message IDs),
+                'document_id_2': set(message IDs),
+            },
+            [...]
+        }
+
+        :return: set of allowed message IDs to read, based on document check
+        :rtype: set
+        """
         IrModelAccess = self.env['ir.model.access']
         allowed_ids = set()
         for doc_model, doc_dict in model_ids.items():
             if not IrModelAccess.check(doc_model, 'read', False):
                 continue
-            allowed_ids |= self._find_allowed_model_wise(doc_model, doc_dict)
+            DocumentModel = self.env[doc_model]
+            allowed_documents = DocumentModel
+            operations = DocumentModel.with_context(active_test=False).search(
+                [('id', 'in', list(doc_dict))]
+            )._group_mail_message_access('read')
+            for operation, document_ids in operations.items():
+                if operation == "read":  # already implied by 'search'
+                    allowed_documents += DocumentModel.browse(document_ids)
+                else:
+                    allowed_documents += DocumentModel.browse(document_ids)._filtered_access(operation)
+            allowed_ids |= {
+                msg_id for document_id in allowed_documents.ids for msg_id in doc_dict[document_id]
+            }
         return allowed_ids
 
     def _check_access(self, operation: str) -> tuple | None:

@@ -763,15 +763,13 @@ class TestMailMessageAccess(MessageAccessCommon):
         found_emp = self.env['mail.message'].with_user(self.user_employee).search([
             ('body', 'ilike', 'AnchorForSearch')
         ])
-        self.assertEqual(found_emp, messages_all, 'FIXME: should filter like read')
-        with self.assertRaises(AccessError):  # some unreadable messages
-            found_emp.read(['subject'])
+        self.assertEqual(found_emp, messages_all.filtered(lambda m: m.res_id != records[2].id), 'FIXME: should filter like read')
+        found_emp.read(['subject'])
         found_por = self.env['mail.message'].with_user(self.user_portal).search([
             ('body', 'ilike', 'AnchorForSearch')
         ])
-        self.assertEqual(found_por, messages_all, 'FIXME: should filter like read')
-        with self.assertRaises(AccessError):  # some unreadable messages
-            found_por.read(['subject'])
+        self.assertEqual(found_por, messages_all.filtered(lambda m: m.res_id != records[2].id), 'FIXME: should filter like read')
+        found_por.read(['subject'])
 
 
 @tagged('mail_message', 'security', 'post_install', '-at_install')
