@@ -334,7 +334,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             })
             total_expected_time += workorder.duration_expected
             total_current_time += wo_duration if is_workorder_started else workorder.duration_expected
-            total_expected_cost += mo_cost
+            total_expected_cost += production.company_id.currency_id.round(mo_cost)
             total_bom_cost = self._sum_bom_cost(total_bom_cost, bom_cost)
             total_real_cost += real_cost
 
