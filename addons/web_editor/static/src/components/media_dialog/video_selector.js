@@ -236,7 +236,7 @@ export class VideoSelector extends Component {
     async supportedPlatforms() {
         const supportedPlatformsRef = this.textareaRef.el.parentElement.querySelector('label[for="o_video_text"] + div')
         const smallEl = document.createElement('small');
-        smallEl.innerHTML = `<small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b> and <b><i>Dailymotion</i></b> videos</small>`;
+        smallEl.innerHTML = `<small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Instagram</i></b> videos</small>`;
         supportedPlatformsRef.removeChild(supportedPlatformsRef.firstChild);
         supportedPlatformsRef.appendChild(smallEl);
     }
