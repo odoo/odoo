@@ -144,7 +144,9 @@ export class WebsiteBuilder extends Component {
                     setTimeout(() => {
                         websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
                         websiteSystrayRegistry.trigger("EDIT-WEBSITE");
-                        document.querySelector(".o_builder_open .o_main_navbar").classList.add("d-none");
+                        document
+                            .querySelector(".o_builder_open .o_main_navbar")
+                            .classList.add("d-none");
                     }, 200);
                 } else {
                     document.querySelector(".o_main_navbar")?.classList.remove("d-none");
@@ -177,7 +179,7 @@ export class WebsiteBuilder extends Component {
                         this.state.showSidebar = show ?? !this.state.showSidebar;
                     },
                 },
-             },
+            },
             getThemeTab: () =>
                 odoo.loader.modules.get("@website/builder/plugins/theme/theme_tab").ThemeTab,
         };
@@ -473,8 +475,10 @@ export class WebsiteBuilder extends Component {
 
     toggleIsMobile(isMobile) {
         this.websitePreviewRef.el.classList.toggle("o_is_mobile", isMobile);
-        this.websiteContent.el?.contentDocument.documentElement
-            .classList.toggle("o_is_mobile", isMobile);
+        this.websiteContent.el?.contentDocument.documentElement.classList.toggle(
+            "o_is_mobile",
+            isMobile
+        );
     }
 
     get aceEditorWidth() {

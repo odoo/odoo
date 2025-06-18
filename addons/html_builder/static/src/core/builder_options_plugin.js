@@ -24,7 +24,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getPageContainers",
         "getRemoveDisabledReason",
         "getCloneDisabledReason",
-        "getReloadSelector",
+        "getReloadTarget",
         "setNextTarget",
     ];
     resources = {
@@ -68,9 +68,26 @@ export class BuilderOptionsPlugin extends Plugin {
         this.editable.addEventListener("click", this.onClick, { capture: true });
 
         this.lastContainers = [];
-        if (this.config.initialTarget) {
-            const el = this.editable.querySelector(this.config.initialTarget);
-            this.updateContainers(el);
+        const target = this.config.initialTarget;
+        if (target) {
+            let trySelector = true;
+            if (target.xpath) {
+                const el = this.document.evaluate(target.xpath, this.editable).iterateNext();
+                console.log("XPATH:", target.xpath, el);
+                if (el) {
+                    trySelector = false;
+                    this.updateContainers(el);
+                }
+            }
+            if (trySelector) {
+                for (const selector of target.selectors || []) {
+                    const el = this.editable.querySelector(selector);
+                    if (el) {
+                        this.updateContainers(el);
+                        break;
+                    }
+                }
+            }
         }
 
         // Selector of elements that should not update/have containers when they
@@ -96,27 +113,83 @@ export class BuilderOptionsPlugin extends Plugin {
         this.updateContainers(ev.target);
     }
 
-    getReloadSelector(editingElement) {
-        console.log("GET RELOAD SELECTOR:", editingElement);
+    // getReloadSelector(editingElement) {
+    //     for (const container of [...this.lastContainers].reverse()) {
+    //         for (const option of container.options) {
+    //             if (option.reloadTarget) {
+    //                 return option.selector;
+    //             }
+    //         }
+    //     }
+    //     if (editingElement.closest("header")) {
+    //         return "header";
+    //     }
+    //     if (editingElement.closest("main")) {
+    //         return "main";
+    //     }
+    //     if (editingElement.closest("footer")) {
+    //         return "footer";
+    //     }
+    //     return null;
+    // }
+
+    getXPath(element) {
+        const parts = [];
+        let currentElement = element;
+        while (currentElement && currentElement.nodeType === Node.ELEMENT_NODE) {
+            const tagName = currentElement.tagName.toLowerCase();
+            const siblings = Array.from(currentElement.parentNode?.children || []);
+            const sameTagSiblings = siblings.filter(
+                (sibling) => sibling.tagName.toLowerCase() === tagName
+            );
+            let index = 1;
+            if (sameTagSiblings.length > 1) {
+                index = sameTagSiblings.indexOf(currentElement) + 1;
+            }
+            parts.push(`${tagName}[${index}]`);
+            currentElement = currentElement.parentNode;
+        }
+        return "/" + parts.reverse().join("/");
+    }
+
+    getReloadTarget() {
+        const target = {
+            xpath: "",
+            selectors: [],
+        };
+        target.xpath = this.getXPath(this.lastContainers.at(-1).element);
         for (const container of [...this.lastContainers].reverse()) {
+            // 1. Create a selector which uniquely identifies the container element
+            let selector = "";
+            let element = container.element;
+            do {
+                if (element.classList.length > 0) {
+                    selector = `.${Array.from(element.classList).join(".")}${selector}`;
+                }
+                if (element.id) {
+                    selector = `#${element.id}${selector}`;
+                }
+                selector = ` ${selector}`;
+                element = element.parentElement;
+            } while (element !== this.document.body);
+            if (this.document.querySelectorAll(selector).length === 1) {
+                target.selectors.push(selector);
+            }
+
+            // 2. Find an option selector which matches one single element
+            // this is needed if the selector computed at the previous step does not match any
+            // element after the reload (could happen if the mutation changed the classes or ids of some elements)
             for (const option of container.options) {
-                if (option.reloadTarget) {
-                    console.log("RELOAD TARGET:", option.reloadTarget);
-                    return option.selector;
+                if (
+                    option.reloadTarget ||
+                    this.document.querySelectorAll(option.selector).length === 1
+                ) {
+                    target.selectors.push(option.selector);
+                    break;
                 }
             }
         }
-        if (editingElement.closest("header")) {
-            return "header";
-        }
-        if (editingElement.closest("main")) {
-            return "main";
-        }
-        if (editingElement.closest("footer")) {
-            console.log("FOOTER");
-            return "footer";
-        }
-        return null;
+        return target;
     }
 
     updateContainers(target, { forceUpdate = false } = {}) {
@@ -140,6 +213,8 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         const newContainers = this.computeContainers(this.target);
+        console.log("NEW CONTAINERS:", newContainers);
+        debugger;
         // Do not update the containers if they did not change and are not
         // forced to update.
         if (
@@ -147,6 +222,7 @@ export class BuilderOptionsPlugin extends Plugin {
             this.target?.isConnected &&
             newContainers.length === this.lastContainers.length
         ) {
+            console.log("DRAW OPTIONS");
             const previousIds = this.lastContainers.map((c) => c.id);
             const newIds = newContainers.map((c) => c.id);
             const areSameElements = newIds.every((id, i) => id === previousIds[i]);
@@ -172,6 +248,7 @@ export class BuilderOptionsPlugin extends Plugin {
 
         this.lastContainers = newContainers;
         this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+        console.log("NEW TARGET:", this.target, this.lastContainers);
     }
 
     getTarget() {
@@ -185,6 +262,7 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     computeContainers(target) {
+        // TODO: find why not working after reload
         const mapElementsToOptions = (options) => {
             const map = new Map();
             for (const option of options) {
@@ -203,6 +281,7 @@ export class BuilderOptionsPlugin extends Plugin {
                     }
                 }
             }
+            debugger;
             return map;
         };
         const elementToOptions = mapElementsToOptions(this.builderOptions);
