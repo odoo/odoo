@@ -374,8 +374,9 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             If an invoice line is linked to a down payment invoice, we need to return the proper values
             to be included in the UBL
         """
-        if not line.move_id._is_downpayment() and line.sale_line_ids and all(sale_line.is_downpayment for sale_line in line.sale_line_ids):
-            prepayment_move_id = line.sale_line_ids.invoice_lines.move_id.filtered(lambda m: m.move_type == 'out_invoice' and m._is_downpayment())
+        orig_downpayment_line = line._get_downpayment_lines()
+        if not line.move_id._is_downpayment() and orig_downpayment_line:
+            prepayment_move_id = orig_downpayment_line.move_id.filtered(lambda m: m.move_type == 'out_invoice')[0]
             return {
                 'prepayment_id': prepayment_move_id.name,
                 'issue_date': fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'),
