@@ -9,14 +9,6 @@ export class ListDateTimeField extends DateTimeField {
         const startDateRef = useRef("start-date");
         useAutoresize(startDateRef, { offset: -5 });
     }
-    /**
-     * @override
-     */
-    shouldShowSeparator() {
-        return this.props.readonly
-            ? this.relatedField && this.values.some(Boolean)
-            : super.shouldShowSeparator();
-    }
 }
 
 export const listDateField = { ...dateField, component: ListDateTimeField };
