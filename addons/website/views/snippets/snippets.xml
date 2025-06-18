@@ -1497,11 +1497,6 @@
                     data-customize-website-views="website.header_call_to_action"
                     data-reset-view-arch="true"
                     data-reload="/"/>
-            <we-button title="Show/hide logo" class="flex-grow-1 d-flex justify-content-center"
-                    data-img="/website/static/src/img/snippets_options/header_extra_element_logo.svg"
-                    data-customize-website-views="|website.option_header_brand_name|website.option_header_brand_logo"
-                    data-reset-view-arch="true"
-                    data-reload="/"/>
         </we-row>
     </div>
 
@@ -1596,17 +1591,22 @@
         </we-select>
     </div>
 
-    <div data-selector="#wrapwrap > header nav.navbar .navbar-brand"
+    <div data-selector="#wrapwrap > header nav.navbar .navbar-brand, #footer .navbar-brand"
          data-no-check="true"
          groups="website.group_website_designer">
         <we-select string="Logo" data-reload="/">
-            <we-button data-customize-website-views="" data-name="option_header_brand_none">None</we-button>
-            <we-button data-customize-website-views="website.option_header_brand_name">Text</we-button>
-            <we-button data-customize-website-views="website.option_header_brand_logo">Image</we-button>
+            <we-button data-customize-website-views="" data-name="option_website_brand_none">None</we-button>
+            <we-button data-customize-website-views="website.option_website_brand_name">Text</we-button>
+            <we-button data-customize-website-views="website.option_website_brand_logo">Image</we-button>
         </we-select>
+    </div>
+
+    <div data-selector="#wrapwrap > header nav.navbar .navbar-brand"
+         data-no-check="true"
+         groups="website.group_website_designer">
         <we-input string="Height"
                   class="o_we_sublevel_1"
-                  data-dependencies="!option_header_brand_none"
+                  data-dependencies="!option_website_brand_none"
                   data-customize-website-variable="null"
                   data-variable="logo-height"
                   data-unit="px"
@@ -1684,6 +1684,16 @@
                        data-select-class="container-fluid"
                        data-customize-website-views="website.footer_copyright_content_width_fluid"/>
         </we-button-group>
+    </div>
+
+    <div data-selector="#wrapwrap > header, #wrapwrap > footer"
+         data-no-check="true"
+         groups="website.group_website_designer">
+        <we-button title="Show/hide logo" class="flex-grow-1 d-flex justify-content-center"
+                data-img="/website/static/src/img/snippets_options/header_extra_element_logo.svg"
+                data-customize-website-views="|website.option_website_brand_name|website.option_website_brand_logo"
+                data-reset-view-arch="true"
+                data-reload="/"/>
     </div>
 
     <!-- Footer - Colors & Copyright -->
