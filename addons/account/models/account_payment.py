@@ -399,7 +399,7 @@ class AccountPayment(models.Model):
                 liquidity, _counterpart, _writeoff = payment._seek_for_lines()
                 payment.state = (
                     'paid'
-                    if move.company_currency_id.is_zero(sum(liquidity.mapped('amount_residual'))) or not liquidity.account_id.reconcile else
+                    if move.company_currency_id.is_zero(sum(liquidity.mapped('amount_residual'))) or not any(liquidity.account_id.mapped('reconcile')) else
                     'in_process'
                 )
             if payment.state == 'in_process' and payment.invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids):
