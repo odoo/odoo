@@ -2597,6 +2597,43 @@ class TestBoM(TestMrpCommon):
         self.assertFalse(bom_overview['product'])
         self.assertTrue(bom_overview['components'])
 
+    def test_calculate_bom_component_quantity(self):
+        bom = self.bom_1
+        empty_uom = self.env['uom.uom']
+
+        # Without a context, component quantity and UoM are not set
+        self.assertEqual(bom.component_qty, 0)
+        self.assertEqual(bom.component_uom_id, empty_uom)
+
+        # BoM components can be filtered by product
+        bom = bom.with_context(
+            filter_bom_components_by='product_id', bom_component_id=self.product_1.id
+        )
+        self.assertEqual(bom.component_qty, 4)
+        self.assertEqual(bom.component_uom_id, self.product_1.uom_id)
+
+        # BoM components can be filtered by product template
+        bom = bom.with_context(
+            filter_bom_components_by='product_tmpl_id', bom_component_id=self.product_2.product_tmpl_id.id
+        )
+        self.assertEqual(bom.component_qty, 2)
+        self.assertEqual(bom.component_uom_id, self.product_2.uom_id)
+
+        # BoM with no components doesn't have component quantity and UoM
+        empty_bom = self.env['mrp.bom'].create({
+            'product_id': self.product_1.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'type': 'normal',
+        })
+        empty_bom = empty_bom.with_context(
+            filter_bom_components_by='product_id', bom_component_id=self.product_1.id
+        )
+        self.assertEqual(empty_bom.component_qty, 0)
+        self.assertEqual(empty_bom.component_uom_id, empty_uom)
+
+
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
     @classmethod
