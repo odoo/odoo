@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import json
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
@@ -182,6 +183,40 @@ class WebsiteSaleCart(TransactionCaseWithUserPortal):
             self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
             sale_order = website.sale_get_order()
             self.assertEqual(len(sale_order._cart_accessories()), 0)
+
+    def test_add_product_with_no_variant_attribute(self):
+        """Tests that adding a product with an attribute configured as 'no_variant'
+        correctly updates the cart quantity without creating variant lines."""
+
+        product_attribute = self.env['product.attribute'].create({
+            'name': "Color",
+            'value_ids': [Command.create({'name': color}) for color in ("Blue", "Red")],
+            'create_variant': 'no_variant',
+        })
+
+        self.product.attribute_line_ids = [Command.create({
+            'attribute_id': product_attribute.id,
+            'value_ids': product_attribute.value_ids.ids,
+        })]
+
+        self.product.attribute_line_ids._update_product_template_attribute_values()
+        ptav = self.env['product.template.attribute.value'].search([
+            ('attribute_id', '=', product_attribute.id),
+        ], limit=1)
+
+        cart_update_args = {
+            'product_id': self.product.id,
+            'add_qty': 1,
+            'no_variant_attribute_values': json.dumps([{'value': ptav.id}]),
+        }
+
+        with MockRequest(self.website.env, website=self.website):
+            self.WebsiteSaleController.cart_update_json(**cart_update_args)
+            self.WebsiteSaleController.cart_update_json(**cart_update_args)
+            order = self.website.sale_get_order()
+
+            self.assertEqual(len(order.order_line), 1)
+            self.assertEqual(order.order_line.product_uom_qty, 2)
 
     def test_remove_archived_product_line(self):
         """If an order has a line containing an archived product,

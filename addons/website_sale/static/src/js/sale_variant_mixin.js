@@ -279,7 +279,7 @@ var VariantMixin = {
                 noVariantAttributeValues.push({
                     'custom_product_template_attribute_value_id': $variantValueInput.data('value_id'),
                     'attribute_value_name': $variantValueInput.data('value_name'),
-                    'value': $variantValueInput.val(),
+                    'value': parseInt($variantValueInput.val()),
                     'attribute_name': $variantValueInput.data('attribute_name'),
                     'is_custom': $variantValueInput.data('is_custom')
                 });

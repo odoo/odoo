@@ -236,7 +236,9 @@ class SaleOrder(models.Model):
             'warning': warning,
         }
 
-    def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
+    def _cart_find_product_line(
+        self, product_id, line_id=None, no_variant_attribute_values=None, **kwargs,
+    ):
         """Find the cart line matching the given parameters.
 
         If a product_id is given, the line will match the product only if the
@@ -252,7 +254,6 @@ class SaleOrder(models.Model):
         product = self.env['product.product'].browse(product_id)
         if not line_id and (
             product.product_tmpl_id.has_dynamic_attributes()
-            or product.product_tmpl_id._has_no_variant_attributes()
         ):
             return SaleOrderLine
 
@@ -261,6 +262,13 @@ class SaleOrder(models.Model):
             domain += [('id', '=', line_id)]
         else:
             domain += [('product_custom_attribute_value_ids', '=', False)]
+
+        if no_variant_attribute_values:
+            ptav_ids = [int(attr_vals['value']) for attr_vals in no_variant_attribute_values]
+            domain += [
+                ('product_no_variant_attribute_value_ids', '!=', False),
+                ('product_no_variant_attribute_value_ids', 'not any', [('id', 'not in', ptav_ids)]),
+            ]
 
         return SaleOrderLine.search(domain)
 
