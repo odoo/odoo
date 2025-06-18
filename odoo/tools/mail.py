@@ -67,7 +67,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
      'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
      'data-mimetype-before-conversion',
-     'data-bs-toggle',  # support nav-tabs
+     'data-bs-toggle', 'data-bs-slide', 'data-bs-slide-to', 'data-bs-target',
      ])
 SANITIZE_TAGS = {
     # allow new semantic HTML5 tags
@@ -105,6 +105,7 @@ class _Cleaner(clean.Cleaner):
 
     strip_classes = False
     sanitize_style = False
+    sanitize_attributes_tags = None
     conditional_comments = True
 
     def __call__(self, doc):
@@ -119,6 +120,13 @@ class _Cleaner(clean.Cleaner):
         if not self.style and self.sanitize_style:
             for el in doc.iter(tag=etree.Element):
                 self.parse_style(el)
+
+        if self.sanitize_attributes_tags:
+            for el in doc.iter(tag=self.sanitize_attributes_tags):
+                attrib = el.attrib
+                for aname in attrib:
+                    if aname not in safe_attrs:
+                        del attrib[aname]
 
     def strip_class(self, el):
         if el.attrib.get('class'):
@@ -333,7 +341,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
             'page_structure': True,
             'style': strip_style,              # True = remove style tags/attrs
             'sanitize_style': sanitize_style,  # True = sanitize styling
-            'forms': sanitize_form,            # True = remove form tags
+            'forms': False,
             'remove_unknown_tags': False,
             'comments': False,
             'conditional_comments': sanitize_conditional_comments,   # True = remove conditional comments
@@ -341,6 +349,14 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         }
         if sanitize_tags:
             kwargs.update(SANITIZE_TAGS)
+        if sanitize_form:  # Authorize BUTTON tag
+            kwargs['forms'] = False
+            kwargs['remove_tags'] = list(kwargs.get('remove_tags', []))
+            kwargs['remove_tags'].append('form')
+            kwargs['kill_tags'] = list(kwargs.get('kill_tags', []))
+            kwargs['kill_tags'].extend(['input', 'select', 'textarea'])
+            if not sanitize_attributes:
+                kwargs['sanitize_attributes_tags'] = 'button'
 
         if sanitize_attributes:  # We keep all attributes in order to keep "style"
             if strip_classes:

@@ -171,6 +171,81 @@ class TestSanitizer(BaseCase):
             self.assertNotIn(misc.html_escape(not_email), sanitized, 'html_sanitize stripped emails of original html')
             self.assertIn(left_part, sanitized)
 
+    def test_sanitize_attributes_dom_purify(self):
+        def attributes(content):
+            return set(attr.partition('=')[0] for attr in str(content).partition(' ')[2].split())
+        # https://developer.mozilla.org/docs/Web/HTML/Reference/Attributes
+        # + https://github.com/cure53/DOMPurify/wiki/Default-TAGs-ATTRIBUTEs-allow-list-&-blocklist#html-attributes
+        # - https://github.com/cure53/DOMPurify/blob/main/src/attrs.ts
+        disallowed_attributes = {
+            'accept-charset', 'accesskey', 'allow', 'alpha', 'as', 'async', 'autofocus', 'buffered',
+            'challenge', 'charset', 'code', 'codebase', 'colorspace', 'content', 'contenteditable',
+            'contextmenu', 'csp', 'data', 'defer', 'dirname', 'dropzone', 'elementtiming', 'form',
+            'formaction', 'formenctype', 'formmethod', 'formnovalidate', 'formtarget', 'http-equiv',
+            'icon', 'importance', 'itemprop', 'keytype', 'language', 'lazyload', 'manifest', 'ping',
+            'referrerpolicy', 'sandbox', 'scoped', 'srcdoc', 'target',
+        }
+        attributes_string = " ".join(f'{attr}="{attr}"' for attr in disallowed_attributes)
+        original = f'<div {attributes_string}></div>'
+        sanitized = html_sanitize(original, sanitize_attributes=False)
+        self.assertEqual(attributes(sanitized), disallowed_attributes)
+        sanitized = html_sanitize(original, sanitize_attributes=True)
+        self.assertEqual(
+            attributes(sanitized),
+            {'accept-charset', 'accesskey', 'charset', 'target'}
+        )
+
+    def test_sanitize_elements_dom_purify(self):
+        def elements(content):
+            return set(element for element in str(content)[1:-1].replace('/', '').split('><'))
+        # https://developer.mozilla.org/docs/Web/HTML/Reference/Elements
+        # + https://github.com/cure53/DOMPurify/wiki/Default-TAGs-ATTRIBUTEs-allow-list-&-blocklist#html-tags
+        # - https://github.com/cure53/DOMPurify/blob/main/src/tags.ts
+        tags_disallowed = {
+            'applet', 'base', 'basefont', 'command', 'embed', 'fencedframe', 'frame', 'frameset',
+            'iframe', 'image', 'keygen', 'link', 'meta', 'noembed', 'noframes', 'noscript',
+            'object', 'param', 'rb', 'rtc', 'script', 'selectedcontent', 'title', 'xmp',
+        }
+        original = "".join(f'<{tag}></{tag}>' for tag in tags_disallowed)
+        sanitized = html_sanitize(original, sanitize_tags=False)
+        self.assertEqual(
+            elements(sanitized),
+            {
+                'basefont', 'command', 'keygen', 'noembed', 'noscript', 'fencedframe', 'rb', 'rtc',
+                'xmp', 'base', 'img', 'selectedcontent'
+            }
+        )
+        sanitized = html_sanitize(original, sanitize_tags=True)
+        self.assertEqual(elements(sanitized), {'basefont', 'command', 'keygen'})
+
+    def test_sanitize_form_elements(self):
+        attributes = ['autofocus', 'form', 'formaction']
+        attributes_string = 'autofocus="autofocus" form="form" formaction="formaction"'
+        original = (
+            '<form {attrs}><input {attrs}><button {attrs}></button>'
+            '<textarea {attrs}></textarea></form>'
+        ).format(attrs=attributes_string)
+        sanitized = html_sanitize(original, sanitize_form=False, sanitize_attributes=False)
+        self.assertEqual(
+            sanitized,
+            original
+        )
+        sanitized = html_sanitize(original, sanitize_form=False, sanitize_attributes=True)
+        self.assertEqual(
+            sanitized,
+            '<form><input><button></button><textarea></textarea></form>'
+        )
+        sanitized = html_sanitize(original, sanitize_form=True, sanitize_attributes=False)
+        self.assertEqual(
+            sanitized,
+            '<button></button>'
+        )
+        sanitized = html_sanitize(original, sanitize_form=True, sanitize_attributes=True)
+        self.assertEqual(
+            sanitized,
+            '<button></button>'
+        )
+
     def test_style_parsing(self):
         test_data = [
             (
