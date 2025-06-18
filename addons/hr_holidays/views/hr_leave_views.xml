@@ -91,7 +91,7 @@
         <field name="name">hr.leave.view.kanban</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <kanban sample="1" class="o_holidays_view_kanban">
+            <kanban sample="1" class="o_holidays_view_kanban" js_class="time_off_kanban_dashboard">
                 <header>
                     <button type="action"
                         name="%(hr_holidays.action_hr_leave_generate_multi_wizard)d"
@@ -490,9 +490,9 @@
                 <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//field[@name='holiday_status_id']" position="before">
-                <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_employee"/>
+                <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_employee"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="department_id" groups="hr_holidays.group_hr_holidays_user" readonly="1"/>
+                <field name="department_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="1"/>
             </xpath>
         </field>
     </record>
