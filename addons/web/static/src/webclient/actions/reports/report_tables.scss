@@ -165,6 +165,12 @@ div#total {
             border-top: none;
         }
     }
+
+    .mt-5 .o_total_table:not(.o_ignore_layout_styling) {
+        &::before {
+            border-top: $border-width solid $border-color;
+        }
+    }
 }
 
 .o_table_boxed-rounded {
