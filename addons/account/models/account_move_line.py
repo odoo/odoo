@@ -2625,14 +2625,15 @@ class AccountMoveLine(models.Model):
             # distribution_on_each_plan corresponds to the proportion that is distributed to each plan to be able to
             # give the real amount when we achieve a 100% distribution
             distribution_on_each_plan = {}
+            amount_on_each_plan = {}
 
             for account_id, distribution in self.analytic_distribution.items():
-                line_values = self._prepare_analytic_distribution_line(float(distribution), account_id, distribution_on_each_plan)
+                line_values = self._prepare_analytic_distribution_line(float(distribution), account_id, distribution_on_each_plan, amount_on_each_plan)
                 if not self.currency_id.is_zero(line_values.get('amount')):
                     analytic_line_vals.append(line_values)
         return analytic_line_vals
 
-    def _prepare_analytic_distribution_line(self, distribution, account_id, distribution_on_each_plan):
+    def _prepare_analytic_distribution_line(self, distribution, account_id, distribution_on_each_plan, amount_on_each_plan):
         """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
             analytic tags with analytic distribution.
         """
@@ -2642,9 +2643,14 @@ class AccountMoveLine(models.Model):
         distribution_plan = distribution_on_each_plan.get(account.root_plan_id, 0) + distribution
         decimal_precision = self.env['decimal.precision'].precision_get('Percentage Analytic')
         if float_compare(distribution_plan, 100, precision_digits=decimal_precision) == 0:
-            amount = -self.balance * (100 - distribution_on_each_plan.get(account.root_plan_id, 0)) / 100.0
+            # using the sum of rounded amount, we can compute what should be the last amount so the rounded sum is equal to balance exactly
+            # (no 0.01 error when adding the rounded amounts)
+            amount = -self.balance - amount_on_each_plan.get(account.root_plan_id, 0)
         else:
             amount = -self.balance * distribution / 100.0
+        # we do the rounding now, and keep track of the sum of the rounded amount per plan
+        amount = self.currency_id.round(amount)
+        amount_on_each_plan[account.root_plan_id] = amount_on_each_plan.get(account.root_plan_id, 0) + amount
         distribution_on_each_plan[account.root_plan_id] = distribution_plan
         default_name = self.name or (self.ref or '/' + ' -- ' + (self.partner_id and self.partner_id.name or '/'))
         return {
