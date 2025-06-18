@@ -8,7 +8,7 @@ import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_ma
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { user } from "@web/core/user";
-import { useState, onWillStart } from "@odoo/owl";
+import { useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 patch(PropertyValue.prototype, {
     setup() {
@@ -17,7 +17,14 @@ patch(PropertyValue.prototype, {
         onWillStart(async () => {
             this.htmlState.isPortalUser = await user.hasGroup("base.group_portal");
         });
-        this.htmlState = useState({ isPortalUser: false });
+        this.htmlState = useState({ isPortalUser: false, key: 0 });
+
+        onWillUpdateProps((newProps) => {
+            if (newProps.type === "html" && newProps.value !== this.lastHtmlValue) {
+                this.htmlState.key += 1;
+                this.lastHtmlValue = newProps.value;
+            }
+        });
 
         return super.setup();
     },
