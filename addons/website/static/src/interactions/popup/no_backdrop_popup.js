@@ -18,6 +18,11 @@ export class NoBackdropPopup extends Interaction {
         this.resizeObserver = null;
     }
 
+    // shouldStop() {
+    //     // Force restart on refresh.
+    //     return true;
+    // }
+
     destroy() {
         this.removeModalNoBackdropEvents();
         // After destroying the interaction, we need to trigger a resize event
@@ -28,6 +33,7 @@ export class NoBackdropPopup extends Interaction {
     updateScrollbar() {
         // When there is no backdrop the element with the scrollbar is
         // '.modal-content' (see comments in CSS).
+        // debugger;
         const modalContentEl = this.el.querySelector(".modal-content");
         const isOverflowing = isScrollableY(modalContentEl);
         const bsModal = window.Modal.getOrCreateInstance(this.el);

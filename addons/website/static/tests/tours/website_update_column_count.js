@@ -188,7 +188,11 @@ registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop", {
     {
         content: "Click on the second column of the 'Columns' snippet",
         trigger: `${columnsSnippetRow} > div:nth-child(2)`,
-        run: "click",
+        run() {
+            const el = this.anchor;
+            el.scrollIntoView();
+            el.click();
+        },
     }, {
         content: "Drag the second column of 'Columns' and drop it in 'Text-Image'",
         trigger: "body .o_overlay_options .o_move_handle, body .o_overlay_options .o_move_handle:not(:visible)",

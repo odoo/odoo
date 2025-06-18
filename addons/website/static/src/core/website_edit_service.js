@@ -187,9 +187,11 @@ registry.category("services").add("website_edit", {
                     },
                     shouldStop() {
                         const snapshot = this.getConfigurationSnapshot();
-                        if (snapshot === this.configurationSnapshot) {
-                            return false;
-                        }
+                        // TODO: MSH: The following code is creating issue, due to this code destroy method is not getting called
+                        // Maybe temporary solution can be done by changing snapshot i.e. some style or something on element
+                        // if (snapshot === this.configurationSnapshot) {
+                        //     return false;
+                        // }
                         this.configurationSnapshot = snapshot;
                         return true;
                     },
