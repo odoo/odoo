@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-dom";
+import { animationFrame, Deferred, queryFirst } from "@odoo/hoot-dom";
 import { useState, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
@@ -121,5 +121,19 @@ describe("HTML builder tests", () => {
         prepareDeferred.resolve();
         await animationFrame();
         expect.verifySteps(["prepare"]);
+    });
+
+    test("Data Attribute action works with non string values", async () => {
+        addBuilderOption({
+            selector: ".s_test",
+            template: xml`<BuilderButton dataAttributeAction="'customerOrderIds'" dataAttributeActionValue="[100, 200]">Click</BuilderButton>`,
+        });
+        await setupHTMLBuilder(`<section class="s_test">Test</section>`);
+        await contains(":iframe .s_test").click();
+        await contains(".we-bg-options-container button:contains('Click')").click();
+        expect(".we-bg-options-container button:contains('Click')").toHaveClass("active");
+        expect(queryFirst(":iframe .s_test").getAttribute("data-customer-order-ids")).toBe(
+            "100,200"
+        );
     });
 });
