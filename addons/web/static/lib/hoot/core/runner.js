@@ -1443,24 +1443,25 @@ export class Runner {
         const shouldInclude = !!includeLevel;
         for (const id of ids) {
             let nId = normalize(id.toLowerCase());
-            let itemIncludeLevel = $abs(includeLevel);
             if (nId.startsWith(EXCLUDE_PREFIX)) {
                 nId = nId.slice(EXCLUDE_PREFIX.length);
-                itemIncludeLevel *= -1;
+                if (includeLevel > 0) {
+                    includeLevel *= -1;
+                }
             }
             const previousValue = values[nId] || 0;
             const wasRemovable = $abs(previousValue) === INCLUDE_LEVEL.url;
             if (shouldInclude) {
-                if (previousValue === itemIncludeLevel) {
+                if (previousValue === includeLevel) {
                     continue;
                 }
-                values[nId] = itemIncludeLevel;
+                values[nId] = includeLevel;
                 if (noIncrement) {
                     continue;
                 }
-                if (previousValue <= 0 && itemIncludeLevel > 0) {
+                if (previousValue <= 0 && includeLevel > 0) {
                     this._hasIncludeFilter++;
-                } else if (previousValue > 0 && itemIncludeLevel <= 0) {
+                } else if (previousValue > 0 && includeLevel <= 0) {
                     this._hasIncludeFilter--;
                 }
                 if (!wasRemovable && isRemovable) {
