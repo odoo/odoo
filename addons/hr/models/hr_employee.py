@@ -340,7 +340,7 @@ class HrEmployee(models.Model):
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
                     'params': {
-                        'title': _("User Creation Notification"),
+                        'title': self.env._("User Creation Notification"),
                         'type': message_type,
                         'message': message,
                         'next': next_action
@@ -350,12 +350,16 @@ class HrEmployee(models.Model):
         old_users = []
         new_users = []
         users_without_emails = []
+        users_with_invalid_emails = []
         for employee in self:
             if employee.user_id:
                 old_users.append(employee.name)
                 continue
             if not employee.work_email:
                 users_without_emails.append(employee.name)
+                continue
+            if not tools.email_normalize(employee.work_email):
+                users_with_invalid_emails.append(employee.name)
                 continue
             new_users.append({
                 'create_employee_id': employee.id,
@@ -381,6 +385,10 @@ class HrEmployee(models.Model):
 
         if users_without_emails:
             message = _("You need to set the work email address for %s", ', '.join(users_without_emails))
+            next_action = _get_user_creation_notification_action(message, 'danger', next_action)
+
+        if users_with_invalid_emails:
+            message = _("You need to set a valid work email address for %s", ', '.join(users_with_invalid_emails))
             next_action = _get_user_creation_notification_action(message, 'danger', next_action)
 
         return next_action
