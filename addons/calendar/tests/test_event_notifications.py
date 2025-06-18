@@ -279,3 +279,81 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         with freeze_time('2023-11-15 16:00:00'):
             self.assertEqual(len(search_event()), 3)
         events.unlink()
+
+    def test_notification_time_recurring(self):
+        """
+        Test that _get_next_potential_limit_alarm correctly selects future events for notifications,
+        and that the dates are correctly computed
+        """
+        now = datetime.now().replace(second=0, microsecond=0)
+        yesterday = now - relativedelta(days=1)
+        next_month = now + relativedelta(days=30)
+        start = yesterday
+        while start.weekday() > 4:
+            start -= relativedelta(days=1)
+        stop = start + relativedelta(hours=1)
+        weekday_flags = ['mon', 'tue', 'wed', 'thu', 'fri']
+        weekday_flag = weekday_flags[start.weekday()]
+        weekday_dict = {flag: False for flag in weekday_flags}
+        weekday_dict[weekday_flag] = True
+
+        partner = self.user.partner_id
+        alarm = self.env.ref('calendar.alarm_notif_1')
+
+        # Test 1: end date recurrence first alarm
+        event_vals = {
+            'start': start,
+            'stop': stop,
+            'day': 1,
+            'duration': 1.0,
+            'until': next_month.date().isoformat(),
+            'end_type': 'end_date',
+            'name': 'Weekly Sales Meeting',
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'alarm_ids': [[6, 0, [alarm.id]]],
+            'partner_ids': [[6, 0, [partner.id]]],
+            'user_id': self.user.id,
+        }
+        event_vals.update(weekday_dict)
+        self.env['calendar.event'].create(event_vals)
+        events = self.env['calendar.event'].search([('name', '=', 'Weekly Sales Meeting')])
+        for e in events:
+            e.partner_ids = [(4, partner.id)]
+        self.env.flush_all()
+        result = self.env['calendar.alarm_manager']._get_next_potential_limit_alarm('notification', partners=partner)
+        now_utc = datetime.utcnow()
+        for alarm_data in result.values():
+            first_alarm = alarm_data.get('first_alarm')
+            self.assertLess(now_utc, first_alarm)
+        events.unlink()
+
+        # Test 2: Count-based recurrence last alarm
+        recurrence_count = 5
+        event_vals = {
+            'start': start,
+            'stop': stop,
+            'duration': 1.0,
+            'count': recurrence_count,
+            'end_type': 'count',
+            'name': 'Daily Sales Meeting',
+            'recurrency': True,
+            'rrule_type': 'daily',
+            'alarm_ids': [[6, 0, [alarm.id]]],
+            'partner_ids': [[6, 0, [partner.id]]],
+            'user_id': self.user.id,
+        }
+        self.env['calendar.event'].create(event_vals)
+        events = self.env['calendar.event'].search([('name', '=', 'Daily Sales Meeting')])
+        for e in events:
+            e.partner_ids = [(4, partner.id)]
+
+        self.env.flush_all()
+        result = self.env['calendar.alarm_manager']._get_next_potential_limit_alarm('notification', partners=partner)
+
+        expected_alarms = sorted([start + relativedelta(days=offset) - relativedelta(minutes=15) for offset in range(1, recurrence_count)])
+        actual_alarms = sorted([data.get('first_alarm') for data in result.values()])
+
+        for expected, actual in zip(expected_alarms, actual_alarms):
+            delta = abs((actual - expected).total_seconds())
+            self.assertLessEqual(delta, 1)
