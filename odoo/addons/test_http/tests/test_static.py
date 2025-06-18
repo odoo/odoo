@@ -405,20 +405,14 @@ class TestHttpStatic(TestHttpStaticCommon):
             'name': 'dummy test_http test_static server',
             'smtp_host': 'localhost',
         })
-
-        for name, value, error_msg in [
-            ('raw bad padding', b'()', "binascii.Error: Non-base64 digit found"),
-            ('raw good padding', b'()==', "binascii.Error: Non-base64 digit found"),
-            ('b64 bad padding', b'YB', "binascii.Error: Incorrect padding"),
-        ]:
-            with self.subTest(name=name):
-                record.smtp_ssl_certificate = value
-                with self.assertLogs('odoo.http') as capture:
-                    res = self.url_open(f'/web/content/ir.mail_server/{record.id}/smtp_ssl_certificate')
-                self.assertEqual(res.status_code, 500)
-                self.assertEqual(len(capture.output), 1, capture.output)
-                self.assertIn(error_msg, capture.output[0])
-                self.assertIn("ir.mail_server.smtp_ssl_certificate", capture.output[0])
+        record.smtp_ssl_certificate = b'non base64 value'
+        self.assertDownload(
+            f'/web/content/ir.mail_server/{record.id}/smtp_ssl_certificate',
+            headers={},
+            assert_status_code=200,
+            assert_headers={},
+            assert_content=b'non base64 value',
+        )
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
