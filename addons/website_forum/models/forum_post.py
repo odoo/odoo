@@ -728,15 +728,12 @@ class ForumPost(models.Model):
     # MESSAGING
     # ----------------------------------------------------------------------
 
-    @api.model
-    def _get_mail_message_access(self, res_ids, operation, model_name=None):
-        # XDO FIXME: to be correctly fixed with new _get_mail_message_access and filter access rule
-        if operation in ('write', 'unlink') and (not model_name or model_name == 'forum.post'):
-            # Make sure only author or moderator can edit/delete messages
-            for post in self.browse(res_ids):
-                if not post.can_edit:
-                    raise AccessError(_('%d karma required to edit a post.', post.karma_edit))
-        return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        if message_operation in ('write', 'unlink'):
+            filtered_self = self.filtered(lambda post: post.can_edit)
+        else:
+            filtered_self = self
+        return super(ForumPost, filtered_self)._mail_get_operation_for_mail_message_operation(message_operation)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         groups = super()._notify_get_recipients_groups(
