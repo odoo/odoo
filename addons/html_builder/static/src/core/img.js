@@ -28,6 +28,10 @@ export class Img extends Component {
         style: { type: String, optional: true },
         alt: { type: String, optional: true },
         attrs: { type: Object, optional: true },
+        svgCheck: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        svgCheck: true,
     };
     static template = xml`
         <svg t-if="isSvg(props.src)" t-ref="svg"
@@ -63,7 +67,11 @@ export class Img extends Component {
             if (this.isSvg(this.props.src) && this.svg.children.length) {
                 // We can't use t-out with markup because it is parsed as HTML,
                 // but SVG need to be parsed as XML for all features to work.
-                this.svgRef.el.replaceChildren(...this.svg.children);
+                const children = [];
+                for (const child of this.svg.children) {
+                    children.push(child.cloneNode(true));
+                }
+                this.svgRef.el.replaceChildren(...children);
             }
         });
     }
@@ -86,7 +94,7 @@ export class Img extends Component {
     }
 
     isSvg(src) {
-        return src.split(".").pop() === "svg";
+        return this.props.svgCheck && src.split(".").pop() === "svg";
     }
 
     async getSvg() {
