@@ -1738,6 +1738,9 @@ def get_base_langs(lang: str) -> list[str]:
     # LAC (~non-peninsular) spanishes have a second base
     if base_lang == 'es' and lang not in ('es_ES', 'es_419'):
         langs.append('es_419')
+    # HK Chinese ~ Taiwan Chinese
+    if lang == 'zh_HK':
+        langs.append('zh_TW')
     if lang != base_lang:
         langs.append(lang)
     return langs
