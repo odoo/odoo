@@ -344,7 +344,7 @@ test("always show the name of the company on the top right of the app", async ()
     expect.verifySteps(["1"]);
 
     // in case of a single company, drop down button should be displayed but disabled
-    expect(".dropdown-toggle").toBeDisplayed();
+    expect(".dropdown-toggle").toBeVisible();
     expect(".dropdown-toggle").not.toBeEnabled();
     expect(".dropdown-toggle").toHaveText("Single company");
 });
