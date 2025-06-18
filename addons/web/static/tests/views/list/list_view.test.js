@@ -216,8 +216,8 @@ test(`simple readonly list`, async () => {
         { message: "integer cells should be right aligned" }
     );
     expect(`.o_list_button_add`).toBeVisible();
-    expect(`.o_list_button_save`).not.toBeVisible();
-    expect(`.o_list_button_discard`).not.toBeVisible();
+    expect(`.o_list_button_save`).not.toHaveCount();
+    expect(`.o_list_button_discard`).not.toHaveCount();
 });
 
 test(`select record range with shift click`, async () => {
@@ -12007,7 +12007,7 @@ test(`pressing ESC in editable grouped list should discard the current line chan
     expect(`tbody tr td:contains(yop)`).toHaveCount(1);
     expect(`tr.o_data_row`).toHaveCount(3);
     expect(`tr.o_data_row.o_selected_row`).toHaveCount(0);
-    expect(`.o_list_button_save`).not.toBeVisible();
+    expect(`.o_list_button_save`).not.toHaveCount();
 });
 
 test(`pressing TAB in editable="bottom" grouped list`, async () => {
@@ -16680,5 +16680,5 @@ test(`hide pager in the list view with sample data`, async () => {
     });
 
     expect(".o_content").toHaveClass("o_view_sample_data");
-    expect(".o_cp_pager").not.toBeVisible();
+    expect(".o_cp_pager").not.toHaveCount();
 });

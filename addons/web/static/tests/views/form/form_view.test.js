@@ -10413,7 +10413,7 @@ test(`form view with inline list view with optional fields and local storage moc
     ]);
     expect(`.o_list_table th`).toHaveCount(2);
     expect(`th[data-name="foo"]`).toBeVisible();
-    expect(`th[data-name="bar"]`).not.toBeVisible();
+    expect(`th[data-name="bar"]`).not.toHaveCount();
 
     // optional fields
     await contains(`.o_optional_columns_dropdown .dropdown-toggle`).click();
@@ -10477,7 +10477,7 @@ test(`form view with list_view_ref with optional fields and local storage mock`,
         `getItem debug_open_view,${localStorageKey}`,
     ]);
     expect(`.o_list_table th`).toHaveCount(2);
-    expect(`th[data-name="foo"]`).not.toBeVisible();
+    expect(`th[data-name="foo"]`).not.toHaveCount();
     expect(`th[data-name="bar"]`).toBeVisible();
 
     // optional fields
