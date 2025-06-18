@@ -271,11 +271,16 @@ test("Focusing input displays related data color/data border colorpickers", asyn
     const type = "bar";
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
-    expect(".options-container [data-label='Dataset Color']").not.toHaveCount();
-    expect(".options-container [data-label='Dataset Border']").not.toHaveCount();
-    await contains(".options-container table tbody input:eq(1)").click();
+    expect(".options-container [data-label='Data Color']").not.toHaveCount();
+    expect(".options-container [data-label='Data Border']").not.toHaveCount();
     expect(".options-container [data-label='Dataset Color']").toBeVisible();
     expect(".options-container [data-label='Dataset Border']").toBeVisible();
+    await contains(".options-container [data-label='Type'] button.o-dropdown").click();
+    await contains(".o_popover [data-action-id='setChartType'][data-action-value='pie']").click();
+    expect(".options-container [data-label='Data Color']").toBeVisible();
+    expect(".options-container [data-label='Data Border']").toBeVisible();
+    expect(".options-container [data-label='Dataset Color']").not.toHaveCount();
+    expect(".options-container [data-label='Dataset Border']").not.toHaveCount();
 });
 
 test("CSS colors and CSS custom variables are correctly computed", async () => {
@@ -305,4 +310,62 @@ test("Stacked option is only available with more than 1 dataset", async () => {
     expect(".options-container [data-label='Stacked']").toBeVisible();
     await contains(".options-container table [data-action-id=removeColumn]").click();
     expect(".options-container [data-label='Stacked']").not.toHaveCount();
+});
+
+test("Adding a new column/row displays the color pickers of the cell in new column/row", async () => {
+    const type = "pie";
+    await setupWebsiteBuilder(chartTemplate(type, getData(type)));
+    await contains(":iframe .s_chart").click();
+    expect(".options-container [data-label='Data Color']").toBeVisible();
+    const prevColor = queryFirst(".options-container [data-label='Data Color'] .o_we_color_preview")
+        .style.backgroundColor;
+
+    await contains(".options-container button.add_column").click();
+    expect(".options-container [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
+        backgroundColor: prevColor,
+    });
+    const columnColor = queryFirst(
+        ".options-container [data-label='Data Color'] .o_we_color_preview"
+    ).style.backgroundColor;
+    expect(".options-container table tbody tr:first-child td:nth-child(4) input").toHaveStyle({
+        border: `2px solid ${columnColor}`,
+    });
+
+    await contains(".options-container button.add_row").click();
+    expect(".options-container [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
+        backgroundColor: columnColor,
+    });
+    const rowColor = queryFirst(".options-container [data-label='Data Color'] .o_we_color_preview")
+        .style.backgroundColor;
+    expect(".options-container table tbody tr:nth-child(4) td:nth-child(2) input").toHaveStyle({
+        border: `2px solid ${rowColor}`,
+    });
+});
+
+test("Removing a row with the current cell resets the current cell", async () => {
+    const type = "pie";
+    await setupWebsiteBuilder(chartTemplate(type, getData(type)));
+    await contains(":iframe .s_chart").click();
+    expect(".options-container [data-label='Data Color']").toBeVisible();
+
+    const defaultColor = queryFirst(
+        ".options-container [data-label='Data Color'] .o_we_color_preview"
+    ).style.backgroundColor;
+
+    await contains(".options-container table tbody tr:nth-child(1) td:nth-child(3) input").click();
+    const focusedCellColor = queryFirst(
+        ".options-container [data-label='Data Color'] .o_we_color_preview"
+    ).style.backgroundColor;
+    expect(".options-container table tbody tr:nth-child(1) td:nth-child(3) input").toHaveStyle({
+        border: `2px solid ${focusedCellColor}`,
+    });
+
+    await contains(
+        ".options-container table tbody tr:last-child td:nth-child(3) button.o_builder_matrix_remove_col"
+    ).click();
+    // After removal, the current cell should reset to default (first dataset, first data point)
+    // The color picker should now reflect the default cell's color
+    expect(".options-container [data-label='Data Color'] .o_we_color_preview").toHaveStyle({
+        backgroundColor: defaultColor,
+    });
 });

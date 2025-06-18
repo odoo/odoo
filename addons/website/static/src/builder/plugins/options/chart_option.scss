@@ -5,20 +5,25 @@ table.o_builder_matrix {
     td, th {
         text-align: center;
 
-        &.o_builder_matrix_selected_cell input {
-            background-color: darken($primary, 10%);
-        }
-
         > :is(div, button) {
             width: 100% !important;
         }
+
+        > div {
+            padding: 0;
+        
+            .o-hb-input-number {
+                padding: 0.15rem $o-we-sidebar-content-field-clickable-spacing;
+            }
+        }
+
 
         .btn {
             padding: unset;
         }
 
-        input {
-            background-color: $o-we-sidebar-content-field-input-bg;
+        .o-hb-input-number {
+            margin-right: 0;
         }
 
         &:last-child {

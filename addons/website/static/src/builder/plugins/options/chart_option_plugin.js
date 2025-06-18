@@ -126,7 +126,7 @@ export class AddColumnAction extends BaseChartAction {
             data: fillDatasetArray(0),
             backgroundColor: this.isPieChart(editingElement)
                 ? data.labels.map(() => this.randomColor())
-                : "",
+                : this.randomColor(),
             borderColor: this.isPieChart(editingElement) ? fillDatasetArray("") : "",
         };
         data.datasets.push(newDataset);
