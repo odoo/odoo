@@ -7,6 +7,7 @@ import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { HighlightPlugin } from "@website/builder/plugins/highlight/highlight_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { contains } from "@web/../tests/web_test_helpers";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 defineMailModels();
 
@@ -121,4 +122,24 @@ test("Similar adjacent highlights are merged", async () => {
     await contains(".o_popover .o_text_highlight_freehand_2").click();
     expect("p>.o_text_highlight_freehand_2").toHaveCount(1);
     expect("p>.o_text_highlight_freehand_1").toHaveCount(0);
+});
+
+test("Remove format on highlight does not create an empty node", async () => {
+    const { editor } = await setupEditor(
+        `<p>
+            <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 2px;">highligh[t]<svg class="o_text_highlight_svg"></svg></span>
+        </p>`,
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin] } }
+    );
+    await expandToolbar();
+    const selectedHighlights = (editor) =>
+        editor.shared.selection
+            .getTargetedNodes()
+            .map((n) => closestElement(n, ".o_text_highlight"))
+            .filter(Boolean);
+    expect("p>.o_text_highlight_freehand_2").toHaveCount(1);
+    expect(selectedHighlights(editor)).toHaveLength(1);
+    await contains(".o-we-toolbar .fa-eraser").click();
+    expect("p>.o_text_highlight_freehand_2").toHaveCount(1);
+    expect(selectedHighlights(editor)).toHaveLength(0);
 });
