@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="bus_view_model_form" model="ir.ui.view">
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='modules']" position="after">
+                <field name="is_bus_sync_enabled"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

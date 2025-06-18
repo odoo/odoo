@@ -6,6 +6,7 @@
     'depends': ['base', 'web'],
     'data': [
         'security/ir.model.access.csv',
+        'views/ir_model_views.xml'
     ],
     'installable': True,
     'auto_install': True,
@@ -16,6 +17,7 @@
             'bus/static/src/services/**/*.js',
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
+            'bus/static/src/views/list/list_renderer.js'
         ],
         'web.assets_frontend': [
             'bus/static/src/*.js',
