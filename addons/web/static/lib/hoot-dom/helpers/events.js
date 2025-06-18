@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { getTag, isFirefox, isIterable } from "../hoot_dom_utils";
+import { getColorHex, getTag, isFirefox, isIterable } from "../hoot_dom_utils";
 import {
     getActiveElement,
     getDocument,
@@ -915,11 +915,17 @@ function setupEvents(type, options) {
         if (!allowLogs) {
             return events;
         }
-        const groupName = [`${type}: dispatched`, events.length, `events`];
+        const groupName = [
+            `%c[${type}]%c dispatched`,
+            `color: ${getColorHex("purple")}`,
+            "",
+            events.length,
+            `events`,
+        ];
         $groupCollapsed(...groupName);
         for (const event of events) {
-            /** @type {(keyof typeof LOG_COLORS)[]} */
-            const colors = ["blue"];
+            /** @type {string[]} */
+            const colors = [getColorHex("text-report-html-tag")];
 
             const typeList = [event.type];
             if (event.key) {
@@ -927,7 +933,9 @@ function setupEvents(type, options) {
             } else if (event.button) {
                 typeList.push(event.button);
             }
-            [...Array(typeList.length)].forEach(() => colors.push("orange"));
+            [...Array(typeList.length)].forEach(() =>
+                colors.push(getColorHex("text-report-string"))
+            );
 
             const typeString = typeList.map((t) => `%c"${t}"%c`).join(", ");
             let message = `%c${event.constructor.name}%c<${typeString}>`;
@@ -937,12 +945,12 @@ function setupEvents(type, options) {
             const target = event.__originalTarget || event.target;
             if (isNode(target)) {
                 const targetParts = toSelector(target, { object: true });
-                colors.push("blue");
+                colors.push(getColorHex("text-report-html-tag"));
                 if (targetParts.id) {
-                    colors.push("orange");
+                    colors.push(getColorHex("text-report-html-id"));
                 }
                 if (targetParts.class) {
-                    colors.push("lightBlue");
+                    colors.push(getColorHex("text-report-html-class"));
                 }
                 const targetString = $values(targetParts)
                     .map((part) => `%c${part}%c`)
@@ -950,8 +958,8 @@ function setupEvents(type, options) {
                 message += ` @${targetString}`;
             }
             const messageColors = colors.flatMap((color) => [
-                `color: ${LOG_COLORS[color]}; font-weight: normal`,
-                `color: ${LOG_COLORS.reset}`,
+                `color: ${color}; font-weight: normal`,
+                "",
             ]);
 
             $groupCollapsed(message, ...messageColors);
@@ -1809,12 +1817,6 @@ const KEY_ALIASES = {
     space: " ",
     up: "ArrowUp",
     win: "Meta",
-};
-const LOG_COLORS = {
-    blue: "#5db0d7",
-    orange: "#f29364",
-    lightBlue: "#9bbbdc",
-    reset: "inherit",
 };
 const LONG_TAP_DELAY = 500;
 
