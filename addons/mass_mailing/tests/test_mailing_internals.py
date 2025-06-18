@@ -498,6 +498,54 @@ class TestMassMailValues(MassMailCommon):
         self.assertFalse(mailing.body_html)
         self.assertEqual(mailing.mailing_model_name, 'res.partner')
 
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_campaign_test_url_remplacement(self):
+        """ Test the urls after sending mail process for mailing campaign tests """
+
+        base_url = self.env['mailing.mailing'].get_base_url()
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'Test',
+            'subject': 'Test',
+            'body_html': f"""
+                <p><a id=\"internal_link\" href=\"{base_url}\">Internal Test Link<a></p>
+                <p><a id=\"internal_tracked_link\" href=\"{base_url}/r/001\">Internal Test Tracked Link<a></p>
+                <p><a id=\"external_link\" href=\"https://www.reddit.com/r/Odoo\">External Test Link<a></p>
+            """,
+            'contact_list_ids': [(6, 0, self.mailing_list_1.ids)],
+            'keep_archives': True,
+            'reply_to_mode': 'new',
+            'reply_to': self.email_reply_to,
+        })
+
+        # We don't want to create link trackers for tests
+        def patched_get_link_tracker_values(self):
+            self.ensure_one()
+            return {}
+
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+        with patch("odoo.addons.mass_mailing.models.mailing.MassMailing._get_link_tracker_values",
+                   new=patched_get_link_tracker_values):
+            with self.mock_mail_gateway(mail_unlink_sent=True):
+                mailing.action_send_mail()
+
+        self.assertTrue(self._mails)
+
+        links_dict = {
+            'internal_tracked_link': base_url + '/r/001',
+            'internal_link': base_url,
+            'external_link': 'https://www.reddit.com/r/Odoo',
+        }
+
+        for new_mail in self._mails:
+            for id, link in links_dict.items():
+                anchor_href = self._get_href_from_anchor_id(new_mail['body'], id)
+                if not anchor_href.startswith(base_url):
+                    self.assertEqual(link, anchor_href, "An external link can't be modified")
+                else:
+                    self.assertIn(link, anchor_href, "The base url should be keeped")
+
 
 @tagged("mass_mailing", "utm")
 class TestMassMailUTM(MassMailCommon):

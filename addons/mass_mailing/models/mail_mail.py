@@ -32,7 +32,7 @@ class MailMail(models.Model):
 
                 parsed = werkzeug.urls.url_parse(url, scheme='http')
 
-                if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
+                if parsed.scheme.startswith('http') and self.get_base_url().endswith(parsed.host) and parsed.path.startswith('/r/'):
                     new_href = href.replace(url, url + '/m/' + str(self.mailing_trace_ids[0].id))
                     body = body.replace(href, new_href)
 
