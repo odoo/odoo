@@ -1,9 +1,11 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { describe, expect, test } from "@odoo/hoot";
 import {
-    manuallyDispatchProgrammaticEvent,
+    advanceTime,
     animationFrame,
+    click,
     dblclick,
+    manuallyDispatchProgrammaticEvent,
     queryAll,
     queryFirst,
     waitFor,
@@ -36,7 +38,18 @@ test("double click on Image", async () => {
     await dblclick(":iframe img.a_nice_img");
     await animationFrame();
     expect(".modal-content:contains(Select a media) .o_upload_media_button").toHaveCount(1);
+    expect("div.o-tooltip").toHaveCount(0);
 });
+
+test("simple click on Image", async () => {
+    await setupWebsiteBuilder(`<div><img class=a_nice_img src='${dummyBase64Img}'></div>`);
+    await click(":iframe img.a_nice_img");
+    await waitFor("div.o-tooltip");
+    expect("div.o-tooltip").toHaveCount(1);
+    await advanceTime(1600);
+    expect("div.o-tooltip").toHaveCount(0);
+});
+
 
 test("double click on text", async () => {
     await setupWebsiteBuilder("<div><p class=text_class>Text</p></div>");
