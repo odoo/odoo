@@ -946,12 +946,14 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         return super().get(sid)
 
     def rotate(self, session, env):
+        _logger.info("-------- ROTATE: BEFORE %s", session.sid)
         self.delete(session)
         session.sid = self.generate_key()
         if session.uid and env:
             session.session_token = security.compute_session_token(session, env)
         session.should_rotate = False
         self.save(session)
+        _logger.info("-------- ROTATE: AFTER %s", session.sid)
 
     def vacuum(self, max_lifetime=SESSION_LIFETIME):
         threshold = time.time() - max_lifetime
@@ -1154,12 +1156,17 @@ class Session(collections.abc.MutableMapping):
     def logout(self, keep_db=False):
         db = self.db if keep_db else get_default_session()['db']  # None
         debug = self.debug
+        _logger.info("------ logout")
+        _logger.info("-------- LOGOUT: session %s", self.sid)
         self.clear()
+        _logger.info("------ logout: cleared")
         self.update(get_default_session(), db=db, debug=debug)
+        _logger.info("------ logout: update")
         self.context['lang'] = request.default_lang() if request else DEFAULT_LANG
         self.should_rotate = True
 
         if request and request.env:
+            _logger.info("------ logout: _post_logout")
             request.env['ir.http']._post_logout()
 
     def touch(self):

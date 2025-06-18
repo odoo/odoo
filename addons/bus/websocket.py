@@ -994,6 +994,7 @@ class WebsocketConnectionHandler:
             ))
             # Force save the session. Session must be persisted to handle
             # WebSocket authentication.
+            _logger.info("-------- WEBSOCKET: session %s", request.session.sid)
             request.session.is_dirty = True
             return response
         except KeyError as exc:
