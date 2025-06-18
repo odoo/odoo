@@ -236,7 +236,7 @@ class SaleOrder(models.Model):
             'warning': warning,
         }
 
-    def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
+    def _cart_find_product_line(self, product_id, line_id=None, no_variant_attribute_values=None, **kwargs):
         """Find the cart line matching the given parameters.
 
         If a product_id is given, the line will match the product only if the
@@ -252,7 +252,6 @@ class SaleOrder(models.Model):
         product = self.env['product.product'].browse(product_id)
         if not line_id and (
             product.product_tmpl_id.has_dynamic_attributes()
-            or product.product_tmpl_id._has_no_variant_attributes()
         ):
             return SaleOrderLine
 
@@ -262,7 +261,25 @@ class SaleOrder(models.Model):
         else:
             domain += [('product_custom_attribute_value_ids', '=', False)]
 
-        return SaleOrderLine.search(domain)
+        candidate_lines = SaleOrderLine.search(domain)
+
+        if not candidate_lines:
+            return SaleOrderLine
+
+        if product.product_tmpl_id._has_no_variant_attributes() and no_variant_attribute_values:
+            target_ids = set()
+            for attr_val in no_variant_attribute_values:
+                if isinstance(attr_val, dict) and 'custom_product_template_attribute_value_id' in attr_val:
+                    target_ids.add(attr_val['custom_product_template_attribute_value_id'])
+
+            if target_ids:
+                candidate_lines = candidate_lines.filtered(
+                    lambda line: set(line.product_no_variant_attribute_value_ids.mapped('id')) == target_ids
+                )
+            else:
+                return SaleOrderLine
+
+        return candidate_lines
 
     # hook to be overridden
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
