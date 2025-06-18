@@ -160,7 +160,8 @@ class HrVersion(models.Model):
             # Other calendars: In case the employee has declared time off in another calendar
             # Example: Take a time off, then a credit time.
             resources_list = [self.env['resource.resource'], resource]
-            result = defaultdict(list)
+            leave_result = defaultdict(list)
+            work_result = defaultdict(list)
             for leave in itertools.chain(leaves_by_resource[False], leaves_by_resource[resource.id]):
                 for resource in resources_list:
                     # Global time off is not for this calendar, can happen with multiple calendars in self
@@ -184,11 +185,18 @@ class HrVersion(models.Model):
                     leave_interval = (leave_start_dt, leave_end_dt, leave)
                     leave_interval = version._get_valid_leave_intervals(attendances, leave_interval)
                     if leave_interval:
-                        result[resource.id] += leave_interval
-            mapped_leaves = {r.id: Intervals(result[r.id], keep_distinct=True) for r in resources_list}
-            leaves = mapped_leaves[resource.id]
+                        if leave.time_type == 'leave':
+                            leave_result[resource.id] += leave_interval
+                        else:
+                            work_result[resource.id] += leave_interval
+            mapped_leaves = {r.id: Intervals(leave_result[r.id], keep_distinct=True) for r in resources_list}
+            mapped_worked_leaves = {r.id: Intervals(work_result[r.id], keep_distinct=True) for r in resources_list}
 
-            real_attendances = attendances - leaves
+            leaves = mapped_leaves[resource.id]
+            worked_leaves = mapped_worked_leaves[resource.id]
+
+            real_attendances = attendances - leaves - worked_leaves
+            real_worked_leaves = worked_leaves - leaves
             if version.has_static_work_entries() or not leaves:
                 # Empty leaves means empty real_leaves
                 real_leaves = attendances - real_attendances
@@ -223,6 +231,14 @@ class HrVersion(models.Model):
                     split_leaves += [(leave_interval[0], leave_interval[1], leave_interval[2])]
             leaves = split_leaves
 
+            split_worked_leaves = []
+            for worked_leave_interval in real_worked_leaves:
+                if worked_leave_interval[2] and len(worked_leave_interval[2]) > 1:
+                    split_leaves += [(worked_leave_interval[0], worked_leave_interval[1], l) for l in worked_leave_interval[2]]
+                else:
+                    split_leaves += [(worked_leave_interval[0], worked_leave_interval[1], worked_leave_interval[2])]
+            real_worked_leaves = split_worked_leaves
+
             # Attendances
             for interval in real_attendances:
                 work_entry_type = version._get_interval_work_entry_type(interval)
@@ -236,6 +252,20 @@ class HrVersion(models.Model):
                     ('version_id', version.id),
                     ('company_id', version.company_id.id),
                 ] + version._get_more_vals_attendance_interval(interval))]
+
+            for interval in real_worked_leaves:
+                work_entry_type = version._get_interval_leave_work_entry_type(interval, worked_leaves, bypassing_work_entry_type_codes)
+                # All benefits generated here are using datetimes converted from the employee's timezone
+                version_vals += [dict([
+                    ('name', "%s: %s" % (work_entry_type.name, employee.name)),
+                    ('date_start', interval[0].astimezone(pytz.utc).replace(tzinfo=None)),
+                    ('date_stop', interval[1].astimezone(pytz.utc).replace(tzinfo=None)),
+                    ('work_entry_type_id', work_entry_type.id),
+                    ('employee_id', employee.id),
+                    ('version_id', version.id),
+                    ('company_id', version.company_id.id),
+                    ('state', 'draft'),
+                ] + version._get_more_vals_leave_interval(interval, worked_leaves))]
 
             leaves_over_attendances = Intervals(leaves, keep_distinct=True) & real_leaves
             for interval in real_leaves:

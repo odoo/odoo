@@ -258,6 +258,7 @@ class HrLeave(models.Model):
             ('date_from', '<', max(self.mapped('date_to'))),
             ('date_to', '>', min(self.mapped('date_from'))),
             ('employee_id', 'in', self.employee_id.ids),
+            ('holiday_status_id.allow_request_on_top', '=', False),
             ('state', 'not in', ['cancel', 'refuse']),
         ])
         for holiday in self:
@@ -947,6 +948,7 @@ Contracts:
             'resource_id': self.employee_id.resource_id.id,
             'calendar_id': self.resource_calendar_id.id,
             'time_type': self.holiday_status_id.time_type,
+            'elligible_for_accrual_rate': self.holiday_status_id.elligible_for_accrual_rate,
         }
 
     def _create_resource_leave(self):
