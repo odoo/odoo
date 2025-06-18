@@ -155,12 +155,12 @@ class RPC(Controller):
         This entrypoint is historical and non-compliant, but kept for
         backwards-compatibility.
         """
-        return self._xmlrpc_common(self, service, xmlrpc_handle_exception_string)
+        return self._xmlrpc_common(service, xmlrpc_handle_exception_string)
 
     @route("/xmlrpc/2/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
     def xmlrpc_2(self, service):
         """XML-RPC service that returns faultCode as int."""
-        return self._xmlrpc_common(self, service, xmlrpc_handle_exception_int)
+        return self._xmlrpc_common(service, xmlrpc_handle_exception_int)
 
     @route('/jsonrpc', type='json', auth="none", save_session=False)
     def jsonrpc(self, service, method, args):
