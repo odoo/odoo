@@ -25,7 +25,6 @@ export class VideoSelector extends Component {
             youtube: 'youtube',
             dailymotion: 'dailymotion',
             vimeo: 'vimeo',
-            youku: 'youku',
         };
 
         this.OPTIONS = {
@@ -62,6 +61,10 @@ export class VideoSelector extends Component {
             errorMessage: '',
         });
         this.urlInputRef = useRef('url-input');
+        // hack: Using "autofocus" as reference to locate textarea and then inject supported
+        // platforms information above is not very elegant but works. It is for
+        // backward compatibility.
+        this.textareaRef = useRef("autofocus");
 
         onWillStart(async () => {
             if (this.props.media) {
@@ -78,7 +81,12 @@ export class VideoSelector extends Component {
             }
         });
 
-        onMounted(async () => this.prepareVimeoPreviews());
+        onMounted(async () => {
+            // TODO: remove hack once we have supported platform list
+            // and loop through it to display supported platforms in XML.
+            this.supportedPlatforms();
+            this.prepareVimeoPreviews();
+        });
 
         useAutofocus();
 
@@ -225,6 +233,18 @@ export class VideoSelector extends Component {
                 console.warn(`Could not get video #${videoId} from vimeo: ${err}`);
             }
         }));
+    }
+
+    /**
+     * Injects the supported video platforms list above the url input field.
+     */
+    async supportedPlatforms() {
+        const smallEl = document.createElement("small");
+        smallEl.innerHTML =
+            '<small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Instagram</i></b> and <b><i>Dailymotion</i></b> videos</small>';
+        this.textareaRef.el.parentElement
+            .querySelector('label[for="o_video_text"] + div')
+            .firstChild.replaceWith(smallEl);
     }
 }
 VideoSelector.mediaSpecificClasses = ['media_iframe_video'];
