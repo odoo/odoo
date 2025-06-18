@@ -1,10 +1,11 @@
 /** @odoo-module */
 
 import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
+import { getColorHex } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
 import { formatTime } from "../hoot_utils";
 import { getTitle, setTitle } from "../mock/window";
-import { getColors, onColorSchemeChange } from "./hoot_colors";
+import { onColorSchemeChange } from "./hoot_colors";
 import { HootTestPath } from "./hoot_test_path";
 
 /**
@@ -338,23 +339,24 @@ export class HootStatusPanel extends Component {
         const doneList = [...done];
         const cellSize = width / tests.length;
         const minSize = $ceil(cellSize);
-        const colors = getColors();
 
         while (this.progressBarIndex < done.size) {
             const test = doneList[this.progressBarIndex];
             const x = $floor(this.progressBarIndex * cellSize);
             switch (test.status) {
                 case Test.ABORTED:
-                    ctx.fillStyle = colors.amber;
+                    ctx.fillStyle = getColorHex("amber");
                     break;
                 case Test.FAILED:
-                    ctx.fillStyle = colors.rose;
+                    ctx.fillStyle = getColorHex("rose");
                     break;
                 case Test.PASSED:
-                    ctx.fillStyle = test.config.todo ? colors.purple : colors.emerald;
+                    ctx.fillStyle = test.config.todo
+                        ? getColorHex("purple")
+                        : getColorHex("emerald");
                     break;
                 case Test.SKIPPED:
-                    ctx.fillStyle = colors.cyan;
+                    ctx.fillStyle = getColorHex("cyan");
                     break;
             }
             ctx.fillRect(x, 0, minSize, height);
