@@ -299,6 +299,48 @@ class TestMrpAccount(TestMrpCommon):
             ]
         )
 
+    def test_labor_cost_posting_is_not_rounded_incorrectly(self):
+        """ Test to ensure that labor costs are posted accurately without rounding errors."""
+
+        account_1, account_2 = self.env['account.account'].search([], limit=2)
+        self.mrp_workcenter.write({'costs_hour': 0.01, "expense_account_id": account_1.id})
+        self.mrp_workcenter_1.write({'costs_hour': 0.01, "expense_account_id": account_2.id})
+        self.categ_real.property_valuation = 'real_time'
+        final_product = self.env['product.product'].create({
+            'is_storable': True,
+            'name': 'final product',
+            'categ_id': self.categ_real.id,
+        })
+        self.bom_1.write({
+            "product_id": final_product.id,
+            'operation_ids': [
+                Command.create({'name': 'work', 'workcenter_id': self.mrp_workcenter.id,   'time_cycle': 30.2}),
+                Command.create({'name': 'work', 'workcenter_id': self.mrp_workcenter_1.id, 'time_cycle': 30.2}),
+            ],
+        })
+
+        # Build
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = final_product
+        production_form.bom_id = self.bom_1
+        production_form.product_qty = 1
+        production = production_form.save()
+        production.action_confirm()
+        workorder = production.workorder_ids
+        workorder.duration = 30.2
+        workorder.time_ids.write({'duration': 30.2})  # Ensure that the duration is correct
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
+        production._post_inventory()
+        production.button_mark_done()
+
+        self.assertEqual(production.workorder_ids.mapped('time_ids').mapped('account_move_line_id').mapped('credit'), [
+            0.01, 0.01
+        ])
+
+
 @tagged("post_install", "-at_install")
 class TestMrpAccountMove(TestAccountMoveStockCommon):
 
