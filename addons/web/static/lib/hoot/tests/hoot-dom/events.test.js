@@ -753,11 +753,7 @@ describe(parseUrl(import.meta.url), () => {
 
         for (const event of dragEvents) {
             expect(event.dataTransfer).toBe(dataTransfer, {
-                message: (_, r) => [
-                    r`drag event`,
-                    event.type,
-                    r`should share the same dataTransfer object`,
-                ],
+                message: `drag event "${event.type}" should share the same dataTransfer object`,
             });
         }
     });
@@ -791,11 +787,7 @@ describe(parseUrl(import.meta.url), () => {
 
         for (const event of dragEvents) {
             expect(event.dataTransfer).toBe(dataTransfer, {
-                message: (_, r) => [
-                    r`drag event`,
-                    event.type,
-                    r`should share the same dataTransfer object`,
-                ],
+                message: `drag event "${event.type}" should share the same dataTransfer object`,
             });
         }
     });

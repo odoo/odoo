@@ -1,7 +1,6 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, click } from "@odoo/hoot-dom";
 import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
@@ -69,7 +68,7 @@ const formArchFull = /* xml */ `
         <field name="is_raining_outside"/>
         <field name="allowed_moods" invisible="1"/>
         <field name="allowed_colors" invisible="1"/>
-        <field name="mood" widget="radio_selection_with_filter" 
+        <field name="mood" widget="radio_selection_with_filter"
             options="{'allowed_selection_field': 'allowed_moods'}"/>
         <field name="color" widget="radio_selection_with_filter"
             options="{'allowed_selection_field': 'allowed_colors'}"/>
