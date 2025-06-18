@@ -16,7 +16,7 @@ from os.path import join as opj
 from odoo.http import request, Response
 from odoo import http, tools, _
 from odoo.tools.misc import file_open
-from odoo.tools.image import image_data_uri, binary_to_image
+from odoo.tools.image import image_data_uri, binary_to_image, get_webp_size
 
 
 logger = logging.getLogger(__name__)
@@ -482,8 +482,11 @@ class Web_Editor(http.Controller):
             return stream.get_response()
 
         image = stream.read()
-        img = binary_to_image(image)
-        width, height = tuple(str(size) for size in img.size)
+        if record.mimetype == "image/webp":
+            width, height = tuple(str(size) for size in get_webp_size(image))
+        else:
+            img = binary_to_image(image)
+            width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)
 
         if root.attrib.get("data-forced-size"):
