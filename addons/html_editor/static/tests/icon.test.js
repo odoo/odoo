@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, tick, waitFor } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
@@ -236,4 +236,19 @@ test("Should be able to undo after adding spin effect to an icon", async () => {
     expect(".btn-group[name='icon_spin']").not.toHaveClass("active");
     expect("span.fa-glass").toHaveCount(1);
     expect("span.fa-glass.fa-spin").toHaveCount(0);
+});
+
+test("Icon should be fully selected if the selection covers the ZWS inside the span", async () => {
+    const { el } = await setupEditor('<p><span class="fa fa-glass"></span></p>');
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</p>`
+    );
+    setContent(
+        el,
+        `<p>\ufeff<span class="fa fa-glass" contenteditable="false">[]\u200b</span>\ufeff</p>`
+    );
+    await tick();
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
 });
