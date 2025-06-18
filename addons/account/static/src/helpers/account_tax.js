@@ -981,7 +981,7 @@ export const accountTaxHelpers = {
         };
 
         // Global tax values.
-        const global_grouping_function = (base_line, tax_data) => !!tax_data;
+        const global_grouping_function = (base_line, tax_data) => tax_data !== null;
 
         let base_lines_aggregated_values = this.aggregate_base_lines_tax_details(base_lines, global_grouping_function);
         let values_per_grouping_key = this.aggregate_base_lines_aggregated_values(base_lines_aggregated_values);
