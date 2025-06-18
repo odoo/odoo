@@ -52,7 +52,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.start_tour(self_route, "self_mobile_each_counter_takeaway_in")
         self.start_tour(self_route, "self_mobile_each_counter_takeaway_out")
 
-        self.env['pos.order'].search([]).write({'state': 'cancel'})
+        self.env['pos.order'].search([('state', '=', 'draft')]).write({'state': 'cancel'})
         self.pos_config.write({
             'self_ordering_pay_after': 'meal',
             'self_ordering_service_mode': 'table',
@@ -62,7 +62,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.start_tour(self_route, "self_mobile_meal_table_takeaway_in")
         self.start_tour(self_route, "self_mobile_meal_table_takeaway_out")
 
-        self.env['pos.order'].search([]).write({'state': 'cancel'})
+        self.env['pos.order'].search([('state', '=', 'draft')]).write({'state': 'cancel'})
         self.pos_config.write({
             'self_ordering_service_mode': 'counter',
         })
@@ -74,7 +74,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         # Cancel in meal
         self.start_tour(self_route, "self_order_mobile_meal_cancel")
 
-        self.env['pos.order'].search([]).write({'state': 'cancel'})
+        self.env['pos.order'].search([('state', '=', 'draft')]).write({'state': 'cancel'})
         self.pos_config.write({
             'self_ordering_pay_after': 'each',
         })
