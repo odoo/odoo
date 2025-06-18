@@ -333,9 +333,9 @@ Display a sidebar beside the post content.
             </t>
             <t t-else="">
                 <div class="mb-4 bg-100 py-2 px-3 border" groups="website.group_website_designer">
-                    <h6 class="text-muted"><em>No tags defined</em></h6>
-                    <a role="menuitem" t-attf-href="/odoo/action-{{action}}/{{main_object.id}}?menu_id={{menu or main_object.env.ref('website.menu_website_configuration').id}}"
-                        title='Edit in backend' id="edit-in-backend">Add some</a>
+                    <h6 class="text-muted o_not_editable"><em>No tags defined</em></h6>
+                    <a role="menuitem" t-attf-href="/odoo/website/{{main_object._name}}/{{main_object.id}}"
+                        title='Edit in backend' id="edit-in-backend" class="css_editable_mode_hidden">Add some</a>
                 </div>
             </t>
         </div>
