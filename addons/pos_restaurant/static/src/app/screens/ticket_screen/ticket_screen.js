@@ -106,6 +106,10 @@ patch(TicketScreen.prototype, {
         }
         return super.isDefaultOrderEmpty(...arguments);
     },
+    // Used to override inside `pos_blackbox_be` and `pos_urban_piper`
+    async _doneOrder(order) {
+        return;
+    },
 });
 
 export class TipCell extends Component {
