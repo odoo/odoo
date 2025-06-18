@@ -330,7 +330,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
             'page_structure': True,
             'style': strip_style,              # True = remove style tags/attrs
             'sanitize_style': sanitize_style,  # True = sanitize styling
-            'forms': sanitize_form,            # True = remove form tags
+            'forms': False,
             'remove_unknown_tags': False,
             'comments': False,
             'conditional_comments': sanitize_conditional_comments,   # True = remove conditional comments
@@ -338,6 +338,11 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         }
         if sanitize_tags:
             kwargs.update(SANITIZE_TAGS)
+        if sanitize_form:
+            kwargs['remove_tags'] = list(kwargs.get('remove_tags', []))
+            kwargs['remove_tags'].append('form')
+            kwargs['kill_tags'] = list(kwargs.get('kill_tags', []))
+            kwargs['kill_tags'].extend(['input', 'select', 'textarea'])
 
         if sanitize_attributes:  # We keep all attributes in order to keep "style"
             if strip_classes:
