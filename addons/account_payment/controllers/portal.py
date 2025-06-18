@@ -105,7 +105,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 'payment_reference': batch_name,
                 'landing_route': '/my/invoices/',
                 'transaction_route': '/invoice/transaction/overdue',
-                'installment_state': 'overude',
+                'installment_state': 'overdue',
                 'next_amount_to_pay': total_amount,
             },
             **kwargs)
