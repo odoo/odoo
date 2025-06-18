@@ -174,6 +174,7 @@ export function highlightText(query, text, classes) {
 export function isEmail(value) {
     // http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
     const re =
+        // eslint-disable-next-line no-useless-escape
         /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     return re.test(value);
 }
@@ -212,4 +213,26 @@ export function uuid() {
     window.crypto.getRandomValues(array);
     // Uint8Array to hex
     return [...array].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * Generate a hash, also known as a 'digest', for the given string.
+ * This algorithm is based on the Java hashString method
+ * (see: https://docs.oracle.com/javase/7/docs/api/java/lang/String.html#hashCode()).
+ * Please note that this hash function is non-cryptographic and does not exhibit collision resistance.
+ *
+ * If a cryptographic hash function is required, the digest() function of the SubtleCrypto
+ * interface makes various hash functions available:
+ * https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+export function hashCode(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash += Math.pow(str.charCodeAt(i) * 31, str.length - i);
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
 }
