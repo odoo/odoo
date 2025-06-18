@@ -1810,7 +1810,8 @@ export class Runner {
                     destroy,
                     getFixture: this.fixture.get,
                 });
-                logger.debug(
+                logger.setLevel("debug");
+                logger.logDebug(
                     `Debug mode is active: Hoot helpers available from \`window.${nameSpace}\``
                 );
             }
@@ -1838,10 +1839,7 @@ export class Runner {
             cleanupTime
         );
 
-        if (this.debug) {
-            logger.level = LOG_LEVELS.debug;
-        }
-        enableEventLogs(logger.level === LOG_LEVELS.debug);
+        enableEventLogs(logger.allows("debug"));
         setFrameRate(this.config.fps);
 
         await this._callbacks.call("before-all", this, logger.error);
