@@ -189,8 +189,12 @@ class ThreadController(http.Controller):
                 'last_used': datetime.now(),
                 'ids': canned_response_ids,
             })
-        # TDE todo: should rely on '_get_mail_message_access'
-        thread = self._get_thread_with_access(thread_model, thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs)
+        # creating a message require an access on model, defined by '_get_mail_message_access'
+        # default behavior being to rely on _mail_post_access
+        access_mode = request.env[thread_model].sudo().browse(thread_id)._get_mail_message_access('create')
+        if not access_mode:
+            raise NotFound()
+        thread = self._get_thread_with_access(thread_model, thread_id, mode=access_mode, **kwargs)
         if not thread:
             raise NotFound()
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):

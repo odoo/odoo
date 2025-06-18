@@ -1,4 +1,4 @@
-from odoo import exceptions, fields, models, tools
+from odoo import fields, models, tools
 
 
 class MailTestAccess(models.Model):
@@ -52,14 +52,17 @@ class MailTestAccessCusto(models.Model):
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
-    def _get_mail_message_access(self, res_ids, operation, model_name=None):
-        # customize message creation
-        if operation == "create":
-            if any(record.is_locked for record in self.browse(res_ids)):
-                raise exceptions.AccessError('Cannot post on locked records')
-            else:
-                return "read"
-        return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
+    def _group_mail_message_access(self, message_access):
+        # customize message creation: only unlocked, except admins
+        if message_access == "create" and not self.env.user._is_admin():
+            return {"read": self.filtered(lambda r: not r.is_locked).ids}
+        # customize read: read access on unlocked, write access on locked
+        elif message_access == "read":
+            return {
+                "read": self.filtered(lambda r: not r.is_locked).ids,
+                "write": self.filtered(lambda r: r.is_locked).ids,
+            }
+        return super()._group_mail_message_access(message_access)
 
 
 class MailTestAccessPublic(models.Model):

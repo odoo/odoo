@@ -34,8 +34,10 @@ class PortalChatter(ThreadController):
         thread = self._get_thread_with_access(thread_model, thread_id, **kwargs)
         partner = request.env.user.partner_id
         if thread:
-            mode = request.env[thread_model]._get_mail_message_access([thread_id], "create")
-            has_react_access = self._get_thread_with_access(thread_model, thread_id, mode, **kwargs)
+            access_mode = request.env[thread_model].sudo().browse(thread_id)._get_mail_message_access("create")
+            if not access_mode:
+                raise Forbidden()
+            has_react_access = self._get_thread_with_access(thread_model, thread_id, access_mode, **kwargs)
             can_react = has_react_access
             if request.env.user._is_public():
                 portal_partner = get_portal_partner(
