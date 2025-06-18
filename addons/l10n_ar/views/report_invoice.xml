@@ -9,7 +9,7 @@
                     <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 65px;" alt="Logo"/>
                 </div>
                 <div name="center-upper" class="col-2 text-center" t-att-style="'color: %s;' % o.company_id.primary_color">
-                    <span style="display: inline-block; text-align: center; line-height: 8px;">
+                    <span id="withholding_legend" style="display: inline-block; text-align: center; line-height: 8px;">
                         <h1 style="line-height: 35px;">
                             <strong><span t-out="not pre_printed_report and document_letter or '&#160;'"/></strong>
                         </h1>
@@ -81,7 +81,8 @@
             <t t-set="report_number" t-value="o.l10n_latam_document_number"/>
             <t t-set="pre_printed_report" t-value="report_type == 'pdf' and o.journal_id.l10n_ar_afip_pos_system == 'II_IM'"/>
             <t t-set="document_letter" t-value="o.l10n_latam_document_type_id.l10n_ar_letter"/>
-            <t t-set="document_legend" t-value="o.l10n_latam_document_type_id.code and 'Cod. %02d' % int(o.l10n_latam_document_type_id.code) or ''"/>
+            <t t-set="document_type_code" t-value="o.l10n_latam_document_type_id.code"/>
+            <t t-set="document_legend" t-value="document_type_code and 'Cod. %02d' % int(document_type_code) or ''"/>
             <t t-set="report_name" t-value="o.l10n_latam_document_type_id.report_name"/>
             <t t-set="header_address" t-value="o.journal_id.l10n_ar_afip_pos_partner_id"/>
 
