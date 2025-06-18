@@ -11,7 +11,7 @@ import { onceAllImagesLoaded } from "@website/utils/images";
 
 const NO_OP = () => {};
 
-class AddPageConfirmDialog extends Component {
+export class AddPageConfirmDialog extends Component {
     static template = "website.AddPageConfirmDialog";
     static props = {
         close: Function,

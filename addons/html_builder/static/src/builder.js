@@ -216,9 +216,12 @@ export class Builder extends Component {
     discard() {
         if (this.state.canUndo) {
             this.dialog.add(ConfirmationDialog, {
+                title: _t("Discard all changes?"),
                 body: _t(
-                    "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
+                    "Are you sure you want to discard all your changes? Once you do, they're gone for good."
                 ),
+                confirmLabel: _t("Discard changes"),
+                cancelLabel: _t("Keep editing"),
                 confirm: () => this.props.closeEditor(),
                 cancel: () => {},
             });
