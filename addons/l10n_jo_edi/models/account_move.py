@@ -124,6 +124,14 @@ class AccountMove(models.Model):
             invoice.l10n_jo_edi_state = 'to_send'
         return super()._post(soft)
 
+    def write(self, vals):
+        sent_count = len(self.filtered(lambda move: move.l10n_jo_edi_state == 'sent'))
+        res = super().write(vals)
+        sent_count_diff = len(self.filtered(lambda move: move.l10n_jo_edi_state == 'sent')) - sent_count
+        if self.company_id:
+            self.company_id._increment_jo_icv(sent_count_diff)
+        return res
+
     def _get_name_invoice_report(self):
         # EXTENDS account
         self.ensure_one()
