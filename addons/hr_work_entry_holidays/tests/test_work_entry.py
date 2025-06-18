@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 import pytz
 
+from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
 from odoo.fields import Date
@@ -15,7 +15,7 @@ from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHoliday
 class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
     @classmethod
     def setUpClass(cls):
-        super(TestWorkeEntryHolidaysWorkEntry, cls).setUpClass()
+        super().setUpClass()
         cls.tz = pytz.timezone(cls.richard_emp.tz)
         cls.start = datetime(2015, 11, 1, 1, 0, 0)
         cls.end = datetime(2015, 11, 30, 23, 59, 59)
@@ -100,11 +100,11 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'is_leave': True,
             'code': 'LEAVETEST500'
         })
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.leave.public.holiday'].create({
             'name': 'Public Holiday',
             'date_from': datetime(2023, 2, 6, 0, 0, 0),
             'date_to': datetime(2023, 2, 7, 23, 59, 59),
-            'calendar_id': self.richard_emp.resource_calendar_id.id,
+            'resource_calendar_ids': [Command.link(self.richard_emp.resource_calendar_id.id)],
             'work_entry_type_id': work_entry_type_holiday.id,
         })
         leave = self.env['hr.leave'].create({
