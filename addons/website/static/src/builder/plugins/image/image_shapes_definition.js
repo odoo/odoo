@@ -2,10 +2,10 @@ import { _t } from "@web/core/l10n/translation";
 
 export const imageShapeDefinitions = {
     basic: {
-        label: "Basic",
+        label: _t("Basic"),
         subgroups: {
             geometrics: {
-                label: "Geometrics",
+                label: _t("Geometrics"),
                 shapes: {
                     // todo: find it's proper place when implementing
                     // hovering an image without shape.
@@ -115,7 +115,7 @@ export const imageShapeDefinitions = {
                 },
             },
             geometrics_rounded: {
-                label: "Geometrics Rounded",
+                label: _t("Geometrics Rounded"),
                 shapes: {
                     "html_builder/geometric_round/geo_round_circle": {
                         selectLabel: _t("Circle"),
@@ -236,7 +236,7 @@ export const imageShapeDefinitions = {
                 },
             },
             geometric_panels: {
-                label: "Geometrics Panels",
+                label: _t("Geometrics Panels"),
                 shapes: {
                     "html_builder/panel/panel_duo": {
                         selectLabel: _t("Duo"),
@@ -264,7 +264,7 @@ export const imageShapeDefinitions = {
                 },
             },
             composites: {
-                label: "Composites",
+                label: _t("Composites"),
                 shapes: {
                     "html_builder/composite/composite_double_pill": {
                         selectLabel: _t("Double Pill"),
@@ -286,10 +286,10 @@ export const imageShapeDefinitions = {
         },
     },
     decorative: {
-        label: "Decorative",
+        label: _t("Decorative"),
         subgroups: {
             brushed: {
-                label: "Brushed",
+                label: _t("Brushed"),
                 shapes: {
                     "html_builder/brushed/brush_1": {
                         selectLabel: _t("Brush 1"),
@@ -309,7 +309,7 @@ export const imageShapeDefinitions = {
                 },
             },
             composition: {
-                label: "Composition",
+                label: _t("Composition"),
                 shapes: {
                     "html_builder/composition/composition_organic_line": {
                         selectLabel: _t("Organic Line"),
@@ -387,7 +387,7 @@ export const imageShapeDefinitions = {
                 },
             },
             patterns: {
-                label: "Patterns",
+                label: _t("Patterns"),
                 shapes: {
                     "html_builder/pattern/pattern_organic_cross": {
                         selectLabel: _t("Organic Cross"),
@@ -454,7 +454,7 @@ export const imageShapeDefinitions = {
                 },
             },
             solids: {
-                label: "Solids",
+                label: _t("Solids"),
                 shapes: {
                     "html_builder/solid/solid_blob_1": {
                         selectLabel: _t("Blob 1"),
@@ -503,7 +503,7 @@ export const imageShapeDefinitions = {
                 },
             },
             specials: {
-                label: "Specials",
+                label: _t("Specials"),
                 shapes: {
                     "html_builder/special/special_speed": {
                         selectLabel: _t("Speed"),
@@ -543,10 +543,10 @@ export const imageShapeDefinitions = {
         },
     },
     devices: {
-        label: "Devices",
+        label: _t("Devices"),
         subgroups: {
             devices: {
-                label: "Devices",
+                label: _t("Devices"),
                 shapes: {
                     "html_builder/devices/iphone_front_portrait": {
                         selectLabel: _t("iPhone #1"),
