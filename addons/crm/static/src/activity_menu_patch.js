@@ -33,6 +33,7 @@ patch(ActivityMenu.prototype, {
             // Necessary because activity_ids of mail.activity.mixin has auto_join
             // So, duplicates are faking the count and "Load more" doesn't show up
             context["force_search_count"] = 1;
+            context["active_test"] = 0; // to show lost leads in the activity
             this.action.doAction("crm.crm_lead_action_my_activities", {
                 additionalContext: context,
                 clearBreadcrumbs: true,
