@@ -25,7 +25,6 @@ export class VideoSelector extends Component {
             youtube: 'youtube',
             dailymotion: 'dailymotion',
             vimeo: 'vimeo',
-            youku: 'youku',
         };
 
         this.OPTIONS = {
