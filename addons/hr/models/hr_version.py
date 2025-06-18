@@ -238,11 +238,13 @@ class HrVersion(models.Model):
                     continue
                 if date_start <= contract_date_end and version.contract_date_start <= date_to:
                     raise ValidationError(_(
-                        'You have some overlapping contracts for %(employee)s:\n%(overlaps)s',
+                        'Overlapping contracts for %(employee)s:\n%(overlaps)s',
                         employee=version.employee_id.display_name,
                         overlaps='\n'.join(
-                            [f'Version ({version.display_name}): {version.contract_date_start} - {version.contract_date_end}'] +
-                            [f'Version ({version.display_name}): {date_start} - {date_end}' for version in versions])))
+                            [f'Version {format_date(v.env, v.date_version, date_format="MMM d, y")}: '
+                             f'from {format_date(v.env, v.contract_date_start, date_format="MMM d, y")} '
+                             f'to {format_date(v.env, v.contract_date_end, date_format="MMM d, y") if v.contract_date_end else "Indefinite"}'
+                             for v in (versions | version)])))
             if not contract_period_exists:
                 dates_per_employee[version.employee_id].append((version.contract_date_start, version.contract_date_end, version))
 
