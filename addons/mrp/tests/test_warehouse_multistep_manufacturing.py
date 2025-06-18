@@ -426,7 +426,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             ('location_dest_id', '=', warehouse_stock_location.id),
         ])
         self.assertEqual(byproduct_postprod_move.state, 'assigned')
-        self.assertEqual(byproduct_postprod_move.group_id.name, mo.name)
+        self.assertEqual(byproduct_postprod_move.reference_ids.name, mo.name)
 
     def test_manufacturing_3_steps_trigger_reordering_rules(self):
         with Form(self.warehouse) as warehouse:

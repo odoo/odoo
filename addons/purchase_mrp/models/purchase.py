@@ -73,6 +73,13 @@ class PurchaseOrderLine(models.Model):
                 kit_lines += line
         super(PurchaseOrderLine, self - kit_lines)._compute_qty_received()
 
+    def _prepare_stock_moves(self, picking):
+        res = super()._prepare_stock_moves(picking)
+        if self.order_id.reference_ids.move_ids.production_group_id:
+            for re in res:
+                re['production_group_id'] = self.order_id.reference_ids.move_ids.production_group_id.id
+        return res
+
     def _get_upstream_documents_and_responsibles(self, visited):
         return [(self.order_id, self.order_id.user_id, visited)]
 

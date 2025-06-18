@@ -107,7 +107,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
             msg="Deadline date of manufacturing order should be equal to the deadline of sale picking"
         )
 
-    def test_01_product_route_level_delays(self):
+    def test_01_product_route_mrp_delays(self):
         """ In order to check schedule dates, set product's Manufacturing Lead Time
             and Customer Lead Time and also set warehouse route's delay."""
 
@@ -132,7 +132,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         self.env['stock.rule'].run_scheduler()
 
         # Check manufacturing order created or not
-        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', self.product_1.id)]) 
+        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', self.product_1.id)])
         self.assertTrue(manufacturing_order, 'Manufacturing order should be created.')
 
         # Check the picking crated or not

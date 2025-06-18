@@ -71,6 +71,12 @@ class StockMove(models.Model):
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        if self.sale_line_id:
+            res['sale_line_id'] = self.sale_line_id.id
+        return res
+
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
@@ -93,10 +99,10 @@ class StockPicking(models.Model):
 
     sale_id = fields.Many2one('sale.order', compute="_compute_sale_id", inverse="_set_sale_id", string="Sales Order", store=True, index='btree_not_null')
 
-    @api.depends('move_ids.reference_ids')
+    @api.depends('move_ids.sale_line_id')
     def _compute_sale_id(self):
         for picking in self:
-            picking.sale_id = picking.reference_ids.sale_ids[:1]
+            picking.sale_id = picking.move_ids.sale_line_id.order_id
 
     @api.depends('move_ids.sale_line_id')
     def _compute_move_type(self):
@@ -135,7 +141,8 @@ class StockPicking(models.Model):
         res = super()._action_done()
         sale_order_lines_vals = []
         for move in self.move_ids:
-            sale_order = move.picking_id.sale_id
+            ref_sale = move.picking_id.reference_ids.sale_ids
+            sale_order = ref_sale and ref_sale[0] or move.sale_line_id.order_id
             # Creates new SO line only when pickings linked to a sale order and
             # for moves with qty. done and not already linked to a SO line.
             if not sale_order or move.sale_line_id or not move.picked or not (

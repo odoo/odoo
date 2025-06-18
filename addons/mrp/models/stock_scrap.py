@@ -87,6 +87,6 @@ class StockScrap(models.Model):
         values = values or {}
         if self.production_id and self.production_id.production_group_id:
             values.update({
-                'group_id': self.production_id.procurement_group_id,
+                'production_group_id': self.production_id.production_group_id.id,
             })
         super().do_replenish(values)

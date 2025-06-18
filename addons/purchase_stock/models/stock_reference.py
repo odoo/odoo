@@ -6,4 +6,4 @@ class StockReference(models.Model):
 
     purchase_ids = fields.Many2many(
         'purchase.order', 'stock_reference_purchase_rel', 'reference_id',
-        'purchase_id', string="Purchases")
+        'purchase_id', string="Purchases", copy=False)

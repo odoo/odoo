@@ -256,7 +256,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(len(picking_delivery), 1)
         self.assertEqual(len(picking_delivery.move_ids), 2)
         self.assertEqual(picking_delivery.origin, picking_receipt.name)
-        self.assertEqual(picking_delivery.partner_id, picking_receipt.partner_id)
+        self.assertEqual(picking_delivery.partner_id, picking_receipt.partner_id.parent_id)
 
         # The picking should be a delivery order
         wh = picking_receipt.picking_type_id.warehouse_id
