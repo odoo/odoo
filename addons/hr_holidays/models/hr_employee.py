@@ -247,8 +247,6 @@ class HrEmployee(models.Model):
         if 'parent_id' in values or 'department_id' in values:
             today_date = fields.Datetime.now()
             hr_vals = {}
-            if values.get('parent_id') is not None:
-                hr_vals['manager_id'] = values['parent_id']
             if values.get('department_id') is not None:
                 hr_vals['department_id'] = values['department_id']
             holidays = self.env['hr.leave'].sudo().search([
@@ -258,6 +256,8 @@ class HrEmployee(models.Model):
                 ('employee_id', 'in', self.ids),
             ])
             holidays.write(hr_vals)
+            if values.get('parent_id') is not None:
+                hr_vals['manager_id'] = values['parent_id']
             allocations = self.env['hr.leave.allocation'].sudo().search([
                 ('state', '=', 'confirm'),
                 ('employee_id', 'in', self.ids),
