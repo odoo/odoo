@@ -1,3 +1,10 @@
+// TODO: this code should probably be converted into an interaction. At the
+// moment, the `data-bs-auto-close` attribute of the dropdown is set both by
+// the code in this file and by the `website.dropdown_edit` interaction. Because
+// of a timing issue (`editor_enable` being set too late), at the moment both
+// this code and the interaction are needed to ensure the correct behaviour in
+// any possible case. See commit message for more details.
+
 const BREAKPOINT_SIZES = {sm: '575', md: '767', lg: '991', xl: '1199', xxl: '1399'};
 
 let ignoreDOMMutations;
