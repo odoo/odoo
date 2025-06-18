@@ -65,6 +65,14 @@ export class HighlightPlugin extends Plugin {
         selectionchange_handlers: this.updateSelectedHighlight.bind(this),
         collapsed_selection_toolbar_predicate: (selectionData) =>
             !!closestElement(selectionData.editableSelection.anchorNode, ".o_text_highlight"),
+        remove_format_handlers: () => {
+            const highlightedNodes = this.getSelectedHighlightNodes();
+            for (const node of new Set(highlightedNodes)) {
+                for (const svg of node.querySelectorAll(".o_text_highlight_svg")) {
+                    svg.remove();
+                }
+            }
+        },
     };
 
     setup() {
@@ -168,10 +176,7 @@ export class HighlightPlugin extends Plugin {
     getSelectedHighlightNodes() {
         return this.dependencies.selection
             .getTargetedNodes()
-            .map((n) => {
-                const el = n.nodeType === Node.ELEMENT_NODE ? n : n.parentElement;
-                return el.closest(".o_text_highlight");
-            })
+            .map((n) => closestElement(n, ".o_text_highlight"))
             .filter(Boolean);
     }
     /**
