@@ -47,7 +47,7 @@ export class CarouselOptionPlugin extends Plugin {
             Component: CarouselItemHeaderMiddleButtons,
             selector: carouselItemOptionSelector,
             props: {
-                addSlide: (editingElement) => this.addSlide(editingElement.closest(".carousel")),
+                addSlide: (editingElement) => this.addSlide(editingElement),
                 removeSlide: async (editingElement) => {
                     // Check if the slide is still in the DOM
                     // TODO: find a more general way to handle target element already removed by an option

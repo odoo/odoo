@@ -106,9 +106,36 @@ registerWebsitePreviewTour(
         // Reorder the slides and make it the second one.
         changeOption("Slide (3/3)", "[data-action-value='prev']"),
         checkSlides(3, 2),
+        // Ensure quickly adding/removing slides doesn’t give a traceback
+        // (Includes delays to better simulate real user interactions and
+        // expose potential race conditions.)
+        {
+            content: "Add a slide",
+            trigger: "button.btn.btn-success[aria-label='Add Slide']",
+            async run(helpers) {
+                await helpers.click()
+                await delay(360);
+            },
+        },
+        {
+            content: "Remove a slide",
+            trigger: "button[aria-label='Remove Slide']",
+            async run(helpers) {
+                await helpers.click();
+                await delay(360);
+            },
+        },
+        {
+            content: "Add a slide",
+            trigger: "button.btn.btn-success[aria-label='Add Slide']",
+            async run(helpers) {
+                await helpers.click();
+                await delay(360);
+            },
+        },
         ...clickOnSave(),
         // Check that saving always sets the first slide as active.
-        checkSlides(3, 1),
+        checkSlides(4, 1),
     ]
 );
 

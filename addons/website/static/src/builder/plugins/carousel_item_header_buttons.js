@@ -25,8 +25,10 @@ export class CarouselItemHeaderMiddleButtons extends Component {
     }
 
     addSlide() {
+        const carouselEl = this.env.getEditingElement().closest(".carousel");
+
         this.callOperation(async () => {
-            await this.props.addSlide(this.env.getEditingElement());
+            await this.props.addSlide(carouselEl);
         });
     }
 
