@@ -593,9 +593,9 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    expect("[title='Disconnect']").not.toBeVisible();
-    expect("[title='Mute']").not.toBeVisible();
-    expect("[title='Deafen']").not.toBeVisible();
+    expect("[title='Disconnect']").not.toHaveCount();
+    expect("[title='Mute']").not.toHaveCount();
+    expect("[title='Deafen']").not.toHaveCount();
     broadcastChannel.postMessage({
         type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
         hostedChannelId: channelId,

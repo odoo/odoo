@@ -2342,7 +2342,7 @@ test("do not restore after action button clicked on desktop", async () => {
     expect(".o_statusbar_buttons button[name=do_something]").toBeVisible();
 
     await contains(".o_statusbar_buttons button[name=do_something]").click();
-    expect(".o_form_buttons_view .o_form_button_save").not.toBeVisible();
+    expect(".o_form_buttons_view .o_form_button_save").not.toHaveCount();
 });
 
 test.tags("mobile");
@@ -2367,7 +2367,7 @@ test("do not restore after action button clicked on mobile", async () => {
     expect(".o-dropdown-item-unstyled-button button[name=do_something]").toBeVisible();
 
     await contains(".o-dropdown-item-unstyled-button button[name=do_something]").click();
-    expect(".o_form_buttons_view .o_form_button_save").not.toBeVisible();
+    expect(".o_form_buttons_view .o_form_button_save").not.toHaveCount();
 });
 
 test("debugManager is active for views", async () => {

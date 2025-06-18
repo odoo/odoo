@@ -12,6 +12,7 @@ import {
 } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { getTimePickers } from "@web/../tests/core/datetime/datetime_test_helpers";
+import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 import {
     clickSave,
     contains,
@@ -23,7 +24,6 @@ import {
     onRpc,
     pagerNext,
 } from "../../web_test_helpers";
-import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 
 function getPickerCell(expr) {
     return queryAll(`.o_datetime_picker .o_date_item_cell:contains(/^${expr}$/)`);
@@ -174,8 +174,7 @@ test("Date field - interaction with the datepicker", async () => {
 
     // open the first one
     await contains("input[data-field=date]").click();
-    let datepicker = queryFirst(".o_datetime_picker");
-    expect(datepicker).toBeDisplayed();
+    expect(".o_datetime_picker:first").toBeDisplayed();
     expect(".o_select_start").toHaveText("3");
     expect(".o_select_end").toHaveText("8");
 
@@ -187,15 +186,14 @@ test("Date field - interaction with the datepicker", async () => {
     await contains(".o_form_view").click();
 
     // Check date after change
-    expect(datepicker).not.toBeDisplayed();
+    expect(".o_datetime_picker:first").not.toHaveCount();
     expect("input[data-field=date]").toHaveValue("02/16/2017");
     expect("input[data-field=date_end]").toHaveValue("03/12/2017");
 
     // Try to change range with end date
     await contains("input[data-field=date_end]").click();
-    datepicker = queryFirst(".o_datetime_picker");
 
-    expect(datepicker).toBeDisplayed();
+    expect(".o_datetime_picker:first").toBeDisplayed();
     expect(".o_select_start").toHaveText("16");
     expect(".o_select_end").toHaveText("12");
 
@@ -206,7 +204,7 @@ test("Date field - interaction with the datepicker", async () => {
     await contains(".o_form_view").click();
 
     // Check date after change
-    expect(datepicker).not.toBeDisplayed();
+    expect(".o_datetime_picker:first").not.toHaveCount();
     expect("input[data-field=date]").toHaveValue("02/13/2017");
     expect("input[data-field=date_end]").toHaveValue("03/18/2017");
 
@@ -540,8 +538,7 @@ test("Datetime field - open datepicker and switch page", async () => {
     // open datepicker
     await contains("input[data-field=datetime]").click();
 
-    let datepicker = queryFirst(".o_datetime_picker");
-    expect(datepicker).toBeDisplayed();
+    expect(".o_datetime_picker:first").toBeDisplayed();
 
     // Start date: id=1
     expect(".o_select_start").toHaveText("8");
@@ -556,7 +553,7 @@ test("Datetime field - open datepicker and switch page", async () => {
 
     // Close picker
     await contains(".o_form_view").click();
-    expect(datepicker).not.toBeDisplayed();
+    expect(".o_datetime_picker:first").not.toHaveCount();
 
     await pagerNext();
 
@@ -567,8 +564,7 @@ test("Datetime field - open datepicker and switch page", async () => {
     // open date range picker
     await contains("input[data-field=datetime]").click();
 
-    datepicker = queryFirst(".o_datetime_picker");
-    expect(datepicker).toBeDisplayed();
+    expect(".o_datetime_picker:first").toBeDisplayed();
 
     // Start date: id=2
     expect(".o_select_start").toHaveText("10");
