@@ -46,16 +46,43 @@ messageActionsRegistry
         sequence: 10,
     })
     .add("reply-to", {
-        condition: (component) => component.props.message.canReplyTo(component.props.thread),
+        condition: (component) =>
+            component.props.message.canReplyTo(component.props.thread) ||
+            (component.env.inChatter && component.props.message.message_type === "comment"),
         icon: "fa fa-reply",
         title: _t("Reply"),
         onClick: (component) => {
             const message = toRaw(component.props.message);
             const thread = toRaw(component.props.thread);
+            const authorPersona = message.author;
+            const composer = thread.composer;
+            const currentText = composer.text || "";
+            const mentionText =
+                authorPersona?.userId !== component.store.self.userId
+                    ? `@${authorPersona?.name} `
+                    : "";
             if (message.eq(thread.composer.replyToMessage)) {
                 thread.composer.replyToMessage = undefined;
+                if (currentText.startsWith(mentionText)) {
+                    composer.text = currentText.slice(mentionText.length);
+                } else {
+                    composer.text = currentText;
+                }
             } else {
                 thread.composer.replyToMessage = message;
+                if (authorPersona) {
+                    composer.mentionedPartners.push(authorPersona);
+                }
+                let newText = currentText;
+                if (component.env.inChatter && !currentText.includes(mentionText)) {
+                    newText = mentionText + newText;
+                }
+                composer.text = newText;
+                composer.selection.start = newText.length;
+                composer.selection.end = newText.length;
+                if (component.env.inChatter && component.env.inChatter.composerType !== "note") {
+                    component.env.inChatter.composerType = "note";
+                }
             }
         },
         sequence: (component) =>
