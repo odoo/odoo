@@ -15,7 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from odoo import http, tools
 from odoo.http import STATIC_CACHE, Response, request
-from odoo.tools.image import binary_to_image, image_data_uri
+from odoo.tools.image import binary_to_image, image_data_uri, get_webp_size
 from odoo.tools.misc import file_open
 
 try:
@@ -488,8 +488,11 @@ class Web_Editor(http.Controller):
             return stream.get_response()
 
         image = stream.read()
-        img = binary_to_image(image)
-        width, height = tuple(str(size) for size in img.size)
+        if record.mimetype == "image/webp":
+            width, height = tuple(str(size) for size in get_webp_size(image))
+        else:
+            img = binary_to_image(image)
+            width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)
 
         if root.attrib.get("data-forced-size"):
