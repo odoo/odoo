@@ -584,6 +584,16 @@ class TestHrEmployee(TestHrCommon):
         self.assertTrue(days)
         self.assertFalse(days['2025-01-04'])
 
+    def test_user_creation_from_employee_with_invalid_email(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Test Employee',
+            'work_email': 'test'
+        })
+
+        action = employee.action_create_users()
+        self.assertEqual(action['params']['message'], f'You need to set a valid work email address for {employee.name}')
+        self.assertFalse(employee.user_id)
+
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeWebJson(HttpCase):
