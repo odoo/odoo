@@ -852,3 +852,202 @@ class TestSaleMrpKitBom(TransactionCase):
         picking.button_validate()
 
         self.assertEqual(so.order_line.qty_delivered, 1)
+<<<<<<< 4bdc5af112b34782eb3c8492a5a8f4f52931a9cf
+||||||| 2cdc41c012f637849ba030989ce928b6b1152e7e
+
+    def test_SO_kit_delivery_change_to_comp_packaging(self):
+        """
+        Test that when selling a kit, and changing the packaging on the stock move
+        to the packaging of the comp, the correct quantity is computed when printing
+        """
+        grp_pack = self.env.ref('product.group_stock_packaging')
+        self.env.user.write({'groups_id': [(4, grp_pack.id, 0)]})
+        kit_product = self._create_product('Kit', 'product', 1)
+        comp_product = self._create_product('Component', 'product', 1)
+        comp_product.uom_id = self.env.ref('uom.product_uom_gram').id
+        packaging_final_prod = self.env['product.packaging'].create({
+            'name': "packs of 9",
+            'product_id': kit_product.id,
+            'qty': 9.0,
+        })
+        packaging_comp = self.env['product.packaging'].create({
+            'name': "pack of 0.45 g",
+            'product_id': comp_product.id,
+            'product_uom_id': self.env.ref('uom.product_uom_gram').id,
+            'qty': 0.45,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': comp_product.id,
+                    'product_qty': 0.1,
+                    'product_uom_id': self.env.ref('uom.product_uom_gram').id
+
+                }),
+            ]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 9,
+                    'product_packaging_id': packaging_final_prod.id
+            })],
+        })
+        so.action_confirm()
+        so.picking_ids.move_ids.product_packaging_id = packaging_comp
+        so.picking_ids.move_ids.write({'quantity': 0.9})
+
+        so.picking_ids.button_validate()
+        aggr_prod_qty = so.picking_ids.move_ids.move_line_ids[0]._get_aggregated_product_quantities(kit_name='Kit')
+        key = f"{comp_product.id}_{comp_product.display_name}__{comp_product.uom_id.id}_{packaging_comp}_{kit_product.bom_ids.id}"
+        self.assertEqual(aggr_prod_qty[key]['packaging_quantity'], 2)
+
+    def test_product_packaging_qty_no_packaging(self):
+        """Check ZeroDivisionError when packaging is missing on kit component."""
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        kit_product = self._create_product('Kit Product', True, price=1.0)
+        comp_A = self._create_product('Component A', True, 1.0)
+        comp_B = self._create_product('Component B', True, 1.0)
+        kit_product_packaging = self.env['product.packaging'].create({
+            'name': 'kit product packaging',
+            'product_id': kit_product.id,
+            'qty': 2.0,
+        })
+        self.env['mrp.bom'].create({
+            'product_id': kit_product.id,
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': comp_A.id, 'product_qty': 2.0}),
+                Command.create({'product_id': comp_B.id, 'product_qty': 2.0}),
+            ],
+        })
+        for product in (comp_A, comp_B):
+            self.env['stock.quant']._update_available_quantity(product, stock_location, quantity=4)
+        delivery_picking = self.env['stock.picking'].create({
+            'name': 'TPPQNP delivery picking',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'move_ids': [Command.create({
+                'name': 'TPPQNP move',
+                'product_id': kit_product.id,
+                'product_uom_qty': 1.0,
+                'product_packaging_id': kit_product_packaging.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery_picking.action_confirm()
+        move = delivery_picking.move_ids[0]
+        move.product_packaging_id = False
+        self.assertEqual(move.move_line_ids.product_packaging_qty, 0.0)
+=======
+
+    def test_SO_kit_delivery_change_to_comp_packaging(self):
+        """
+        Test that when selling a kit, and changing the packaging on the stock move
+        to the packaging of the comp, the correct quantity is computed when printing
+        before and after validating
+        """
+        grp_pack = self.env.ref('product.group_stock_packaging')
+        self.env.user.write({'groups_id': [(4, grp_pack.id, 0)]})
+        kit_product = self._create_product('Kit', 'product', 1)
+        comp_product = self._create_product('Component', 'product', 1)
+        comp_product.uom_id = self.env.ref('uom.product_uom_gram').id
+        packaging_final_prod = self.env['product.packaging'].create({
+            'name': "packs of 9",
+            'product_id': kit_product.id,
+            'qty': 9.0,
+        })
+        packaging_comp = self.env['product.packaging'].create({
+            'name': "pack of 0.45 g",
+            'product_id': comp_product.id,
+            'product_uom_id': self.env.ref('uom.product_uom_gram').id,
+            'qty': 0.45,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': comp_product.id,
+                    'product_qty': 0.1,
+                    'product_uom_id': self.env.ref('uom.product_uom_gram').id
+
+                }),
+            ]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 9,
+                    'product_packaging_id': packaging_final_prod.id
+            })],
+        })
+        so.action_confirm()
+        # check that before validating, the product packaging quantity is good, both if we keep the final product packages
+        # and if we change to a packages of the component
+        so.picking_ids.move_ids.write({'quantity': 0.9})
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[0].product_packaging_qty, 1)
+        so.picking_ids.move_ids.product_packaging_id = packaging_comp
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[0].product_packaging_qty, 2)
+        # check that after validating, if the packages was changed to a package of the component the quantity is good
+        so.picking_ids.button_validate()
+        aggr_prod_qty = so.picking_ids.move_ids.move_line_ids[0]._get_aggregated_product_quantities(kit_name='Kit')
+        key = f"{comp_product.id}_{comp_product.display_name}__{comp_product.uom_id.id}_{packaging_comp}_{kit_product.bom_ids.id}"
+        self.assertEqual(aggr_prod_qty[key]['packaging_quantity'], 2)
+
+    def test_product_packaging_qty_no_packaging(self):
+        """Check ZeroDivisionError when packaging is missing on kit component."""
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        kit_product = self._create_product('Kit Product', True, price=1.0)
+        comp_A = self._create_product('Component A', True, 1.0)
+        comp_B = self._create_product('Component B', True, 1.0)
+        kit_product_packaging = self.env['product.packaging'].create({
+            'name': 'kit product packaging',
+            'product_id': kit_product.id,
+            'qty': 2.0,
+        })
+        self.env['mrp.bom'].create({
+            'product_id': kit_product.id,
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': comp_A.id, 'product_qty': 2.0}),
+                Command.create({'product_id': comp_B.id, 'product_qty': 2.0}),
+            ],
+        })
+        for product in (comp_A, comp_B):
+            self.env['stock.quant']._update_available_quantity(product, stock_location, quantity=4)
+        delivery_picking = self.env['stock.picking'].create({
+            'name': 'TPPQNP delivery picking',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'move_ids': [Command.create({
+                'name': 'TPPQNP move',
+                'product_id': kit_product.id,
+                'product_uom_qty': 1.0,
+                'product_packaging_id': kit_product_packaging.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery_picking.action_confirm()
+        move = delivery_picking.move_ids[0]
+        move.product_packaging_id = False
+        self.assertEqual(move.move_line_ids.product_packaging_qty, 0.0)
+>>>>>>> 29b9e1d2b4c7ad75de73bc2fb0d0f363c155acfd
