@@ -55,3 +55,13 @@ test("Can click on delete", async function () {
     await contains(".o_badge:first .o_delete").click();
     expect.verifySteps(["update"]);
 });
+
+test("Cannot enter free text in the input", async function () {
+    const env = await makeMockEnv();
+    await mountBooleanMultiSelector(env, {
+        selectedValues: [],
+        update: () => {},
+    });
+    const input = getFixture().querySelector("input");
+    expect(input.getAttribute("maxlength")).toBe("0");
+});
