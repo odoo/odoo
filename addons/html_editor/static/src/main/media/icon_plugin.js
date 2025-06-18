@@ -3,6 +3,8 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "../font/color_selector";
 import { MediaDialog } from "./media_dialog/media_dialog";
+import { isZWS } from "@html_editor/utils/dom_info";
+import { nodeSize } from "@html_editor/utils/position";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -49,14 +51,7 @@ export class IconPlugin extends Plugin {
         toolbar_namespaces: [
             {
                 id: "icon",
-                isApplied: (targetedNodes) =>
-                    targetedNodes.every(
-                        (node) =>
-                            // All nodes should be icons, its ZWS child or its ancestors
-                            node.classList?.contains("fa") ||
-                            node.parentElement.classList.contains("fa") ||
-                            (node.querySelector?.(".fa") && node.isContentEditable !== false)
-                    ),
+                isApplied: this.isSelectingOnlyIcons.bind(this),
             },
         ],
         toolbar_groups: [
@@ -134,6 +129,9 @@ export class IconPlugin extends Plugin {
                 text: _t("Replace"),
             },
         ],
+        /** Handlers */
+        selectionchange_handlers: this.normalizeIconSelection.bind(this),
+        /** Overrides */
         color_apply_overrides: this.applyIconColor.bind(this),
     };
 
@@ -147,6 +145,35 @@ export class IconPlugin extends Plugin {
     getTargetedIcon() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
         return targetedNodes.find((node) => node.classList?.contains?.("fa"));
+    }
+
+    isSelectingOnlyIcons(targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        return (
+            targetedNodes.length &&
+            targetedNodes.every(
+                (node) =>
+                    // All nodes should be icons, its ZWS child or its ancestors
+                    node.classList?.contains("fa") ||
+                    node.parentElement.classList.contains("fa") ||
+                    (node.querySelector?.(".fa") && node.isContentEditable !== false)
+            )
+        );
+    }
+
+    normalizeIconSelection() {
+        const { anchorNode, focusNode } = this.document.getSelection();
+        if (this.isSelectingOnlyIcons() && (isZWS(anchorNode) || isZWS(focusNode))) {
+            const selectedIcon = this.getSelectedIcon();
+            this.dependencies.selection.setSelection(
+                {
+                    anchorNode: selectedIcon,
+                    anchorOffset: 0,
+                    focusNode: selectedIcon,
+                    focusOffset: nodeSize(selectedIcon),
+                },
+                { normalize: false }
+            );
+        }
     }
 
     resizeIcon({ size }) {
