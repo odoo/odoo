@@ -911,6 +911,9 @@ class AccountPayment(models.Model):
     def write(self, vals):
         if vals.get('state') in ('in_process', 'paid') and not vals.get('move_id'):
             self.filtered(lambda p: not p.move_id)._generate_journal_entry()
+            for payment in self:
+                if payment.move_id.state == 'draft' and payment.name and payment.move_id.name == '/' and payment.journal_id.code != 'CSH1':
+                    payment.move_id.name = payment.name
             self.move_id.filtered(lambda m: m.state == 'draft').action_post()
 
         res = super().write(vals)
