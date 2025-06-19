@@ -50,9 +50,12 @@ export class WOStateDropdown extends Component {
             selectedWorkorders = [this.props.record];
         }
         let ids = selectedWorkorders.filter((wo) => !([state, 'done'].includes(wo.data.state) || wo.data.production_state == 'done')).map((wo) => wo.resId)
+        let res = false;
         if (ids && ids.length > 0) {
-            await this.callOrm("set_state", [state], ids);
+            res = await this.callOrm("set_state", [state], ids);
         }
+        console.log(res);
+        this.handleWizard(res);
     }
 
 
@@ -65,11 +68,19 @@ export class WOStateDropdown extends Component {
             ids = [this.props.record.resId];
         }
         if (args !== undefined) {
-            await this.orm.call("mrp.workorder", functionName, [ids, ...args]);
+            return await this.orm.call("mrp.workorder", functionName, [ids, ...args]);
         } else {
-            await this.orm.call("mrp.workorder", functionName, [ids]);
+            return await this.orm.call("mrp.workorder", functionName, [ids]);
         }
-        await this.reload();
+    }
+
+    handleWizard(res){
+        if (res && res.binding_type == "action") { // && res.res_model === "mrp.workorder.incomplete.qty"
+            return this.action.doAction(res, { onClose: this.reload.bind(this) });
+        }
+        else{
+            this.reload();
+        }
     }
 }
 
