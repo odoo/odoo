@@ -868,7 +868,7 @@ class AccountMove(models.Model):
         """ Check the proxy for incoming invoices for a specified proxy user.
             :return: True if there remain some invoices on the server to be downloaded, False otherwise.
         """
-        server_url = proxy_user._get_server_url()
+        server_url = proxy_user._get_ksef_server_url()
 
         # Download invoices
         invoices_data = {}
@@ -1687,7 +1687,7 @@ class AccountMove(models.Model):
         if proxy_user.edi_mode == 'demo':
             return {file_data['filename']: {'id_transaction': 'demo'} for file_data in files}
 
-        server_url = proxy_user._get_server_url()
+        server_url = proxy_user._get_ksef_server_url()
         results = proxy_user._make_request(
             f'{server_url}/api/l10n_it_edi/1/out/SdiRiceviFile',
             params={'files': files})
@@ -1714,7 +1714,7 @@ class AccountMove(models.Model):
                     message=_("The e-invoice file %s has been sent in Demo EDI mode.", filename))
             return
 
-        server_url = proxy_user._get_server_url()
+        server_url = proxy_user._get_ksef_server_url()
         try:
             notifications = proxy_user._make_request(
                 f'{server_url}/api/l10n_it_edi/1/in/TrasmissioneFatture',

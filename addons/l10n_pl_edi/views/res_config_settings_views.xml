@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_l10n_pl_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.pl.edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_vendor_bills']" position="after">
+                <block title="Polish KSeF EDI" id="l10n_pl_edi_block" invisible="company_country_code != 'PL'">
+                    <setting id="poland_edi_setting">
+                        <div>
+                            <div class="text-muted">
+                                Configure your credentials for the Polish National e-Invoicing System (KSeF).
+                            </div>
+                            <div class="content-group mt16">
+                                <div class="row">
+                                    <label for="l10n_pl_edi_mode" string="Environment" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_pl_edi_mode" class="oe_inline" widget="radio"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="l10n_pl_edi_certificate" string="Private Key" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_pl_edi_certificate" widget="binary" filename="'private.key'" class="oe_inline"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="l10n_pl_access_token" string="Auth Token" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_pl_access_token" class="oe_inline" readonly="1"/>
+                                </div>
+                                <div class="mt16">
+                                    <button
+                                        name="authenticate_user_for_ksef"
+                                        string="Authenticate &amp; Get Token"
+                                        type="object"
+                                        class="btn-primary"
+                                        help="Generates a challenge and uses your certificate to request a new authorization token."/>
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
