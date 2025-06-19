@@ -102,9 +102,7 @@ export function resizeTextArea(textarea, options = {}) {
         borderTopWidth: 0,
         borderBottomWidth: 0,
         paddingTop: 0,
-        paddingRight: style.paddingRight,
         paddingBottom: 0,
-        paddingLeft: style.paddingLeft,
     });
     textarea.style.height = "auto";
     const height = Math.max(minimumHeight, textarea.scrollHeight + heightOffset);
