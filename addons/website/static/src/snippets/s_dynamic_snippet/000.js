@@ -57,9 +57,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
         return this._super.apply(this, arguments)
             .then(() => {
                 this._setupSizeChangedManagement(true);
-                this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
                 this._render();
-                this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
             });
     },
     /**
@@ -67,11 +65,9 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @override
      */
     destroy: function () {
-        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
         this._toggleVisibility(false);
         this._setupSizeChangedManagement(false);
         this._clearContent();
-        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         this._super.apply(this, arguments);
     },
 
@@ -87,7 +83,13 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this.trigger_up('widgets_stop_request', {
             $target: $templateArea,
         });
-        $templateArea.html('');
+        // The children are removed one by one, otherwise, if the snippet is
+        // removed and then "undo" is clicked, the rows are reordered in
+        // reverse. TODO: The observer should handle this properly without this
+        // workaround.
+        while ($templateArea[0].firstChild) {
+            $templateArea[0].removeChild($templateArea[0].firstChild);
+        }
     },
     /**
      * Method to be overridden in child components if additional configuration elements
