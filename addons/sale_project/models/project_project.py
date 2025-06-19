@@ -294,7 +294,7 @@ class ProjectProject(models.Model):
                 'name': _('Cost of Goods Sold Items'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'account.move.line',
-                'views': [[False, 'tree'], [False, 'form']],
+                'views': [[False, 'list'], [False, 'form']],
                 'domain': [('move_id', '=', res_id), ('display_type', '=', 'cogs')],
                 'context': {'create': False, 'edit': False},
             }
