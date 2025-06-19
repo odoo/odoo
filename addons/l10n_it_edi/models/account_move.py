@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from base64 import b64encode
+from base64 import b64encode, b64decode
 from collections import defaultdict
 from datetime import datetime
 import logging
@@ -82,12 +82,7 @@ class AccountMove(models.Model):
     )
     l10n_it_edi_transaction = fields.Char(copy=False, string="FatturaPA Transaction")
     l10n_it_edi_attachment_file = fields.Binary(copy=False, attachment=True)
-    l10n_it_edi_attachment_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="FatturaPA Attachment",
-        compute=lambda self: self._compute_linked_attachment_id('l10n_it_edi_attachment_id', 'l10n_it_edi_attachment_file'),
-        depends=['l10n_it_edi_attachment_file'],
-    )
+    l10n_it_edi_attachment_name = fields.Char(string="FatturaPA Attachment")
     l10n_it_edi_proxy_mode = fields.Selection(related="company_id.l10n_it_edi_proxy_user_id.edi_mode", depends=['company_id'])
     l10n_it_edi_button_label = fields.Char(compute="_compute_l10n_it_edi_button_label")
     l10n_it_edi_is_self_invoice = fields.Boolean(compute="_compute_l10n_it_edi_is_self_invoice")
@@ -374,9 +369,10 @@ class AccountMove(models.Model):
             }
 
         attachment_vals = self._l10n_it_edi_get_attachment_values(pdf_values=None)
-        self.env['ir.attachment'].create(attachment_vals)
-        self.invalidate_recordset(fnames=['l10n_it_edi_attachment_id', 'l10n_it_edi_attachment_file'])
-        self.message_post(attachment_ids=self.l10n_it_edi_attachment_id.ids)
+        self.l10n_it_edi_attachment_file = b64encode(attachment_vals['raw'])
+        self.l10n_it_edi_attachment_name = attachment_vals['name']
+        self.invalidate_recordset(fnames=['l10n_it_edi_attachment_name', 'l10n_it_edi_attachment_file'])
+        self.message_post(attachments=[(self.l10n_it_edi_attachment_name, attachment_vals['raw'])])
         self._l10n_it_edi_send({self: attachment_vals})
         self.is_move_sent = True
 
@@ -398,18 +394,18 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         self.ensure_one()
         if filetype == 'fatturapa':
-            if fatturapa_attachment := self.l10n_it_edi_attachment_id:
+            if fatturapa_attachment := self.l10n_it_edi_attachment_file:
                 return {
-                    'filename': fatturapa_attachment.name,
+                    'filename': self.l10n_it_edi_attachment_name,
                     'filetype': 'xml',
-                    'content': fatturapa_attachment.raw,
+                    'content': b64decode(fatturapa_attachment),
                 }
         return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
 
     def get_extra_print_items(self):
         # EXTENDS 'account' - add possibility to download all FatturaPA XML files
         print_items = super().get_extra_print_items()
-        if self.l10n_it_edi_attachment_id:
+        if self.filtered('l10n_it_edi_attachment_file'):
             print_items.append({
                 'key': 'download_xml_fatturapa',
                 'description': _('XML FatturaPA'),
@@ -418,7 +414,7 @@ class AccountMove(models.Model):
         return print_items
 
     def action_invoice_download_fatturapa(self):
-        if invoices_with_fatturapa := self.filtered('l10n_it_edi_attachment_id'):
+        if invoices_with_fatturapa := self.filtered('l10n_it_edi_attachment_file'):
             return {
                 'type': 'ir.actions.act_url',
                 'url': f'/account/download_invoice_documents/{",".join(map(str, invoices_with_fatturapa.ids))}/fatturapa',
@@ -1376,16 +1372,11 @@ class AccountMove(models.Model):
                 })]
 
             for element in tree.xpath('.//Allegati'):
-                attachment_64 = self.env['ir.attachment'].create({
-                    'name': get_text(element, './/NomeAttachment'),
-                    'datas': str.encode(get_text(element, './/Attachment')),
-                    'type': 'binary',
-                    'res_model': 'account.move',
-                    'res_id': self.id,
-                })
+                self.l10n_it_edi_attachment_name = get_text(element, './/NomeAttachment')
+                self.l10n_it_edi_attachment_file = b64decode(get_text(element, './/Attachment'))
                 self.sudo().message_post(
                     body=(_("Attachment from XML")),
-                    attachment_ids=[attachment_64.id],
+                    attachments=[(self.l10n_it_edi_attachment_name, self.l10n_it_edi_attachment_file)],
                 )
 
             for message in message_to_log:
@@ -1822,7 +1813,7 @@ class AccountMove(models.Model):
         proxy_user = self.company_id.l10n_it_edi_proxy_user_id
         if proxy_user.edi_mode == 'demo':
             for move in self:
-                filename = move.l10n_it_edi_attachment_id and move.l10n_it_edi_attachment_id.name or '???'
+                filename = move.l10n_it_edi_attachment_name or '???'
                 self._l10n_it_edi_write_send_state(
                     transformed_notification={
                         'l10n_it_edi_state': 'forwarded',
@@ -1916,8 +1907,8 @@ class AccountMove(models.Model):
         filename = parsed_notification.get('filename')
         errors = parsed_notification.get('errors', [])
         date = parsed_notification.get('date', fields.Date.today())
-        if not filename and self.l10n_it_edi_attachment_id:
-            filename = self.l10n_it_edi_attachment_id.name
+        if not filename and self.l10n_it_edi_attachment_name:
+            filename = self.l10n_it_edi_attachment_name
         outcome = parsed_notification.get('outcome', False)
         if not outcome:
             new_state = state_map.get(sdi_state, False)
