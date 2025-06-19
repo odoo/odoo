@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
@@ -237,3 +238,47 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
 
         credit_lines = [l for l in new_layer.account_move_id.line_ids if l.credit > 0]
         self.assertEqual(len(credit_lines), 1)
+
+    def test_multi_company_fifo_svl_negative_revaluation(self):
+        """
+        Check that the journal entries and stock valuation layers are created for the company related
+        to the stock move even if the picking is validated using a different one.
+        """
+        company1 = self.env.company
+        company2 = self.env['res.company'].create({
+            'name': 'Lovely Company',
+        })
+        self.env.companies = company1 | company2
+
+        product = self.product1
+        product.categ_id.write({
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time',
+        })
+        # Modify valuation to manual_periodic for company2
+        product.categ_id.with_company(company2).property_valuation = 'manual_periodic'
+
+        # Create moves to revaluate for company1
+        self._make_in_move(product, 10, unit_cost=10, create_picking=True)
+        self._make_out_move(product, 15, create_picking=True)
+
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'name': 'test fifo',
+                'product_id': product.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 10,
+                'price_unit': 7,
+            })]
+        }).with_company(company2)
+        receipt.action_confirm()
+        receipt.button_validate()
+
+        svls = self.env['stock.valuation.layer'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(svls), 4, "Expected 4 valuation layers")
+        self.assertTrue(all(svl.account_move_id for svl in svls), "All SVLs should be linked to a journal entry")
