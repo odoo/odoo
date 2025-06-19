@@ -1,6 +1,6 @@
 import { Component, useState } from "@odoo/owl";
-import { OptionsContainer } from "./option_container";
 import { useOptionsSubEnv } from "@html_builder/utils/utils";
+import { OptionsContainer } from "@html_builder/sidebar/option_container";
 
 export class DesignTab extends Component {
     static template = "mass_mailing_egg.DesignTab";

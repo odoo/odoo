@@ -48,4 +48,4 @@ export class AlertIconAction extends BuilderAction {
         return iconEl.classList.contains(className);
     }
 }
-registry.category("website-plugins").add(AlertOptionPlugin.id, AlertOptionPlugin);
+registry.category("builder-plugins").add(AlertOptionPlugin.id, AlertOptionPlugin);

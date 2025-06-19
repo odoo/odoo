@@ -66,4 +66,4 @@ export class SetCustomFilterAction extends BuilderAction {
     }
 }
 
-registry.category("website-plugins").add(ImageFilterOptionPlugin.id, ImageFilterOptionPlugin);
+registry.category("builder-plugins").add(ImageFilterOptionPlugin.id, ImageFilterOptionPlugin);

@@ -1,12 +1,19 @@
 <templates>
     <t t-name="mass_mailing_egg.MassMailingIframe">
-        <div>
-            <iframe t-key="iframeKey" t-ref="iframeRef" t-on-blur="onBlur" t-on-load="onIframeLoad"/>
-        </div>
-        <div t-att-class="{ 'o_builder_sidebar_open': props.showSidebar }"
-            class="o-mass_mailing_egg-builder_sidebar border-start border-dark">
-            <LazyComponent  t-if="props.showSidebar" Component="'mass_mailing_egg.Builder'"
-                props="() => this.getBuilderProps()" bundle="'mass_mailing_egg.assets_builder'"/>
+        <div class="o_mass_mailing_iframe_wrapper bg-200" t-att-class="{'o_mass_mailing_fullscreen': state.showFullscreen}">
+            <div class="d-flex w-100 h-100">
+                <div class="flex-grow-1">
+                    <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
+                    <div class="h-100">
+                        <iframe class="h-100" t-ref="iframeRef"/>
+                    </div>
+                </div>
+                <div t-if="props.themeOptions.withBuilder"
+                    class="o_mass_mailing_egg-builder_sidebar border-start border-dark o_builder_sidebar_open">
+                    <LazyComponent t-if="state.ready" Component="'website.Builder'"
+                        props="() => this.getBuilderProps()" bundle="'mass_mailing_egg.assets_builder'"/>
+                </div>
+            </div>
         </div>
     </t>
     <t t-name="mass_mailing_egg.IframeHead">
@@ -15,7 +22,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     </t>
     <t t-name="mass_mailing_egg.IframeBody">
-        <!-- TODO EGGMAIL: remove wrapwrap if interactions are not needed -->
-        <div id="wrapwrap" class="note-editable"/>
+        <div class="note-editable"/>
     </t>
 </templates>

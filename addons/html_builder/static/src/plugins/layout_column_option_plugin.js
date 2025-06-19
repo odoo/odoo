@@ -122,4 +122,4 @@ export class ChangeColumnCountAction extends BuilderAction {
     }
 }
 
-registry.category("website-plugins").add(LayoutColumnOptionPlugin.id, LayoutColumnOptionPlugin);
+registry.category("builder-plugins").add(LayoutColumnOptionPlugin.id, LayoutColumnOptionPlugin);

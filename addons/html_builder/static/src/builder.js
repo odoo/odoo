@@ -31,7 +31,7 @@ export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab, InvisibleElementsPanel };
     static props = {
-        closeEditor: { type: Function },
+        closeEditor: { type: Function, optional: true },
         reloadEditor: { type: Function, optional: true },
         onEditorLoad: { type: Function, optional: true },
         installSnippetModule: { type: Function, optional: true },
@@ -43,6 +43,8 @@ export class Builder extends Component {
         Plugins: { type: Array, optional: true },
         config: { type: Object, optional: true },
         getThemeTab: { type: Function, optional: true },
+        editableSelector: { type: String },
+        toggleFullscreen: { type: Function, optional: true },
     };
     static defaultProps = {
         onEditorLoad: () => {},
@@ -95,7 +97,7 @@ export class Builder extends Component {
                     });
                 },
                 closeEditor: async () => {
-                    await this.props.closeEditor();
+                    await this.props.closeEditor?.();
                 },
                 installSnippetModule: async (snippet) =>
                     this.props.installSnippetModule(snippet, this.save.bind(this)),
@@ -150,7 +152,9 @@ export class Builder extends Component {
             // instantiating the sub components that potentially need the
             // editor.
             const iframeEl = await this.props.iframeLoaded;
-            this.editableEl = iframeEl.contentDocument.body.querySelector("#wrapwrap");
+            this.editableEl = iframeEl.contentDocument.body.querySelector(
+                this.props.editableSelector
+            );
             setEditableWindow(iframeEl.contentWindow);
             setEditableDocument(iframeEl.contentDocument);
 
@@ -177,7 +181,7 @@ export class Builder extends Component {
         // });
         onWillDestroy(() => {
             this.editor.destroy();
-            this.editableEl.removeEventListener("dragstart", this.onDragStart);
+            this.editableEl?.removeEventListener("dragstart", this.onDragStart);
             // actionService.setActionMode("current");
         });
 

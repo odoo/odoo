@@ -37,4 +37,4 @@ class BorderRadiusStylePlugin extends Plugin {
         });
     }
 }
-registry.category("website-plugins").add(BorderRadiusStylePlugin.id, BorderRadiusStylePlugin);
+registry.category("builder-plugins").add(BorderRadiusStylePlugin.id, BorderRadiusStylePlugin);

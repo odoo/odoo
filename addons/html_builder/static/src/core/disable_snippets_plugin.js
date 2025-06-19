@@ -65,6 +65,9 @@ export class DisableSnippetsPlugin extends Plugin {
             }
         };
         const canDrop = (snippet) => {
+            if (!snippet) {
+                return false;
+            }
             const snippetEl = snippet.content;
             return !!dropAreasBySelector.find(
                 ({ selector, exclude, dropAreaEls }) =>

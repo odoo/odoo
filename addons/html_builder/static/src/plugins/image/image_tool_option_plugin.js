@@ -300,7 +300,7 @@ export class AltAction extends BuilderAction {
     }
 }
 
-registry.category("website-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);
+registry.category("builder-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);
 
 /**
  * @param {String} mimetype

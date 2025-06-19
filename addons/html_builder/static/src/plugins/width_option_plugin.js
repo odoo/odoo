@@ -14,4 +14,4 @@ class WidthOptionPlugin extends Plugin {
         ],
     };
 }
-registry.category("website-plugins").add(WidthOptionPlugin.id, WidthOptionPlugin);
+registry.category("builder-plugins").add(WidthOptionPlugin.id, WidthOptionPlugin);
