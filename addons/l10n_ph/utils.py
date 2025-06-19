@@ -5,6 +5,7 @@ import xlwt
 import xlsxwriter
 
 from odoo.tools.misc import format_date
+from odoo.tools import html2plaintext
 
 
 COLUMN_HEADER_MAP = {
@@ -16,7 +17,8 @@ COLUMN_HEADER_MAP = {
     "firstName": "first_name",
     "middleName": "middle_name",
     "address": "address",
-    "nature": "product_name",
+    "zip_code": "zip",
+    "nature": "tax_description",
     "ATC": "atc",
     "income_payment": "price_subtotal",
     "ewt_rate": "amount",
@@ -58,7 +60,8 @@ def _export_bir_2307(sheet_title, moves, file_format='xlsx'):
             'first_name': partner.first_name or '',
             'middle_name': partner.middle_name or '',
             'last_name': partner.last_name or '',
-            'address': ', '.join([val for val in partner_address_info if val])
+            'address': ', '.join([val for val in partner_address_info if val]),
+            'zip': partner.zip or ''
         }
         aggregated_taxes = move._prepare_invoice_aggregated_taxes()
         for invoice_line, tax_details_for_line in aggregated_taxes['tax_details_per_record'].items():
@@ -66,8 +69,7 @@ def _export_bir_2307(sheet_title, moves, file_format='xlsx'):
                 if not tax.l10n_ph_atc:
                     continue
 
-                product_name = invoice_line.product_id.name or invoice_line.name
-                values['product_name'] = re.sub(r'[()]', '', product_name) if product_name else ""
+                values['tax_description'] = html2plaintext(tax.description) or ''
                 values['atc'] = tax.l10n_ph_atc
                 values['price_subtotal'] = tax_detail['base_amount']
                 values['amount'] = abs(tax.amount)
