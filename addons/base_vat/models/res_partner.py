@@ -140,14 +140,16 @@ class ResPartner(models.Model):
             if not partner.vat or len(partner.vat) == 1:
                 partner.vies_vat_to_check = ''
                 continue
-            country_code, number = partner._split_vat(partner.vat)
-            if not country_code.isalpha() and partner.country_id:
-                country_code = partner.country_id.code
+            vat_prefix, number = partner._split_vat(partner.vat)
+            if not vat_prefix.isalpha() and partner.country_id:
+                vat_prefix = _eu_country_vat.get(partner.country_id.code, partner.country_id.code)
                 number = partner.vat
+            country_code = vat_prefix.upper()
+            country_code = _eu_country_vat_inverse.get(country_code, country_code)
             partner.vies_vat_to_check = (
-                country_code.upper() in eu_country_codes or
+                country_code in eu_country_codes or
                 country_code.lower() in _region_specific_vat_codes
-            ) and self._fix_vat_number(country_code + number, partner.country_id.id) or ''
+            ) and self._fix_vat_number(vat_prefix + number, partner.country_id.id) or ''
 
     @api.depends_context('company')
     @api.depends('vies_vat_to_check')
@@ -158,7 +160,7 @@ class ResPartner(models.Model):
             company_code = self.env.company.account_fiscal_country_id.code
             partner.perform_vies_validation = (
                 to_check
-                and not to_check[:2].upper() == company_code
+                and to_check[:2].upper() != _eu_country_vat_inverse.get(company_code, company_code)
                 and self.env.company.vat_check_vies
             )
 
