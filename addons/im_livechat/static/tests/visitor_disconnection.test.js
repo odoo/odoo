@@ -9,14 +9,14 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { Persona } from "@mail/core/common/persona_model";
+import { ResPartner } from "@mail/core/common/res_partner_model";
 import { Thread } from "@mail/core/common/thread";
 
 describe.current.tags("desktop");
 defineLivechatModels();
 
 test("Visitor going offline shows disconnection banner to operator", async () => {
-    patchWithCleanup(Persona, { IM_STATUS_DEBOUNCE_DELAY: 0 });
+    patchWithCleanup(ResPartner, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     patchWithCleanup(Thread.prototype, {
         setup() {
             super.setup();

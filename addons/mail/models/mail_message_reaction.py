@@ -32,9 +32,9 @@ class MailMessageReaction(models.Model):
             data = {
                 "content": content,
                 "count": len(reactions),
-                "guests": Store.Many(reactions.guest_id, ["avatar_128", "name"]),
+                "guest_ids": Store.Many(reactions.guest_id, ["avatar_128", "name"]),
                 "message": message.id,
-                "partners": Store.Many(
+                "partner_ids": Store.Many(
                     reactions.partner_id,
                     ["avatar_128", *message._get_store_partner_name_fields()],
                 ),

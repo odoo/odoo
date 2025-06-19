@@ -1,6 +1,6 @@
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
-import { getOutOfOfficeDateEndText } from "@hr_holidays/persona_model_patch";
+import { getOutOfOfficeDateEndText } from "@hr_holidays/res_partner_model_patch";
 
 import { patch } from "@web/core/utils/patch";
 

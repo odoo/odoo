@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
 const threadPatch = {
     setup() {
         super.setup();
-        this.collaborator_ids = fields.Many("Persona");
+        this.collaborator_ids = fields.Many("res.partner");
     },
 };
 patch(Thread.prototype, threadPatch);

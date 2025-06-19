@@ -59,7 +59,7 @@ export class Notification extends Record {
                 return _t("Exception");
         }
     }
-    res_partner_id = fields.One("Persona");
+    res_partner_id = fields.One("res.partner");
 
     get isFailure() {
         return ["exception", "bounce"].includes(this.notification_status);

@@ -18,7 +18,8 @@ declare module "models" {
     import { MessageLinkPreview as MessageLinkPreviewClass } from "@mail/core/common/message_link_preview_model";
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
-    import { Persona as PersonaClass } from "@mail/core/common/persona_model";
+    import { ResPartner as ResPartnerClass } from "@mail/core/common/res_partner_model";
+    import { MailGuest as MailGuestClass } from "@mail/core/common/mail_guest_model";
     import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
     import { ResGroupsPrivilege as ResGroupsPrivilegeClass } from "@mail/core/common/res_groups_privilege_model";
     import { ResLang as ResLangClass } from "@mail/core/common/res_lang_model";
@@ -47,7 +48,8 @@ declare module "models" {
     export interface MessageLinkPreview extends MessageLinkPreviewClass {}
     export interface MessageReactions extends MessageReactionsClass {}
     export interface Notification extends NotificationClass {}
-    export interface Persona extends PersonaClass {}
+    export interface ResPartner extends ResPartnerClass {}
+    export interface MailGuest extends MailGuestClass {}
     export interface ResGroups extends ResGroupsClass {}
     export interface ResGroupsPrivilege extends ResGroupsPrivilegeClass {}
     export interface ResLang extends ResLangClass {}
@@ -76,7 +78,8 @@ declare module "models" {
         "mail.notification": StaticMailRecord<Notification, typeof NotificationClass>;
         "mail.template": StaticMailRecord<MailTemplate, typeof MailTemplateClass>;
         MessageReactions: StaticMailRecord<MessageReactions, typeof MessageReactionsClass>;
-        Persona: StaticMailRecord<Persona, typeof PersonaClass>;
+        "res.partner": StaticMailRecord<ResPartner, typeof ResPartnerClass>;
+        "mail.guest": StaticMailRecord<MailGuest, typeof MailGuestClass>;
         "res.country": StaticMailRecord<Country, typeof CountryClass>;
         "res.groups": StaticMailRecord<ResGroups, typeof ResGroupsClass>;
         "res.groups.privilege": StaticMailRecord<ResGroupsPrivilege, typeof ResGroupsPrivilegeClass>;
@@ -107,7 +110,8 @@ declare module "models" {
         "mail.notification": Notification;
         "mail.template": MailTemplate;
         MessageReactions: MessageReactions;
-        Persona: Persona;
+        "res.partner": ResPartner;
+        "mail.guest": MailGuest;
         "res.country": Country;
         "res.groups": ResGroups;
         "res.groups.privilege": ResGroupsPrivilege;
