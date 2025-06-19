@@ -1748,7 +1748,7 @@ class TestQueries(TransactionCase):
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE "res_users"."active" IS TRUE
-            AND ("res_users"."id" IN %s AND "res_users__partner_id"."id" IN %s)
+            AND ("res_users"."id" IN %s AND "res_users"."partner_id" IN %s)
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
         ''']):
             Model.search([])
@@ -2262,10 +2262,8 @@ class TestOne2many(TransactionCase):
                     "res_partner"."id" IN (
                         SELECT "res_partner_bank"."partner_id"
                         FROM "res_partner_bank"
-                        WHERE (
-                            "res_partner_bank"."id" IN %s
-                            AND "res_partner_bank"."sanitized_acc_number" LIKE %s
-                        )
+                        WHERE "res_partner_bank"."id" IN %s
+                          AND "res_partner_bank"."sanitized_acc_number" LIKE %s
                     )
                     AND ("res_partner"."name" NOT IN %s OR "res_partner"."name" IS NULL)
                     AND "res_partner"."parent_id" IS NOT NULL
