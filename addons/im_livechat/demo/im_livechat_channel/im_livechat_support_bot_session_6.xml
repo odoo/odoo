@@ -104,6 +104,15 @@
             }"/>
             <value name="inviting_partner" model="res.partner" eval="obj().browse(ref('support_bot_operator_partner_demo'))"/>
         </function>
+        <function model="im_livechat.channel.member.history" name="write">
+            <value model="im_livechat.channel.member.history"
+                eval="obj().search([('partner_id', '=', ref('base.user_admin')), ('channel_id', '=', ref('im_livechat.support_bot_session_6_demo'))]).ids"/>
+            <value eval="{
+                'create_date': datetime.now() - timedelta(seconds=10),
+                'response_time_hour': 5 / 3600,
+                'message_count': 1
+            }"/>
+        </function>
         <record id="support_bot_session_6_message_6" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="support_bot_session_6_demo"/>

@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged, new_test_user

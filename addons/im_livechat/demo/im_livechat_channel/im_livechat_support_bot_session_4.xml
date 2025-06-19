@@ -138,32 +138,46 @@
             }"/>
             <value name="inviting_partner" model="res.partner" eval="obj().env['res.partner'].browse(ref('support_bot_operator_partner_demo'))"/>
         </function>
+        <function model="im_livechat.channel.member.history" name="write">
+            <value model="im_livechat.channel.member.history"
+                eval="obj().search([('partner_id', '=', ref('base.partner_admin')), ('channel_id', '=', ref('im_livechat.support_bot_session_4_demo'))]).ids"/>
+            <value eval="{
+                'create_date': datetime.now() - timedelta(seconds=15),
+                'response_time_hour': 5 / 3600,
+                'message_count': 1
+            
+            }"/>
+        </function>
         <record id="support_bot_session_4_message_8" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="support_bot_session_4_demo"/>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_admin"/>
             <field name="body">Salve 👋, ha qualche domanda riguardante livechat?</field>
-            <field name="date" eval="datetime.now() + timedelta(seconds=15)"/>
-            <field name="create_date" eval="datetime.now() + timedelta(seconds=15)"/>
+            <field name="date" eval="datetime.now() + timedelta(seconds=20)"/>
+            <field name="create_date" eval="datetime.now() + timedelta(seconds=20)"/>
         </record>
         <record id="support_bot_session_4_message_call_notification" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.support_bot_session_4_demo"/>
-            <field name="author_guest_id" ref="im_livechat.support_bot_session_4_guest_demo"/>
-            <field name="author_id"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="body">&lt;div data-oe-type=&#34;call&#34; class=&#34;o_mail_notification&#34;&gt;&lt;/div&gt;</field>
             <field name="message_type">notification</field>
-            <field name="date" eval="datetime.now() - timedelta(seconds=20)"/>
-            <field name="create_date" eval="datetime.now() - timedelta(seconds=20)"/>
+            <field name="date" eval="datetime.now() + timedelta(seconds=40)"/>
+            <field name="create_date" eval="datetime.now() + timedelta(seconds=40)"/>
         </record>
         <record id="support_bot_session_4_call_1" model="discuss.call.history">
             <field name="channel_id" ref="im_livechat.support_bot_session_4_demo"/>
             <field name="start_dt"
-                eval="datetime.now() - timedelta(seconds=70)"/>
+                eval="datetime.now() + timedelta(seconds=40)"/>
             <field name="end_dt"
-                eval="datetime.now() - timedelta(seconds=10)"/>
+                eval="datetime.now() + timedelta(seconds=200)"/>
             <field name="start_call_message_id" ref="support_bot_session_4_message_call_notification"/>
         </record>
+        <function model="im_livechat.channel.member.history" name="write">
+            <value model="im_livechat.channel.member.history"
+                eval="obj().search([('partner_id', '=', ref('base.partner_admin')), ('channel_id', '=', ref('support_bot_session_4_demo'))]).ids"/>
+            <value eval="{'call_history_ids': [ref('support_bot_session_4_call_1')]}"/>
+        </function>
     </data>
 </odoo>

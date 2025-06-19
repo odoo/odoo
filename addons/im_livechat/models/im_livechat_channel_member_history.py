@@ -1,4 +1,7 @@
+from collections import defaultdict
+
 from odoo import api, models, fields
+from odoo.fields import Domain
 from odoo.exceptions import ValidationError
 
 
@@ -32,7 +35,71 @@ class ImLivechatChannelMemberHistory(models.Model):
     agent_expertise_ids = fields.Many2many(
         "im_livechat.expertise", compute="_compute_member_fields", store=True
     )
+
     avatar_128 = fields.Binary(compute="_compute_avatar_128")
+
+    # REPORTING FIELDS
+
+    session_country_id = fields.Many2one("res.country", related="channel_id.country_id")
+    session_livechat_channel_id = fields.Many2one(
+        "im_livechat.channel", "Live chat channel", related="channel_id.livechat_channel_id"
+    )
+    session_outcome = fields.Selection(
+        [
+            ("no_answer", "Never Answered"),
+            ("no_agent", "No one Available"),
+            ("no_failure", "Success"),
+            ("escalated", "Escalated"),
+        ],
+        compute="_compute_session_outcome",
+        store=True,
+    )
+    session_start_hour = fields.Float(
+        "Session Start Hour", compute="_compute_session_start_hour", store=True
+    )
+    session_week_day = fields.Selection(
+        [
+            ("0", "Monday"),
+            ("1", "Tuesday"),
+            ("2", "Wednesday"),
+            ("3", "Thursday"),
+            ("4", "Friday"),
+            ("5", "Saturday"),
+            ("6", "Sunday"),
+        ],
+        string="Day of the Week",
+        compute="_compute_session_week_day",
+        store=True,
+    )
+    session_duration_hour = fields.Float(
+        "Session Duration",
+        help="Time spent by the persona in the session in hours",
+        compute="_compute_session_duration_hour",
+        aggregator="avg",
+        store=True,
+    )
+    rating_id = fields.Many2one("rating.rating", compute="_compute_rating_id", store=True)
+    rating = fields.Float(related="rating_id.rating")
+    rating_text = fields.Selection("Rating text", related="rating_id.rating_text")
+    call_history_ids = fields.Many2many("discuss.call.history")
+    has_call = fields.Float(compute="_compute_has_call", store=True)
+    call_count = fields.Float("# of Sessions with Calls", related="has_call", aggregator="sum")
+    call_percentage = fields.Float("Session with Calls (%)", related="has_call", aggregator="avg")
+    call_duration_hour = fields.Float(
+        "Call Duration", compute="_compute_call_duration_hour", aggregator="sum", store=True
+    )
+    message_count = fields.Integer("# of Messages per Session", aggregator="avg")
+    help_status = fields.Selection(
+        selection=[
+            ("requested", "Help Requested"),
+            ("provided", "Help Provided"),
+            ("none", "No Help"),
+        ],
+        compute="_compute_help_status",
+        search="_search_help_status",
+        store=True,
+    )
+    response_time_hour = fields.Float("Response Time", aggregator="avg")
 
     _member_id_unique = models.Constraint(
         "UNIQUE(member_id)", "Members can only be linked to one history"
@@ -46,7 +113,7 @@ class ImLivechatChannelMemberHistory(models.Model):
         "One guest can only be linked to one history on a channel",
     )
     _partner_id_or_guest_id_constraint = models.Constraint(
-        "CHECK(NOT (partner_id IS NOT NULL AND guest_id IS NOT NULL))",
+        "CHECK(partner_id IS NULL OR guest_id IS NULL)",
         "History should either be linked to a partner or a guest but not both",
     )
 
@@ -60,7 +127,7 @@ class ImLivechatChannelMemberHistory(models.Model):
             raise ValidationError(
                 self.env._(
                     "Cannot create history as it is only available for live chats: %(histories)s.",
-                    histories=failing_histories.member_id.mapped("display_name")
+                    histories=failing_histories.member_id.mapped("display_name"),
                 )
             )
 
@@ -73,12 +140,16 @@ class ImLivechatChannelMemberHistory(models.Model):
             history.livechat_member_type = (
                 history.livechat_member_type or history.member_id.livechat_member_type
             )
-            history.chatbot_script_id = history.chatbot_script_id or history.member_id.chatbot_script_id
+            history.chatbot_script_id = (
+                history.chatbot_script_id or history.member_id.chatbot_script_id
+            )
             history.agent_expertise_ids = (
                 history.agent_expertise_ids or history.member_id.agent_expertise_ids
             )
 
-    @api.depends("livechat_member_type", "partner_id.name", "partner_id.display_name", "guest_id.name")
+    @api.depends(
+        "livechat_member_type", "partner_id.name", "partner_id.display_name", "guest_id.name"
+    )
     def _compute_display_name(self):
         for history in self:
             name = history.partner_id.name or history.guest_id.name
@@ -90,3 +161,81 @@ class ImLivechatChannelMemberHistory(models.Model):
     def _compute_avatar_128(self):
         for history in self:
             history.avatar_128 = history.partner_id.avatar_128 or history.guest_id.avatar_128
+
+    # ===================================================================
+    # REPORTING
+    # ===================================================================
+
+    @api.depends("call_history_ids")
+    def _compute_has_call(self):
+        for history in self:
+            history.has_call = 1 if history.call_history_ids else 0
+
+    @api.depends("call_history_ids.duration_hour")
+    def _compute_call_duration_hour(self):
+        for history in self:
+            history.call_duration_hour = sum(history.call_history_ids.mapped("duration_hour"))
+
+    @api.depends(
+        "channel_id.livechat_agent_requesting_help_history",
+        "channel_id.livechat_agent_providing_help_history",
+    )
+    def _compute_help_status(self):
+        agent_histories = self.filtered(lambda h: h.livechat_member_type == "agent")
+        (self - agent_histories).help_status = "none"
+        for history in agent_histories:
+            if (
+                history.channel_id.livechat_agent_requesting_help_history.partner_id
+                == history.partner_id
+            ):
+                history.help_status = "requested"
+            elif (
+                history.channel_id.livechat_agent_providing_help_history.partner_id
+                == history.partner_id
+            ):
+                history.help_status = "provided"
+
+    @api.depends("channel_id.rating_ids")
+    def _compute_rating_id(self):
+        agent_histories = self.filtered(lambda h: h.livechat_member_type == "agent")
+        (self - agent_histories).rating_id = None
+        for history in agent_histories:
+            history.rating_id = history.channel_id.rating_ids.filtered(
+                lambda r: r.rated_partner_id == history.partner_id
+            )[:1]  # Live chats only allow one rating.
+
+    @api.depends("channel_id.livechat_is_escalated", "channel_id.livechat_failure")
+    def _compute_session_outcome(self):
+        for history in self:
+            history.session_outcome = (
+                "escalated"
+                if history.channel_id.livechat_is_escalated
+                else history.channel_id.livechat_failure
+            )
+
+    @api.depends("channel_id.create_date")
+    def _compute_session_start_hour(self):
+        for history in self:
+            history.session_start_hour = history.channel_id.create_date.hour
+
+    @api.depends("channel_id.create_date")
+    def _compute_session_week_day(self):
+        for history in self:
+            history.session_week_day = str(history.channel_id.create_date.weekday())
+
+    @api.depends("create_date", "channel_id.livechat_end_dt")
+    def _compute_session_duration_hour(self):
+        for history in self:
+            end = history.channel_id.livechat_end_dt or fields.Datetime.now()
+            history.session_duration_hour = (end - history.create_date).total_seconds() / 3600
+
+    @api.model
+    def action_open_discuss_channel_list_view(self, domain=()):
+        discuss_channels = self.search_fetch(domain, ["channel_id"]).channel_id
+        action = self.env["ir.actions.act_window"]._for_xml_id("im_livechat.discuss_channel_action")
+        action["context"] = {}
+        action["domain"] = [("id", "in", discuss_channels.ids)]
+        action["mobile_view_mode"] = "list"
+        action["view_mode"] = "list"
+        action["views"] = [view for view in action["views"] if view[1] in ("list", "form")]
+        return action

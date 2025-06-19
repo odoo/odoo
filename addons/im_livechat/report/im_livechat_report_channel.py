@@ -257,8 +257,8 @@ class Im_LivechatReportChannel(models.Model):
         return result
 
     @api.model
-    def action_open_discuss_channel_list_view(self, report_channels_domain=()):
-        discuss_channels = self.search_fetch(report_channels_domain, ["channel_id"]).channel_id
+    def action_open_discuss_channel_list_view(self, domain=()):
+        discuss_channels = self.search_fetch(domain, ["channel_id"]).channel_id
         action = self.env["ir.actions.act_window"]._for_xml_id("im_livechat.discuss_channel_action")
         action["context"] = {}
         action["domain"] = [("id", "in", discuss_channels.ids)]

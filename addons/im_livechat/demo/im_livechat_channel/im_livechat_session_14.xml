@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="livechat_channel_session_14" model="discuss.channel">
-            <field name="name">Visiteur, Mitchell Admin</field>
+            <field name="name">Visiteur, Mitchell AdminNN</field>
             <field name="livechat_lang_id" ref="base.lang_fr"/>
             <field name="livechat_operator_id" ref="base.partner_admin"/>
             <field name="livechat_channel_id" ref="im_livechat.im_livechat_channel_data"/>
@@ -19,6 +19,15 @@
             <field name="last_interest_dt" eval="DateTime.today() - timedelta(minutes=1)"/>
             <field name="livechat_member_type">agent</field>
         </record>
+        <function model="im_livechat.channel.member.history" name="write">
+            <value model="im_livechat.channel.member.history"
+                eval="obj().search([('partner_id', '=', ref('base.partner_admin')), ('channel_id', '=', ref('im_livechat.livechat_channel_session_14'))]).ids"/>
+            <value eval="{
+                'create_date': datetime.now() - timedelta(minutes=1),
+                'response_time_hour': 15 / 3600,
+                'message_count': 1
+            }"/>
+        </function>
         <record id="im_livechat.livechat_channel_session_14_guest" model="mail.guest">
             <field name="name">Visiteur</field>
         </record>
@@ -56,6 +65,15 @@
             <value eval="[ref('im_livechat.livechat_channel_session_14')]"/>
             <value name="partners" model="res.partner" eval="obj().env['res.partner'].browse(ref('base.partner_demo'))"/>
             <value name="inviting_partner" model="res.partner" eval="obj().env['res.partner'].browse(ref('base.partner_admin'))"/>
+        </function>
+        <function model="im_livechat.channel.member.history" name="write">
+            <value model="im_livechat.channel.member.history"
+                eval="obj().search([('partner_id', '=', ref('base.partner_demo')), ('channel_id', '=', ref('im_livechat.livechat_channel_session_14'))]).ids"/>
+            <value eval="{
+                'create_date': datetime.now() - timedelta(seconds=15),
+                'response_time_hour': 30 / 3600,
+                'message_count': 1
+            }"/>
         </function>
         <record id="livechat_channel_session_14_message_3" model="mail.message">
             <field name="author_id" ref="base.partner_demo"/>

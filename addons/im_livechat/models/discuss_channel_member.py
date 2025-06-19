@@ -1,14 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import operator
-
 from collections import defaultdict
 from datetime import datetime, timedelta
-from functools import reduce
 
-from odoo import api, models, fields
+from odoo import api, Command, models, fields
 from odoo.fields import Domain
-from odoo.osv import expression
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -76,39 +72,33 @@ class DiscussChannelMember(models.Model):
     def _create_or_update_history(self, values_by_member=None):
         if not values_by_member:
             values_by_member = {}
-        members_without_history = self.filtered(lambda m: not m.livechat_member_history_ids)
-        history_domain = reduce(
-            operator.or_,
-            [
-                Domain([("channel_id", "=", h.channel_id.id), ("partner_id", "=", h.partner_id.id)])
-                if h.partner_id
-                else Domain(
-                    [("channel_id", "=", h.channel_id.id), ("guest_id", "=", h.guest_id.id)]
-                )
-                for h in members_without_history
-            ],
-            Domain(expression.FALSE_DOMAIN),
-        )
-        history_by_channel_persona = defaultdict(dict)
+        history_domain = [
+            ("channel_id", "in", self.channel_id.ids),
+            Domain("partner_id", "in", self.partner_id.ids)
+            | Domain("guest_id", "in", self.guest_id.ids),
+        ]
+        channel_persona_histories = defaultdict(dict)
         for history in self.env["im_livechat.channel.member.history"].search_fetch(
             history_domain, ["channel_id", "partner_id", "guest_id"]
         ):
-            history_by_channel_persona[history.channel_id][history.partner_id, history.guest_id] = (
+            channel_persona_histories[history.channel_id][history.partner_id, history.guest_id] = (
                 history
             )
-        to_create = members_without_history.filtered(
-            lambda m: (m.partner_id, m.guest_id) not in history_by_channel_persona[m.channel_id]
+        members_without_history = self.filtered(
+            lambda m: (m.partner_id, m.guest_id) not in channel_persona_histories[m.channel_id]
         )
         self.env["im_livechat.channel.member.history"].create(
-            [{"member_id": member.id, **values_by_member.get(member, {})} for member in to_create]
+            [
+                {"member_id": member.id, **values_by_member.get(member, {})}
+                for member in members_without_history
+            ]
         )
-        for member in self - to_create:
-            history = (
-                member.livechat_member_history_ids
-                or history_by_channel_persona[member.channel_id][member.partner_id, member.guest_id]
-            )
+        for member in (self - members_without_history):
+            history = channel_persona_histories[member.channel_id][
+                member.partner_id, member.guest_id
+            ]
             if history.member_id != member:
-                history.member_id = member
+                values_by_member.setdefault(member, {})["member_id"] = member.id
             if member in values_by_member:
                 history.write(values_by_member[member])
 
@@ -128,7 +118,7 @@ class DiscussChannelMember(models.Model):
         # sudo - im_livechat.channel.member.history: creating/udpating history following
         # "agent_expetise_ids" modification is acceptable.
         self.sudo()._create_or_update_history(
-            {member: {"agent_expertise_ids": member.agent_expertise_ids.ids} for member in self}
+            {member: {"agent_expertise_ids": member.agent_expertise_ids} for member in self}
         )
 
     @api.autovacuum
