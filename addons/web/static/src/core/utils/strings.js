@@ -1,6 +1,32 @@
 import { isObject } from "./objects";
 import { markup } from "@odoo/owl";
 
+const ESCAPE_CHARS_MAP = [
+    ["&", "&amp;"],
+    ["<", "&lt;"],
+    [">", "&gt;"],
+    ["'", "&#x27;"],
+    ['"', "&quot;"],
+    ["`", "&#x60;"],
+];
+
+// OdooMark regular expressions
+const R_LINE_BREAK = /\n/g;
+const R_TAB = /\t/g;
+const R_TAG = /&#x60;(.+?)&#x60;/g;
+const R_TEXT_BOLD = /\*\*(.+?)\*\*/g;
+const R_TEXT_MUTED = /--(.+?)--/g;
+
+// Other regular expressions
+// http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
+const R_EMAIL =
+    /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+const R_FALSY = /^false|0$/i;
+const R_NUMERIC = /^\d+$/;
+const R_REGEX_SPECIAL_CHAR = /[.*+?^${}()|[\]\\]/g;
+const R_SPRINTF = /%s/g;
+const R_SPRINTF_DICT = /%\(([^)]+)\)s/g;
+
 export const nbsp = "\u00a0";
 
 /**
@@ -16,16 +42,10 @@ export function escape(str) {
     if (typeof str === "number") {
         return String(str);
     }
-    [
-        ["&", "&amp;"],
-        ["<", "&lt;"],
-        [">", "&gt;"],
-        ["'", "&#x27;"],
-        ['"', "&quot;"],
-        ["`", "&#x60;"],
-    ].forEach((pairs) => {
-        str = String(str).replaceAll(pairs[0], pairs[1]);
-    });
+    str = String(str);
+    for (const [char, escapedChar] of ESCAPE_CHARS_MAP) {
+        str = str.replaceAll(char, escapedChar);
+    }
     return str;
 }
 
@@ -37,7 +57,7 @@ export function escape(str) {
  * @returns {string} escaped string to use as a RegExp
  */
 export function escapeRegExp(str) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return str.replaceAll(R_REGEX_SPECIAL_CHAR, "\\$&");
 }
 
 /**
@@ -58,7 +78,7 @@ export function escapeRegExp(str) {
  *
  * @param {string} str
  * @param {number[]} indices
- * @param {string} separator
+ * @param {string} [separator]
  * @returns {string}
  */
 export function intersperse(str, indices, separator = "") {
@@ -94,28 +114,28 @@ export function intersperse(str, indices, separator = "") {
  * If the values are a set of strings, they will replace `%s` expressions.
  * If no value is given, the string will not be formatted.
  *
- * @param {string} s
- * @param {any[]} values
+ * @param {string} str
+ * @param {...unknown} values
  * @returns {string}
  */
-export function sprintf(s, ...values) {
+export function sprintf(str, ...values) {
     if (values.length === 1 && isObject(values[0])) {
         const valuesDict = values[0];
-        s = s.replace(/%\(([^)]+)\)s/g, (match, value) => valuesDict[value]);
+        str = str.replaceAll(R_SPRINTF_DICT, (_match, value) => valuesDict[value]);
     } else if (values.length > 0) {
-        s = s.replace(/%s/g, () => values.shift());
+        str = str.replaceAll(R_SPRINTF, () => values.shift());
     }
-    return s;
+    return str;
 }
 
 /**
  * Capitalizes a string: "abc def" => "Abc def"
  *
- * @param {string} s the input string
+ * @param {string} str
  * @returns {string}
  */
-export function capitalize(s) {
-    return s ? s[0].toUpperCase() + s.slice(1) : "";
+export function capitalize(str) {
+    return str ? str[0].toUpperCase() + str.slice(1) : "";
 }
 
 /**
@@ -130,22 +150,16 @@ export function capitalize(s) {
  * @returns {ReturnType<markup>} the formatted text
  */
 export function odoomark(text) {
-    const boldEx = /\*\*(.+?)\*\*/g;
-    const textMutedEx = /--(.+?)--/g;
-    const tagEx = /&#x60;(.+?)&#x60;/g;
-    const brEx = /\n/g;
-    const tabEx = /\t/g;
-
     return markup(
         escape(text)
-            .replaceAll(boldEx, `<b>$1</b>`)
-            .replaceAll(textMutedEx, `<span class='text-muted'>$1</span>`)
+            .replaceAll(R_TEXT_BOLD, `<b>$1</b>`)
+            .replaceAll(R_TEXT_MUTED, `<span class='text-muted'>$1</span>`)
             .replaceAll(
-                tagEx,
+                R_TAG,
                 `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">$1</span>`
             )
-            .replaceAll(brEx, `<br/>`)
-            .replaceAll(tabEx, `<span style="margin-left: 2em"></span>`)
+            .replaceAll(R_LINE_BREAK, `<br/>`)
+            .replaceAll(R_TAB, `<span style="margin-left: 2em"></span>`)
     );
 }
 
@@ -171,24 +185,21 @@ export function highlightText(query, text, classes) {
 
 /**
  * @param {string} value
- * @returns boolean
+ * @returns {boolean}
  */
 export function isEmail(value) {
-    // http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
-    const re =
-        /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    return re.test(value);
+    return R_EMAIL.test(value);
 }
 
 /**
  * Return true if the string is composed of only digits
  *
  * @param {string} value
- * @returns boolean
+ * @returns {boolean}
  */
 
 export function isNumeric(value) {
-    return Boolean(value?.match(/^\d+$/));
+    return R_NUMERIC.test(value);
 }
 
 /**
@@ -201,7 +212,7 @@ export function isNumeric(value) {
  * @returns {boolean}
  */
 export function exprToBoolean(str, trueIfEmpty = false) {
-    return str ? !/^false|0$/i.test(str) : trueIfEmpty;
+    return str ? !R_FALSY.test(str) : trueIfEmpty;
 }
 
 /**
