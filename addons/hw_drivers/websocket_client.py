@@ -87,14 +87,25 @@ class WebsocketClient(Thread):
         """
         self.channel = channel
         self.last_message_id = int(helpers.get_conf('last_websocket_message_id') or 0)
+        self.server_url = server_url
         url_parsed = urllib.parse.urlsplit(server_url)
         scheme = url_parsed.scheme.replace("http", "ws", 1)
-        self.url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
+        self.websocket_url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
+        self.db_name = helpers.get_conf('db_name') or ''
         super().__init__()
 
     def run(self):
-        self.ws = websocket.WebSocketApp(self.url,
-            header={"User-Agent": "OdooIoTBox/1.0"},
+        session_response = requests.post(
+            self.server_url + "/iot/authenticate",
+            data={"identifier": helpers.get_identifier(), "token": helpers.get_token()},
+        )
+        if session_response.status_code != 200:
+            _logger.error("Failed to get session ID, status %s. Websocket cannot open.", session_response.status_code)
+            return
+        session_id = session_response.text
+
+        self.ws = websocket.WebSocketApp(self.websocket_url,
+            header={"User-Agent": "OdooIoTBox/1.0", "X-Odoo-Database": self.db_name, "Cookie": f"session_id={session_id}"},
             on_open=self.on_open, on_message=self.on_message,
             on_error=on_error, on_close=self.on_close)
 
