@@ -24,12 +24,22 @@
                     <notebook invisible="not id">
                         <page string="History Lines">
                             <field name="history_ids">
-                                <list>
+                                <list create="0">
                                     <field name="description"/>
                                     <field name="order_id"/>
-                                    <field name="create_date" string="Date"/>
+                                    <field name="create_date" string="Creation"/>
+                                    <field name="expiration_date" string="Expiration"/>
                                     <field name="issued"/>
+                                    <field name="available_issued_points"/>
                                     <field name="used"/>
+                                    <field
+                                        name="is_line_expired"
+                                        string="Status"
+                                        widget="badge"
+                                        decoration-danger="is_line_expired == 'expired'"
+                                        decoration-success="is_line_expired == 'valid'"
+                                        decoration-warning="is_line_expired == 'used'"
+                                    />
                                 </list>
                             </field>
                         </page>

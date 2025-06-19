@@ -49,7 +49,6 @@ class LoyaltyCard(models.Model):
     history_ids = fields.One2many(
         comodel_name='loyalty.history',
         inverse_name='card_id',
-        readonly=True,
     )
 
     _card_code_unique = models.Constraint(
