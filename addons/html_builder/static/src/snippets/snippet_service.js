@@ -358,10 +358,17 @@ export class SnippetModel extends Reactive {
      *
      * @param {HTMLElement} snippetEl the snippet we want to save
      * @param {Array<Function>} cleanForSaveHandlers all the hanlders of the
-     *     clean_for_save_handlers` resources
+     *     `clean_for_save_handlers` resources
+     * @param {Function} wrapWithSaveSnippetHandlers a function that processes the snippet
+     * before and/or after the cloning. E.g. stopping the interactions before
+     * cloning and restarting them after cloning.
      * @returns
      */
-    saveSnippet(snippetEl, cleanForSaveHandlers) {
+    saveSnippet(
+        snippetEl,
+        cleanForSaveHandlers,
+        wrapWithSaveSnippetHandlers = (_, callback) => callback()
+    ) {
         return new Promise((resolve) => {
             this.dialog.add(
                 ConfirmationDialog,
@@ -375,7 +382,10 @@ export class SnippetModel extends Reactive {
                         const snippetKey = isButton ? "s_button" : snippetEl.dataset.snippet;
                         const thumbnailURL = this.getSnippetThumbnailURL(snippetKey);
 
-                        const snippetCopyEl = snippetEl.cloneNode(true);
+                        const snippetCopyEl = wrapWithSaveSnippetHandlers(snippetEl, () =>
+                            snippetEl.cloneNode(true)
+                        );
+
                         // "CleanForSave" the snippet copy (only its children in
                         // the case of a popup, or it will be saved as invisible
                         // and will not be visible in the "add snippet" dialog).
