@@ -10,7 +10,7 @@ import odoo  # to expose in the shell
 from odoo import api
 from odoo.modules.registry import Registry
 from odoo.service import server
-from odoo.tools import config
+from odoo.tools import config, gc
 from . import Command, server as cli_server
 
 _logger = logging.getLogger(__name__)
@@ -127,7 +127,7 @@ class Shell(Command):
                 console.runsource(f.read(), filename=pythonstartup, symbol='exec')
         console.interact(banner='')
 
-    def shell(self, dbname):
+    def shell(self, dbname, freeze_gc=False):
         local_vars = {
             'openerp': odoo,
             'odoo': odoo,
@@ -141,9 +141,13 @@ class Shell(Command):
                 env = api.Environment(cr, uid, ctx)
                 local_vars['env'] = env
                 local_vars['self'] = env.user
+                if freeze_gc:
+                    gc.gc_freeze()
                 self.console(local_vars)
                 cr.rollback()
         else:
+            if freeze_gc:
+                gc.gc_freeze()
             self.console(local_vars)
 
     def run(self, args):
@@ -152,8 +156,10 @@ class Shell(Command):
         dbnames = config['db_name']
         if len(dbnames) > 1:
             sys.exit("-d/--database/db_name has multiple database, please provide a single one")
+        # freeze allocated object, because they will stay during
+        # the whole time the program is executed
         if not dbnames:
-            self.shell(None)
+            self.shell(None, freeze_gc=True)
         else:
-            self.shell(dbnames[0])
-        return 0
+            self.shell(dbnames[0], freeze_gc=True)
+        sys.exit()

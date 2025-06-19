@@ -675,6 +675,7 @@ class ThreadedServer(CommonServer):
             self.stop()
             return rc
 
+        gc.gc_freeze()
         self.cron_spawn()
 
         # Wait for a first signal to be handled. (time.sleep will be interrupted
@@ -823,7 +824,10 @@ class GeventServer(CommonServer):
 
     def run(self, preload, stop):
         self.start()
+        if not stop:
+            gc.gc_freeze()
         self.stop()
+
 
 class PreforkServer(CommonServer):
     """ Multiprocessing inspired by (g)unicorn.
@@ -1057,7 +1061,8 @@ class PreforkServer(CommonServer):
         sql_db.close_all()
 
         _logger.debug("Multiprocess starting")
-        while 1:
+        gc.gc_freeze()
+        while True:
             try:
                 #_logger.debug("Multiprocess beat (%s)",time.time())
                 self.process_signals()
@@ -1069,10 +1074,13 @@ class PreforkServer(CommonServer):
                 _logger.debug("Multiprocess clean stop")
                 self.stop()
                 break
-            except Exception as e:
-                _logger.exception(e)
+            except Exception:
+                _logger.exception()
                 self.stop(False)
-                return -1
+                rc = -1
+                break
+        return rc
+
 
 class Worker(object):
     """ Workers """
@@ -1407,6 +1415,7 @@ def preload_registries(dbnames):
 
                 # run post-install tests
                 if config['test_enable']:
+                    gc.gc_freeze()  # keep objects allocated before testing
                     from odoo.tests import loader  # noqa: PLC0415
                     t0 = time.time()
                     t0_sql = sql_db.sql_counter
@@ -1473,6 +1482,7 @@ def start(preload=None, stop=False):
             except Exception:
                 _logger.warning("Could not set ARENA_MAX through mallopt()")
         server = ThreadedServer(odoo.http.root)
+    gc.gc_freeze()  # global server allocated
 
     watcher = None
     if 'reload' in config['dev_mode'] and not odoo.evented:
