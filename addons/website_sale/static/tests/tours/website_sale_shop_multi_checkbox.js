@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
         content: "select Product",
         trigger: ".oe_product_cart a:contains(/^Product Multi$/)",
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "check price",
@@ -67,6 +68,7 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox_single_value',
         content: "select Product",
         trigger: '.oe_product_cart a:contains(/^Burger$/)',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "check price",
