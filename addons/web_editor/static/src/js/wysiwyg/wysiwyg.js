@@ -493,6 +493,7 @@ export class Wysiwyg extends Component {
             preHistoryUndo: () => {
                 this.destroyLinkTools();
             },
+            postHistoryUndo: this.postHistoryUndo.bind(this),
             beforeAnyCommand: this._beforeAnyCommand.bind(this),
             commands: powerboxOptions.commands,
             categories: powerboxOptions.categories,
@@ -1181,6 +1182,10 @@ export class Wysiwyg extends Component {
     redo() {
         this.odooEditor.historyRedo();
     }
+    /**
+     * This is automatically triggered after undo()
+     */
+    postHistoryUndo() { }
     /**
      * Focus inside the editor.
      *
