@@ -4,13 +4,13 @@
     'name': 'Spain - Facturae EDI',
     'version': '1.0',
     'category': 'Accounting/Localizations/EDI',
-    'website': 'https://www.facturae.gob.es/face/Paginas/FACE.aspx',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/accounting/customer_invoices/electronic_invoicing/spain.html',
     'description': """
 This module create the Facturae file required to send the invoices information to the General State Administrations.
 It allows the export and signature of the signing of Facturae files.
-The current version of Facturae supported is the 3.2.2
+The current version of Facturae supported is the 3.2.2.
 
-for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
+For more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
     """,
     'depends': [
         'certificate',

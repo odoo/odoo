@@ -8,8 +8,10 @@
     'description': """
 * Electronically report invoices to the NAV (Hungarian Tax Agency) when issuing physical (paper) invoices.
 * Perform the Tax Audit Export (Adóhatósági Ellenőrzési Adatszolgáltatás) in NAV 3.0 format.
+
+https://www.odootech.hu
     """,
-    'website': 'https://www.odootech.hu',
+    'website': 'https://www.odoo.com/documentation/master/applications/finance/accounting/customer_invoices/electronic_invoicing/hungary.html',
     'depends': ['account_debit_note', 'base_iban', 'l10n_hu'],
     'data': [
         'security/ir.model.access.csv',
