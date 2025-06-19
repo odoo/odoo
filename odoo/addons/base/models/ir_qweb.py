@@ -381,6 +381,7 @@ import psycopg2.errors
 from markupsafe import Markup, escape
 from collections import defaultdict
 from collections.abc import Sized, Mapping, Sequence
+from copy import deepcopy
 from itertools import count, chain
 from lxml import etree
 from dateutil.relativedelta import relativedelta
@@ -889,8 +890,10 @@ class IrQweb(models.AbstractModel):
         if value.get('error'):
             raise value['error']
 
+        # In dev mode `_generate_code_cached` is not cached and the tree can be processed several times
+        value_tree = deepcopy(value['tree']) if 'xml' in tools.config['dev_mode'] else value['tree']
         # return etree, document and ref
-        return (value['tree'], value['template'], value['ref'])
+        return (value_tree, value['template'], value['ref'])
 
     @api.model
     def _get_preload_attribute_xmlids(self):
