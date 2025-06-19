@@ -1,4 +1,4 @@
-import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
@@ -30,5 +30,7 @@ test("display country in channel member list", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-ActionPanel:contains(Information)");
+    await click(".o-mail-Discuss-header button[name='member-list']");
     await contains(".o-discuss-ChannelMember span", { text: "Belgium", count: 2 });
 });

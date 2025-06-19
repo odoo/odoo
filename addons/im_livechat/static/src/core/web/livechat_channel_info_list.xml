@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.channelInfoList">
+        <ActionPanel title.translate="Information" minWidth="200" initialWidth="250" icon="'fa fa-info'">
+            <div class="d-flex flex-column bg-inherit gap-1">
+                <h3 class="pt-3">Notes</h3>
+                <textarea class="form-control" rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>
