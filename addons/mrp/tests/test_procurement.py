@@ -276,7 +276,7 @@ class TestProcurement(TestMrpCommon):
             'name': 'Plastic Mold',
         })
 
-        self.env['mrp.bom'].create({
+        tdbg = self.env['mrp.bom'].create({
             'product_id': product_bottle.id,
             'product_tmpl_id': product_bottle.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
