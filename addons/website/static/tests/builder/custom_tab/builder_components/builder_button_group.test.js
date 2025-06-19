@@ -7,16 +7,19 @@ import {
     addBuilderOption,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 describe.current.tags("desktop");
 
 test("change the editingElement of sub widget through `applyTo` prop", async () => {
+    class CustomAction extends BuilderAction {
+        static id = "customAction";
+        apply({ editingElement }) {
+            expect.step(`customAction ${editingElement.className}`);
+        }
+    }
     addBuilderAction({
-        customAction: {
-            apply: ({ editingElement }) => {
-                expect.step(`customAction ${editingElement.className}`);
-            },
-        },
+        CustomAction,
     });
     addBuilderOption({
         selector: ".test-options-target",
@@ -36,12 +39,14 @@ test("change the editingElement of sub widget through `applyTo` prop", async () 
     expect.verifySteps(["customAction a o-paragraph"]);
 });
 test("should propagate actionParam in the context", async () => {
+    class CustomAction extends BuilderAction {
+        static id = "customAction";
+        apply({ params: { mainParam: testParam } }) {
+            expect.step(`customAction ${testParam}`);
+        }
+    }
     addBuilderAction({
-        customAction: {
-            apply: ({ params: { mainParam: testParam } }) => {
-                expect.step(`customAction ${testParam}`);
-            },
-        },
+        CustomAction,
     });
     addBuilderOption({
         selector: ".test-options-target",
@@ -75,19 +80,35 @@ test("prevent preview of all buttons", async () => {
                         <BuilderButton action="'customAction4'"/>
                     </BuilderButtonGroup>`,
     });
+    class CustomAction1 extends BuilderAction {
+        static id = "customAction1";
+        apply() {
+            return expect.step(`customAction1`);
+        }
+    }
+    class CustomAction2 extends BuilderAction {
+        static id = "customAction2";
+        apply() {
+            return expect.step(`customAction2`);
+        }
+    }
+    class CustomAction3 extends BuilderAction {
+        static id = "customAction3";
+        apply() {
+            return expect.step(`customAction3`);
+        }
+    }
+    class CustomAction4 extends BuilderAction {
+        static id = "customAction4";
+        apply() {
+            return expect.step(`customAction4`);
+        }
+    }
     addBuilderAction({
-        customAction1: {
-            apply: () => expect.step(`customAction1`),
-        },
-        customAction2: {
-            apply: () => expect.step(`customAction2`),
-        },
-        customAction3: {
-            apply: () => expect.step(`customAction3`),
-        },
-        customAction4: {
-            apply: () => expect.step(`customAction4`),
-        },
+        CustomAction1,
+        CustomAction2,
+        CustomAction3,
+        CustomAction4,
     });
     await setupHTMLBuilder(`
                 <div class="test-options-target">

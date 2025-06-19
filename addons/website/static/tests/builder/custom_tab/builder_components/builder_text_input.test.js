@@ -7,6 +7,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -20,8 +21,11 @@ test("hide/display base on applyTo", async () => {
         template: xml`<BuilderTextInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
     });
     addActionOption({
-        customAction: {
-            getValue: () => "customValue",
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue() {
+                return "customValue";
+            }
         },
     });
 

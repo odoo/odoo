@@ -12,6 +12,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "./website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -225,11 +226,14 @@ test("Applying an overlay button action should wait for the actions in progress"
     addPlugin(TestPlugin);
     const customActionDef = new Deferred();
     addActionOption({
-        customAction: {
-            load: () => customActionDef,
-            apply: ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            load() {
+                return customActionDef;
+            }
+            apply({ editingElement }) {
                 editingElement.classList.add("customAction");
-            },
+            }
         },
     });
     addOption({

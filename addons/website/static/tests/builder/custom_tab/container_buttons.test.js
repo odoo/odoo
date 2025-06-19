@@ -16,6 +16,7 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { animationFrame, Deferred, queryText, tick } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -299,11 +300,14 @@ test("applying option container button should wait for actions in progress", asy
     addPlugin(TestPlugin);
     const customActionDef = new Deferred();
     addActionOption({
-        customAction: {
-            load: () => customActionDef,
-            apply: ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            load() {
+                return customActionDef;
+            }
+            apply({ editingElement }) {
                 editingElement.classList.add("customAction");
-            },
+            }
         },
     });
     addOption({
