@@ -71,13 +71,13 @@ function genericDeserializeDate(type, value) {
 
 function placeholderForSelect(displayPlaceholder) {
     if (displayPlaceholder) {
-        return _t(`Select one or several criteria`);
+        return _t(`Select at least one criterion`);
     }
 }
 
 function placeholderForInput(displayPlaceholder) {
     if (displayPlaceholder) {
-        return _t(`Press "Enter" to add criterion`);
+        return _t(`Enter at least one criterion`);
     }
 }
 
