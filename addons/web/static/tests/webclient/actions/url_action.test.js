@@ -45,8 +45,8 @@ test("execute an 'ir.actions.act_url' action with url javascript:", async () => 
 });
 
 test("execute an 'ir.actions.act_url' action with target 'download'", async () => {
-    patchWithCleanup(browser.location, {
-        assign: (url) => {
+    patchWithCleanup(browser, {
+        open: (url) => {
             expect.step(url);
         },
     });
