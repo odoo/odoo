@@ -42,6 +42,7 @@
 
             'web/static/src/scss/bootstrap_overridden.scss',
             'html_builder/static/src/**/*.inside.scss',
+            'html_editor/static/src/main/chatgpt/chatgpt_plugin.scss',
             'html_editor/static/src/main/link/link.scss',
         ],
         'html_builder.assets_edit_frontend': [
