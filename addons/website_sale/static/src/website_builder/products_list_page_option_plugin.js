@@ -87,7 +87,7 @@ class SetDefaultSortAction extends BuilderAction {
         this.reload = {};
     }
     isApplied({ editingElement, value }) {
-        editingElement.dataset.defaultSort === value;
+        return editingElement.dataset.defaultSort === value;
     }
     apply({ value }) {
         return rpc("/shop/config/website", { shop_default_sort: value });

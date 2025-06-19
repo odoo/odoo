@@ -21,6 +21,7 @@ export class CompositeActionPlugin extends Plugin {
 class CompositeAction extends BuilderAction {
     static id = "composite";
     static dependencies = ["builderActions"];
+    loadOnClean = true;
     async prepare({ actionParam: { mainParam: actions }, actionValue }) {
         const proms = [];
         for (const actionDef of actions) {
@@ -131,9 +132,6 @@ class CompositeAction extends BuilderAction {
             }
         }
     }
-    loadOnClean() {
-        return true;
-    }
     clean({
         editingElement,
         params: { mainParam: actions },
@@ -194,5 +192,7 @@ class CompositeAction extends BuilderAction {
 
 class ReloadCompositeAction extends CompositeAction {
     static id = "reloadComposite";
-    reload() {}
+    setup() {
+        this.reload = {};
+    }
 }
