@@ -225,11 +225,15 @@ export class PivotRenderer extends Component {
         });
 
         // retrieve form and list view ids from the action
+        // Always include 'list'; include 'form' only if it exists in the views
         const { views = [] } = this.env.config;
-        this.views = ["list", "form"].map((viewType) => {
-            const view = views.find((view) => view[1] === viewType);
-            return [view ? view[0] : false, viewType];
-        });
+
+        this.views = ["list"]
+            .concat(views.some(view => view[1] === "form") ? ["form"] : [])
+            .map((viewType) => {
+                const view = views.find((view) => view[1] === viewType);
+                return [view ? view[0] : false, viewType];
+            });
 
         const group = {
             rowValues: cell.groupId[0],
