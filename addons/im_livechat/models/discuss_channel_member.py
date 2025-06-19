@@ -85,7 +85,9 @@ class DiscussChannelMember(models.Model):
     def _inverse_livechat_member_type(self):
         # sudo - im_livechat.channel.member: creating/updating history following
         # "livechat_member_type" modification is acceptable.
-        self.sudo()._create_or_update_history()
+        self.sudo()._create_or_update_history(
+            {member: {"livechat_member_type": member.livechat_member_type} for member in self},
+        )
 
     def _inverse_chatbot_script_id(self):
         # sudo - im_livechat.channel.member: creating/updating history following

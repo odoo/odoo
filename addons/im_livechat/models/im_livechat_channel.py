@@ -217,6 +217,9 @@ class Im_LivechatChannel(models.Model):
         self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None
     ):
         user_operator = self.env["res.users"]
+        # use the same "now" in the whole function to ensure unpin_dt > last_interest_dt
+        now = fields.Datetime.now()
+        last_interest_dt = now - timedelta(seconds=1)
         if chatbot_script:
             if chatbot_script.id not in self.browse(self.ids).mapped('rule_ids.chatbot_script_id.id'):
                 return False
@@ -230,12 +233,13 @@ class Im_LivechatChannel(models.Model):
         members_to_add = [
             Command.create(
                 {
-                    "livechat_member_type": "agent" if user_operator else "bot",
                     "chatbot_script_id": chatbot_script.id if not user_operator else False,
+                    "last_interest_dt": last_interest_dt,
+                    "livechat_member_type": "agent" if user_operator else "bot",
                     "partner_id": operator_partner_id,
-                    "unpin_dt": fields.Datetime.now(),
-                }
-            )
+                    "unpin_dt": now,
+                },
+            ),
         ]
         visitor_user = False
         if user_id and user_id != user_operator.id:
