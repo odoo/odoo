@@ -728,7 +728,6 @@ class AccountMoveLine(models.Model):
             record.cumulated_balance = result[record.id]
 
     def _search_reconcile_until(self, operator, value):
-        # see search_fetch which transforms the value into a context key for use in _compute_amount_residual_at_date
         if operator not in ('<', '<=', '='):
             raise NotImplementedError
         return []
@@ -738,9 +737,9 @@ class AccountMoveLine(models.Model):
     def _compute_amount_residual(self):
         self._compute_residual()
 
-    @api.depends_context('reconcile_until')
+    @api.depends_context('search_default_reconcile_until')
     def _compute_amount_residual_at_date(self):
-        reconcile_until = self.env.context.get('reconcile_until', fields.Date.context_today(self))  # default to avoid unset computed field
+        reconcile_until = self.env.context.get('search_default_reconcile_until', [fields.Date.context_today(self)])[0]  # default to avoid unset computed field
         self._compute_residual(reconcile_until)
 
     def _compute_residual(self, reconcile_until=False):
@@ -1486,12 +1485,6 @@ class AccountMoveLine(models.Model):
             domain_cumulated_balance=to_tuple(domain or []),
             order_cumulated_balance=order,
         )
-
-        for condition in Domain(domain).iter_conditions():
-            if condition.field_expr == 'reconcile_until':
-                # keep the condition as it will be checked and replaced by _search_reconcile_until
-                contextualized = contextualized.with_context(reconcile_until=condition.value)
-
         return super(AccountMoveLine, contextualized).search_fetch(domain, field_names, offset, limit, order)
 
     def default_get(self, fields_list):

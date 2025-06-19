@@ -437,7 +437,7 @@
                     <field name="journal_id"/>
                     <field name="currency_id" groups="base.group_multi_currency" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="reconcile_until"/>
+                    <field name="reconcile_until" context="{'search_default_reconcile_until': self}"/>
                     <separator/>
                     <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items" invisible="1"/>
                     <separator/>
