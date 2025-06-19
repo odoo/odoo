@@ -7,8 +7,150 @@ from odoo.tools import SQL
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    def _get_query_tax_details_simplified(self, search_condition):
+        query = SQL('''
+            WITH tax_data AS (
+                SELECT
+                    lt.id AS tax_line_id,
+                    t.id AS tax_id,
+                    lt.balance AS tax_amount,
+                    account_move_line.id AS base_line_id,
+                    lt.move_id,
+                    t.sequence,
+                    CASE
+                        WHEN t.amount_type <> 'fixed' THEN account_move_line.balance
+                        ELSE account_move_line.quantity
+                    END AS base_value,
+                    lt.partner_id,
+                    lt.currency_id,
+                    lt.analytic_distribution,
+                    account_move_line.account_id AS base_account_id,
+                    lt.account_id AS tax_account_id,
+                    t.amount,
+                    tax_rep.factor_percent,
+                    move.move_type
+                FROM account_move_line account_move_line
+                JOIN account_move move ON move.id = account_move_line.move_id
+                JOIN account_move_line_account_tax_rel r ON r.account_move_line_id = account_move_line.id
+                JOIN account_tax t ON t.id = r.account_tax_id
+                JOIN account_move_line lt ON (
+                        (
+                            account_move_line.tax_repartition_line_id IS NULL
+                            AND t.id = COALESCE(lt.group_tax_id, lt.tax_line_id)
+                        )
+                        OR (
+                            account_move_line.tax_repartition_line_id IS NOT NULL
+                            AND t.id = lt.tax_line_id
+                        )
+                    )
+                    AND lt.move_id = account_move_line.move_id
+                    AND COALESCE(lt.partner_id, 0) = COALESCE(account_move_line.partner_id, 0)
+                    AND lt.currency_id = account_move_line.currency_id
+                    AND (
+                        t.analytic IS NOT TRUE
+                        OR (lt.analytic_distribution IS NULL AND account_move_line.analytic_distribution IS NULL)
+                        OR lt.analytic_distribution = account_move_line.analytic_distribution
+                    )
+                JOIN account_tax_repartition_line tax_rep ON tax_rep.id = lt.tax_repartition_line_id
+                WHERE
+                    %(search_condition)s
+                AND (
+                    move.move_type != 'entry'
+                    OR sign(account_move_line.balance) = sign(lt.balance * t.amount * tax_rep.factor_percent)
+                )
+                AND (
+                    account_move_line.tax_repartition_line_id IS NOT NULL
+                    OR COALESCE(tax_rep.account_id, account_move_line.account_id) = lt.account_id
+                )
+            ),
+            aggregated AS (
+                SELECT
+                    *,
+                    SUM(base_value) OVER (PARTITION BY tax_line_id, tax_id ORDER BY sequence, base_line_id) AS base_cumul,
+                    SUM(base_value) OVER (PARTITION BY tax_line_id, tax_id) AS base
+                FROM tax_data
+            ),
+            raw_tax_details AS (
+                SELECT
+                    move_id,
+                    tax_line_id,
+                    base_line_id,
+                    ROUND(tax_amount * base_cumul / NULLIF(base, 0), 2)
+                      - LAG(ROUND(tax_amount * base_cumul / NULLIF(base, 0), 2), 1, 0.0)
+                        OVER (PARTITION BY tax_line_id, tax_id ORDER BY tax_line_id, base_line_id) AS tax_amount
+                FROM aggregated
+            ),
+            direct_tax_details AS (
+                SELECT raw_tax_details.*
+                FROM raw_tax_details
+                JOIN account_move_line base_line ON base_line.id = raw_tax_details.base_line_id
+                WHERE base_line.tax_repartition_line_id IS NULL
+            ),
+            tax_line_base_details AS (
+                SELECT
+                    raw_tax_details.*,
+                    base_line.balance AS base_line_balance,
+                    comp_curr.decimal_places AS comp_curr_prec
+                FROM raw_tax_details
+                JOIN account_move_line base_line ON base_line.id = raw_tax_details.base_line_id
+                JOIN res_currency comp_curr ON comp_curr.id = base_line.company_currency_id
+                WHERE base_line.tax_repartition_line_id IS NOT NULL
+            ),
+            dispatched_tax_line_base_details AS (
+                SELECT
+                    move_id,
+                    tax_line_id,
+                    base_line_id,
+                    ROUND(
+                        COALESCE(tax_amount * base_cumul / NULLIF(base_line_balance, 0), 0),
+                        comp_curr_prec
+                    )
+                    - LAG(
+                        ROUND(
+                            COALESCE(tax_amount * base_cumul / NULLIF(base_line_balance, 0), 0),
+                            comp_curr_prec
+                        ), 1, 0.0
+                    ) OVER (PARTITION BY tax_line_id, src_line_id ORDER BY base_line_id) AS tax_amount
+                FROM (
+                    SELECT
+                        tax_line_base.move_id,
+                        tax_line_base.tax_line_id,
+                        direct_base.base_line_id,
+                        tax_line_base.base_line_id AS src_line_id,
+                        tax_line_base.tax_amount,
+                        tax_line_base.base_line_balance,
+                        tax_line_base.comp_curr_prec,
+                        SUM(direct_base.tax_amount) OVER (
+                            PARTITION BY tax_line_base.tax_line_id, tax_line_base.base_line_id
+                            ORDER BY direct_base.base_line_id
+                        ) AS base_cumul
+                    FROM tax_line_base_details tax_line_base
+                    JOIN direct_tax_details direct_base ON direct_base.tax_line_id = tax_line_base.base_line_id
+                ) source
+            )
+            SELECT
+                move_id,
+                tax_line_id,
+                base_line_id,
+                tax_amount
+            FROM direct_tax_details
+
+            UNION ALL
+
+            SELECT
+                move_id,
+                tax_line_id,
+                base_line_id,
+                tax_amount
+            FROM dispatched_tax_line_base_details
+            ORDER BY tax_line_id, base_line_id;
+            ''',
+            search_condition=search_condition,
+        )
+        return query
+
     @api.model
-    def _get_query_tax_details_from_domain(self, domain, fallback=True) -> SQL:
+    def _get_query_tax_details_from_domain(self, domain, fallback=True, use_simplified_query=False) -> SQL:
         """ Create the tax details sub-query based on the orm domain passed as parameter.
 
         :param domain:      An orm domain on account.move.line.
@@ -16,6 +158,8 @@ class AccountMoveLine(models.Model):
         :return:            query as SQL object
         """
         query = self.env['account.move.line']._search(domain)
+        if use_simplified_query:
+            return self._get_query_tax_details_simplified(query.where_clause)
 
         return self._get_query_tax_details(query.from_clause, query.where_clause, fallback=fallback)
 
