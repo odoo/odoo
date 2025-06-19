@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="resume_slides_line_view_form" model="ir.ui.view">
+        <field name="name">hr.resume.line.form</field>
+        <field name="model">hr.resume.line</field>
+        <field name="inherit_id" ref="hr_skills.resume_line_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='external_url']" position="before">
+                <field name="event_id" readonly="0"/>
+            </xpath>
+            <xpath expr="//field[@name='course_type']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='external_url']" position="attributes">
+                <attribute name="invisible">course_type != 'external'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='event_id']" position="attributes">
+                <attribute name="invisible">course_type != 'onsite'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="resume_slides_line_view_list" model="ir.ui.view">
+        <field name="name">hr.resume.line.list</field>
+        <field name="model">hr.resume.line</field>
+        <field name="inherit_id" ref="hr_skills.hr_resume_line_list_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='course_type']" position="attributes">
+                <attribute name="column_invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='external_url']" position="attributes">
+                <attribute name="column_invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='duration']" position="after">
+                <field name="event_id" optional="hide" readonly="0"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="resume_slides_line_view_kanban" model="ir.ui.view">
+        <field name="name">hr.resume.line.kanban.view.inherited</field>
+        <field name="model">hr.resume.line</field>
+        <field name="inherit_id" ref="hr_skills.hr_resume_line_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='course_type']" position="attributes">
+                <attribute name="decoration-primary">course_type == 'onsite'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
