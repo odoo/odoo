@@ -227,7 +227,7 @@
                             <div class="o_row">
                                 <field name="scheduled_date" readonly="state in ['cancel', 'done']" required="id"
                                     decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now"
-                                    decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date"
+                                    decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; datetime.datetime.now().to_utc().strftime('%Y-%m-%d')"
                                     decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
                                 <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                             </div>
@@ -361,7 +361,7 @@
                     <filter name="internal" invisible="1" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
                     <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
                     <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
-                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
+                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <filter name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
                     <filter name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
                     <filter name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
