@@ -20,6 +20,36 @@ function addColumn(position) {
     };
 }
 
+function turnIntoHeader(row) {
+    return (editor) => {
+        if (!row) {
+            const selection = editor.shared.selection.getEditableSelection();
+            row = findInSelection(selection, "tr");
+        }
+        editor.shared.table.turnIntoHeader(row);
+    };
+}
+
+function turnIntoRow(row) {
+    return (editor) => {
+        if (!row) {
+            const selection = editor.shared.selection.getEditableSelection();
+            row = findInSelection(selection, "tr");
+        }
+        editor.shared.table.turnIntoRow(row);
+    };
+}
+
+function moveRow(position, row) {
+    return (editor) => {
+        if (!row) {
+            const selection = editor.shared.selection.getEditableSelection();
+            row = findInSelection(selection, "tr");
+        }
+        editor.shared.table.moveRow(position, row);
+    };
+}
+
 function removeRow(row) {
     return (editor) => {
         if (!row) {
@@ -41,6 +71,84 @@ function removeColumn(cell) {
 }
 
 describe("row", () => {
+    describe("convert", () => {
+        test("should convert the first row to table header", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <td style="width: 20px;">ab[]</td>
+                                <td style="width: 25px;">cd</td>
+                                <td style="width: 30px;">ef</td>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: turnIntoHeader(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 20px;">ab[]</th>
+                                <th class="o_table_header" style="width: 25px;">cd</th>
+                                <th class="o_table_header" style="width: 30px;">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should convert table header to normal row", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <td style="width: 20px;">ab[]</td>
+                                <td style="width: 25px;">cd</td>
+                                <td style="width: 30px;">ef</td>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: turnIntoRow(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <td style="width: 20px;">ab[]</td>
+                                <td style="width: 25px;">cd</td>
+                                <td style="width: 30px;">ef</td>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+
     describe("above", () => {
         test("should add a row above the top row", async () => {
             await testEditor({
@@ -156,6 +264,85 @@ describe("row", () => {
             });
         });
     });
+
+    describe("move", () => {
+        test("should move header row down and convert it to normal row", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 20px;">ab[]</th>
+                                <th class="o_table_header" style="width: 25px;">cd</th>
+                                <th class="o_table_header" style="width: 30px;">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>gh</td>
+                                <td>ij</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: moveRow("down"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 30px;">
+                                <th class="o_table_header" style="width: 20px;">gh</th>
+                                <th class="o_table_header" style="width: 25px;">ij</th>
+                                <th class="o_table_header" style="width: 30px;">kl</th>
+                            </tr>
+                            <tr style="height: 20px;">
+                                <td style="width: 20px;">ab[]</td>
+                                <td style="width: 25px;">cd</td>
+                                <td style="width: 30px;">ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should move second row up and convert it to header row", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 20px;">ab</th>
+                                <th class="o_table_header" style="width: 25px;">cd</th>
+                                <th class="o_table_header" style="width: 30px;">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>gh</td>
+                                <td>ij</td>
+                                <td>kl[]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: moveRow("up"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 30px;">
+                                <th class="o_table_header" style="width: 20px;">gh</th>
+                                <th class="o_table_header" style="width: 25px;">ij</th>
+                                <th class="o_table_header" style="width: 30px;">kl[]</th>
+                            </tr>
+                            <tr style="height: 20px;">
+                                <td style="width: 20px;">ab</td>
+                                <td style="width: 25px;">cd</td>
+                                <td style="width: 30px;">ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+
     describe("removal", () => {
         test("should remove a row based on selection", async () => {
             await testEditor({
