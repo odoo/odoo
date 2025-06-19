@@ -3442,7 +3442,7 @@ test("kanban grouped by stage_id: move record from to the None column", async ()
     // Set up a record with no stage initially
     Partner._records = [
         { id: 1, foo: "Task A", stage_id: false },
-        { id: 2, foo: "Task B", stage_id: 10},
+        { id: 2, foo: "Task B", stage_id: 10 },
     ];
     Partner._fields.stage_id = fields.Many2one({ relation: "partner.stage" });
 
@@ -3463,9 +3463,9 @@ test("kanban grouped by stage_id: move record from to the None column", async ()
     expect(queryAll(".o_kanban_group")).toHaveCount(2); // None and New
 
     await click(".o_kanban_group:first .o_kanban_header");
-    
+
     // Drag a record to the "None" column
-    let dragActions = await contains(".o_kanban_record:contains(Task B)").drag();
+    const dragActions = await contains(".o_kanban_record:contains(Task B)").drag();
     await dragActions.moveTo(".o_kanban_group:nth-child(1) .o_kanban_header");
     await dragActions.drop();
 
@@ -9504,10 +9504,16 @@ test("progress bar with aggregates: activate bars (grouped by many2one)", async 
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
+                        <field name="float_field"/>
                     </t>
                 </templates>
             </kanban>`,
         groupBy: ["product_id"],
+    });
+
+    onRpc("partner", "web_read_group", ({ kwargs }) => {
+        // float_field is not in the progressbar, then never ask his aggregation
+        expect(kwargs.aggregates).not.toInclude("float_field:sum");
     });
 
     expect(getKanbanColumnTooltips(0)).toEqual(["2 yop", "1 gnap", "1 blip"]);
