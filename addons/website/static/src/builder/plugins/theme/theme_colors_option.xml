@@ -73,40 +73,22 @@
                 <t t-set-slot="collapse">
                     <t t-foreach="state.presets" t-as="preset" t-key="preset.id">
                         <BuilderRow t-slot-scope="row">
-                            <div t-on-click="row.toggleCollapseContent"
-                                t-attf-class="
-                                    w-100 p-2 d-flex justify-content-between
-                                    align-items-center ms-3"
-                                t-attf-style="
-                                    background-color: {{preset.background}};
-                                    background-image: {{preset.backgroundGradient}};
-                                    color: {{preset.text}}">
-                                <h3
-                                    class="m-0"
-                                    t-attf-style="color: {{preset.headings}}">
-                                    Title
-                                </h3>
-                                <p class="my-0 ms-3 me-auto">
-                                    Text
-                                </p>
-                                <button
-                                    tabindex="-1"
-                                    class="btn btn-sm me-2"
-                                    t-attf-style="
-                                        background-color: {{preset.primaryBtn}};
-                                        color: {{preset.primaryBtnText}};
-                                        border: 1px solid {{preset.primaryBtnBorder}}">
-                                    Button
-                                </button>
-                                <button
-                                    tabindex="-1"
-                                    class="btn btn-sm"
-                                    t-attf-style="
-                                        background-color: {{preset.secondaryBtn}};
-                                        color: {{preset.secondaryBtnText}};
-                                        border: 1px solid {{preset.secondaryBtnBorder}}">
-                                    Button
-                                </button>
+                            <div class="o_cc_preview_wrapper" t-on-click="row.toggleCollapseContent">
+                                <div inert="" t-att-class="`o_cc${preset.id}`"
+                                     class="w-100 p-2 d-flex justify-content-between align-items-center ms-3">
+                                    <h3 class="m-0">
+                                        Title
+                                    </h3>
+                                    <p class="my-0 ms-3 me-auto">
+                                        Text
+                                    </p>
+                                    <button class="btn btn-primary btn-sm me-2">
+                                        Button
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm">
+                                        Button
+                                    </button>
+                                </div>
                             </div>
                             <t t-set-slot="collapse">
                                 <BuilderRow label.translate="Background">
