@@ -1172,6 +1172,7 @@ class DiscussChannel(models.Model):
                         for partner in partners
                     ],
                     "channel_type": "chat",
+                    "last_interest_dt": last_interest_dt,
                     "name": ", ".join(partners.mapped("name")),
                 }
             )
