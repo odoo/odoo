@@ -138,6 +138,20 @@ describe("Custom button style", () => {
         expect(optionsvalues).toInclude("Button Secondary");
         expect(optionsvalues).not.toInclude("Custom");
     });
+    test("Editor allow button size style by default", async () => {
+        await setupEditor(
+            '<p><a href="https://test.com/" class="btn btn-primary">link[]Label</a></p>'
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+        const optionsValues = [...queryOne('select[name="link_style_size"]').options].map(
+            (opt) => opt.label
+        );
+        expect(optionsValues).toInclude("Small");
+        expect(optionsValues).toInclude("Medium");
+        expect(optionsValues).toInclude("Large");
+    });
     test("Editor don't allow target blank style by default", async () => {
         await setupEditor('<p><a href="https://test.com/">link[]Label</a></p>');
         await waitFor(".o-we-linkpopover");
