@@ -188,7 +188,7 @@
                                         <field name="bank_account_id" context="{'default_partner_id': work_contact_id}"
                                                options="{'no_quick_create': True}" readonly="not id"/>
                                     </group>
-                                    <group string="Birth Information">
+                                    <group string="Birth Information" name="hr_birth_group">
                                         <field name="legal_name"/>
                                         <label for="birthday"/>
                                         <div class="o_row" name="div_km_home_work">
@@ -226,7 +226,7 @@
                                         <field name="ssnid"/>
                                         <field name="passport_id"/>
                                     </group>
-                                    <group string="Location">
+                                    <group string="Location" name="hr_location_group">
                                         <label for="private_street" string="Private Address"/>
                                         <div class="o_address_format">
                                             <field name="private_street" placeholder="Street..." class="o_address_street"/>
@@ -244,13 +244,13 @@
                                             <span><field name="distance_home_work_unit"/></span>
                                         </div>
                                     </group>
-                                    <group string="Family">
+                                    <group string="Family" name="hr_family_group">
                                         <field name="marital"/>
                                         <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
                                         <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
                                         <field name="children"/>
                                     </group>
-                                    <group string="Education">
+                                    <group string="Education" name="hr_education_group">
                                         <field name="certificate"/>
                                         <field name="study_field"/>
                                     </group>
