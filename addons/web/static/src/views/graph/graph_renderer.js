@@ -681,7 +681,11 @@ export class GraphRenderer extends Component {
      * If a group has been clicked on, display a view of its records.
      * @param {MouseEvent} ev
      */
-    onGraphClicked(ev) {
+    onGraphClicked(ev, isMiddleClick) {
+        const { disableLinking, mode } = this.model.metaData;
+        if (disableLinking || mode === "line") {
+            return;
+        }
         const [activeElement] = this.chart.getElementsAtEventForMode(
             ev,
             "nearest",
@@ -694,7 +698,7 @@ export class GraphRenderer extends Component {
         const { datasetIndex, index } = activeElement;
         const { domains } = this.chart.data.datasets[datasetIndex];
         if (domains) {
-            this.onGraphClickedFinal(domains[index]);
+            this.onGraphClickedFinal(domains[index], isMiddleClick);
         }
     }
 
@@ -760,7 +764,7 @@ export class GraphRenderer extends Component {
      * instantiate the chart.
      */
     prepareOptions() {
-        const { disableLinking, mode } = this.model.metaData;
+        const { mode } = this.model.metaData;
         const options = {
             maintainAspectRatio: false,
             scales: this.getScaleOptions(),
@@ -774,9 +778,6 @@ export class GraphRenderer extends Component {
             },
             animation: this.getAnimationOptions(),
         };
-        if (!disableLinking && mode !== "line") {
-            options.onClick = this.onGraphClicked.bind(this);
-        }
         if (mode === "line") {
             options.interaction = {
                 mode: "index",
@@ -848,7 +849,7 @@ export class GraphRenderer extends Component {
      * @param {Array} views
      * @param {Object} context
      */
-    openView(domain, views, context) {
+    openView(domain, views, context, newWindow) {
         this.actionService.doAction(
             {
                 context,
@@ -860,6 +861,7 @@ export class GraphRenderer extends Component {
                 views,
             },
             {
+                newWindow,
                 viewType: "list",
             }
         );
@@ -867,7 +869,7 @@ export class GraphRenderer extends Component {
     /**
      * @param {string} domain the domain of the clicked area
      */
-    onGraphClickedFinal(domain) {
+    onGraphClickedFinal(domain, isMiddleClick = false) {
         const { context } = this.model.metaData;
 
         Object.keys(context).forEach((x) => {
@@ -884,7 +886,7 @@ export class GraphRenderer extends Component {
             return [views[viewType] || false, viewType];
         }
         const actionViews = [getView("list"), getView("form")];
-        this.openView(domain, actionViews, context);
+        this.openView(domain, actionViews, context, isMiddleClick);
     }
 
     /**
