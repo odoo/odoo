@@ -598,7 +598,7 @@ function useOperationWithReload(callApply, reload) {
     return async (...args) => {
         const { editingElement } = args[0][0];
         await Promise.all([callApply(...args), env.editor.shared.savePlugin.save()]);
-        const target = env.editor.shared["builderOptions"].getReloadSelector(editingElement);
+        const target = env.editor.shared.builderOptions.getReloadTarget(editingElement);
         const url = reload.getReloadUrl?.();
         await env.editor.config.reloadEditor({ target, url });
     };

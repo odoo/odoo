@@ -43,8 +43,8 @@ export class ProductImageOptionPlugin extends Plugin {
 }
 
 /*
-* Change sequence of product page images
-*/
+ * Change sequence of product page images
+ */
 class SetPositionAction extends BuilderAction {
     static id = "setPosition";
     setup() {
