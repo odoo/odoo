@@ -36,7 +36,7 @@
                 <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.composer.replyToMessage, props.composer.thread)">
                     Replying to <b t-esc="props.composer.replyToMessage.author?.name ?? props.composer.replyToMessage.email_from"/>
                 </span>
-                <span t-if="props.composer.replyToMessage.thread.notEq(props.composer.thread)">
+                <span t-if="props.composer.replyToMessage.thread?.notEq(props.composer.thread)">
                     on: <b><t t-esc="props.composer.replyToMessage.thread.displayName"/></b>
                 </span>
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => (props.composer.replyToMessage = undefined)"/>
