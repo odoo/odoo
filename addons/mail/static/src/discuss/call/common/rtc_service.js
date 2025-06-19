@@ -545,9 +545,9 @@ export class Rtc extends Record {
         this.setTalking(true);
     }
 
-    async openPip() {
+    async openPip(options) {
         if (this.isHost) {
-            await this.pipService.openPip();
+            await this.pipService.openPip(options);
             return;
         }
         this.notification.add(UNAVAILABLE_AS_REMOTE, {
