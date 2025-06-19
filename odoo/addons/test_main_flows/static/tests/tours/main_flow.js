@@ -555,16 +555,24 @@ stepUtils.autoExpandMoreButtons(),
         }
     },
 }, {
-    trigger: '.o_field_widget[name=service_policy] select',
+    trigger: ".o_field_widget[name=service_policy] input",
     content: _t('Change service policy'),
     tooltipPosition: 'left',
-    run: `select "delivered_timesheet"`,
+    run: "click",
 }, {
-    trigger: '.o_field_widget[name=service_tracking] select',
-    content: _t('Change track service'),
+    content: "Select",
+    trigger: ".o_select_menu_item:contains(Based on Timesheets)",
+    run: "click",
+},  {
+    trigger: ".o_field_widget[name=service_tracking] input",
+    content: _t('Change service policy'),
     tooltipPosition: 'left',
-    run: `select "task_global_project"`,
+    run: "click",
 }, {
+    content: "Select",
+    trigger: ".o_select_menu_item:contains(Task)",
+    run: "click",
+},{
     isActive: ["desktop"],
     trigger: '.o_field_widget[name=project_id] input',
     content: _t('Choose project'),

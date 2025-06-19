@@ -1,10 +1,7 @@
-body:not(.o_touch_device) .o_field_selection {
-    &:not(.o_field_invalid):not(:hover):not(:focus-within) {
-        & select:not(:hover) {
-            background-image: none;
-        }
-    }
+.o_field_selection_menu {
+    min-width: 160px;
 }
-select:has(option.o_select_placeholder:checked) {
-    color: $input-placeholder-color;
+
+.o_form_view.o_field_highlight .o_select_menu .o_select_menu_caret {
+    visibility: visible;
 }
