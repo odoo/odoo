@@ -690,7 +690,8 @@ class HrAttendance(models.Model):
     def _cron_auto_check_out(self):
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
-             ('employee_id.company_id.auto_check_out', '=', True)]
+             ('employee_id.company_id.auto_check_out', '=', True),
+             ('employee_id.resource_calendar_id.flexible_hours', '=', False)]
         )
 
         if not to_verify:
@@ -740,7 +741,9 @@ class HrAttendance(models.Model):
 
         technical_attendances_vals = []
         absent_employees = self.env['hr.employee'].search([('id', 'not in', checked_in_employees.ids),
-                                                           ('company_id', 'in', companies.ids)])
+                                                           ('company_id', 'in', companies.ids),
+                                                           ('resource_calendar_id.flexible_hours', '=', False)])
+
         for emp in absent_employees:
             local_day_start = pytz.utc.localize(yesterday).astimezone(pytz.timezone(emp._get_tz()))
             technical_attendances_vals.append({

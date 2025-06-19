@@ -46,7 +46,8 @@ class StockMove(models.Model):
         # 'real cost' of finished product moves @ build time
         price_unit_map = {
             move.id: (
-                move.unbuild_id.mo_id.move_finished_ids.stock_valuation_layer_ids.filtered(
+                (move.unbuild_id.mo_id.move_finished_ids |
+                move.unbuild_id.mo_id.move_raw_ids).stock_valuation_layer_ids.filtered(
                     lambda svl: svl.product_id == move.product_id
                 )[0].unit_cost,
                 move.company_id.currency_id.round,

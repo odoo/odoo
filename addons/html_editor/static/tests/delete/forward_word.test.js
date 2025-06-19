@@ -2,6 +2,7 @@ import { test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
+import { mockUserAgent } from "@odoo/hoot-mock";
 
 test("should not remove an unremovable element on CTRL+DELETE", async () => {
     await testEditor({
@@ -36,5 +37,14 @@ test("should not merge an unbreakable element on CTRL+DELETE (2)", async () => {
         contentAfter: unformat(`
             <p>abc[]</p>
             <div class="oe_unbreakable">def</div>`),
+    });
+});
+
+test("Should delete last word on MacOS", async () => {
+    mockUserAgent("mac");
+    await testEditor({
+        contentBefore: `<p>hello[] world</p>`,
+        stepFunction: () => press(["Alt", "Delete"]),
+        contentAfter: `<p>hello[]</p>`,
     });
 });

@@ -13,7 +13,7 @@
             </div>
             <div t-if="this.state.isDone or this.isWebsiteUser" class="alert alert-info" role="alert">
                 <span t-if="this.state.isDone">
-                    <strong>Sharing is caring!</strong> Email(s) sent.
+                    <strong>Sharing is caring!</strong> Your email(s) will arrive shortly.
                 </span>
                 <span t-if="this.isWebsiteUser">
                     Please <a t-attf-href="/odoo?redirect={{ window.location.href }}" class="fw-bold"> login </a>

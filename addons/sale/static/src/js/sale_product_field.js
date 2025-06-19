@@ -148,10 +148,12 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     }
 
     get label() {
-        let label = super.label;
+        let label = this.props.record.data.name;
         if (this.translatedProductName && label.startsWith(this.translatedProductName)) {
             // Remove the translated name as it is already shown to the salesman on the SOL.
-            label = label.slice(label.indexOf("\n") + 1);
+            label = label.slice(this.translatedProductName.length + 1);  // + "\n"
+        } else {
+            label = super.label;
         }
         return label;
     }
@@ -161,15 +163,13 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     }
 
     updateLabel(value) {
-        if (this.translatedProductName === undefined) {
-            // View was not updated to include `translatedProductName`
+        if (!this.translatedProductName) {
             return super.updateLabel(value);
         }
         this.props.record.update({
             name: (
-                this.translatedProductName && value && this.translatedProductName.concat("\n", value)
-                || !value && this.translatedProductName
-                || value
+                value && this.translatedProductName.concat("\n", value)
+                || this.translatedProductName
             ),
         });
     }

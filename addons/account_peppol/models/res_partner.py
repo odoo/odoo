@@ -205,7 +205,7 @@ class ResPartner(models.Model):
             self.peppol_eas,
             self_partner._get_peppol_edi_format(),
         )
-        if self_partner.peppol_verification_state == 'valid':
+        if self_partner.peppol_verification_state == 'valid' and not self_partner.invoice_sending_method:
             self_partner.invoice_sending_method = 'peppol'
 
         self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)

@@ -330,25 +330,23 @@ test("Image transformation disappear on escape", async () => {
     expect(transfoContainers.length).toBe(0);
 });
 
-test("Image transformation disappear on backspace/delete", async () => {
+test("Image transformation disappears on backspace/delete", async () => {
     const { editor } = await setupEditor(`
         <img class="img-fluid test-image" src="${base64Img}">
     `);
     click("img.test-image");
-    await waitFor(".o-we-toolbar");
+    await expectElementCount(".o-we-toolbar", 1);
     await contains(".o-we-toolbar div[name='image_transform'] button").click();
-    expect(".transfo-container").toHaveCount(1);
+    await expectElementCount(".transfo-container", 1);
     press("backspace");
-    await animationFrame();
-    expect(".transfo-container").toHaveCount(0);
+    await expectElementCount(".transfo-container", 0);
     undo(editor);
     click("img.test-image");
-    await waitFor(".o-we-toolbar");
+    await expectElementCount(".o-we-toolbar", 1);
     await contains(".o-we-toolbar div[name='image_transform'] button").click();
-    expect(".transfo-container").toHaveCount(1);
+    await expectElementCount(".transfo-container", 1);
     press("delete");
-    await animationFrame();
-    expect(".transfo-container").toHaveCount(0);
+    await expectElementCount(".transfo-container", 0);
 });
 
 test("Image transformation disappears on character key press", async () => {
@@ -356,12 +354,11 @@ test("Image transformation disappears on character key press", async () => {
         <img class="img-fluid test-image" src="${base64Img}">
     `);
     click("img.test-image");
-    await waitFor(".o-we-toolbar");
+    await expectElementCount(".o-we-toolbar", 1);
     await contains(".o-we-toolbar div[name='image_transform'] button").click();
-    expect(".transfo-container").toHaveCount(1);
+    await expectElementCount(".transfo-container", 1);
     insertText(editor, "a");
-    await animationFrame();
-    expect(".transfo-container").toHaveCount(0);
+    await expectElementCount(".transfo-container", 0);
 });
 
 test("Image transformation scalers position", async () => {

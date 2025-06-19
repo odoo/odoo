@@ -470,6 +470,8 @@ class AccountWithholdingLine(models.AbstractModel):
         existing_withholding_line_map = self.grouped(key=lambda l: l._get_grouping_key())
 
         def grouping_function(base_line_data, tax_data):
+            if not tax_data:
+                return None
             account = company.withholding_tax_base_account_id or base_line_data['account_id']
             tax = tax_data['tax']
             # Note: keep this aligned with _get_grouping_key

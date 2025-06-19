@@ -363,7 +363,7 @@ class Picking(models.Model):
     @api.depends('company_id.account_fiscal_country_id.code')
     def _compute_l10n_ro_edi_stock_enable(self):
         for picking in self:
-            picking.l10n_ro_edi_stock_enable = picking.company_id.account_fiscal_country_id.code == 'RO'
+            picking.l10n_ro_edi_stock_enable = picking.picking_type_code != 'internal' and picking.company_id.account_fiscal_country_id.code == 'RO'
 
     @api.depends('l10n_ro_edi_stock_enable', 'state', 'l10n_ro_edi_stock_state')
     def _compute_l10n_ro_edi_stock_enable_send(self):
