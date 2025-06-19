@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("time_off_card_tour", {
         },
         {
             content: "Click on the time off card to open the detailed popover.",
-            trigger: ".o_timeoff_details",
+            trigger: "span.o_timeoff_details",
             run: "click",
         },
         {
@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add("time_off_card_tour", {
         },
         {
             content: "Click on the time off card to open the detailed popover.",
-            trigger: ".o_timeoff_details",
+            trigger: "span.o_timeoff_details",
             run: "click",
         },
         {
@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add("time_off_card_tour", {
         },
         {
             content: "Click on the time off card to open the detailed popover.",
-            trigger: ".o_timeoff_details",
+            trigger: "span.o_timeoff_details",
             run: "click",
         },
         {
