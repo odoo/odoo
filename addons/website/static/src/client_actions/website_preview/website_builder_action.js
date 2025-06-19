@@ -29,6 +29,7 @@ import { isHTTPSorNakedDomainRedirection } from "./utils";
 import { WebsiteSystrayItem } from "./website_systray_item";
 import { renderToElement } from "@web/core/utils/render";
 import { isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
+import { getScrollingElement } from "@web/core/utils/scrolling";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 
@@ -47,6 +48,8 @@ export class WebsiteBuilder extends Component {
         this.title = useService("title");
         this.hotkeyService = useService("hotkey");
         this.websiteService.websiteRootInstance = undefined;
+        this.iframeFallbackUrl = '/website/iframefallback';
+        this.iframefallback = useRef('iframefallback');
 
         this.websiteContent = useRef("iframe");
         useSubEnv({
@@ -152,6 +155,10 @@ export class WebsiteBuilder extends Component {
             },
             () => [this.state.isEditing]
         );
+    }
+
+    get testMode() {
+        return odoo.testMode;
     }
 
     get menuProps() {
@@ -459,10 +466,36 @@ export class WebsiteBuilder extends Component {
         this.iframeLoaded = new Promise((resolve) => {
             this.resolveIframeLoaded = () => {
                 this.hotkeyService.registerIframe(this.websiteContent.el);
+                this.websiteContent.el.contentWindow.addEventListener('beforeunload', this.onPageUnload.bind(this));
+
                 this.addListeners(this.websiteContent.el.contentDocument);
                 resolve(this.websiteContent.el);
             };
         });
+    }
+
+    onPageUnload() {
+        // If the iframe is currently displaying an XML file, the body does not
+        // exist, so we do not replace the iframefallback content.
+        const websiteDoc = this.websiteContent.el?.contentDocument;
+        const fallBackDoc = this.iframefallback.el?.contentDocument;
+        if (!this.state.isEditing  && websiteDoc && fallBackDoc) {
+            fallBackDoc.body.replaceWith(websiteDoc.body.cloneNode(true));
+            const currentScrollEl = getScrollingElement(websiteDoc);
+            const scrollElement = getScrollingElement(fallBackDoc);
+            scrollElement.scrollTop = currentScrollEl.scrollTop;
+            this.cleanIframeFallback();
+        }
+    }
+
+    cleanIframeFallback() {
+        // Remove autoplay in all iframes urls so videos are not
+        const iframesEl = this.iframefallback.el.contentDocument.querySelectorAll("iframe");
+        for (const iframeEl of iframesEl) {
+            const url = new URL(iframeEl.src);
+            url.searchParams.delete('autoplay');
+            iframeEl.src = url.toString();
+        }
     }
 
     toggleMobile() {
