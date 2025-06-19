@@ -135,15 +135,19 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
         cls.hours_per_day = cls.employee_emp.resource_id.calendar_id.hours_per_day or 8
 
-    def assert_remaining_leaves_equal(self, work_entry_type, value, employee, date=None, digits=None):
+    def assert_remaining_leaves_equal(self, work_entry_type, value, employee, date=None, digits=None, virtual=False):
         allocation_data = work_entry_type.get_allocation_data(employee, date)
+        if not virtual:
+            leaves = 'remaining_leaves'
+        else:
+            leaves = 'virtual_remaining_leaves'
         if not date:
             date = fields.Date.today()
         if digits:
-            self.assertAlmostEqual(allocation_data[employee][0][1]['remaining_leaves'], value,
+            self.assertAlmostEqual(allocation_data[employee][0][1][leaves], value,
                 digits, f"Remaining leaves for date '{date}' are incorrect.")
         else:
-            self.assertEqual(allocation_data[employee][0][1]['remaining_leaves'],
+            self.assertEqual(allocation_data[employee][0][1][leaves],
                 value, f"Remaining leaves for date '{date}' are incorrect.")
 
     def _create_form_test_accrual_allocation(self, work_entry_type, date_from, employee, accrual_plan, date_to=None, creator_user=None):

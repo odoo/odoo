@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools.date_utils import get_timedelta
 
 
 def _get_selection_days(self):
@@ -131,7 +132,8 @@ class HrLeaveAccrualLevel(models.Model):
         default='unlimited', required=True,
         help="You can limit the accrued time carried over for the next period."
     )
-    postpone_max_days = fields.Integer(export_string_translation=False,
+    # `max_carryover_duration` unit is defined by `added_value_type`
+    max_carryover_duration = fields.Integer(export_string_translation=False,
         help="Set a maximum of accruals an allocation keeps at the end of the year.")
     can_modify_value_type = fields.Boolean(compute="_compute_can_modify_value_type", default=False,
         export_string_translation=False)
@@ -153,8 +155,8 @@ class HrLeaveAccrualLevel(models.Model):
         'CHECK(added_value > 0)',
         'You must give a rate greater than 0 in accrual plan levels.',
     )
-    _valid_postpone_max_days_value = models.Constraint(
-        "CHECK(action_with_unused_accruals <> 'all' OR carryover_options <> 'limited' OR COALESCE(postpone_max_days, 0) > 0)",
+    _valid_max_carryover_duration_value = models.Constraint(
+        "CHECK(action_with_unused_accruals <> 'all' OR carryover_options <> 'limited' OR COALESCE(max_carryover_duration, 0) > 0)",
         'You cannot have a maximum quantity to carryover set to 0.',
     )
     _valid_accrual_validity_value = models.Constraint(
@@ -367,3 +369,6 @@ class HrLeaveAccrualLevel(models.Model):
 
     def action_save_new(self):
         return self.accrual_plan_id.action_create_accrual_plan_level()
+
+    def _get_start_date(self, date_from):
+        return date_from + get_timedelta(self.start_count, self.start_type)
