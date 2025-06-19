@@ -7,15 +7,17 @@ import {
     setupWebsiteBuilder,
 } from "./website_helpers";
 import { xml } from "@odoo/owl";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
 test("Undo/Redo correctly restores the stored container target", async () => {
     addActionOption({
-        customAction: {
-            apply: ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement }) {
                 editingElement.remove();
-            },
+            }
         },
     });
     addOption({
@@ -46,10 +48,11 @@ test("Undo/Redo correctly restores the stored container target", async () => {
 
 test("Undo/Redo multiple actions always restores the action container target", async () => {
     addActionOption({
-        customAction: {
-            apply: ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement }) {
                 editingElement.classList.add("test");
-            },
+            }
         },
     });
     addOption({
@@ -90,11 +93,12 @@ test("Undo/Redo multiple actions always restores the action container target", a
 test("Undo/Redo an action that activates another target restores the old one on undo and the new one on redo", async () => {
     let editor;
     addActionOption({
-        customAction: {
-            apply: ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement }) {
                 editingElement.classList.add("test");
-                editor.shared["builderOptions"].setNextTarget(editingElement.nextElementSibling);
-            },
+                editor.shared.builderOptions.setNextTarget(editingElement.nextElementSibling);
+            }
         },
     });
     addOption({
@@ -125,15 +129,17 @@ test("Undo/Redo an action that activates another target restores the old one on 
 
 test("Containers fallback to a valid ancestor if the target disappears and restore it on undo", async () => {
     addActionOption({
-        targetAction: {
-            apply: ({ editingElement }) => {
+        targetAction: class extends BuilderAction {
+            static id = "targetAction";
+            apply({ editingElement }) {
                 editingElement.remove();
-            },
+            }
         },
-        ancestorAction: {
-            apply: ({ editingElement }) => {
+        ancestorAction: class extends BuilderAction {
+            static id = "ancestorAction";
+            apply({ editingElement }) {
                 editingElement.remove();
-            },
+            }
         },
     });
     addOption({

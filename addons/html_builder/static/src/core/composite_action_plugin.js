@@ -21,11 +21,12 @@ export class CompositeActionPlugin extends Plugin {
 class CompositeAction extends BuilderAction {
     static id = "composite";
     static dependencies = ["builderActions"];
+    loadOnClean = true;
     async prepare({ actionParam: { mainParam: actions }, actionValue }) {
         const proms = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.prepare) {
+            if (action.has("prepare")) {
                 const actionDescr = { actionId: actionDef.action };
                 if (actionDef.actionParam) {
                     actionDescr.actionParam = convertParamToObject(actionDef.actionParam);
@@ -42,7 +43,7 @@ class CompositeAction extends BuilderAction {
         const results = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.getPriority) {
+            if (action.has("getPriority")) {
                 const actionDescr = this._getActionDescription({ ...actionDef, value });
                 results.push(action.getPriority(actionDescr));
             }
@@ -56,7 +57,7 @@ class CompositeAction extends BuilderAction {
         let actionGetValue;
         const actionDef = actions.find((actionDef) => {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.getValue) {
+            if (action.has("getValue")) {
                 actionGetValue = action.getValue;
             }
             return !!action.getValue;
@@ -73,7 +74,7 @@ class CompositeAction extends BuilderAction {
         const results = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.isApplied) {
+            if (action.has("isApplied")) {
                 const actionDescr = this._getActionDescription({
                     editingElement,
                     ...actionDef,
@@ -89,7 +90,7 @@ class CompositeAction extends BuilderAction {
         const loadResults = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.load) {
+            if (action.has("load")) {
                 const actionDescr = this._getActionDescription({
                     editingElement,
                     ...actionDef,
@@ -118,7 +119,7 @@ class CompositeAction extends BuilderAction {
     }) {
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.apply) {
+            if (action.has("apply")) {
                 const actionDescr = this._getActionDescription({
                     editingElement,
                     value,
@@ -130,9 +131,6 @@ class CompositeAction extends BuilderAction {
                 await action.apply(actionDescr);
             }
         }
-    }
-    loadOnClean() {
-        return true;
     }
     clean({
         editingElement,
@@ -154,10 +152,9 @@ class CompositeAction extends BuilderAction {
                 selectableContext,
                 nextAction,
             });
-
-            if (action.clean) {
+            if (action.has("clean")) {
                 action.clean(actionDescr);
-            } else if (action.apply) {
+            } else if (action.has("apply")) {
                 if (loadResult && loadResult[actionDef.action]) {
                     actionDescr.loadResult = loadResult[actionDef.action];
                 }
@@ -194,5 +191,7 @@ class CompositeAction extends BuilderAction {
 
 class ReloadCompositeAction extends CompositeAction {
     static id = "reloadComposite";
-    reload() {}
+    setup() {
+        this.reload = {};
+    }
 }
