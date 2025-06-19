@@ -4,6 +4,7 @@ import { reactive } from "@odoo/owl";
 
 export const callPipService = {
     dependencies: ["mail.popout"],
+
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
@@ -26,7 +27,11 @@ export const callPipService = {
             state.active = false;
             pipWindow?.close();
         }
-        async function openPip() {
+        /**
+         * @param {Object} [param0] native pip options
+         * @param {Component} [param0.context]
+         */
+        async function openPip({ context }) {
             const rtc = env.services["discuss.rtc"];
             if (!rtc?.channel) {
                 return;
@@ -36,8 +41,10 @@ export const callPipService = {
                 /** Application-level PiP. @see CallPip **/
                 return;
             }
+            const isShadowRoot = context?.root?.el?.getRootNode() instanceof ShadowRoot;
             pipWindow = await popout.pip(Call, {
                 props: { isPip: true, thread: rtc.channel },
+                options: { useAlternativeAssets: isShadowRoot },
             });
             pipWindow.addEventListener("keydown", (ev) => {
                 rtc.onKeyDown(ev);
@@ -47,6 +54,7 @@ export const callPipService = {
             });
             pipWindow.document.body.style.backgroundColor = "black";
             pipWindow.document.body.style.overflow = "hidden";
+            pipWindow.document.body.style.display = "block";
         }
         return reactive({
             get isNativePipAvailable() {
