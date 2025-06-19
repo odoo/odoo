@@ -25,7 +25,10 @@ export class ProductConfiguratorDialog extends Component {
         currencyId: { type: Number, optional: true },
         selectedComboItems: {
             type: Array,
-            element: String,
+            element: Object,
+            shape: {
+                name: String,
+            },
             optional: true,
         },
         soDate: String,
@@ -85,12 +88,13 @@ export class ProductConfiguratorDialog extends Component {
                 optional_products,
                 currency_id,
             } = await this._loadData(this.props.edit);
-            products.filter((product) => {
-                product.selectedComboItems =
-                    product.product_tmpl_id == this.props.productTemplateId
-                        ? this.props.selectedComboItems
-                        : [];
-            });
+
+            // If the product configurator is opened after the combo configurator (which happens if
+            // a combo product has optional products), `_loadData` will return a single product
+            // (i.e. the combo product), which should be linked to the previously selected combo
+            // items.
+            products[0].selectedComboItems = this.props.selectedComboItems || [];
+
             this.state.products = products;
             this.state.optionalProducts = optional_products;
             for (const customPtav of this.props.customPtavs) {

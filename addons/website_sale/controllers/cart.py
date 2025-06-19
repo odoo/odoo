@@ -132,7 +132,9 @@ class Cart(PaymentPortal):
             of `product.template.attribute.value` ids.
         :param list linked_products: A list of objects representing additional products linked to
             the product added to the cart. Can be combo item or optional products.
-        :param int combo_line_id: The combo line linked to this line.
+        :param int combo_line_id: The already existing line for the combo product to add (only
+            applicable for combos). If provided, don't add the combo product, but add its optional
+            products.
         :param dict kwargs: Optional data. This parameter is not used here.
         :return: The values
         :rtype: dict
@@ -175,8 +177,11 @@ class Cart(PaymentPortal):
                 )
                 combo_quantity = min(combo_quantity, combo_item_quantity)
             quantity = combo_quantity
-        # Don't add main product if it is a combo product as it is already added from combo
-        # configurator.
+        # If we're adding a combo with optional products, the `/shop/cart/add` route is called
+        # twice: first to add the combo product and its combo items, and second to add the optional
+        # products. As a result, we shouldn't add the combo product again during the second call
+        # (in which case a `combo_line_id` param is provided, identifying the already existing
+        # combo product line).
         if not combo_line_id:
             values = order_sudo._cart_add(
                 product_id=product_id,
@@ -184,12 +189,11 @@ class Cart(PaymentPortal):
                 uom_id=uom_id,
                 product_custom_attribute_values=product_custom_attribute_values,
                 no_variant_attribute_value_ids=no_variant_attribute_value_ids,
-                **kwargs
+                **kwargs,
             )
-            line_ids = {product_template_id: values['line_id']}
         else:
             values = {'line_id': combo_line_id}
-            line_ids = {product_template_id: combo_line_id}
+        line_ids = {product_template_id: values['line_id']}
 
         if linked_products and values['line_id']:
             for product_data in linked_products:
@@ -233,8 +237,8 @@ class Cart(PaymentPortal):
         if main_product_line.product_type == 'combo':
             main_product_line._check_validity()
         if combo_line_id:
-            # Since combo main product is pre-added using combo configurator, we don't need it for
-            # the cart notification or tracking.
+            # If the combo product has already been added to the cart, we shouldn't include it in
+            # the cart notification nor track it.
             del line_ids[product_template_id]
         values['notification_info'] = self._get_cart_notification_information(
             order_sudo, line_ids.values()
