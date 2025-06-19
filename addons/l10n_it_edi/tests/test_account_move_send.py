@@ -46,11 +46,11 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         self.assertEqual((invoice1 + invoice2).mapped('sending_data'), [False, False])
         self.assertEqual(1, len(self.get_attachments(invoice1.id)))
         self.assertTrue(invoice1.invoice_pdf_report_id)
-        self.assertFalse(invoice1.l10n_it_edi_attachment_id)
+        self.assertFalse(invoice1.l10n_it_edi_attachment_file)
         self.assertFalse(invoice1.is_being_sent)
         self.assertEqual(1, len(self.get_attachments(invoice2.id)))
         self.assertTrue(invoice2.invoice_pdf_report_id)
-        self.assertFalse(invoice2.l10n_it_edi_attachment_id)
+        self.assertFalse(invoice2.l10n_it_edi_attachment_file)
         self.assertFalse(invoice2.is_being_sent)
 
     def test_invoice_multi_with_l10n_it_edi_xml_export(self):
@@ -72,11 +72,11 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         self.assertEqual((invoice1 + invoice2).mapped('sending_data'), [False, False])
         self.assertEqual(2, len(self.get_attachments(invoice1.id)))
         self.assertTrue(invoice1.invoice_pdf_report_id)
-        self.assertTrue(invoice1.l10n_it_edi_attachment_id)
+        self.assertTrue(invoice1.l10n_it_edi_attachment_file)
         self.assertFalse(invoice1.is_being_sent)
         self.assertEqual(2, len(self.get_attachments(invoice2.id)))
         self.assertTrue(invoice2.invoice_pdf_report_id)
-        self.assertTrue(invoice2.l10n_it_edi_attachment_id)
+        self.assertTrue(invoice2.l10n_it_edi_attachment_file)
         self.assertFalse(invoice2.is_being_sent)
 
     def test_invoice_with_cig_or_cup_or_both(self):
