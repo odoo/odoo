@@ -155,6 +155,7 @@ export class CartPage extends Component {
         }
 
         await this.selfOrder.getPricesFromServer();
+        !this.lines.length && this.router.back();
     }
 
     async _changeQuantity(line, increase) {
