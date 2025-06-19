@@ -67,7 +67,7 @@ class MrpWorkorder(models.Model):
         ('done', 'Finished'),
         ('cancel', 'Cancelled')], string='Status',
         compute='_compute_state', store=True,
-        default='blocked', copy=False, index=True)
+        default='ready', copy=False, index=True)
     leave_id = fields.Many2one(
         'resource.calendar.leaves',
         help='Slot into workcenter calendar once planned',
@@ -84,7 +84,7 @@ class MrpWorkorder(models.Model):
         store=True, copy=False)
     duration_expected = fields.Float(
         'Expected Duration', digits=(16, 2), compute='_compute_duration_expected',
-        readonly=False, store=True, copy=False) # in minutes
+        readonly=False, store=True, copy=False)  # in minutes
     duration = fields.Float(
         'Real Duration', compute='_compute_duration', inverse='_set_duration',
         readonly=False, store=True, copy=False)
