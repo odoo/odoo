@@ -154,6 +154,8 @@ export class TableUIPlugin extends Plugin {
             moveRow: withAddStep(this.dependencies.table.moveRow),
             addRow: withAddStep(this.dependencies.table.addRow),
             removeRow: withAddStep(this.dependencies.table.removeRow),
+            makeHeader: withAddStep(this.dependencies.table.makeHeader),
+            removeHeader: withAddStep(this.dependencies.table.removeHeader),
             resetRowHeight: withAddStep(this.dependencies.table.resetRowHeight),
             resetColumnWidth: withAddStep(this.dependencies.table.resetColumnWidth),
             resetTableSize: withAddStep(this.dependencies.table.resetTableSize),

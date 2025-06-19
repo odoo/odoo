@@ -356,7 +356,10 @@ export class ToolbarPlugin extends Plugin {
         }
         const isCollapsed = selectionData.editableSelection.isCollapsed;
         if (isCollapsed) {
-            return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
+            return !!closestElement(
+                selectionData.editableSelection.anchorNode,
+                "td.o_selected_td, th.o_selected_td"
+            );
         }
         return !!this.getFilteredTargetedNodes().length;
     }
