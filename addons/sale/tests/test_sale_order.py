@@ -28,6 +28,16 @@ class TestSaleOrder(SaleCommon):
             {'name': 'Partner 1'},
             {'name': 'Partner 2'},
         ])
+        cls.partner_a = cls.env['res.partner'].create({'name': 'Test Partner A for Negative Vals Test'})
+        cls.product_order_ok = cls.env['product.product'].create({
+            'name': "Test Product for Negative Vals (Order OK)",
+            'type': 'consu',
+            'invoice_policy': 'order',
+            'list_price': 10.0,
+            'taxes_id': False,  # Keep test simple, no taxes
+            'categ_id': cls.env.ref('product.product_category_all').id,
+        })
+        # self.pricelist should be available from SaleCommon -> ProductCommon
 
     def test_computes_auto_fill(self):
         free_product, dummy_product = self.env['product.product'].create([{
@@ -772,6 +782,79 @@ class TestSaleOrder(SaleCommon):
         })
         self.assertEqual(new_order.order_line.price_unit, 22.0)
 
+    def test_new_neg_vals_check(self):
+        """ Test behavior of sale order lines with negative quantity and/or price. """
+        SaleOrder = self.env['sale.order']
+        SaleOrderLine = self.env['sale.order.line']
+
+        # Product 'product_order_ok' has list_price = 10.0
+        # Pricelist 'self.pricelist' has no special rules affecting this product.
+
+        order = SaleOrder.create({
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.pricelist.id,
+        })
+
+        # Scenario A: Negative quantity, positive price (e.g., a return)
+        # Expected: Subtotal should be negative. No error.
+        line_neg_qty = SaleOrderLine.create({
+            'order_id': order.id,
+            'product_id': self.product_order_ok.id,
+            'product_uom_qty': -1.0,
+            'price_unit': 10.0,  # Explicitly set price for clarity
+        })
+        self.assertEqual(line_neg_qty.price_subtotal, -10.0,
+                           "Subtotal: qty -1, price 10 should be -10.0")
+        self.assertEqual(line_neg_qty.price_total, -10.0,
+                           "Total: qty -1, price 10, no tax should be -10.0")
+        # Check order totals after this line
+        order._compute_amounts()  # Ensure amounts are recomputed
+        self.assertEqual(order.amount_untaxed, -10.0,
+                           "Order untaxed should be -10.0")
+        self.assertEqual(order.amount_total, -10.0, "Order total should be -10.0")
+
+        # Scenario B: Positive quantity, negative price
+        # Expected: Should raise UserError
+        with self.assertRaises(UserError, msg="Should not allow negative price_unit."):
+            # In Odoo, direct create with negative price might be blocked by SQL
+            # constraint if not caught by Python. We'll try to create then write,
+            # or expect an onchange/constraint to catch it.
+            SaleOrderLine.create({
+                'order_id': order.id,
+                'product_id': self.product_order_ok.id,
+                'product_uom_qty': 1.0,
+                'price_unit': -100.0,
+            })
+
+        # Alternative for Scenario B: if create doesn't raise, try writing to an existing line:
+        # Clean up previous lines for a fresh order state for this part of the test
+        order.order_line.unlink()
+        line_pos_qty_neg_price_attempt = SaleOrderLine.create({
+            'order_id': order.id,
+            'product_id': self.product_order_ok.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 10.0,  # Start with a valid price
+        })
+        with self.assertRaises(UserError,
+                               msg="Should not allow updating price_unit to a negative value."):
+            line_pos_qty_neg_price_attempt.write({'price_unit': -100.0})
+            # Flushing or specific onchange calls might be needed if not immediate
+            line_pos_qty_neg_price_attempt.flush_recordset(['price_unit'])
+
+        # Scenario C: Negative quantity, negative price
+        # Expected: Should raise UserError
+        # Clean up previous lines for a fresh order state for this scenario
+        order.order_line.unlink()
+        with self.assertRaises(UserError,
+                               msg="Should not allow negative qty and negative price_unit together."):
+            SaleOrderLine.create({
+                'order_id': order.id,
+                'product_id': self.product_order_ok.id,
+                'product_uom_qty': -1.0,
+                'price_unit': -100.0,
+            })
+
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
@@ -1085,6 +1168,7 @@ class TestSalesTeam(SaleCommon):
         order.action_update_taxes()
         self.assertEqual(order.amount_total, 252)
         self.assertEqual(order.amount_tax, 52)
+
 
 @tagged('post_install', '-at_install')
 class TestSaleMailComposerUI(MailCommon, HttpCase):
