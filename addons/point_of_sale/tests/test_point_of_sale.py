@@ -94,3 +94,43 @@ class TestPointOfSale(TransactionCase):
             "value": 0.005
         })
         self.assertEqual(coin.value, 0.005)
+
+    def test_session_filter_local_data(self):
+        product1 = self.env['product.template'].create({
+            'name': 'product1'
+        })
+        product2 = self.env['product.template'].create({
+            'name': 'product2'
+        })
+        product3 = self.env['product.template'].create({
+            'name': 'product3'
+        })
+        config = self.env["pos.config"].create({
+            "name": "shop"
+        })
+        session = self.env['pos.session'].create({'name': 'Test Session', 'config_id': config.id})
+
+        # Delete one product and archive another one
+        products_to_display = [product1.id, product2.id, product3.id]
+        product1.write({'active': False})
+        product2.unlink()
+        models_to_filter = {'product.template': products_to_display}
+        products_to_display = list(set(products_to_display) - set(session.filter_local_data(models_to_filter)['product.template']))
+        self.assertEqual(products_to_display, [product3.id])
+
+        # No change
+        product4 = self.env['product.template'].create({
+            'name': 'product4'
+        })
+        products_to_display = [product3.id, product4.id]
+        models_to_filter = {'product.template': products_to_display}
+        products_to_display = list(set(products_to_display) - set(session.filter_local_data(models_to_filter)['product.template']))
+        self.assertEqual(products_to_display, [product3.id, product4.id])
+
+        # Delete all products
+        products_to_display = [product3.id, product4.id]
+        product3.unlink()
+        product4.unlink()
+        models_to_filter = {'product.template': products_to_display}
+        products_to_display = list(set(products_to_display) - set(session.filter_local_data(models_to_filter)['product.template']))
+        self.assertEqual(products_to_display, [])

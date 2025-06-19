@@ -203,7 +203,12 @@ class PosSession(models.Model):
     def filter_local_data(self, models_to_filter):
         response = {}
         for model, ids in models_to_filter.items():
-            response[model] = self.env[model].browse(ids)._unrelevant_records()
+            existing_records = self.env[model].browse(ids).exists()
+
+            non_existent_ids = set(ids) - set(existing_records.ids)
+            inactive_ids = set(existing_records._unrelevant_records())
+
+            response[model] = list(non_existent_ids | inactive_ids)
 
         return response
 
