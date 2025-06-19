@@ -1,12 +1,27 @@
+#o_work_employee_container > div {
+    @media (min-width: #{map-get($grid-breakpoints, "lg")}) {
+        padding: 0 calc(var(--gutter-x) * 1) !important;
+
+        &:first-child {
+            padding-left: calc(var(--gutter-x) * .5) !important;
+        }
+
+        &:last-child {
+            padding-right: calc(var(--gutter-x) * .5) !important;
+        }
+    }
+}
 
 #o_employee_org_chart {
-
     .o_org_chart_entry {
+        --treeEntry-padding-v: 0.5rem;
+
+        padding-top: var(--treeEntry-padding-v);
+        padding-bottom: var(--treeEntry-padding-v);
+
         .o_media_object {
             width: $o-hr-org-chart-entry-pic-small-size;
             height: $o-hr-org-chart-entry-pic-small-size;
-            background-size: cover;
-            background-position: center center;
         }
 
         &.o_org_chart_entry_self .o_media_object {
@@ -14,8 +29,24 @@
             height: $o-hr-org-chart-entry-pic-size;
         }
 
-        &:not(.o_org_chart_entry_self):hover .o_media_object {
-            box-shadow: 0 0 0 $border-width*2 $info;
+        &:not(.o_org_chart_entry_self) .o_employee_redirect:hover {
+            .o_media_object {
+                box-shadow: 0 0 0 $border-width*2 $info;
+            }
+
+            .o_employee_job {
+                color: darken($text-muted, 5%) !important;
+            }
+        }
+
+        .o_employee_button {
+            &:active {
+                border-color: $o-gray-300;
+            }
+
+            &:hover .badge {
+                filter: brightness(0.9);
+            }
         }
     }
 
@@ -24,30 +55,43 @@
     }
 
     .o_org_chart_group_down.o_org_chart_has_managers {
-        padding-left: $o-hr-org-chart-entry-pic-size * .6;
+        padding-left: $o-hr-org-chart-entry-pic-size * .95;
     }
 
     // ORGANIGRAM LINES
+    .o_treeEntry:before {
+        --treeEntry--before-top: calc(-2 * (var(--treeEntry-padding-v)) - (#{$o-hr-org-chart-entry-pic-small-size} * .5));
+
+        bottom: 50%;
+        height: auto;
+    }
+
+    .o_treeEntry:after {
+        top: 50%;
+    }
+
     .o_org_chart_group_up .o_treeEntry {
         --treeEntry-padding-h: 0px;
-        --treeEntry--before-top: 50%;
         --treeEntry--after-display: none;
         --treeEntry--beforeAfter-left: #{$o-hr-org-chart-entry-pic-small-size * .5};
+
+        &:first-of-type::before {
+            display: none;
+        }
     }
 
     .o_org_chart_entry_self_container .o_treeEntry {
-        --treeEntry-padding-h: #{$o-hr-org-chart-entry-pic-small-size * .5};
-        --treeEntry-padding-v: #{$o-hr-org-chart-entry-pic-size * .25};
-    }
-
-    .o_org_chart_group_down .o_treeEntry {
-        --treeEntry-padding-h: #{$o-hr-org-chart-entry-pic-size};
-        --treeEntry-padding-v: #{$o-hr-org-chart-entry-pic-small-size * .5};
+        --treeEntry-padding-h: 1.5rem;
     }
 }
 
-// Right to Left specific style to flip the popover arrow
-.o_rtl .o_org_chart_popup.popover .arrow {
-    left: 100%;
-    transform: matrix(-1, 0, 0, 1, 0, 0);
+// Specific popup style
+.o_org_chart_popup {
+    --popover-header-padding-y: 0.25rem;
+
+    .o_employee_redirect {
+        --btn-padding-x: var(--popover-header-padding-x);
+
+        margin-right: calc(-1 * var(--popover-header-padding-x));
+    }
 }
