@@ -31,6 +31,7 @@ import {
 
 import { Composer } from "@mail/core/common/composer";
 import { press, queryFirst } from "@odoo/hoot-dom";
+import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1111,5 +1112,51 @@ test("composer reply-to message is restored on thread change", async () => {
     await contains(".o-mail-Message", { count: 0 });
     await click(".o-mail-DiscussSidebar-item:contains('General')");
     await contains(".o-mail-Message");
+    await contains(".o-mail-Composer:contains('Replying to')");
+    const store = getService("mail.store");
+    expect(
+        browser.localStorage.getItem(
+            store.Thread.get({ model: "discuss.channel", id: channelId }).composer.localId
+        )
+    ).toBe('{"emailAddSignature":true,"replyToMessageId":1,"text":""}');
+});
+
+test("composer reply-to message is restored page reload", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+        name: "General",
+    });
+    const [messageId_1] = pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "Test-1",
+            attachment_ids: [],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "Test-2",
+            attachment_ids: [],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    // simulate composer was replying to 1st message before page reload
+    // not taking last message as to not fetch last message data prematurely
+    browser.localStorage.setItem(
+        `Composer,(Thread,discuss.channel AND ${channelId}) OR (undefined)`,
+        `{"replyToMessageId":${messageId_1},"text":""}`
+    );
+    await start();
+    await openDiscuss(channelId);
     await contains(".o-mail-Composer:contains('Replying to')");
 });
