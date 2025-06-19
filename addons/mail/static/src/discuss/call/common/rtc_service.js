@@ -102,6 +102,40 @@ function hasTurn(iceServers) {
 }
 
 /**
+ * Checks whether hardware acceleration is available in the browser.
+ *
+ * This function attempts to create a WebGL rendering context, which requires GPU access.
+ * If WebGL is not supported, or a known software renderer (like SwiftShader or LLVMpipe)
+ * is detected, the function throws an error with a descriptive message.
+ */
+
+function checkHardwareAccelerationSupport() {
+    const canvas = document.createElement("canvas");
+    const gl =
+        canvas.getContext("webgl") ||
+        canvas.getContext("webgl2") ||
+        canvas.getContext("experimental-webgl");
+    if (!gl) {
+        const error = new Error(
+            "Your browser does not support WebGL. Hardware acceleration might be disabled in your system"
+        );
+        error.name = "Visual Effects Not Supported";
+        throw error;
+    }
+    const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+    if (debugInfo) {
+        const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+        if (/swiftshader|llvmpipe|software/i.test(renderer)) {
+            const error = new Error(
+                "Your system is using a software renderer. Visual effects require hardware acceleration to be enabled from your browser settings."
+            );
+            error.name = "Hardware acceleration is disabled";
+            throw error;
+        }
+    }
+}
+
+/**
  * Allows to use both peer to peer and SFU connections simultaneously, which makes it possible to
  * establish a connection with other call participants with the SFU when possible, and still handle
  * peer-to-peer for the participants who did not manage to establish a SFU connection.
@@ -1808,6 +1842,7 @@ export class Rtc extends Record {
         }
         if (this.store.settings.useBlur && type === "camera") {
             try {
+                checkHardwareAccelerationSupport();
                 this.blurManager?.close();
                 this.blurManager = new BlurManager(sourceStream, {
                     backgroundBlur: this.store.settings.backgroundBlurAmount,
@@ -1816,10 +1851,11 @@ export class Rtc extends Record {
                 const bluredStream = await this.blurManager.stream;
                 outputTrack = bluredStream.getVideoTracks()[0];
             } catch (_e) {
-                this.notification.add(
-                    _t("%(name)s: %(message)s)", { name: _e.name, message: _e.message }),
-                    { type: "warning" }
-                );
+                console.warn("Blur initialization failed:", _e);
+                this.notification.add(_t("%(message)s", { message: _e.message }), {
+                    title: _e.name,
+                    type: "warning",
+                });
                 this.store.settings.useBlur = false;
             }
         }
