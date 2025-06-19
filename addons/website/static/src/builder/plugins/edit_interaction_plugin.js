@@ -18,6 +18,12 @@ export class EditInteractionPlugin extends Plugin {
             // The clonedEl is implicitly started because it is a newly
             // inserted content.
         },
+        on_will_save_snippet_handlers: ({ snippetEl }) => {
+            this.stopInteractions(snippetEl);
+        },
+        on_saved_snippet_handlers: ({ snippetEl }) => {
+            this.restartInteractions(snippetEl);
+        },
     };
 
     setup() {
