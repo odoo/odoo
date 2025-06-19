@@ -24,14 +24,13 @@ class PurchaseOrderLine(models.Model):
                                            ondelete={'stock_moves': _ondelete_stock_moves})
 
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, copy=False)
-    orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint', copy=False, index='btree_not_null')
+    orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint', copy=False, index='btree_not_null', ondelete='set null')
     move_dest_ids = fields.Many2many('stock.move', 'stock_move_created_purchase_line_rel', 'created_purchase_line_id', 'move_id', 'Downstream moves alt')
     product_description_variants = fields.Char('Custom Description')
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
     is_storable = fields.Boolean(related='product_id.is_storable')
     location_final_id = fields.Many2one('stock.location', 'Location from procurement')
-    group_id = fields.Many2one('procurement.group', 'Procurement group that generated this line', index='btree_not_null')
 
     def _compute_qty_received_method(self):
         super(PurchaseOrderLine, self)._compute_qty_received_method()
@@ -300,7 +299,7 @@ class PurchaseOrderLine(models.Model):
             'company_id': self.order_id.company_id.id,
             'price_unit': price_unit,
             'picking_type_id': self.order_id.picking_type_id.id,
-            'group_id': self.order_id.group_id.id,
+            'reference_ids': [Command.set(self.order_id.reference_ids.ids)],
             'origin': self.order_id.name,
             'description_picking': product.description_pickingin or self.name,
             'propagate_cancel': self.propagate_cancel,
@@ -339,11 +338,6 @@ class PurchaseOrderLine(models.Model):
         res['propagate_cancel'] = values.get('propagate_cancel')
         res['product_description_variants'] = values.get('product_description_variants')
         res['product_no_variant_attribute_value_ids'] = values.get('never_product_template_attribute_value_ids')
-
-        # Need to attach purchase order to procurement group for mtso
-        group = values.get('group_id')
-        if group and not res['move_dest_ids']:
-            res['group_id'] = values['group_id'].id
         return res
 
     def _create_stock_moves(self, picking):
@@ -365,7 +359,7 @@ class PurchaseOrderLine(models.Model):
             description_picking = values['product_description_variants']
         lines = self.filtered(
             lambda l: l.propagate_cancel == values['propagate_cancel']
-            and (l.orderpoint_id == values['orderpoint_id'] if values['orderpoint_id'] and not values['move_dest_ids'] else True)
+            and (l.orderpoint_id in [values['orderpoint_id'], False] if values['orderpoint_id'] and not values['move_dest_ids'] else True)
         )
 
         # In case 'product_description_variants' is in the values, we also filter on the PO line
@@ -381,10 +375,7 @@ class PurchaseOrderLine(models.Model):
             if product_lang.description_purchase:
                 name += '\n' + product_lang.description_purchase
             lines = lines.filtered(lambda l: (l.name == name + '\n' + description_picking) or (values.get('product_description_variants') in (product_lang.name, product_id.with_user(SUPERUSER_ID).name) and l.name == name))
-            if lines:
-                return lines[0]
-
-        return lines and lines[0] or self.env['purchase.order.line']
+        return lines and lines.sorted(lambda l: l.orderpoint_id)[0] or self.env['purchase.order.line']
 
     def _get_outgoing_incoming_moves(self):
         outgoing_moves = self.env['stock.move']

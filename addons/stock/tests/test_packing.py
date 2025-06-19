@@ -1958,9 +1958,8 @@ class TestPackagePropagation(TestPackingCommon):
             'tracking': 'none',
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2)
-        pg = self.env['procurement.group'].create({'name': 'propagation_test'})
-        self.env['procurement.group'].run([
-            pg.Procurement(
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
                 self.productA,
                 2.0,
                 self.productA.uom_id,
@@ -1970,12 +1969,11 @@ class TestPackagePropagation(TestPackingCommon):
                 self.warehouse.company_id,
                 {
                     'warehouse_id': self.warehouse,
-                    'group_id': pg
                 }
             )
         ])
         picking = self.env['stock.picking'].search([
-            ('group_id', '=', pg.id),
+            ('product_id', '=', self.productA.id),
             ('location_id', '=', self.stock_location.id),
         ])
         picking.action_assign()
@@ -1985,7 +1983,7 @@ class TestPackagePropagation(TestPackingCommon):
         picking.button_validate()
         self.assertEqual(picking.state, 'done')
         pack_lines = self.env['stock.picking'].search([
-            ('group_id', '=', pg.id),
+            ('product_id', '=', self.productA.id),
             ('location_id', '=', self.pack_location.id),
         ]).move_line_ids
 

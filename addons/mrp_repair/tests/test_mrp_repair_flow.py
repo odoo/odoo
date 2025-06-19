@@ -46,7 +46,7 @@ class TestMrpRepairFlow(TestMrpCommon):
 
         repair.action_validate()
 
-        production = repair.procurement_group_id.stock_move_ids.created_production_id
+        production = repair.reference_ids.production_ids
         self.assertEqual(production.product_id, product)
         self.assertEqual(production.product_qty, 1.0)
         self.assertEqual(production.move_dest_ids.repair_id, repair)

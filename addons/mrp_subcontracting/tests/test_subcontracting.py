@@ -103,19 +103,17 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertFalse(mo.picking_type_id.active)
 
         # Create a RR
-        pg1 = self.env['procurement.group'].create({})
         self.env['stock.warehouse.orderpoint'].create({
             'name': 'xxx',
             'product_id': self.comp1.id,
             'product_min_qty': 0,
             'product_max_qty': 0,
             'location_id': self.env.user.company_id.subcontracting_location_id.id,
-            'group_id': pg1.id,
         })
 
         # Run the scheduler and check the created picking
-        self.env['procurement.group'].run_scheduler()
-        picking = self.env['stock.picking'].search([('group_id', '=', pg1.id)])
+        self.env['stock.rule'].run_scheduler()
+        picking = self.env['stock.picking'].search([('product_id', '=', self.comp1.id)])
         self.assertEqual(len(picking), 1)
         self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
         picking_receipt.move_ids.quantity = 1
@@ -1221,19 +1219,17 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertFalse(mo.picking_type_id.active)
 
         # Create a RR
-        pg1 = self.env['procurement.group'].create({})
         self.env['stock.warehouse.orderpoint'].create({
             'name': 'xxx',
             'product_id': self.comp1_sn.id,
             'product_min_qty': 0,
             'product_max_qty': 0,
             'location_id': self.env.user.company_id.subcontracting_location_id.id,
-            'group_id': pg1.id,
         })
 
         # Run the scheduler and check the created picking
-        self.env['procurement.group'].run_scheduler()
-        picking = self.env['stock.picking'].search([('group_id', '=', pg1.id)])
+        self.env['stock.rule'].run_scheduler()
+        picking = self.env['stock.picking'].search([('product_id', '=', self.comp1_sn.id)])
         self.assertEqual(len(picking), 1)
         self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
 
@@ -1381,9 +1377,9 @@ class TestSubcontractingTracking(TransactionCase):
         picking_receipt.move_ids.picked = True
         picking_receipt.button_validate()
         self.assertEqual(mo.state, 'done')
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped("state"), ['done'] * todo_nb)
-        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), todo_nb)
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped("qty_produced"), [1] * todo_nb)
+        self.assertEqual(mo.production_group_id.production_ids.mapped("state"), ['done'] * todo_nb)
+        self.assertEqual(len(mo.production_group_id.production_ids), todo_nb)
+        self.assertEqual(mo.production_group_id.production_ids.mapped("qty_produced"), [1] * todo_nb)
 
         # Available quantities should be negative at the subcontracting location for each components
         avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1_sn, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
@@ -1585,18 +1581,18 @@ class TestSubcontractingTracking(TransactionCase):
         wizard.action_prepare()
 
         # Each generated serial number should have its own mo
-        self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.sorted("name"), [
+        self.assertRecordValues(mo.production_group_id.production_ids.sorted("name"), [
             {"name": initial_name + "-001", "state": "confirmed"},
             {"name": initial_name + "-002", "state": "confirmed"},
             {"name": initial_name + "-003", "state": "confirmed"},
         ])
-        self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.move_raw_ids, [
+        self.assertRecordValues(mo.production_group_id.production_ids.move_raw_ids, [
             {"quantity": 1.0, "state": "assigned"},
             {"quantity": 1.0, "state": "assigned"},
             {"quantity": 1.0, "state": "assigned"},
         ])
-        mo.procurement_group_id.mrp_production_ids.button_mark_done()
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped("state"), ['done', 'done' , 'done'])
+        mo.production_group_id.production_ids.button_mark_done()
+        self.assertEqual(mo.production_group_id.production_ids.mapped("state"), ['done', 'done' , 'done'])
 
 
 @tagged('post_install', '-at_install')
