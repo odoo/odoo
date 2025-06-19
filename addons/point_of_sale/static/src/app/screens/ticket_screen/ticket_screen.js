@@ -426,7 +426,7 @@ export class TicketScreen extends Component {
                 const dateA = a.date_order;
                 const dateB = b.date_order;
 
-                if (a.date_order !== b.date_order) {
+                if (!dateA.equals(dateB)) {
                     return ascending ? dateA - dateB : dateB - dateA;
                 } else {
                     const nameA = parseInt(a.pos_reference.replace(/\D/g, "")) || 0;
