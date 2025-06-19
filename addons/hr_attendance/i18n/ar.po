@@ -365,10 +365,11 @@ msgstr "تمت الموافقة تلقائياً "
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "Automatically Check-Out Employees based on their working schedule with an "
-"additional tolerance."
+"additional tolerance. Does not apply to employees with a flexible working "
+"schedule."
 msgstr ""
 "قم بتسجيل خروج الموظفين تلقائياً بناءً على جداول أعمالهم مع المزيد من "
-"التسامح. "
+"التسامح. لا ينطبق على الموظفين الذين لديهم جدول عمل مرن. "
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -951,7 +952,10 @@ msgstr "التعريف يدوياً "
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "If checked, days not covered by an attendance will be visible in the Report."
-msgstr "إذا تم تحديدها، ستظهر الأيام التي لا يغطيها الحضور في التقرير."
+" Does not apply to employees with a flexible working schedule."
+msgstr ""
+"إذا تم تحديدها، ستظهر الأيام غير المشمولة بالحضور في التقرير. لا ينطبق على "
+"الموظفين الذين لديهم جدول عمل مرن. "
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
@@ -1341,11 +1345,6 @@ msgstr "رمز RFID مع القارئ "
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "RFID Token with reader on tablet"
 msgstr "رمز RFID مع القارئ على الجهاز اللوحي "
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__rating_ids
-msgid "Ratings"
-msgstr "التقييمات "
 
 #. module: hr_attendance
 #. odoo-javascript

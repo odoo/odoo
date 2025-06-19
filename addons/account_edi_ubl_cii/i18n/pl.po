@@ -3,8 +3,8 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Marta Wacławek, 2025
 # Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-06 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,8 @@ msgid ""
 "%s should have a KVK or OIN number set in Company ID field or as Peppol "
 "e-address (EAS code 0106 or 0190)."
 msgstr ""
+"%s powinien mieć numer KVK lub OIN skonfigurowany w polu ID Firmy lub jako "
+"e-adres Peppol (EAS numer 0106 lub 0190)."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -52,7 +54,7 @@ msgstr "A-NZ BIS Billing 3.0"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__as
 msgid "AS2 exchange"
-msgstr ""
+msgstr "Wymiana AS2"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
@@ -134,7 +136,7 @@ msgstr "Belgijski rejestr przedsiębiorstw"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9925
 msgid "Belgian VAT"
-msgstr ""
+msgstr "Belgia VAT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9924
@@ -155,7 +157,7 @@ msgstr "Sieć rejestrów przedsiębiorstw"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Check Partner(s)"
-msgstr "Sprawdź partnera//-ów"
+msgstr "Sprawdź partnera/-ów"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_eas
@@ -324,24 +326,24 @@ msgstr "EN 16931"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Each invoice line shall have one and only one tax."
-msgstr "Każda linia faktury ma jeden i tylko jeden podatek."
+msgstr "Każda pozycja faktury ma jeden i tylko jeden podatek."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Each invoice line should have a product or a label."
-msgstr "Każdy wiersz faktury powinien mieć produkt lub etykietę."
+msgstr "Każda pozycja faktury powinna mieć produkt lub etykietę."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Each invoice line should have at least one tax."
-msgstr "Każda linia faktury powinna mieć przynajmniej jeden podatek."
+msgstr "Każda pozycja faktury powinna mieć przynajmniej jeden podatek."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__em
 msgid "Electronic mail"
-msgstr ""
+msgstr "Poczta elektroniczna"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -378,7 +380,7 @@ msgstr "Factur-x/XRechnung CII 2.2.0"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__au
 msgid "File Transfer Protocol"
-msgstr ""
+msgstr "Protokół transferu danych"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0037
@@ -635,7 +637,7 @@ msgstr "Norwegia Org.nr."
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__an
 msgid "O.F.T.P. (ODETTE File Transfer Protocol)"
-msgstr ""
+msgstr "O.F.T.P. (ODETTE File Transfer Protocol)"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -656,7 +658,7 @@ msgstr "Punkt końcowy Peppol"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Peppol ID"
-msgstr ""
+msgstr "Peppol ID"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_eas
@@ -668,7 +670,7 @@ msgstr "Adres elektroniczny Peppol (EAS)"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Please fill in partner's VAT or Peppol Address."
-msgstr ""
+msgstr "Wypełnij VAT lub adres Peppol partnera."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -677,6 +679,7 @@ msgid ""
 "Please fill in your company's VAT or Peppol Address to generate a complete "
 "XML file."
 msgstr ""
+"Wypełnij swój VAT lub adres Peppol, aby wygenerować kompletny plik XML."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -937,7 +940,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__aq
 msgid "X.400 address for mail text"
-msgstr ""
+msgstr "X.400 adres do poczty tekstowej"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -958,8 +961,8 @@ msgid ""
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
 " code (BT-151)."
 msgstr ""
-"Należy uwzględnić co najmniej jeden podatek w każdej linii faktury. [BR-"
-"CO-04]-Każda linia faktury (BG-25) powinna być skategoryzowana za pomocą "
+"Należy uwzględnić co najmniej jeden podatek w każdej pozycji faktury. [BR-"
+"CO-04]-Każda pozycja faktury (BG-25) powinna być skategoryzowana za pomocą "
 "kodu kategorii VAT pozycji fakturowanej (BT-151)."
 
 #. module: account_edi_ubl_cii

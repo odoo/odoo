@@ -6,8 +6,8 @@
 # Martin Trigaux, 2025
 # Jolien De Paepe, 2025
 # Wil Odoo, 2025
-# Manon Rondou, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-14 06:42+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -836,6 +836,8 @@ msgid ""
 "\n"
 "A chatbot to help the user be guided through recruitment process on the website and land on the right jobs position.\n"
 msgstr ""
+"\n"
+"Een chatbot die de gebruiker helpt door het wervingsproces op de website te begeleiden en op de juiste vacature terecht te laten komen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -1546,6 +1548,13 @@ msgid ""
 "- Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
 "- Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
 msgstr ""
+"\n"
+"Boekhoudrapporten voor Tsjechië\n"
+"=====================================\n"
+"Deze module bevat boekhoudrapporten voor Tsjechië, inclusief:\n"
+"- Btw-controleverklaring (aanmaak en XML-export). Voor meer informatie, zie https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"- Souhrnné hlášení VIES-rapport (aanmaak en XML-export). Voor meer informatie, zie https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"- Belastingrapport (XML-export). Voor meer informatie, zie https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk_reports
@@ -6378,6 +6387,16 @@ msgid ""
 "Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 "For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 msgstr ""
+"\n"
+"India - E-facturatie\n"
+"====================\n"
+"Om facturen via API in te dienen bij de overheid.\n"
+"We gebruiken 'Tera Software Limited' als GSP\n"
+"Stap 1: Maak eerst een API-gebruikersnaam en wachtwoord aan op het e-facturatieportaal.\n"
+"Stap 2: Schakel over naar het bedrijf dat bij dat GST-nummer hoort\n"
+"Stap 3: Stel die gebruikersnaam en dat wachtwoord in binnen Odoo (Ga naar: Facturatie/Boekhouding -> Configuratie -> Instellingen -> Klantfacturen of zoek op 'E-factuur' in de zoekbalk)\n"
+"Stap 4: Herhaal stappen 1, 2, 3 voor alle GSTIN’s die je hebt in Odoo. Heb je meerdere bedrijven met hetzelfde GST-nummer? Voer stap 1 dan alleen uit voor het eerste bedrijf.\n"
+"Voor het aanmaken van de API-gebruikersnaam en het wachtwoord, raadpleeg dit document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_ewaybill
@@ -6425,6 +6444,10 @@ msgid ""
 "====================================\n"
 "This bridge module allows to manage Indian GSTR with E-invoice module.\n"
 msgstr ""
+"\n"
+"India - GSTR met e-factuur\n"
+"====================================\n"
+"Deze brugmodule maakt het mogelijk om de Indiase GSTR te beheren via de e-factuurmodule.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -13204,12 +13227,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "(Same"
-msgstr ""
+msgstr "(Zelfde"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ") and"
-msgstr ""
+msgstr ") en"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -14291,6 +14314,9 @@ msgid ""
 "A user may not belong to this group and one of those.  For instance, users "
 "may not be portal users and internal users."
 msgstr ""
+"Een gebruiker mag niet tot deze groep en tot een van de andere groepen "
+"behoren. Bijvoorbeeld: gebruikers mogen geen portaalgebruikers en interne "
+"gebruikers tegelijk zijn."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_appraisals
@@ -14523,7 +14549,7 @@ msgstr "Toegang tot exportfunctie"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Accessible only for the super user"
-msgstr ""
+msgstr "Alleen toegankelijk voor de supergebruiker"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_update_tax_tags
@@ -15089,7 +15115,7 @@ msgstr "Voeg weergaven en tweaks toe aan het evenement"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Added from"
-msgstr ""
+msgstr "Toegevoegd vanuit"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__add
@@ -15802,6 +15828,8 @@ msgid ""
 "All profiles must have the same initial stack trace to be displayed "
 "together."
 msgstr ""
+"Alle profielen moeten dezelfde initiële stack trace hebben om samen "
+"weergegeven te worden."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -15872,7 +15900,7 @@ msgstr "Het bijwerken van btw-rubrieken op bestaande boekingen toelaten"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment_integration_monster
 msgid "Allow user to share job positions on Monster Job board"
-msgstr ""
+msgstr "Sta de gebruiker toe om vacatures te delen op het Monster Jobboard"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm_repair
@@ -18291,7 +18319,7 @@ msgstr "Medewerkercommissie automatisch invullen"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__automated_name
 #: model:ir.model.fields,field_description:base.field_ir_cron__automated_name
 msgid "Automated Name"
-msgstr ""
+msgstr "Geautomatiseerde naam"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__auto_install
@@ -20188,7 +20216,7 @@ msgstr "Chat, mail gateway en privé kanalen"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment_livechat
 msgid "Chatbot for the HR Recruitment"
-msgstr ""
+msgstr "Chatbot voor HR-werving"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_check
@@ -20878,7 +20906,7 @@ msgstr "Bereken"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Compute %(field_chain_str)s"
-msgstr ""
+msgstr "Bereken %(field_chain_str)s"
 
 #. module: base
 #. odoo-python
@@ -22802,7 +22830,7 @@ msgstr "Chat"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__disjoint_ids
 msgid "Disjoint Groups"
-msgstr ""
+msgstr "Niet-overlappende groepen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__view_disjoint_group_ids
@@ -25051,6 +25079,8 @@ msgstr "Extra hulpmiddelen"
 #: model:ir.module.module,summary:base.module_hr_recruitment_extract
 msgid "Extract data from CV scans to fill applicant forms automatically"
 msgstr ""
+"Gegevens uit cv-scans halen om sollicitatieformulieren automatisch in te "
+"vullen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_bank_statement_extract
@@ -25686,6 +25716,8 @@ msgid ""
 "Following child actions should have the same groups (%(groups)s): "
 "%(children)s"
 msgstr ""
+"Volgende onderliggende acties moeten dezelfde groepen hebben (%(groups)s): "
+"%(children)s"
 
 #. module: base
 #. odoo-python
@@ -25693,6 +25725,8 @@ msgstr ""
 msgid ""
 "Following child actions should have the same model (%(model)s): %(children)s"
 msgstr ""
+"Volgende onderliggende acties moeten hetzelfde model hebben (%(model)s): "
+"%(children)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__font
@@ -25913,7 +25947,7 @@ msgstr "Frankrijk - Werkboekingen Verlof"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Free access"
-msgstr ""
+msgstr "Vrije toegang"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -26578,6 +26612,8 @@ msgid ""
 "Group-restricted fields cannot be included in webhook payloads, as it could allow any user to accidentally leak sensitive information. You will have to remove the following fields from the webhook payload:\n"
 "%(restricted_fields)s"
 msgstr ""
+"Groepsbeperkte velden kunnen niet worden opgenomen in webhook-payloads, omdat dit ertoe kan leiden dat gevoelige informatie per ongeluk wordt gelekt. Je moet de volgende velden uit de webhook-payload verwijderen:\n"
+"%(restricted_fields)s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -26617,12 +26653,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__all_group_ids
 msgid "Groups and implied groups"
-msgstr ""
+msgstr "Groepen en impliciete groepen"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__group_ids
 msgid "Groups explicitly assigned to the user"
-msgstr ""
+msgstr "Groepen die expliciet aan de gebruiker zijn toegewezen"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_embedded_actions__groups_ids
@@ -26810,7 +26846,7 @@ msgstr "Analyses van voorraadverplaatsingen verwerken met project"
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
 msgid "Handle checkouts and payments for shops and restaurants."
-msgstr ""
+msgstr "Verwerk kassabonnen en betalingen voor winkels en restaurants."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
@@ -27309,7 +27345,7 @@ msgstr ""
 msgid ""
 "I'm sorry to say that JSON fields (such as '%s') are currently not "
 "supported."
-msgstr ""
+msgstr "Sorry, JSON-velden (zoals '%s') worden momenteel niet ondersteund."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap_crm
@@ -27640,6 +27676,8 @@ msgstr ""
 msgid ""
 "If several actions return an action, only the last one will be executed."
 msgstr ""
+"Als meerdere acties een actie teruggeven, wordt alleen de laatste "
+"uitgevoerd."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__action_id
@@ -27843,23 +27881,23 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Implied"
-msgstr ""
+msgstr "Impliciet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
 msgid "Implied Groups"
-msgstr ""
+msgstr "Impliciete groepen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_list
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Implied groups"
-msgstr ""
+msgstr "Impliciete groepen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_by_ids
 msgid "Implying Groups"
-msgstr ""
+msgstr "Implicerende groepen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -28106,7 +28144,7 @@ msgstr "India - GSTR Inia eFiling met Kassa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_edi_gstr
 msgid "Indian - GSTR with E-invoice"
-msgstr ""
+msgstr "India – GSTR met e-factuur"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos
@@ -28456,12 +28494,12 @@ msgstr "Integreer je kassa met een Adyen betaalterminal"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_iot_ingenico
 msgid "Integrate your POS with an Ingenico payment terminal through IoT"
-msgstr ""
+msgstr "Integreer je Kassa met een Ingenico-betaalterminal via IoT"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_iot_worldline
 msgid "Integrate your POS with an Worldline payment terminal through IoT"
-msgstr ""
+msgstr "Integreer je kassa met een Worldline-betaalterminal via IoT"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mercado_pago
@@ -29092,22 +29130,22 @@ msgstr "Jersey"
 #. odoo-python
 #: code:addons/base/models/ir_cron.py:0
 msgid "Job '%s' already executing"
-msgstr ""
+msgstr "Job '%s' wordt al uitgevoerd"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_integration_monster
 msgid "Job Board - Monster.com"
-msgstr ""
+msgstr "Vacaturebord - Monster.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_integration_skills_monster
 msgid "Job Board - Monster.com (Skills)"
-msgstr ""
+msgstr "Vacaturebord - Monster.com (Skills)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_integration_website_monster
 msgid "Job Board - Monster.com (Website)"
-msgstr ""
+msgstr "Vacaturebord - Monster.com (Website)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__function
@@ -30027,7 +30065,7 @@ msgstr "Koppelmodule tussen Kassa en Mrp"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_repair
 msgid "Link module between Point of Sale and Repair"
-msgstr ""
+msgstr "Koppelmodule tussen Kassa en Reparatie"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale
@@ -31913,7 +31951,7 @@ msgstr "Mrp Reparaties"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
 msgid "Multi Actions"
-msgstr ""
+msgstr "Meerdere acties"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_company
@@ -35292,7 +35330,7 @@ msgstr "Kassa - Personeelszaken"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_repair
 msgid "POS - Repair"
-msgstr ""
+msgstr "Kassa - Reparatie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_loyalty
@@ -36453,12 +36491,12 @@ msgstr "PoS - Evenement verkoop"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot_ingenico
 msgid "PoS IoT Ingenico"
-msgstr ""
+msgstr "Kassa IoT Ingenico"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot_worldline
 msgid "PoS IoT Worldline"
-msgstr ""
+msgstr "Kassa IoT Worldline"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_order_tracking_display
@@ -39554,7 +39592,7 @@ msgstr "Sms-berichten verzenden wanneer de ticketfase wordt verplaatst"
 #: model:ir.module.module,description:base.module_whatsapp_calendar
 #: model:ir.module.module,summary:base.module_whatsapp_calendar
 msgid "Send whatsapp messages as event reminders"
-msgstr ""
+msgstr "Verstuur WhatsApp-berichten als herinneringen voor evenementen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_easypost
@@ -39765,6 +39803,8 @@ msgstr "Server actie"
 msgid ""
 "Server action %(action_name)s has one or more warnings, address them first."
 msgstr ""
+"Serveractie %(action_name)s heeft één of meerdere waarschuwingen. Los deze "
+"eerst op."
 
 #. module: base
 #. odoo-python
@@ -39929,7 +39969,7 @@ msgstr "Schoenmaker"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_test_website_sale
 msgid "Shop address Test for different countries"
-msgstr ""
+msgstr "Testadres winkel voor verschillende landen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_shopee
@@ -41424,7 +41464,7 @@ msgstr "Technische instellingen"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__view_group_hierarchy
 msgid "Technical field for user group setting"
-msgstr ""
+msgstr "Technisch veld voor de instelling van gebruikersgroepen"
 
 #. module: base
 #: model:ir.actions.report,name:base.ir_module_reference_print
@@ -41474,7 +41514,7 @@ msgstr "Test - basis automatisering"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_test_website_sale
 msgid "Test - Ecommerce & Accouting Localizations"
-msgstr ""
+msgstr "Test – Lokalisaties E-commerce & Boekhouding"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_import_export
@@ -41673,7 +41713,7 @@ msgstr "Test API keys"
 #. module: base
 #: model:ir.module.module,description:base.module_test_read_group
 msgid "Tests for (formatted/web)_read_group"
-msgstr ""
+msgstr "Tests voor (formatted/web)_read_group"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_search_panel
@@ -41805,6 +41845,10 @@ msgid ""
 "including weekends or holidays in the duration of the employee leave's "
 "request."
 msgstr ""
+"De Indiase Verlof-module biedt extra functionaliteit aan de applicatie. "
+"Hiermee kun je 'sandwich leave' instellen binnen een verloftype, waarbij "
+"weekenden of feestdagen worden meegerekend in de duur van het verlofverzoek "
+"van de werknemer."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_10
@@ -42327,6 +42371,11 @@ msgid ""
 " You can't traverse non-relational fields (even in the quantum realm). Make "
 "sure only the last field in the path is non-relational."
 msgstr ""
+"Het pad dat is opgegeven in het veld '%(searched_field)s' bevat een niet-"
+"relationeel veld (%(current_field)s) dat niet het laatste veld in het pad "
+"is. Niet-relationele velden kunnen niet worden doorlopen (zelfs niet in het "
+"kwantumrijk). Zorg ervoor dat alleen het laatste veld in het pad niet-"
+"relationeel is."
 
 #. module: base
 #. odoo-python
@@ -42886,6 +42935,8 @@ msgid ""
 "This module contains tests and tours related to shop address for different "
 "country localizations."
 msgstr ""
+"Deze module bevat tests en rondleidingen met betrekking tot winkeladressen "
+"voor verschillende landenlokalisaties."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_sms
@@ -43500,7 +43551,7 @@ msgstr "Bovenmarge (mm)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Top-level actions"
-msgstr ""
+msgstr "Acties op hoogste niveau"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__count
@@ -43596,12 +43647,12 @@ msgstr "Transifex integratie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_implied_ids
 msgid "Transitively Implied Groups"
-msgstr ""
+msgstr "Transitief geïmpliceerde groepen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_implied_by_ids
 msgid "Transitively Implying Groups"
-msgstr ""
+msgstr "Transitief implicerende groepen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__translate
@@ -44133,7 +44184,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Uninstall…"
-msgstr ""
+msgstr "Verwijderen…"
 
 #. module: base
 #. odoo-python
@@ -44633,6 +44684,8 @@ msgstr "Gebruiker"
 msgid ""
 "User %(user)s cannot be at the same time in exclusive groups %(groups)s."
 msgstr ""
+"Gebruiker %(user)s kan niet tegelijkertijd in exclusieve groepen %(groups)s "
+"zitten."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_user_device
@@ -44763,22 +44816,23 @@ msgstr "Gebruikerslog"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_user_ids
 msgid "Users and implied users"
-msgstr ""
+msgstr "Gebruikers en geïmpliceerde gebruikers"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__user_ids
 msgid "Users explicitly in this group"
-msgstr ""
+msgstr "Gebruikers expliciet in deze groep"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__implied_by_ids
 msgid "Users in those groups are implicitly part of this group."
-msgstr ""
+msgstr "Gebruikers in die groepen maken impliciet deel uit van deze groep."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__implied_ids
 msgid "Users of this group are also implicitly part of those groups"
 msgstr ""
+"Gebruikers van deze groep maken ook impliciet deel uit van die groepen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uses_default_logo
@@ -44998,7 +45052,7 @@ msgstr "Bekijk en maak rapportages"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_list
 msgid "View in speedscope"
-msgstr ""
+msgstr "Weergeven in Speedscope"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
@@ -45342,7 +45396,7 @@ msgstr "Website Helpdesk"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr_recruitment_livechat
 msgid "Website IM Livechat HR Recruitment"
-msgstr ""
+msgstr "Website IM Livechat HR-werving"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
@@ -45507,7 +45561,7 @@ msgstr "WhatsApp in marketingautomatisering"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_calendar
 msgid "WhatsApp-Calendar"
-msgstr ""
+msgstr "WhatsApp-kalender"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_delivery
@@ -46747,7 +46801,7 @@ msgstr "naam"
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "narrow"
-msgstr ""
+msgstr "smal"
 
 #. module: base
 #. odoo-python
@@ -46769,7 +46823,7 @@ msgstr "one2many"
 #. odoo-python
 #: code:addons/base/models/res_company.py:0
 msgid "parent_id"
-msgstr ""
+msgstr "parent_id"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -46863,7 +46917,7 @@ msgstr "selection_value"
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "short"
-msgstr ""
+msgstr "kort"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_sales_subscriptions
@@ -46893,7 +46947,7 @@ msgstr "testmodule om modules met alleen gegevens te testen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_read_group
 msgid "test of (formatted/web)_read_group"
-msgstr ""
+msgstr "test van (formatted/web)_read_group"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights

@@ -359,8 +359,9 @@ msgstr "自動批准"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "Automatically Check-Out Employees based on their working schedule with an "
-"additional tolerance."
-msgstr "根據員工的工作時間表，自動為下班員工簽出，並可設定額外的容差。"
+"additional tolerance. Does not apply to employees with a flexible working "
+"schedule."
+msgstr "根據員工的工作時間表，加上容差值，自動為員工簽出。不適用於使用彈性工作時間表的員工。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -936,7 +937,8 @@ msgstr "手動識別"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "If checked, days not covered by an attendance will be visible in the Report."
-msgstr "若勾選，報告會顯示沒有值勤記錄的日子。"
+" Does not apply to employees with a flexible working schedule."
+msgstr "若勾選，報告會顯示沒有值勤記錄的日子。不適用於使用彈性工作時間表的員工。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
@@ -1326,11 +1328,6 @@ msgstr "RFID 標籤，以讀取器讀取"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "RFID Token with reader on tablet"
 msgstr "RFID 標籤，以平板電腦的讀取器讀取"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__rating_ids
-msgid "Ratings"
-msgstr "評分"
 
 #. module: hr_attendance
 #. odoo-javascript

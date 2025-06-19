@@ -219,6 +219,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) 항목의 계정 유형은  \"%(receivable)s\" 또는 "
+"\"%(payable)s\" 유형이어야 하며 \"%(allow_reconciliation)s\" 및 \"%(non_trade)s\" "
+"항목이 모두 활성화되어 있어야 합니다."
 
 #. module: account
 #. odoo-python
@@ -1463,6 +1466,8 @@ msgid ""
 "<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
 "disabled again if there are any existing journal items."
 msgstr ""
+"<strong>주의:</strong> 감사 추적 기능을 활성화된 이후에는, 기존에 전표 항목이 있는 경우 다시 비활성화를 할 수 "
+"없습니다."
 
 #. module: account
 #. odoo-python
@@ -15226,7 +15231,7 @@ msgstr "전표에 대해 참조 모델과 참조 유형을 조합시키도록 �
 #: code:addons/account/models/partner.py:0
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
-msgstr ""
+msgstr "비즈니스 파트너 정보가 관련 회계 내역 전체에 반영이 완료되었습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18255,7 +18260,7 @@ msgstr "이 계정에 외화를 설정할 수 없습니다. 이미 다른 외화
 msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
-msgstr ""
+msgstr "다른 %(vat_label) 항목이 적용되는 경우에는, 해당 파트너를 다른 파트너의 청구서 주소로 설정할 수 없습니다."
 
 #. module: account
 #. odoo-python
