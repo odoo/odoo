@@ -93,3 +93,11 @@ export function cancelOrder() {
         },
     ];
 }
+
+export function removeLine(productName) {
+    return {
+        content: `remove orderline with name ${productName}`,
+        trigger: `.product-card-item:has(.product-info strong:contains(${productName})) .product-controllers button:eq(0)`,
+        run: "click",
+    };
+}
