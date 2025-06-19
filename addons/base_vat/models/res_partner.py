@@ -111,6 +111,7 @@ class ResPartner(models.Model):
                 raise ValidationError(_("To explicitly indicate no (valid) VAT, use '/' instead. "))
         vat_prefix, vat_number = self._split_vat(vat)
 
+<<<<<<< 6bb3c31320eb7a647754ccc2a20fa018880275dd
         if vat_prefix == 'EU' and country not in self.env.ref('base.europe').country_ids:
             # Foreign companies that trade with non-enterprises in the EU
             # may have a VATIN starting with "EU" instead of a country code.
@@ -154,6 +155,47 @@ class ResPartner(models.Model):
     @api.onchange('vat', 'country_id')
     def _onchange_vat(self):
         self._check_vat(validation=False)
+||||||| 043ea15cd39ac0ff6f5dec88969e76e912e6a2f4
+    @api.depends('vat', 'country_id')
+    def _compute_vies_vat_to_check(self):
+        """ Retrieve the VAT number, if one such exists, to be used when checking against the VIES system """
+        eu_country_codes = self.env.ref('base.europe').country_ids.mapped('code')
+        for partner in self:
+            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
+            # a partner for which they haven't yet input VAT, and one not subject to VAT
+            if not partner.vat or len(partner.vat) == 1:
+                partner.vies_vat_to_check = ''
+                continue
+            country_code, number = partner._split_vat(partner.vat)
+            if not country_code.isalpha() and partner.country_id:
+                country_code = partner.country_id.code
+                number = partner.vat
+            partner.vies_vat_to_check = (
+                country_code.upper() in eu_country_codes or
+                country_code.lower() in _region_specific_vat_codes
+            ) and self._fix_vat_number(country_code + number, partner.country_id.id) or ''
+=======
+    @api.depends('vat', 'country_id')
+    def _compute_vies_vat_to_check(self):
+        """ Retrieve the VAT number, if one such exists, to be used when checking against the VIES system """
+        eu_country_codes = self.env.ref('base.europe').country_ids.mapped('code')
+        for partner in self:
+            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
+            # a partner for which they haven't yet input VAT, and one not subject to VAT
+            if not partner.vat or len(partner.vat) == 1:
+                partner.vies_vat_to_check = ''
+                continue
+            vat_prefix, number = partner._split_vat(partner.vat)
+            if not vat_prefix.isalpha() and partner.country_id:
+                vat_prefix = _eu_country_vat.get(partner.country_id.code, partner.country_id.code)
+                number = partner.vat
+            country_code = vat_prefix.upper()
+            country_code = _eu_country_vat_inverse.get(country_code, country_code)
+            partner.vies_vat_to_check = (
+                country_code in eu_country_codes or
+                country_code.lower() in _region_specific_vat_codes
+            ) and self._fix_vat_number(vat_prefix + number, partner.country_id.id) or ''
+>>>>>>> 4579544ab3628fd4a63fa8aaa090e2a729553ae6
 
     @api.depends_context('company')
     @api.depends('vat')
@@ -164,7 +206,7 @@ class ResPartner(models.Model):
             company_code = self.env.company.account_fiscal_country_id.code
             partner.perform_vies_validation = (
                 to_check
-                and not to_check[:2].upper() == company_code
+                and to_check[:2].upper() != _eu_country_vat_inverse.get(company_code, company_code)
                 and self.env.company.vat_check_vies
             )
 
