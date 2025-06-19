@@ -529,7 +529,10 @@ export class LinkPlugin extends Plugin {
                         if (attachmentId) {
                             this.linkElement.dataset.attachmentId = attachmentId;
                         }
-                        if (cleanZWChars(this.linkElement.innerText) === label) {
+                        if (
+                            cleanZWChars(this.linkElement.innerText) === label ||
+                            !!this.linkElement.childElementCount
+                        ) {
                             this.overlay.close();
                             this.dependencies.selection.setSelection(
                                 this.dependencies.selection.getEditableSelection()
