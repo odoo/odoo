@@ -19,6 +19,7 @@ player_regexes = {
     'dailymotion': r'(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
     'instagram': r'(?:(.*)instagram.com|instagr\.am)/p/(.[a-zA-Z0-9-_\.]*)',
     'youku': r'(?:(https?:\/\/)?(v\.youku\.com/v_show/id_|player\.youku\.com/player\.php/sid/|player\.youku\.com/embed/|cloud\.youku\.com/services/sharev\?vid=|video\.tudou\.com/v/)|youku:)(?P<id>[A-Za-z0-9]+)(?:\.html|/v\.swf|)',
+    'facebook': r'^(?:(?:https?:)?//)?(?:www\.)?facebook\.com/(?:plugins/video\.php.*?[?&]href=https%3A%2F%2Fwww\.facebook\.com%2F([^%/]+)%2Fvideos%2F(\d+)|([^/?#]+)?/videos/(\d+)|watch(?:/?|\?)v=(\d+))',
 }
 
 
@@ -45,6 +46,9 @@ def get_video_source_data(video_url):
         youku_match = re.search(player_regexes['youku'], video_url)
         if youku_match:
             return ('youku', youku_match.group("id"), youku_match)
+        facebook_match = re.search(player_regexes['facebook'], video_url)
+        if facebook_match:
+            return ('facebook', facebook_match.group(2) or facebook_match.group(4) or facebook_match.group(5), facebook_match)
     return None
 
 
@@ -106,6 +110,8 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
         embed_url = f'//www.instagram.com/p/{video_id}/embed/'
     elif platform == 'youku':
         embed_url = f'//player.youku.com/embed/{video_id}'
+    elif platform == 'facebook':
+        embed_url = f'//facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Ffifaworldcup%2Fvideos%2F{video_id}%2F&show_text=false&width=560&t=0'
 
     if params:
         embed_url = f'{embed_url}?{url_encode(params)}'
