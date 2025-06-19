@@ -100,12 +100,10 @@ test("can undo a shape", async () => {
     await waitFor(".o-we-toolbar");
 
     await click(".o-we-toolbar button[name='shape_rounded']");
-    await animationFrame();
-    expect(".o-we-toolbar button[name='shape_rounded']").toHaveClass("active");
+    await expectElementCount(".o-we-toolbar button[name='shape_rounded'].active", 1);
     expect("img").toHaveClass("rounded");
     undo(editor);
-    await animationFrame();
-    expect(".o-we-toolbar button[name='shape_rounded']").not.toHaveClass("active");
+    await expectElementCount(".o-we-toolbar button[name='shape_rounded'].active", 0);
     expect("img").not.toHaveClass("rounded");
 });
 
