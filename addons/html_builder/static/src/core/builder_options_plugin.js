@@ -218,10 +218,11 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         const previousElementToIdMap = new Map(this.lastContainers.map((c) => [c.element, c.id]));
-        return [...elementToOptions]
+        const result = [...elementToOptions]
             .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
             .map(([element, options]) => ({
                 id: previousElementToIdMap.get(element) || uniqueId(),
+                folded: true,
                 element,
                 options,
                 headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
@@ -235,6 +236,10 @@ export class BuilderOptionsPlugin extends Plugin {
                 cloneDisabledReason: this.getCloneDisabledReason(element),
                 optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
             }));
+        if (result.length) {
+            result.at(-1).folded = false;
+        }
+        return result;
     }
 
     getPageContainers() {
