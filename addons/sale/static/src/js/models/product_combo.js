@@ -20,4 +20,13 @@ export class ProductCombo {
     get selectedComboItem() {
         return this.combo_items.find(item => item.is_selected);
     }
+
+    /**
+     * Check whether this combo is configurable.
+     *
+     * @return {Boolean} Whether this combo is configurable.
+     */
+    get isConfigurable() {
+        return !this.combo_items[0].is_preselected;
+}
 }

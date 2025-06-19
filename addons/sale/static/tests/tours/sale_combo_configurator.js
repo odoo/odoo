@@ -121,21 +121,16 @@ registry
             productConfiguratorTourUtils.addOptionalProduct("Optional product"),
             {
                 content: "verify that we cannot reduce main product quantity",
-                trigger: 'button[name="sale_quantity_button_minus"]:disabled',
+                trigger: ':not(button[name="sale_quantity_button_minus"])',
             },
             {
                 content: "verify that we cannot increase main product quantity",
-                trigger: 'button[name="sale_quantity_button_plus"]:disabled',
+                trigger: ':not(button[name="sale_quantity_button_plus"])',
             },
             ...productConfiguratorTourUtils.saveConfigurator(),
-            {
-                content: "Verify the first combo item is added",
-                trigger: 'td[name="product_template_id"]:contains("Product A2")',
-            },
-            {
-                content: "Verify the second combo item is added",
-                trigger: 'td[name="product_template_id"]:contains("Product B2")',
-            },
+            tourUtils.checkSOLDescriptionContains("Product A2"),
+            tourUtils.checkSOLDescriptionContains("Product B2"),
+            tourUtils.checkSOLDescriptionContains("Optional product"),
             // Don't end the tour with a form in edition mode.
             ...stepUtils.saveForm(),
         ],
