@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
+import base64
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -53,13 +54,17 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_invoice_extra_attachments(self, invoice):
         # EXTENDS 'account'
-        return super()._get_invoice_extra_attachments(invoice) + invoice.l10n_it_edi_attachment_id
+        return super()._get_invoice_extra_attachments(invoice) + self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_field', '=', 'l10n_it_edi_attachment_file'),
+            ('res_id', 'in', invoice.ids),
+        ])
 
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
         if (
-                ('it_edi_send' in invoice_data['extra_edis'] and not invoice.l10n_it_edi_attachment_id)
+                ('it_edi_send' in invoice_data['extra_edis'] and not invoice.l10n_it_edi_attachment_file)
                 or (invoice_data['invoice_edi_format'] == 'it_edi_xml' and invoice._l10n_it_edi_ready_for_xml_export())
         ):
             if errors := invoice._l10n_it_edi_export_data_check():
@@ -74,7 +79,7 @@ class AccountMoveSend(models.AbstractModel):
         if (
             invoice_data.get('pdf_attachment_values')
             and (
-                ('it_edi_send' in invoice_data['extra_edis'] and not invoice.l10n_it_edi_attachment_id)
+                ('it_edi_send' in invoice_data['extra_edis'] and not invoice.l10n_it_edi_attachment_file)
                 or (invoice_data['invoice_edi_format'] == 'it_edi_xml' and invoice._l10n_it_edi_ready_for_xml_export())
             )
         ):
@@ -88,8 +93,8 @@ class AccountMoveSend(models.AbstractModel):
         moves = self.env['account.move']
         for move, move_data in invoices_data.items():
             if 'it_edi_send' in move_data['extra_edis']:
-                if attachment := move.l10n_it_edi_attachment_id:
-                    attachments_vals[move] = {'name': attachment.name, 'raw': attachment.raw}
+                if attachment := move.l10n_it_edi_attachment_file:
+                    attachments_vals[move] = {'name': move.l10n_it_edi_attachment_name, 'raw': attachment}
                     moves |= move
                 elif edi_values := move_data.get('l10n_it_edi_values'):
                     attachments_vals[move] = edi_values
@@ -100,12 +105,19 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoices_data)
 
-        attachments_vals = [
-            invoice_data.get('l10n_it_edi_values')
-            for invoice_data in invoices_data.values()
-            if invoice_data.get('l10n_it_edi_values')
-        ]
-        if attachments_vals:
-            attachments = self.env['ir.attachment'].sudo().create(attachments_vals)
-            res_ids = attachments.mapped('res_id')
-            self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['l10n_it_edi_attachment_id', 'l10n_it_edi_attachment_file'])
+        move_ids_to_names = {}
+        for move, data in invoices_data.items():
+            if values := data.get('l10n_it_edi_values'):
+                move.l10n_it_edi_attachment_file = base64.b64encode(values['raw'])
+                move.l10n_it_edi_attachment_name = values['name']
+                move.invalidate_recordset(fnames=['l10n_it_edi_attachment_name', 'l10n_it_edi_attachment_file'])
+                move_ids_to_names[move.id] = values['name']
+
+        if move_ids_to_names:
+            attachments = self.env['ir.attachment'].search([
+                ('res_model', '=', 'account.move'),
+                ('res_field', '=', 'l10n_it_edi_attachment_file'),
+                ('res_id', 'in', list(move_ids_to_names)),
+            ])
+            for attachment in attachments:
+                attachment.name = move_ids_to_names.get(attachment.res_id)
