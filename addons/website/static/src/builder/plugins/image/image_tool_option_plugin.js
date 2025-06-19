@@ -9,17 +9,12 @@ import { ImageToolOption } from "./image_tool_option";
 import { isImageCorsProtected, getMimetype } from "@html_editor/utils/image";
 import { withSequence } from "@html_editor/utils/resource";
 import {
-    REPLACE_MEDIA,
     IMAGE_TOOL,
     ALIGNMENT_STYLE_PADDING,
 } from "@html_builder/utils/option_sequence";
-import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media_option";
+import { searchSupportedParentLinkEl } from "../replace_media_option";
 import { computeMaxDisplayWidth } from "./image_format_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
-
-export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
-export const REPLACE_MEDIA_EXCLUDE =
-    "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
@@ -34,12 +29,6 @@ class ImageToolOptionPlugin extends Plugin {
     static shared = ["canHaveHoverEffect"];
     resources = {
         builder_options: [
-            withSequence(REPLACE_MEDIA, {
-                OptionComponent: ReplaceMediaOption,
-                selector: REPLACE_MEDIA_SELECTOR,
-                exclude: REPLACE_MEDIA_EXCLUDE,
-                name: "replaceMediaOption",
-            }),
             withSequence(IMAGE_TOOL, {
                 OptionComponent: ImageToolOption,
                 selector: "img",
@@ -56,7 +45,6 @@ class ImageToolOptionPlugin extends Plugin {
             ResetCropAction,
             TransformImageAction,
             ResetTransformImageAction,
-            ReplaceMediaAction,
             SetLinkAction,
             SetUrlAction,
             SetNewWindowAction,
@@ -188,28 +176,6 @@ export class ResetTransformImageAction extends BuilderAction {
             "style",
             (editingElement.getAttribute("style") || "").replace(/[^;]*transform[\w:]*;?/g, "")
         );
-    }
-}
-export class ReplaceMediaAction extends BuilderAction {
-    static id = "replaceMedia";
-    static dependencies = ["media", "history", "builderOptions"];
-    async load({ editingElement }) {
-        let image;
-        await this.dependencies.media.openMediaDialog({
-            node: editingElement,
-            save: (newImage) => {
-                image = newImage;
-            },
-        });
-        return image;
-    }
-    apply({ editingElement, loadResult: newImage }) {
-        if (!newImage) {
-            return;
-        }
-        editingElement.replaceWith(newImage);
-        this.dependencies.history.addStep();
-        this.dependencies["builderOptions"].updateContainers(newImage);
     }
 }
 export class SetLinkAction extends BuilderAction {
