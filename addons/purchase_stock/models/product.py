@@ -189,3 +189,14 @@ class ProductSupplierinfo(models.Model):
                 'target': 'new',
                 'view_mode': 'form',
             }
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        res = super().name_search(name, args, operator, limit)
+        res = [(r[0], r[1], {'is_vendor': True}) for r in res]
+
+        partner_args = [['display_name', '!=', r[1]] for r in res]
+        partners = self.env['res.partner'].name_search(name, partner_args, operator, limit - len(res))
+
+        res += [(False, p[1], {'is_vendor': False, 'partner_id': p[0]}) for p in partners]
+        return res
