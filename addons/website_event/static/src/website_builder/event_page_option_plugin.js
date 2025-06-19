@@ -37,6 +37,9 @@ class DisplaySubMenuAction extends BuilderAction {
         this.orm = this.services.orm;
         this.currentWebsiteUrl = this.document.location.pathname;
         this.eventId = this.getEventObjectId();
+        this.reload = {
+            getReloadUrl: () => this.eventData["website_url"],
+        }
     }
 
     async toggleWebsiteMenu(value) {
@@ -59,12 +62,6 @@ class DisplaySubMenuAction extends BuilderAction {
         }
         const objectIds = this.currentWebsiteUrl.match(/\d+(?![-\w])/);
         return parseInt(objectIds[0]) | 0;
-    }
-
-    reload() {
-        return {
-            getReloadUrl: () => this.eventData["website_url"],
-        };
     }
 
     async prepare() {

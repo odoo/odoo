@@ -18,7 +18,6 @@ export class BuilderAction {
         this.getValue = this.getValue.bind(this);
         this.clean = this.clean.bind(this);
         this.load = this.load.bind(this);
-        this.loadOnClean = this.loadOnClean.bind(this);
         this.prepare = this.prepare.bind(this);
         this.setup();
     }
@@ -71,8 +70,6 @@ export class BuilderAction {
      * @param {HTMLElement} context.editingElement
      */
     async load(context) {}
-
-    loadOnClean(context) {}
 
     /**
      * Check if a method has been overridden.
