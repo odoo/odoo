@@ -211,6 +211,7 @@ export class CartPage extends Component {
             line.qty = lastChange.qty;
             return;
         }
+<<<<<<< f6651178bb0cf840545934e1f6b07d79aeb6ae78
 
         const doRemoveLine = () => {
             this.selfOrder.removeLine(line);
@@ -228,6 +229,10 @@ export class CartPage extends Component {
         };
         card.addEventListener("animationend", onAnimationEnd);
         card.classList.add("delete-fade-out");
+||||||| e49041faca8195c6408141718fa463c0d881cc8a
+=======
+        !this.lines.length && this.router.back();
+>>>>>>> 173a8ae1c96a9085e002b1360b4ad8c6e7307da8
     }
 
     changeQuantity(line, increase) {

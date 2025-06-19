@@ -25,6 +25,13 @@ registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_in", {
         ...CartPage.cancelOrder(),
         Utils.checkBtn("Order Now"),
         Utils.checkBtn("My Orders"),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        CartPage.removeLine("Coca-Cola"),
+        ProductPage.isShown(),
     ],
 });
 

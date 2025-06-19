@@ -21,8 +21,19 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
+<<<<<<< f6651178bb0cf840545934e1f6b07d79aeb6ae78
         ProductPage.clickCategory("Miscellaneous"),
         Utils.checkIsDisabledBtn("Checkout"),
+||||||| e49041faca8195c6408141718fa463c0d881cc8a
+        Utils.checkIsDisabledBtn("Order"),
+=======
+        Utils.checkIsDisabledBtn("Order"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        CartPage.removeLine("Coca-Cola"),
+        ProductPage.isShown(),
+>>>>>>> 173a8ae1c96a9085e002b1360b4ad8c6e7307da8
     ],
 });
 
