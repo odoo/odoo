@@ -2,12 +2,24 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { touching, isVisible } from "@web/core/utils/ui";
+import { isScrollableY } from "@web/core/utils/scrolling";
 
 export class BottomFixedElement extends Interaction {
     static selector = "#wrapwrap";
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _scrollableTarget: () => {
+            const scrollableEl = this.el.ownerDocument.scrollingElement;
+            return isScrollableY(scrollableEl)
+                ? scrollableEl
+                : scrollableEl.ownerDocument.defaultView;
+        },
+    };
     dynamicContent = {
-        _document: { "t-on-scroll": this.hideBottomFixedElements },
         _window: { "t-on-resize": this.hideBottomFixedElements },
+        _scrollableTarget: {
+            "t-on-scroll": this.hideBottomFixedElements,
+        },
     }
 
     destroy() {
