@@ -5,7 +5,7 @@
     <div class="o-mail-Activity d-flex py-1 mb-2" t-on-click="onClick">
         <div class="o-mail-Activity-sidebar d-flex flex-shrink-0 position-relative align-items-start justify-content-center">
             <div class="o-mail-Activity-avatarContainer position-relative d-flex align-items-center justify-content-center" t-att-role="props.activity.persona ? 'button' : 'img'" t-on-click="onClickAvatar">
-                <img t-if="props.activity.persona" class="w-100 h-100 rounded o_object_fit_cover" t-att-src="props.activity.persona.avatarUrl" />
+                <img t-if="props.activity.persona" class="w-100 h-100 rounded object-fit-cover" t-att-src="props.activity.persona.avatarUrl" />
                 <div
                     class="o-mail-Activity-iconContainer rounded-circle d-flex align-items-center justify-content-center"
                     t-att-class="{
