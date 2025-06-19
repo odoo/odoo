@@ -47,7 +47,7 @@
                         thread="props.thread"
                         messageEdition="props.messageEdition"
                         isFirstMessage="msg_first"
-                        hasActions="props.messageActions"
+                        hasActions="props.messageActions and !props.thread.isTransient"
                         showDates="props.showDates"
                     />
                     <t t-set="prevMsg" t-value="msg"/>
