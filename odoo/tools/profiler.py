@@ -116,10 +116,14 @@ class Collector:
 
     def add(self, entry=None, frame=None, check_limit=True):
         """ Add an entry (dict) to this collector. """
+        exceeded_entry_count = bool(self.profiler.entry_count_limit) \
+                                and self.profiler.counter >= self.profiler.entry_count_limit
+        exceeded_time_limit = bool(self.profiler.time_limit) \
+                              and self.profiler.time_limit < real_time() - self.profiler.start_time
         if (
             check_limit
-            and self.profiler.entry_count_limit
-            and self.profiler.counter >= self.profiler.entry_count_limit
+            and exceeded_entry_count
+            and exceeded_time_limit
         ):
             self.profiler.end()
             return
@@ -134,6 +138,7 @@ class Collector:
         if 'exec_context' not in entry:
             entry['exec_context'] = getattr(self.profiler.init_thread, 'exec_context', ())
         self._entries.append(entry)
+        return entry
 
     def post_process(self):
         for entry in self._entries:
@@ -170,12 +175,18 @@ class SQLCollector(Collector):
         self.profiler.init_thread.query_hooks.remove(self.hook)
 
     def hook(self, cr, query, params, query_start, query_time):
-        self.add({
+        entry = {
             'query': str(query),
             'full_query': str(cr._format(query, params)),
             'start': query_start,
             'time': query_time,
-        })
+        }
+        sample = self.add(entry)
+
+        def update_sample(delay):
+            sample['time'] = delay
+
+        return update_sample
 
     def summary(self):
         total_time = sum(entry['time'] for entry in self._entries) or 1
@@ -509,7 +520,8 @@ class Profiler:
         self.profile_id = None
         self.log = log
         self.sub_profilers = []
-        self.entry_count_limit = int(self.params.get("entry_count_limit",0)) # the limit could be set using a smarter way
+        self.entry_count_limit = int(self.params.get("entry_count_limit", 0))
+        self.time_limit = int(self.params.get("time_limit", 0))
         self.done = False
         self.exit_stack = ExitStack()
         self.counter = 0
