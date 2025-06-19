@@ -397,8 +397,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._is_modifying_relations.clear()
         self.registry_invalidated = True
 
-        self.field_depends.clear()
-        self.field_depends_context.clear()
+        # model classes on which to *not* recompute field_depends[_context]
+        models_field_depends_done = set()
 
         if model_names is None:
             self.many2many_relations.clear()
@@ -408,6 +408,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for model_cls in self.models.values():
                 model_cls._setup_done__ = False
 
+            self.field_depends.clear()
+            self.field_depends_context.clear()
+
         else:
             # only mark impacted models for setup
             for model_name in self.descendants(model_names, '_inherit', '_inherits'):
@@ -416,7 +419,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # recursively mark fields to re-setup
             todo = []
             for model_cls in self.models.values():
-                if not model_cls._setup_done__:
+                if model_cls._setup_done__:
+                    models_field_depends_done.add(model_cls)
+                else:
                     todo.extend(model_cls._fields.values())
 
             done = set()
@@ -437,6 +442,12 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     field.__set_name__(model_cls, name)
                     field._setup_done = False
 
+                    models_field_depends_done.discard(model_cls)
+
+                # partial invalidation of field_depends[_context]
+                self.field_depends.pop(field, None)
+                self.field_depends_context.pop(field, None)
+
                 done.add(field)
                 todo.extend(self.field_setup_dependents.pop(field, ()))
 
@@ -445,7 +456,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
         model_classes.setup_model_classes(env)
 
         # determine field_depends and field_depends_context
-        for model in env.values():
+        for model_cls in self.models.values():
+            if model_cls in models_field_depends_done:
+                continue
+            model = model_cls(env, (), ())
             for field in model._fields.values():
                 depends, depends_context = field.get_depends(model)
                 self.field_depends[field] = tuple(depends)
