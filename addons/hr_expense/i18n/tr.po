@@ -113,7 +113,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "(incl"
-msgstr ""
+msgstr "(dahil:"
 
 #. module: hr_expense
 #. odoo-python
@@ -284,7 +284,7 @@ msgstr "Ödenecek Tutar"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "An"
-msgstr ""
+msgstr "Bir"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -521,8 +521,6 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Ölçü Birimleri arası dönüştürme yalnızca aynı kategoriye sahiplerse "
-"yapılabilir. Dönüşümler oranlara göre yapılacaktır."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_kanban_view
@@ -1062,7 +1060,7 @@ msgstr "Müşterilere veya tedarikçilere hediyeler"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "Go to settings"
-msgstr ""
+msgstr "Ayarlara gidin"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1726,9 +1724,6 @@ msgid ""
 "don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
 "navigate."
 msgstr ""
-"Hazır? Manuel olarak kaydedebilir veya değişiklikleri buradan atabilirsiniz."
-" <em>Kaydetmenize gerek yok</em> - Odoo gezinirken sizin için herşeyi "
-"kurtaracak."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -1856,8 +1851,6 @@ msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
-"Bu personelin \"Masraf\" onayından sorumlu kullanıcıyı seçiniz.\n"
-"Eğer boşsa, onay bir Yönetici veya Onaylayıcı (ayarlar/kullanıcılar kısmında belirlenen) tarafından yapılır."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
@@ -1960,10 +1953,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Aktivitelere göre durum \n"
-"Gecikmiş\\: Son tarih geçmiş\n"
-"Bugün\\: Aktivite tarihi bugün\n"
-"Planlanmış\\: Gelecek Aktiviteler."
+"Faaliyetlere dayalı durum\n"
+"Gecikmiş: Son tarih geçmiş\n"
+"Bugün: Etkinlik tarihi bugün\n"
+"Planlanan: Gelecekteki faaliyetler."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2075,8 +2068,6 @@ msgid ""
 "The first word of the email subject did not correspond to any category code."
 " You'll have to set the category manually on the expense."
 msgstr ""
-"E-posta konusunun ilk kelimesi herhangi bir kategori koduna karşılık "
-"gelmiyordu. Kategoriyi masraf üzerinde manuel olarak ayarlamanız gerekir."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -2085,9 +2076,6 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
-"Aşağıdaki onaylanmış giderler, bu raporun bazı giderlerinden benzer çalışan,"
-" tutar ve kategoriye sahiptir. Lütfen bu raporun kopya içermediğini "
-"doğrulayın."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
@@ -2505,6 +2493,8 @@ msgid ""
 "You do not have the rights to add or remove any expenses on an approved or "
 "paid expense report."
 msgstr ""
+"Onaylanmış veya ödenmiş bir gider raporuna herhangi bir gider ekleme veya "
+"rapordan gider çıkarma hakkınız yoktur."
 
 #. module: hr_expense
 #. odoo-python

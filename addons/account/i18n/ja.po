@@ -7,8 +7,8 @@
 # Andy Yiu, 2025
 # Wil Odoo, 2025
 # Ryoko Tsuda <ryoko@quartile.co>, 2025
-# Junko Augias, 2025
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-13 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2025\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -221,6 +221,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) は勘定科目タイプ \"%(receivable)s\" または "
+"\"%(payable)s\" 両方のオプション \"%(allow_reconciliation)s\" および \"%(non_trade)s\" "
+"が有効化されている必要があります。"
 
 #. module: account
 #. odoo-python
@@ -3678,17 +3681,17 @@ msgstr "基本"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Batch Payment Number Sequence"
-msgstr "バッチ支払番号付番"
+msgstr "一括支払番号付番"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
 msgid "Batch Payment Sequence"
-msgstr "バッチ支払付番"
+msgstr "一括支払付番"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
-msgstr "バッチ支払"
+msgstr "一括支払"
 
 #. module: account
 #. odoo-javascript
@@ -3940,12 +3943,12 @@ msgstr "キャンセル"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr "記入を取消"
+msgstr "記入をキャンセル"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__canceled
 msgid "Canceled"
-msgstr "取消済"
+msgstr "キャンセル済"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
@@ -3953,7 +3956,7 @@ msgstr "取消済"
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__cancel
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
-msgstr "取消済"
+msgstr "キャンセル済"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -9003,7 +9006,7 @@ msgstr "イレギュラーなシーケンス"
 msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
-msgstr "最終ロック日以降のシーケンス番号の仕入先請求書の取消または削除されたドラフトによる不正。"
+msgstr "最終ロック日以降のシーケンス番号の仕入先請求書のキャンセルまたは削除されたドラフトによる不正。"
 
 #. module: account
 #. odoo-python
@@ -9011,7 +9014,7 @@ msgstr "最終ロック日以降のシーケンス番号の仕入先請求書の
 msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
-msgstr "最終ロック日以降のシーケンス番号の顧客請求書の、取消または削除されたドラフトによる不正。"
+msgstr "最終ロック日以降のシーケンス番号の顧客請求書の、キャンセルまたは削除されたドラフトによる不正。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -10444,7 +10447,7 @@ msgstr "直近"
 #: model:ir.model.fields,field_description:account.field_account_move__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
 msgid "Need Cancel Request"
-msgstr "要求を取消する必要があります"
+msgstr "要求をキャンセルする必要があります"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -12600,7 +12603,7 @@ msgstr "消込モデル"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
-msgstr "消込パーツ"
+msgstr "消込部分"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
@@ -12800,7 +12803,7 @@ msgstr "非ゼロ値最小貨幣(例えば、0.05)を表します。"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Request Cancel"
-msgstr "取消要求"
+msgstr "キャンセル要求"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__require_partner_bank_account
@@ -16868,7 +16871,7 @@ msgstr "アングロサクソン会計を使用"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_batch_payment
 msgid "Use batch payments"
-msgstr "バッチ支払を使用"
+msgstr "一括支払を使用"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -17657,7 +17660,7 @@ msgstr "インバウンド仕訳とアウトバウンド仕訳の支払いを同
 msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
-msgstr "仕訳をドラフトにリセットすることはできません。取消を申請する必要があります。"
+msgstr "仕訳をドラフトにリセットすることはできません。キャンセルを申請する必要があります。"
 
 #. module: account
 #. odoo-python
