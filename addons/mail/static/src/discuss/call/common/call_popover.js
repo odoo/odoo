@@ -13,19 +13,21 @@ export class CallPopover extends Component {
         contentClass: { type: String, optional: true },
         clickToClose: { type: Boolean, optional: true },
         slots: { optional: true },
+        openByDefault: { type: Boolean, optional: true },
     };
     static defaultProps = {
         position: "bottom",
         class: "",
         contentClass: "",
         clickToClose: false,
+        openByDefault: false,
     };
 
     setup() {
         super.setup();
         this.triggerRef = useRef("trigger");
         this.contentRef = useRef("content");
-        this.state = useState({ isOpen: false });
+        this.state = useState({ isOpen: this.props.openByDefault });
         usePosition("content", () => this.triggerRef.el, {
             position: this.props.position,
             margin: 4,

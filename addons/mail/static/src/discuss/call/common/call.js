@@ -1,3 +1,4 @@
+import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performance_warning";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
@@ -25,8 +26,13 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
  * @extends {Component<Props, Env>}
  */
 export class Call extends Component {
-    static components = { CallActionList, CallParticipantCard, PttAdBanner };
-    static props = ["thread?", "compact?", "isPip?"];
+    static components = {
+        BlurPerformanceWarning,
+        CallActionList,
+        CallParticipantCard,
+        PttAdBanner,
+    };
+    static props = ["thread", "compact?", "isPip?"];
     static template = "discuss.Call";
 
     overlayTimeout;
