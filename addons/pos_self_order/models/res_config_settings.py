@@ -156,7 +156,7 @@ class ResConfigSettings(models.TransientModel):
                 with zip_file.open(f"{qr_image['name']} ({index + 1}).png", "w") as buf:
                     qr_image['images']['png'].save(buf, format="PNG")
                 with zip_file.open(f"{qr_image['name']} ({index + 1}).svg", "w") as buf:
-                    qr_image['images']['svg'].save(buf)
+                    buf.write(qr_image['images']['svg'].to_string())
         zip_buffer.seek(0)
 
         # Delete previous attachments
