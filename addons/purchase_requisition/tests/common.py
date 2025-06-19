@@ -9,6 +9,8 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
     def setUpClass(cls):
         super(TestPurchaseRequisitionCommon, cls).setUpClass()
 
+        cls.env.user.group_ids += cls.env.ref('uom.group_uom')
+
         # Fetch purchase related user groups
         user_group_purchase_manager = cls.env.ref('purchase.group_purchase_manager')
         user_group_purchase_user = cls.env.ref('purchase.group_purchase_user')
