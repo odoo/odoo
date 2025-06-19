@@ -1,0 +1,40 @@
+<odoo>
+    <record id="view_move_form_fa3_l10n_pl_edi" model="ir.ui.view">
+        <field name="name">account.move.form.fa3</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='header_right_group']" position="inside">
+                <field name="l10n_pl_ksef_status" invisible="not l10n_pl_edi_register"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                    <div class="alert alert-warning"
+                         role="alert"
+                         invisible="not l10n_pl_edi_header or state == 'draft' or l10n_pl_ksef_status == 'accepted'">
+                        <div class="d-flex align-items-center">
+                            <field name="l10n_pl_edi_header" class="oe_inline" readonly="1"/>
+                            <a name="action_update_invoice_status"
+                               type="object"
+                               class="alert-link fw-bold ms-1"
+                               invisible="l10n_pl_ksef_status == 'accepted' or not l10n_pl_move_reference_number"
+                               data-hotkey="shift+K">Check Sending</a>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success d-flex align-items-center"
+                         role="alert"
+                         invisible="l10n_pl_ksef_status != 'accepted'">
+
+                        <i class="fa fa-check-circle text-success me-2" role="img" title="Success"/>
+                        <span>Invoice accepted by KSeF.</span>
+
+                        <a name="action_get_invoice_UPO"
+                           type="object"
+                            class="alert-link fw-bold ms-1"
+                           invisible="not l10n_pl_move_reference_number"
+                           data-hotkey="shift+U">Download UPO</a>
+                    </div>
+                </xpath>
+        </field>
+    </record>
+</odoo>
