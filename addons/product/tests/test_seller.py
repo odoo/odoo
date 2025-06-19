@@ -151,6 +151,7 @@ class TestSeller(TransactionCase):
             "Setting the product_id to False shouldn't affect seller_ids.")
 
     def test_supplierinfo_without_uom_and_product_template(self):
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
         supplier_info = self.env['product.supplierinfo'].create({
             'partner_id': self.asustec.id,
         })
