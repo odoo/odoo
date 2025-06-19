@@ -29,6 +29,11 @@ class Module(Command):
             help="Install modules",
             description="Install selected modules",
         )
+        self.data_import_parser = subparsers.add_parser(
+            'data-import',
+            help="Import data modules (.zip)",
+            description="Import selected data modules",
+        )
         self.upgrade_parser = subparsers.add_parser(
             'upgrade',
             help="Upgrade modules",
@@ -47,6 +52,7 @@ class Module(Command):
 
         for parser in (
             self.install_parser,
+            self.data_import_parser,
             self.uninstall_parser,
             self.upgrade_parser,
             self.force_demo_parser,
@@ -61,17 +67,18 @@ class Module(Command):
 
         self.install_parser.add_argument(
             'modules', nargs='+', metavar='MODULE',
-            help="names of the modules to be installed. For data modules (.zip), use the path instead")
-        self.install_parser.epilog = textwrap.dedent("""\
-            Before installing modules, an Odoo database needs to be created and initialized
-            on your PostgreSQL instance, using the `db init` command:
-
-            $ odoo-bin db init <db_name>
-
-            To get help on its parameters, see:
-
-            $ odoo-bin db init --help
-        """)
+            help="names of the modules to be installed.")
+        self.data_import_parser.add_argument(
+            'paths', nargs='+', metavar='PATH',
+            help="path of the data modules zipfiles to be imported.")
+        self.data_import_parser.add_argument(
+            '--force-init', action='store_true',
+            help='force initialization of the module',
+        )
+        self.data_import_parser.add_argument(
+            '--with-demo', action='store_true',
+            help='install the specific demo data of the module',
+        )
         self.uninstall_parser.add_argument(
             'modules', nargs='+', metavar='MODULE',
             help="names of the modules to be uninstalled")
@@ -82,6 +89,18 @@ class Module(Command):
             '--outdated', action='store_true',
             help="only update modules that have a newer version on disk",
         )
+
+        for parser in (self.install_parser, self.data_import_parser):
+            parser.epilog = textwrap.dedent("""\
+                Before installing modules, an Odoo database needs to be created and initialized
+                on your PostgreSQL instance, using the `db init` command:
+
+                $ odoo-bin db init <db_name>
+
+                To get help on its parameters, see:
+
+                $ odoo-bin db init --help
+            """)
 
     def run(self, cmdargs):
         parsed_args = self.parser.parse_args(args=cmdargs)
@@ -106,6 +125,8 @@ class Module(Command):
         match parsed_args.subcommand:
             case 'install':
                 self._install(parsed_args)
+            case 'data-import':
+                self._data_import(parsed_args)
             case 'uninstall':
                 self._uninstall(parsed_args)
             case 'upgrade':
@@ -132,7 +153,6 @@ class Module(Command):
             module
             for module in module_names
             if get_module_path(module)
-            or self._get_zip_path(module)
         }
         if not valid_module_names:
             _logger.warning("No valid module names found")
@@ -179,16 +199,16 @@ class Module(Command):
 
     def _install(self, parsed_args):
         with self._create_env_context(parsed_args.db_name) as env:
-
             installable_modules = self._get_modules(env, parsed_args.modules)
-            non_installable_modules = set(parsed_args.modules) - set(installable_modules.mapped("name"))
             if installable_modules:
                 installable_modules.button_immediate_install()
 
+    def _data_import(self, parsed_args):
+        with self._create_env_context(parsed_args.db_name) as env:
             importable_zipfiles = OrderedSet(
                 fullpath
-                for module in non_installable_modules
-                if (fullpath := self._get_zip_path(module))
+                for path in parsed_args.paths
+                if (fullpath := self._get_zip_path(path))
             )
             if not importable_zipfiles:
                 return
@@ -196,7 +216,11 @@ class Module(Command):
                 _logger.warning("Cannot import data modules unless the `base_import_module` module is installed")
             else:
                 for importable_zipfile in importable_zipfiles:
-                    env['ir.module.module']._import_zipfile(importable_zipfile)
+                    env['ir.module.module']._import_zipfile(
+                        importable_zipfile,
+                        force=parsed_args.force_init,
+                        with_demo=parsed_args.with_demo,
+                    )
 
     def _upgrade(self, parsed_args):
         with self._create_env_context(parsed_args.db_name) as env:
