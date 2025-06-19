@@ -104,7 +104,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
-            previous_operator_id: null,
+            operator_params: {previous_operator_id: null},
             persisted: false,
         })}`,
     ]);
@@ -124,7 +124,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
                 `/im_livechat/get_session - ${JSON.stringify({
                     channel_id: livechatChannelId,
                     anonymous_name: "Visitor",
-                    previous_operator_id: operatorPartnerId,
+                    operator_params: {previous_operator_id: operatorPartnerId},
                     persisted: true,
                 })}`,
                 `/mail/message/post - ${JSON.stringify({

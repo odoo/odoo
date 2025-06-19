@@ -233,7 +233,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 {
                     "anonymous_name": "anon 1",
                     "channel_id": self.im_livechat_channel.id,
-                    "previous_operator_id": self.users[0].partner_id.id,
+                    "operator_params": {"previous_operator_id": self.users[0].partner_id.id},
                 },
             )["channel_id"]
         )
@@ -249,7 +249,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     {
                         "anonymous_name": "anon 2",
                         "channel_id": self.im_livechat_channel.id,
-                        "previous_operator_id": self.users[0].partner_id.id,
+                        "operator_params": {"previous_operator_id": self.users[0].partner_id.id},
                     },
                 )["channel_id"]
             )

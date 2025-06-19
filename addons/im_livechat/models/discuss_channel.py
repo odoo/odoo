@@ -516,3 +516,117 @@ class DiscussChannel(models.Model):
             # sudo: discuss.channel - last operator left the conversation, state must be updated.
             channel_sudo.livechat_active = False
             self._bus_send_store(self, "livechat_active")
+
+    def _forward_operator(self, chatbot_script_step=None, users=None):
+        """ Add a human operator to the conversation. The conversation with the chatbot (scripted chatbot or ai agent) is stopped
+        the visitor will continue the conversation with a real person.
+
+        In case we don't find any operator (e.g: no-one is available) we don't post any messages.
+        The chat with the chatbot will continue normally, which allows to add extra steps when it's the case
+        (e.g: ask for the visitor's email and create a lead).
+
+        :param chatbot_script_step: the forward to operator chatbot script step if the forwarding is done through
+        a scripted chatbot as opposed to an ai agent.
+        :param users: recordset of candidate operators, if not provided the currently available
+            users of the livechat channel are used as candidates instead.
+        """
+
+        human_operator = False
+        posted_message = self.env['mail.message']
+        if chatbot_script_step is None:
+            chatbot_script_step = self.env['chatbot.script.step']
+
+        if self.livechat_channel_id:
+            human_operator = self._get_human_operator(users, chatbot_script_step)
+
+        # handle edge case where we found yourself as available operator -> don't do anything
+        # it will act as if no-one is available (which is fine)
+        if human_operator and human_operator != self.env.user:
+
+            posted_message = self._post_current_chatbot_step_message(chatbot_script_step)
+
+            channel_sudo = self.sudo()
+            bot_partner_id = channel_sudo.channel_member_ids.filtered(lambda m: m.livechat_member_type == "bot").partner_id
+            self._add_human_operator_to_channel(human_operator, chatbot_script_step, bot_partner_id)
+            # sudo - discuss.channel: let the chat bot proceed to the forward step (change channel operator, add human operator
+            # as member, remove bot from channel, rename channel and finally broadcast the channel to the new operator).
+            channel_sudo._action_unfollow(partner=bot_partner_id, post_leave_message=False)
+            self._rename_channel(human_operator)
+            self._add_next_step_message_to_store(chatbot_script_step)
+            channel_sudo._broadcast(human_operator.partner_id.ids)
+            self.channel_pin(pinned=True)
+        else:
+            # sudo: discuss.channel - visitor tried getting operator, outcome must be updated
+            self.sudo().livechat_failure = "no_agent"
+
+        return posted_message
+
+    def _get_human_operator(self, users, chatbot_script_step):
+        operator_params = {
+            'lang': self.env.context.get("lang"),
+            'country_id': self.country_id.id,
+            'users': users
+        }
+        if chatbot_script_step:
+            operator_params['expertises'] = chatbot_script_step.operator_expertise_ids
+        # sudo: res.users - visitor can access operator of their channel
+        human_operator = self.livechat_channel_id.sudo()._get_operator(**operator_params)
+        return human_operator
+
+    def _post_current_chatbot_step_message(self, chatbot_script_step):
+        posted_message = self.env['mail.message']
+        if chatbot_script_step and chatbot_script_step.message:
+            # first post the message of the step (if we have one)
+            posted_message = self._chatbot_post_message(chatbot_script_step.chatbot_script_id, plaintext2html(chatbot_script_step.message))
+        return posted_message
+
+    def _add_human_operator_to_channel(self, human_operator, chatbot_script_step, inviting_partner):
+        create_member_params = {'livechat_member_type': 'agent'}
+        if chatbot_script_step:
+            create_member_params['agent_expertise_ids'] = chatbot_script_step.operator_expertise_ids.ids
+        # next, add the human_operator to the channel and post a "Operator invited to the channel" notification
+        self.sudo()._add_members(
+            users=human_operator,
+            create_member_params=create_member_params,
+            inviting_partner=inviting_partner,
+        )
+
+    def _rename_channel(self, human_operator):
+        # finally, rename the channel to include the operator's name
+        self.sudo().write(
+            {
+                "livechat_failure": "no_answer",
+                "livechat_operator_id": human_operator.partner_id,
+                "name": " ".join(
+                    [
+                        self.env.user.display_name
+                        if not self.env.user._is_public()
+                        else self.anonymous_name,
+                        human_operator.livechat_username
+                        if human_operator.livechat_username
+                        else human_operator.name,
+                    ]
+                )
+            }
+        )
+
+    def _add_next_step_message_to_store(self, chatbot_script_step):
+        if chatbot_script_step:
+            step_message = next((
+                # sudo - chatbot.message.id: visitor can access chat bot messages.
+                m.mail_message_id for m in self.sudo().chatbot_message_ids.sorted("id")
+                if m.script_step_id == chatbot_script_step
+                and m.mail_message_id.author_id == chatbot_script_step.chatbot_script_id.operator_partner_id
+            ), self.env["mail.message"])
+            store = Store()
+            self._bus_send_store(
+                store.add_model_values(
+                    "ChatbotStep",
+                    {
+                        "id": (chatbot_script_step.id, step_message.id),
+                        "scriptStep": chatbot_script_step.id,
+                        "message": step_message.id,
+                        "operatorFound": True,
+                    },
+                )
+            )

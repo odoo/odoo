@@ -233,19 +233,19 @@ class Im_LivechatChannel(models.Model):
     # Channel Methods
     # --------------------------
     def _get_livechat_discuss_channel_vals(
-        self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None
+        self, anonymous_name, operator_params=None, user_id=None, country_id=None, lang=None
     ):
-        user_operator = self.env["res.users"]
-        if chatbot_script:
-            if chatbot_script.id not in self.browse(self.ids).mapped('rule_ids.chatbot_script_id.id'):
-                return False
-        else:
-            user_operator = self._get_operator(previous_operator_id=previous_operator_id, lang=lang, country_id=country_id)
-            if not user_operator:
-                # no one available
-                return False
-        # partner to add to the discuss.channel
-        operator_partner_id = user_operator.partner_id.id if user_operator else chatbot_script.operator_partner_id.id
+        if operator_params is None:
+            operator_params = {}
+        chatbot_script = operator_params.get('chatbot_script', self.env['chatbot.script'])
+        operator_params['lang'] = lang
+        operator_params['country_id'] = country_id
+        operator_info = self._get_operator_info(operator_params)
+        if operator_info is False:
+            return False
+
+        user_operator = operator_info['user_operator']
+        operator_partner_id = operator_info['operator_partner_id']
         members_to_add = [
             Command.create(
                 {
@@ -268,14 +268,9 @@ class Im_LivechatChannel(models.Model):
                 ),
             )
 
-        if chatbot_script:
-            name = chatbot_script.title
-        else:
-            name = ' '.join([
-                visitor_user.display_name if visitor_user else anonymous_name,
-                user_operator.livechat_username or user_operator.name
-            ])
-
+        operator_info['chatbot_script'] = chatbot_script
+        visitor_info = {'visitor_user': visitor_user, 'anonymous_name': anonymous_name}
+        channel_name = self._get_channel_name(operator_info, visitor_info)
         return {
             'channel_member_ids': members_to_add,
             "livechat_lang_id": self.env["res.lang"].search([("code", "=", lang)]).id,
@@ -287,8 +282,50 @@ class Im_LivechatChannel(models.Model):
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
             'channel_type': 'livechat',
-            'name': name,
+            'name': channel_name,
         }
+
+    def _get_operator_info(self, operator_params):
+        # partner to add to the discuss.channel
+        operator_partner_id = False
+
+        chatbot_script = operator_params.get('chatbot_script')
+        if chatbot_script:
+            if chatbot_script.id not in self.browse(self.ids).mapped('rule_ids.chatbot_script_id.id'):
+                return False
+            operator_partner_id = chatbot_script.operator_partner_id.id
+
+        is_user_operator = self._is_user_operator(operator_params)
+        if is_user_operator:
+            user_operator = self._get_operator(
+                previous_operator_id=operator_params.get('previous_operator_id'),
+                lang=operator_params['lang'],
+                country_id=operator_params['country_id']
+            )
+            if not user_operator:
+                # no one available
+                return False
+            operator_partner_id = user_operator.partner_id.id
+
+        return {'user_operator': is_user_operator and user_operator, 'operator_partner_id': operator_partner_id}
+
+    def _is_user_operator(self, operator_params):
+        return not operator_params.get('chatbot_script')
+
+    def _get_channel_name(self, operator_info, visitor_info):
+        chatbot_script = operator_info['chatbot_script']
+        user_operator = operator_info['user_operator']
+        visitor_user = visitor_info['visitor_user']
+        anonymous_name = visitor_info['anonymous_name']
+
+        if chatbot_script:
+            channel_name = chatbot_script.title
+        else:
+            channel_name = ' '.join([
+                visitor_user.display_name if visitor_user else anonymous_name,
+                user_operator.livechat_username or user_operator.name
+            ])
+        return channel_name
 
     def _get_less_active_operator(self, operator_statuses, operators):
         """ Retrieve the most available operator based on the following criteria:
@@ -475,13 +512,16 @@ class Im_LivechatChannel(models.Model):
         if username is None:
             username = _('Visitor')
         info = {}
-        info['available'] = self.chatbot_script_count or len(self.available_operator_ids) > 0
+        info['available'] = self._is_livechat_available()
         info['server_url'] = self.get_base_url()
         info["websocket_worker_version"] = WebsocketConnectionHandler._VERSION
         if info['available']:
             info['options'] = self._get_channel_infos()
             info['options']["default_username"] = username
         return info
+
+    def _is_livechat_available(self):
+        return self.chatbot_script_count or len(self.available_operator_ids) > 0
 
 
 class Im_LivechatChannelRule(models.Model):
@@ -561,6 +601,9 @@ class Im_LivechatChannelRule(models.Model):
         # second, fallback on the rules without country
         domain = [('country_ids', '=', False), ('channel_id', '=', channel_id)]
         return _match(self.search(domain))
+
+    def _is_bot_configured(self):
+        return bool(self.chatbot_script_id)
 
     def _to_store_defaults(self):
         return [
