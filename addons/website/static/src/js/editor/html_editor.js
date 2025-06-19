@@ -8,6 +8,7 @@ import wUtils from "@website/js/utils";
 import { useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
+import { CSS_SHORTHANDS } from "@html_builder/utils/utils_css";
 
 /**
  * The goal of this patch is to handle the URL autocomplete in the LinkPopover
@@ -65,7 +66,7 @@ patch(LinkPopover.prototype, {
         this.urlRef = useChildRef();
         useEffect(
             (el) => {
-                if (el) {
+                if (el && (this.state.isImage || (!this.state.url && this.state.label))) {
                     el.focus();
                 }
             },
@@ -125,6 +126,123 @@ patch(LinkPopover.prototype, {
             }
         }
         return choices;
+    },
+
+    onChange() {
+        super.onChange();
+        Object.assign(this.state.colorsData, this.computeColorsData());
+    },
+
+    /**
+     * Compute inline styles by applying the given classes to a temporary button
+     * inserted in the container.
+     *
+     * @param {HTMLElement} buttonContainerEl - Container where the temporary
+     *                                          button is placed
+     * @param {string} variantClass - Variant class (e.g., 'btn-primary')
+     * @param {string[]} extraClasses - Extra classes (size, shape)
+     *
+     * @returns {string} Extracted inline style string
+     */
+    computeButtonInlineStyles(buttonContainerEl, variantClass, extraClasses) {
+        const tempButtonEl = document.createElement("a");
+        tempButtonEl.className = `btn ${variantClass} ${extraClasses.join(" ")}`.trim();
+
+        this.props.ignoreDOMMutations(() => buttonContainerEl.appendChild(tempButtonEl));
+
+        const computedStyles = window.getComputedStyle(tempButtonEl);
+        const allowedStyles = [
+            "color",
+            "font-size",
+            "font-weight",
+            "text-transform",
+            "background-color",
+            ...CSS_SHORTHANDS["padding"],
+            ...CSS_SHORTHANDS["border-width"],
+            ...CSS_SHORTHANDS["border-color"],
+            ...CSS_SHORTHANDS["border-style"],
+            ...CSS_SHORTHANDS["border-radius"],
+        ];
+        const inlineStyle = [];
+
+        for (const style of allowedStyles) {
+            const value = computedStyles.getPropertyValue(style);
+            if (value) {
+                inlineStyle.push(`${style}: ${value};`);
+            }
+        }
+
+        this.props.ignoreDOMMutations(() => tempButtonEl.remove());
+        return inlineStyle.join("");
+    },
+
+    /**
+     * Override `computeColorsData` to ensure link style previews (for primary
+     * and secondary buttons) in the popover use the actual button styles based
+     * on the editing element's classes or component state.
+     */
+    computeColorsData() {
+        const colors = super.computeColorsData();
+        if (!this.props.allowCustomStyle) {
+            return colors;
+        }
+
+        let buttonContainerEl = this.props.containerElement;
+        let stylePrefix = "btn";
+        let sizeClasses = [];
+        let shapeClasses = [];
+
+        const stylePrefixRegex = /(outline|fill)/;
+
+        if (buttonContainerEl.tagName === "A") {
+            sizeClasses = [...buttonContainerEl.classList].filter((cls) =>
+                ["btn-lg", "btn-sm"].includes(cls)
+            );
+            shapeClasses = [...buttonContainerEl.classList].filter((cls) =>
+                ["flat", "rounded-circle"].includes(cls)
+            );
+
+            const prefix = buttonContainerEl.className.match(stylePrefixRegex)?.[0];
+            if (prefix) {
+                stylePrefix = `btn-${prefix}`;
+            }
+
+            buttonContainerEl = buttonContainerEl.parentElement;
+        } else if (this.state) {
+            const { buttonShape = "", buttonSize = "" } = this.state;
+
+            const prefix = buttonShape.match(stylePrefixRegex)?.[0];
+            stylePrefix = prefix ? `btn-${prefix}` : "btn";
+
+            if (buttonSize) {
+                sizeClasses.push(`btn-${buttonSize}`);
+            }
+
+            shapeClasses.push(
+                ...buttonShape.split(" ").filter((cls) => ["rounded-circle", "flat"].includes(cls))
+            );
+        }
+
+        const extraClasses = [...sizeClasses, ...shapeClasses];
+
+        const primaryClass = `${stylePrefix}-primary`;
+        const secondaryClass = `${stylePrefix}-secondary`;
+
+        const applyStyle = (btnType, variantClass) => {
+            const index = colors.findIndex((color) => color.type === btnType);
+            if (index !== -1) {
+                colors[index].style = this.computeButtonInlineStyles(
+                    buttonContainerEl,
+                    variantClass,
+                    extraClasses
+                );
+            }
+        };
+
+        applyStyle("primary", primaryClass);
+        applyStyle("secondary", secondaryClass);
+
+        return colors;
     },
 
     onSelect(value) {

@@ -57,7 +57,8 @@ test("Popovers scroll with iframe", async () => {
     await expectScroll(".o_popover:has(> .o_animate_text_popover)");
 
     await contains(".o-we-toolbar button[name=link]").click();
-    await contains(".o-we-linkpopover select[name=link_type]").select("custom");
+    await contains(".o-we-linkpopover button[name=link_type]").click();
+    await contains(".o_popover .o-dropdown-item span:contains(custom)").click();
     await contains(".o-we-linkpopover button.custom-text-picker").click();
     await expectScroll(".o_popover:has(> .o_font_color_selector)");
 });
@@ -91,4 +92,60 @@ test("Floating toolbar visual consistency and usability", async () => {
     const colorLabel = await waitFor(".o_popover label[for='colorButton']");
     const sublevelRow = colorLabel.closest(".hb-row-sublevel-1");
     expect(sublevelRow).toHaveClass("hb-row-sublevel-1");
+});
+
+test("button preview updates according to button shape, size, and theme colors", async () => {
+    await setupWebsiteBuilder(
+        `<div class="o_cc o_cc1"><a class="btn btn-primary">My Button</a></div>`,
+        {
+            loadIframeBundles: true,
+            styleContent: /*css*/ `
+                .o_cc1 .btn-primary {
+                    --btn-bg: #FF0000;
+                    --btn-border-color: #CE0000;
+                }
+                .o_cc1 .btn-secondary {
+                    --btn-bg: #ff9c00;
+                    --btn-border-color: #BD9400;
+                }
+            `,
+        }
+    );
+    const btnEl = queryOne(":iframe .o_cc1 a");
+    setSelection({
+        anchorNode: btnEl.firstChild.nextSibling,
+        anchorOffset: 0,
+        focusOffset: 1,
+    });
+    await waitFor(".o-we-toolbar");
+    await contains("button[name='link']").click();
+
+    const buttonShapeSelectEl = queryOne("select[name='link_style_shape']");
+    buttonShapeSelectEl.value = "flat";
+    buttonShapeSelectEl.dispatchEvent(new Event("change"));
+    const buttonSizeSelectEl = queryOne("select[name='link_style_size']");
+    buttonSizeSelectEl.value = "lg";
+    buttonSizeSelectEl.dispatchEvent(new Event("change"));
+
+    expect("select[name='link_style_shape']").toHaveValue("flat");
+    expect("select[name='link_style_size']").toHaveValue("lg");
+
+    await contains("button[name='link_type']").click();
+    expect(".dropdown-item span:contains(Button Primary)").toHaveStyle({
+        "background-color": "rgb(255, 0, 0)",
+        "text-transform": "uppercase",
+    });
+    expect(".dropdown-item span:contains(Button Secondary)").toHaveStyle({
+        "background-color": "rgb(255, 156, 0)",
+        "text-transform": "uppercase",
+    });
+    await contains(".dropdown-item span:contains(Button Primary)").click();
+
+    buttonShapeSelectEl.value = "outline";
+    buttonShapeSelectEl.dispatchEvent(new Event("change"));
+    await contains("button[name='link_type']").click();
+    expect(".dropdown-item span:contains(Button Primary)").toHaveStyle({
+        "background-color": "rgba(0, 0, 0, 0)",
+        "text-transform": "none",
+    });
 });

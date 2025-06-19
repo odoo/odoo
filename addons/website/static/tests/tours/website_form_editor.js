@@ -550,9 +550,14 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            content: "Click on link type dropdown",
+            trigger: ".o-we-linkpopover button[name='link_type']",
+            run: "click",
+        },
+        {
             content: "Change button's style",
-            trigger: ".o-we-linkpopover select[name='link_type']",
-            run: "select custom",
+            trigger: ".o-we-link-type-dropdown .dropdown-item:contains('Custom')",
+            run: "click",
         },
         {
             trigger: ".o-we-linkpopover select[name=link_style_shape]",

@@ -2,11 +2,12 @@ import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { Component, useState, useRef, useEffect, useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { useColorPicker } from "@web/core/color_picker/color_picker";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 const DEFAULT_CUSTOM_TEXT_COLOR = "#714B67";
 const DEFAULT_CUSTOM_FILL_COLOR = "#ffffff";
@@ -27,6 +28,8 @@ export class LinkPopover extends Component {
     static props = {
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         linkElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
+        containerElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
+        ignoreDOMMutations: Function,
         onApply: Function,
         onChange: Function,
         onDiscard: Function,
@@ -55,17 +58,7 @@ export class LinkPopover extends Component {
         canRemove: true,
         formatColor: formatColor,
     };
-    static components = { CheckBox };
-    colorsData = [
-        { type: "", label: _t("Link"), btnPreview: "link" },
-        { type: "primary", label: _t("Button Primary"), btnPreview: "primary" },
-        { type: "secondary", label: _t("Button Secondary"), btnPreview: "secondary" },
-        { type: "custom", label: _t("Custom"), btnPreview: "custom" },
-        // Note: by compatibility the dialog should be able to remove old
-        // colors that were suggested like the BS status colors or the
-        // alpha -> epsilon classes. This is currently done by removing
-        // all btn-* classes anyway.
-    ];
+    static components = { CheckBox, Dropdown, DropdownItem };
     buttonSizesData = [
         { size: "sm", label: _t("Small") },
         { size: "", label: _t("Medium") },
@@ -120,7 +113,7 @@ export class LinkPopover extends Component {
             type:
                 this.props.type ||
                 linkElement.className.match(/btn(-[a-z0-9_-]*)(primary|secondary|custom)/)?.pop() ||
-                "",
+                "link",
             linkTarget: linkElement.target === "_blank" ? "_blank" : "",
             directDownload: true,
             isDocument: false,
@@ -128,6 +121,7 @@ export class LinkPopover extends Component {
             buttonShape: this.getButtonShape(),
             customBorderSize: computedStyle.borderWidth.replace("px", "") || "0",
             customBorderStyle: computedStyle.borderStyle || "solid",
+            colorsData: this.computeColorsData(),
             isImage: this.props.isImage,
             showReplaceTitleBanner: this.props.showReplaceTitleBanner,
             showLabel: !linkElement.childElementCount,
@@ -232,7 +226,9 @@ export class LinkPopover extends Component {
         }
         this.updateDocumentState();
         this.editingWrapper = useRef("editing-wrapper");
-        this.inputRef = useRef(this.state.isImage ? "url" : "label");
+        this.inputRef = useRef(
+            this.state.isImage || (this.state.label && !this.state.url) ? "url" : "label"
+        );
         useEffect(
             (el) => {
                 if (el) {
@@ -269,6 +265,42 @@ export class LinkPopover extends Component {
         option.isChecked = !option.isChecked;
     }
 
+    /**
+     * Return the default color options for the editor.
+     *
+     * Each option is an object with:
+     *  - type      : identifier of the role (e.g., "link", "primary").
+     *  - label     : UI label shown in the editor.
+     *  - className : optional CSS classes for preview elements.
+     *  - style     : optional inline style for preview elements.
+     */
+    computeColorsData() {
+        return [
+            {
+                type: "link",
+                label: _t("Link"),
+                style: "color: #008f8c;",
+            },
+            {
+                type: "primary",
+                label: _t("Button Primary"),
+                className: "btn btn-sm btn-primary",
+            },
+            {
+                type: "secondary",
+                label: _t("Button Secondary"),
+                className: "btn btn-sm btn-secondary",
+            },
+            {
+                type: "custom",
+                label: _t("Custom"),
+            },
+            // Note: by compatibility the dialog should be able to remove old
+            // colors that were suggested like the BS status colors or the
+            // alpha -> epsilon classes. This is currently done by removing
+            // all btn-* classes anyway.
+        ];
+    }
     onChange() {
         // Apply changes to update the link preview.
         this.props.onChange(
@@ -331,14 +363,6 @@ export class LinkPopover extends Component {
             textContent + "/" === this.props.linkElement.getAttribute("href");
         this.state.label = labelEqualsUrl ? "" : textContent;
     }
-    async onClickCopy(ev) {
-        ev.preventDefault();
-        await browser.navigator.clipboard.writeText(this.props.linkElement.href || "");
-        this.notificationService.add(_t("Link copied to clipboard."), {
-            type: "success",
-        });
-        this.props.onCopy();
-    }
     onClickRemove() {
         this.props.onRemove();
     }
@@ -395,6 +419,17 @@ export class LinkPopover extends Component {
 
     onClickStripDomain(checked) {
         this.state.stripDomain = checked;
+    }
+
+    /**
+     * Updates the component state with the chosen link type and triggers
+     * `onChange` to propagate the update.
+     *
+     * @param {string} type - The selected link type
+     */
+    onSelectedLinkType(type) {
+        this.state.type = type;
+        this.onChange();
     }
 
     /**
@@ -601,41 +636,38 @@ export class LinkPopover extends Component {
     }
 
     get classes() {
-        let classes = [...this.props.linkElement.classList]
-            .filter(
-                (value) =>
-                    !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
-            )
-            .join(" ");
+        const classes = [...this.props.linkElement.classList].filter(
+            (value) => !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
+        );
 
         let stylePrefix = "";
-        if (this.state.type === "custom") {
+        if (this.state.type && this.state.type !== "link") {
             if (this.state.buttonSize) {
-                classes += ` btn-${this.state.buttonSize}`;
+                classes.push(`btn-${this.state.buttonSize}`);
             }
+
             if (this.state.buttonShape) {
                 const buttonShape = this.state.buttonShape.split(" ");
                 if (["outline", "fill"].includes(buttonShape[0])) {
                     stylePrefix = `${buttonShape[0]}-`;
                 }
-                classes += ` ${buttonShape.slice(stylePrefix ? 1 : 0).join(" ")}`;
+                classes.push(buttonShape.slice(stylePrefix ? 1 : 0).join(" "));
             }
-        }
-        if (this.state.type) {
-            classes += ` btn btn-${stylePrefix}${this.state.type}`;
+
+            classes.push(`btn`, `btn-${stylePrefix}${this.state.type}`);
         }
 
         const textColor = this.customTextColorState.selectedColor;
         if (isCSSVariable(textColor)) {
-            classes += " text-" + textColor;
+            classes.push(`text-${textColor}`);
         }
 
         const fillColor = this.customFillColorState.selectedColor;
         if (isCSSVariable(fillColor)) {
-            classes += " bg-" + fillColor;
+            classes.push(`bg-${fillColor}`);
         }
 
-        return classes.trim();
+        return classes.filter(Boolean).join(" ");
     }
 
     get customStyles() {

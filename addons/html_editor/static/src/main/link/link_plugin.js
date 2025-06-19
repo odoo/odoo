@@ -609,6 +609,8 @@ export class LinkPlugin extends Plugin {
             document: this.document,
             linkElement,
             isImage: isImage,
+            containerElement: selection.anchorNode.parentElement,
+            ignoreDOMMutations: this.dependencies.history.ignoreDOMMutations,
             onApply: (...args) => {
                 delete this._isNavigatingByMouse;
                 applyCallback(...args);
@@ -883,6 +885,7 @@ export class LinkPlugin extends Plugin {
         }
         cursors.restore();
         this.linkInDocument = null;
+        this.dependencies.selection.focusEditable();
         this.dependencies.history.addStep();
     }
 

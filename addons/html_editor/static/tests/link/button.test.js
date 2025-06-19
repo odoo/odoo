@@ -66,9 +66,9 @@ describe("button style", () => {
         await waitFor(".o-we-toolbar");
         await click("button[name='link']");
         await animationFrame();
-        await click('select[name="link_type"]');
+        await click("button[name='link_type']");
         await animationFrame();
-        await select("primary");
+        await click(".o-we-link-type-dropdown .dropdown-item:contains('Button Primary')");
         await animationFrame();
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("/test");
 
@@ -130,13 +130,28 @@ describe("Custom button style", () => {
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
         await animationFrame();
-        const optionsvalues = [...queryOne('select[name="link_type"]').options].map(
+        await click("button[name='link_type']");
+        await animationFrame();
+        const dropdownItems = queryAll(".o-we-link-type-dropdown .dropdown-item");
+        const labels = dropdownItems.map((item) => item.textContent.trim());
+        expect(labels).toInclude("Link");
+        expect(labels).toInclude("Button Primary");
+        expect(labels).toInclude("Button Secondary");
+        expect(labels).not.toInclude("Custom");
+    });
+    test("Editor allow button size style by default", async () => {
+        await setupEditor(
+            `<p><a href="https://test.com/" class="btn btn-primary">link[]Label</a></p>`
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+        const optionsValues = [...queryOne("select[name='link_style_size']").options].map(
             (opt) => opt.label
         );
-        expect(optionsvalues).toInclude("Link");
-        expect(optionsvalues).toInclude("Button Primary");
-        expect(optionsvalues).toInclude("Button Secondary");
-        expect(optionsvalues).not.toInclude("Custom");
+        expect(optionsValues).toInclude("Small");
+        expect(optionsValues).toInclude("Medium");
+        expect(optionsValues).toInclude("Large");
     });
     test("Editor don't allow target blank style by default", async () => {
         await setupEditor('<p><a href="https://test.com/">link[]Label</a></p>');
@@ -152,13 +167,14 @@ describe("Custom button style", () => {
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
         await animationFrame();
-        const optionsvalues = [...queryOne('select[name="link_type"]').options].map(
-            (opt) => opt.label
-        );
-        expect(optionsvalues).toInclude("Link");
-        expect(optionsvalues).toInclude("Button Primary");
-        expect(optionsvalues).toInclude("Button Secondary");
-        expect(optionsvalues).toInclude("Custom");
+        await click("button[name='link_type']");
+        await animationFrame();
+        const dropdownItems = queryAll(".o-we-link-type-dropdown .dropdown-item");
+        const labels = dropdownItems.map((item) => item.textContent.trim());
+        expect(labels).toInclude("Link");
+        expect(labels).toInclude("Button Primary");
+        expect(labels).toInclude("Button Secondary");
+        expect(labels).toInclude("Custom");
     });
     test("The link popover should load the current custom format correctly", async () => {
         await setupEditor(
@@ -170,7 +186,7 @@ describe("Custom button style", () => {
         await animationFrame();
         expect(".o_we_label_link").toHaveValue("linkLabel");
         expect(".o_we_href_input_link").toHaveValue("https://test.com/");
-        expect(queryOne('select[name="link_type"]').selectedOptions[0].value).toBe("custom");
+        expect(queryOne("button[name='link_type']").textContent).toBe("Custom");
         expect(queryOne(".custom-text-picker").style.backgroundColor).toBe("rgb(0, 255, 0)");
         expect(queryOne(".custom-fill-picker").style.backgroundColor).toBe("rgb(0, 0, 255)");
         expect(queryOne(".custom-border-picker").style.backgroundColor).toBe("rgb(255, 0, 0)");
@@ -207,8 +223,9 @@ describe("Custom button style", () => {
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/", {
             confirm: false,
         });
-        await click('select[name="link_type"]');
-        await select("custom");
+        await click("button[name='link_type']");
+        await animationFrame();
+        await click(".o-we-link-type-dropdown .dropdown-item:contains('Custom')");
         await animationFrame();
 
         await click(".custom-text-picker");
@@ -278,8 +295,9 @@ describe("Custom button style", () => {
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
         await animationFrame();
-        await click('select[name="link_type"]');
-        await select("custom");
+        await click("button[name='link_type']");
+        await animationFrame();
+        await click(".dropdown-item span:contains('Custom')");
         await animationFrame();
 
         // test outline
