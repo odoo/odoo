@@ -10,6 +10,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "./website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 describe("Operation", () => {
     test("handle 3 concurrent cancellable operations (with delay)", async () => {
@@ -90,11 +91,14 @@ describe("Block editable", () => {
     test("Doing an operation should block the editable during its execution", async () => {
         const customActionDef = new Deferred();
         addActionOption({
-            customAction: {
-                load: () => customActionDef,
-                apply: ({ editingElement }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                load() {
+                    return customActionDef;
+                }
+                apply({ editingElement }) {
                     editingElement.classList.add("custom-action");
-                },
+                }
             },
         });
         addOption({
@@ -134,21 +138,23 @@ describe("Async operations", () => {
         });
     });
 
-    test("In clickable component, revert is awaited before applying the next apply", async() => {
+    test("In clickable component, revert is awaited before applying the next apply", async () => {
         const applyDelay = 1000;
         addActionOption({
-            customAction: {
-                apply: async ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                async apply({ editingElement, value }) {
                     await new Promise((resolve) => setTimeout(resolve, applyDelay));
                     editingElement.classList.add(value);
                     expect.step("apply first");
-                },
+                }
             },
-            customAction2: {
-                apply: ({ editingElement, value }) => {
+            customAction2: class extends BuilderAction {
+                static id = "customAction2";
+                apply({ editingElement, value }) {
                     editingElement.classList.add(value);
                     expect.step("apply second");
-                },
+                }
             },
         });
         addOption({
@@ -178,12 +184,14 @@ describe("Async operations", () => {
         expect.verifySteps(["revert"]);
     });
 
-    test("In ColorPicker, revert is awaited before applying the next apply", async() => {
+    test("In ColorPicker, revert is awaited before applying the next apply", async () => {
         const applyDelay = 1000;
         addActionOption({
-            customAction: {
-                apply: async ({ editingElement }) => {
-                    let color = getComputedStyle(editingElement).getPropertyValue("background-color");
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                async apply({ editingElement }) {
+                    let color =
+                        getComputedStyle(editingElement).getPropertyValue("background-color");
                     if (color === "rgb(255, 0, 0)") {
                         color = "red";
                         await new Promise((resolve) => setTimeout(resolve, applyDelay));
@@ -192,7 +200,7 @@ describe("Async operations", () => {
                     }
                     editingElement.classList.add(color);
                     expect.step(`apply ${color}`);
-                },
+                }
             },
         });
         addOption({

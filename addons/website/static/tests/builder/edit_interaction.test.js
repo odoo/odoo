@@ -12,6 +12,7 @@ import {
 } from "./website_helpers";
 import { waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -37,14 +38,15 @@ test("dropping a new snippet starts its interaction", async () => {
 
 test("ensure order of operations when hovering an option", async () => {
     addActionOption({
-        customAction: {
-            load: async () => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            async load() {
                 expect.step("load");
-            },
-            apply: ({ editingElement }) => {
+            }
+            apply({ editingElement }) {
                 editingElement.classList.add("new_class");
                 expect.step("apply");
-            },
+            }
         },
     });
     addOption({

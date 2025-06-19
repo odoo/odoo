@@ -9,6 +9,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -103,15 +104,16 @@ test("apply color to a different style than color or backgroundColor", async () 
 test("apply custom action", async () => {
     const styleName = "border-top-color";
     addActionOption({
-        customAction: {
-            load: async () => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            async load() {
                 expect.step("load");
-            },
-            apply: async ({ editingElement }) => {
+            }
+            async apply({ editingElement }) {
                 expect.step(
                     `apply ${getComputedStyle(editingElement).getPropertyValue(styleName)}`
                 );
-            },
+            }
         },
     });
     addOption({
@@ -129,12 +131,15 @@ test("apply custom action", async () => {
 test("apply custom async action", async () => {
     const def = new Deferred();
     addActionOption({
-        customAction: {
-            getValue: () => "",
-            apply: async ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue() {
+                return "";
+            }
+            async apply({ editingElement }) {
                 await def;
                 editingElement.classList.add("applied");
-            },
+            }
         },
     });
     addOption({
@@ -185,14 +190,15 @@ test("should revert preview on escape", async () => {
 
 test("should apply transparent color if no color is defined", async () => {
     addActionOption({
-        customAction: {
-            getValue: ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
                 expect.step("getValue");
                 return editingElement.dataset.color;
-            },
-            apply: ({ editingElement, value }) => {
+            }
+            apply({ editingElement, value }) {
                 editingElement.dataset.color = value;
-            },
+            }
         },
     });
     addOption({

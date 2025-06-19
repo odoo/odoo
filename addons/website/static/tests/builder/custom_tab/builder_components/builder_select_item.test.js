@@ -17,15 +17,17 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
 test("call a specific action with some params and value (BuilderSelectItem)", async () => {
     addActionOption({
-        customAction: {
-            apply: ({ params: { mainParam: testParam }, value }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ params: { mainParam: testParam }, value }) {
                 expect.step(`customAction ${testParam} ${value}`);
-            },
+            }
         },
     });
     addOption({
@@ -315,11 +317,11 @@ test("revert a preview selected with the keyboard when cancelling with escape", 
 
 test("isApplied shouldn't be called when the element is removed from the DOM", async () => {
     addActionOption({
-        customAction: {
-            isApplied: ({ editingElement: el }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            isApplied({ editingElement: el }) {
                 expect(el.isConnected).toBe(true);
-            },
-            apply: () => {},
+            }
         },
     });
     addOption({
