@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.password_policy</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="auth_password_policy.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//block[@id='user_default_rights']" position="after">
+                <block title="Password Policy" id="password_policy">
+                    <setting help="If check it, time unit of password_expiration will be converted from days to minutes">
+                        <field name="test_password_expiration"/>
+                    </setting>
+                    <div class="mt16">
+                        <span>
+                            Password expires in
+                            <field name="password_expiration" class="oe_inline" />
+                            days.
+                        </span>
+                    </div>
+                    <div class="mt16">
+                        <span>
+                            Alert password expires before
+                            <field name="day_alert_expire" class="oe_inline" />
+                            days.
+                        </span>
+                    </div>
+                    <div class="mt16">
+                        <span>
+                            Time to compute expire password
+                            <field name="time_compute_expire" widget="float_time" class="oe_inline" />
+                        </span>
+                    </div>
+                    <div class="mt16">
+                        <span>
+                            Minimum number of characters
+                            <field name="minlength" class="oe_inline" />
+                        </span>
+                    </div>
+                    <div class="mt16">
+                        <span>
+                            Disallow reuse of
+                            <field name="password_history" class="oe_inline" />
+                            previous passwords.
+                        </span>
+                        <div class="text-muted">
+                            Use negative number for infinite, or 0 to disable
+                        </div>
+                    </div>
+                    <div class="mt16">
+                        <span>
+                            Minimum number of lowercase characters
+                            <field name="password_lower" class="oe_inline" />
+                        </span>
+                    </div>
+                    <div class="mt16">
+                        <span>
+                            Minimum number of uppercase characters
+                            <field name="password_upper" class="oe_inline" />
+                        </span>
+                    </div>
+                    <div class="mt16">
+                        <span>
+                            Minimum number of numeric characters
+                            <field name="password_numeric" class="oe_inline" />
+                        </span>
+                    </div>
+                    <div class="mt16">
+                        <span>
+                            Minimum number of special characters
+                            <field name="password_special" class="oe_inline" />
+                        </span>
+                    </div>
+                </block>
+            </xpath>
+
+            <xpath expr="//field[@name='minlength']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

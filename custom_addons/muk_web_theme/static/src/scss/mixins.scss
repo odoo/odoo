@@ -1,0 +1,17 @@
+@mixin mk-full-screen-menu {
+    width: 100vw;
+    z-index: 1002;
+    display: flex;
+    flex-direction: column;
+    transform: none !important;
+    position: fixed !important;
+    height: calc(100vh - #{$o-navbar-height});
+    max-height: calc(100vh - #{$o-navbar-height});
+    top: $o-navbar-height;
+    right: 0 !important;
+    left: 0 !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-shadow: none;
+    border: none;
+}
