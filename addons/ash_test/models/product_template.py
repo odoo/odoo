@@ -33,3 +33,4 @@ class ProductTemplate(models.Model):
     is_high_value = fields.Boolean(string='Is High Value', default=False)
     product_category_2 = fields.Many2one('product.category',string='Product Category Level 2')
     product_category_3 = fields.Many2one('product.category',string='Product Category Level 3')
+    country_origin = fields.Char(string='Country Origin')
