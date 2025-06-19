@@ -15,9 +15,17 @@
                     <field name="res_ids" invisible="1"/>
                     <field name="plan_available_ids" invisible="1"/>
                     <sheet class="o_mail_activity_schedule_wizard">
-                        <field name="plan_id" options="{'no_open': True, 'no_create': True}"
-                                    widget="selection_badge" 
-                                    invisible="not plan_available_ids" nolabel="1"/>
+                        <field name="plan_id"
+                            options="{'no_open': True, 'no_create': True}"
+                            widget="selection_badge"
+                            invisible="not plan_available_ids"
+                            nolabel="1"/>
+                        <br/>
+                        <field name="activity_type_id"
+                            required="not plan_id"
+                            widget="selection_badge_icons"
+                            iconField="icon"
+                            nolabel="1"/>
                         <group invisible="not plan_id">
                             <group>
                                 <field name="plan_date" placeholder="Default deadline for the activities..." string="Due Date"/>
@@ -35,13 +43,7 @@
                                 </field>
                             </group>
                         </group>
-                        <group invisible="plan_id">
-                            <field name="activity_type_id"
-                                    required="not plan_id"
-                                    widget="selection_badge_icons"
-                                    iconField="icon"
-                                    nolabel="1"
-                                    />
+                        <group invisible="not activity_type_id">
                             <group name="summary_group" colspan="2">
                                 <label for="summary" class="o_form_label fs-3"/>
                                 <field string="Summary" name="summary" placeholder="e.g. Discuss Proposal" class="fs-3 w-100" nolabel="1"/>
