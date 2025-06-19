@@ -20,6 +20,7 @@ registry.category("web_tour.tours").add("website_livechat_user_known_after_reloa
             run() {
                 window.location.reload();
             },
+            expectUnloadPage: true,
         },
         {
             trigger:

@@ -47,6 +47,7 @@ registry.category("web_tour.tours").add("website_livechat_no_session_with_hide_r
         {
             trigger: "body",
             run: () => (window.location = "/"),
+            expectUnloadPage: true,
         },
         {
             trigger: ".o-livechat-root:shadow [title='Close Chat Window (ESC)']",
