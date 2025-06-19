@@ -479,7 +479,7 @@
     <div class="o_wslides_home_aside">
         <div t-if="user.rank_id" class="d-flex align-items-center">
             <span class="fw-bold text-muted me-2">Current rank:</span>
-            <img t-att-src="website.image_url(user.rank_id, 'image_128')" width="16" height="16" alt="" class="o_object_fit_cover me-1"/>
+            <img t-att-src="website.image_url(user.rank_id, 'image_128')" width="16" height="16" alt="" class="object-fit-cover me-1"/>
             <a href="/profile/ranks_badges" t-field="user.rank_id"/>
         </div>
         <t t-set="next_rank_id" t-value="user._get_next_rank()"/>

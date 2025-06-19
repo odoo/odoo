@@ -9,7 +9,7 @@
             t-att-data-product-id="props.productId"
             t-attf-aria-labelledby="article_product_{{props.productId}}">
             <div t-if="props.imageUrl" class="product-img ratio ratio-4x3 rounded-top rounded-3">
-                <img class="w-100 o_object_fit_cover bg-200 pe-none" t-att-src="props.imageUrl" t-att-alt="props.name" draggable="false"/>
+                <img class="w-100 object-fit-cover bg-200 pe-none" t-att-src="props.imageUrl" t-att-alt="props.name" draggable="false"/>
             </div>
             <div class="product-content h-100 px-2 rounded-bottom-3 flex-shrink-1"
                 t-att-class="{'d-flex' : !props.isComboPopup, 'my-1': !(props.isComboPopup and !props.imageUrl)}">
