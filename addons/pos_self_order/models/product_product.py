@@ -113,9 +113,13 @@ class ProductProduct(models.Model):
         config_self = self.env['pos.config'].sudo().search([('self_ordering_mode', '!=', 'nothing')])
         for config in config_self:
             if config.current_session_id and config.access_token:
-                config._notify('PRODUCT_CHANGED', {
-                    'product.product': self.read(self._load_pos_self_data_fields(config), load=False)
-                })
+                records = self.env["product.template"].load_product_from_pos(config.id, [('id', '=', self.product_tmpl_id.id)])
+                payload = {}
+                self_models = self.env["pos.config"]._load_self_data_models()
+                for model in records:
+                    if model in self_models:
+                        payload[model] = records[model]
+                config._notify('PRODUCT_CHANGED', payload)
 
     def _can_return_content(self, field_name=None, access_token=None):
         if field_name == "image_512" and self.sudo().self_order_available:

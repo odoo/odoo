@@ -94,6 +94,8 @@
             ("include", "point_of_sale.base_tests"),
             "pos_self_order/static/tests/tours/**/*",
             "point_of_sale/static/tests/generic_helpers/numpad_util.js",
+            "point_of_sale/static/tests/generic_helpers/dialog_util.js",
+            "point_of_sale/static/tests/generic_helpers/utils.js",
         ],
     },
     "author": "Odoo S.A.",
