@@ -4,6 +4,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { DateTimeInput } from '@web/core/datetime/datetime_input';
 import { Component, useState, onWillStart, markup, xml } from "@odoo/owl";
+const { DateTime } = luxon;
 
 export class LunchCurrency extends Component {
     static template = "lunch.LunchCurrency";
@@ -16,7 +17,7 @@ export class LunchCurrency extends Component {
 
 export class LunchOrderLine extends Component {
     static template = "lunch.LunchOrderLine";
-    static props = ["line", "currency", "onUpdateQuantity", "openOrderLine", "infos"];
+    static props = ["line", "currency", "onUpdateQuantity", "openOrderLine", "infos", "isToOrder"];
     static components = {
         LunchCurrency,
     };
@@ -43,7 +44,7 @@ export class LunchOrderLine extends Component {
     }
 
     get badgeClass() {
-        const mapping = {'new': 'warning', 'confirmed': 'success', 'sent': 'info', 'ordered': 'danger'};
+        const mapping = {'new': 'secondary', 'confirmed': 'success', 'sent': 'info', 'ordered': 'primary'};
         return mapping[this.line.raw_state];
     }
 
@@ -107,6 +108,7 @@ export class LunchDashboard extends Component {
         LunchOrderLine,
         LunchUser,
         Many2XAutocomplete,
+        DateTimeInput,
     };
     static props = ["openOrderLine"];
     static template = "lunch.LunchDashboard";
@@ -114,7 +116,7 @@ export class LunchDashboard extends Component {
         super.setup();
         this.state = useState({
             infos: {},
-            date: new Date(),
+            date: DateTime.now(),
         });
 
         useBus(this.env.bus, 'lunch_update_dashboard', () => this._fetchLunchInfos());
@@ -187,24 +189,7 @@ export class LunchDashboard extends Component {
     }
 
     async onUpdateLunchTime(value) {
-        if (value) {
-            // Set time at 12:00
-            this.state.date.setTime(value + 12 * 60 * 60 * 1000);
-        } else {
-            this.state.date.setTime(new Date());
-        }
+        this.state.date = value || DateTime.now();
         this.env.searchModel.updateDate(this.state.date);
     }
 }
-
-LunchDashboard.components = {
-    LunchAlerts,
-    LunchCurrency,
-    LunchLocation,
-    LunchOrderLine,
-    LunchUser,
-    Many2XAutocomplete,
-    DateTimeInput,
-};
-LunchDashboard.props = ["openOrderLine"];
-LunchDashboard.template = 'lunch.LunchDashboard';
