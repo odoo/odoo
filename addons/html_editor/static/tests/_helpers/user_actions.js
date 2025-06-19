@@ -1,7 +1,14 @@
 import { closestBlock } from "@html_editor/utils/blocks";
 import { boundariesIn, leftPos, startPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
-import { click, manuallyDispatchProgrammaticEvent, press, tick, waitFor } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    click,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    waitFor,
+} from "@odoo/hoot-dom";
+import { tick } from "@odoo/hoot-mock";
 import { setSelection } from "./selection";
 import { execCommand } from "./userCommands";
 import { isBrowserChrome, isMobileOS } from "@web/core/browser/feature_detection";
@@ -203,6 +210,8 @@ export async function unlinkFromToolbar() {
 
 export async function unlinkFromPopover() {
     await waitFor(".o-we-linkpopover");
+    await click(".o_we_edit_link");
+    await animationFrame();
     await click(".o_we_remove_link");
 }
 

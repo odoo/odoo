@@ -3,6 +3,7 @@ import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { patch } from "@web/core/utils/patch";
+import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { useAutofocus, useChildRef } from "@web/core/utils/hooks";
 import wUtils from "@website/js/utils";
 
@@ -120,7 +121,65 @@ patch(LinkPopover.prototype, {
         }
         return choices;
     },
+    computeColorsData() {
+        const linkEl = this.props.linkElement;
+        const isWebsite = !!linkEl?.closest(".o_colored_level[class*='o_cc']");
+        if (!isWebsite) {
+            return super.computeColorsData();
+        }
 
+        const getClosestComboNum = (el) => {
+            while (el) {
+                const ccClass = Array.from(el.classList || []).find((cls) => /^o_cc\d+$/.test(cls));
+                if (ccClass) {
+                    return ccClass.replace("o_cc", "");
+                }
+                el = el.parentElement;
+            }
+            return "1"; // select the first preset by default
+        };
+
+        const comboNum = getClosestComboNum(linkEl);
+        const rootStyles = window.top.getComputedStyle(window.top.document.documentElement);
+        const getVar = (key) =>
+            getCSSVariableValue(`hb-cp-o-cc${comboNum}-${key}`, rootStyles).replace(/^'|'$/g, "");
+
+        const primaryBg = getVar("btn-primary");
+        const primaryText = getVar("btn-primary-text");
+        const secondaryBg = getVar("btn-secondary");
+        const secondaryText = getVar("btn-secondary-text");
+
+        return [
+            {
+                type: "",
+                label: _t("Link"),
+                btnPreview: "link",
+                className: "",
+                style: "color: #008f8c;",
+            },
+            {
+                type: "primary",
+                label: _t("Button Primary"),
+                btnPreview: "primary",
+                className: "btn btn-sm",
+                style: `background-color: ${primaryBg}; color: ${primaryText};`,
+            },
+            {
+                type: "secondary",
+                label: _t("Button Secondary"),
+                btnPreview: "secondary",
+                className: "btn btn-sm",
+                style: `background-color: ${secondaryBg}; color: ${secondaryText};`,
+            },
+            {
+                type: "custom",
+                label: _t("Custom"),
+                btnPreview: "custom",
+                className: "",
+                style: "",
+            },
+        ];
+    },
     onSelect(value) {
         this.state.url = value;
         this.onChange();
