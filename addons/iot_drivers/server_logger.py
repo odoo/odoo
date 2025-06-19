@@ -36,6 +36,7 @@ class AsyncHTTPHandler(logging.Handler):
         """
         super().__init__()
         self._odoo_server_url = odoo_server_url
+        self._db_name = helpers.get_conf('db_name') or ''
         self._log_queue = queue.Queue(self._MAX_QUEUE_SIZE)
         self._flush_thread = None
         self._active = None
@@ -94,6 +95,7 @@ class AsyncHTTPHandler(logging.Handler):
             odoo_session.post(
                 self._odoo_server_url + '/iot/log',
                 data=empty_queue(),
+                headers={'X-Odoo-Database': self._db_name},
                 timeout=self._REQUEST_TIMEOUT
             ).raise_for_status()
             self._next_disconnection_time = None
