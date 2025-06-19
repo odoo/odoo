@@ -17,7 +17,7 @@ function getSpecificOperators(fieldDef, params) {
         case "many2one":
         case "many2many":
         case "one2many":
-            return ["ilike", "not ilike", "starts_with", "ends_with"];
+            return ["multi ilike", "multi not ilike", "multi starts_with", "multi ends_with"];
         case "date":
         case "datetime":
             return [
@@ -31,9 +31,9 @@ function getSpecificOperators(fieldDef, params) {
         case "integer":
         case "float":
         case "monetary":
-            return [">", "<", "between", "not_between", "ilike", "not ilike"];
+            return [">", "<", "between", "not_between", "multi ilike", "multi not ilike"];
         case "json":
-            return ["ilike", "not ilike"];
+            return ["multi ilike", "multi not ilike"];
         case "date_option":
         case "time_option":
         case "datetime_option":

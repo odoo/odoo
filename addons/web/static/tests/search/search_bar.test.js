@@ -1450,16 +1450,18 @@ test("edit a favorite", async () => {
     expect(`.modal`).toHaveCount(1);
     expect(getCurrentPath()).toBe("Foo");
     expect(getCurrentOperator()).toBe("contains");
-    expect(getCurrentValue()).toBe("abc");
+    expect(`${SELECTORS.valueEditor} input`).toHaveValue("");
+    expect(queryAllTexts(SELECTORS.tag)).toEqual(["abc"]);
 
     await editValue("def");
     expect(getCurrentPath()).toBe("Foo");
     expect(getCurrentOperator()).toBe("contains");
-    expect(getCurrentValue()).toBe("def");
+    expect(`${SELECTORS.valueEditor} input`).toHaveValue("");
+    expect(queryAllTexts(SELECTORS.tag)).toEqual(["abc", "def"]);
 
     await contains(".modal footer button").click();
     expect(`.modal`).toHaveCount(0);
-    expect(getFacetTexts()).toEqual(["Foo contains def", "Bool\n>\nCompany"]);
+    expect(getFacetTexts()).toEqual(["Foo contains abc or def", "Bool\n>\nCompany"]);
 });
 
 test("edit a field", async () => {
@@ -1485,14 +1487,11 @@ test("edit a field", async () => {
     expect(getFacetTexts()).toEqual(["Foo\nabc\nor\ndef"]);
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
-    expect(SELECTORS.condition).toHaveCount(2);
-
-    expect(getCurrentPath(0)).toBe("Foo");
-    expect(getCurrentOperator(0)).toBe("contains");
-    expect(getCurrentValue(0)).toBe("abc");
-    expect(getCurrentPath(1)).toBe("Foo");
-    expect(getCurrentOperator(1)).toBe("contains");
-    expect(getCurrentValue(1)).toBe("def");
+    expect(SELECTORS.condition).toHaveCount(1);
+    expect(getCurrentPath()).toBe("Foo");
+    expect(getCurrentOperator()).toBe("contains");
+    expect(`${SELECTORS.valueEditor} input`).toHaveValue("");
+    expect(queryAllTexts(SELECTORS.tag)).toEqual(["abc", "def"]);
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([`Foo\nabc\nor\ndef`]);

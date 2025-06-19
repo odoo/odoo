@@ -229,6 +229,12 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
             join = " ";
             addParenthesis = false;
             break;
+        case "multi ilike":
+        case "multi not ilike":
+        case "multi starts_with":
+        case "multi ends_with":
+            addParenthesis = false;
+        // eslint-disable-next-line no-fallthrough
         case "in":
         case "not in":
             addParenthesis = values.length === 0;
