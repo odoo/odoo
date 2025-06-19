@@ -356,3 +356,28 @@ registry.category("web_tour.tours").add("OrderTimeTour", {
         ].flat();
     },
 });
+
+registry
+    .category("web_tour.tours")
+    .add("test_consistent_refund_process_between_frontend_and_backend", {
+        steps: () =>
+            [
+                Chrome.startPoS(),
+                Dialog.confirm("Open Register"),
+                ProductScreen.addOrderline("Desk Pad", "2", "4"),
+                ProductScreen.clickPayButton(),
+                PaymentScreen.clickPaymentMethod("Bank"),
+                PaymentScreen.clickValidate(),
+                ReceiptScreen.isShown(),
+                ReceiptScreen.clickNextOrder(),
+                ...ProductScreen.clickRefund(),
+                TicketScreen.selectOrder("001"),
+                inLeftSide(Order.hasLine({ productName: "Desk Pad", withClass: ".selected" })),
+                ProductScreen.clickNumpad("1"),
+                TicketScreen.toRefundTextContains("To Refund: 1"),
+                TicketScreen.confirmRefund(),
+                PaymentScreen.clickPaymentMethod("Bank"),
+                PaymentScreen.clickValidate(),
+                ReceiptScreen.isShown(),
+            ].flat(),
+    });

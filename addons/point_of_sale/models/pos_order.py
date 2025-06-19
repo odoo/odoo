@@ -1193,16 +1193,18 @@ class PosOrder(models.Model):
 
     def _prepare_refund_values(self, current_session):
         self.ensure_one()
+        pos_reference, sequence_number, tracking_number = current_session.get_next_order_refs()
         return {
             'name': _('%(name)s REFUND', name=self.name),
             'session_id': current_session.id,
             'date_order': fields.Datetime.now(),
-            'pos_reference': self.pos_reference,
+            'pos_reference': pos_reference,
             'lines': False,
-            'amount_tax': -self.amount_tax,
-            'amount_total': -self.amount_total,
             'amount_paid': 0,
-            'is_total_cost_computed': False
+            'is_total_cost_computed': False,
+            'is_refund': True,
+            'sequence_number': sequence_number,
+            'tracking_number': tracking_number,
         }
 
     def _prepare_mail_values(self, email, ticket, basic_ticket):
@@ -1232,6 +1234,7 @@ class PosOrder(models.Model):
         return The newly created refund orders.
         """
         refund_orders = self.env['pos.order']
+        config_ids = self.env['pos.config']
         for order in self:
             # When a refund is performed, we are creating it in a session having the same config as the original
             # order. It can be the same session, or if it has been closed the new one that has been opened.
@@ -1241,12 +1244,17 @@ class PosOrder(models.Model):
             refund_order = order.copy(
                 order._prepare_refund_values(current_session)
             )
-            for line in order.lines:
+            for line in order.lines.filtered(lambda l: l.refunded_qty < l.qty):
                 PosPackOperationLot = self.env['pos.pack.operation.lot']
                 for pack_lot in line.pack_lot_ids:
                     PosPackOperationLot += pack_lot.copy()
-                line.copy(line._prepare_refund_data(refund_order, PosPackOperationLot))
+                refund_line = line.copy(line._prepare_refund_data(refund_order, PosPackOperationLot))
+                refund_line._onchange_amount_line_all()
+            refund_order._compute_prices()
+            config_ids |= refund_order.config_id
             refund_orders |= refund_order
+        for config in config_ids:
+            config.notify_synchronisation(config.current_session_id.id, 0)
         return refund_orders
 
     def refund(self):
@@ -1475,8 +1483,6 @@ class PosOrderLine(models.Model):
             'name': _('%(name)s REFUND', name=self.name),
             'qty': -(self.qty - self.refunded_qty),
             'order_id': refund_order.id,
-            'price_subtotal': -self.price_subtotal,
-            'price_subtotal_incl': -self.price_subtotal_incl,
             'pack_lot_ids': PosPackOperationLot,
             'is_total_cost_computed': False,
             'refunded_orderline_id': self.id,

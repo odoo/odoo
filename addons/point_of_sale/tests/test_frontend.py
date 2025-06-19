@@ -2164,6 +2164,45 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.start_pos_tour('test_preset_timing_retail')
 
+    def test_consistent_refund_process_between_frontend_and_backend(self):
+        """
+        Ensure that the partial refund process is consistent between the frontend and backend.
+        This includes validating the refund order creation, amount, state, and payment processing.
+        """
+        # Open POS UI with the POS user
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        # Run the POS tour simulating a partial refund
+        self.start_pos_tour('test_consistent_refund_process_between_frontend_and_backend')
+
+        # Fetch orders created in the current POS session
+        orders = self.env['pos.order'].search([
+            ('session_id', '=', self.main_pos_config.current_session_id.id)
+        ])
+        self.assertEqual(len(orders), 2, "Expected two orders: original and refund.")
+
+        # Perform refund on order and retrieve the resulting draft refund order
+        refund_action = orders[1].refund()
+        refund_order = self.env['pos.order'].browse(refund_action['res_id'])
+
+        # Validate the refund order is in draft and has correct negative total
+        self.assertEqual(refund_order.state, 'draft', "Refund order should be in draft state.")
+        self.assertEqual(refund_order.amount_total, -4, "Refund order total should be -4.")
+
+        # Create a payment for the refund using the configured bank method
+        payment_context = {
+            "active_ids": refund_order.ids,
+            "active_id": refund_order.id
+        }
+        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': refund_order.amount_total,
+            'payment_method_id': self.bank_payment_method.id,
+        })
+
+        # Validate and finalize the refund payment
+        refund_payment.with_context(**payment_context).check()
+        self.assertEqual(refund_order.state, 'paid', "Refund order should be marked as paid.")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
