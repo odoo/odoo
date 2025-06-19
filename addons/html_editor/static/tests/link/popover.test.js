@@ -1048,4 +1048,17 @@ describe("upload file via link popover", () => {
         const favIcon = await waitFor(".o_we_preview_favicon span.o_image");
         expect(favIcon).toHaveAttribute("data-mimetype", "text/plain");
     });
+
+    describe("hidden label field", () => {
+        test("label field should be hidden if <a> content is not text only", async () => {
+            await setupEditor(`<a href="http://test.com/"><img src="${base64Img}">te[]xt</a>`);
+            await waitFor(".o-we-linkpopover");
+            expect(".o-we-linkpopover").toHaveCount(1);
+            // open edit mode and check if label input is hidden
+            await click(".o_we_edit_link");
+            await waitFor(".input-group");
+            expect(".o_we_label_link").not.toBeVisible();
+            expect(".o_we_href_input_link").toHaveValue("http://test.com/");
+        });
+    });
 });
