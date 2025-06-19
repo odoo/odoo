@@ -392,29 +392,35 @@ class DiscussChannel(models.Model):
 
         def get_vals(channel):
             return {
-                get_field_name(field_description): (
-                    channel[get_field_name(field_description)],
-                    field_description,
-                )
-                for field_description in self._sync_field_names()
+                subchannel: {
+                    get_field_name(field_description): (
+                        channel[get_field_name(field_description)],
+                        field_description,
+                    )
+                    for field_description in field_descriptions
+                }
+                for subchannel, field_descriptions in self._sync_field_names().items()
             }
 
         old_vals = {channel: get_vals(channel) for channel in self}
         result = super().write(vals)
         for channel in self:
-            new_vals = get_vals(channel)
-            diff = []
-            for field_name, (value, field_description) in new_vals.items():
-                if value != old_vals[channel][field_name][0]:
-                    diff.append(field_description)
-            if diff:
-                channel._bus_send_store(channel, diff)
+            new_subchannel_vals = get_vals(channel)
+            for subchannel, vals in new_subchannel_vals.items():
+                diff = []
+                for field_name, (value, field_description) in vals.items():
+                    if value != old_vals[channel][subchannel][field_name][0]:
+                        diff.append(field_description)
+                if diff:
+                    channel._bus_send_store(channel, diff, subchannel=subchannel)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         return result
 
     def _sync_field_names(self):
-        return [
+        # keys are bus subchannel names, values are lists of field names to sync
+        res = defaultdict(list)
+        res[None] += [
             "avatar_cache_key",
             "channel_type",
             "create_uid",
@@ -427,6 +433,7 @@ class DiscussChannel(models.Model):
             "name",
             "uuid",
         ]
+        return res
 
     # ------------------------------------------------------------
     # MEMBERS MANAGEMENT
