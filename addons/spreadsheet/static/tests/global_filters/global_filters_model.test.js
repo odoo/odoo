@@ -599,6 +599,20 @@ test("Relational filter default to current user", async function () {
     });
 });
 
+test("Can set a numeric global filter value to 0", async function () {
+    const { model } = await createSpreadsheetWithPivot();
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "numeric",
+        label: "Numeric Filter",
+        defaultValue: 1998,
+    });
+    const [filter] = model.getters.getGlobalFilters();
+    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual(1998);
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: filter.id, value: 0 });
+    expect(model.getters.getGlobalFilterValue(filter.id)).toBe(0);
+});
+
 test("Get active filters with multiple filters", async function () {
     const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
@@ -2785,6 +2799,48 @@ test("Check boolean filter domain", async () => {
     );
 });
 
+test("Can add a numeric filter", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "numeric",
+        defaultValue: undefined,
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: 1998 });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(1998);
+});
+
+test("Can add a numeric filter with a default value", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "numeric",
+        defaultValue: 1998,
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(1998);
+});
+
+test("Check numeric filter domain", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "numeric",
+        defaultValue: undefined,
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    const fieldMatching = { chain: "probability", type: "numeric" };
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual("[]");
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: 10 });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `[("probability", "=", 10)]`
+    );
+});
+
 test("Undo/Redo of global filter update", async () => {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     const filter = {
@@ -2869,6 +2925,42 @@ test("Default value of text filter", () => {
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+});
+
+test("Default value of numeric filter", () => {
+    const model = new Model();
+    let result = addGlobalFilterWithoutReload(model, {
+        id: "1",
+        type: "numeric",
+        label: "Default value cannot be a boolean, should be a number",
+        defaultValue: true,
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "2",
+        type: "numeric",
+        label: "Default value cannot be a string, should be a number",
+        defaultValue: "default value",
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "3",
+        type: "numeric",
+        label: "Default value is a number",
+        defaultValue: 1998,
+    });
+    expect(result.isSuccessful).toBe(true);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "4",
+        type: "numeric",
+        label: "Default value is empty",
+    });
+    expect(result.isSuccessful).toBe(true);
 });
 
 test("Default value of date filter", () => {

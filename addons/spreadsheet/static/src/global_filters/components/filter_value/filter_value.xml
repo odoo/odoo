@@ -15,6 +15,12 @@
                     onValueChanged="(value) => this.onTextInput(filter.id, value)"
                 />
             </div>
+            <div t-if="filter.type === 'numeric'" class="w-100">
+                <NumericFilterValue
+                    value="filterValue"
+                    onValueChanged="(value) => this.onNumericInput(filter.id, value)"
+                />
+            </div>
             <span t-if="filter.type === 'relation'" class="w-100">
                 <MultiRecordSelector
                     t-if="isValid"
