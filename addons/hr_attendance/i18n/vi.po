@@ -370,10 +370,11 @@ msgstr "Được phê duyệt tự động"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "Automatically Check-Out Employees based on their working schedule with an "
-"additional tolerance."
+"additional tolerance. Does not apply to employees with a flexible working "
+"schedule."
 msgstr ""
 "Tự động check-out nhân viên dựa trên lịch làm việc của họ với một khoảng sai"
-" số bổ sung."
+" số bổ sung. Không áp dụng cho nhân viên có lịch làm việc linh hoạt."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -951,9 +952,10 @@ msgstr "Nhận dạng thủ công"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "If checked, days not covered by an attendance will be visible in the Report."
+" Does not apply to employees with a flexible working schedule."
 msgstr ""
-"Nếu được chọn, những ngày không có trong chấm công sẽ hiển thị trong Báo "
-"cáo."
+"Nếu được chọn, những ngày không có chấm công sẽ hiển thị trong Báo cáo. Điều"
+" này không áp dụng đối với nhân viên có lịch làm việc linh hoạt."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
@@ -1345,11 +1347,6 @@ msgstr "Token RFID với đầu đọc"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "RFID Token with reader on tablet"
 msgstr "Token RFID với đầu đọc trên máy tính bảng"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__rating_ids
-msgid "Ratings"
-msgstr "Đánh giá"
 
 #. module: hr_attendance
 #. odoo-javascript
