@@ -114,6 +114,16 @@ if (__DETECT_ERROR_2__.length > 0) {
     console.error("Wrong count in split after default");
 }
 
+const [TEXT_ALIGNMENT, TITLE_LAYOUT_SIZE, WIDTH, BLOCK_ALIGN, ...__DETECT_ERROR_3__] = splitBetween(
+    AFTER_HTML_BUILDER,
+    SNIPPET_SPECIFIC_BEFORE,
+    4
+);
+if (__DETECT_ERROR_3__.length > 0) {
+    console.error("Wrong count in website split before specific");
+}
+export { TEXT_ALIGNMENT, TITLE_LAYOUT_SIZE, WIDTH, BLOCK_ALIGN };
+
 export {
     BEGIN,
     REPLACE_MEDIA,

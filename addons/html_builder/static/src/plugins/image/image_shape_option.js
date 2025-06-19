@@ -1,9 +1,9 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
-import { ShapeSelector } from "../shape/shape_selector";
+import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 
 export class ImageShapeOption extends BaseOptionComponent {
-    static template = "website.ImageShapeOption";
+    static template = "html_builder.ImageShapeOption";
     static props = {};
     setup() {
         super.setup();

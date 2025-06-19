@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
-import { BLOCK_ALIGN } from "@website/builder/option_sequence";
+import { BLOCK_ALIGN } from "@html_builder/utils/option_sequence";
 
 class BlockAlignmentOptionPlugin extends Plugin {
     static id = "blockAlignmentOption";

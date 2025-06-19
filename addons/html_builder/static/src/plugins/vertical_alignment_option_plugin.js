@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
-import { VerticalAlignmentOption } from "./vertical_alignment_option";
+import { VerticalAlignmentOption } from "@html_builder/plugins/vertical_alignment_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { VERTICAL_ALIGNMENT, BOX_BORDER_SHADOW } from "@website/builder/option_sequence";
 

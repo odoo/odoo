@@ -1,5 +1,4 @@
-import { before } from "@html_builder/utils/option_sequence";
-import { WIDTH } from "@website/builder/option_sequence";
+import { before, WIDTH } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { fonts } from "@html_editor/utils/fonts";
 import { registry } from "@web/core/registry";

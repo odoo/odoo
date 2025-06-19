@@ -8,10 +8,11 @@ import {
 import { isMobileView } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { LayoutColumnOption, LayoutGridOption, LayoutOption } from "./layout_option";
+import { LayoutGridOption, LayoutOption } from "./layout_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { LAYOUT, LAYOUT_COLUMN, LAYOUT_GRID } from "@website/builder/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { LayoutColumnOption } from "@html_builder/plugins/layout_column_option";
 
 class LayoutOptionPlugin extends Plugin {
     static id = "LayoutOption";

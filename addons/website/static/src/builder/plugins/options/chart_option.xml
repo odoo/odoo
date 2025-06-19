@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 <t t-name="website.ChartOption">
     <BuilderRow label.translate="Background">
-        <t t-call="website.BackgroundColorWidgetOption"/>
+        <t t-call="html_builder.BackgroundColorWidgetOption"/>
     </BuilderRow>
     <BuilderRow label.translate="Type">
         <BuilderSelect action="'setChartType'">

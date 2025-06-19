@@ -3,8 +3,8 @@ import { BackgroundImageOption } from "./background_image_option";
 import { BackgroundPositionOption } from "./background_position_option";
 import { BackgroundShapeOption } from "./background_shape_option";
 import { useBackgroundOption } from "./background_hook";
-import { ImageFilterOption } from "../image/image_filter_option";
-import { ImageFormatOption } from "../image/image_format_option";
+import { ImageFilterOption } from "@html_builder/plugins/image/image_filter_option";
+import { ImageFormatOption } from "@html_builder/plugins/image/image_format_option";
 
 export class BackgroundOption extends BaseOptionComponent {
     static template = "website.BackgroundOption";
