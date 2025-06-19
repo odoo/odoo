@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@id='account_vendor_bills']" position="after">
-                <block title="Italian Electronic Invoicing" invisible="country_code != 'IT'" id='l10n_it_edi'>
+                <block title="Italian Electronic Invoicing" invisible="country_code != 'IT' or use_root_proxy_user" id='l10n_it_edi'>
                     <setting id="l10n_it_edi_setting" string="Fattura Electronica (FatturaPA)">
                         <field name="l10n_it_edi_show_purchase_journal_id" invisible="1"/>
 
@@ -27,6 +27,11 @@
                             </div>
                         </div>
                     </setting>
+                </block>
+                <block title="Italian Electronic Invoicing" invisible="(country_code != 'IT') or not use_root_proxy_user" id='account_edi_branch'>
+                    <span class="o_form_label">
+                        This branch shares the same VAT number and Codice Fiscale as its parent company. Select the parent company to configure the EDI settings.
+                    </span>
                 </block>
             </xpath>
         </field>

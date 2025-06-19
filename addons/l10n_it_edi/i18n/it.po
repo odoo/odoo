@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.2a1+e\n"
+"Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-31 13:58+0000\n"
-"PO-Revision-Date: 2025-01-31 13:58+0000\n"
+"POT-Creation-Date: 2025-06-19 09:25+0000\n"
+"PO-Revision-Date: 2025-06-19 09:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -55,8 +55,19 @@ msgstr ""
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid ""
+"<span class=\"o_form_label\">\n"
+"                        This branch shares the same VAT number and Codice Fiscale as its parent company. Select the parent company to configure the EDI settings.\n"
+"                    </span>"
+msgstr ""
+"<span class=\"o_form_label\">\n"
+"                        Questa filiale condivide la stessa partita IVA e Codice Fiscale della società madre. Selezionare la società madre per configurare le impostazioni EDI.\n"
+"                    </span>"
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid ""
 "<span class=\"text-muted\">\n"
-"                                    By checking this box, I authorize Odoo to send and receive my invoices using the Sistema di Interscambio (SDI).\n"
+"                                    By checking this box, I authorize Odoo to send and receive my invoices through the Sistema di Interscambio (SDI).\n"
 "                                </span>"
 msgstr ""
 
@@ -185,6 +196,7 @@ msgstr "Codice"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_codice_fiscale
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__l10n_it_codice_fiscale
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__l10n_it_codice_fiscale
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.address_form_fields
 msgid "Codice Fiscale"
 msgstr ""
 
@@ -302,7 +314,9 @@ msgstr "Fattura differita (art. 21, comma 4, terzo periodo del DPR 633/72)"
 msgid ""
 "Deferred invoice (Article 21, paragraph 4, third period, letter b "
 "(Dropshipping))"
-msgstr "Fattura differita [articolo 21, comma 4, terzo periodo, lettera b (Dropshipping)]"
+msgstr ""
+"Fattura differita [articolo 21, comma 4, terzo periodo, lettera b "
+"(Dropshipping)]"
 
 #. module: l10n_it_edi
 #: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_02
@@ -319,6 +333,17 @@ msgstr "Deposito/anticipo sulla parcella"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__l10n_it_pa_index
 msgid "Destination Code"
 msgstr "Codice destinatario"
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.address_form_fields
+msgid "Destination Code (SDI)"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/controllers/portal.py:0
+msgid "Destination Code (SDI) must have between 6 and 7 characters"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.constraint,message:l10n_it_edi.constraint_res_partner_l10n_it_pa_index
@@ -447,7 +472,9 @@ msgstr ""
 msgid ""
 "Internal reverse charge self-invoice (Article 17 of Presidential Decree no. "
 "633/72 for invoices with Natura subcodes 'N6')"
-msgstr "Autofattura interna in reverse charge (art. 17 DPR n. .633/72 per fatture con sottocodice Natura 'N6')"
+msgstr ""
+"Autofattura interna in reverse charge (art. 17 DPR n. .633/72 per fatture "
+"con sottocodice Natura 'N6')"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -464,7 +491,9 @@ msgstr ""
 msgid ""
 "Invoice (Immediate or Accompanying if <DatiTrasporto> or <DatiDDT> are "
 "completed)"
-msgstr "Fattura (Immediata o di accompagnamento se <DatiTrasporto> o <DatiDDT> sono stati compilati)"
+msgstr ""
+"Fattura (Immediata o di accompagnamento se <DatiTrasporto> o <DatiDDT> sono "
+"stati compilati)"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__invoice_id
@@ -646,7 +675,7 @@ msgstr "MP08 - Carta di pagamento"
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp09
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp09
 msgid "MP09 - RID"
-msgstr "MP09 - RID"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp10
@@ -664,13 +693,13 @@ msgstr "MP11 - RID veloce"
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp12
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp12
 msgid "MP12 - RIBA"
-msgstr "MP12 - RIBA"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp13
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp13
 msgid "MP13 - MAV"
-msgstr "MP13 - MAV"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp14
@@ -730,7 +759,7 @@ msgstr "MP22 - Ritenuta su somme già riscosse"
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_payment_method__mp23
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_payment_method_line__l10n_it_payment_method__mp23
 msgid "MP23 - PagoPA"
-msgstr "MP23 - PagoPA"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_eco_index_share_capital
@@ -805,6 +834,11 @@ msgstr "E-mail PEC"
 #: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_06
 msgid "Parcel"
 msgstr "Parcella"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__company_parent_id
+msgid "Parent Company"
+msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -980,7 +1014,9 @@ msgstr "Rifiutato SdI"
 msgid ""
 "Self-invoice Report (ex art.6 c8 471/97 or art.46 c5 331/93), or for invoice"
 " not received or for a lower amount"
-msgstr "Rapporto di autofattura (ex art.6 c8 471/97 o art.46 c5 331/93), oppure per fattura non ricevuta o di importo inferiore"
+msgstr ""
+"Rapporto di autofattura (ex art.6 c8 471/97 o art.46 c5 331/93), oppure per "
+"fattura non ricevuta o di importo inferiore"
 
 #. module: l10n_it_edi
 #: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_28
@@ -988,7 +1024,9 @@ msgid ""
 "Self-invoice for Italian tax from foreign suppliers identified but not "
 "established in Italy and for purchases from San Marino with VAT (paper "
 "invoice)"
-msgstr "Autofattura per imposta italiana da fornitori esteri identificati ma non stabiliti in Italia e per acquisti da San Marino con IVA (fattura cartacea)"
+msgstr ""
+"Autofattura per imposta italiana da fornitori esteri identificati ma non "
+"stabiliti in Italia e per acquisti da San Marino con IVA (fattura cartacea)"
 
 #. module: l10n_it_edi
 #: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_21
@@ -999,14 +1037,17 @@ msgstr "Autofattura per l'altezza del soffitto"
 #: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_23
 msgid ""
 "Self-invoice for extraction of goods from VAT warehouse with VAT liability"
-msgstr "Autofattura per l'estrazione di beni dal deposito IVA con IVA a debito"
+msgstr ""
+"Autofattura per l'estrazione di beni dal deposito IVA con IVA a debito"
 
 #. module: l10n_it_edi
 #: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_22
 msgid ""
 "Self-invoice for extraction of goods from VAT warehouse without VAT "
 "liability"
-msgstr "Autofattura per l'estrazione di beni dal deposito IVA senza assoggettamento ad IVA"
+msgstr ""
+"Autofattura per l'estrazione di beni dal deposito IVA senza assoggettamento "
+"ad IVA"
 
 #. module: l10n_it_edi
 #: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_19
@@ -1014,14 +1055,18 @@ msgid ""
 "Self-invoice for foreign goods (both intra and non-EU) already present in "
 "Italy (Article 17 paragraph 2 of Presidential Decree 633/72) - Alternative "
 "to esterometro"
-msgstr "Autofattura per merci estere (sia intra che extra UE) già presenti in Italia (art. 17 comma 2 del DPR 633/72) - Alternativa all'esterometro"
+msgstr ""
+"Autofattura per merci estere (sia intra che extra UE) già presenti in Italia"
+" (art. 17 comma 2 del DPR 633/72) - Alternativa all'esterometro"
 
 #. module: l10n_it_edi
 #: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_17
 msgid ""
 "Self-invoice for purchases of foreign services (both within and outside the "
 "EU) - Alternative to esterometro"
-msgstr "Autofattura per acquisti di servizi all'estero (sia all'interno che all'esterno dell'UE) - Alternativa all'esterometro"
+msgstr ""
+"Autofattura per acquisti di servizi all'estero (sia all'interno che "
+"all'esterno dell'UE) - Alternativa all'esterometro"
 
 #. module: l10n_it_edi
 #: model:l10n_it.document.type,name:l10n_it_edi.l10n_it_document_type_27
@@ -1034,7 +1079,9 @@ msgstr "Autofattura per autoconsumo o per cessione gratuita pro soluto"
 msgid ""
 "Self-invoice for the purchase of intra-community goods - Alternative to "
 "esterometro"
-msgstr "Autofattura per l'acquisto di beni intracomunitari - Alternativa all'esterometro"
+msgstr ""
+"Autofattura per l'acquisto di beni intracomunitari - Alternativa "
+"all'esterometro"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
@@ -1153,6 +1200,14 @@ msgstr ""
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "The Origin Document Date cannot be in the future."
 msgstr "La Data Documento Origine non può essere nel futuro."
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The amount_total %(current_total)s is different than PrezzoTotale "
+"%(expected_total)s for '%(move_name)s'"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_liquidation_state__ls
@@ -1379,7 +1434,9 @@ msgstr "Valore totale dal file XML: %s"
 msgid ""
 "Transfer of depreciable assets and for internal transfers (ex art.36 "
 "Presidential Decree 633/72)"
-msgstr "Cessione di beni ammortizzabili e per trasferimenti interni (ex art.36 DPR 633/72)"
+msgstr ""
+"Cessione di beni ammortizzabili e per trasferimenti interni (ex art.36 DPR "
+"633/72)"
 
 #. module: l10n_it_edi
 #: model:ir.actions.act_window,name:l10n_it_edi.action_ddt_account
@@ -1419,6 +1476,11 @@ msgstr "Utente non autorizzato"
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Unknown error"
 msgstr "Errore sconosciuto"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__use_root_proxy_user
+msgid "Use Root Proxy User"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_header
