@@ -1259,7 +1259,7 @@ def _optimize_in_required(condition, model):
     field = condition._field(model)
     if (
         field.falsy_value is None
-        and field.required
+        and (field.required or field.name == 'id')
         and field in model.env.registry.not_null_fields
         # only optimize if there are no NewId's
         and all(model._ids)
