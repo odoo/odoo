@@ -107,7 +107,7 @@
             'mt-1': props.thread.parent_channel_id,
         }">
             <div class="o-mail-Thread-avatar d-inline" t-att-class="{'o-mail-Thread-avatarChatWindow': env.inChatWindow }">
-                <img t-if="!props.thread.parent_channel_id" class="rounded-3 o_object_fit_cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
+                <img t-if="!props.thread.parent_channel_id" class="rounded-3 object-fit-cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
                 <i t-else="" class="fa fa-comments-o opacity-75"/>
             </div>
             <h1 class="opacity-75" t-att-class="{ 'fs-3': env.inChatWindow, 'mb-0': env.inChatWindow, 'mb-1': !env.inChatWindow }" t-esc="startMessageTitle"/>

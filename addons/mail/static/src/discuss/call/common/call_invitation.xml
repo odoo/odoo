@@ -6,13 +6,13 @@
             'o-cameraPreview': state.videoStream,
         }">
             <div class="position-relative d-flex justify-content-center position-absolute h-100 w-100 rounded-3">
-                <video class="shadow rounded h-100 w-100 o_object_fit_cover rounded-3" autoplay="" t-ref="video"/>
+                <video class="shadow rounded h-100 w-100 object-fit-cover rounded-3" autoplay="" t-ref="video"/>
             </div>
             <div t-if="props.thread.rtcInvitingSession" class="o-discuss-CallInvitation-correspondent d-flex justify-content-around align-items-center text-nowrap px-3 mb-2 z-1" t-att-class="{
                 'align-self-start mt-3': state.videoStream,
                 'flex-column mt-4': !state.videoStream,
             }">
-                <img class="o-discuss-CallInvitation-avatar mb-2 rounded-circle cursor-pointer o_object_fit_cover"
+                <img class="o-discuss-CallInvitation-avatar mb-2 rounded-circle cursor-pointer object-fit-cover"
                     t-att-src="props.thread.rtcInvitingSession.channel_member_id.persona.avatarUrl"
                     t-on-click="onClickAvatar"
                     alt="Avatar"/>

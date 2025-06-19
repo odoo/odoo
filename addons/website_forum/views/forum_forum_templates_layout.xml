@@ -278,7 +278,7 @@
         <a t-attf-href="/forum/user/#{ uid }?forum_id=#{ forum.id if forum else '' }&amp;forum_origin=#{ request.httprequest.path }"
             class="btn w-100 py-1 text-start d-flex align-items-center" data-bs-toggle="tooltip" data-trigger="hover"
             title="My profile">
-            <img class="o_wforum_avatar rounded-circle o_object_fit_cover" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
+            <img class="o_wforum_avatar rounded-circle object-fit-cover" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
             <div class="d-flex flex-column justify-content-center ms-2">
                 <span class="mt-0 mb-1 h6-fs fw-bold" t-out="user_id.name"/>
                 <span class="fs-6 text-reset opacity-50"><t t-out="user_id.karma"/> XP</span>
