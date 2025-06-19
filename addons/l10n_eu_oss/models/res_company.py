@@ -45,7 +45,10 @@ class ResCompany(models.Model):
             oss_countries = eu_countries - company.account_fiscal_country_id - multi_tax_reports_countries_fpos.country_id
             tg = self.env['account.tax.group'].search([
                 *self.env['account.tax.group']._check_company_domain(company),
-                ('tax_payable_account_id', '!=', False)], limit=1)
+                ('tax_payable_account_id', '!=', False),
+                ('tax_payable_account_id.code', '!=', False)], limit=1)
+            if not tg:
+                continue
             self.env['account.account']._search_new_account_code(tg.tax_payable_account_id.code)
             default_oss_payable_account = self.env['account.account']
 
@@ -72,10 +75,7 @@ class ResCompany(models.Model):
                     if tax_amount and domestic_tax not in fpos.tax_ids.original_tax_ids:
                         if not foreign_taxes.get(tax_amount, False):
                             oss_tax_group_local_xml_id = f"{company.id}_oss_tax_group_{str(tax_amount).replace('.', '_')}_{company.account_fiscal_country_id.code}"
-                            if not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
-                                tg = self.env['account.tax.group'].search([
-                                    *self.env['account.tax.group']._check_company_domain(company),
-                                    ('tax_payable_account_id', '!=', False)], limit=1)
+                            if tg and not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
                                 if not default_oss_payable_account:
                                     default_oss_payable_account = self.env['account.account'].create([{
                                         'name': f'{tg.tax_payable_account_id.name} OSS',
