@@ -35,6 +35,9 @@ export function usePositionHook(containerRef, document, callback) {
                     addDomListener(scrollableElement, "scroll");
                     resizeObserver.observe(scrollableElement);
                 }
+                if (containerRef.el.ownerDocument.defaultView.frameElement) {
+                    addDomListener(document, "scroll");
+                }
             }
             return () => {
                 resizeObserver.disconnect();
