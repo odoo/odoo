@@ -69,6 +69,7 @@ export class ProjectTask extends models.Model {
         relation_field: "parent_id",
     });
     subtask_count = fields.Integer();
+    sequence = fields.Integer({ string: "Sequence", default: 10 });
     closed_subtask_count = fields.Integer();
     project_id = fields.Many2one({ relation: "project.project", falsy_value_label: "🔒 Private" });
     display_in_project = fields.Boolean();
