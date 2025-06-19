@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!--
+    Odoo QWeb template for generating a Polish KSeF e-invoice in FA(3) XML format.
+    This template maps Odoo's invoice data model to the official XML structure required by the Polish tax authorities.
+    The `t-` attributes are Odoo's template directives for rendering dynamic content.
+  -->
+  <template id="l10n_pl_edi.fa3_xml_template" name="Polish FA(3) XML Template">
+    <Faktura xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2022/01/05/eD/DefinicjeTypy/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://crd.gov.pl/wzor/2025/06/25/13775/">
+
+      <!--
+        ======================================================================
+        Nagłówek (Header)
+        - Contains metadata about the XML file itself.
+        ======================================================================
+      -->
+      <Naglowek>
+        <!-- Form Code: Identifies the schema being used. "FA (3)" is the official system code. -->
+        <KodFormularza kodSystemowy="FA (3)" wersjaSchemy="1-0E">FA</KodFormularza>
+        <!-- Form Variant: The specific version of the form, in this case, "3". -->
+        <WariantFormularza>3</WariantFormularza>
+        <!-- Timestamp of the XML file generation. -->
+        <DataWytworzeniaFa t-out="DataWytworzeniaFa"/>
+        <!-- Information about the system that generated the file. -->
+        <SystemInfo>Odoo</SystemInfo>
+      </Naglowek>
+
+      <!--
+        ======================================================================
+        Podmiot1 (Entity 1 - The Seller)
+        - Contains identification and address details for the company issuing the invoice.
+        ======================================================================
+      -->
+      <Podmiot1>
+        <DaneIdentyfikacyjne>
+          <t t-if="seller.vat">
+          <!-- NIP: Polish Tax Identification Number. The value is cleaned of 'PL' prefix and separators. -->
+          <NIP t-out="get_vat_number(seller.vat)"/>
+          </t>
+          <!-- Nazwa: The full legal name of the seller. -->
+          <Nazwa t-out="seller.name"/>
+        </DaneIdentyfikacyjne>
+        <Adres>
+          <!-- KodKraju: Two-letter ISO country code of the seller. -->
+          <KodKraju t-out="seller.country_id.code"/>
+          <!-- AdresL1: First line of the address, typically street, postal code, and city. -->
+          <AdresL1 t-out="seller_address"/>
+          <!-- AdresL2: Second line of the address (optional). -->
+          <AdresL2 t-if="seller.street2" t-out="seller.street2"/>
+        </Adres>
+        <t t-if="seller.email or seller.phone">
+        <DaneKontaktowe>
+            <Email t-out="seller.email"/>
+            <Telefon t-out="seller.phone"/>
+        </DaneKontaktowe>
+        </t>
+      </Podmiot1>
+
+      <!--
+        ======================================================================
+        Podmiot2 (Entity 2 - The Buyer)
+        - Contains identification and address details for the recipient of the invoice.
+        - Includes logic to handle different types of buyers (Polish, EU, non-EU).
+        ======================================================================
+      -->
+      <Podmiot2>
+        <DaneIdentyfikacyjne>
+          <!-- Logic to determine the correct tax identifier for the buyer. -->
+          <t t-if="buyer.vat">
+            <!-- Case 1: Buyer is Polish (VAT number starts with PL). -->
+            <t t-if="(get_vat_country(buyer.vat) or buyer.country_code) == 'PL'">
+              <NIP t-out="get_vat_number(buyer.vat)"/>
+            </t>
+            <!-- Case 2: Special EU transactions (OSS, Triangular Sale). -->
+            <t t-elif="special_transactions">
+              <KodUE t-out="get_vat_country(buyer.vat) or buyer.country_code"/>
+              <NrVatUE t-out="get_vat_number(buyer.vat)"/>
+            </t>
+            <!-- Case 3: Other foreign buyer with a tax ID. -->
+            <t t-else="">
+              <KodKraju t-out="get_vat_country(buyer.vat) or buyer.country_code"/>
+              <NrID t-out="get_vat_number(buyer.vat)"/>
+            </t>
+          </t>
+          <!-- Case 4: Buyer has no tax identifier. -->
+          <t t-else="">
+            <BrakID>1</BrakID> <!-- "1" indicates no ID is provided. -->
+          </t>
+          <!-- Nazwa: The full legal name of the buyer. -->
+          <Nazwa t-out="buyer.name"/>
+        </DaneIdentyfikacyjne>
+        <t t-if="buyer.street or buyer.zip or buyer.city or buyer.country_id">
+          <Adres>
+            <!-- KodKraju: Two-letter ISO country code of the buyer. -->
+            <KodKraju t-out="buyer.country_code"/>
+            <!-- AdresL1: First line of the buyer's address. -->
+            <AdresL1 t-out="buyer_address"/>
+            <!-- AdresL2: Second line of the buyer's address (optional). -->
+            <AdresL2 t-if="buyer.street2" t-out="buyer.street2"/>
+          </Adres>
+        </t>
+        <t t-if="buyer.email or buyer.phone">
+        <DaneKontaktowe>
+            <Email t-out="buyer.email"/>
+            <Telefon t-out="buyer.phone"/>
+        </DaneKontaktowe>
+        </t>
+
+            <!-- JST flag: 1=subordinate local gov unit; 2=otherwise. If 1, complete Podmiot3 with NIP/IDWew and role=8 -->
+          <JST>2</JST>
+
+          <!-- GV flag: 1=GV member; 2=otherwise. If 1, complete Podmiot3 with NIP/IDWew and role=10 -->
+          <GV>2</GV>
+      </Podmiot2>
+
+      <!--
+        ======================================================================
+        Fa (Invoice Core)
+        - Contains the main financial details of the invoice, including totals, tax summaries, and line items.
+        ======================================================================
+      -->
+      <Fa>
+        <!-- KodWaluty: ISO 4217 currency code (e.g., PLN, EUR). -->
+        <KodWaluty t-out="invoice.currency_id.name"/>
+        <!-- P_1: Invoice issue date. -->
+        <P_1 t-out="invoice.invoice_date"/>
+
+          <!-- P_1M: Invoice issue place where the invoice is legally created and issued . TO-CHECK -->
+        <P_1M t-if="seller.city" t-out="seller.city"/>
+
+          <!-- P_2: Invoice number. -->
+        <P_2 t-out="invoice.name"/>
+
+          <!-- WZ: The number of the WZ (release) warehouse document related to the invoice TO-CHECK -->
+
+        <!-- P_6: Date of supply or completion of service (if different from issue date). -->
+        <P_6 t-if="invoice.delivery_date and invoice.delivery_date != invoice.date" t-out="invoice.delivery_date"/>
+
+          <!-- OkresFa: Element containing the period to which the invoice relates contains P_6_Od and P_6_Do. TO-CHECK -->
+        <!--
+          Tax Summary section: Aggregates net and tax amounts by VAT rate.
+          The logic uses Odoo tax tags (e.g., 'K_19', 'K_17') which correspond to specific boxes in the Polish JPK_V7 declaration.
+          'P_13_x' fields are for net amounts, 'P_14_x' are for tax amounts.
+          'P_14_xW' fields are for tax amounts converted to PLN (required for foreign currency invoices).
+        -->
+
+        <!-- Net (P_13_1) and Tax (P_14_1) for the standard 23% VAT rate (based on JPK tag K_19). -->
+        <t t-if="not float_is_zero(get_amounts_from_tag('K_19'), 2)">
+            <P_13_1 t-out="float_repr(get_amounts_from_tag('K_19'), 2)"/>
+            <P_14_1 t-out="float_repr(get_amounts_from_tag('K_20'), 2)"/>
+            <P_14_1W t-if="invoice.currency_id.name != 'PLN'"  t-out="float_repr(get_amounts_from_tag_in_PLN_currency('K_20'), 2)"/>
+        </t>
+        <!-- Net (P_13_2) and Tax (P_14_2) for the 8% VAT rate (based on JPK tag K_17). -->
+        <t  t-if="not float_is_zero(get_amounts_from_tag('K_17'), 2)">
+            <P_13_2 t-out="float_repr(get_amounts_from_tag('K_17'), 2)"/>
+            <P_14_2 t-out="float_repr(get_amounts_from_tag('K_18'), 2)"/>
+            <P_14_2W t-if="invoice.currency_id.name != 'PLN'"  t-out="float_repr(get_amounts_from_tag_in_PLN_currency('K_18'), 2)"/>
+        </t>
+        <!-- Net (P_13_3) and Tax (P_14_3) for the 5% VAT rate (based on JPK tag K_15). -->
+        <t  t-if="not float_is_zero(get_amounts_from_tag('K_15'), 2)">
+            <P_13_3 t-out="float_repr(get_amounts_from_tag('K_15'), 2)"/>
+            <P_14_3 t-out="float_repr(get_amounts_from_tag('K_16'), 2)"/>
+            <P_14_3W t-if="invoice.currency_id.name != 'PLN'"  t-out="float_repr(get_amounts_from_tag_in_PLN_currency('K_16'), 2)"/>
+        </t>
+
+        <!-- Net (P_13_4) and Tax (P_14_4) for sales covered by lump sum for passenger taxis. -->
+
+        <!-- Net (P_13_5) and Tax (P_14_5) for OSS (One-Stop-Shop) procedure. -->
+        <t t-if="not float_is_zero(get_amounts_from_tag('OSS_Base'), 2)">
+            <P_13_5 t-out="float_repr(get_amounts_from_tag('OSS_Base'), 2)"/>
+            <P_14_5 t-if="not float_is_zero(get_amounts_from_tag('OSS_Tax'), 2)"  t-out="float_repr(get_amounts_from_tag('OSS_Tax'), 2)"/>
+        </t>
+
+        <!-- Other net amounts for various special cases (e.g., exports, intra-community supply). -->
+        <P_13_6_1 t-if="not float_is_zero(get_amounts_from_tag('K_13'), 2)"  t-out="float_repr(get_amounts_from_tag('K_13'), 2)"/>
+        <P_13_6_2 t-if="not float_is_zero(get_amounts_from_tag('K_21'), 2)"  t-out="float_repr(get_amounts_from_tag('K_21'), 2)"/>
+        <P_13_6_3 t-if="not float_is_zero(get_amounts_from_tag('K_22'), 2)"  t-out="float_repr(get_amounts_from_tag('K_22'), 2)"/>
+
+        <!-- Net amount for domestic supply exempt from tax (based on JPK tag K_10). -->
+        <P_13_7 t-if="not float_is_zero(get_amounts_from_tag('K_10'), 2)"  t-out="float_repr(get_amounts_from_tag('K_10'), 2)"/>
+        <!-- P_13_8: Total value of sales for the supply of goods and provision of services outside the country. TO-CHECK -->
+          <!-- P_13_9: Total value of the provision of services referred to in Article 100 sec. 1 item 4 and Article 100 sec TO-CHECK -->
+          <!-- P_13_10: Total value of sales under the reverse-charge procedure for which the purchaser is the taxpayer in accordance with the repealed Article 17 sec. 1. TO-CHECK -->
+          <!-- P_13_11: Total value of sales under the margin scheme referred to in Article 119 and Article 120 TO-CHECK -->
+
+          <!-- P_15: Total gross amount of the invoice (including all taxes). -->
+        <P_15 t-out="float_repr(invoice.amount_total_signed, 2)"/>
+
+          <!-- KursWalutyZ: Exchange rate of the currency to PLN on the invoice date. TO-CHECK -->
+          <KursWalutyZ t-out="invoice.invoice_currency_rate"/>
+        <!--
+          ======================================================================
+          Adnotacje (Annotations)
+          - Flags for special procedures and invoice characteristics. "1" for yes, "2" for no.
+          ======================================================================
+        -->
+        <Adnotacje>
+            <!-- P_16: Cash accounting method ("metoda kasowa"). 1=Yes, 2=No. -->
+            <t t-if="any(tax.tax_exigibility == 'on_payment' for tax in invoice.line_ids.tax_ids)">
+                <P_16 t-out="1"/>
+            </t>
+            <t t-else="">
+                <P_16 t-out="2"/>
+            </t>
+            <!-- P_17: Self-billing. 1=Yes, 2=No. -->
+            <P_17 t-out="2"/>
+            <!-- P_18: Reverse charge mechanism. 1=Yes, 2=No. -->
+            <P_18 t-out="2"/>
+            <!-- P_18A: Split payment mechanism. 1=Yes, 2=No. -->
+            <P_18A t-out="2"/>
+            <!-- Zwolnienie: Tax exemption details. -->
+            <Zwolnienie>
+                <!-- P_19N: Flag indicating if the invoice contains tax-exempt items. 1=No, 2=Yes -->
+                <!-- This seems to be hardcoded to "No" (1) and might need adjustment based on specific business logic for exemptions. -->
+                <!-- https://ksef.podatki.gov.pl/media/4u1bmhx4/information-sheet-on-the-fa-3-logical-structure.pdf, pages 58-59 -->
+                <P_19N t-out="1"/>
+            </Zwolnienie>
+            <!-- NoweSrodkiTransportu: New means of transport. -->
+            <NoweSrodkiTransportu>
+                <!-- P_22N: Flag for new means of transport. 1=No, 2=Yes. -->
+                <P_22N t-out="1"/>
+            </NoweSrodkiTransportu>
+            <!-- P_23: Triangular transaction flag. 1=Yes, 2=No. -->
+            <P_23 t-out="triangular_transaction"/>
+            <!-- PMarzy: Margin scheme (e.g., for used goods, tourism). -->
+            <PMarzy>
+                <!-- P_PMarzyN: Flag for margin scheme. 1=No, 2=Yes. -->
+                <P_PMarzyN t-out="1"/>
+            </PMarzy>
+        </Adnotacje>
+
+        <!-- RodzajFaktury: Invoice Type. Can be VAT (standard), KOR (correction), ZAL (advance payment) or ...... -->
+        <RodzajFaktury t-out="invoice_type"/>
+
+         <t t-if="invoice_type in ['ROZ', 'ZAL']">
+            <t t-foreach="related_invoices" t-as="related_inv_number">
+                <FakturaZaliczkowa>
+                    <NrKSeFZN t-out="'1'"/>
+                    <NrFaZaliczkowej t-out="related_inv_number"/>
+                </FakturaZaliczkowa>
+            </t>
+        </t>
+
+
+        <t t-if="'KOR' in invoice_type">
+            <PrzyczynaKorekty t-out="correction_info['PrzyczynaKorekty']"/>
+            <TypKorekty t-out="correction_info['TypKorekty']"/>
+            <DaneFaKorygowanej>
+                <DataWystFaKorygowanej t-out="correction_info['DataWystFaKorygowanej']"/>
+                <NrFaKorygowanej t-out="correction_info['NrFaKorygowanej']"/>
+                <NrKSeFN>1</NrKSeFN>
+            </DaneFaKorygowanej>
+        </t>
+
+        <!--
+          ======================================================================
+          FakturaWiersz (Invoice Line)
+          - This block iterates over each line of the invoice.
+          ======================================================================
+        -->
+        <t t-foreach="invoice_lines" t-as="line">
+          <FaWiersz>
+            <!-- NrWierszaFa: Sequential line number. -->
+            <NrWierszaFa t-out="line['NrWierszaFa']"/>
+            <!-- P_7: Name of the good or service. -->
+            <P_7 t-out="line['P_7']"/>
+            <!-- P_8A: Unit of measure (e.g., szt., kg, godz.). -->
+            <P_8A t-out="line['P_8A']"/>
+            <!-- P_8B: Quantity. -->
+            <P_8B t-out="line['P_8B']"/>
+            <!-- P_9A: Net unit price. -->
+            <P_9A t-out="line['P_9A']"/>
+            <!-- P_11: Total net value for the line. -->
+            <P_11 t-out="line['P_11']"/>
+            <!-- P_12: VAT rate applicable to the line (e.g., 23, 8, 5, "zw" for exempt). -->
+            <P_12 t-out="line['P_12']"/>
+          </FaWiersz>
+        </t>
+
+        <!--  Platnosc Element containing details of the payment terms [optional element]       -->
+          <Platnosc>
+            <t t-set="payments" t-value="invoice._get_reconciled_payments()"/>
+
+            <t t-if="invoice.payment_state == 'paid' and len(payments) == 1">
+                <Zaplacono>1</Zaplacono>
+                <DataZaplaty t-out="payments[0].date"/>
+            </t>
+
+            <t t-elif="len(payments) > 1">
+                <t t-if="invoice.payment_state == 'partial'">
+                <ZnacznikZaplatyCzesciowej>1</ZnacznikZaplatyCzesciowej>
+                </t>
+                <t t-elif="invoice.payment_state == 'paid'">
+                <ZnacznikZaplatyCzesciowej>2</ZnacznikZaplatyCzesciowej>
+                </t>
+
+                <t t-foreach="payments" t-as="payment">
+                <ZaplataCzesciowa>
+                    <KwotaZaplatyCzesciowej t-out="float_repr(payment.amount, 2)"/>
+                    <DataZaplatyCzesciowej t-out="payment.date"/>
+                    <FormaPlatnosci t-if="payment.journal_id.type == 'cash'" t-out="'1'"/>
+                    <FormaPlatnosci t-elif="payment.journal_id.type == 'bank'" t-out="'6'"/>
+                    <FormaPlatnosci t-else="" t-out="'6'"/>
+                </ZaplataCzesciowa>
+                </t>
+            </t>
+            <t t-if="invoice.payment_state != 'paid' and invoice.invoice_date_due">
+            <TerminPlatnosci>
+                <Termin t-out="invoice.invoice_date_due"/>
+                <t t-set="term_line" t-value="invoice.invoice_payment_term_id.line_ids.filtered(lambda l: l.nb_days > 0)[:1]"/>
+                <t t-if="term_line">
+                    <TerminOpis>
+                        <Ilosc t-out="term_line.nb_days"/>
+                        <Jednostka>Dni</Jednostka>
+                        <ZdarzeniePoczatkowe>
+                            <t t-if="term_line.delay_type == 'days_after'">Data wystawienia faktury</t>
+                            <t t-elif="term_line.delay_type == 'days_after_end_of_month'">Koniec miesiąca</t>
+                            <t t-elif="term_line.delay_type == 'days_after_end_of_next_month'">Koniec następnego miesiąca</t>
+                            <t t-else="">Data wystawienia faktury</t>
+                        </ZdarzeniePoczatkowe>
+                    </TerminOpis>
+                </t>
+            </TerminPlatnosci>
+            </t>
+            <t t-if="invoice.partner_bank_id">
+                <RachunekBankowy>
+                    <NrRB t-out="invoice.partner_bank_id.acc_number.replace(' ', '')"/>
+                    <NazwaBanku t-out="invoice.partner_bank_id.bank_id.name"/>
+                    <OpisRachunku t-out="invoice.currency_id.name"/>
+                </RachunekBankowy>
+            </t>
+        </Platnosc>
+
+        <t t-if="invoice.invoice_incoterm_id">
+        <WarunkiTransakcji>
+            <WarunkiDostawy t-out="invoice.invoice_incoterm_id.code"/>
+        </WarunkiTransakcji>
+        </t>
+      </Fa>
+    </Faktura>
+  </template>
+</odoo>

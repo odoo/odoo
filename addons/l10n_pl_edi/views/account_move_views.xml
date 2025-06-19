@@ -1,0 +1,52 @@
+<odoo>
+    <record id="view_move_form_l10n_pl_edi" model="ir.ui.view">
+        <field name="name">account.move.form.l10n_pl_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='action_invoice_sent']" position="before">
+                <button
+                    name="action_l10n_pl_edi_update_invoice_status"
+                    string="Check Sending"
+                    invisible="(l10n_pl_edi_status != 'sent') or not l10n_pl_edi_ref"
+                    type="object"
+                    class="oe_highlight"
+                    data-hotkey="shift+K"
+                />
+                <button
+                    name="action_l10n_pl_edi_get_invoice_UPO"
+                    string="Download UPO"
+                    invisible="(l10n_pl_edi_status != 'accepted') or l10n_pl_edi_upo_id"
+                    type="object"
+                    class="oe_highlight"
+                    data-hotkey="shift+U"
+                />
+            </xpath>
+
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning"
+                     role="alert"
+                     invisible="not l10n_pl_edi_header or state == 'draft' or l10n_pl_edi_status == 'accepted'">
+                    <div class="d-flex align-items-center">
+                        <field name="l10n_pl_edi_header" class="oe_inline" readonly="1"/>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//group[@id='header_right_group']" position="inside">
+                <field name="l10n_pl_edi_status" invisible="not l10n_pl_edi_register"/>
+            </xpath>
+
+            <xpath expr="//page[@id='pl_extra']/group" position="inside">
+                <group invisible="not l10n_pl_edi_register">
+                    <field name="l10n_pl_edi_number" groups="base.group_no_one" readonly="1"/>
+                    <field name="l10n_pl_edi_ref" groups="base.group_no_one" readonly="1"/>
+                    <field name="l10n_pl_edi_session_id" groups="base.group_no_one" readonly="1"/>
+                    <field name="l10n_pl_edi_attachment_id" groups="base.group_no_one" readonly="1"/>
+                    <field name="l10n_pl_edi_upo_id" groups="base.group_no_one" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
