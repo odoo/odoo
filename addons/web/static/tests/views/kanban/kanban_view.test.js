@@ -9437,10 +9437,16 @@ test("progress bar with aggregates: activate bars (grouped by many2one)", async 
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
+                        <field name="float_field"/>
                     </t>
                 </templates>
             </kanban>`,
         groupBy: ["product_id"],
+    });
+
+    onRpc("partner", "web_read_group", ({ kwargs }) => {
+        // float_field is not in the progressbar, then never ask his aggregation
+        expect(kwargs.aggregates).not.toInclude("float_field:sum");
     });
 
     expect(getKanbanColumnTooltips(0)).toEqual(["2 yop", "1 gnap", "1 blip"]);
