@@ -3,7 +3,7 @@
 import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
-
+from odoo import Command
 from odoo.exceptions import UserError
 
 
@@ -69,3 +69,32 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
             self.pos_config.write({"self_ordering_mode": mode})
             with self.assertRaises(UserError):
                 self.pos_config.write({"self_ordering_default_user_id": False})
+
+    def test_self_order_product_availability(self):
+        """Test product visibility and cart behavior for kiosk and mobile self-ordering modes."""
+        setup_product_combo_items(self)
+
+        # Remove all combo items except desks_combo
+        self.office_combo.write({
+            "combo_ids": [
+                Command.unlink(c.id)
+                for c in self.office_combo.combo_ids
+                if c.id != self.desks_combo.id
+            ],
+        })
+
+        # --- Kiosk Mode Tour ---
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self.start_tour(self.pos_config._get_self_order_route(), "test_self_order_kiosk_product_availability")
+
+        # --- Mobile Mode Tour ---
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+        })
+        self.start_tour(self.pos_config._get_self_order_route(), "test_self_order_product_availability")
