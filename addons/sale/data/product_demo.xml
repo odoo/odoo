@@ -125,31 +125,6 @@
         <field name="expense_policy">cost</field>
     </record>
 
-    <record id="product.product_attribute_2" model="product.attribute">
-        <field name="display_type">color</field>
-    </record>
-    <record id="product.product_attribute_3" model="product.attribute">
-        <field name="display_type">select</field>
-    </record>
-
-    <record id="product.product_attribute_value_3" model="product.attribute.value">
-        <field name="html_color">#FFFFFF</field>
-    </record>
-    <record id="product.product_attribute_value_4" model="product.attribute.value">
-        <field name="html_color">#000000</field>
-    </record>
-
-    <record id="product_attribute_value_7" model="product.attribute.value">
-        <field name="name">Custom</field>
-        <field name="attribute_id" ref="product.product_attribute_1"/>
-        <field name="is_custom">True</field>
-        <field name="sequence">3</field>
-    </record>
-
-    <record id="product.product_4_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
-        <field name="value_ids" eval="[(4,ref('product_attribute_value_7'))]"/>
-    </record>
-
     <!--
     Handle automatically created product.template.attribute.value.
     Check "product.product_4_attribute_1_value_2" for more information about this
