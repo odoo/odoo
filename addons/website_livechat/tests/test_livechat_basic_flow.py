@@ -197,6 +197,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                         "livechat_active": True,
                         "livechat_channel_id": self.livechat_channel.id,
+                        "livechat_note": False,
                         "livechat_operator_id": {
                             "id": self.operator.partner_id.id,
                             "type": "partner",

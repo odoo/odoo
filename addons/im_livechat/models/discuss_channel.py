@@ -78,6 +78,12 @@ class DiscussChannel(models.Model):
         compute="_compute_livechat_agent_providing_help_history",
         store=True,
     )
+    livechat_note = fields.Html(
+        "Live Chat Note",
+        sanitize_style=True,
+        groups="base.group_user",
+        help="Note about the session, visible to all internal users having access to the session.",
+    )
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
@@ -223,12 +229,17 @@ class DiscussChannel(models.Model):
             )
 
     def _sync_field_names(self):
-        return super()._sync_field_names() + [
+        field_names = super()._sync_field_names()
+        field_names[None].append(
             Store.One(
                 "livechat_operator_id",
                 self.env["discuss.channel"]._store_livechat_operator_id_fields(),
             ),
-        ]
+        )
+        field_names["internal_users"].append(
+            Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat")
+        )
+        return field_names
 
     def _store_livechat_operator_id_fields(self):
         """Return the standard fields to include in Store for livechat_operator_id."""
@@ -247,8 +258,11 @@ class DiscussChannel(models.Model):
                 sudo=True,
             ),
         ]
-        if self.env.user._is_internal():
+        if for_current_user and self.env.user._is_internal():
             fields.append(Store.One("livechat_channel_id", ["name"], sudo=True))
+            fields.append(
+                Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat")
+            )
         return super()._to_store_defaults(for_current_user=for_current_user) + fields
 
     def _to_store(self, store: Store, fields):
