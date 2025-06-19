@@ -86,19 +86,15 @@
     <!-- Change 'continue' button to use the website login settings -->
     <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="replace">
         <t t-if="availability_check">
-            <t t-if="website.account_on_checkout == 'mandatory' and website.is_public_user()">
-                <button class="btn btn-primary" type="submit">
-                    <span>Sign In</span>
-                    <span class="fa fa-sign-in"/>
-                </button>
-            </t>
-            <t t-else="">
-                <t t-set="has_paying_ticket" t-value="any(ticket.get('price', 0) > 0 for ticket in tickets)"/>
-                <button type="submit" class="btn btn-primary">
-                    <span t-if="has_paying_ticket">Go to Payment</span>
-                    <span t-else="">Confirm Registration</span>
-                </button>
-            </t>
+            <t t-set="has_paying_ticket" t-value="any(ticket.get('price', 0) > 0 for ticket in tickets)"/>
+            <button t-if="website.account_on_checkout == 'mandatory' and website.is_public_user() and has_paying_ticket" class="btn btn-primary" type="submit">
+                <span>Sign In</span>
+                <span class="fa fa-sign-in"/>
+            </button>
+            <button t-else="" type="submit" class="btn btn-primary">
+                <span t-if="has_paying_ticket">Go to Payment</span>
+                <span t-else="">Confirm Registration</span>
+            </button>
         </t>
     </xpath>
 </template>
