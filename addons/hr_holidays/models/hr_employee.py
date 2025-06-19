@@ -617,7 +617,7 @@ class HrEmployee(models.Model):
         for employee in employees:
             for work_entry_type in work_entry_types:
                 if not work_entry_type.requires_allocation:
-                    # Ensure that leave types that do not require allocation are
+                    # Ensure that work entry types that do not require allocation are
                     # still stored in the consumed allocation leaves.
                     # False is the special key used for this type of leave
                     allocations_leaves_consumed[employee][
@@ -732,7 +732,7 @@ class HrEmployee(models.Model):
                     virtual_remaining = 0
                     additional_leaves_duration = 0
                     for allocation in consumed_content:
-                        latest_accrual_bonus += allocation and allocation._get_future_leaves_on(date_to_simulate)
+                        latest_accrual_bonus += allocation and allocation._get_additionnal_future_leaves_on(date_to_simulate, precomputed_allocations)
                         date_accrual_bonus += consumed_content[allocation]['accrual_bonus']
                         virtual_remaining += consumed_content[allocation]['virtual_remaining_leaves']
                     for leave in content['to_recheck_leaves']:

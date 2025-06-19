@@ -135,16 +135,17 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
         cls.hours_per_day = cls.employee_emp.resource_id.calendar_id.hours_per_day or 8
 
-    def assert_remaining_leaves_equal(self, work_entry_type, value, employee, date=None, digits=None):
-        allocation_data = work_entry_type.get_allocation_data(employee, date)
-        if not date:
-            date = fields.Date.today()
-        if digits:
-            self.assertAlmostEqual(allocation_data[employee][0][1]['remaining_leaves'], value,
-                digits, f"Remaining leaves for date '{date}' are incorrect.")
-        else:
-            self.assertEqual(allocation_data[employee][0][1]['remaining_leaves'],
-                value, f"Remaining leaves for date '{date}' are incorrect.")
+    def _assert_allocation_nbr_of_days_and_remaining_leaves_equal(self, allocation, expected_duration, expected_remaining_leaves,
+            msg=None, target_date=None, digits=3):
+        """ The unit of `expected_duration` is `allocation.work_entry_type_id.unit_of_measure` """
+        work_entry_type_data = allocation.work_entry_type_id.get_allocation_data(allocation.employee_id, target_date)
+        remaining_leaves = work_entry_type_data[allocation.employee_id][0][1]['remaining_leaves']
+        leaves_taken = work_entry_type_data[allocation.employee_id][0][1]['leaves_taken']
+        allocation_value = remaining_leaves + leaves_taken
+
+        modified_msg = f'Error on {target_date or fields.Date.today()}' + f' - {msg}' if msg else ''
+        self.assertAlmostEqual(allocation_value, expected_duration, places=digits, msg=modified_msg)
+        self.assertAlmostEqual(remaining_leaves, expected_remaining_leaves, places=digits, msg=modified_msg)
 
     def _take_leave(self, employee, work_entry_type, date_from, date_to):
         leave = self.env['hr.leave'].create({
@@ -157,7 +158,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
         return leave
 
     def _create_form_test_accrual_allocation(self, work_entry_type, date_from, employee, accrual_plan, date_to=None, creator_user=None):
-        allocation = self.env['hr.leave.allocation']
+        allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True)
         if creator_user:
             allocation = allocation.with_user(creator_user)
         with Form(allocation, 'hr_holidays.hr_leave_allocation_view_form_manager') as form:

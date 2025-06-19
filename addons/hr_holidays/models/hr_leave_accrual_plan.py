@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from calendar import monthrange
+from datetime import date
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
 
 from odoo.addons.hr_holidays.models.hr_leave_accrual_plan_level import _get_selection_days
 
@@ -160,3 +162,68 @@ class HrLeaveAccrualPlan(models.Model):
             if not vals.get("name", False):
                 vals['name'] = self.env._("Unnamed Plan")
         return super().create(vals_list)
+
+    def _get_lvls_boundaries(self, date_from) -> list[date]:
+        """ Returns a list containing intervals boundaries of each level.
+            The start of the level x is the end date of the previous level.
+
+            For instance, if there are 2 levels, this function will return a list of 2 dates :
+            the start of the first level, and the start of the second level
+        """
+        self.ensure_one()
+
+        if not self.level_ids:
+            return None
+        sorted_levels = self.level_ids.sorted('sequence')
+
+        boundaries = [sorted_levels[0]._get_start_date(date_from)]
+        if len(sorted_levels) == 1:
+            return boundaries
+
+        if self.transition_mode == 'immediately':
+            for i in range(1, len(sorted_levels)):
+                boundaries.append(sorted_levels[i]._get_start_date(date_from))
+            return boundaries
+
+        for i in range(1, len(sorted_levels)):
+            expected_lvl_start = sorted_levels[i]._get_start_date(date_from)
+            current_lvl = sorted_levels[i]
+            lvl_start = current_lvl._get_next_date(expected_lvl_start + relativedelta(days=-1))
+            boundaries.append(lvl_start)
+        return boundaries
+
+    def _get_lvl_last_date(self, date_from, level_idx, lvls_boundaries=None):
+        self.ensure_one()
+        lvls_boundaries = lvls_boundaries or self._get_lvls_boundaries(date_from)
+        if level_idx == len(lvls_boundaries) - 1:
+            return None
+        return lvls_boundaries[level_idx + 1]
+
+    def _get_current_accrual_plan_levels(self, date, lvls_boundaries) -> dict[str, tuple] | None:
+        """ Returns a dict of tuples (lvl, idx) containing the level(s) we are currently in depending on `date` parameter.
+            It can return up to 2 entries (during level transition), "current_level" and "previous_level" (optional).
+            Return example:  {
+                "previous_level": (lvl3, lvl3_idx),         -> "previous_level" is an optional entry
+                "current_level": (lvl4, lvl4_idx),
+            }
+        """
+        self.ensure_one()
+        if not self.level_ids or lvls_boundaries[0] > date:
+            return None
+
+        sorted_levels = self.level_ids.sorted('sequence')
+        current_lvl_start = False
+        current_lvl_idx = False
+        for lvl_idx, lvl_start in enumerate(lvls_boundaries):
+            if date >= lvl_start:
+                current_lvl_idx = lvl_idx
+                current_lvl_start = lvl_start
+
+        # if `date` is a level transition
+        if current_lvl_idx > 0 and date == current_lvl_start:
+            return {
+                "previous_level": (sorted_levels[current_lvl_idx - 1], current_lvl_idx - 1),
+                "current_level": (sorted_levels[current_lvl_idx], current_lvl_idx),
+            }
+
+        return {"current_level": (sorted_levels[current_lvl_idx], current_lvl_idx)}
