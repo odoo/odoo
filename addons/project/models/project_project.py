@@ -473,22 +473,20 @@ class ProjectProject(models.Model):
         return True
 
     def copy_data(self, default=None):
+        default = dict(default or {})
         vals_list = super().copy_data(default=default)
-        if default and 'name' in default:
-            return vals_list
         copy_from_template = self.env.context.get('copy_from_template')
         for project, vals in zip(self, vals_list):
             if project.is_template and not copy_from_template:
                 vals['is_template'] = True
             if copy_from_template:
-                # We can make last_update_status as None because it is a required field
-                vals.pop("last_update_status", None)
-                for field in set(self._get_template_field_blacklist()) & set(vals.keys()):
-                    del vals[field]
-                vals["name"] = project.name
+                for field in self._get_template_field_blacklist():
+                    if field in vals and field not in default:
+                        del vals[field]
+            if copy_from_template or (not project.is_template and vals.get('is_template')):
+                vals['name'] = default.get('name', project.name)
             else:
-                if project.is_template or not vals.get("is_template"):
-                    vals["name"] = self.env._("%s (copy)", project.name)
+                vals['name'] = default.get('name', self.env._('%s (copy)', project.name))
         return vals_list
 
     def copy(self, default=None):
@@ -1292,10 +1290,7 @@ class ProjectProject(models.Model):
             key.removeprefix('default_'): value
             for key, value in self.env.context.items()
             if key.startswith('default_') and key.removeprefix('default_') in self._get_template_default_context_whitelist()
-        } | values | {
-            field: False
-            for field in self._get_template_field_blacklist()
-        }
+        } | values
         project = self.with_context(copy_from_template=True).copy(default=default)
         project.message_post(body=self.env._("Project created from template %(name)s.", name=self.name))
 
