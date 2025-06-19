@@ -194,7 +194,7 @@ class Domain:
     __slots__ = ('_opt_level',)
     _opt_level: OptimizationLevel
 
-    def __new__(cls, *args):
+    def __new__(cls, *args, internal: bool = False):
         """Build a domain AST.
 
         ```
@@ -239,7 +239,13 @@ class Domain:
         stack: list[Domain] = []
         try:
             for item in reversed(arg):
-                if isinstance(item, (tuple, list)) and len(item) == 3 and '*' not in item[1]:
+                if isinstance(item, (tuple, list)) and len(item) == 3:
+                    if internal:
+                        # process subdomains when processing internal values
+                        if item[1] in ('any', 'any*', 'not any', 'not any*') and isinstance(item[2], (list, tuple)):
+                            item = (item[0], item[1], Domain(item[2], internal=True))
+                    elif '*' in item[1]:
+                        raise ValueError(f"Domain() invalid item in domain: {item!r}")
                     stack.append(Domain(*item))
                 elif item == DomainAnd.OPERATOR:
                     stack.append(stack.pop() & stack.pop())
@@ -921,7 +927,7 @@ class DomainCondition(Domain):
             original_exception = e
         else:
             if computed_domain is not NotImplemented:
-                return Domain(computed_domain)
+                return Domain(computed_domain, internal=True)
         # try with the positive operator
         if (
             original_exception is None
@@ -929,7 +935,7 @@ class DomainCondition(Domain):
         ):
             computed_domain = field.determine_domain(model, inversed_opeator, value)
             if computed_domain is not NotImplemented:
-                return ~Domain(computed_domain)
+                return ~Domain(computed_domain, internal=True)
         # compatibility for any*
         try:
             if operator in ('any*', 'not any*'):
@@ -944,9 +950,9 @@ class DomainCondition(Domain):
         # backward compatibility to implement only '=' or '!='
         try:
             if operator == 'in':
-                return Domain.OR(field.determine_domain(model, '=', v) for v in value)
+                return Domain.OR(Domain(field.determine_domain(model, '=', v), internal=True) for v in value)
             elif operator == 'not in':
-                return Domain.AND(field.determine_domain(model, '!=', v) for v in value)
+                return Domain.AND(Domain(field.determine_domain(model, '!=', v), internal=True) for v in value)
         except (NotImplementedError, UserError) as e:
             if original_exception is None:
                 original_exception = e
