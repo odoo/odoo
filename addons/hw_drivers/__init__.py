@@ -3,6 +3,7 @@
 
 from functools import wraps
 import requests
+import logging
 
 from . import server_logger
 from . import connection_manager
@@ -14,6 +15,9 @@ from . import http
 from . import interface
 from . import main
 from . import websocket_client
+
+_logger = logging.getLogger(__name__)
+_logger.warning("==== Starting Odoo ====")
 
 _get = requests.get
 _post = requests.post
