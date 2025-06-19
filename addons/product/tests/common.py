@@ -29,8 +29,9 @@ class ProductCommon(UomCommon):
         cls.pricelist = cls.env['product.pricelist'].create({
             'name': 'Test Pricelist',
         })
-        # Archive all existing pricelists
-        cls.env['product.pricelist'].search([
+        bot_user = cls.env.ref('base.user_root')
+        # Archive all existing pricelists bot user to access a loyalty program
+        cls.env['product.pricelist'].with_user(bot_user).search([
             ('id', '!=', cls.pricelist.id),
         ]).action_archive()
 
