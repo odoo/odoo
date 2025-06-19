@@ -14,6 +14,8 @@ export class TableMenu extends Component {
         moveRow: Function,
         addRow: Function,
         removeRow: Function,
+        turnIntoHeader: Function,
+        turnIntoRow: Function,
         resetRowHeight: Function,
         resetColumnWidth: Function,
         resetTableSize: Function,
@@ -35,6 +37,7 @@ export class TableMenu extends Component {
             const tr = this.props.target.parentElement;
             this.isFirst = !tr.previousElementSibling;
             this.isLast = !tr.nextElementSibling;
+            this.isTableHeader = [...tr.children][0].nodeName === "TH";
         }
         this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
     }
@@ -123,6 +126,20 @@ export class TableMenu extends Component {
 
     rowItems() {
         return [
+            this.isFirst &&
+                !this.isTableHeader && {
+                    name: "make_header",
+                    icon: "fa-th-large",
+                    text: _t("Turn into header"),
+                    action: (target) => this.props.turnIntoHeader(target.parentElement),
+                },
+            this.isFirst &&
+                this.isTableHeader && {
+                    name: "remove_header",
+                    icon: "fa-table",
+                    text: _t("Turn into row"),
+                    action: (target) => this.props.turnIntoRow(target.parentElement),
+                },
             !this.isFirst && {
                 name: "move_up",
                 icon: "fa-chevron-up",
@@ -135,7 +152,7 @@ export class TableMenu extends Component {
                 text: _t("Move down"),
                 action: (target) => this.props.moveRow("down", target.parentElement),
             },
-            {
+            !this.isTableHeader && {
                 name: "insert_above",
                 icon: "fa-plus",
                 text: _t("Insert above"),
