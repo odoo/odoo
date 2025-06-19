@@ -321,7 +321,9 @@ export class CallPip extends Component {
 
     onTouchMove(event) {
         this.onMouseMove(event);
-        event.preventDefault();
+        if (this.state.isDragging) {
+            event.preventDefault();
+        }
     }
 
     onMouseUp() {
