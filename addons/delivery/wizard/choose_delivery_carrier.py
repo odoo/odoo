@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -15,10 +17,11 @@ class ChooseDeliveryCarrier(models.TransientModel):
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', required=True)
     carrier_id = fields.Many2one(
         'delivery.carrier',
-        string="Shipping Method",
+        string="Shipping Carrier",
         required=True,
         domain="[('id', 'in', available_carrier_ids)]",
     )
+    is_pickup_carrier = fields.Boolean(related='carrier_id.is_pickup')
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
     delivery_price = fields.Float()
     display_price = fields.Float(string='Cost', readonly=True)
@@ -29,6 +32,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     delivery_message = fields.Text(readonly=True)
     total_weight = fields.Float(string='Total Order Weight', related='order_id.shipping_weight', readonly=False)
     weight_uom_name = fields.Char(readonly=True, default=_get_default_weight_uom)
+    partner_shipping_id = fields.Many2one('res.partner', string="Pickup Point")
 
     @api.onchange('carrier_id', 'total_weight')
     def _onchange_carrier_id(self):
@@ -89,8 +93,27 @@ class ChooseDeliveryCarrier(models.TransientModel):
         }
 
     def button_confirm(self):
-        self.order_id.set_delivery_line(self.carrier_id, self.delivery_price)
-        self.order_id.write({
+        self.ensure_one()
+        if self.is_pickup_carrier and not self.partner_shipping_id:
+            raise UserError(_("Please select a pickup point before adding a shipping method"))
+        delivery_address = self.partner_shipping_id if self.is_pickup_carrier else self.partner_id
+        self.order_id.set_delivery_line(self.carrier_id, self.delivery_price, delivery_address)
+        so_vals = {
             'recompute_delivery_price': False,
             'delivery_message': self.delivery_message,
-        })
+        }
+        self.order_id.write(so_vals)
+
+    def set_pickup_location(self, pickup_location_data):
+        self.ensure_one()
+        if self.carrier_id.is_pickup:
+            pickup_location_data = json.loads(pickup_location_data)
+            parent_location = self.partner_shipping_id.parent_id if self.partner_shipping_id.is_pickup_location else self.partner_id
+            address = self.env['res.partner']._address_from_json(pickup_location_data, parent_location)
+            self.partner_shipping_id = address or self.partner_id
+        # When opening a dialog from another dialog, the first one gets closed
+        # We need to return an action to open the first dialog again
+        action = self.order_id.action_open_delivery_wizard()
+        del action['context']
+        action['res_id'] = self.id
+        return action

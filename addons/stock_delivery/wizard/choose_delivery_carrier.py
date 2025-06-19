@@ -11,3 +11,6 @@ class ChooseDeliveryCarrier(models.TransientModel):
         super()._compute_invoicing_message()
         if self.carrier_id.invoice_policy == 'real':
             self.invoicing_message = _('The shipping price will be set once the delivery is done.')
+
+    def _get_unavailable_order_lines(self, wh_id):
+        return self.order_id._get_unavailable_order_lines(wh_id)

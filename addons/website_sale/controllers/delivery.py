@@ -124,7 +124,7 @@ class Delivery(WebsiteSale):
         :return: None
         """
         order_sudo = request.cart
-        order_sudo._set_pickup_location(pickup_location_data)
+        order_sudo.set_pickup_location(pickup_location_data)
 
     @route('/website_sale/get_pickup_locations', type='jsonrpc', auth='public', website=True)
     def website_sale_get_pickup_locations(self, zip_code=None, **kwargs):
@@ -138,7 +138,7 @@ class Delivery(WebsiteSale):
         """
         order_sudo = request.cart
         country = order_sudo.partner_shipping_id.country_id
-        return order_sudo._get_pickup_locations(zip_code, country, **kwargs)
+        return order_sudo.carrier_id._get_pickup_locations(zip_code, country, parent_record=order_sudo, **kwargs)
 
     @route(_express_checkout_delivery_route, type='jsonrpc', auth='public', website=True)
     def express_checkout_process_delivery_address(self, partial_delivery_address):

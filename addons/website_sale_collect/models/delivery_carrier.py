@@ -14,6 +14,19 @@ class DeliveryCarrier(models.Model):
         selection_add=[('in_store', "Pick up in store")], ondelete={'in_store': 'set default'}
     )
     warehouse_ids = fields.Many2many(string="Stores", comodel_name='stock.warehouse')
+    delivery_method = fields.Selection(selection_add=([('in_store', 'Pick up in store')]))
+
+    def _compute_delivery_method(self):
+        super()._compute_delivery_method()
+        for carrier in self:
+            if carrier.delivery_type == 'in_store':
+                carrier.delivery_method = 'in_store'
+
+    def _compute_is_pickup(self):
+        super()._compute_is_pickup()
+        for carrier in self:
+            if carrier.delivery_type == 'in_store':
+                carrier.is_pickup = True
 
     @api.constrains('delivery_type', 'is_published', 'warehouse_ids')
     def _check_in_store_dm_has_warehouses_when_published(self):
@@ -50,7 +63,25 @@ class DeliveryCarrier(models.Model):
 
     # === BUSINESS METHODS ===#
 
-    def _in_store_get_close_locations(self, partner_address, product_id=None):
+    def _get_pickup_locations(self, zip_code=None, country=None, customer_address=False, shipping_address=False, **kwargs):
+        """ Override of `website_sale` to ensure that a country is provided when there is a zip
+        code.
+
+        If the country cannot be found (e.g., the GeoIP request fails), the zip code is cleared to
+        prevent the parent method's assertion to fail.
+        """
+        if zip_code and not country:
+            country_code = None
+            if shipping_address.location_data:
+                country_code = shipping_address.location_data['country_code']
+            elif request.geoip.country_code:
+                country_code = request.geoip.country_code
+            country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+            if not country:
+                zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
+        return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
+
+    def _in_store_get_close_locations(self, partner_address, product_id=None, parent_record=None):
         """ Get the formatted close pickup locations sorted by distance to the partner address.
 
         :param res.partner partner_address: The address to use to sort the pickup locations.
@@ -69,7 +100,7 @@ class DeliveryCarrier(models.Model):
         partner_address.geo_localize()  # Calculate coordinates.
 
         pickup_locations = []
-        order_sudo = request.cart
+        record = parent_record or request.cart
         for wh in self.warehouse_ids:
             pickup_location_values = wh._prepare_pickup_location_data()
             if not pickup_location_values:  # Ignore warehouses with badly configured addresses.
@@ -79,7 +110,7 @@ class DeliveryCarrier(models.Model):
             if product:  # Called from the product page.
                 in_store_stock_data = utils.format_product_stock_values(product, wh.id)
             else:  # Called from the checkout page.
-                in_store_stock_data = {'in_stock': order_sudo._is_in_stock(wh.id)}
+                in_store_stock_data = {'in_stock': record._is_in_stock(wh.id)}
 
             # Calculate the distance between the partner address and the warehouse location.
             pickup_location_values.update({

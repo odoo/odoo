@@ -56,6 +56,11 @@ class DeliveryCarrier(models.Model):
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
     tracking_url = fields.Char(string='Tracking Link', help="This option adds a link for the customer in the portal to track their package easily. Use <shipmenttrackingnumber> as a placeholder in your URL.")
     currency_id = fields.Many2one(related='product_id.currency_id')
+    delivery_method = fields.Selection([
+        ('classic', 'Classic'),
+        ('pickup_point', 'Pickup Point'),
+    ], string="Shipping Method", compute='_compute_delivery_method', default='classic')
+    is_pickup = fields.Boolean(compute='_compute_is_pickup')
 
     invoice_policy = fields.Selection(
         selection=[('estimated', "Estimated cost")],
@@ -123,6 +128,19 @@ class DeliveryCarrier(models.Model):
         for carrier in self:
             if carrier.must_have_tag_ids & carrier.excluded_tag_ids:
                 raise UserError(_("Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags.") % carrier.name)
+
+    @api.depends('delivery_type')
+    def _compute_delivery_method(self):
+        for carrier in self:
+            if hasattr(carrier, f'{carrier.delivery_type}_use_locations') and getattr(carrier, f'{carrier.delivery_type}_use_locations'):
+                carrier.delivery_method = 'pickup_point'
+            else:
+                carrier.delivery_method = 'classic'
+
+    @api.depends('delivery_method')
+    def _compute_is_pickup(self):
+        for carrier in self:
+            carrier.is_pickup = carrier.delivery_method == 'pickup_point'
 
     def _compute_weight_uom_name(self):
         self.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -499,3 +517,39 @@ class DeliveryCarrier(models.Model):
             raise UserError(_("Not available for current order"))
 
         return price
+
+    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
+        """
+        Return the pickup locations of the delivery method close to a given zip code.
+
+        Use provided `zip_code` and `country` or the order's delivery address to determine the zip
+        code and the country to use.
+
+        Note: self.ensure_one()
+
+        :param int zip_code: The zip code to look up to, optional.
+        :param res.country country: The country to look up to, required if `zip_code` is provided.
+        :return: The close pickup locations data.
+        :rtype: dict
+        """
+        self.ensure_one()
+        if zip_code:
+            assert country  # country is required if zip_code is provided.
+            partner_address = self.env['res.partner'].new({
+                'active': False,
+                'country_id': country.id,
+                'zip': zip_code,
+            })
+        else:
+            raise UserError(_("No zip code provided."))
+        try:
+            error = {'error': _("No pick-up points are available for this delivery address.")}
+            function_name = f'_{self.delivery_type}_get_close_locations'
+            if not hasattr(self, function_name):
+                return error
+            pickup_locations = getattr(self, function_name)(partner_address, **kwargs)
+            if not pickup_locations:
+                return error
+            return {'pickup_locations': pickup_locations}
+        except UserError as e:
+            return {'error': str(e)}

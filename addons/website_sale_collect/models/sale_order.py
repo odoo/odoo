@@ -15,18 +15,18 @@ class SaleOrder(models.Model):
         when the warehouse was set by the pickup_location_data"""
         in_store_orders_with_pickup_data = self.filtered(
             lambda so: (
-                so.carrier_id.delivery_type == 'in_store' and so.pickup_location_data
+                so.carrier_id.delivery_type == 'in_store' and so.partner_shipping_id.location_data
             )
         )
         super(SaleOrder, self - in_store_orders_with_pickup_data)._compute_warehouse_id()
         for order in in_store_orders_with_pickup_data:
-            order.warehouse_id = order.pickup_location_data['id']
+            order.warehouse_id = self.env['stock.warehouse'].browse(order.partner_shipping_id.location_data['id']).id
 
     def _compute_fiscal_position_id(self):
         """Override of `sale` to set the fiscal position matching the selected pickup location
         for pickup in-store orders."""
         in_store_orders = self.filtered(
-            lambda so: so.carrier_id.delivery_type == 'in_store' and so.pickup_location_data
+            lambda so: so.carrier_id.delivery_type == 'in_store' and so.partner_shipping_id.location_data
         )
         AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
         for order in in_store_orders:
@@ -35,7 +35,7 @@ class SaleOrder(models.Model):
             )
         super(SaleOrder, self - in_store_orders)._compute_fiscal_position_id()
 
-    def set_delivery_line(self, carrier, amount):
+    def set_delivery_line(self, carrier, amount, delivery_address=None):
         """ Override of `website_sale` to recompute warehouse and fiscal position when a new
         delivery method is not in-store anymore. """
         in_store_orders = self.filtered(
@@ -43,44 +43,26 @@ class SaleOrder(models.Model):
                 so.carrier_id.delivery_type == 'in_store' and carrier.delivery_type != 'in_store'
             )
         )
-        res = super().set_delivery_line(carrier, amount)
+        res = super().set_delivery_line(carrier, amount, delivery_address)
         in_store_orders._compute_warehouse_id()
         in_store_orders._compute_fiscal_position_id()
         return res
 
-    def _set_pickup_location(self, pickup_location_data):
+    def set_pickup_location(self, pickup_location_data):
         """ Override `website_sale` to set the pickup location for in-store delivery methods.
         Set account fiscal position depending on selected pickup location to correctly calculate
         taxes.
         """
-        super()._set_pickup_location(pickup_location_data)
+        super().set_pickup_location(pickup_location_data)
         if self.carrier_id.delivery_type != 'in_store':
             return
 
-        self.pickup_location_data = json.loads(pickup_location_data)
-        if self.pickup_location_data:
-            self.warehouse_id = self.pickup_location_data['id']
+        pickup_location_data = json.loads(pickup_location_data)
+        if pickup_location_data:
+            self.warehouse_id = self.partner_shipping_id.location_data['id']
             self._compute_fiscal_position_id()
         else:
             self._compute_warehouse_id()
-
-    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
-        """ Override of `website_sale` to ensure that a country is provided when there is a zip
-        code.
-
-        If the country cannot be found (e.g., the GeoIP request fails), the zip code is cleared to
-        prevent the parent method's assertion to fail.
-        """
-        if zip_code and not country:
-            country_code = None
-            if self.pickup_location_data:
-                country_code = self.pickup_location_data['country_code']
-            elif request.geoip.country_code:
-                country_code = request.geoip.country_code
-            country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
-            if not country:
-                zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
-        return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
 
     def _get_shop_warehouse_id(self):
         """Override of `website_sale_stock` to consider the chosen warehouse."""
