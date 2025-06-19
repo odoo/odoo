@@ -254,6 +254,7 @@ export class Composer extends Component {
     }
 
     onClickCancelOrSaveEditText(ev) {
+        ev.preventDefault();
         const composer = toRaw(this.props.composer);
         if (composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
             this.props.onDiscardCallback(ev);
