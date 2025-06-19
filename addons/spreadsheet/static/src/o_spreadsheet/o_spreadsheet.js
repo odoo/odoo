@@ -5324,6 +5324,10 @@
         });
     };
     const CAN_REMOVE_COLUMNS_ROWS = (dimension, env) => {
+        if ((dimension === "COL" && env.model.getters.getActiveRows().size > 0) ||
+            (dimension === "ROW" && env.model.getters.getActiveCols().size > 0)) {
+            return false;
+        }
         const sheetId = env.model.getters.getActiveSheetId();
         const selectedElements = env.model.getters.getElementsFromSelection(dimension);
         const includesAllVisibleHeaders = env.model.getters.checkElementsIncludeAllVisibleHeaders(sheetId, dimension, selectedElements);
@@ -6672,11 +6676,11 @@
          * transformation function given
          */
         addTransformation(executed, toTransforms, fn) {
-            for (let toTransform of toTransforms) {
-                if (!this.content[toTransform]) {
-                    this.content[toTransform] = new Map();
-                }
-                this.content[toTransform].set(executed, fn);
+            if (!this.content[executed]) {
+                this.content[executed] = new Map();
+            }
+            for (const toTransform of toTransforms) {
+                this.content[executed].set(toTransform, fn);
             }
             return this;
         }
@@ -6685,7 +6689,7 @@
          * that the executed command happened.
          */
         getTransformation(toTransform, executed) {
-            return this.content[toTransform] && this.content[toTransform].get(executed);
+            return this.content[executed] && this.content[executed].get(toTransform);
         }
     }
     const otRegistry = new OTRegistry();
@@ -36385,10 +36389,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      */
     function transformAll(toTransform, executed) {
         let transformedCommands = [...toTransform];
+        const possibleTransformations = new Set(otRegistry.getKeys());
         for (const executedCommand of executed) {
-            transformedCommands = transformedCommands
-                .map((cmd) => transform(cmd, executedCommand))
-                .filter(isDefined$1);
+            // If the executed command is not in the registry, we skip it
+            // because we know there won't be any transformation impacting the
+            // commands to transform.
+            if (possibleTransformations.has(executedCommand.type)) {
+                transformedCommands = transformedCommands.reduce((acc, cmd) => {
+                    const transformed = transform(cmd, executedCommand);
+                    if (transformed) {
+                        acc.push(transformed);
+                    }
+                    return acc;
+                }, []);
+            }
         }
         return transformedCommands;
     }
@@ -36848,7 +36862,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (this.waitingAck) {
                 return;
             }
-            this.waitingAck = true;
             this.sendPendingMessage();
         }
         /**
@@ -36878,6 +36891,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 throw new Error(`Trying to send a new revision while replaying initial revision. This can lead to endless dispatches every time the spreadsheet is open.
       ${JSON.stringify(message)}`);
             }
+            this.waitingAck = true;
             this.transportService.sendMessage({
                 ...message,
                 serverRevisionId: this.serverRevisionId,
@@ -43865,9 +43879,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.72';
-    __info__.date = '2025-06-12T10:50:57.982Z';
-    __info__.hash = 'fb0036b';
+    __info__.version = '16.0.73';
+    __info__.date = '2025-06-19T18:27:33.808Z';
+    __info__.hash = '8bc0a8a';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
