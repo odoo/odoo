@@ -617,7 +617,7 @@ export class PropertiesField extends Component {
         const oldType = propertiesValues[propertyIndex].type;
         const newType = propertyDefinition.type;
 
-        this._regeneratePropertyName(propertyDefinition);
+        this._regeneratePropertyName(propertyDefinition, propertiesValues[propertyIndex]);
 
         propertiesValues[propertyIndex] = propertyDefinition;
         await this.props.record.update({ [this.props.name]: propertiesValues });
@@ -839,27 +839,31 @@ export class PropertiesField extends Component {
      * If the type / model are the same, restore the original name to not reset the
      * children otherwise, generate a new value so all value of the record are reset.
      *
-     * @param {object} propertyDefinition
+     * @param {object} newDefinition
+     * @param {object} oldDefinition
      */
-    _regeneratePropertyName(propertyDefinition) {
-        const initialValues = this.initialValues[propertyDefinition.name];
+    _regeneratePropertyName(newDefinition, oldDefinition) {
+        const initialValues = this.initialValues[newDefinition.name];
         if (
             initialValues &&
-            propertyDefinition.type === initialValues.type &&
-            propertyDefinition.comodel === initialValues.comodel
+            newDefinition.type === initialValues.type &&
+            newDefinition.comodel === initialValues.comodel
         ) {
-            // restore the original name
-            propertyDefinition.name = initialValues.name;
-        } else if (initialValues && initialValues.name === propertyDefinition.name) {
+            // restore the original name (so the value on other records are not set to false)
+            newDefinition.name = initialValues.name;
+        } else if (
+            oldDefinition.type !== newDefinition.type ||
+            oldDefinition.model !== newDefinition.model
+        ) {
             // Generate a new name to reset all values on other records.
             // because the name has been changed on the definition,
             // the old name on others record won't match the name on the definition
             // and the python field will just ignore the old value.
             // Store the new generated name to be able to restore it
             // if needed.
-            const newName = this.generatePropertyName(propertyDefinition.type);
+            const newName = this.generatePropertyName(newDefinition.type);
             this.initialValues[newName] = initialValues;
-            propertyDefinition.name = newName;
+            newDefinition.name = newName;
         }
     }
 

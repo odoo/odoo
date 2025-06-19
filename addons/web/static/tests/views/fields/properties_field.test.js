@@ -43,6 +43,7 @@ async function closePopover() {
 async function changeType(propertyType) {
     const TYPES_INDEX = {
         char: 1,
+        html: 3,
         integer: 5,
         float: 6,
         date: 7,
@@ -1353,8 +1354,7 @@ test("properties: name reset", async () => {
 
     // select the "User" model
     await click(".o_field_property_definition_model input");
-    await animationFrame();
-    await click(".o_field_property_definition_model .ui-menu-item:nth-child(2)");
+    await contains(".o_field_property_definition_model .ui-menu-item:nth-child(2)").click();
     await animationFrame();
     await closePopover();
 
@@ -1378,24 +1378,46 @@ test("properties: name reset", async () => {
     await animationFrame();
     await changeType("many2one");
     await click(".o_field_property_definition_model input");
-    await animationFrame();
-    await click(".o_field_property_definition_model .ui-menu-item:nth-child(2)");
+    await contains(".o_field_property_definition_model .ui-menu-item:nth-child(2)").click();
     await animationFrame();
     const propertyName = queryAttribute(".o_property_field:nth-child(2)", "property-name");
+    expect(propertyName.endsWith("_html")).toEqual(false);
 
     // save (if we do not save, the name will be the same even if
     // we change the model, because it would be useless to regenerate it again)
     await closePopover();
 
     // restore the model "User", and check that the name has been restored
-    await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
-    await animationFrame();
-    await click(".o_field_property_definition_model input");
-    await animationFrame();
-    await click(".o_field_property_definition_model .ui-menu-item:nth-child(2)");
-    await animationFrame();
+    await contains(".o_property_field:nth-child(2) .o_field_property_open_popover").click();
+    await contains(".o_field_property_definition_model input").click();
+    await contains(".o_field_property_definition_model .ui-menu-item:nth-child(2)").click();
     await closePopover();
     expect(".o_property_field:nth-child(2)").toHaveAttribute("property-name", propertyName);
+
+    // Change the definition and check that the name stay the same
+    await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
+    await contains(".o_field_property_definition_kanban input").click();
+    await closePopover();
+    expect(".o_property_field:nth-child(2)").toHaveAttribute("property-name", propertyName);
+
+    // Change the type to "HTML" and verify that the suffix is added
+    await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
+    await animationFrame();
+    await changeType("html");
+    await closePopover();
+    await animationFrame();
+    const htmlPropertyName = queryAttribute(".o_property_field:nth-child(2)", "property-name");
+    expect(htmlPropertyName.endsWith("_html")).toEqual(true);
+
+    // Restore the selection type, the name should be restored
+    await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
+    await animationFrame();
+    await changeType("selection");
+    await closePopover();
+    await animationFrame();
+    expect(".o_property_field:nth-child(2)").toHaveAttribute("property-name", "property_2", {
+        message: "Name must have been restored",
+    });
 });
 
 /**
