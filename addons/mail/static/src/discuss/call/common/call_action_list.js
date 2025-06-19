@@ -12,7 +12,7 @@ import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_
 
 export class CallActionList extends Component {
     static components = { CallPopover, CallActionButton };
-    static props = ["thread", "fullscreen?", "compact?"];
+    static props = ["thread?", "fullscreen?", "compact?"];
     static template = "discuss.CallActionList";
 
     setup() {
@@ -27,10 +27,13 @@ export class CallActionList extends Component {
         });
     }
 
+    get thread() {
+        return this.props.thread || this.rtc.channel;
+    }
+
     get isPromotingFullscreen() {
         return Boolean(
-            !this.env.pipWindow &&
-                this.props.thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
+            !this.env.pipWindow && this.thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
         );
     }
 
@@ -39,7 +42,7 @@ export class CallActionList extends Component {
     }
 
     get isOfActiveCall() {
-        return Boolean(this.props.thread.eq(this.rtc.channel));
+        return Boolean(this.thread.eq(this.rtc.channel));
     }
 
     get isSmall() {
@@ -57,20 +60,20 @@ export class CallActionList extends Component {
         if (this.rtc.state.hasPendingRequest) {
             return;
         }
-        await this.rtc.leaveCall(this.props.thread);
+        await this.rtc.leaveCall(this.thread);
     }
 
     /**
      * @param {MouseEvent} ev
      */
     async onClickToggleAudioCall(ev, { camera = false } = {}) {
-        await this.rtc.toggleCall(this.props.thread, { camera, fullscreen: this.props.fullscreen });
+        await this.rtc.toggleCall(this.thread, { camera, fullscreen: this.props.fullscreen });
     }
 
     onMouseenterMore() {
         if (this.isPromotingFullscreen) {
             this.popover.open(this.more.el, { tooltip: _t("Enter full screen!") });
-            this.props.thread.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
+            this.thread.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         }
     }
 
