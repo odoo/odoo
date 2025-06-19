@@ -151,3 +151,10 @@ export function setupCombo(products, addToCart = true) {
 
     return steps;
 }
+
+export function checkProductOutOfStock(productName) {
+    return {
+        content: `Check if '${productName}' is marked as out of stock`,
+        trigger: `.o_self_product_box:has(span:contains('${productName}')):has(div:contains('Out of stock'))`,
+    };
+}
