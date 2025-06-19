@@ -353,7 +353,15 @@ class ResPartner(models.Model):
     def _compute_avatar(self, avatar_field, image_field):
         partners_with_internal_user = self.filtered(
             lambda partner: partner.user_ids - partner.user_ids.filtered('share') or partner.type == 'contact')
-        super(ResPartner, partners_with_internal_user)._compute_avatar(avatar_field, image_field)
+        partners_to_get_initial_avatar = partners_with_internal_user.filtered(
+            lambda ptr: ptr.user_ids and not ptr.id and not ptr[avatar_field],
+        )
+        for partner in partners_to_get_initial_avatar:
+            if partner[partner._avatar_name_field]:
+                partner[avatar_field] = partner._avatar_generate_svg()
+            else:
+                partner[avatar_field] = base64.b64encode(partner._avatar_get_placeholder())
+        super(ResPartner, partners_with_internal_user - partners_to_get_initial_avatar)._compute_avatar(avatar_field, image_field)
         partners_without_image = (self - partners_with_internal_user).filtered(lambda p: not p[image_field])
         for _, group in tools.groupby(partners_without_image, key=lambda p: p._avatar_get_placeholder_path()):
             group_partners = self.env['res.partner'].concat(*group)
