@@ -1,4 +1,5 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { _t } from "@web/core/l10n/translation";
 
 export class ReplaceMediaOption extends BaseOptionComponent {
     static template = "html_builder.ReplaceMediaOption";
@@ -6,6 +7,7 @@ export class ReplaceMediaOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
+            tooltipName: this.getTooltipName(editingElement),
             canSetLink: this.canSetLink(editingElement),
             hasHref: this.hasHref(editingElement),
         }));
@@ -20,6 +22,21 @@ export class ReplaceMediaOption extends BaseOptionComponent {
     hasHref(editingElement) {
         const parentEl = searchSupportedParentLinkEl(editingElement);
         return parentEl.tagName === "A" && parentEl.hasAttribute("href");
+    }
+    getTooltipName(editingElement) {
+        const classes = editingElement.classList;
+        if (classes.contains("media_iframe_video")) {
+            return _t("Replace Video");
+        } else if (classes.contains("img")) {
+            return _t("Replace Image");
+        } else if (
+            classes.contains("fa") ||
+            Array.from(classes).some((cls) => cls.startsWith("s_share_"))
+        ) {
+            return _t("Replace Icon");
+        } else {
+            return _t("Replace Media");
+        }
     }
 }
 
