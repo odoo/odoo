@@ -62,9 +62,15 @@ class QueryURL:
         for key, value in kw.items():
             if value and key in path_args:
                 if isinstance(value, models.BaseModel):
-                    paths[key] = slug(value)
+                    value = value.filtered(lambda v: v)
+                    if len(value) > 1:
+                        # Multiple records: join slugs with commas
+                        paths[key] = ",".join(slug(v) for v in value)
+                    elif len(value) == 1:
+                        paths[key] = slug(value[0])
                 else:
-                    paths[key] = "%s" % value
+                    # Allow comma-separated string directly
+                    paths[key] = str(value)
             elif value:
                 if isinstance(value, (list, set)):
                     fragments.append(
