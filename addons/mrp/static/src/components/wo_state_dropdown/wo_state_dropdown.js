@@ -1,31 +1,28 @@
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
-import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 
 
-export class MOListViewDropdown extends Component {
-    static template = "mrp.MOViewListDropdown";
+export class WOStateDropdown extends Component {
+    static template = "mrp.WOStateDropdown";
     static components = {
         Dropdown,
         DropdownItem,
     };
-    static props = { ...standardWidgetProps };
+    static props = { ...standardFieldProps };
 
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
-        this.workorderState = useState({
-            state: this.props.record.data.state,
-        });
         this.colorIcons = {
-            "blocked": "bg-warning",
-            "ready": "bg-muted",
-            "progress": "bg-info",
-            "cancel": "bg-danger",
-            "done": "bg-success",
+            "blocked": ["warning", "fa-exclamation-circle"],
+            "ready": ["300", "fa-circle"],
+            "progress": ["info", "fa-play-circle"],
+            "cancel": ["danger", "fa-times-circle"],
+            "done": ["success", "fa-check-circle"],
         };
     }
 
@@ -34,9 +31,17 @@ export class MOListViewDropdown extends Component {
         this.env.model.notify();
     }
 
-    get statusColor() {
-        const state = this.workorderState.state;
-        return this.colorIcons[state] || "";
+    statusColor(state) {
+        return this.colorIcons[state] ? this.colorIcons[state][0] : "";
+    }
+
+    statusIcon(state) {
+        return this.colorIcons[state] ? this.colorIcons[state][1] : "";
+    }
+
+    stateName(state) {
+        const stateName = this.props.record._config.fields.state.selection.find((el) => el[0] == state);
+        return stateName ? stateName[1] : "";
     }
 
     async setState(state) {
@@ -44,7 +49,7 @@ export class MOListViewDropdown extends Component {
         if (!selectedWorkorders || selectedWorkorders.length == 0) {
             selectedWorkorders = [this.props.record];
         }
-        let ids = selectedWorkorders.filter((wo) => !([state, 'done'].includes(wo.data.state) || wo.data.production_state == 'done')).map((wo) => wo.resId)  
+        let ids = selectedWorkorders.filter((wo) => !([state, 'done'].includes(wo.data.state) || wo.data.production_state == 'done')).map((wo) => wo.resId)
         if (ids && ids.length > 0) {
             await this.callOrm("set_state", [state], ids);
         }
@@ -68,9 +73,9 @@ export class MOListViewDropdown extends Component {
     }
 }
 
-export const moListViewDropdown = {
-    listViewWidth: 20,
-    component: MOListViewDropdown,
+export const woStateDropdown = {
+    component: WOStateDropdown,
+    supportedTypes: ["selection"],
 };
 
-registry.category("view_widgets").add("mo_view_list_dropdown", moListViewDropdown);
+registry.category("fields").add("wo_state_dropdown", woStateDropdown);
