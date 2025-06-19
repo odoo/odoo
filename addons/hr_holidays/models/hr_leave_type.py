@@ -615,17 +615,11 @@ class HrLeaveType(models.Model):
         for allocation in allocations:
             expiration_date = allocation.date_to
 
-            accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(target_date)[0]
+            accrual_plan_level, _ = allocation.sudo().get_current_accrual_plan_level_id(target_date)
             carryover_date = False
             if accrual_plan_level and (accrual_plan_level.action_with_unused_accruals == 'lost'
             or accrual_plan_level.carryover_options == 'limited'):
-                carryover_date = allocation.sudo()._get_carryover_date(target_date)
-                # If carry over date == target date, then add 1 year to carry over date.
-                # Rational: for example if carry over date = 01/01 this year and target date = 01/01 this year,
-                # then any accrued days on 01/01 this year will have their carry over date 01/01 next year
-                # and not 01/01 this year.
-                if carryover_date == target_date:
-                    carryover_date += relativedelta(years=1)
+                carryover_date = allocation.sudo()._get_next_carryover_date(target_date)
 
             carried_over_days_expiration_date = carried_over_days_expiration_data[allocation]['expiration_date']
 
@@ -647,7 +641,7 @@ class HrLeaveType(models.Model):
                 if expiration_date and expiration_date == closest_expiration_date:
                     expiring_leaves_count += remaining_leaves[allocation]['virtual_remaining_leaves']
                 elif carryover_date and carryover_date == closest_expiration_date:
-                    accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(target_date)[0]
+                    accrual_plan_level, _ = allocation.sudo().get_current_accrual_plan_level_id(target_date)
                     expiring_leaves_count += max(0, remaining_leaves[allocation]['virtual_remaining_leaves'] - accrual_plan_level.postpone_max_days)
                 elif carried_over_days_expiration_date and carried_over_days_expiration_date == closest_expiration_date:
                     expiring_leaves_count += carried_over_days_expiration_data[allocation]['no_expiring_days']

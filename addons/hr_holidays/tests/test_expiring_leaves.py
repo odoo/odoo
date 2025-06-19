@@ -7,8 +7,9 @@ from freezegun import freeze_time
 from odoo.addons.base.tests.common import HttpCase
 from odoo.tests.common import tagged
 from odoo.tests.common import users
+from odoo.tests import Form
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon, assert_virtual_leaves_equal
 
 
 @tagged('post_install', '-at_install', 'carryover_expiring_leaves')
@@ -28,6 +29,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '4',
+            'can_be_carryover': True,
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -703,6 +705,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '4',
+            'can_be_carryover': True,
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -809,3 +812,93 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
 
         # Assert the number of expiring leaves
         self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_remaining'], 1)
+
+
+    def _get_accrual_plan_sample1(self, added_value):
+        return self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'start',
+            'can_be_carryover': True,
+            'carryover_date': 'other',
+            'carryover_day': '15',
+            'carryover_month': '2',
+            'level_ids': [(0, 0, {
+                'added_value_type': 'day',
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': added_value,
+                'frequency': 'monthly',
+                'action_with_unused_accruals': 'all',
+                'accrual_validity': True,
+                'accrual_validity_count': 10,
+            })],
+        })
+
+    def _get_leave_type_day_sample1(self):
+        return self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+        })
+
+    def _get_allocation_sample(self, leave_type, accrual_plan, date_from, date_to=False):
+        with Form(self.env['hr.leave.allocation']) as f:
+            f.name = 'Accrual allocation for employee'
+            f.allocation_type = 'accrual'
+            f.accrual_plan_id = accrual_plan
+            f.employee_id = self.employee_emp
+            f.holiday_status_id = leave_type
+            f.date_from = date_from
+            if date_to:
+                f.date_to = date_to
+        return f.record
+
+    def test_accrual_plan_start_carryover_expiring_second_period(self):
+        """
+        Check that the carryover is applied correctly when the accrued gain time is set as "start"
+        and the policy is set to "all", but there is a validity of 10 days
+        """
+        with freeze_time('2025-01-23'):
+            added_value = 3
+            accrual_plan = self._get_accrual_plan_sample1(added_value)
+            leave_type_day = self._get_leave_type_day_sample1()
+            allocation = self._get_allocation_sample(leave_type_day, accrual_plan, '2025-01-01', '2025-06-30')
+            allocation.action_approve()
+            allocation._update_accrual()
+
+        assertions = [
+            ('2025-01-24', added_value),
+            ('2025-02-01', added_value * 2),
+            ('2025-02-15', added_value * 2),
+            ('2025-02-24', added_value * 2),
+            ('2025-02-25', 0),
+            ('2025-03-01', added_value),
+        ]
+
+        for test_date, remaining_leaves in assertions:
+            with freeze_time(test_date):
+                assert_virtual_leaves_equal(self, test_date, allocation, leave_type_day, remaining_leaves, self.employee_emp)
+
+    def test_accrual_plan_start_carryover_first_period_expired(self):
+        """
+        Check that the carryover is applied correctly when it happens on the first period of the first level
+        The accrued gain time is set as "start" and the policy is set to "all", but there is a validity of 10 days
+        """
+        added_value = 3
+        with freeze_time('2025-02-01'):
+            accrual_plan = self._get_accrual_plan_sample1(added_value)
+            leave_type_day = self._get_leave_type_day_sample1()
+            allocation = self._get_allocation_sample(leave_type_day, accrual_plan, '2025-02-01', '2025-06-30')
+            allocation.action_approve()
+
+        assertions = [
+            ('2025-02-01', added_value),
+            ('2025-02-24', added_value),
+            ('2025-02-28', 0),
+        ]
+        for test_date, remaining_leaves in assertions:
+            with freeze_time(test_date):
+                assert_virtual_leaves_equal(self, test_date, allocation, leave_type_day, remaining_leaves, self.employee_emp)

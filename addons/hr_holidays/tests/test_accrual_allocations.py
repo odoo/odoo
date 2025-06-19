@@ -10,7 +10,7 @@ from odoo.tests import tagged, Form
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon, assert_virtual_leaves_equal
 
 
 @tagged('post_install', '-at_install', 'accruals')
@@ -32,7 +32,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'hour',
         })
 
-    def setAllocationCreateDate(self, allocation_id, date):
+    def _set_allocation_create_date(self, allocation_id, date):
         """ This method is a hack in order to be able to define/redefine the create_date
             of the allocations.
             This is done in SQL because ORM does not allow to write onto the create_date field.
@@ -44,7 +44,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                        WHERE id = %s
                        """ % (date, allocation_id))
 
-    def assert_allocation_and_balance(self, allocation, expected_allocation_value, expected_balance_value, msg):
+    def _assert_allocation_and_balance(self, allocation, expected_allocation_value, expected_balance_value, msg):
         unit = allocation.accrual_plan_id.added_value_type
         allocation_value = allocation.number_of_hours_display if unit == 'hour' else allocation.number_of_days
 
@@ -314,7 +314,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2021-09-03',
             })
-            self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
+            self._set_allocation_create_date(allocation.id, '2021-09-01 00:00:00')
             allocation.action_approve()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -360,20 +360,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2021-08-31',
             })
-            self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
+            self._set_allocation_create_date(allocation.id, '2021-09-01 00:00:00')
             allocation.action_approve()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
             allocation._update_accrual()
-            next_date = datetime.date(2021, 10, 1)
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
 
-        with freeze_time(next_date):
-            next_date = datetime.date(2021, 11, 1)
+        with freeze_time(datetime.date(2021, 10, 1)):
             allocation._update_accrual()
             # Prorata = 1 since a whole month passed
             self.assertEqual(allocation.number_of_days, 1, 'There should be 1 day allocated.')
-            self.assertEqual(allocation.nextcall, next_date, 'The next call date of the cron should be November 1st')
+            self.assertEqual(allocation.nextcall, datetime.date(2021, 11, 1), 'The next call date of the cron should be November 1st')
 
     def test_frequency_biyearly(self):
         with freeze_time('2021-09-01'):
@@ -401,7 +399,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
+            self._set_allocation_create_date(allocation.id, '2021-09-01 00:00:00')
             allocation.action_approve()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -447,7 +445,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
+            self._set_allocation_create_date(allocation.id, '2021-09-01 00:00:00')
             allocation.action_approve()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -548,8 +546,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'state': 'confirm',
             })
             (allocation_not_worked_time | allocation_worked_time).action_approve()
-            self.setAllocationCreateDate(allocation_not_worked_time.id, '2021-08-01 00:00:00')
-            self.setAllocationCreateDate(allocation_worked_time.id, '2021-08-01 00:00:00')
+            self._set_allocation_create_date(allocation_not_worked_time.id, '2021-08-01 00:00:00')
+            self._set_allocation_create_date(allocation_worked_time.id, '2021-08-01 00:00:00')
             leave_type = self.env['hr.leave.type'].create({
                 'name': 'Paid Time Off',
                 'requires_allocation': False,
@@ -751,11 +749,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation.action_approve()
             next_date = datetime.date.today() + relativedelta(days=11)
             second_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 10)])
-            self.assertEqual(allocation._get_current_accrual_plan_level_id(next_date)[0], second_level, 'The second level should be selected')
+            self.assertEqual(allocation.get_current_accrual_plan_level_id(next_date)[0], second_level, 'The second level should be selected')
 
     def test_accrual_transition_after_period(self):
-        with freeze_time("2017-12-05"):
-            # 1 accrual with 2 levels and level transition after
+        with freeze_time("2025-07-08"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'transition_mode': 'end_of_accrual',
                 'can_be_carryover': True,
@@ -788,9 +785,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
             })
             allocation.action_approve()
-            next_date = datetime.date.today() + relativedelta(days=11)
+            # Second level starts on 2025-07-18, but first level 'transition_mode' is set to 'end_of_accrual', so the first level will
+            # end its period before transition
+            # ===> 2025-07-18 is a Friday, therefore the second level will start on 2025-07-21 (next Monday)
+            # "2025-07-19" still belongs to the first level
+            first_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 1)])
+            current_lvl, _ = allocation.get_current_accrual_plan_level_id(datetime.date(2025, 7, 19))
+            self.assertEqual(current_lvl, first_level, 'The first level should be selected')
+
+            # "2025-07-21" still belongs to the first level
             second_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 10)])
-            self.assertEqual(allocation._get_current_accrual_plan_level_id(next_date)[0], second_level, 'The second level should be selected')
+            current_lvl, _ = allocation.get_current_accrual_plan_level_id(datetime.date(2025, 7, 21))
+            self.assertEqual(current_lvl, second_level, 'The second level should be selected')
 
     def test_unused_accrual_lost(self):
         """
@@ -1488,7 +1494,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2024-12-20'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 120, 120,
+            self._assert_allocation_and_balance(allocation, 120, 120,
                 "The yearly cap should be reached.")
             leave = self.env['hr.leave'].create({
                 'name': "Leave for employee",
@@ -1502,12 +1508,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             self.assertEqual(leave.number_of_hours, 2)
             self.assertEqual(allocation.leaves_taken, 2)
-            self.assert_allocation_and_balance(allocation, 120, 118,
+            self._assert_allocation_and_balance(allocation, 120, 118,
                 "The 2 hours should be deduced from the balance")
 
         with freeze_time('2024-12-31'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 120, 118,
+            self._assert_allocation_and_balance(allocation, 120, 118,
                 "The amount shouldn't exceed the yearly amount as all days days have already been accrued.")
 
         with freeze_time('2025-01-06'):
@@ -1516,7 +1522,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2025-07-03'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 182, 180, "The global cap should be reached.")
+            self._assert_allocation_and_balance(allocation, 182, 180, "The global cap should be reached.")
             leave = self.env['hr.leave'].create({
                 'name': "Leave for employee",
                 'employee_id': self.employee_emp.id,
@@ -1526,17 +1532,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             self.assertEqual(leave.number_of_hours, 64)
             self.assertEqual(allocation.leaves_taken, 66)
-            self.assert_allocation_and_balance(allocation, 182, 116,
+            self._assert_allocation_and_balance(allocation, 182, 116,
                 "The leave hours should be deduced from the balance.")
 
         with freeze_time('2025-12-25'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 240, 174,
+            self._assert_allocation_and_balance(allocation, 240, 174,
                 "The total yearly amount should be reached.")
 
         with freeze_time('2025-12-31'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 240, 174,
+            self._assert_allocation_and_balance(allocation, 240, 174,
                 "Nothing more should have been accrued since the yearly cap was already reached.")
 
     def test_accrual_period_start(self):
@@ -1914,13 +1920,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # The amount of days should be computed as if it was accrued since
             # the start date of the allocation.
             self.assertAlmostEqual(accrual_allocation.number_of_days, 34.0, places=0)
-            self.assertFalse(accrual_allocation.lastcall == accrual_allocation.date_from)
+            self.assertFalse(accrual_allocation.last_accruals == accrual_allocation.date_from)
             accrual_allocation._update_accrual()
             # The amount being already computed, the amount should stay the same after the cron
             # running on the same day.
             self.assertAlmostEqual(accrual_allocation.number_of_days, 34.0, places=0)
 
-    def test_future_accural_time(self):
+    def test_future_accrual_time(self):
+        """
+        Check that the carryover is processed correctly when the 'added_value_type' is set to 'hour'
+        """
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
             'time_type': 'leave',
@@ -1956,8 +1965,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
             })
             allocation.action_approve()
-            allocation_data = leave_type.get_allocation_data(self.employee_emp, datetime.date(2024, 2, 1))
-            self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 2)
+            with freeze_time("2024-02-01"):
+                assert_virtual_leaves_equal(self, "2024-02-01", allocation, leave_type, 2, self.employee_emp)
 
     def test_added_type_during_onchange(self):
         """
@@ -2307,12 +2316,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertEqual(allocation.lastcall, False)
 
             allocation.action_refuse()
-            allocation.write({
-                'allocation_type': 'accrual',
-                'accrual_plan_id': accrual_plan.id,
-            })
 
-            self.assertEqual(allocation.lastcall, datetime.date(2017, 12, 5))
+            with Form(allocation) as f:
+                f.allocation_type = 'accrual'
+                f.accrual_plan_id = accrual_plan
+
+            self.assertEqual(f.record.lastcall, datetime.date(2017, 12, 5))
 
     def test_accrual_allocation_data_persists(self):
         leave_type = self.env['hr.leave.type'].create({
@@ -2850,17 +2859,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     III. Carryover policy is all (all days carry over).
 
         Create an allocation that starts 01/01/2024 and uses the above accrual plan.
-
-        1. On 01/01/2024: The employee is accrued 10 days.
-        2. On 01/01/2025: The employee is accrued 10 days.
-        3. On 01/06/2025: All the days are lost due to carryover policy.
-        4. On 01/01/2026: The employee is accrued 10 days.
-        5. On 01/06/2026: All the days are lost due to carryover policy.
-        6. On 01/09/2026: Level transition occurrs. 6.67 days are accrued.
-        7. On 01/01/2027:
-            - 4 days are accrued for the period from 01/09/2026 until 31/12/2026.
-            - 12 days are accrued for the new period (becase days are accrue at the start of the accrual period)
-            - Total number of days is 6.67 + 4 + 12 = 22.67 days.
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
@@ -2899,33 +2897,42 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             allocation.action_approve()
 
+        # On 01/01/2024: The employee is accrued 10 days.
         with freeze_time('2024-01-01'):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 10)
 
+        # On 01/06/2024: All the days are lost due to carryover policy.
+        # On 01/01/2025: The employee is accrued 10 days.
         with freeze_time('2025-01-01'):
             allocation._update_accrual()
-        self.assertEqual(allocation.number_of_days, 20)
+        self.assertEqual(allocation.number_of_days, 10)
 
+        # On 01/06/2025: All the days are lost due to carryover policy.
         with freeze_time('2025-06-01'):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 0)
 
+        # On 01/01/2026: The employee is accrued days until the end of the first level (1st of August)
+        # 8 first months of 2026: 31 + 28 + 31 + 30 + 31 + 30 + 31 + 30 + 1 = 243
         with freeze_time('2026-01-01'):
             allocation._update_accrual()
-        self.assertEqual(allocation.number_of_days, 10)
+        self.assertAlmostEqual(allocation.number_of_days, 243 / 365 * 10, 4)
 
+        # On 01/06/2026: All the days are lost due to carryover policy.
         with freeze_time('2026-06-01'):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 0)
 
+        # On 01/09/2026: 4 days are accrued for the period from 01/09/2026 until 31/12/2026.
         with freeze_time('2026-09-01'):
             allocation._update_accrual()
-        self.assertAlmostEqual(allocation.number_of_days, 10.7, 1)
+        self.assertAlmostEqual(allocation.number_of_days, 4, 1)
 
+        # On 01/01/2027: The employee is accrued 12 days.
         with freeze_time('2027-01-01'):
             allocation._update_accrual()
-        self.assertAlmostEqual(allocation.number_of_days, 22.67, 2)
+        self.assertAlmostEqual(allocation.number_of_days, 16, 1)
 
     def test_carried_over_days_expiry_date_computation(self):
         """
@@ -3421,7 +3428,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2025-09-01'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 13, 10, "The employee balance should be 10 days.")
+            self._assert_allocation_and_balance(allocation, 13, 10, "The employee balance should be 10 days.")
 
     def test_time_off_balance_computation(self):
         """
@@ -3481,7 +3488,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2024-01-01'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 10, 10, "The employee was accrued 10 days")
+            self._assert_allocation_and_balance(allocation, 10, 10, "The employee was accrued 10 days")
 
         leave = self.env['hr.leave'].create({
             'name': 'leave',
@@ -3494,7 +3501,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2024-04-01'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 7, 5, "Only 5 days will carry over")
+            self._assert_allocation_and_balance(allocation, 7, 5, "Only 5 days will carry over")
 
         leave = self.env['hr.leave'].create({
             'name': 'leave',
@@ -3507,11 +3514,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2024-09-01'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 3, 0, "The 5 carried over days should expire")
+            self._assert_allocation_and_balance(allocation, 3, 0, "The 5 carried over days should expire")
 
         with freeze_time('2025-01-01'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 13, 10, "The employee was accrued 10 days")
+            self._assert_allocation_and_balance(allocation, 13, 10, "The employee was accrued 10 days")
 
         leave = self.env['hr.leave'].create({
             'name': 'leave',
@@ -3524,7 +3531,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2025-04-01'):
             allocation._update_accrual()
-            self.assert_allocation_and_balance(allocation, 11, 5, "Only 5 days will carry over")
+            self._assert_allocation_and_balance(allocation, 11, 5, "Only 5 days will carry over")
 
     def test_carriedover_days_expiration_reset(self):
         """
@@ -3913,7 +3920,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'date_from': '2024-12-01',
                 'number_of_days': 8,
                 'allocation_type': 'accrual',
-                'nextcall': '2025-01-01',
             })
             allocation.action_approve()
             # A virtual leave that is pending approval and will be taken after the carryover date
@@ -3987,9 +3993,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             allocation.action_approve()
         with freeze_time('2024-01-09'):
-            allocation._update_accrual()
-            allocation_data = leave_type_day.get_allocation_data(self.employee_emp)
-            self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 1)
+            assert_virtual_leaves_equal(self, '2024-01-09', allocation, leave_type_day, 1, self.employee_emp)
 
     def test_accrual_allocation_data_with_different_units_half_day(self):
         '''
@@ -4029,9 +4033,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             allocation.action_approve()
         with freeze_time('2024-01-09'):
-            allocation._update_accrual()
-            allocation_data = leave_type_day.get_allocation_data(self.employee_emp)
-            self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 1)
+            assert_virtual_leaves_equal(self, '2024-01-09', allocation, leave_type_day, 1, self.employee_emp)
 
     def test_accrual_allocation_data_with_different_units_and_used_days(self):
         '''
@@ -4080,5 +4082,4 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'request_date_to': '2024-01-05',
             })
             leave.action_approve()
-            allocation_data = leave_type_day.get_allocation_data(self.employee_emp)
-            self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 1)
+            assert_virtual_leaves_equal(self, '2024-01-17', allocation, leave_type_day, 1, self.employee_emp)
