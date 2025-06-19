@@ -5239,6 +5239,27 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(unbuild_order.state, 'done')
         self.assertEqual(unbuild_order.product_qty, 1.23456)
 
+    def test_mo_plan_with_multiple_workorders(self):
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'workorder_ids': [
+                Command.create({
+                    'name': 'OP1',
+                    'product_uom_id': self.product_1.uom_id.id,
+                    'workcenter_id': self.workcenter_1.id,
+                }),
+                Command.create({
+                    'name': 'OP2',
+                    'product_uom_id': self.product_1.uom_id.id,
+                    'workcenter_id': self.workcenter_1.id,
+                    'duration': 60,
+                })
+            ],
+        })
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertTrue(mo.is_planned)
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
