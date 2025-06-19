@@ -54,12 +54,11 @@ class MrpWorkorder(models.Model):
     qty_producing = fields.Float(
         compute='_compute_qty_producing',
         string='Currently Produced Quantity', digits='Product Unit')
-    qty_remaining = fields.Float('Quantity To Be Produced', compute='_compute_qty_remaining', digits='Product Unit')
+    qty_remaining = fields.Float('Quantity Remaining', compute='_compute_qty_remaining', digits='Product Unit')
     qty_produced = fields.Float(
         'Quantity Done', default=0.0,
         digits='Product Unit',
-        copy=False,
-        help="The number of products already handled by this work order")
+        copy=False)
     qty_ready = fields.Float('Quantity Ready', compute='_compute_qty_ready', digits='Product Unit', default=0.0)
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
@@ -87,7 +86,7 @@ class MrpWorkorder(models.Model):
         store=True, copy=False)
     duration_expected = fields.Float(
         'Expected Duration', digits=(16, 2), compute='_compute_duration_expected',
-        readonly=False, store=True, copy=False) # in minutes
+        readonly=False, store=True, copy=False)  # in minutes
     duration = fields.Float(
         'Real Duration', compute='_compute_duration', inverse='_set_duration',
         readonly=False, store=True, copy=False)
@@ -147,21 +146,25 @@ class MrpWorkorder(models.Model):
                                      column1="blocked_by_id", column2="workorder_id", string="Blocks",
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
+    allow_partial_qty = fields.Boolean(related="production_bom_id.workorder_partial_qty")
 
     @api.depends('qty_ready')
     def _compute_state(self):
         for workorder in self:
-            if not workorder.product_uom_id or workorder.state not in ('blocked', 'ready'):
+            if not workorder.product_uom_id or workorder.state != 'blocked' or workorder.production_state == 'draft':
                 continue
             has_qty_ready = workorder.product_uom_id.compare(workorder.qty_ready, 0) > 0
             is_fully_consumed = workorder.product_uom_id.compare(workorder.qty_remaining, 0) <= 0
             if has_qty_ready or is_fully_consumed:
                 workorder.state = 'ready'
-            else:
-                workorder.state = 'blocked'
 
     def set_state(self, state):
         ids_to_update = []
+        if state == 'done':
+            res = self._check_qty_on_set_state_done('set_state', self._get_caller_kwargs(locals()))
+            if res:
+                return res
+
         for wo in self:
             if wo.state == state or 'done' in (wo.state, wo.production_state):
                 continue
@@ -180,6 +183,7 @@ class MrpWorkorder(models.Model):
             wo_to_update.action_mark_as_done()
         else:
             wo_to_update.write({'state': state})
+        return None
 
     @api.depends('production_id.date_start', 'date_start')
     def _compute_production_date(self):
@@ -249,7 +253,18 @@ class MrpWorkorder(models.Model):
 
     @api.depends('blocked_by_workorder_ids.qty_produced', 'blocked_by_workorder_ids.state', 'production_state')
     def _compute_qty_ready(self):
+        mo_ids_to_backorder = self.env.context.get('mo_ids_to_backorder', [])
         for workorder in self:
+            if self.env.context.get('skip_backorder') and mo_ids_to_backorder and workorder.production_id.backorder_ids:
+                # When creating a workorder from a backorder MO, workorder dependencies are not set, which leads to wrong qty_ready computation (and then to a wrong state).
+                previous_mo_ids = list(filter(lambda mo_id : mo_id in workorder.production_id.backorder_ids.ids, mo_ids_to_backorder))
+                wo_to_bypass = workorder.id == [min(workorder.production_id.workorder_ids.ids)] if not workorder.allow_workorder_dependencies else len(workorder.operation_id.blocked_by_operation_ids) == 0
+                if not wo_to_bypass and workorder.id != min(workorder.production_id.workorder_ids.ids) and previous_mo_ids and any(mo_id < workorder.production_id.id for mo_id in previous_mo_ids):
+                    workorder.qty_ready = 0
+                    continue
+            if not workorder.allow_partial_qty:
+                workorder.qty_ready = 0 if any(wo.state != 'done' for wo in workorder.blocked_by_workorder_ids) else workorder.qty_remaining
+                continue
             if workorder.state in ('cancel', 'done') or workorder.production_state == 'draft':
                 workorder.qty_ready = 0
                 continue
@@ -263,7 +278,7 @@ class MrpWorkorder(models.Model):
             for wo in workorder.blocked_by_workorder_ids:
                 if wo.state != 'cancel':
                     workorder_qty_ready = min(workorder_qty_ready, wo.qty_produced + wo.qty_reported_from_previous_wo)
-            workorder.qty_ready = workorder_qty_ready - workorder.qty_produced - workorder.qty_reported_from_previous_wo
+            workorder.qty_ready = max(workorder_qty_ready - workorder.qty_produced - workorder.qty_reported_from_previous_wo, 0)
 
     # Both `date_start` and `date_finished` are related fields on `leave_id`. Let's say
     # we slide a workorder on a gantt view, a single call to write is made with both
@@ -303,6 +318,25 @@ class MrpWorkorder(models.Model):
     def _check_no_cyclic_dependencies(self):
         if self._has_cycle('blocked_by_workorder_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))
+
+    def _check_qty_on_set_state_done(self, calling_method, caller_kwargs={}):
+        """
+        Because this method can be called from various places, we need to ensure that we know
+        where it is called from, so that we can restore the caller back on user confirmation.
+        :param str calling_method: Name of the method that called this method.
+        """
+        if self.env.context.get('skip_check_qty_on_set_state_done') or all(wo.state == 'done' or wo.product_uom_id.compare(wo.qty_remaining, 0) <= 0 or wo.product_uom_id.is_zero(wo.qty_produced) for wo in self):
+            return None
+        if not calling_method:
+            raise ValidationError(_("The calling method is not defined. This method should be called with a valid calling_method parameter."))
+        wizard = self.env['mrp.workorder.incomplete.qty'].create({'workorder_ids': self.ids, 'calling_method': calling_method, 'caller_kwargs': caller_kwargs})
+        action = self.env['ir.actions.actions']._for_xml_id('mrp.action_mrp_workorder_incomplete_qty')
+        action['res_id'] = wizard.id
+        action['context'] = self.env.context
+        return action
+
+    def _get_caller_kwargs(self, caller_locals):
+        return {k: v for k, v in caller_locals.items() if k not in ('self', 'ids_to_update')}
 
     @api.depends('production_id.name')
     def _compute_barcode(self):
@@ -707,7 +741,7 @@ class MrpWorkorder(models.Model):
             moves.picked = True
             workorder.end_all()
             vals = {
-                'qty_produced': min(workorder.qty_produced or workorder.qty_producing or workorder.qty_production, workorder.qty_production - workorder.qty_reported_from_previous_wo),
+                'qty_produced': workorder.get_fulfilled_qty_produced(),
                 'state': 'done',
                 'date_finished': date_finished,
                 'costs_hour': workorder.workcenter_id.costs_hour
@@ -904,6 +938,9 @@ class MrpWorkorder(models.Model):
         return sum(self.time_ids.mapped('duration')) + self.get_working_duration()
 
     def action_mark_as_done(self):
+        res = self._check_qty_on_set_state_done('action_mark_as_done')
+        if res:
+            return res
         for wo in self:
             if wo.working_state == 'blocked':
                 raise UserError(_('Please unblock the work center to validate the work order'))
@@ -912,6 +949,7 @@ class MrpWorkorder(models.Model):
                 ratio = wo.qty_produced / wo.qty_production
                 wo.duration = wo.duration_expected * ratio
                 wo.duration_percent = 100 * ratio
+        return True
 
     def _compute_expected_operation_cost(self, without_employee_cost=False):
         return (self.duration_expected / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
@@ -926,3 +964,12 @@ class MrpWorkorder(models.Model):
         """ This should only be called once when the MO is confirmed. """
         for workorder in self:
             workorder.cost_mode = workorder.operation_id.cost_mode or 'actual'
+
+    def get_fulfilled_qty_produced(self):
+        self.ensure_one()
+        return 1 if self.product_tracking == 'serial' else min(self.qty_produced or self.qty_producing or self.qty_production, self.qty_production - self.qty_reported_from_previous_wo)
+
+    def fulfill_empty_qty_produced(self):
+        for wo in self:
+            if wo.product_uom_id.compare(wo.qty_produced, 0) <= 0:
+                wo.qty_produced = wo.get_fulfilled_qty_produced()

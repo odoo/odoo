@@ -94,7 +94,11 @@ class MrpBom(models.Model):
     show_set_bom_button = fields.Boolean(compute="_compute_show_set_bom_button")
     batch_size = fields.Float('Batch Size', default=1.0, digits='Product Unit', help="All automatically generated manufacturing orders for this product will be of this size.")
     enable_batch_size = fields.Boolean(default=False)
-
+    workorder_partial_qty = fields.Boolean(
+        'Process Partial Quantities in Work Orders',
+        help="If active, you will be able to process partial quantities in work orders.\n"
+             "On validation, subsequent work orders will be released/blocked accordingly."
+    )
     _qty_positive = models.Constraint(
         'check (product_qty > 0)',
         'The quantity to produce must be positive!',

@@ -5,10 +5,8 @@
         <Dropdown disabled="this.props.record.data.state === 'done'">
             <div t-attf-class="d-flex {{!this.props.record.resId ? 'invisible': ''}}">
                 <t t-set="color" t-value="statusColor(this.props.record.data.state)"/>
-                <div class="d-flex align-items-center ">
-                    <span t-attf-class="fa fa-lg fa-circle text-{{color}} me-2"/>
-                </div>
                 <div>
+                    <span t-attf-class="fa fa-lg fa-circle text-{{color}} me-2"/> <!-- force .fa-lg font-size to 1.45em to == badge height, maybe also remove "vertical-align:-6%;" -->
                     <span t-attf-class="badge rounded-pill text-bg-{{color}}" t-esc="stateName(this.props.record.data.state)"/>
                 </div>
             </div>
