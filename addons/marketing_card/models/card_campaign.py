@@ -1,6 +1,8 @@
 import base64
+from markupsafe import escape
 
 from odoo import _, api, fields, models, exceptions
+from odoo.tools.sql import SQL
 
 from .card_template import TEMPLATE_DIMENSIONS
 
@@ -17,7 +19,10 @@ class CardCampaign(models.Model):
 
     def _get_model_selection(self):
         """Hardcoded list of models, checked against actually-present models."""
-        allowed_models = ['res.partner', 'event.track', 'event.booth', 'event.registration']
+        allowed_models = [
+            'event.attendee', 'event.booth', 'event.track', 'event.registration', 'event.sponsor',
+            'res.partner',
+        ]
         models = self.env['ir.model'].sudo().search_fetch([('model', 'in', allowed_models)], ['model', 'name'])
         return [(model.model, model.name) for model in models]
 
@@ -44,40 +49,40 @@ class CardCampaign(models.Model):
     post_suggestion = fields.Text(help="Description below the card and default text when sharing on X")
     preview_record_ref = fields.Reference(string="Preview On", selection="_get_model_selection", required=True)
     tag_ids = fields.Many2many('card.campaign.tag', string='Tags')
-    target_url = fields.Char(string='Post Link')
+    target_url = fields.Char(string='Post Link', compute='_compute_target_url', readonly=False, store=True)
     target_url_click_count = fields.Integer(related="link_tracker_id.count")
 
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user, domain="[('share', '=', False)]")
 
-    reward_message = fields.Html(string='Thank You Message')
+    reward_message = fields.Html(string='Thank You Message', translate=True)
     reward_target_url = fields.Char(string='Reward Link')
-    request_title = fields.Char('Request', default=lambda self: _('Help us share the news'))
-    request_description = fields.Text('Request Description')
+    request_title = fields.Char('Request', default=lambda self: _('Help us share the news'), translate=True)
+    request_description = fields.Text('Request Description', translate=True)
 
     # Static Content fields
     content_background = fields.Image('Background')
     content_button = fields.Char('Button')
 
     # Dynamic Content fields
-    content_header = fields.Char('Header')
+    content_header = fields.Char('Header', translate=True)
     content_header_dyn = fields.Boolean('Is Dynamic Header')
     content_header_path = fields.Char('Header Path')
     content_header_color = fields.Char('Header Color')
 
-    content_sub_header = fields.Char('Sub-Header')
+    content_sub_header = fields.Char('Sub-Header', translate=True)
     content_sub_header_dyn = fields.Boolean('Is Dynamic Sub-Header')
     content_sub_header_path = fields.Char('Sub-Header Path')
     content_sub_header_color = fields.Char('Sub Header Color')
 
-    content_section = fields.Char('Section')
+    content_section = fields.Char('Section', translate=True)
     content_section_dyn = fields.Boolean('Is Dynamic Section')
     content_section_path = fields.Char('Section Path')
 
-    content_sub_section1 = fields.Char('Sub-Section 1')
+    content_sub_section1 = fields.Char('Sub-Section 1', translate=True)
     content_sub_section1_dyn = fields.Boolean('Is Dynamic Sub-Section 1')
     content_sub_section1_path = fields.Char('Sub-Section 1 Path')
 
-    content_sub_section2 = fields.Char('Sub-Section 2')
+    content_sub_section2 = fields.Char('Sub-Section 2', translate=True)
     content_sub_section2_dyn = fields.Boolean('Is Dynamic Sub-Section 2')
     content_sub_section2_path = fields.Char('Sub-Section 2 Path')
 
@@ -87,18 +92,59 @@ class CardCampaign(models.Model):
 
     @api.depends('card_ids')
     def _compute_card_stats(self):
-        cards_by_status_count = self.env['card.card']._read_group(
-            domain=[('campaign_id', 'in', self.ids)],
-            groupby=['campaign_id', 'share_status'],
-            aggregates=['__count'],
-            order='campaign_id ASC',
-        )
         self.update({
             'card_count': 0,
             'card_click_count': 0,
             'card_share_count': 0,
         })
-        for campaign, status, card_count in cards_by_status_count:
+        # avoid query for empty/newid recordsets
+        if not self.ids:
+            return
+        self.flush_recordset()
+        self.env['card.card'].flush_model(['active', 'campaign_id', 'res_id', 'share_status'])
+        # if there are multiple rows with the same res_id
+        # assign a rank from 0 to 2 going from "most advanced" status to "least advanced"
+        # if a recipient has "shared" ANY of their cards and "visited" 3 others
+        # then we only count 1 card, among all those that were shared
+        ranked_cards_cte = SQL("""
+        WITH ranked_cards AS (
+            SELECT
+                card.share_status as share_status,
+                card.res_id as res_id,
+                campaign.id as campaign_id,
+                ROW_NUMBER() OVER (
+                    PARTITION BY res_id
+                        ORDER BY
+                            CASE
+                                WHEN share_status IS NULL THEN 0
+                                WHEN share_status = 'visited' THEN 1
+                                WHEN share_status = 'shared' THEN 2
+                             END
+                            DESC
+                ) as card_status_rank
+              FROM card_card card
+        INNER JOIN card_campaign campaign
+                ON card.campaign_id = campaign.id
+             WHERE
+                card.active = True
+                AND campaign.id IN %(card_campaign_ids)s
+        )
+        """, card_campaign_ids=tuple(self.ids))
+        # then pick the row with the "most advanced" status present
+        self.env.cr.execute(SQL("""
+            %(ranked_cards_cte)s
+            SELECT
+              campaign_id,
+              share_status,
+              COUNT(*) as count
+              FROM ranked_cards
+             WHERE card_status_rank = 1
+          GROUP BY campaign_id, share_status
+        """, ranked_cards_cte=ranked_cards_cte))
+        cards_by_status_count = self.env.cr.fetchall()
+
+        for campaign_id, status, card_count in cards_by_status_count:
+            campaign = self.browse(campaign_id)
             # shared cards are implicitly visited
             if status == 'shared':
                 campaign.card_share_count += card_count
@@ -158,6 +204,10 @@ class CardCampaign(models.Model):
         for campaign in self:
             preview_model = campaign.preview_record_ref and campaign.preview_record_ref._name
             campaign.res_model = preview_model or campaign.res_model or 'res.partner'
+
+    def _compute_target_url(self):
+        """Overridden in event bridge."""
+        pass
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -237,19 +287,7 @@ class CardCampaign(models.Model):
 
     def action_preview(self):
         self.ensure_one()
-        card = self.env['card.card'].with_context(active_test=False).search([
-            ('campaign_id', '=', self.id),
-            ('res_id', '=', self.preview_record_ref.id),
-        ])
-        if card:
-            card.image = self.image_preview
-        else:
-            card = self.env['card.card'].create({
-                'campaign_id': self.id,
-                'res_id': self.preview_record_ref.id,
-                'image': self.image_preview,
-                'active': False,
-            })
+        card = self._fetch_or_create_preview_card()
         return {'type': 'ir.actions.act_url', 'url': card._get_path('preview'), 'target': 'new'}
 
     def action_share(self):
@@ -262,7 +300,45 @@ class CardCampaign(models.Model):
                 'default_subject': self.name,
                 'default_card_campaign_id': self.id,
                 'default_mailing_model_id': self.env['ir.model']._get_id(self.res_model),
-                'default_body_arch': f"""
+                'default_body_arch': self._action_share_get_default_body(),
+            },
+            'views': [[False, 'form']],
+            'target': 'new',
+        }
+
+    def _fetch_or_create_preview_card(self):
+        """Fetch the card corresponding to the preview record, or create one if none exists.
+
+        The image also gets the preview render if it has none. It is also archived to ensure
+        it is rerendered later if sent.
+        """
+        self.ensure_one()
+        lang = self.env.lang or self.env.user.lang
+        card = self.env['card.card'].with_context(active_test=False).search([
+            ('campaign_id', '=', self.id),
+            ('res_id', '=', self.preview_record_ref.id),
+            ('lang', '=', lang),
+        ])
+        image = self._get_image_b64(self.preview_record_ref)
+        if card:
+            card.write({
+                'image': image,
+                'active': False,
+            })
+        else:
+            card = self.env['card.card'].create({
+                'campaign_id': self.id,
+                'res_id': self.preview_record_ref.id,
+                'image': image,
+                'lang': lang,
+                'active': False,
+            })
+        return card
+
+    def _action_share_get_default_body(self):
+        # try to pick a relevant card if users try to visit during preview/test mailings
+        preview_card = self._fetch_or_create_preview_card() if self else self.env['card.card']
+        return f"""
 <div class="o_layout oe_unremovable oe_unmovable bg-200 o_empty_theme" data-name="Mailing">
 <style id="design-element"></style>
 <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
@@ -271,10 +347,10 @@ class CardCampaign(models.Model):
 
 <div class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
     <div class="container s_allow_columns">
-        <p>Hello everyone</p>
-        <p>Here's the link to advertise your participation.
-        <br> Your help with this promotion would be greatly appreciated!`</p>
-        <p>Many thanks</p>
+        <p>{escape(_("Hello everyone"))}</p>
+        <p>{escape(_("Here's the link to advertise your participation."))}
+        <br>{escape(_("Your help with this promotion would be greatly appreciated!"))}</p>
+        <p>{escape(_("Many thanks"))}</p>
     </div>
 </div>
 
@@ -283,8 +359,8 @@ class CardCampaign(models.Model):
         <tbody>
             <tr>
                 <td align="center">
-                    <a href="/cards/{self.id}/preview" style="padding-left: 3px !important; padding-right: 3px !important">
-                        <img src="/web/image/card.campaign/{self.id}/image_preview" alt="Card Preview" class="img-fluid" style="width: 540px;"/>
+                    <a href="/cards/{preview_card.id or 0}/preview" style="padding-left: 3px !important; padding-right: 3px !important">
+                        <img src="/web/image/card.campaign/{self.id or 0}/image_preview" alt="{escape(_("Card Preview"))}" class="img-fluid" style="width: 540px;"/>
                     </a>
                 </td>
             </tr>
@@ -293,11 +369,7 @@ class CardCampaign(models.Model):
 </div>
 
 </div></div></div></div>
-""",
-            },
-            'views': [[False, 'form']],
-            'target': 'new',
-        }
+"""
 
     # ==========================================================================
     # Image generation
@@ -317,7 +389,7 @@ class CardCampaign(models.Model):
     # Card creation
     # ==========================================================================
 
-    def _update_cards(self, domain, auto_commit=False):
+    def _update_cards(self, domain, lang, auto_commit=False):
         """Create missing cards and update cards if necessary based for the domain."""
         self.ensure_one()
         TargetModel = self.env[self.res_model]
@@ -325,11 +397,12 @@ class CardCampaign(models.Model):
         cards = self.env['card.card'].with_context(active_test=False).search_fetch([
             ('campaign_id', '=', self.id),
             ('res_id', 'in', res_ids),
+            ('lang', '=', lang),
         ], ['res_id', 'requires_sync'])
         # update active and res_model for preview cards
         cards.active = True
         self.env['card.card'].create([
-            {'campaign_id': self.id, 'res_id': res_id}
+            {'campaign_id': self.id, 'res_id': res_id, 'lang': lang}
             for res_id in set(res_ids) - set(cards.mapped('res_id'))
         ])
 
@@ -339,6 +412,7 @@ class CardCampaign(models.Model):
             ('requires_sync', '=', True),
             ('campaign_id', '=', self.id),
             ('res_id', 'in', res_ids),
+            ('lang', '=', lang),
         ], ['res_id'], limit=100):
             # no need to autocommit if it can be done in one batch
             if auto_commit and updated_cards:
@@ -348,7 +422,7 @@ class CardCampaign(models.Model):
             TargetModelPrefetch = TargetModel.with_prefetch(cards.mapped('res_id'))
             for card in cards.filtered('requires_sync'):
                 card.write({
-                    'image': self._get_image_b64(TargetModelPrefetch.browse(card.res_id)),
+                    'image': self.with_context(lang=lang)._get_image_b64(TargetModelPrefetch.browse(card.res_id)),
                     'requires_sync': False,
                     'active': True,
                 })
@@ -356,8 +430,8 @@ class CardCampaign(models.Model):
             updated_cards += cards
         return updated_cards
 
-    def _get_url_from_res_id(self, res_id, suffix='preview'):
-        card = self.env['card.card'].search([('campaign_id', '=', self.id), ('res_id', '=', res_id)])
+    def _get_url_from_res_id(self, res_id, lang, suffix='preview'):
+        card = self.env['card.card'].search([('campaign_id', '=', self.id), ('res_id', '=', res_id), ('lang', '=', lang)])
         return card and card._get_path(suffix) or self.target_url
 
     # ==========================================================================
