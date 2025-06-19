@@ -45,6 +45,80 @@ class PopupOptionPlugin extends Plugin {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
 
+    getActions() {
+        return {
+            // Moves the snippet in #o_shared_blocks to be common to all pages
+            // or inside the first editable oe_structure in the main to be on
+            // current page only.
+            moveBlock: {
+                isApplied: ({ editingElement, value }) => {
+                    const iframe = document.querySelector(".o_iframe_container iframe");
+                    const iframeDoc = iframe?.contentDocument;
+                    if (!iframeDoc) return false;
+                    const popupInSharedBlocks = iframeDoc.querySelector("#o_shared_blocks .s_popup");
+                    
+                    if(value === "specificPages" && !editingElement.dataset.selectedUrls) {
+                        editingElement.dataset.selectedUrls = "[]";
+                    }
+
+                    if (popupInSharedBlocks) {
+                        if (editingElement.dataset.selectedUrls) {
+                            return value === "specificPages";
+                        } else {
+                            return value === "allPages";
+                        }
+                    } else {
+                        return value === "currentPage";
+                    }
+                },
+                apply: ({ editingElement, value }) => {
+                    let selector;
+                    if (value === "allPages" || value === "specificPages") {
+                        selector = "#o_shared_blocks";
+                    } else {
+                        selector = "main .oe_structure.o_editable";
+                    }
+                    const whereEl = this.editable.querySelector(selector);
+                    const popupEl = editingElement.closest(".s_popup");
+                    whereEl.insertAdjacentElement("afterbegin", popupEl);
+                },
+            },
+            setBackdrop: {
+                isApplied: ({ editingElement }) => {
+                    const hasBackdropColor =
+                        editingElement.style.getPropertyValue("background-color").trim() ===
+                        "var(--black-50)";
+                    const hasNoBackdropClass =
+                        editingElement.classList.contains("s_popup_no_backdrop");
+                    return hasBackdropColor && !hasNoBackdropClass;
+                },
+                apply: ({ editingElement }) => {
+                    editingElement.classList.remove("s_popup_no_backdrop");
+                    editingElement.style.setProperty(
+                        "background-color",
+                        "var(--black-50)",
+                        "important"
+                    );
+                },
+                clean: ({ editingElement }) => {
+                    editingElement.classList.add("s_popup_no_backdrop");
+                    editingElement.style.removeProperty("background-color");
+                },
+            },
+            copyAnchor: {
+                apply: ({ editingElement }) => {
+                    this.dependencies.anchor.createOrEditAnchorLink(editingElement);
+                },
+            },
+            setPopupDelay: {
+                apply: ({ editingElement, value }) => {
+                    editingElement.dataset.showAfter = value * 1000;
+                },
+                getValue: ({ editingElement }) => editingElement.dataset.showAfter / 1000,
+            },
+        };
+    }
+
     onCloned({ cloneEl }) {
         if (cloneEl.matches(".s_popup")) {
             this.assignUniqueID(cloneEl);

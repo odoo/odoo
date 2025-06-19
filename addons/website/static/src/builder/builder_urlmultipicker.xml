@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.BuilderUrlMultiPicker">
+    <div class="d-flex flex-column flex-nowrap flex-grow-1">
+    <table>
+        <tr t-foreach="selection" t-as="entry" t-key="entry.id">
+            <td>
+                <input type="text" disabled="" t-att-data-name="entry.display_name" t-att-value="entry.display_name"/>
+            </td>
+            <td>
+                <button class="mt-0 border-0 p-0 bg-transparent text-danger fa fa-fw fa-minus" t-on-click="() => this.unselect(entry.id)"/>
+            </td>
+        </tr>
+    </table>
+    <input
+        t-ref="inputRef"
+        t-att-value="state.value"
+        t-on-input="onInput"
+        placeholder="e.g. /my-awesome-page"
+    />
+    </div>
+</t>
+
+</templates>
