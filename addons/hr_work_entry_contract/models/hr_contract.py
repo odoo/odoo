@@ -100,6 +100,7 @@ class HrContract(models.Model):
             employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
         result = dict()
         for calendar, employees in employees_by_calendar.items():
+            calendar = calendar or self.env.company.resource_calendar_id
             result.update(calendar._attendance_intervals_batch(
                 start_dt,
                 end_dt,
