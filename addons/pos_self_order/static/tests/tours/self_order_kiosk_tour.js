@@ -5,6 +5,7 @@ import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirma
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 
 registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
     steps: () => [
@@ -203,5 +204,44 @@ registry.category("web_tour.tours").add("test_self_order_pricelist", {
         Utils.clickBtn("Order"),
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
+    ],
+});
+
+registry.category("web_tour.tours").add("test_self_order_kiosk_product_availability", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
+        ProductPage.clickCategory("Category 2"),
+        // Mark 'Combo Product 5' as unavailable and verify it shows as out of stock
+        Utils.setProductAvailability("Combo Product 5", false),
+        ProductPage.checkProductOutOfStock("Combo Product 5"),
+        ProductPage.clickProduct("Office Combo"),
+        ProductPage.clickComboProduct("Combo Product 4"),
+        Utils.clickBtn("Add to cart"),
+        // Make 'Office Combo' unavailable and attempt payment
+        // Expect a dialog stating the product is no longer available and user is redirected to product page
+        Utils.clickBtn("Checkout"),
+        Utils.setProductAvailability("Office Combo", false),
+        Utils.clickBtn("Order"),
+        Dialog.bodyIs(
+            "It seems that Office Combo is no longer available. Please go back and edit your order."
+        ),
+        Dialog.confirm("OK"),
+        // Add 'Combo Product 4' again and mark 'Combo Product 5' available, then unavailable after adding to cart
+        // Expect unavailable product dialog and user should remain on cart page to process remaining items
+        ProductPage.clickProduct("Combo Product 4"),
+        Utils.setProductAvailability("Combo Product 5", true),
+        ProductPage.clickProduct("Combo Product 5"),
+        Utils.clickBtn("Checkout"),
+        Utils.setProductAvailability("Combo Product 5", false),
+        Utils.clickBtn("Order"),
+        Dialog.bodyIs(
+            "It seems that Combo Product 5 is no longer available. Please go back and edit your order."
+        ),
+        Dialog.confirm("OK"),
+        Utils.clickBtn("Order"),
+        Numpad.click("3"),
+        Utils.clickBtn("Order"),
+        Utils.clickBtn("Close"),
     ],
 });
