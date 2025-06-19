@@ -462,7 +462,7 @@ class Many2one(_Relational):
         fname = field_expr
         comodel = model.env[self.comodel_name]
         sql_field = model._field_to_sql(alias, fname, query)
-        can_be_null = self not in model.env.registry.not_null_fields
+        can_be_null = fname != 'id' and self not in model.env.registry.not_null_fields
 
         if not isinstance(value, Domain):
             # value is SQL or Query
