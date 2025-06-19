@@ -4,6 +4,12 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 import { patch } from "@web/core/utils/patch";
 
 patch(PaymentScreen.prototype, {
+    onMounted() {
+        super.onMounted();
+        if (this.pos.isPeruvianCompany()) {
+            this.currentOrder.setToInvoice(true);
+        }
+    },
     async _isOrderValid(isForceValidate) {
         const res = await super._isOrderValid(...arguments);
         if (!this.pos.isPeruvianCompany() && res) {
