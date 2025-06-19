@@ -360,23 +360,22 @@ class TestChannelInternals(MailCommon, HttpCase):
 
     # `channel_get` will pin the channel by default and thus last interest will be updated.
     @users('employee')
-    def test_channel_info_get_should_update_last_interest_dt(self):
-        self.env['discuss.channel']._get_or_create_chat(partners_to=self.partner_admin.ids)
-
-        retrieve_time = datetime(2021, 1, 1, 0, 0)
-        with patch.object(fields.Datetime, 'now', lambda: retrieve_time):
-            # `last_interest_dt` should be updated again when `channel_get` is called
-            # because `channel_pin` is called.
-            channel = self.env["discuss.channel"]._get_or_create_chat(
-                partners_to=self.partner_admin.ids
-            )
+    def test_get_or_create_chat_should_update_last_interest_dt(self):
+        """Ensure last_interest_dt of the current user is updated when calling _get_or_create_chat.
+        The last_interest_dt of the channel is only updated when creating the chat initially."""
+        with freeze_time("2025-06-18 10:40:22"):
+            channel = self.env["discuss.channel"]._get_or_create_chat(self.partner_admin.ids)
+        self.assertEqual(fields.Datetime.to_string(channel.last_interest_dt), "2025-06-18 10:40:21")
         self.assertEqual(
-            fields.Datetime.to_string(
-                channel.channel_member_ids.filtered(
-                    lambda member: member.partner_id == self.env.user.partner_id
-                ).last_interest_dt
-            ),
-            fields.Datetime.to_string(retrieve_time),
+            fields.Datetime.to_string(channel.self_member_id.last_interest_dt),
+            "2025-06-18 10:40:21",
+        )
+        with freeze_time("2025-06-18 10:40:58"):
+            self.env["discuss.channel"]._get_or_create_chat(self.partner_admin.ids)
+        self.assertEqual(fields.Datetime.to_string(channel.last_interest_dt), "2025-06-18 10:40:21")
+        self.assertEqual(
+            fields.Datetime.to_string(channel.self_member_id.last_interest_dt),
+            "2025-06-18 10:40:57",
         )
 
     @users('employee')
@@ -805,10 +804,9 @@ class TestChannelInternals(MailCommon, HttpCase):
 
     @users('employee')
     def test_create_chat_channel_should_only_pin_the_channel_for_the_current_user(self):
-        chat = self.env['discuss.channel']._get_or_create_chat(partners_to=self.test_partner.ids)
-        member_of_current_user = self.env['discuss.channel.member'].search([('channel_id', '=', chat.id), ('partner_id', '=', self.env.user.partner_id.id)])
-        member_of_correspondent = self.env['discuss.channel.member'].search([('channel_id', '=', chat.id), ('partner_id', '=', self.test_partner.id)])
-        self.assertTrue(member_of_current_user.is_pinned)
+        chat = self.env["discuss.channel"]._get_or_create_chat(self.test_partner.ids)
+        member_of_correspondent = chat.channel_member_ids - chat.self_member_id
+        self.assertTrue(chat.self_member_id.is_pinned)
         self.assertFalse(member_of_correspondent.is_pinned)
 
     @users("employee")
