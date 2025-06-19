@@ -21,6 +21,11 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         Utils.checkIsDisabledBtn("Order"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        CartPage.removeLine("Coca-Cola"),
+        ProductPage.isShown(),
     ],
 });
 
