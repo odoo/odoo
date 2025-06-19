@@ -50,6 +50,10 @@ class ImageToolOptionPlugin extends Plugin {
                 selector: "span.fa, i.fa, img",
                 exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
             }),
+            {
+                template: "website.VideoMediaOption",
+                selector: ".media_iframe_video",
+            },
         ],
         builder_actions: {
             CropImageAction,
