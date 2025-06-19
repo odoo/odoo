@@ -173,6 +173,7 @@ export class CartPage extends Component {
         } else {
             this.selfOrder.removeLine(line);
         }
+        !this.lines.length && this.router.back();
     }
 
     async _changeQuantity(line, increase) {
