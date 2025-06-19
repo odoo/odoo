@@ -7,41 +7,33 @@ import { useBus, useService } from "@web/core/utils/hooks";
 export class UploadButton extends Component {
     static template = "product.UploadButton";
     static props = {
-        formData: { type: Object, optional: true},
+        formData: { type: Object, optional: true },
         // See https://www.iana.org/assignments/media-types/media-types.xhtml
-        allowedMIMETypes: { type: String, optional: true},
+        allowedMIMETypes: { type: String, optional: true },
         load: Function,
         uploadRoute: String,
-    }
+    };
     static defaultProps = {
         formData: {},
-    }
+    };
 
     setup() {
         this.uploadFileInputRef = useRef("uploadFileInput");
         this.fileUploadService = useService("file_upload");
-        this.notification = useService('notification');
-        useBus(
-            this.fileUploadService.bus,
-            "FILE_UPLOAD_LOADED",
-            async () => {
-                await this.props.load();
-            },
-        );
+        this.notification = useService("notification");
+        useBus(this.fileUploadService.bus, "FILE_UPLOAD_LOADED", async () => {
+            await this.props.load();
+        });
     }
 
     async onFileInputChange(ev) {
-        const files = [...ev.target.files].filter(file => this.validFileType(file));
+        const files = [...ev.target.files].filter((file) => this.validFileType(file));
         if (!files.length) {
             return;
         }
-        await this.fileUploadService.upload(
-            this.props.uploadRoute,
-            files,
-            {
-                buildFormData: (formData) => this.buildFormData(formData)
-            },
-        );
+        await this.fileUploadService.upload(this.props.uploadRoute, files, {
+            buildFormData: (formData) => this.buildFormData(formData),
+        });
         // Reset the file input's value so that the same file may be uploaded twice.
         ev.target.value = "";
     }
@@ -56,17 +48,29 @@ export class UploadButton extends Component {
      */
     validFileType(file) {
         if (this.props.allowedMIMETypes && !this.props.allowedMIMETypes.includes(file.type)) {
-            this.notification.add(
-                _t(`Oops! '%(fileName)s' didn’t upload since its format isn’t allowed.`, {
+            this._notifyFileNotValid(
+                _t("Oops! '%(fileName)s' didn’t upload since its format isn’t allowed.", {
                     fileName: file.name,
-                }),
-                {
-                    type: "danger",
-                }
+                })
+            );
+            return false;
+        } else if (!file.size) {
+            this._notifyFileNotValid(
+                _t("Oops! '%(fileName)s' didn’t upload since it is empty.", {
+                    fileName: file.name,
+                })
             );
             return false;
         }
         return true;
+    }
+
+    /**
+     * Displays a "danger" notification with a translated message including the file name.
+     * @param {string} message - The message template to display (e.g., "Oops! '%(fileName)s' didn’t upload...").
+     */
+    _notifyFileNotValid(message) {
+        this.notification.add(message, { type: "danger" });
     }
 
     buildFormData(formData) {
@@ -74,5 +78,4 @@ export class UploadButton extends Component {
             formData.append(key, value);
         }
     }
-
 }
