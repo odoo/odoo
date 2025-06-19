@@ -1,4 +1,5 @@
 import { reactive } from "@odoo/owl";
+import { memoize } from "@web/core/utils/functions";
 import { rpc } from "@web/core/network/rpc";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
@@ -191,3 +192,29 @@ export function convertToEmbedURL(url) {
     }
     return { url: null, provider: null };
 }
+
+/**
+ * Checks if the browser supports hardware acceleration for video processing.
+ *
+ * @returns {boolean} True if hardware acceleration is supported, false otherwise.
+ */
+export const hasHardwareAcceleration = memoize(() => {
+    const canvas = document.createElement("canvas");
+    const gl =
+        canvas.getContext("webgl2") ||
+        canvas.getContext("webgl") ||
+        canvas.getContext("experimental-webgl");
+    if (!gl) {
+        // WebGL support is typically required for hardware acceleration.
+        return false;
+    }
+    const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+    if (debugInfo) {
+        const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+        if (/swiftshader|llvmpipe|software/i.test(renderer)) {
+            // These renderers indicate software-based rendering instead of hardware acceleration.
+            return false;
+        }
+    }
+    return true;
+});

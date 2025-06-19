@@ -1,3 +1,4 @@
+import { hasHardwareAcceleration } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { fields, Record } from "./record";
@@ -77,6 +78,15 @@ export class Settings extends Record {
     edgeBlurAmount = 10;
     showOnlyVideo = false;
     useBlur = false;
+    blurPerformanceWarning = fields.Attr(false, {
+        compute() {
+            const rtc = this.store.rtc;
+            if (!rtc || !this.useBlur) {
+                return false;
+            }
+            return this.useBlur && rtc.state?.cameraTrack && !hasHardwareAcceleration();
+        },
+    });
 
     logRtc = false;
     /**
