@@ -213,11 +213,16 @@ def get_identifier():
     # On windows, get motherboard's uuid (serial number isn't reliable as it's not always present)
     command = ['powershell', '-Command', "(Get-CimInstance Win32_ComputerSystemProduct).UUID"]
     p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
-    if p.returncode != 0:
-        _logger.error("Failed to get Windows IoT serial number")
-        return False
+    identifier = get_conf('generated_identifier')  # Fallback identifier if windows does not return mb UUID
+    if p.returncode == 0 and p.stdout.decode().strip():
+        return p.stdout.decode().strip()
 
-    return p.stdout.decode().strip() or False
+    _logger.error("Failed to get Windows IoT serial number, defaulting to a random identifier")
+    if not identifier:
+        identifier = secrets.token_hex()
+        update_conf({'generated_identifier': identifier})
+
+    return identifier
 
 
 def get_path_nginx():
