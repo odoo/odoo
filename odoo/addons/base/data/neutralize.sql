@@ -18,7 +18,17 @@ UPDATE ir_cron
 );
 
 -- neutralization flag for the database
-INSERT INTO ir_config_parameter (key, value)
-VALUES ('database.is_neutralized', true)
-    ON CONFLICT (key) DO
-       UPDATE SET value = true;
+DO $$
+BEGIN
+   IF NOT EXISTS (
+       SELECT 1 FROM ir_config_parameter
+       WHERE key = 'database.is_neutralized'
+   ) THEN
+      INSERT INTO ir_config_parameter (key, value)
+      VALUES ('database.is_neutralized', 'true');
+   ELSE
+      UPDATE ir_config_parameter
+      SET value = 'true'
+      WHERE key = 'database.is_neutralized';
+   END IF;
+END $$;
