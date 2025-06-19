@@ -57,7 +57,9 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).button_draft()
 
         # Unlink the COGS lines generated during the 'post' method.
-        self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
+        cogs_lines = self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs')
+        cogs_lines.remove_move_reconcile()
+        cogs_lines.unlink()
         return res
 
     def button_cancel(self):
