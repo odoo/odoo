@@ -98,12 +98,13 @@ const [
     REPLACE_MEDIA,
     FONT_AWESOME,
     IMAGE_TOOL,
+    POPUP_IMAGE,
     ALIGNMENT_STYLE_PADDING,
     DYNAMIC_SVG,
     AFTER_HTML_BUILDER,
     SNIPPET_SPECIFIC_BEFORE,
     ...__DETECT_ERROR_1__
-] = splitBetween(BEGIN, SNIPPET_SPECIFIC, 7);
+] = splitBetween(BEGIN, SNIPPET_SPECIFIC, 8);
 if (__DETECT_ERROR_1__.length > 0) {
     console.error("Wrong count in split before default");
 }
@@ -119,6 +120,7 @@ export {
     REPLACE_MEDIA,
     FONT_AWESOME,
     IMAGE_TOOL,
+    POPUP_IMAGE,
     ALIGNMENT_STYLE_PADDING,
     DYNAMIC_SVG,
     AFTER_HTML_BUILDER,

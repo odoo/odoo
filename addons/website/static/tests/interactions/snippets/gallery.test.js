@@ -18,16 +18,16 @@ const defaultGallery = `
             <div class="container">
                 <div class="row s_nb_column_fixed">
                     <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
-                        <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_03" data-index="0" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="204" data-original-src="/website/static/src/img/library/library_image_03.jpg" data-mimetype-before-conversion="image/jpeg"/>
-                        <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_10" data-index="3" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="211" data-original-src="/website/static/src/img/library/library_image_10.jpg" data-mimetype-before-conversion="image/jpeg"/>
+                        <img class="img img-fluid d-block rounded o_image_popup" src="/web/image/website.library_image_03" data-index="0" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="204" data-original-src="/website/static/src/img/library/library_image_03.jpg" data-mimetype-before-conversion="image/jpeg"/>
+                        <img class="img img-fluid d-block rounded o_image_popup" src="/web/image/website.library_image_10" data-index="3" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="211" data-original-src="/website/static/src/img/library/library_image_10.jpg" data-mimetype-before-conversion="image/jpeg"/>
                     </div>
                     <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
-                        <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_13" data-index="1" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="214" data-original-src="/website/static/src/img/library/library_image_13.jpg" data-mimetype-before-conversion="image/jpeg"/>
-                        <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_05" data-index="4" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="206" data-original-src="/website/static/src/img/library/library_image_05.jpg" data-mimetype-before-conversion="image/jpeg"/>
+                        <img class="img img-fluid d-block rounded o_image_popup" src="/web/image/website.library_image_13" data-index="1" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="214" data-original-src="/website/static/src/img/library/library_image_13.jpg" data-mimetype-before-conversion="image/jpeg"/>
+                        <img class="img img-fluid d-block rounded o_image_popup" src="/web/image/website.library_image_05" data-index="4" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="206" data-original-src="/website/static/src/img/library/library_image_05.jpg" data-mimetype-before-conversion="image/jpeg"/>
                     </div>
                     <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
-                        <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_14" data-index="2" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="215" data-original-src="/website/static/src/img/library/library_image_14.jpg" data-mimetype-before-conversion="image/jpeg"/>
-                        <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_16" data-index="5" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="217" data-original-src="/website/static/src/img/library/library_image_16.jpg" data-mimetype-before-conversion="image/jpeg"/>
+                        <img class="img img-fluid d-block rounded o_image_popup" src="/web/image/website.library_image_14" data-index="2" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="215" data-original-src="/website/static/src/img/library/library_image_14.jpg" data-mimetype-before-conversion="image/jpeg"/>
+                        <img class="img img-fluid d-block rounded o_image_popup" src="/web/image/website.library_image_16" data-index="5" data-name="Image" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="217" data-original-src="/website/static/src/img/library/library_image_16.jpg" data-mimetype-before-conversion="image/jpeg"/>
                     </div>
                 </div>
             </div>
@@ -35,19 +35,10 @@ const defaultGallery = `
     </div>
 `;
 
-test("gallery does nothing if there is no non-slideshow s_image_gallery", async () => {
-    const { core } = await startInteractions(`
-        <div id="wrapwrap">
-            <section class="s_image_gallery o_slideshow"/>
-        </div>
-    `);
-    expect(core.interactions).toHaveLength(0);
-});
-
 async function checkLightbox({ next, previous, close }) {
     const { core } = await startInteractions(defaultGallery);
     expect(core.interactions).toHaveLength(1);
-    const imgEls = queryAll("img");
+    const imgEls = queryAll("img.o_image_popup");
     await click(imgEls[3]);
     await animationFrame();
     await advanceTime(1000);
