@@ -724,3 +724,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_editing_awaits_navigation(self):
         self.start_tour("/", "website_editing_awaits_navigation", login="admin")
+
+    def test_website_link_popover_preview(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_link_popover_preview', login='admin')

@@ -66,6 +66,7 @@ registerWebsitePreviewTour('edit_link_popover', {
         content: "Popover should be shown for home",
         trigger: ".o-we-linkpopover .o_we_url_link:contains('Home')",
     },
+    clickEditLink,
     {
         content: "Click on Remove Link in Popover",
         trigger: ".o-we-linkpopover .o_we_remove_link",

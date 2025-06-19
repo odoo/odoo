@@ -587,6 +587,7 @@ export class LinkPlugin extends Plugin {
         this.restoreSavePoint = this.dependencies.history.makeSavePoint();
         const props = {
             document: this.document,
+            containerElement: selection.anchorNode.parentElement,
             linkElement,
             isImage: isImage,
             onApply: (...args) => {
@@ -863,6 +864,7 @@ export class LinkPlugin extends Plugin {
         }
         cursors.restore();
         this.linkInDocument = null;
+        this.dependencies.selection.focusEditable();
         this.dependencies.history.addStep();
     }
 
