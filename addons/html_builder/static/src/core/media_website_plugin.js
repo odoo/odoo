@@ -29,6 +29,7 @@ export class MediaWebsitePlugin extends Plugin {
                 commandId: "websiteVideo",
             },
         ],
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
 
     setup() {
@@ -72,5 +73,31 @@ export class MediaWebsitePlugin extends Plugin {
         const editableEl =
             closestElement(params.node || sel.startContainer, ".o_editable") || this.editable;
         this.dependencies.media.openMediaDialog(params, editableEl);
+    }
+
+    async onSnippetDropped({ snippetEl }) {
+        if (!snippetEl.matches(".s_video")) {
+            return;
+        }
+
+        let isVideoSelected = false;
+        await new Promise((resolve) => {
+            const onClose = this.dependencies.media.openMediaDialog({
+                noImages: true,
+                noIcons: true,
+                noVideos: false,
+                extraTabs: [],
+                node: snippetEl,
+                save: async (selectedVideoEl) => {
+                    isVideoSelected = true;
+                    snippetEl.replaceWith(selectedVideoEl);
+                },
+            });
+            onClose.then(() => {
+                resolve();
+            });
+        });
+
+        return !isVideoSelected;
     }
 }

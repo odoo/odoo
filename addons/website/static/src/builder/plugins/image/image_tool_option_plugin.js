@@ -17,7 +17,7 @@ import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media
 import { computeMaxDisplayWidth } from "./image_format_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
+export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa, .o_file_box";
 export const REPLACE_MEDIA_EXCLUDE =
     "[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa";
 
@@ -63,11 +63,12 @@ class ImageToolOptionPlugin extends Plugin {
             AltAction,
         },
         on_media_dialog_saved_handlers: async (elements, { node }) => {
-            for (const image of elements) {
-                if (image && image.tagName === "IMG") {
+
+            for (const element of elements) {
+                if (element && element.tagName === "IMG") {
                     const updateImageAttributes =
                         await this.dependencies.imagePostProcess.processImage({
-                            img: image,
+                            img: element,
                             newDataset: {
                                 formatMimetype: "image/webp",
                             },
@@ -81,7 +82,7 @@ class ImageToolOptionPlugin extends Plugin {
                                 }
                                 const original = await loadImage(dataset.originalSrc);
                                 const maxWidth = dataset.width
-                                    ? image.naturalWidth
+                                    ? element.naturalWidth
                                     : original.naturalWidth;
                                 const optimizedWidth = Math.min(
                                     maxWidth,
@@ -105,6 +106,24 @@ class ImageToolOptionPlugin extends Plugin {
                             },
                         });
                     updateImageAttributes();
+                }
+                if (
+                    element.classList.contains("o_image") &&
+                    element.querySelectorAll("img").length === 0
+                ) {
+                    element.classList.remove("o_image");
+                }
+                if (
+                    element.classList.contains("o_file_box") &&
+                    element.querySelectorAll(".o_file_image").length === 0
+                ) {
+                    element.classList.remove("o_file_box");
+                }
+                if (
+                    element.classList.contains("s_video") &&
+                    element.querySelectorAll("iframe").length === 0
+                ) {
+                    element.classList.remove("s_video");
                 }
             }
         },

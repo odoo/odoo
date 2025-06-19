@@ -19,7 +19,10 @@ class ImageSnippetOptionPlugin extends Plugin {
         let isImageSelected = false;
         await new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
-                onlyImages: true,
+                noImages: false,
+                noIcons: false,
+                noVideos: true,
+                extraTabs: [],
                 node: snippetEl,
                 save: async (selectedImageEl) => {
                     isImageSelected = true;
