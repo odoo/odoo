@@ -6,8 +6,10 @@ import { touching, isVisible } from "@web/core/utils/ui";
 export class BottomFixedElement extends Interaction {
     static selector = "#wrapwrap";
     dynamicContent = {
-        _document: { "t-on-scroll": this.hideBottomFixedElements },
-        _window: { "t-on-resize": this.hideBottomFixedElements },
+        _window: {
+            "t-on-resize": this.hideBottomFixedElements,
+            "t-on-scroll": this.hideBottomFixedElements,
+        },
     }
 
     destroy() {
