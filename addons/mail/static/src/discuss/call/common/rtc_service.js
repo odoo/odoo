@@ -626,12 +626,12 @@ export class Rtc extends Record {
         }
     }
 
-    async deafen() {
+    deafen() {
         if (this.isRemote) {
             this._remoteAction({ is_deaf: true });
             return;
         }
-        await this.setDeaf(true);
+        this.setDeaf(true);
         this.soundEffectsService.play("earphone-off");
     }
 
@@ -670,12 +670,12 @@ export class Rtc extends Record {
         });
     }
 
-    async mute() {
+    mute() {
         if (this.isRemote) {
             this._remoteAction({ is_muted: true });
             return;
         }
-        await this.setMute(true);
+        this.setMute(true);
         this.soundEffectsService.play("mic-off");
     }
 
@@ -713,12 +713,12 @@ export class Rtc extends Record {
 
     async toggleDeafen() {
         if (this.selfSession.is_deaf) {
-            await this.undeafen();
+            this.undeafen();
             if (this.selfSession.is_muted) {
                 await this.unmute();
             }
         } else {
-            await this.deafen();
+            this.deafen();
         }
     }
 
@@ -728,19 +728,19 @@ export class Rtc extends Record {
                 await this.unmute();
             }
             if (this.selfSession.is_deaf) {
-                await this.undeafen();
+                this.undeafen();
             }
         } else {
-            await this.mute();
+            this.mute();
         }
     }
 
-    async undeafen() {
+    undeafen() {
         if (this.isRemote) {
             this._remoteAction({ is_deaf: false });
             return;
         }
-        await this.setDeaf(false);
+        this.setDeaf(false);
         this.soundEffectsService.play("earphone-on");
     }
 
@@ -750,7 +750,7 @@ export class Rtc extends Record {
             return;
         }
         if (this.state.micAudioTrack) {
-            await this.setMute(false);
+            this.setMute(false);
         } else {
             await this.resetMicAudioTrack({ force: true });
         }
@@ -984,13 +984,13 @@ export class Rtc extends Record {
                     if (value === this.localSession.is_muted) {
                         break;
                     }
-                    promises.push(value ? this.mute() : this.unmute());
+                    value ? this.mute() : promises.push(this.unmute());
                     break;
                 case "is_deaf":
                     if (value === this.localSession.is_deaf) {
                         break;
                     }
-                    value ? promises.push(this.deafen()) : promises.push(this.undeafen());
+                    value ? this.deafen() : this.undeafen();
                     break;
                 case "raisingHand":
                     if (value === Boolean(this.localSession.raisingHand)) {
@@ -1592,7 +1592,7 @@ export class Rtc extends Record {
     /**
      * @param {Boolean} is_deaf
      */
-    async setDeaf(is_deaf) {
+    setDeaf(is_deaf) {
         this.updateAndBroadcast({ is_deaf });
         for (const session of this.state.channel.rtc_session_ids) {
             if (!session.audioElement) {
@@ -1600,15 +1600,15 @@ export class Rtc extends Record {
             }
             session.audioElement.muted = is_deaf;
         }
-        await this.refreshMicAudioStatus();
+        this.refreshMicAudioStatus();
     }
 
     /**
      * @param {Boolean} is_muted
      */
-    async setMute(is_muted) {
+    setMute(is_muted) {
         this.updateAndBroadcast({ is_muted });
-        await this.refreshMicAudioStatus();
+        this.refreshMicAudioStatus();
     }
 
     /**
@@ -1636,7 +1636,7 @@ export class Rtc extends Record {
         this.localSession.isTalking = isTalking;
         if (!this.localSession.isMute) {
             this.pttExtService.notifyIsTalking(isTalking);
-            await this.refreshMicAudioStatus();
+            this.refreshMicAudioStatus();
         }
     }
 
@@ -1726,7 +1726,7 @@ export class Rtc extends Record {
      * Sets the enabled property of the local microphone audio track based on the
      * current session state. And notifies peers of the new audio state.
      */
-    async refreshMicAudioStatus() {
+    refreshMicAudioStatus() {
         if (!this.state.micAudioTrack) {
             return;
         }
@@ -1914,6 +1914,7 @@ export class Rtc extends Record {
                 this.setMute(true);
             });
             micAudioTrack.enabled = !this.localSession.isMute && this.localSession.isTalking;
+            this.state.micAudioTrack?.stop();
             this.state.micAudioTrack = micAudioTrack;
             this.linkVoiceActivationDebounce();
             this.updateAudioTrack();
@@ -1935,7 +1936,7 @@ export class Rtc extends Record {
             !this.state.micAudioTrack
         ) {
             this.localSession.isTalking = false;
-            await this.refreshMicAudioStatus();
+            this.refreshMicAudioStatus();
             return;
         }
         try {
@@ -1956,7 +1957,7 @@ export class Rtc extends Record {
             });
             this.localSession.isTalking = true;
         }
-        await this.refreshMicAudioStatus();
+        this.refreshMicAudioStatus();
     }
 
     /**
