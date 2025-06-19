@@ -17,7 +17,6 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     date = fields.Date(string='Expiration Date')
     alias_name = fields.Char(string="Alias Name")
     alias_domain_id = fields.Many2one("mail.alias.domain", string="Alias Domain")
-    partner_id = fields.Many2one("res.partner")
     template_id = fields.Many2one("project.project", default=lambda self: self._context.get('template_id'))
     role_to_users_ids = fields.One2many('project.template.role.to.users.map', 'wizard_id', default=_default_role_to_users_ids)
 
@@ -25,7 +24,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
         """
         Whitelist of fields of this wizard that will be used when creating a project from a template.
         """
-        return ["name", "date_start", "date", "alias_name", "alias_domain_id", "partner_id"]
+        return ["name", "date_start", "date", "alias_name", "alias_domain_id"]
 
     def _create_project_from_template(self):
         # Dictionary with all whitelist fields and their values
@@ -52,9 +51,12 @@ class ProjectTemplateCreateWizard(models.TransientModel):
             'view_mode': 'form',
             'views': [(view.id, 'form')],
             'res_model': 'project.template.create.wizard',
-            'res_id': self.id,
             'target': 'new',
-            'context': self.env.context,
+            'context': {
+                key: value
+                for key, value in self.env.context.items()
+                if not key.startswith('default_')
+            },
         }
 
 
