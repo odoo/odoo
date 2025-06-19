@@ -789,6 +789,7 @@ export class LinkPlugin extends Plugin {
         }
         cursors.restore();
         this.linkInDocument = null;
+        this.dependencies.selection.focusEditable();
         this.dependencies.history.addStep();
     }
 
