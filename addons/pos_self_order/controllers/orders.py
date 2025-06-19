@@ -55,6 +55,7 @@ class PosSelfOrderController(http.Controller):
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })
+        order_ids._notify_new_self_order()
 
         return self._generate_return_values(order_ids, pos_config)
 
