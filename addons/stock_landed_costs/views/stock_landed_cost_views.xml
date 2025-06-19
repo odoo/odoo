@@ -44,7 +44,8 @@
                                 <field name="account_journal_id" nolabel="1" readonly="state == 'done'"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="account_move_id" invisible="not account_move_id"/>
-                                <field name="vendor_bill_id"/>
+                                <field name="vendor_bill_id" options="{'no_quick_create': True}"
+                                       context="{'default_move_type': 'in_invoice', 'input_full_display_name': True}"/>
                             </group>
                         </group>
                         <notebook>

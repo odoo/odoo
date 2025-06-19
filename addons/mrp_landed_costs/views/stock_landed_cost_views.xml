@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <field name="target_model" position="attributes">
                 <attribute name="invisible">0</attribute>
-                <attribute name="groups">stock.group_stock_manager</attribute>
+                <attribute name="groups">stock.group_stock_manager,mrp.group_mrp_manager,account.group_account_user</attribute>
             </field>
             <field name="picking_ids" position="after">
                 <field name="target_model" invisible="1" readonly="state == 'done'"/>
@@ -15,6 +15,7 @@
                     widget="many2many_tags" options="{'no_create_edit': True}"
                     invisible="target_model != 'manufacturing'"
                     readonly="state == 'done'"
+                    groups="stock.group_stock_manager,mrp.group_mrp_manager,account.group_account_user"
                     domain="[('company_id', '=', company_id), ('move_finished_ids.stock_valuation_layer_ids', '!=', False)]"/>
             </field>
         </field>
