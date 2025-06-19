@@ -149,10 +149,10 @@ export function checkLegend(view, expectedLabels) {
 /**
  * @param {GraphView} view
  */
-export async function clickOnDataset(view) {
+export async function clickOnDataset(view, options = {}) {
     const chart = getChart(view);
     const point = chart.getDatasetMeta(0).data[0].getCenterPoint();
-    return contains(chart.canvas).click({ position: point, relative: true });
+    return contains(chart.canvas).click({ position: point, relative: true, ...options });
 }
 
 /**

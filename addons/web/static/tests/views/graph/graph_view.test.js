@@ -1853,7 +1853,7 @@ test("clicking on bar charts triggers a do_action", async () => {
                     [false, "form"],
                 ],
             });
-            expect(options).toEqual({ viewType: "list" });
+            expect(options).toEqual({ newWindow: false, viewType: "list" });
         },
     });
 
@@ -1875,6 +1875,45 @@ test("clicking on bar charts triggers a do_action", async () => {
     await clickOnDataset(view);
 });
 
+test("middle click on bar charts triggers a do_action", async () => {
+    expect.assertions(6);
+
+    mockService("action", {
+        doAction(actionRequest, options) {
+            expect(actionRequest).toEqual({
+                context: { allowed_company_ids: [1], lang: "en", tz: "taht", uid: 7 },
+                domain: [["bar", "=", false]],
+                name: "Foo Analysis",
+                res_model: "foo",
+                target: "current",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            });
+            expect(options).toEqual({ newWindow: true, viewType: "list" });
+        },
+    });
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph string="Foo Analysis">
+                <field name="bar" />
+            </graph>
+        `,
+    });
+
+    checkModeIs(view, "bar");
+    checkDatasets(view, ["domains"], {
+        domains: [[["bar", "=", false]], [["bar", "=", true]]],
+    });
+
+    await clickOnDataset(view, { ctrlKey: true });
+});
+
 test("Clicking on bar charts removes group_by and search_default_* context keys", async () => {
     expect.assertions(2);
 
@@ -1892,7 +1931,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
                     [false, "form"],
                 ],
             });
-            expect(options).toEqual({ viewType: "list" });
+            expect(options).toEqual({ newWindow: false, viewType: "list" });
         },
     });
 
@@ -1933,7 +1972,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
                     [29, "form"],
                 ],
             });
-            expect(options).toEqual({ viewType: "list" });
+            expect(options).toEqual({ newWindow: false, viewType: "list" });
         },
     });
 
@@ -1959,6 +1998,54 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
     });
 
     await clickOnDataset(view);
+});
+
+test("middle click on a pie chart trigger a do_action with correct views", async () => {
+    expect.assertions(6);
+
+    Foo._views[["list", 364]] = /* xml */ `<list />`;
+    Foo._views[["form", 29]] = /* xml */ `<form />`;
+
+    mockService("action", {
+        doAction(actionRequest, options) {
+            expect(actionRequest).toEqual({
+                context: { allowed_company_ids: [1], lang: "en", tz: "taht", uid: 7 },
+                domain: [["bar", "=", false]],
+                name: "Foo Analysis",
+                res_model: "foo",
+                target: "current",
+                type: "ir.actions.act_window",
+                views: [
+                    [364, "list"],
+                    [29, "form"],
+                ],
+            });
+            expect(options).toEqual({ newWindow: true, viewType: "list" });
+        },
+    });
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph string="Foo Analysis" type="pie">
+                <field name="bar" />
+            </graph>
+        `,
+        config: {
+            views: [
+                [364, "list"],
+                [29, "form"],
+            ],
+        },
+    });
+
+    checkModeIs(view, "pie");
+    checkDatasets(view, ["domains"], {
+        domains: [[["bar", "=", false]], [["bar", "=", true]]],
+    });
+
+    await clickOnDataset(view, { ctrlKey: true });
 });
 
 test('graph view with attribute disable_linking="1"', async () => {
