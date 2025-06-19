@@ -19,6 +19,7 @@
 # tomerlayline, 2024
 # yael terner, 2024
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
+# Yoram Lavi, 2025
 # or balmas, 2025
 # 
 msgid ""
@@ -405,7 +406,7 @@ msgstr "קופון/כרטיס מועדון חייב להיות בעל קוד י�
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "A program must have at least one reward."
-msgstr "תוכנית חייבת להחיל לפחות תגמול אחד."
+msgstr "תוכנית חייבת להחיל לפחות הטבה אחת."
 
 #. module: loyalty
 #. odoo-python
@@ -450,7 +451,7 @@ msgstr "הוסף"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a reward"
-msgstr "הוסף תגמול"
+msgstr "הוסף הטבה"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -611,7 +612,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Communications"
-msgstr ""
+msgstr "דיוור"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__company_id
@@ -1316,7 +1317,7 @@ msgstr "מועדון לקוחות"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_reward
 msgid "Loyalty Reward"
-msgstr "הטבת חברת מועדון"
+msgstr "הטבת חבר מועדון"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_rule
@@ -1614,7 +1615,7 @@ msgstr "דירוגים"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_amount
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Reward"
-msgstr "תגמול"
+msgstr "הטבה"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_mode
@@ -1639,7 +1640,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_ids
 msgid "Reward Products"
-msgstr "מוצרי תגמולים"
+msgstr "מוצרי הטבות"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_type
@@ -1780,12 +1781,12 @@ msgstr "כמות הנקודות הדרושה לקבלת תגמול חייבת ל
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "The reward description field cannot be empty."
-msgstr "שדה תיאור התגמול לא יכול להיות ריק."
+msgstr "שדה תיאור ההטבה לא יכול להיות ריק."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
 msgid "The reward product quantity must be strictly positive."
-msgstr "כמות מוצר התגמול חייבת להיות מספר חיובי."
+msgstr "כמות מוצר ההטבה חייבת להיות מספר חיובי."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_from
@@ -1894,8 +1895,8 @@ msgid ""
 "When customers make an order, they accumulate points they can exchange for "
 "rewards on the current order or on a future one."
 msgstr ""
-"כאשר הלקוחות מבצעים הזמנה, הם צוברים נקודות שניתן להחליף אותן בתגמולים "
-"בהזמנה הנוכחית או בהזמנה עתידית."
+"כאשר הלקוחות מבצעים הזמנה, הם צוברים נקודות שניתן להחליף אותן בהטבות  בהזמנה"
+" הנוכחית או בהזמנה עתידית."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1903,8 +1904,7 @@ msgid ""
 "When generating coupon, you can define a specific points value that can be "
 "exchanged for rewards."
 msgstr ""
-"כאשר מייצרים קופון, ניתן להגדיר ערך נקודות ספציפי שניתן יהיה להחליף "
-"בתגמולים."
+"כאשר מייצרים קופון, ניתן להגדיר ערך נקודות ספציפי שניתן יהיה להחליף בהטבות."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
