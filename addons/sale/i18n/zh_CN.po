@@ -5592,7 +5592,7 @@ msgid ""
 "'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and '形式发票'"
-" 或 '订单'}} (Ref {{ object.name or 'n/a' }})"
+" or '订单'}} (编号：{{ object.name or '不适用' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale

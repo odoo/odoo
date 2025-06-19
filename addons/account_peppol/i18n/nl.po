@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
-# Manon Rondou, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,6 +209,11 @@ msgid ""
 "content (e.g. some part has not been acknowledged, or the digest associated "
 "does not match the signature digest, for NRR)."
 msgstr ""
+"Er is een ontvangstbevestiging ontvangen voor een eerder door de MSH "
+"verzonden bericht, maar de inhoud komt niet overeen met de oorspronkelijke "
+"berichtinhoud. Deze fout treedt bijvoorbeeld op wanneer een deel van het "
+"bericht niet is bevestigd, of wanneer de digest niet overeenkomt met de "
+"digest van de handtekening (bij NRR)."
 
 #. module: account_peppol
 #. odoo-python
@@ -217,6 +222,8 @@ msgid ""
 "A Receipt has not been received  for a message that was previously sent by "
 "the MSH generating this error."
 msgstr ""
+"Er is geen ontvangstbevestiging ontvangen voor een eerder door de MSH "
+"verzonden bericht, wat deze fout veroorzaakt."
 
 #. module: account_peppol
 #. odoo-python
@@ -225,6 +232,8 @@ msgid ""
 "A fragment is received but a previously received fragment message had the "
 "same values for GroupId and FragmentNum"
 msgstr ""
+"Er is een fragment ontvangen waarvan de GroupId en FragmentNum gelijk zijn "
+"aan die van een eerder ontvangen fragment."
 
 #. module: account_peppol
 #. odoo-python
@@ -233,6 +242,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
 msgstr ""
+"Er is een fragment ontvangen, maar meer dan één fragment in dezelfde groep "
+"specificeert een waarde voor een compressie-element."
 
 #. module: account_peppol
 #. odoo-python
@@ -241,6 +252,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
 msgstr ""
+"Er is een fragment ontvangen, maar meerdere fragmenten in dezelfde groep "
+"specificeren een waarde voor dit element."
 
 #. module: account_peppol
 #. odoo-python
@@ -248,6 +261,8 @@ msgstr ""
 msgid ""
 "A fragment is received that relates to a group that was previously rejected."
 msgstr ""
+"Er is een fragment ontvangen dat deel uitmaakt van een groep die eerder werd"
+" afgewezen."
 
 #. module: account_peppol
 #. odoo-python
@@ -256,6 +271,8 @@ msgid ""
 "A message unit in a bundle was not processed because a related message unit "
 "in the bundle caused an error."
 msgstr ""
+"Een berichtonderdeel in een bundel is niet verwerkt omdat een gerelateerd "
+"onderdeel in dezelfde bundel een fout heeft veroorzaakt."
 
 #. module: account_peppol
 #. odoo-python
@@ -264,6 +281,9 @@ msgid ""
 "A participant with these details has already been registered on the network."
 " If you have previously registered to a Peppol service, please deregister."
 msgstr ""
+"Een deelnemer met deze gegevens is al geregistreerd op het netwerk. Als je "
+"je eerder hebt geregistreerd bij een Peppol-dienst, schrijf je dan eerst "
+"uit."
 
 #. module: account_peppol
 #. odoo-python
@@ -279,6 +299,8 @@ msgid ""
 "A responding MSH indicates that it applies the alternate MEP binding to the "
 "response message."
 msgstr ""
+"Een reagerende MSH geeft aan dat het de alternatieve MEP-binding toepast op "
+"het antwoordbericht."
 
 #. module: account_peppol
 #. odoo-python
@@ -287,6 +309,8 @@ msgid ""
 "A value is set for FragmentCount, but a previously received fragment had a "
 "greature value."
 msgstr ""
+"Er is een waarde ingesteld voor FragmentCount, maar een eerder ontvangen "
+"fragment had een hogere waarde."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -369,6 +393,9 @@ msgid ""
 "element/attribute contains a value that could not be recognized and "
 "therefore could not be used by the MSH."
 msgstr ""
+"Hoewel het berichtdocument correct is opgebouwd en schema-geldig is, bevat "
+"een element of attribuut een waarde die niet wordt herkend en daarom niet "
+"door de MSH kan worden gebruikt."
 
 #. module: account_peppol
 #. odoo-python
@@ -378,6 +405,9 @@ msgid ""
 "element/attribute value cannot be processed as expected because the related "
 "feature is not supported by the MSH."
 msgstr ""
+"Hoewel het berichtdocument correct is opgebouwd en schema-geldig is, kan een"
+" element- of attribuutwaarde niet zoals verwacht worden verwerkt omdat de "
+"bijbehorende functionaliteit niet door de MSH wordt ondersteund."
 
 #. module: account_peppol
 #. odoo-python
@@ -388,6 +418,10 @@ msgid ""
 "element/attribute, or with the processing mode of the MSH, or with the "
 "normative requirements of the ebMS specification."
 msgstr ""
+"Hoewel het berichtdocument correct is opgebouwd en voldoet aan het schema, "
+"is een element- of attribuutwaarde niet consistent met de inhoud van een "
+"ander element of attribuut, met de verwerkingsmodus van de MSH, of met de "
+"normatieve vereisten van de ebMS-specificatie."
 
 #. module: account_peppol
 #. odoo-python
@@ -397,6 +431,10 @@ msgid ""
 "or absence of some element/ attribute is not consistent with the capability "
 "of the MSH, with respect to supported features."
 msgstr ""
+"Hoewel het berichtdocument correct is opgebouwd en voldoet aan het schema, "
+"komt de aanwezigheid of afwezigheid van een element of attribuut niet "
+"overeen met de mogelijkheden van de MSH wat betreft de ondersteunde "
+"functionaliteit."
 
 #. module: account_peppol
 #. odoo-python
@@ -406,6 +444,9 @@ msgid ""
 "Reliability module could not get assurance that the message was properly "
 "delivered, in spite of resending efforts."
 msgstr ""
+"Hoewel het bericht werd verzonden met de vereiste van gegarandeerde "
+"levering, kon de betrouwbaarheidsmodule — ondanks herhaalde pogingen — geen "
+"zekerheid verkrijgen dat het correct werd afgeleverd."
 
 #. module: account_peppol
 #. odoo-python
@@ -414,6 +455,8 @@ msgid ""
 "An Intermediary MSH was unable to route an ebMS message and stopped "
 "processing the message."
 msgstr ""
+"Een intermediaire MSH kon een ebMS-bericht niet routeren en heeft de "
+"verwerking van het bericht stopgezet."
 
 #. module: account_peppol
 #. odoo-python
@@ -422,6 +465,8 @@ msgid ""
 "An MSH has determined that the message is expired and will not attempt to "
 "forward or deliver it."
 msgstr ""
+"Een MSH heeft vastgesteld dat het bericht is verlopen en zal niet proberen "
+"het door te sturen of af te leveren."
 
 #. module: account_peppol
 #. odoo-python
@@ -431,18 +476,23 @@ msgid ""
 "MPC for pulling, but the intermediary MSH is unable to store the message "
 "with this MPC"
 msgstr ""
+"Er is een vermelding in de routeringsfunctie gevonden die het bericht "
+"toewijst aan een MPC voor ophalen, maar de intermediaire MSH kon het bericht"
+" niet opslaan onder deze MPC."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred during the decompression."
-msgstr ""
+msgstr "Er is een fout opgetreden tijdens het decomprimeren."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred while decompressing the reassembled message."
 msgstr ""
+"Er is een fout opgetreden tijdens het decomprimeren van het opnieuw "
+"samengevoegde bericht."
 
 #. module: account_peppol
 #. odoo-python
@@ -451,6 +501,8 @@ msgid ""
 "An incoming message fragment has a a value greater than the known "
 "FragmentCount."
 msgstr ""
+"Een binnenkomend berichtfragment heeft een waarde die groter is dan de "
+"bekende FragmentCount."
 
 #. module: account_peppol
 #. odoo-python
@@ -461,12 +513,15 @@ msgid ""
 "was prepared to wait for the message to be pulled, and that limit has been "
 "reached."
 msgstr ""
+"Een intermediaire MSH heeft het bericht toegewezen aan een MPC voor ophalen "
+"en succesvol opgeslagen. Er was echter een tijdslimiet ingesteld voor het "
+"ophalen van het bericht, en die limiet is inmiddels bereikt."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An internal error occurred"
-msgstr ""
+msgstr "Er is een interne fout opgetreden"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -592,6 +647,8 @@ msgid ""
 "Could not find an XSD with which to validate the document with identifier "
 "\"%s\"."
 msgstr ""
+"Er kon geen XSD worden gevonden om het document met identificatiecode '%s' "
+"te valideren."
 
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
@@ -824,6 +881,8 @@ msgid ""
 "Message properties were present in the fragment SOAP header that were not "
 "specified in %s"
 msgstr ""
+"Er waren berichtkenmerken aanwezig in de SOAP-header van het fragment die "
+"niet waren opgegeven in %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_migration_key
@@ -846,18 +905,20 @@ msgid ""
 "More time than %s has passed since the first fragment was received but not "
 "all other fragments are received."
 msgstr ""
+"Er is meer tijd verstreken dan %s sinds het eerste fragment werd ontvangen, "
+"maar niet alle overige fragmenten zijn ontvangen."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No UBL document was provided to the Peppol Outbound Service."
-msgstr ""
+msgstr "Er is geen UBL-document aangeleverd aan de Peppol Outbound Service."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No valid AS4 participant endpoint were found."
-msgstr ""
+msgstr "Er zijn geen geldige AS4-deelnemerseindpunten gevonden."
 
 #. module: account_peppol
 #. odoo-python
@@ -866,6 +927,8 @@ msgid ""
 "Not enough disk space available to store all (expected) fragments of the "
 "group."
 msgstr ""
+"Er is onvoldoende schijfruimte beschikbaar om alle (verwachte) fragmenten "
+"van de groep op te slaan."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
@@ -885,7 +948,7 @@ msgstr "Nog niet gecontroleerd"
 #. module: account_peppol
 #: model:mail.template,description:account_peppol.mail_template_peppol_registration
 msgid "Notification email for peppol registration state update"
-msgstr ""
+msgstr "E-mailmelding over statusupdate van Peppol-registratie"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -963,7 +1026,7 @@ msgstr "PEPPOL: Status deelnemer bijwerken"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_webhook_keepalive_ir_actions_server
 msgid "PEPPOL: webhook keep alive"
-msgstr ""
+msgstr "PEPPOL: webhook keep-alive"
 
 #. module: account_peppol
 #. odoo-python
@@ -985,7 +1048,7 @@ msgstr "Een Peppol-adres is vereist."
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_can_send
 msgid "Peppol Can Send"
-msgstr ""
+msgstr "Peppol kan verzenden"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_peppol_config_wizard
@@ -1007,6 +1070,8 @@ msgid ""
 "Peppol Error [code=%(error_code)s]: %(error_subject)s\n"
 "%(error_message)s"
 msgstr ""
+"Peppol-fout [code=%(error_code)s]: %(error_subject)s\n"
+"%(error_message)s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_external_provider
@@ -1090,7 +1155,7 @@ msgstr "Waarschuwingen Peppol"
 #. module: account_peppol
 #: model:mail.template,name:account_peppol.mail_template_peppol_registration
 msgid "Peppol: Registration update"
-msgstr ""
+msgstr "Peppol: Registratie-update."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1127,6 +1192,8 @@ msgstr "Installeer de phonenumbers bibliotheek."
 msgid ""
 "Please set a journal for Peppol invoices on %s before receiving documents."
 msgstr ""
+"Stel een journaal in voor Peppol-facturen op %s voordat je documenten "
+"ontvangt."
 
 #. module: account_peppol
 #. odoo-python
@@ -1162,6 +1229,8 @@ msgid ""
 "Proxy error, please contact Odoo (missing \"%s\" - please make sure that it "
 "was loaded from the configuration panel)"
 msgstr ""
+"Proxyfout, neem contact op met Odoo ('%s' ontbreekt – controleer of dit is "
+"geladen via het configuratiepaneel)."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -1267,6 +1336,9 @@ msgid ""
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
 msgstr ""
+"Een betrouwbaarheidsfunctie zoals geïmplementeerd door de "
+"Betrouwbaarheidsmodule is niet operationeel, of de betrouwbaarheidstoestand "
+"die aan deze berichtvolgorde is gekoppeld, is ongeldig."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1281,7 +1353,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Something went wrong with your request"
-msgstr ""
+msgstr "Er is iets misgegaan met je verzoek."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1310,6 +1382,8 @@ msgid ""
 "The MSH is experiencing temporary or permanent failure in trying to open a "
 "transport connection with a remote MSH."
 msgstr ""
+"De MSH ondervindt een tijdelijke of permanente storing bij het tot stand "
+"brengen van een transportverbinding met een externe MSH."
 
 #. module: account_peppol
 #. odoo-python
@@ -1319,6 +1393,9 @@ msgid ""
 " is not contained within the ebMS Message, as identified by a PartInfo/href "
 "URI)."
 msgstr ""
+"De MSH kan een externe payloadreferentie niet oplossen (d.w.z. een onderdeel"
+" dat niet is opgenomen in het ebMS-bericht, zoals geïdentificeerd via een "
+"PartInfo/href-URI)."
 
 #. module: account_peppol
 #. odoo-python
@@ -1327,18 +1404,20 @@ msgid ""
 "The Peppol Participant DNS lookup resulted in an URL address that does not "
 "belong to this server."
 msgstr ""
+"De DNS-opzoeking van de Peppol-deelnemer leverde een URL op die niet "
+"overeenkomt met deze server."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The Peppol Participant cannot receive this document type."
-msgstr ""
+msgstr "De Peppol-deelnemer kan dit documenttype niet ontvangen."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The Peppol Participant certificate is invalid."
-msgstr ""
+msgstr "Het certificaat van de Peppol-deelnemer is ongeldig."
 
 #. module: account_peppol
 #. odoo-python
@@ -1347,6 +1426,8 @@ msgid ""
 "The Peppol Participant service group found on his Service Metadata Provider "
 "is invalid."
 msgstr ""
+"De servicegroep van de Peppol-deelnemer die is gevonden bij zijn Service "
+"Metadata Provider, is ongeldig."
 
 #. module: account_peppol
 #. odoo-python
@@ -1367,30 +1448,34 @@ msgid ""
 "The Service Metadata Publisher associated to this participant is not "
 "reachable. url: %s"
 msgstr ""
+"De Service Metadata Publisher die aan deze deelnemer is gekoppeld, is niet "
+"bereikbaar. URL: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The UBL document provided to the Peppol Outbound Service is malformed."
 msgstr ""
+"Het UBL-document dat aan de Peppol Outbound Service is aangeleverd, is niet "
+"correct opgebouwd."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document could not be canonicalized."
-msgstr ""
+msgstr "Het XML-document kon niet in canonieke vorm worden omgezet."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the XSD Schema."
-msgstr ""
+msgstr "Het XML-document is niet geldig volgens het XSD-schema."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the schematron."
-msgstr ""
+msgstr "Het XML-document is niet geldig volgens de schematronregels."
 
 #. module: account_peppol
 #. odoo-python
@@ -1402,13 +1487,13 @@ msgstr "Het document werd niet gevonden"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be sent to the Peppol Participant."
-msgstr ""
+msgstr "Het document kon niet worden verzonden naar de Peppol-deelnemer."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be validated."
-msgstr ""
+msgstr "Het document kon niet worden gevalideerd."
 
 #. module: account_peppol
 #. odoo-python
@@ -1430,6 +1515,9 @@ msgid ""
 "The eb3:Message header copied to the fragment header does not match the "
 "eb3:Message header in the reassembled source message."
 msgstr ""
+"De eb3:Message-header die is gekopieerd naar de header van het fragment, "
+"komt niet overeen met de eb3:Message-header in het opnieuw samengevoegde "
+"bronbericht."
 
 #. module: account_peppol
 #. odoo-python
@@ -1438,6 +1526,8 @@ msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
 msgstr ""
+"De ebMS-header is ofwel niet correct opgebouwd als XML-document, of voldoet "
+"niet aan de ebMS-verpakkingsregels."
 
 #. module: account_peppol
 #. odoo-python
@@ -1447,6 +1537,9 @@ msgid ""
 "the MSH is not compatible with the expected content, based on the associated"
 " P-Mode."
 msgstr ""
+"De ebMS-header of een andere header (bijv. voor betrouwbaarheid of "
+"beveiliging) die door de MSH wordt verwacht, is niet compatibel met de "
+"verwachte inhoud op basis van de bijbehorende P-Mode."
 
 #. module: account_peppol
 #. odoo-python
@@ -1455,6 +1548,8 @@ msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
 msgstr ""
+"De versleutelde gegevens die verwijzen naar de Security-header voor de "
+"'ebms'-SOAP-actor, konden niet worden ontsleuteld door de Security Module."
 
 #. module: account_peppol
 #. odoo-python
@@ -1486,18 +1581,21 @@ msgid ""
 "other than the fragment header and a data part are in the message. are added"
 " or the SOAP Body is not empty."
 msgstr ""
+"Het href-attribuut verwijst niet naar een geldig MIME-gegevensonderdeel. Er "
+"zijn MIME-onderdelen aanwezig die geen fragmentheader of gegevensonderdeel "
+"zijn, of de SOAP-body is niet leeg."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The incoming message could not be decompressed."
-msgstr ""
+msgstr "Het binnenkomende bericht kon niet worden gedecomprimeerd."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The message does not comply with the AS4 policy."
-msgstr ""
+msgstr "Het bericht voldoet niet aan het AS4-beleid"
 
 #. module: account_peppol
 #. odoo-python
@@ -1513,6 +1611,9 @@ msgid ""
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
 msgstr ""
+"De processor heeft vastgesteld dat de beveiligingsmethoden, parameters, "
+"reikwijdte of andere vereisten of afspraken op beveiligingsniveau van het "
+"bericht niet zijn nageleefd."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1529,12 +1630,15 @@ msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
 msgstr ""
+"De handtekening in de Security-header die bedoeld is voor de 'ebms'-SOAP-"
+"actor kon niet worden gevalideerd door de Security-module."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The size of the data part in a fragment message is greater than %s"
 msgstr ""
+"De grootte van het gegevensonderdeel in een fragmentbericht is groter dan %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1543,6 +1647,7 @@ msgid ""
 "The structure of a received bundle is not in accordance with the bundling "
 "rules."
 msgstr ""
+"De structuur van een ontvangen bundel komt niet overeen met de bundelregels."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1557,30 +1662,33 @@ msgid ""
 "The use of MIME is not consistent with the required usage in this "
 "specification."
 msgstr ""
+"Het gebruik van MIME is niet in overeenstemming met het vereiste gebruik "
+"volgens deze specificatie."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "There is no message available for pulling from this MPC at this moment."
-msgstr ""
+msgstr "Er is momenteel geen bericht beschikbaar om op te halen van deze MPC."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "There was an error while sending this invoice via Peppol."
 msgstr ""
+"Er is een fout opgetreden bij het verzenden van deze factuur via Peppol."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the Peppol Request"
-msgstr ""
+msgstr "Er is een fout opgetreden bij het Peppol-verzoek"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the incoming message."
-msgstr ""
+msgstr "Er is een fout opgetreden met het binnenkomende bericht."
 
 #. module: account_peppol
 #. odoo-python
@@ -1589,12 +1697,14 @@ msgid ""
 "There was an issue with the Hermes Migration Token Collection Interface "
 "(MTCI)."
 msgstr ""
+"Er is een probleem opgetreden met de Hermes Migration Token Collection "
+"Interface (MTCI)."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an issue with the Peppol Participant."
-msgstr ""
+msgstr "Er is een probleem opgetreden met de Peppol-deelnemer."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1605,7 +1715,7 @@ msgstr "Deze factuur is ook"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "This user is not registered on our Access Point."
-msgstr ""
+msgstr "Deze gebruiker is niet geregistreerd op ons Access Point."
 
 #. module: account_peppol
 #. odoo-python
@@ -1614,6 +1724,8 @@ msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
+"Deze gebruiker is geen Peppol-gebruiker. De bijbehorende proxy_type moet "
+"'peppol' zijn. Dit is vereist om een Peppol-deelnemer aan te maken."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1633,13 +1745,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unable to verify the digest value."
-msgstr ""
+msgstr "Kan de digestwaarde niet verifiëren."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unexpected end of MIME multipart message."
-msgstr ""
+msgstr "Onverwacht einde van MIME-multipartbericht."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1656,7 +1768,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unknown Peppol Error: %s"
-msgstr ""
+msgstr "Onbekende Peppol-fout: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
@@ -1697,7 +1809,7 @@ msgstr ""
 #. module: account_peppol
 #: model:mail.template,subject:account_peppol.mail_template_peppol_registration
 msgid "Welcome to Peppol"
-msgstr ""
+msgstr "Welkom bij Peppol"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1769,7 +1881,7 @@ msgstr "Je kunt deze factuur elektronisch verzenden via Peppol."
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You don't have enough credit"
-msgstr ""
+msgstr "Je hebt niet genoeg tegoed"
 
 #. module: account_peppol
 #. odoo-python
@@ -1778,6 +1890,9 @@ msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
 msgstr ""
+"Je hebt het maximumaantal documenten bereikt dat je vandaag mag verzenden. "
+"Probeer het later opnieuw. Neem contact op met de ondersteuning als je denkt"
+" dat je limiet verhoogd moet worden."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1812,6 +1927,8 @@ msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
 msgstr ""
+"Je bedrijf is al geregistreerd op een Access Point (%s) voor het ontvangen "
+"van facturen. Je wordt alleen als verzender in Odoo geregistreerd."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1822,7 +1939,7 @@ msgstr "Je eindpunt"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
-msgstr ""
+msgstr "Je identificatie is nog niet goedgekeurd voor deze actie"
 
 #. module: account_peppol
 #. odoo-python
@@ -1853,7 +1970,7 @@ msgstr "Je registratie moet binnen de dag geactiveerd zijn."
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your request is still being processed."
-msgstr ""
+msgstr "Je verzoek wordt nog verwerkt."
 
 #. module: account_peppol
 #. odoo-python

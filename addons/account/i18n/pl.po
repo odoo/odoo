@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Marta Wacławek, 2025
 # Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1381,7 +1381,7 @@ msgstr "<span>Ostrzeżenie: Ten dokument może być duplikatem</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Adres dostawy</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1653,6 +1653,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Konto bankowe o numerze konta %(number)s już istnieje dla Partnera "
+"%(partner)s, ale jest zarchiwizowane. Odarchiwizuj je."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2237,7 +2239,7 @@ msgstr "Konto służące do przesunięcia okresu wydatku"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
 msgid "Account used to register the private part of mixed expenses."
-msgstr ""
+msgstr "Konto używane do rejestrowania prywatnej części łączonych wydatków."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -2765,7 +2767,7 @@ msgstr "Wszystkie konta na liniach muszą być tego samego typu."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "All bank & cash journals"
-msgstr ""
+msgstr "Wszystkie dzienniki bankowe i kasowe"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__move_to_hash_ids
@@ -3670,7 +3672,7 @@ msgstr "Konto bankowe"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr ""
+msgstr "Konto bankowe %(link)s z numerem %(number)s zostało zarchiwizowane"
 
 #. module: account
 #. odoo-python
@@ -4206,12 +4208,12 @@ msgstr "Anulowana faktura"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Proforma Credit Note"
-msgstr ""
+msgstr "Anulowana nota kredytowa proforma"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Proforma Invoice"
-msgstr ""
+msgstr "Anulowana faktura proforma"
 
 #. module: account
 #. odoo-python
@@ -4279,7 +4281,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr ""
+msgstr "Nie można zidentyfikować faktur w wygenerowanym PDF: %s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -5306,7 +5308,7 @@ msgstr "Utwórz ręcznie"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create new account"
-msgstr ""
+msgstr "Stwórz nowe konto"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -6030,7 +6032,7 @@ msgstr "Dedykowana sekwencja płatności"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__deductible_amount
 msgid "Deductibility"
-msgstr ""
+msgstr "Odliczenie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -6806,12 +6808,12 @@ msgstr "Wersja robocza płatności"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Credit Note"
-msgstr ""
+msgstr "Wersja robocza noty kredytowej proforma"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Invoice"
-msgstr ""
+msgstr "Wersja robocza faktury proforma"
 
 #. module: account
 #. odoo-python
@@ -7922,7 +7924,7 @@ msgstr "Z kont należności handlowych"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__from_transaction_details
 msgid "From Transaction Details"
-msgstr ""
+msgstr "Z szczegółów transakcji"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
@@ -8107,7 +8109,7 @@ msgstr "Grupowe płatności"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Group Payments Number Sequence"
-msgstr ""
+msgstr "Grupuj numery sekwencji płatności"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__is_group_by_name
@@ -11096,22 +11098,22 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 msgid "No search more"
-msgstr ""
+msgstr "Przestań szukać"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
 msgid "Non Deductible Products"
-msgstr ""
+msgstr "Produkty nie podlegające odliczeniu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product_total
 msgid "Non Deductible Products Total"
-msgstr ""
+msgstr "Suma produktów nie podlegających odliczeniu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_tax
 msgid "Non Deductible Tax"
-msgstr ""
+msgstr "Podatek nie podlegający odliczeniu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -11528,6 +11530,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "Only vendor bills allow for deductibility of product/services."
 msgstr ""
+"Jedynie rachunki od dostawców pozwalają na odliczenie produktów/usług."
 
 #. module: account
 #. odoo-python
@@ -12664,7 +12667,7 @@ msgstr "Wydrukuj czeki, aby zapłacić swoim dostawcom"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__non_deductible_account_id
 msgid "Private Part Account"
-msgstr ""
+msgstr "Konto prywatnej części"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
@@ -12735,7 +12738,7 @@ msgstr "Produkty do odbioru"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Professional %"
-msgstr ""
+msgstr "Profesjonalny %"
 
 #. module: account
 #. odoo-javascript
@@ -12752,22 +12755,22 @@ msgstr "Konto wynikowe"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
-msgstr ""
+msgstr "Nota kredytowa proforma"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Invoice"
-msgstr ""
+msgstr "Faktura proforma"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Vendor Bill"
-msgstr ""
+msgstr "Rachunek od dostawcy proforma"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Vendor Credit Note"
-msgstr ""
+msgstr "Nota kredytowa proforma dostawcy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
@@ -13205,7 +13208,7 @@ msgstr "Kwota podatków powiązanych "
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__exchange_diff_partial_ids
 #: model:ir.model.fields,field_description:account.field_account_move__exchange_diff_partial_ids
 msgid "Related reconciliation"
-msgstr ""
+msgstr "Powiązane uzgodnienie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__document_type
@@ -13921,7 +13924,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Select a type"
-msgstr ""
+msgstr "Wybierz typ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14015,6 +14018,9 @@ msgid ""
 "Any file extension will be accepted.\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
+"Wyślij jedną osobną wiadomość e-mail dla każdej faktury.\n"
+"Każde rozszerzenie pliku będzie akceptowane.\n"
+"Tylko pliki PDF i XML będą interpretowane przez Odoo"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
@@ -15505,6 +15511,8 @@ msgstr ""
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr ""
+"Partner komercyjny został zaktualizowany dla wszystkich powiązanych wpisów "
+"księgowych."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -15628,7 +15636,7 @@ msgstr "Dodane dni muszą mieścić się w przedziale od 0 do 31."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The deductibility must be a value between 0 and 100."
-msgstr ""
+msgstr "Odliczenie musi być wartością pomiędzy 0 a 100."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id
@@ -17620,7 +17628,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
 msgid "Values that created the draft cash-basis entry"
-msgstr ""
+msgstr "Wartości, które utworzyły wersję roboczą wpisu gotówkowego"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
@@ -17962,7 +17970,7 @@ msgstr "Nieprawidłowa wartość kredytowa lub debetowa w wpisie księgowym!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "XML format"
-msgstr ""
+msgstr "Format XML"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
@@ -18022,7 +18030,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You can not reconcile cancelled entries."
-msgstr ""
+msgstr "Nie możesz uzgodnić anulowanych wpisów."
 
 #. module: account
 #. odoo-python
@@ -18646,6 +18654,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
+"Nie możesz skonfigurować partnera jako adresu fakturowania innego partnera, "
+"jeśli mają różne %(vat_label)s."
 
 #. module: account
 #. odoo-python
@@ -19105,7 +19115,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "in_invoice"
-msgstr ""
+msgstr "in_invoice"
 
 #. module: account
 #. odoo-javascript
@@ -19163,13 +19173,13 @@ msgstr "wymienione poniżej dla tego dostawcy."
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "move_id"
-msgstr ""
+msgstr "move_id"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "move_type"
-msgstr ""
+msgstr "move_type"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19213,7 +19223,7 @@ msgstr "poza"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "out_invoice"
-msgstr ""
+msgstr "out_invoice"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -19240,13 +19250,13 @@ msgstr "przesunięcie na {new_date}"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "private part"
-msgstr ""
+msgstr "część prywatna"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "private part (taxes)"
-msgstr ""
+msgstr "część prywatna (podatki)"
 
 #. module: account
 #. odoo-python
@@ -19276,7 +19286,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "reversed"
-msgstr ""
+msgstr "odwrócone"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain

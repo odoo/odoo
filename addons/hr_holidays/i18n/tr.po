@@ -386,6 +386,8 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
+"<span>Çalışanın saat dilimi sizinki ile aynı değil! Bu alanda, tarih ve saatler çalışanın saat diliminde gösterilir.</span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1058,7 +1060,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Available:"
-msgstr ""
+msgstr "Kullanılabilir:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -1243,7 +1245,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Cap:"
-msgstr ""
+msgstr "Üst limit:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__carried_over_days_expiration_date
@@ -1513,7 +1515,7 @@ msgstr "Mevcut İzin Türü"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Currently Valid"
-msgstr ""
+msgstr "Şu Anda Geçerli"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__daily
@@ -1590,6 +1592,8 @@ msgid ""
 "Define the maximum level of negative days this kind of time off can reach. "
 "Value must be at least 1."
 msgstr ""
+"Bu izin türünün ulaşabileceği maksimum negatif gün sayısını tanımlayın. "
+"Değer en az 1 olmalıdır."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1775,7 +1779,7 @@ msgstr "Aktif Çalışan"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_company_id
 msgid "Employee Company"
-msgstr ""
+msgstr "Çalışanın Şirketi"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__category_id
@@ -1978,7 +1982,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "Generated Allocations"
-msgstr ""
+msgstr "Oluşturulan Tahsisler"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1995,7 +1999,7 @@ msgstr "Bağış"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "Grant Time"
-msgstr ""
+msgstr "Veriliş Zamanı"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
@@ -2132,7 +2136,7 @@ msgstr "Bitiş saati"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__hourly
 msgid "Hourly"
-msgstr ""
+msgstr "Saatlik"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2498,7 +2502,7 @@ msgstr "Yönetici"
 #: model:ir.model,name:hr_holidays.model_hr_leave_mandatory_day
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
 msgid "Mandatory Day"
-msgstr ""
+msgstr "Zorunlu Gün"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2506,7 +2510,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_mandatory_day_action
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_mandatory_day_menu_configuration
 msgid "Mandatory Days"
-msgstr ""
+msgstr "Zorunlu Günler"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__3
@@ -2607,12 +2611,12 @@ msgstr "Dönüm Noktası"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__transition_mode
 msgid "Milestone Transition"
-msgstr ""
+msgstr "Kilometre Taşı Geçişi"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
 msgid "Milestone cap"
-msgstr ""
+msgstr "Kilometre Taşı Sınırı"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_ch_swissdec_military_lt
@@ -2653,7 +2657,7 @@ msgstr "Sabah"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_generate_multi_wizard
 msgid "Multiple Requests"
-msgstr ""
+msgstr "Birden Fazla Talep"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2717,7 +2721,7 @@ msgstr "Adı"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Negative Cap"
-msgstr ""
+msgstr "Negatif Sınır"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2873,6 +2877,8 @@ msgid ""
 "Non-visible allocations can still be selected when taking a leave, but will "
 "simply not be displayed on the leave dashboard."
 msgstr ""
+"Görünmeyen hak edişler izin alınırken yine de seçilebilir, ancak izin "
+"panosunda görüntülenmez."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__no_validation
@@ -3102,7 +3108,7 @@ msgstr "Ücretli İzin"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "Pending Requests"
-msgstr ""
+msgstr "Bekleyen Talepler"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
@@ -3520,6 +3526,8 @@ msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
 msgstr ""
+"Silmek istediğiniz tahakkuk planlarından bazıları mevcut bir hak edişle "
+"bağlantılı. Önce onları silin veya iptal edin."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_hours
@@ -3554,7 +3562,7 @@ msgstr "Başla"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Start Accruing"
-msgstr ""
+msgstr "Biriktirmeye Başlayın"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -3769,6 +3777,8 @@ msgid ""
 "The maximum excess amount should be greater than 0. If you want to set 0, "
 "disable the negative cap instead."
 msgstr ""
+"Azami fazla tutar 0’dan büyük olmalıdır. 0 olarak ayarlamak istiyorsanız, "
+"negatif sınırı devre dışı bırakın."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__expiring_carryover_days
@@ -4113,7 +4123,7 @@ msgstr "İzin: Geçersiz izinleri iptal et"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Time off"
-msgstr ""
+msgstr "İzin"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
@@ -4516,6 +4526,8 @@ msgid ""
 "When the field is checked the balance of an allocation using this accrual "
 "plan will never exceed the specified amount."
 msgstr ""
+"Bu alan işaretlendiğinde, bu tahakkuk planını kullanan bir hak edişin "
+"bakiyesi asla belirtilen tutarı aşmaz."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
@@ -4590,7 +4602,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You are not allowed to request time off on a Mandatory Day"
-msgstr ""
+msgstr "Zorunlu Çalışma Günleri'nde izin istemenize müsaade edilmez"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
@@ -4839,7 +4851,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "after"
-msgstr ""
+msgstr "sonra"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4888,7 +4900,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "click here"
-msgstr ""
+msgstr "buraya tıklayın"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4969,7 +4981,7 @@ msgstr "başlangıçta"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "new request"
-msgstr ""
+msgstr "yeni talep"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form

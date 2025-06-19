@@ -368,12 +368,12 @@ msgstr "Antal vedhæftninger"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Attendance"
-msgstr "Tilstedeværelse"
+msgstr "Fremmøde"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Attendance/Point of Sale"
-msgstr "Tilstedeværelse/POS"
+msgstr "Fremmøde/POS"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -445,7 +445,7 @@ msgstr "Bachelor"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
 #: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
-msgstr "Navneskilt"
+msgstr "ID-kort"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
@@ -1103,7 +1103,7 @@ msgstr "Billede af ansat"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_lang
 msgid "Employee Lang"
-msgstr "Medarbejders sprog"
+msgstr "Medarbejderens sprog"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
@@ -1144,23 +1144,23 @@ msgstr "Stillingstype"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Employee Update Rights"
-msgstr "Medarbejders opdateringsrettigheder"
+msgstr "Medarbejderens opdateringsrettigheder"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_id
 msgid "Employee bank account to pay salaries"
-msgstr "Medarbejders bankkonto til udbetaling af løn"
+msgstr "Medarbejderens bankkonto til udbetaling af løn"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
 msgid "Employee's Bank Account Number"
-msgstr "Medarbejders kontonummer"
+msgstr "Medarbejderens kontonummer"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
 msgid "Employee's Country"
-msgstr "Medarbejders land"
+msgstr "Medarbejderens land"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -1168,12 +1168,12 @@ msgstr "Medarbejders land"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
-msgstr "Medarbejders navn"
+msgstr "Medarbejderens navn"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
 msgid "Employee's Working Hours"
-msgstr "Medarbejders arbejdstimer"
+msgstr "Medarbejderens arbejdstimer"
 
 #. module: hr
 #. odoo-python
@@ -1372,7 +1372,7 @@ msgstr "HR-medarbejder: Kontrollér arbejdstilladelsens gyldighed"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 msgid "HR Presence Status"
-msgstr "HR-tilstedeværelsestilstand"
+msgstr "HR-fremmødetilstand"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1436,7 +1436,7 @@ msgstr "HR-afdelingsrapport"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
-msgstr "HR-tilstedeværelsestilstand"
+msgstr "HR-fremmødetilstand"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -2067,9 +2067,8 @@ msgid ""
 " enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
-"Pinkode, der bruges til at logge ind og ud af kiosk-tilstand i "
-"Tilstedeværelsesappen (hvis aktiveret i indstillingerne) samt til at skifte "
-"kasserer i POS-appen."
+"Pinkode, der bruges til at logge ind og ud af kiosk-tilstand i Fremmødeappen"
+" (hvis aktiveret i indstillingerne) samt til at skifte kasserer i POS-appen."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -2180,24 +2179,23 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Condition"
-msgstr "Tilstedeværelsesbetingelse"
+msgstr "Fremmødebetingelse"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Display"
-msgstr "Tilstedeværelsesindikator"
+msgstr "Fremmødeindikator"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence of employees"
-msgstr "Ansattes tilstedeværelse"
+msgstr "Ansattes fremmøde"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence reporting screen, email and IP address control."
 msgstr ""
-"Skærm til registrering af tilstedeværelse samt kontrol af e-mail og IP-"
-"adresse."
+"Skærm til registrering af fremmøde samt kontrol af e-mail og IP-adresse."
 
 #. module: hr
 #. odoo-javascript
@@ -2692,7 +2690,7 @@ msgid ""
 "The Badge ID must be alphanumeric without any accents and no longer than 18 "
 "characters."
 msgstr ""
-"Navneskiltet skal indeholde maksimalt 17 alfanumeriske tegn uden accenter."
+"ID-kortet skal indeholde maksimalt 17 alfanumeriske tegn uden accenter."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -2700,8 +2698,8 @@ msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr ""
-"Navneskiltet skal være entydigt. Det valgte navneskilt bruges allerede af en"
-" anden medarbejder."
+"ID-kortet skal være entydigt. Det valgte kort bruges allerede af en anden "
+"medarbejder."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -3144,8 +3142,8 @@ msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
 " to update other information."
 msgstr ""
-"Du kan kun ændre dine egne præferencer. Kontakt venligst en HR-ansvarlig for"
-" at få hjælp til at ændre andre oplysninger."
+"Du kan kun ændre dine egne præferencer. Kontakt venligst en "
+"personaleansvarlig for at få hjælp til at ændre andre oplysninger."
 
 #. module: hr
 #. odoo-javascript

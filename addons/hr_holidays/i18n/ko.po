@@ -828,7 +828,7 @@ msgstr "할당 유형"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be \"To Approve\" in order to approve it."
-msgstr ""
+msgstr "배정 내용을 승인하려면 배정 상태가 반드시 “승인 예정” 이어야 합니다."
 
 #. module: hr_holidays
 #. odoo-python
@@ -910,7 +910,7 @@ msgstr "금액"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "An employee already booked time off which overlaps with this period:"
-msgstr ""
+msgstr "직원이 신청한 휴가 기간이 이미 이 기간과 중복됩니다."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1349,7 +1349,7 @@ msgstr "나중에 다시 모든 휴가 요청을 전체적으로 확인하세요
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
 msgid "Check back later to review all your employees' time off"
-msgstr ""
+msgstr "나중에 다시 모든 직원 휴가를 검토하세요."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -2921,7 +2921,7 @@ msgstr "없음. 누적된 시간이 0으로 초기화됨"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "Not possible state. State Approve is only used for leave needed 2 approvals"
-msgstr ""
+msgstr "사용 불가 상태입니다. 상태에 대한 승인은 2회 승인을 해야 하는 휴가에만 적용됩니다."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
@@ -3098,14 +3098,14 @@ msgstr "관리자만 취소된 휴가를 수정할 수 있습니다."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a time off Administrator can approve/refuse their own requests."
-msgstr ""
+msgstr "휴가 관리자만 본인 신청 내용을 승인 또는 거부할 수 있습니다."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "Oops! %(state)s Time-Off requests can only be deleted by Administrators."
-msgstr ""
+msgstr "죄송합니다! %(state)s 휴가 신청은 관리자만 삭제할 수 있습니다."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__other
@@ -3178,7 +3178,7 @@ msgstr "공휴일"
 #: model_terms:ir.actions.act_window,help:hr_holidays.open_view_public_holiday
 msgid ""
 "Public Holidays are non-working days that don't impact employees' balances"
-msgstr ""
+msgstr "공휴일은 휴무일로써 직원 휴가 잔여일에 영향이 없습니다."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
@@ -3776,7 +3776,7 @@ msgstr "직원은 %(departure_date)s에 퇴사할 예정입니다."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 msgid "The first day must be lower than the second day."
-msgstr ""
+msgstr "첫 번째 날짜는 두 번째보다 이전 날짜여야 합니다."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4562,7 +4562,7 @@ msgstr "이 필드를 선택하면 연간 총 발생 휴가 수가 지정된 한
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Why do you want to cancel this approved time off ?"
-msgstr ""
+msgstr "승인된 휴가를 취소하려는 사유는 무엇인가요?"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_work_accident
@@ -4660,20 +4660,20 @@ msgstr "휴가 취소는 본인의 휴가만 취소할 수 있습니다. 휴가�
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can only validate a leave with validation by Time Off Manager."
-msgstr ""
+msgstr "휴가 관리자 승인 후에만 휴가 승인이 가능합니다."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "You can only validate an allocation with validation by Time Off Manager."
-msgstr ""
+msgstr "휴가 관리자 승인 후에만 휴가 배정이 가능합니다."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "You can select the period you need to take off"
-msgstr ""
+msgstr "휴가 기간을 선택할 수 있습니다."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4710,26 +4710,26 @@ msgstr "동일한 작업은 두 번 수행할 수 없습니다."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't refuse a leave with validation by Time Off Officer."
-msgstr ""
+msgstr "휴가 담당자의 확인이 완료된 휴가는 반려할 수 없습니다."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "You can't refuse an allocation with validation by Time Off Officer."
-msgstr ""
+msgstr "휴가 담당자의 확인이 완료된 휴가 배정은 반려할 수 없습니다."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't reset a leave. Cancel/delete this one and create an other"
-msgstr ""
+msgstr "휴가 배정을 초기화할 수 없습니다. 배정된 휴가를 취소/삭제 후 다른 휴가를 생성하세요"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "You can't reset an allocation. Cancel/delete this one and create an other"
-msgstr ""
+msgstr "휴가 배정을 초기화할 수 없습니다. 배정된 휴가를 취소/삭제 후 다른 휴가를 생성하세요"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4836,7 +4836,7 @@ msgstr "이미 시작된 휴가를 수정/검증하려면 관리자 권한이 �
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You've already booked time off which overlaps with this period:"
-msgstr ""
+msgstr "예약한 휴가 기간이 이 기간과 겹칩니다:"
 
 #. module: hr_holidays
 #. odoo-python

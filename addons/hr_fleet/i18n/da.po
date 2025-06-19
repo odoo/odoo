@@ -31,6 +31,8 @@ msgid ""
 "<span class=\"o_stat_value\">1</span>\n"
 "                        <span class=\"o_stat_text\">Employee</span>"
 msgstr ""
+"<span class=\"o_stat_value\">1</span>\n"
+"                        <span class=\"o_stat_text\">Medarbejder</span>"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
@@ -57,7 +59,7 @@ msgstr "Vedhæftede filer"
 #. odoo-python
 #: code:addons/hr_fleet/models/employee.py:0
 msgid "Cannot remove address from employees with linked cars."
-msgstr ""
+msgstr "Adressen på medarbejdere med tilknyttede firmabiler kan ikke fjernes."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
@@ -83,7 +85,7 @@ msgstr "Slet"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr "Afskedigelse guide"
+msgstr "Fratrædelsesassistent"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__display_name
@@ -113,12 +115,12 @@ msgstr "Fører"
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
 msgid "Driver (Employee)"
-msgstr ""
+msgstr "Fører (medarbejder)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
 msgid "Drivers history on a vehicle"
-msgstr "Førere historik for køretøj"
+msgstr "Et køretøjs førerhistorik"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee
@@ -130,39 +132,39 @@ msgstr "Medarbejder"
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "Employee %s is not linked to a vehicle."
-msgstr ""
+msgstr "Medarbejder %s er ikke knyttet til et køretøj."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
 msgid "Employee Name"
-msgstr "Medarbejder navn"
+msgstr "Medarbejdernavn"
 
 #. module: hr_fleet
 #: model:ir.model.fields.selection,name:hr_fleet.selection__mail_activity_plan_template__responsible_type__fleet_manager
 msgid "Fleet Manager"
-msgstr "Flåde leder"
+msgstr "Flådeleder"
 
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "Fleet Manager is limited to Employee plans."
-msgstr ""
+msgstr "Flådeleder er begrænset til medarbejderplaner."
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Fleet Mobility Card"
-msgstr ""
+msgstr "Flådemobilitetskort"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
 msgid "Future Driver (Employee)"
-msgstr ""
+msgstr "Fremtidig fører (medarbejder)"
 
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/employee.py:0
 msgid "History Employee Cars"
-msgstr ""
+msgstr "Medarbejdernes firmabilhistorik"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__id
@@ -199,7 +201,7 @@ msgstr "Antal vedhæftninger"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
-msgstr "Kilometertæller log for et køretøj"
+msgstr "Kilometertællerlog for et køretøj"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
@@ -211,17 +213,17 @@ msgstr "Offentlig ansat"
 #: code:addons/hr_fleet/models/fleet_vehicle.py:0
 #: code:addons/hr_fleet/models/fleet_vehicle_log_contract.py:0
 msgid "Related Employee"
-msgstr ""
+msgstr "Tilknyttet medarbejder"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
 msgid "Release Company Car"
-msgstr "Frigør Firmabil"
+msgstr "Frigør firmabil"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
-msgstr "Service på køretøjer"
+msgstr "Køretøjsservice"
 
 #. module: hr_fleet
 #. odoo-python
@@ -230,6 +232,8 @@ msgid ""
 "The vehicle of employee %(employee)s is not linked to a fleet manager, "
 "assigning to you."
 msgstr ""
+"Medarbejderens køretøj %(employee)s er ikke knyttet til en flådeleder og "
+"tildeles derfor dig."
 
 #. module: hr_fleet
 #. odoo-javascript
@@ -250,9 +254,9 @@ msgstr "Køretøj"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_contract
 msgid "Vehicle Contract"
-msgstr "Køretøj Kontrakt"
+msgstr "Køretøjskontrakt"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
 msgid "Vehicles (private)"
-msgstr ""
+msgstr "Køretøjer (privat)"

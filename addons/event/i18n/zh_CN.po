@@ -60,7 +60,7 @@ msgstr "%(event_name)s-登记用于%(attendee_name)s"
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(slot_name)s（尚余名额：%(count)s）"
 
 #. module: event
 #. odoo-python
@@ -4044,12 +4044,12 @@ msgstr "时段邮件排期工具"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
+msgstr "如果活动有多个时段，您必须选择适用的时段。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
 msgid "Slot-based communication"
-msgstr ""
+msgstr "按时段通讯"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_slot_from_event
@@ -4063,7 +4063,7 @@ msgstr "时段"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
 msgid "Slots Count"
-msgstr ""
+msgstr "时段数目"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -4293,6 +4293,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"活动 %(event_name)s 没有足够名额：\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -4314,6 +4316,8 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"以下活动不可有编排在活动时间范围以外的时段：\n"
+"%(event_names)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
@@ -4456,7 +4460,7 @@ msgstr "参加人数"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Total Registration"
-msgstr ""
+msgstr "报名总人数"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4547,7 +4551,7 @@ msgstr "即将到来的 或 运行中的"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "更新报名人数上限？"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -4654,7 +4658,7 @@ msgstr "此机票是否没有座位。"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "此时段的名额是否已售完。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
