@@ -40,7 +40,6 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
-        livechat_active: true,
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,

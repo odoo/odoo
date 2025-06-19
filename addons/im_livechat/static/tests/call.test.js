@@ -32,7 +32,6 @@ test("should display started a call message with operator livechat username", as
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_active: true,
         livechat_operator_id: serverState.partnerId,
     });
     setupChatHub({ opened: [channelId] });

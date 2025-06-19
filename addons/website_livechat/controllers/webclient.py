@@ -33,7 +33,7 @@ class WebClient(WebclientController):
                     ("channel_type", "=", "livechat"),
                     ("livechat_visitor_id", "=", visitor.id),
                     ("livechat_channel_id", "=", livechat_channel_id),
-                    ("livechat_active", "=", True),
+                    ("livechat_end_dt", "=", False),
                     ("has_message", "=", True),
                     ("is_pending_chat_request", "=", True),
                 ],

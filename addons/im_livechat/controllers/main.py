@@ -130,7 +130,6 @@ class LivechatController(http.Controller):
                 "fetchChannelInfoState": "fetched",
                 "id": channel_id,
                 "isLoaded": True,
-                "livechat_active": True,
                 "livechat_operator_id": Store.One(
                     operator, self.env["discuss.channel"]._store_livechat_operator_id_fields(),
                 ),

@@ -32,7 +32,6 @@ test("Can execute help command on livechat channels", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_active: true,
         livechat_operator_id: serverState.partnerId,
     });
     onRpc("/web/dataset/call_kw/discuss.channel/execute_command_help", () => {
@@ -56,7 +55,6 @@ test('Receives visitor typing status "is typing"', async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_active: true,
         livechat_operator_id: serverState.partnerId,
     });
     await start();

@@ -35,7 +35,6 @@ test("new message from operator displays unread counter", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_active: true,
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });

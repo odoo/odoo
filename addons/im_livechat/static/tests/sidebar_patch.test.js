@@ -401,7 +401,6 @@ test("unknown livechat can be displayed and interacted with", async () => {
             Command.create({ partner_id: partnerId, last_interest_dt: "2021-01-01 10:00:00" }),
         ],
         channel_type: "livechat",
-        livechat_active: true,
         livechat_operator_id: partnerId,
         create_uid: serverState.publicUserId,
     });

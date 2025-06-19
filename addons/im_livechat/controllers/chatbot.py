@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
+from odoo import fields, http
 from odoo.http import request
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
@@ -69,7 +69,7 @@ class LivechatChatbotScriptController(http.Controller):
 
         if not next_step:
             # sudo - discuss.channel: marking the channel as closed as part of the chat bot flow
-            discuss_channel.sudo().livechat_active = False
+            discuss_channel.sudo().livechat_end_dt = fields.Datetime.now()
             return None
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id

@@ -30,7 +30,7 @@ const chatWindowPatch = {
                     super.close(...arguments);
                     break;
                 }
-                if (!this.thread.livechat_active) {
+                if (this.thread.livechat_end_dt) {
                     if (isSelfVisitor) {
                         this.livechatStep = CW_LIVECHAT_STEP.FEEDBACK;
                         this.open({ focus: true, notifyState: this.thread?.state !== "open" });

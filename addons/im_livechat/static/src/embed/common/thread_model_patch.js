@@ -58,10 +58,9 @@ patch(Thread.prototype, {
          */
         this.readyToSwapDeferred = new Deferred();
         this.chatbot = fields.One("Chatbot");
-        this.livechat_active = false;
         this._toggleChatbot = fields.Attr(false, {
             compute() {
-                return this.chatbot && this.isLoaded && this.livechat_active;
+                return this.chatbot && this.isLoaded && !this.livechat_end_dt;
             },
             onUpdate() {
                 if (this._toggleChatbot) {
@@ -74,7 +73,9 @@ patch(Thread.prototype, {
         });
         this.storeAsActiveLivechats = fields.One("Store", {
             compute() {
-                return this.livechat_active ? this.store : null;
+                return this.channel_type === "livechat" && !this.livechat_end_dt
+                    ? this.store
+                    : null;
             },
         });
         this.requested_by_operator = false;
@@ -147,7 +148,7 @@ patch(Thread.prototype, {
 
     get composerDisabled() {
         const step = this.chatbot?.currentStep;
-        if (this.chatbot?.forwarded && this.livechat_active) {
+        if (this.chatbot?.forwarded && !this.livechat_end_dt) {
             return false;
         }
         return (

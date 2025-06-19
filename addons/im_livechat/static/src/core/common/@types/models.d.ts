@@ -37,6 +37,7 @@ declare module "models" {
     export interface Thread {
         composerDisabled: Readonly<boolean>;
         composerDisabledText: Readonly<string>;
+        livechat_end_dt: luxon.DateTime;
         livechat_operator_id: Persona;
         livechatVisitorMember: ChannelMember;
         open_chat_window: true|undefined;

@@ -25,7 +25,7 @@ const storePatch = {
             .filter((thread) => thread.isUnread)
             .sort(
                 (t1, t2) =>
-                    t2.livechat_active - t1.livechat_active ||
+                    !t2.livechat_end_dt - !t1.livechat_end_dt ||
                     compareDatetime(t1.lastInterestDt, t2.lastInterestDt) ||
                     t1.id - t2.id
             );
