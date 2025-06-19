@@ -195,7 +195,7 @@ class ProgressBarState {
         );
         const { context, fields, groupBy, resModel } = this.model.root;
         const kwargs = { context };
-        const aggregateSpecs = getAggregateSpecifications(fields);
+        const aggregateSpecs = getAggregateSpecifications(this._aggregateFields);
         const domain = filterDomain
             ? Domain.and([group.groupDomain, filterDomain]).toList()
             : group.groupDomain;
