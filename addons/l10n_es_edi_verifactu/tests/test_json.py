@@ -102,7 +102,8 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         })
         invoice.action_post()
 
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         self.assertFalse(document.errors)
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()
@@ -123,7 +124,8 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         })
         credit_note.action_post()
 
-        document = credit_note._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = credit_note._l10n_es_edi_verifactu_create_documents()[credit_note]
         self.assertFalse(document.errors)
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()
@@ -143,7 +145,8 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         })
         invoice.action_post()
 
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         self.assertFalse(document.errors)
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()
@@ -159,7 +162,8 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         ).reverse_moves(is_modify=True)
 
         credit_note = invoice.reversal_move_id
-        document = credit_note._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = credit_note._l10n_es_edi_verifactu_create_documents()[credit_note]
         self.assertFalse(document.errors)
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()
@@ -172,7 +176,8 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
             'invoice_date': '2019-02-11',
         })
         substitution_move.action_post()
-        document = substitution_move._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = substitution_move._l10n_es_edi_verifactu_create_documents()[substitution_move]
         self.assertFalse(document.errors)
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()
@@ -197,7 +202,8 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         })
         invoice.action_post()
 
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         self.assertFalse(document.errors)
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()
@@ -225,11 +231,50 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         invoice.action_post()
         self.assertEqual(invoice.amount_total, 1090.0)
 
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         self.assertFalse(document.errors)
 
         expected_qr_code_url = '/report/barcode/?barcode_type=QR&value=https%3A%2F%2Fprewww2.aeat.es%2Fwlpl%2FTIKE-CONT%2FValidarQR%3Fnif%3D59962470K%26numserie%3DINV%252F2019%252F00001%26fecha%3D30-01-2019%26importe%3D1100.00&barLevel=M&width=180&height=180'
         self.assertEqual(invoice.l10n_es_edi_verifactu_qr_code, expected_qr_code_url)
+
+        with self._mock_zeep_registration_operation_certificate_issue():
+            batch_dict, _info = document._send_as_batch()
+        self.assertEqual(batch_dict, self._json_file_to_dict('l10n_es_edi_verifactu/tests/files/test_invoice_3.json'))
+
+    def test_invoice_4(self):
+        """
+        Test 0% and exempt taxes (i.e. taxes with `l10n_es_type` 'no_sujeto', 'no_sujeto_loc', 'exento').
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-30',
+            'date': '2019-01-30',
+            'partner_id': self.partner_b.id,  # Spanish customer
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_1.id,
+                    'price_unit': 1000.0,
+                    'tax_ids': [Command.set(self.tax0_no_sujeto_loc.ids)]
+                }),
+                Command.create({
+                    'product_id': self.product_1.id,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(self.tax0_exento.ids)]
+                }),
+                Command.create({
+                    'product_id': self.product_1.id,
+                    'price_unit': 10.0,
+                    'tax_ids': [Command.set(self.tax0_no_sujeto.ids)]
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.assertEqual(invoice.amount_total, 1110.0)
+
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
+        self.assertFalse(document.errors)
 
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()
@@ -250,7 +295,8 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         })
         invoice.action_post()
 
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         self.assertFalse(document.errors)
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()
@@ -301,17 +347,19 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
             'Huella': 'FA5DC48A0640BEB02A05160FD30020D1EA67FC1B400800ECDD9FC785E137C864',
         }
 
-        document0 = invoices[0]._l10n_es_edi_verifactu_create_document(
-            previous_record_identifier=previous_record_identifier,
-        )
-        self.assertFalse(document0.errors)
-        document1 = invoices[1]._l10n_es_edi_verifactu_create_document(
-            cancellation=True, previous_record_identifier=document0.record_identifier,
-        )
+        # We create a dummy document for the record identifier only
+        dummy_start_document = self.env['l10n_es_edi_verifactu.document'].create([{
+            'company_id': self.company.id,
+            'document_type': 'submission',
+            'record_identifier': previous_record_identifier,
+        }])
+        with self._mock_last_document(dummy_start_document):
+            document0 = invoices[0]._l10n_es_edi_verifactu_create_documents()[invoices[0]]
+            self.assertFalse(document0.errors)
+        # We do not use `_mock_last_document` in the following to check that it works w/o mocking
+        document1 = invoices[1]._l10n_es_edi_verifactu_create_documents(cancellation=True)[invoices[1]]
         self.assertFalse(document1.errors)
-        document2 = invoices[2]._l10n_es_edi_verifactu_create_document(
-            previous_record_identifier=document1.record_identifier,
-        )
+        document2 = invoices[2]._l10n_es_edi_verifactu_create_documents()[invoices[2]]
         self.assertFalse(document2.errors)
         documents = self.env['l10n_es_edi_verifactu.document'].browse([
             document0.id, document1.id, document2.id,
@@ -335,7 +383,8 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         })
         invoice.action_post()
 
-        document = invoice._l10n_es_edi_verifactu_create_document(cancellation=True)
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents(cancellation=True)[invoice]
         self.assertFalse(document.errors)
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()
@@ -354,7 +403,8 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         })
         invoice.action_post()
 
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         self.assertFalse(document.errors)
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()

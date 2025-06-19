@@ -10,6 +10,7 @@
         'l10n_es_pos',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/pos_order_views.xml',
     ],
     'assets': {

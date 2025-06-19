@@ -52,13 +52,20 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
            'name': "Product 1",
         })
 
-        cls.tax21_goods = cls.env['account.chart.template'].with_company(cls.company).ref('account_tax_template_s_iva21b')
-        cls.tax21_services = cls.env['account.chart.template'].with_company(cls.company).ref('account_tax_template_s_iva21s')
-        cls.tax10_goods = cls.env['account.chart.template'].with_company(cls.company).ref('account_tax_template_s_iva10b')
-        cls.tax10_services = cls.env['account.chart.template'].with_company(cls.company).ref('account_tax_template_s_iva10s')
-        cls.tax1p4_services_recargo = cls.env['account.chart.template'].with_company(cls.company).ref('account_tax_template_s_req014')
-        cls.tax5p2_services_recargo = cls.env['account.chart.template'].with_company(cls.company).ref('account_tax_template_s_req52')
-        cls.tax1_withholding = cls.env['account.chart.template'].with_company(cls.company).ref('account_tax_template_s_irpf1')
+        ChartTemplate = cls.env['account.chart.template'].with_company(cls.company)
+        cls.tax21_goods = ChartTemplate.ref('account_tax_template_s_iva21b')
+        cls.tax21_services = ChartTemplate.ref('account_tax_template_s_iva21s')
+        cls.tax10_goods = ChartTemplate.ref('account_tax_template_s_iva10b')
+        cls.tax10_services = ChartTemplate.ref('account_tax_template_s_iva10s')
+        cls.tax1p4_services_recargo = ChartTemplate.ref('account_tax_template_s_req014')
+        cls.tax5p2_services_recargo = ChartTemplate.ref('account_tax_template_s_req52')
+        cls.tax1_withholding = ChartTemplate.ref('account_tax_template_s_irpf1')
+        cls.tax0_no_sujeto_loc = ChartTemplate.ref('account_tax_template_s_iva_ns')
+        cls.tax0_exento = ChartTemplate.ref('account_tax_template_s_iva0')
+        # We create a 'no_sujeto' tax since there is currently no such tax in the standard chart
+        cls.tax0_no_sujeto = cls.tax0_no_sujeto_loc.copy()
+        cls.tax0_no_sujeto.l10n_es_type = 'no_sujeto'
+
 
         # Everything in the tests should be possible without being administrator.
         # We do not want to hide access errors the user may have in production (i.e. with access to the certificates)
@@ -131,3 +138,31 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
     def _mock_format_document_generation_errors(self, errors):
         title = _("The Veri*Factu document could not be created")
         return self._mock_format_document_errors(errors, title)
+
+    def _mock_last_document(self, document):
+        # Note: returns the same document for all companies
+        function_path = 'odoo.addons.l10n_es_edi_verifactu.models.res_company.ResCompany._l10n_es_edi_verifactu_get_last_document'
+        return mock.patch(function_path, return_value=(document or self.env['l10n_es_edi_verifactu.document']))
+
+    def _create_dummy_invoice(self, name=None, invoice_date=None):
+        # The only values we care about are the ones relevant for the record identifier.
+        invoice_vals = {
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-30',
+            'date': '2019-01-30',
+            'partner_id': self.partner_b.id,  # Spanish customer
+            'invoice_line_ids': [
+                Command.create({'product_id': self.product_1.id, 'price_unit': 100.0, 'tax_ids': [Command.set(self.tax21_goods.ids)]}),
+            ],
+        }
+
+        # Adjust some values to give the record the needed record identifier
+        if invoice_date is not None:
+            invoice_vals['invoice_date'] = invoice_date
+        if name is not None:
+            invoice_vals['name'] = name
+
+        invoice = self.env['account.move'].create(invoice_vals)
+        invoice.action_post()
+
+        return invoice

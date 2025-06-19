@@ -22,32 +22,10 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         # This is needed to have the correct record identifiers on the invoices
         cls.company.vat = 'A39200019'
 
-    def _create_dummy_invoice(self, name=None, invoice_date=None):
-        # The only values we care about are the ones relevant for the record identifier.
-        invoice_vals = {
-            'move_type': 'out_invoice',
-            'invoice_date': '2019-01-30',
-            'date': '2019-01-30',
-            'partner_id': self.partner_b.id,  # Spanish customer
-            'invoice_line_ids': [
-                Command.create({'product_id': self.product_1.id, 'price_unit': 100.0, 'tax_ids': [Command.set(self.tax21_goods.ids)]}),
-            ],
-        }
-
-        # Adjust some values to give the record the needed record identifier
-        if invoice_date is not None:
-            invoice_vals['invoice_date'] = invoice_date
-        if name is not None:
-            invoice_vals['name'] = name
-
-        invoice = self.env['account.move'].create(invoice_vals)
-        invoice.action_post()
-
-        return invoice
-
     def test_record_identifier(self):
         invoice = self._create_dummy_invoice(name='INV/2019/00006', invoice_date='2024-12-11')
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         expected_record_identifier = {
             'IDEmisorFactura': 'A39200019',
             'NumSerieFactura': 'INV/2019/00006',
@@ -58,7 +36,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_cannot_delete_chained_document(self):
         invoice = self._create_dummy_invoice(name='INV/2019/00006', invoice_date='2024-12-11')
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         with self.assertRaises(UserError):
             document.unlink()
 
@@ -67,8 +46,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         mock_errors = ["Problem 1", "Problem 2"]
         patched_render_xml_node = mock.patch(check_function_path, return_value=mock_errors)
         invoice = self._create_dummy_invoice()
-        with patched_render_xml_node:
-            document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None), patched_render_xml_node:
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
 
         expected_document_values = {
             'document_type': 'submission',
@@ -87,7 +66,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_certificate_issue(self):
         invoice = self._create_dummy_invoice()
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         with self._mock_zeep_registration_operation_certificate_issue():
             _batch_xml, info = document._send_as_batch()
 
@@ -121,7 +101,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
             raise zeep.exceptions.Fault(message, code=code)
 
         invoice = self._create_dummy_invoice()
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         with self._mock_zeep_registration_operation_function(_raise_soapfault):
             _batch_xml, info = document._send_as_batch()
 
@@ -153,7 +134,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_batch_single_accepted_registration(self):
         invoice = self._create_dummy_invoice(name='INV/2019/00026', invoice_date='2024-12-30')
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json'):
             _batch_xml, info = document._send_as_batch()
 
@@ -192,7 +174,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_batch_single_accepted_cancellation(self):
         invoice = self._create_dummy_invoice(name='INV/2019/00047', invoice_date='2024-12-30')
-        document = invoice._l10n_es_edi_verifactu_create_document(cancellation=True)
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents(cancellation=True)[invoice]
         with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_cancellation.json'):
             _batch_xml, info = document._send_as_batch()
 
@@ -232,7 +215,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_batch_single_rejected_registration(self):
         invoice = self._create_dummy_invoice(name='INV/2019/00006', invoice_date='2024-12-11')
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_rejected_registration.json'):
             _batch_xml, info = document._send_as_batch()
 
@@ -274,7 +258,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_batch_single_registered_with_errors_registration(self):
         invoice = self._create_dummy_invoice(name='INV/2019/00007', invoice_date='2024-12-17')
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_registered_with_errors_registration.json'):
             _batch_xml, info = document._send_as_batch()
 
@@ -316,7 +301,8 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
 
     def test_response_parsing_error_document_not_found(self):
         invoice = self._create_dummy_invoice(name='INV/2019/00500', invoice_date='2024-12-17')
-        document = invoice._l10n_es_edi_verifactu_create_document()
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
         with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_registered_with_errors_registration.json'):
             _batch_xml, info = document._send_as_batch()
 
@@ -363,7 +349,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         mock_accept = self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json')
 
         invoice = self._create_dummy_invoice(name='INV/2019/00026', invoice_date='2024-12-30')
-        with mock_accept:
+        with self._mock_last_document(None), mock_accept:
             created_documents = invoice._l10n_es_edi_verifactu_mark_for_next_batch()
         document = created_documents[invoice]
 

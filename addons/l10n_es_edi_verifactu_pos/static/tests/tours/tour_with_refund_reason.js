@@ -8,7 +8,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("l10n_es_edi_verifactu_pos.tour_with_refund_reason", {
     test: true,
-    url: "/pos/web",
     steps: () => [
         ProductScreen.confirmOpeningPopup(),
         ProductScreen.clickHomeCategory(),

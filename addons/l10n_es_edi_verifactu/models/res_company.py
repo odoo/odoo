@@ -35,7 +35,7 @@ class ResCompany(models.Model):
         string="Special VAT Regime",
         selection=[
             ('simplified', "Simplified Regime"),
-            ('reagyp', "REAGYP (Speical Regime for Agriculture, Livestock and Fisheries)"),
+            ('reagyp', "REAGYP (Special Regime for Agriculture, Livestock and Fisheries)"),
             ('recargo', "Recargo de Equivalencia"),
         ],
     )
@@ -96,3 +96,14 @@ class ResCompany(models.Model):
                 'company_id': self.id,
             })
         return self.l10n_es_edi_verifactu_chain_sequence_id.next_by_id()
+
+    def _l10n_es_edi_verifactu_get_last_document(self):
+        self.ensure_one()
+        return self.env['l10n_es_edi_verifactu.document'].search(
+            [
+                ('chain_index', '!=', False),
+                ('company_id', '=', self.id),
+            ],
+            order='chain_index DESC',
+            limit=1,
+        )

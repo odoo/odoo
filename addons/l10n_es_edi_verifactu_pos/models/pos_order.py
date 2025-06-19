@@ -188,21 +188,17 @@ class PosOrder(models.Model):
 
         return vals
 
-    def _l10n_es_edi_verifactu_create_document(self, cancellation=False, previous_record_identifier=None):
-        self.ensure_one()
-
-        record_values = self._l10n_es_edi_verifactu_get_record_values(cancellation=cancellation)
-
-        return self.env['l10n_es_edi_verifactu.document']._create_for_record(
-            record_values, previous_record_identifier=previous_record_identifier,
-        )
-
-    def _l10n_es_edi_verifactu_mark_for_next_batch(self, cancellation=False):
+    def _l10n_es_edi_verifactu_create_documents(self, cancellation=False):
         record_values_list = [
             order._l10n_es_edi_verifactu_get_record_values(cancellation=cancellation)
             for order in self
         ]
-        return self.env['l10n_es_edi_verifactu.document']._mark_records_for_next_batch(record_values_list)
+        return self.env['l10n_es_edi_verifactu.document'].sudo()._create_from_record_values_list(record_values_list)
+
+    def _l10n_es_edi_verifactu_mark_for_next_batch(self, cancellation=False):
+        documents = self._l10n_es_edi_verifactu_create_documents(cancellation=cancellation)
+        self.env['l10n_es_edi_verifactu.document'].trigger_next_batch()
+        return documents
 
     # TODO: Remove in 17.1+
     @api.model
@@ -260,13 +256,16 @@ class PosOrder(models.Model):
         res = super()._generate_pos_order_invoice()
 
         for order in self:
+            new_documents = False
+
             waiting_documents = order.l10n_es_edi_verifactu_document_ids._filter_waiting()
             if waiting_documents:
                 raise UserError(_("The order can not be invoiced. It is waiting to send a Veri*Factu record to the AEAT already."))
 
             # Cancel the order
             if order.l10n_es_edi_verifactu_state in ('accepted', 'registered_with_errors'):
-                order._l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
+                order.sudo()._l10n_es_edi_verifactu_create_documents(cancellation=True)
+                new_documents = True
 
             refunded_order = self.refunded_order_ids
             if refunded_order and not refunded_order.account_move:
@@ -275,7 +274,11 @@ class PosOrder(models.Model):
             # Register the invoice instead. The call to `super()` may already have sent it
             invoice = order.account_move
             if invoice.l10n_es_edi_verifactu_required and invoice and not invoice.l10n_es_edi_verifactu_document_ids:
-                invoice._l10n_es_edi_verifactu_mark_for_next_batch()
+                invoice.sudo()._l10n_es_edi_verifactu_create_documents()
+                new_documents
+
+            if new_documents:
+                self.env['l10n_es_edi_verifactu.document'].trigger_next_batch()
 
         return res
 

@@ -34,11 +34,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
       * handles the sending of the data as XML to the AEAT
       * stores information extracted from the received response
 
-    The main function to generate Veri*Factu Documents is `_mark_records_for_next_batch`:
-      1. It generates the documents (submission or cancellation)
+    The main functions are
+      1. `_create_from_record_values_list` to generate Veri*Factu Documents (submission or cancellation):
          * The documents form a chain in generation order by including a reference to the preceding document.
          * The function handles the correct chaining.
-      2. It sends them (and any other unsent documents) directly to the AEAT if possible (see below).
+      2. `trigger_next_batch` to send all waiting documents (now if possible or via a cron as soon as possible)
 
     We can not necessarily send the documents directly after generation.
     This is because the AEAT requires a waiting time between shipments (or reaching 1000 new records to send).
@@ -126,7 +126,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
     @api.depends('document_type')
     def _compute_display_name(self):
         for document in self:
-            document.display_name = _("Verifactu Document %s", document.id)
+            document.display_name = _("Veri*Factu Document %s", document.id)
 
     @api.depends('document_type')
     def _compute_json_attachment_filename(self):
@@ -158,6 +158,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         name = vals['name']
         invoice_date = vals['invoice_date']
         move_type = vals['move_type']
+        documents = vals['documents']
         refunded_document = vals['refunded_document']
         substituted_document = vals['substituted_document']
         substituted_document_reversal_document = vals['substituted_document_reversal_document']
@@ -175,6 +176,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if not name or len(name) > 60:
             errors.append(_("The name of the record is not between 1 and 60 characters long: %(name)s.",
                             name=name))
+
+        if documents and documents._filter_waiting():
+            errors.append(_("We are waiting to send a Veri*Factu record to the AEAT already."))
 
         certificate = company.sudo()._l10n_es_edi_verifactu_get_certificate()
         if not certificate:
@@ -297,7 +301,8 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         return document
 
-    def _mark_records_for_next_batch(self, record_values_list):
+    @api.model
+    def _create_from_record_values_list(self, record_values_list):
         """Create Veri*Factu documents for input `record_values_list`.
         Return a dictionary (record -> document) containing all the created documents.
         In case we already have documents waiting to be sent for a record it is skipped (no new document is created).
@@ -327,21 +332,16 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 lock_error = _("Someone else is already generating Veri*Factu documents for the same company.")
                 continue
 
-            previous_document = self.env['l10n_es_edi_verifactu.document'].search(
-                [('chain_index', '!=', False)], order='chain_index desc', limit=1,
-            )
+            previous_document = company._l10n_es_edi_verifactu_get_last_document()
             for record_values in record_values_list:
                 if lock_error:
                     record_values['errors'].append(lock_error)
-                if record_values.get('documents', self.env[self._name])._filter_waiting():
-                    record_values['errors'].append(_("We are waiting to send a Veri*Factu record to the AEAT already."))
                 document = self.env['l10n_es_edi_verifactu.document']._create_for_record(
                     record_values, previous_record_identifier=previous_document.record_identifier,
                 )
                 if document.state != 'error':
                     previous_document = document
                 result[record_values['record']] = document
-        self.env['l10n_es_edi_verifactu.document'].trigger_next_batch()
         return result
 
     @api.model

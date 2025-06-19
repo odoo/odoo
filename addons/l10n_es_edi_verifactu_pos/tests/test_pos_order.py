@@ -23,7 +23,6 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         cls.fakenow = datetime.datetime(2025, 1, 1)
         cls.startClassPatcher(freeze_time(cls.fakenow))
 
-
     @contextmanager
     def with_pos_session(self):
         session = self.open_new_session(0.0)
