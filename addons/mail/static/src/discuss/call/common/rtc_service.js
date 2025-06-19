@@ -2141,7 +2141,7 @@ export const rtcService = {
     dependencies: [
         "bus_service",
         "discuss.p2p",
-        "discuss.pip_service",
+        "discuss.call_pip_service",
         "discuss.ptt_extension",
         "mail.sound_effects",
         "mail.store",
@@ -2155,7 +2155,7 @@ export const rtcService = {
      */
     start(env, services) {
         const rtc = env.services["mail.store"].rtc;
-        rtc.pipService = services["discuss.pip_service"];
+        rtc.pipService = services["discuss.call_pip_service"];
         onChange(rtc.pipService.state, "active", () => {
             const isPipMode = rtc.pipService.state.active;
             if (!isPipMode) {

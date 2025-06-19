@@ -28,7 +28,7 @@ export class CallPip extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.pipService = useService("discuss.pip_service");
+        this.pipService = useService("discuss.call_pip_service");
         this.rtc = useService("discuss.rtc");
         this.rootRef = useRef("root");
         useSubEnv({ pipWindow: window });
@@ -342,7 +342,7 @@ export class CallPip extends Component {
 }
 
 export const callPipService = {
-    dependencies: ["discuss.pip_service", "mail.store"],
+    dependencies: ["discuss.call_pip_service", "mail.store"],
     start() {
         registry.category("main_components").add("discuss.CallPip", { Component: CallPip });
     },

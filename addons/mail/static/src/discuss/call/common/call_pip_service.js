@@ -59,4 +59,4 @@ export const callPipService = {
     },
 };
 
-registry.category("services").add("discuss.pip_service", callPipService);
+registry.category("services").add("discuss.call_pip_service", callPipService);
