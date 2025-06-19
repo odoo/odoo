@@ -519,7 +519,7 @@ export class Composer extends Component {
         if (this.props.type !== "note") {
             allRecipients.push(...this.thread.additionalRecipients);
             // auto-create partners:
-            const newPartners = allRecipients.filter((recipient) => !recipient.persona);
+            const newPartners = allRecipients.filter((recipient) => !recipient.partner_id);
             if (newPartners.length !== 0) {
                 const recipientEmails = [];
                 newPartners.forEach((recipient) => {
@@ -532,10 +532,10 @@ export class Composer extends Component {
                 });
                 for (const index in partners) {
                     const partnerData = partners[index];
-                    const persona = this.store.Persona.insert({ ...partnerData, type: "partner" });
+                    const partner = this.store["res.partner"].insert(partnerData);
                     const email = recipientEmails[index];
                     const recipient = allRecipients.find((recipient) => recipient.email === email);
-                    Object.assign(recipient, { persona });
+                    recipient.partner_id = partner.id;
                 }
             }
         }
@@ -552,7 +552,7 @@ export class Composer extends Component {
             // Reset signature when recovering an empty body.
             composer.emailAddSignature = true;
         }
-        let signature = this.store.self.main_user_id?.signature;
+        let signature = this.store.self_partner?.main_user_id?.signature;
         if (signature) {
             const divElement = document.createElement("div");
             divElement.setAttribute("data-o-mail-quote", "1");
@@ -575,7 +575,7 @@ export class Composer extends Component {
             default_partner_ids:
                 this.props.type === "note"
                     ? []
-                    : allRecipients.map((recipient) => recipient.persona.id),
+                    : allRecipients.map((recipient) => recipient.partner_id),
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,

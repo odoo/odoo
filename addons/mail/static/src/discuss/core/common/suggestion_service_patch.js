@@ -15,8 +15,8 @@ const suggestionServicePatch = {
     /**
      * @override
      */
-    isSuggestionValid(persona, thread) {
-        if (thread?.model === "discuss.channel" && persona.eq(this.store.odoobot)) {
+    isSuggestionValid(partner, thread) {
+        if (thread?.model === "discuss.channel" && partner.eq(this.store.odoobot)) {
             return true;
         }
         return super.isSuggestionValid(...arguments);
@@ -38,11 +38,11 @@ const suggestionServicePatch = {
             // from inadvertently leaking the private message to the
             // mentioned partner.
             let partners = thread.channel_member_ids
-                .map((member) => member.persona)
-                .filter((persona) => persona.type === "partner");
+                .filter((member) => member.partner_id)
+                .map((member) => member.partner_id);
             if (thread.channel_type === "channel") {
                 const group = (thread.parent_channel_id || thread).group_public_id;
-                partners = new Set([...partners, ...(group?.personas ?? [])]);
+                partners = new Set([...partners, ...(group?.partner_ids ?? [])]);
             }
             return partners;
         } else {
@@ -120,8 +120,8 @@ const suggestionServicePatch = {
             recentChatPartnerIds: this.store.getRecentChatPartnerIds(),
             memberPartnerIds: new Set(
                 thread?.channel_member_ids
-                    .filter((member) => member.persona.type === "partner")
-                    .map((member) => member.persona.id)
+                    .filter((member) => member.partner_id)
+                    .map((member) => member.partner_id.id)
             ),
         });
     },

@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             async run() {
                 /** @type {import("models").Store} */
                 const store = odoo.__WOWL_DEBUG__.root.env.services["mail.store"];
-                if (store.self.type === "guest") {
+                if (store.self_guest) {
                     const src = this.anchor.querySelector("img").src;
                     const token = store["ir.attachment"].get(
                         (src.match("/web/image/([0-9]+)") || []).at(-1)
@@ -174,11 +174,13 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
+            trigger:
+                ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
             content: "Check the earlier provided extra attachment is listed",
-            trigger: '.o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer[title="extra.txt"]',
+            trigger:
+                '.o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer[title="extra.txt"]',
         },
         {
             content: "Save edited message",

@@ -77,7 +77,10 @@ export class MessageReactionList extends Component {
     }
 
     hasSelfReacted(reaction) {
-        return this.store.self.in(reaction.personas);
+        return (
+            this.store.self_partner?.in(reaction.partner_ids) ||
+            this.store.self_guest?.in(reaction.guest_ids)
+        );
     }
 
     onClickReaction(reaction) {

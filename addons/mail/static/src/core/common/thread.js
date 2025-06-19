@@ -494,7 +494,7 @@ export class Thread extends Component {
 
     async onClickPreferences() {
         const actionDescription = await this.orm.call("res.users", "action_get");
-        actionDescription.res_id = this.store.self.main_user_id?.id;
+        actionDescription.res_id = this.store.self_partner?.main_user_id?.id;
         this.env.services.action.doAction(actionDescription);
     }
 
@@ -651,8 +651,8 @@ export class Thread extends Component {
 
     get startMessageSubtitle() {
         if (this.props.thread.parent_channel_id) {
-            const authorName = Object.values(this.store.Persona.records).find((persona) =>
-                persona.main_user_id?.eq(this.props.thread.create_uid)
+            const authorName = Object.values(this.store["res.partner"].records).find(
+                (partner) => partner.main_user_id === this.props.thread.create_uid
             )?.name;
             if (authorName) {
                 return _t("Started by %(authorName)s", { authorName });

@@ -49,7 +49,7 @@
                     <t t-set-slot="body" t-esc="installationRequest.body"/>
                     <t t-set-slot="name"><t  t-esc="installationRequest.displayName"/></t>
                     <t t-set-slot="icon">
-                        <ImStatus persona="installationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                        <ImStatus partner="installationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
                     <t t-set-slot="sideContent">
                         <a t-if="ui.isSmall" class="btn fa fa-cloud-download" />
@@ -70,7 +70,7 @@
                     <t t-set-slot="body" t-esc="notificationRequest.body"/>
                     <t t-set-slot="name"><t t-esc="notificationRequest.displayName"/></t>
                     <t t-set-slot="icon">
-                        <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                        <ImStatus partner="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
                     <t t-set-slot="sideContent">
                         <a t-if="ui.isSmall" class="btn fa fa-bell" />

@@ -81,9 +81,9 @@ const threadPatch = {
         const data = await rpc("/mail/thread/subscribe", {
             res_model: this.model,
             res_id: this.id,
-            partner_ids: [this.store.self.id],
+            partner_ids: [this.store.self_partner?.id],
         });
         this.store.insert(data);
-    }
+    },
 };
 patch(Thread.prototype, threadPatch);

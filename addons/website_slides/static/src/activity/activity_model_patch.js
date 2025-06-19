@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 const activityPatch = {
     setup() {
         super.setup(...arguments);
-        this.request_partner_id = fields.One("Persona");
+        this.request_partner_id = fields.One("res.partner");
     },
 };
 patch(Activity.prototype, activityPatch);
