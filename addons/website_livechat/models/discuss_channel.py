@@ -21,7 +21,7 @@ class DiscussChannel(models.Model):
          delete discuss_channel as not useful to keep empty chat
          """
         super().channel_pin(pinned=pinned)
-        if self.livechat_active and not self.message_ids:
+        if self.channel_type == "livechat" and not pinned and not self.message_ids:
             self.sudo().unlink()
 
     def _field_store_repr(self, field_name):

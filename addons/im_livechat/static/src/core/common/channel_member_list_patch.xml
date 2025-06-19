@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="im_livechat.ChannelMemberList" t-inherit="discuss.ChannelMemberList" t-inherit-mode="extension">
         <xpath expr="//button[@name='inviteButton']" position="attributes">
-            <attribute name="t-if">props.thread.channel_type != "livechat" or props.thread.livechat_active</attribute>
+            <attribute name="t-if">!props.thread.livechat_end_dt</attribute>
         </xpath>
     </t>
 </templates>
