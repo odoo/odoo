@@ -12,10 +12,13 @@ from datetime import datetime
 @tagged('post_install', '-at_install')
 class TestSaleOrderEDIGen(TestSaleCommon):
     def test_sale_order_download_edi(self):
-        self.partner_a.vat = 'US12345674'
+        self.env.company.vat = 'BE0477472701'
+        self.partner_a.vat = 'NL123456782B90'
+
         so = self.env['sale.order'].create({
             'name': 'My SO',
             'partner_id': self.partner_a.id,
+            'client_order_ref': 'PO/1234',
             'order_line': [
                 Command.create({
                     'product_id': self.product_a.id,
