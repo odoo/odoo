@@ -241,3 +241,16 @@ test("link redirection should not be prefixed when the current page is not a web
     // the open method should not be called from onClickForcePreviewMode
     expect.verifySteps([]);
 });
+
+test("Focus should be on label when adding a new URL", async () => {
+    const { editor } = await setupEditor("<p>ab[]</p>");
+    await insertText(editor, "/link");
+    await animationFrame();
+    expect(".active .o-we-command-name").toHaveText("Link");
+    await click(".o-we-command-name:first");
+    await animationFrame();
+    expect(".o-we-linkpopover").toHaveCount(1);
+    expect(".o-we-linkpopover input.o_we_label_link").toBeFocused({
+        message: "should focus label input by default",
+    });
+});
