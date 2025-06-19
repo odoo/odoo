@@ -60,6 +60,7 @@
             <cbc:IssueDate t-out="vals.get('issue_date')" />
             <cbc:OrderTypeCode t-out="vals.get('order_type_code')" />
             <cbc:Note t-out="vals.get('note')" />
+            <cbc:DocumentCurrencyCode t-out="vals.get('document_currency_code')" />
             <cac:ValidityPeriod>
                 <cbc:EndDate t-out="vals.get('validity_date')"/>
             </cac:ValidityPeriod>
@@ -69,7 +70,6 @@
             <cac:OriginatorDocumentReference>
                 <cbc:ID t-out="vals.get('originator_document_reference')"/>
             </cac:OriginatorDocumentReference>
-            <cbc:DocumentCurrencyCode t-out="vals.get('document_currency_code')" />
             <cac:BuyerCustomerParty>
                 <cac:Party>
                     <t t-call="{{PartyType_template}}">
