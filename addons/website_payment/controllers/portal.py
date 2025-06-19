@@ -165,17 +165,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :return: The payment methods either because they are the brand of a primary payment
             method or because the brand is a primary payment method.
         """
-        limit = self._cast_as_int(limit) or 6
+        limit = self._cast_as_int(limit)
         # Sudoed to be able to read the brands of primary methods
-        return request.env['payment.method'].sudo().search_read(
-            [
-                '|', '&', ('is_primary', '=', True),
-                     '&', ('provider_ids.is_published', '=', True),
-                          ('brand_ids', '=', False),
-                     '&', ('is_primary', '=', False),
-                          ('primary_payment_method_id.provider_ids.is_published', '=', True),
-            ],
-            fields=('id', 'name', 'code'),
-            limit=limit,
-            order='sequence',
-        )
+        return request.env['payment.method']._get_available_payment_methods(limit)

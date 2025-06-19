@@ -1,22 +1,24 @@
-import { SupportedPaymentMethods } from "./supported_payment_methods";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
+import { Interaction } from "@web/public/interaction";
 
 
-const SupportedPaymentMethodsEdit = I => class extends I {
+class SupportedPaymentMethodsEdit extends Interaction {
+    static selector = ".s_supported_payment_methods[data-empty=true]";
     dynamicContent = {
         ".btn-view_providers": {
             "t-on-click": this.onClickViewPorviders.bind(this),
         },
     };
 
+    start() {
+        this.render();
+    }
+
     /**
-     * @override To display a message when no payment methods could be found.
+     * Displays a message when no payment methods could be found (will not be saved by the editor).
      */
     render() {
-        if (this.payment_methods.length) {
-            return super.render();
-        }
         // If the snippet is empty, a <br> tag is added by default
         this.el.replaceChildren();
         this.renderAt(
@@ -35,6 +37,5 @@ const SupportedPaymentMethodsEdit = I => class extends I {
 registry
     .category("public.interactions.edit")
     .add("website.supported_payment_methods", {
-        Interaction: SupportedPaymentMethods,
-        mixin: SupportedPaymentMethodsEdit,
+        Interaction: SupportedPaymentMethodsEdit,
     });
