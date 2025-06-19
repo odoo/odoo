@@ -127,7 +127,7 @@ export class PowerButtonsPlugin extends Plugin {
             editableRect.bottom > blockRect.top &&
             isEmptyBlock(block) &&
             !this.services.ui.isSmall &&
-            !closestElement(editableSelection.anchorNode, "td, li") &&
+            !closestElement(editableSelection.anchorNode, "td, th, li") &&
             !block.style.textAlign &&
             this.getResource("power_buttons_visibility_predicates").every((predicate) =>
                 predicate(editableSelection)

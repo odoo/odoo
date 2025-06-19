@@ -31,5 +31,7 @@ export function getColumnIndex(td) {
  * @returns {Array<HTMLTableCellElement>}
  */
 export function getTableCells(table) {
-    return [...table.querySelectorAll("td")].filter((td) => closestElement(td, "table") === table);
+    return [...table.querySelectorAll("td, th")].filter(
+        (cell) => closestElement(cell, "table") === table
+    );
 }

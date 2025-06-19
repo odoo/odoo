@@ -556,6 +556,10 @@ export function isListElement(node) {
 
 export const listElementSelector = [...listContainers].join(",");
 
+export function isTableCell(node) {
+    return ["TH", "TD"].includes(node.nodeName);
+}
+
 /**
  * @param {Element} parentBlock
  * @param {Node[]} nodes
