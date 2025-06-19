@@ -44,6 +44,18 @@ class TestBIR2307Generation(TestPhCommon):
             'country_id': cls.env.ref('base.ph').id,
             'zip': "+900–1-096",
         })
+
+        cls.partner_a.write({
+            'vat': '123-456-789-001',
+            'branch_code': '001',
+            'name': 'JMC Company',
+            'street': "250 Amorsolo Street",
+            'city': "Manila",
+            'country_id': cls.env.ref('base.ph').id,
+            'zip': "+900–1-096",
+            'is_company': True,
+        })
+
         cls.other_currency = cls.setup_other_currency('EUR', rates=[('2017-01-01', 2)])
 
     def test_bir_2307_company(self):
@@ -58,9 +70,9 @@ class TestBIR2307Generation(TestPhCommon):
         # 2: Build the expected values
         expected_values = {
             # Header
-            0: ['Reporting_Month', 'Vendor_TIN', 'branchCode', 'companyName', 'surName', 'firstName', 'middleName', 'address', 'nature', 'ATC', 'income_payment', 'ewt_rate', 'tax_amount'],
+            0: ['Reporting_Month', 'Vendor_TIN', 'branchCode', 'companyName', 'surName', 'firstName', 'middleName', 'address', 'zip_code', 'nature', 'ATC', 'income_payment', 'ewt_rate', 'tax_amount'],
             # Row
-            1: ['01/15/2020', '789456123', '789', 'Test Partner', '', '', '', '9 Super Street, Super City, Philippines', 'Test line', 'WC640', 100.0, 1.0, 1.0],
+            1: ['01/15/2020', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '1% WC640 - Supplier of goods', 'WC640', 100.0, 1.0, 1.0],
         }
 
         report_file = io.BytesIO(bir_2307)
@@ -112,13 +124,14 @@ class TestBIR2307Generation(TestPhCommon):
         for row in range(1, sheet.nrows):
             result.append(sheet.row_values(row))
         self.assertEqual(result, [
-            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', 'test line', 'WI010', 1000.0, 10.0, 100.0]
+            ['01/01/2025', '123456789', '001', '', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '', 'WI010', 1000.0, 10.0, 100.0]
         ])
 
     def test_03_atc_affected_by_vat(self):
         """ Ensure that generating the file on a document where the ATC tax is affected works as expected. """
         vat = self._create_tax('15% VAT', 15, include_base_amount=True)
         atc = self._create_tax('10% ATC', -10, l10n_ph_atc='WI010', is_base_affected=True)
+        atc.description = '10% ATC'
         bill = self.init_invoice(
             move_type='in_invoice',
             amounts=[1000],
@@ -137,7 +150,7 @@ class TestBIR2307Generation(TestPhCommon):
         for row in range(1, sheet.nrows):
             result.append(sheet.row_values(row))
         self.assertEqual(result, [
-            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', 'test line', 'WI010', 1150.0, 10.0, 115.0]
+            ['01/01/2025', '123456789', '001', '', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '10% ATC', 'WI010', 1150.0, 10.0, 115.0]
         ])
 
     def test_04_multi_currency(self):
@@ -147,7 +160,7 @@ class TestBIR2307Generation(TestPhCommon):
             move_type='in_invoice',
             amounts=[2000],
             taxes=tax,
-            partner=self.partner,
+            partner=self.partner_a,
             invoice_date='2025-01-01',
             currency=self.other_currency,
         )
@@ -163,7 +176,7 @@ class TestBIR2307Generation(TestPhCommon):
             result.append(sheet.row_values(row))
         # We expect the values in company currency in the file.
         self.assertEqual(result, [
-            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', 'test line', 'WI010', 1000.0, 10.0, 100.0]
+            ['01/01/2025', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '', 'WI010', 1000.0, 10.0, 100.0]
         ])
 
     @classmethod
