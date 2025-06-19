@@ -19,6 +19,7 @@ import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/errors/error_handlers";
 import { sprintf } from "@web/core/utils/strings";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { useTrackedFinalizedOrder } from "@point_of_sale/app/hooks/use_tracked_finalized_order";
 
 export class PaymentScreen extends Component {
     static template = "point_of_sale.PaymentScreen";
@@ -47,12 +48,19 @@ export class PaymentScreen extends Component {
         useErrorHandlers();
         this.payment_interface = null;
         this.error = false;
+        this.locked = false;
         this.validateOrder = useAsyncLockedMethod(this.validateOrder);
         onMounted(this.onMounted);
+        useTrackedFinalizedOrder(
+            this.props.orderUuid,
+            this.pos.firstScreen,
+            false,
+            () => this.locked
+        );
     }
 
     onMounted() {
-        const order = this.pos.get_order();
+        const order = this.currentOrder;
 
         for (const payment of order.payment_ids) {
             const pmid = payment.payment_method_id.id;
@@ -301,6 +309,7 @@ export class PaymentScreen extends Component {
         }
 
         this.pos.addPendingOrder([this.currentOrder.id]);
+        this.locked = true;
         this.currentOrder.state = "paid";
 
         this.env.services.ui.block();
