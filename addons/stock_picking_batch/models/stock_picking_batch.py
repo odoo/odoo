@@ -85,17 +85,23 @@ class StockPickingBatch(models.Model):
         for batch in self:
             estimated_shipping_weight = 0
             estimated_shipping_volume = 0
+            done_package_ids = set()
             # packs
             for pack in self.move_line_ids.result_package_id:
                 p_type = pack.package_type_id
-                estimated_shipping_weight += pack.shipping_weight
-                if p_type:
+                if pack.shipping_weight:
+                    # shipping_weight was computed, so base_weight should be included.
+                    estimated_shipping_weight += pack.shipping_weight
+                    done_package_ids.add(pack.id)
+                elif p_type:
                     estimated_shipping_weight += p_type.base_weight or 0
                     estimated_shipping_volume += (p_type.packaging_length * p_type.width * p_type.height) / 1000.0**3
             # move without packs
-            for move in self.picking_ids.move_ids_without_package:
-                estimated_shipping_weight += move.product_id.weight * move.product_qty
-                estimated_shipping_volume += move.product_id.volume * move.product_qty
+            for move_line in self.picking_ids.move_ids.move_line_ids:
+                if move_line.result_package_id.id in done_package_ids:
+                    continue
+                estimated_shipping_weight += move_line.product_id.weight * move_line.quantity_product_uom
+                estimated_shipping_volume += move_line.product_id.volume * move_line.quantity_product_uom
             batch.estimated_shipping_weight = estimated_shipping_weight
             batch.estimated_shipping_volume = estimated_shipping_volume
 
@@ -271,13 +277,13 @@ class StockPickingBatch(models.Model):
         self.ensure_one()
         self.picking_ids.action_assign()
 
-    def action_put_in_pack(self):
+    def action_put_in_pack(self, package_id=False, package_type_id=False, package_name=False):
         """ Action to put move lines with 'Done' quantities into a new pack
         This method follows same logic to stock.picking.
         """
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            return self.move_line_ids.action_put_in_pack()
+            return self.move_line_ids.action_put_in_pack(package_id, package_type_id, package_name)
 
     def action_view_reception_report(self):
         action = self.picking_ids[0].action_view_reception_report()
@@ -343,6 +349,23 @@ class StockPickingBatch(models.Model):
                 'sticky': False,
                 'next': {'type': 'ir.actions.act_window_close'},
             }
+        }
+
+    def action_see_packages(self):
+        self.ensure_one()
+        return {
+            'name': self.env._("Packages"),
+            'res_model': 'stock.package',
+            'view_mode': 'list,kanban,form',
+            'views': [(self.env.ref('stock.view_stock_package_list_editable').id, 'list'), (False, 'kanban'), (False, 'form')],
+            'type': 'ir.actions.act_window',
+            'domain': [('picking_ids', 'in', self.picking_ids.ids)],
+            'context': {
+                'picking_id': self.picking_ids[:1].id,
+                'show_entire_packs': self.picking_type_id.show_entire_packs,
+                'allowed_pack_in_pack': self.picking_type_id.allow_pack_in_pack,
+                'search_default_main_packages': True,
+            },
         }
 
     # -------------------------------------------------------------------------

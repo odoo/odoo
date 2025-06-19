@@ -180,8 +180,6 @@ class StockMove(models.Model):
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     move_lines_count = fields.Integer(compute='_compute_move_lines_count')
-    package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, copy=False, index='btree_not_null')
-    picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     display_import_lot = fields.Boolean(compute='_compute_display_assign_serial')
     next_serial = fields.Char('First SN/Lot')
@@ -1114,8 +1112,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         fields = [
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id', 'location_final_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
-            'package_level_id', 'propagate_cancel', 'description_picking',
-            'never_product_template_attribute_value_ids',
+            'propagate_cancel', 'description_picking', 'never_product_template_attribute_value_ids',
         ]
         if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
             fields.append('date')
@@ -1688,7 +1685,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         if not lot_id:
             lot_id = self.env['stock.lot']
         if not package_id:
-            package_id = self.env['stock.quant.package']
+            package_id = self.env['stock.package']
         if not owner_id:
             owner_id = self.env['res.partner']
 
@@ -1898,8 +1895,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                         assigned_moves_ids.add(move.id)
                         continue
                     # Reserve new quants and create move lines accordingly.
-                    forced_package_id = move.package_level_id.package_id or None
-                    taken_quantity = move._update_reserved_quantity(need, move.location_id, package_id=forced_package_id, strict=False)
+                    taken_quantity = move._update_reserved_quantity(need, move.location_id, strict=False)
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue
                     moves_to_redirect.add(move.id)

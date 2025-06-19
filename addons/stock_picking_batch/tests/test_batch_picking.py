@@ -727,6 +727,7 @@ class TestBatchPicking02(TransactionCase):
         })
         self.package_type = self.env['stock.package.type'].create({
             'name': 'Big box',
+            'identification_method': 'manual',
             'base_weight': 10,
             'packaging_length': 500,
             'width': 500,
@@ -740,7 +741,7 @@ class TestBatchPicking02(TransactionCase):
         package. It should be possible to transfer the whole package across the
         two pickings
         """
-        package = self.env['stock.quant.package'].create({
+        package = self.env['stock.package'].create({
             'name': 'superpackage',
             'package_type_id': self.package_type.id,
         })

@@ -302,7 +302,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         mo = mo_form.save()
         mo.action_confirm()
 
-        package = self.env['stock.quant.package'].create({})
+        package = self.env['stock.package'].create({})
 
         picking = mo.picking_ids
         picking.move_line_ids.write({
@@ -604,13 +604,13 @@ class TestKitPicking(common.TestMrpCommon):
 
         delivery_form = Form(self.env['stock.picking'])
         delivery_form.picking_type_id = self.picking_type_in
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = bom_kit.product_id
             move.product_uom_qty = 4
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = not_kit_1
             move.product_uom_qty = 4
-        with delivery_form.move_ids_without_package.new() as move:
+        with delivery_form.move_ids.new() as move:
             move.product_id = not_kit_2
             move.product_uom_qty = 3
         delivery = delivery_form.save()
