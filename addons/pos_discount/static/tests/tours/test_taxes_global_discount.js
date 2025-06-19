@@ -3,6 +3,8 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
+import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { registry } from "@web/core/registry";
 
@@ -84,6 +86,17 @@ registry
                 ProductScreen.checkTotalAmount("30.04"),
                 ProductScreen.checkTaxAmount("3.98"),
                 ...payAndInvoice("30.04"),
+                // On refund, check if the global discount line is correctly prorated in the refund order
+                ...ProductScreen.clickRefund(),
+                TicketScreen.filterIs("Paid"),
+                TicketScreen.selectOrder("001"),
+                ProductScreen.clickNumpad("1"),
+                TicketScreen.confirmRefund(),
+                inLeftSide([
+                    ...ProductScreen.orderLineHas("product_1_1", "-1", "-18.32"),
+                    ...ProductScreen.orderLineHas("discount", "1", "0.37"),
+                ]),
+                ProductScreen.checkTotalAmount("-17.95"),
             ].flat(),
     });
 
