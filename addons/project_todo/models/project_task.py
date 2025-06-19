@@ -51,7 +51,7 @@ class ProjectTask(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': f'/odoo/project/{self.project_id.id}/tasks/{self.id}',
+            'url': f'/odoo/to-do/{self.id}/project.task/{self.id}',
         }
 
     @api.model
