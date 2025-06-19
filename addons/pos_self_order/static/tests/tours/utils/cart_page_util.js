@@ -115,3 +115,11 @@ export function checkTotalPrice(price) {
         trigger: `.order-price :contains(Total):contains(${price})`,
     };
 }
+
+export function acceptUnavailableProductDialog(label) {
+    return {
+        content: `Confirm the 'Oops...' unavailable product popup with button '${label}'`,
+        trigger: `.modal-dialog:has(.modal-title:contains('Oops')) .btn.btn-primary:contains("${label}")`,
+        run: "click",
+    };
+}

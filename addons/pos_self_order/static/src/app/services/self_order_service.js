@@ -13,6 +13,7 @@ import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { constructFullProductName, deduceUrl, random5Chars } from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
 import {
@@ -74,8 +75,10 @@ export class SelfOrder extends Reactive {
         }
 
         this.data.connectWebSocket("ORDER_STATE_CHANGED", () => this.getUserDataFromServer());
-        this.data.connectWebSocket("PRODUCT_CHANGED", (payload) => {
-            this.models.connectNewData(payload);
+        this.data.connectWebSocket("PRODUCT_CHANGED", async (payload) => {
+            await this.data.read("product.template", [payload]);
+            await this.data.searchRead("product.product", [["product_tmpl_id", "in", [payload]]]);
+            this.initData();
         });
         if (this.config.self_ordering_mode === "kiosk") {
             this.data.connectWebSocket("STATUS", ({ status }) => {
@@ -756,6 +759,8 @@ export class SelfOrder extends Reactive {
 
     verifyCart() {
         let result = true;
+        const unavailableProducts = new Set();
+
         for (const line of this.currentOrder.unsentLines) {
             if (line.combo_parent_id?.uuid) {
                 continue;
@@ -773,19 +778,42 @@ export class SelfOrder extends Reactive {
                     line.customer_note = alreadySent.customer_note;
                     line.selected_attributes = alreadySent.selected_attributes;
                 } else {
+                    const productName =
+                        wrongChild?.product_id?.name &&
+                        !line.product_id?.self_order_available &&
+                        line.product_id?.name
+                            ? line.product_id.name
+                            : wrongChild?.product_id?.name || line.product_id?.name;
+                    productName && unavailableProducts.add(productName);
+                    // Remove all children and parent if any product is unavailable
+                    line.combo_line_ids.forEach((childLine) => {
+                        childLine.delete();
+                    });
                     line.delete();
                 }
-                this.notification.add(
-                    _t(
-                        "%s is not available anymore, it has thus been removed from your order. Please review your order and validate it again.",
-                        line.full_product_name
-                    ),
-                    { type: "danger" }
-                );
                 result = false;
             }
         }
 
+        if (unavailableProducts.size) {
+            const productNames = Array.from(unavailableProducts).join(", ");
+            const goBackIfCartEmpty = () => {
+                if (!this.currentOrder.unsentLines.length) {
+                    this.router.back();
+                }
+            };
+            this.dialog.add(ConfirmationDialog, {
+                title: _t("Oops..."),
+                body: markup(
+                    _t(
+                        "It seems that <strong class='text-danger'>%s</strong> no longer available. Please go back and edit your order.",
+                        productNames
+                    )
+                ),
+                confirm: goBackIfCartEmpty,
+                dismiss: goBackIfCartEmpty,
+            });
+        }
         return result;
     }
 
