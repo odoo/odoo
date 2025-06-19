@@ -289,7 +289,7 @@
                 <field name="date_deadline" widget="remaining_days"/>
                 <field name="date_done" string="Done Date" optional="hide"/>
                 <field name="feedback" optional="hide"/>
-                <widget name="activity_list_reschedule_dropdown"/>
+                <widget name="mail_activity_list_reschedule_dropdown"/>
                 <button name="action_done" type="object" string="Done" icon="fa-check" invisible="active == False"/>
                 <button name="unlink" type="object" string="Cancel" icon="fa-times" class="text-danger" invisible="active == False"/>
             </list>
@@ -335,7 +335,7 @@
         <field name="name">mail.activity.view.kanban.open.target</field>
         <field name="model">mail.activity</field>
         <field name="arch" type="xml">
-            <kanban string="Activity" action="action_open_document" type="object" js_class="activity_my_kanban">
+            <kanban string="Activity" action="action_open_document" type="object" js_class="mail_activity_my_kanban">
                 <templates>
                     <field name="active" invisible="1"/>
                     <field name="icon" invisible="1"/>
