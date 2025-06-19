@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.channelInfoList">
+        <ActionPanel title.translate="Information" minWidth="200" initialWidth="250" icon="'fa fa-info'">
+            <div t-if="props.thread.livechat_active" class="d-flex flex-column bg-inherit gap-1">
+                <h3 class="pt-3">Status</h3>
+                <t t-foreach="statusButtons" t-as="btn" t-key="btn.status">
+                    <button
+                        class="flex btn btn-sm px-1 btn-secondary rounded-3 gap-1"
+                        t-att-class="{
+                            'active': props.thread.livechat_status === btn.status,
+                            'btn-warning': props.thread.livechat_status === btn.status and btn.status === 'waiting',
+                            'btn-danger': props.thread.livechat_status === btn.status and btn.status === 'need_help',
+                        }"
+                        t-on-click="() => this.updateLivechatStatus(btn.status)"
+                    >
+                        <i t-att-class="btn.icon"/>
+                        <span class="ms-2 text-truncate" t-esc="btn.label"/>
+                    </button>
+                </t>
+            </div>
+            <div t-if="!props.thread.livechat_active and props.thread.livechat_failure"  class="o-livechat-channelInfoList-outcome d-flex flex-column bg-inherit gap-2">
+                <h3 class="pt-3">Outcome</h3>
+                <button
+                    class="flex btn btn-sm px-1 btn-secondary active rounded-3"
+                >
+                    <span class="text-truncate">
+                        <t t-if="props.thread.livechat_is_escalated">Escalated</t>
+                        <t t-elif="props.thread.livechat_failure === 'no_failure'">Success</t>
+                        <t t-elif="props.thread.livechat_failure === 'no_answer'">Not answered</t>
+                        <t t-elif="props.thread.livechat_failure === 'no_agent'">No one available</t>
+                        <t t-else=""></t>
+                    </span>
+                </button>
+            </div>
+            <div t-if="chatbotAnswers.length" class="d-flex flex-column bg-inherit gap-1">
+                <h3 class="pt-3">Chatbot answers</h3>
+                <t t-foreach="chatbotAnswers" t-as="answer" t-key="answer.id">
+                    <div class="d-flex align-items-center gap-1 bg-light rounded-3">
+                        <i class="fa fa-comment me-1"/>
+                        <span class="text-truncate" t-esc="answer.label"/>
+                    </div>
+                </t>
+            </div>
+            <div t-if="expertiseTags.length" class="d-flex flex-column bg-inherit gap-1">
+                <h3 class="pt-3">Expertise</h3>
+                <div class="d-flex flex-wrap gap-1">
+                    <TagsList displayText="true" tags="expertiseTags"/>
+                </div>
+            </div>
+            <div t-if="recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
+                <h3 class="pt-3">Recent conversations</h3>
+                <t t-foreach="recentConversations || []" t-as="thread" t-key="thread.localId">
+                    <button
+                        class="btn btn-sm btn-secondary d-flex align-items-center justify-content-center gap-1 rounded-3"
+                        t-on-click="()=>thread.open()"
+                    >
+                        <i class="fa fa-external-link opacity-75"/>
+                        <span class="ms-1 fw-bold" t-esc="thread.displayName"/>
+                    </button>
+                </t>
+            </div>
+            <div class="d-flex flex-column bg-inherit gap-1">
+                <h3 class="pt-3">Notes</h3>
+                <textarea class="form-control" rows="3" placeholder="Add your notes here..." t-model="props.thread.note" t-on-blur="onBlurNote"></textarea>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>

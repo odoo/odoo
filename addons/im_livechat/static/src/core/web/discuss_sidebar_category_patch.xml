@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='mail.discuss_badge']" position="before">
+            <span t-if="props.thread.channel_type === 'livechat' and props.thread.livechat_active" class="me-2">
+                <i
+                    class="fa fa-circle"
+                    t-att-class="{
+                        'text-muted': props.thread.livechat_status === 'in_progress',
+                        'text-warning': props.thread.livechat_status === 'waiting',
+                        'text-danger': props.thread.livechat_status === 'need_help',
+                    }"
+                />
+            </span>
+        </xpath>
+    </t>
+</templates>

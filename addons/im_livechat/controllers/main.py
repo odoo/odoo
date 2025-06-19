@@ -252,3 +252,13 @@ class LivechatController(http.Controller):
         in conversation with an operator, it's not possible to send the visitor a chat request."""
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             channel._close_livechat_session()
+
+    def _prepare_visitor_data(self, store, channel, visitor_id):
+        return store.get_result()
+
+    @http.route("/im_livechat/visitor", methods=["POST"], type="jsonrpc", auth="user")
+    def visitor_data(self, channel_id, visitor_id=None, **kwargs):
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            return False
+        return self._prepare_visitor_data(Store(), channel, visitor_id)

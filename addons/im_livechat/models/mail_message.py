@@ -55,7 +55,10 @@ class MailMessage(models.Model):
                         and channel.livechat_operator_id != chatbot,
                     }
                     if answer := chatbot_message.user_script_answer_id:
-                        step_data["selectedAnswer"] = answer.id
+                        step_data["selectedAnswer"] = {
+                            "id": answer.id,
+                            "label": answer.name,
+                        }
                     store.add_model_values("ChatbotStep", step_data)
                     store.add(
                         message, {"chatbotStep": {"scriptStep": step.id, "message": message.id}}

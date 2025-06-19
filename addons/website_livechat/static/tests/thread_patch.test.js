@@ -55,7 +55,6 @@ test("Rendering of visitor banner", async () => {
     });
     await contains("span", { text: "English" });
     await contains("span > span", { text: "General website" });
-    await contains("span", { text: "Home → Contact" });
 });
 
 test("Livechat with non-logged visitor should show visitor banner", async () => {

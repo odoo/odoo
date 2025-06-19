@@ -221,6 +221,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 "id": self.chatbot_script.operator_partner_id.id,
                 "type": "partner",
             }
+            channel_data_join["discuss.channel"][0]["livechat_failure"] = "no_agent"
             channel_data_join["discuss.channel"][0]["member_count"] = 3
             channel_data_join["discuss.channel"][0]["name"] = "Testing Bot"
             channel_data_join["discuss.channel.member"].insert(0, member_bot_data)

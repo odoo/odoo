@@ -9,7 +9,6 @@ export class ChatbotStep extends Record {
     answer_ids = fields.Many("chatbot.script.answer", {
         compute() {
             return this.scriptStep?.answer_ids;
-
         },
     });
     selectedAnswer = fields.One("chatbot.script.answer");
@@ -19,6 +18,11 @@ export class ChatbotStep extends Record {
         },
     });
     isLast = false;
+    operator_expertise_ids = fields.Many("im_livechat.expertise", {
+        compute() {
+            return this.scriptStep?.operator_expertise_ids;
+        },
+    });
 
     get expectAnswer() {
         return [
