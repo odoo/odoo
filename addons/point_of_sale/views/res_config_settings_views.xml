@@ -19,7 +19,8 @@
                 </t>
 
                 <app data-string="Point of sale" string="Point of Sale" name="point_of_sale" groups="point_of_sale.group_pos_manager">
-                    <div style="z-index:1000;" class="position-fixed w-100 bg-white">
+                    <div class="pos_res_config_container">
+                    <div class="sticky-top w-100 bg-white">
                         <setting type="header" string="Point of Sale">
                             <field name="pos_config_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this point of sale."/>
                             <button name="action_pos_config_create_new" type="object" string="+ New Shop" class="btn btn-link"/>
@@ -489,6 +490,7 @@
                                 </setting>
                             </block>
                         </div>
+                    </div>
                     </div>
                 </app>
             </xpath>
