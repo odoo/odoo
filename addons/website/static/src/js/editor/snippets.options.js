@@ -3738,7 +3738,6 @@ options.registry.WebsiteAnimate = options.Class.extend({
             // Trigger a DOM reflow.
             void this.$target[0].offsetWidth;
             this.$target.css('animation-name', '');
-            this.ownerDocument.defaultView.dispatchEvent(new Event('resize'));
         } else {
             // Trigger a DOM reflow (Needed to prevent the animation from
             // being launched twice when previewing the "Intensity" option).
