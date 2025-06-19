@@ -5,6 +5,7 @@ from collections import defaultdict
 import werkzeug
 import werkzeug.exceptions
 from odoo import _, api, fields, models
+from odoo.fields import SQL
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.image import image_data_uri
 
@@ -48,6 +49,7 @@ class ResPartnerBank(models.Model):
     )
     currency_id = fields.Many2one(tracking=True)
     lock_trust_fields = fields.Boolean(compute='_compute_lock_trust_fields')
+    duplicate_bank_partner_ids = fields.Many2many('res.partner', compute="_compute_duplicate_bank_partner_ids")
 
     @api.constrains('journal_id')
     def _check_journal_id(self):
@@ -62,6 +64,23 @@ class ResPartnerBank(models.Model):
             if bank.allow_out_payment:
                 if not self.env.user.has_group('account.group_validate_bank_account'):
                     raise ValidationError(_('You do not have the right to trust or un-trust a bank account.'))
+
+    @api.depends('acc_number')
+    def _compute_duplicate_bank_partner_ids(self):
+        id2duplicates = dict(self.env.execute_query(SQL(
+            """
+                SELECT this.id,
+                       ARRAY_AGG(other.partner_id)
+                  FROM res_partner_bank this
+             LEFT JOIN res_partner_bank other ON this.acc_number = other.acc_number
+                                             AND this.id != other.id
+                 WHERE this.id = ANY(%(ids)s)
+              GROUP BY this.id
+            """,
+            ids=self.ids,
+        )))
+        for bank in self:
+            bank.duplicate_bank_partner_ids = self.env['res.partner'].browse(id2duplicates.get(bank._origin.id))
 
     @api.depends('partner_id.country_id', 'sanitized_acc_number', 'allow_out_payment', 'acc_type')
     def _compute_display_account_warning(self):
