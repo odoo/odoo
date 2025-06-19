@@ -263,9 +263,12 @@ class CustomizeGrayAction extends BuilderAction {
 class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
     static id = "changeColorPalette";
     static dependencies = ["customizeWebsite"];
-    setup() {}
-    async apply(context) {
-        const confirmed = await new Promise((resolve) => {
+    setup() {
+        this.preview = false;
+        this.dependencies.customizeWebsite.withCustomHistory(this);
+    }
+    async load() {
+        return new Promise((resolve) => {
             this.services.dialog.add(ConfirmationDialog, {
                 body: _t(
                     "Changing the color palette will reset all your color customizations, are you sure you want to proceed?"
@@ -274,7 +277,9 @@ class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
                 cancel: () => resolve(false),
             });
         });
-        if (!confirmed) {
+    }
+    async apply(context) {
+        if (!context.loadResult) {
             return;
         }
         await super.apply(context);
