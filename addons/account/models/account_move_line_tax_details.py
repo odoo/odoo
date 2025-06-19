@@ -7,6 +7,74 @@ from odoo.tools import SQL
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    def _get_query_tax_details_new(self, domain):
+        query = self.env['account.move.line']._where_calc(domain)
+        table_references = query.from_clause
+        search_condition = query.where_clause
+        query = SQL ('''
+            SELECT
+                move_id,
+                tax_line_id,
+                base_line_id,
+                ROUND(tax * base_cumul / base, 2)
+                  - LAG(ROUND(tax * base_cumul / base, 2), 1, 0.0)
+                    OVER (PARTITION BY tax_line_id, tax_id ORDER BY tax_line_id, base_line_id) AS tax
+            FROM (
+                SELECT
+                    lt.id AS tax_line_id,
+                    t.id AS tax_id,
+                    lt.balance AS tax,
+                    account_move_line.id AS base_line_id,
+                    lt.move_id,
+                    SUM(
+                        CASE WHEN t.amount_type <> 'fixed'
+                             THEN account_move_line.balance
+                             ELSE account_move_line.quantity
+                        END
+                    ) OVER (PARTITION BY lt.id, t.id ORDER BY t.sequence, account_move_line.id) AS base_cumul,
+                    SUM(
+                        CASE WHEN t.amount_type <> 'fixed'
+                             THEN account_move_line.balance
+                             ELSE account_move_line.quantity
+                        END
+                    ) OVER (PARTITION BY lt.id, t.id) AS base
+                FROM
+                    account_move_line account_move_line
+                    JOIN account_move move ON move.id = account_move_line.move_id
+                    JOIN account_move_line_account_tax_rel r ON r.account_move_line_id = account_move_line.id
+                    JOIN account_tax t ON t.id = r.account_tax_id
+                    JOIN account_move_line lt ON lt.tax_line_id = t.id AND lt.move_id = account_move_line.move_id
+                     AND account_move_line.tax_repartition_line_id IS NULL
+                     AND account_move_line.move_id = lt.move_id
+                    AND COALESCE(lt.partner_id, 0) = COALESCE(account_move_line.partner_id, 0)
+                    AND lt.currency_id = account_move_line.currency_id
+                    AND (
+                        (t.analytic IS NOT TRUE)
+                        OR (lt.analytic_distribution IS NULL AND account_move_line.analytic_distribution IS NULL)
+                        OR lt.analytic_distribution = account_move_line.analytic_distribution
+                    )
+                    JOIN account_tax_repartition_line tax_rep ON
+                         tax_rep.id = lt.tax_repartition_line_id
+                     AND (
+                            move.move_type != 'entry'
+                            OR
+                            sign(account_move_line.balance) = sign(lt.balance * t.amount * tax_rep.factor_percent)
+                         )
+                     AND (
+                        COALESCE(tax_rep.account_id, account_move_line.account_id) = lt.account_id
+                    )
+                WHERE
+                    %(search_condition)s
+                ORDER BY
+                    lt.id, t.sequence, account_move_line.id
+            ) AS taxes;
+            ''',
+            table_references=table_references,
+            search_condition=search_condition,
+            line_ids=tuple(self.ids)
+        )
+        return query
+
     @api.model
     def _get_query_tax_details_from_domain(self, domain, fallback=True) -> SQL:
         """ Create the tax details sub-query based on the orm domain passed as parameter.
