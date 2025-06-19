@@ -19,6 +19,7 @@
         'im_livechat',
         'mail',
         'mail_bot',
+        'mass_mailing',
         'project_todo',
         'website_livechat',
         'website_slides',
