@@ -36,35 +36,50 @@ class TestLivechatUI(HttpCaseWithUserDemo, TestLivechatCommon):
         self.start_tour("/", 'website_livechat_no_rating_tour')
         channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor_tour.id)])
         self.assertEqual(len(channel), 1, "There can only be one channel created for 'Visitor Tour'.")
-        self.assertEqual(channel.livechat_active, False, 'Livechat must be inactive after closing the chat window.')
+        self.assertTrue(channel.livechat_end_dt, 'Livechat must be inactive after closing the chat window.')
 
     def test_no_rating_no_close_flow_ui(self):
         self.start_tour("/", 'website_livechat_no_rating_no_close_tour')
         channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor_tour.id)])
         self.assertEqual(len(channel), 1, "There can only be one channel created for 'Visitor Tour'.")
-        self.assertEqual(channel.livechat_active, True, 'Livechat must be active while the chat window is not closed.')
+        self.assertFalse(
+            channel.livechat_end_dt,
+            "Livechat must be active while the chat window is not closed.",
+        )
 
     def test_empty_chat_request_flow_no_rating_no_close_ui(self):
         # Open an empty chat request
         self.visitor_tour.with_user(self.operator).sudo().action_send_chat_request()
-        chat_request = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor_tour.id), ('livechat_active', '=', True)])
+        chat_request = self.env["discuss.channel"].search(
+            [("livechat_visitor_id", "=", self.visitor_tour.id), ("livechat_end_dt", "=", False)]
+        )
 
         # Visitor ask a new livechat session before the operator start to send message in chat request session
         self.start_tour("/", 'website_livechat_no_rating_no_close_tour')
 
         # Visitor's session must be active (gets the priority)
-        channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor_tour.id), ('livechat_active', '=', True)])
+        channel = self.env["discuss.channel"].search(
+            [("livechat_visitor_id", "=", self.visitor_tour.id), ("livechat_end_dt", "=", False)]
+        )
         self.assertEqual(len(channel), 1, "There can only be one channel created for 'Visitor Tour'.")
-        self.assertEqual(channel.livechat_active, True, 'Livechat must be active while the chat window is not closed.')
+        self.assertFalse(
+            channel.livechat_end_dt,
+            "Livechat must be active while the chat window is not closed.",
+        )
 
         # Check that the chat request has been canceled.
         chat_request.invalidate_recordset()
-        self.assertEqual(chat_request.livechat_active, False, "The livechat request must be inactive as the visitor started himself a livechat session.")
+        self.assertTrue(
+            chat_request.livechat_end_dt,
+            "The livechat request must be inactive as the visitor started himself a livechat session.",
+        )
 
     def test_chat_request_flow_with_rating_ui(self):
         # Open a chat request
         self.visitor_tour.with_user(self.operator).sudo().action_send_chat_request()
-        chat_request = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor_tour.id), ('livechat_active', '=', True)])
+        chat_request = self.env["discuss.channel"].search(
+            [("livechat_visitor_id", "=", self.visitor_tour.id), ("livechat_end_dt", "=", False)]
+        )
 
         # Operator send a message to the visitor
         self._send_message(chat_request, self.operator.email, "Hello my friend !", author_id=self.operator.partner_id.id)
@@ -77,4 +92,4 @@ class TestLivechatUI(HttpCaseWithUserDemo, TestLivechatCommon):
     def _check_end_of_rating_tours(self):
         channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor_tour.id)])
         self.assertEqual(len(channel), 1, "There can only be one channel created for 'Visitor Tour'.")
-        self.assertEqual(channel.livechat_active, False, 'Livechat must be inactive after rating.')
+        self.assertTrue(channel.livechat_end_dt, "Livechat must be inactive after rating.")

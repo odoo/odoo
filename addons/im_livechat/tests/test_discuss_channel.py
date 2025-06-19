@@ -16,11 +16,11 @@ class TestDiscussChannel(TestImLivechatCommon):
             },
         )
         chat = self.env["discuss.channel"].browse(data["channel_id"])
-        self.assertTrue(chat.livechat_active)
+        self.assertFalse(chat.livechat_end_dt)
         chat.with_user(bob_user).action_unfollow()
-        self.assertTrue(chat.livechat_active)
+        self.assertFalse(chat.livechat_end_dt)
         chat.with_user(chat.livechat_operator_id.main_user_id).action_unfollow()
-        self.assertFalse(chat.livechat_active)
+        self.assertTrue(chat.livechat_end_dt)
 
     def test_human_operator_failure_states(self):
         data = self.make_jsonrpc_request(

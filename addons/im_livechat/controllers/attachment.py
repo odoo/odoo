@@ -21,7 +21,7 @@ class LivechatAttachmentController(AttachmentController):
         if (
             thread_model == "discuss.channel"
             and thread.channel_type == "livechat"
-            and not thread.livechat_active
+            and thread.livechat_end_dt
             and not request.env.user._is_internal()
         ):
             raise AccessError(_("You are not allowed to upload attachments on this channel."))

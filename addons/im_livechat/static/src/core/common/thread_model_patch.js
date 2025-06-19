@@ -7,6 +7,7 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     setup() {
         super.setup();
+        this.livechat_end_dt = fields.Datetime();
         this.livechat_operator_id = fields.One("Persona");
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
@@ -61,11 +62,11 @@ patch(Thread.prototype, {
     },
 
     get composerDisabled() {
-        return this.channel_type === "livechat" && this.livechat_active === false;
+        return this.channel_type === "livechat" && this.livechat_end_dt;
     },
 
     get composerDisabledText() {
-        return this.channel_type === "livechat" && this.livechat_active === false
+        return this.channel_type === "livechat" && this.livechat_end_dt
             ? _t("This livechat conversation has ended")
             : "";
     },

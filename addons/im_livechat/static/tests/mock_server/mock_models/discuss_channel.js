@@ -2,6 +2,7 @@ import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { fields, makeKwArgs } from "@web/../tests/web_test_helpers";
+import { serializeDate } from "@web/core/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 
 export class DiscussChannel extends mailModels.DiscussChannel {
@@ -15,12 +16,12 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         for (const channel_id of ids) {
             const [channel] = this.browse(channel_id);
             if (channel.channel_type == "livechat" && channel.channel_member_ids.length <= 2) {
-                this.write([channel.id], { livechat_active: false });
+                this.write([channel.id], { livechat_end_dt: serializeDate(luxon.DateTime.now()) });
                 BusBus._sendone(
                     channel,
                     "mail.record/insert",
                     new mailDataHelpers.Store()
-                        .add(this.browse(channel_id), { livechat_active: channel.livechat_active })
+                        .add(this.browse(channel_id), makeKwArgs({ fields: ["livechat_end_dt"] }))
                         .get_result()
                 );
             }
@@ -62,7 +63,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 } else {
                     channelInfo.livechat_operator_id = false;
                 }
-                channelInfo["livechat_active"] = channel.livechat_active;
+                channelInfo["livechat_end_dt"] = channel.livechat_end_dt;
                 channelInfo.livechat_channel_id = mailDataHelpers.Store.one(
                     this.env["im_livechat.channel"].browse(channel.livechat_channel_id),
                     makeKwArgs({ fields: ["name"] })
@@ -75,16 +76,16 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
 
-        if (!this.browse(channel_id)[0].livechat_active) {
+        if (this.browse(channel_id)[0].livechat_end_dt) {
             return;
         }
-        this.write([channel_id], { livechat_active: false });
+        this.write([channel_id], { livechat_end_dt: serializeDate(luxon.DateTime.now()) });
         const [channel] = this.browse(channel_id);
         BusBus._sendone(
             channel,
             "mail.record/insert",
             new mailDataHelpers.Store()
-                .add(this.browse(channel_id), { livechat_active: channel.livechat_active })
+                .add(this.browse(channel_id), makeKwArgs({ fields: ["livechat_end_dt"] }))
                 .get_result()
         );
         if (channel.message_ids.length === 0) {

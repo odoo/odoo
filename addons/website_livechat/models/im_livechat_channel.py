@@ -17,7 +17,16 @@ class Im_LivechatChannel(models.Model):
             discuss_channel_vals['livechat_visitor_id'] = visitor_sudo.id
             # As chat requested by the visitor, delete the chat requested by an operator if any to avoid conflicts between two flows
             # TODO DBE : Move this into the proper method (open or init mail channel)
-            chat_request_channel = self.env['discuss.channel'].sudo().search([('livechat_visitor_id', '=', visitor_sudo.id), ('livechat_active', '=', True)])
+            chat_request_channel = (
+                self.env["discuss.channel"]
+                .sudo()
+                .search(
+                    [
+                        ("livechat_visitor_id", "=", visitor_sudo.id),
+                        ("livechat_end_dt", "=", False),
+                    ]
+                )
+            )
             for discuss_channel in chat_request_channel:
                 operator = discuss_channel.livechat_operator_id
                 operator_name = operator.user_livechat_username or operator.name

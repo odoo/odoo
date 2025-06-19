@@ -12,6 +12,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 import { defineLivechatModels } from "./livechat_test_helpers";
+import { serializeDate, today } from "@web/core/l10n/dates";
 
 defineLivechatModels();
 
@@ -66,6 +67,7 @@ test("closing a chat window with no message from admin side unpins it", async ()
             Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "livechat",
+        livechat_end_dt: serializeDate(today()),
         livechat_operator_id: serverState.partnerId,
     });
     await start();
@@ -94,7 +96,6 @@ test("Focus should not be stolen when a new livechat open", async () => {
                 Command.create({ guest_id: guestId }),
             ],
             channel_type: "livechat",
-            livechat_active: true,
         },
     ]);
     await start();
@@ -130,7 +131,6 @@ test("do not ask confirmation if other operators are present", async () => {
         ],
         livechat_operator_id: serverState.partnerId,
         channel_type: "livechat",
-        livechat_active: true,
     });
     setupChatHub({ opened: [channelId] });
     await start();

@@ -84,7 +84,7 @@ export class Chatbot extends Record {
         this.thread.messages.add(message_id);
         if (this.currentStep) {
             this.currentStep.isLast = false;
-            this.thread.livechat_active = true;
+            this.thread.livechat_end_dt = false;
         }
         this.start();
     }
@@ -136,7 +136,7 @@ export class Chatbot extends Record {
             (this.currentStep?.isLast &&
                 (!this.currentStep.expectAnswer || this.currentStep?.completed)) ||
             this.currentStep?.operatorFound ||
-            !this.thread.livechat_active
+            this.thread.livechat_end_dt
         );
     }
 

@@ -69,7 +69,6 @@ export class LivechatChannel extends models.ServerModel {
         return {
             channel_partner_ids: [operator.partner_id],
             channel_member_ids: membersToAdd,
-            livechat_active: true,
             livechat_operator_id: operator.partner_id,
             livechat_channel_id: id,
             anonymous_name: ResUsers._is_public(this.env.uid) ? false : anonymous_name,

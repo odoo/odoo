@@ -26,7 +26,6 @@ test("display country in channel member list", async () => {
         country_id: countryId,
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
-        livechat_active: true,
     });
     await start();
     await openDiscuss(channelId);
