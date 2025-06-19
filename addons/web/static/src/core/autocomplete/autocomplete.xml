@@ -66,8 +66,19 @@
                                         t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
                                     >
                                         <t t-slot="{{ source.optionSlot }}" label="option.label" data="option.data">
-                                            <t t-out="option.label"/>
-                                        </t>
+                                            <t t-if="!option.labelTermOrder" t-out="option.label"/>
+                                            <t t-else="">
+                                                <t t-foreach="option.labelTermOrder.bits" t-as="bit" t-key="bit.id">
+                                                    <t t-if="!option.labelTermOrder.termIndexes.includes(bit.id)" t-esc="bit.bit"/>
+                                                    <mark class="o-autocomplete--mark" t-else="" t-esc="bit.bit"/>
+                                                </t>
+                                                <br/>
+                                                <t t-if="option.labelTermOrder.termIndexes.length === 0" t-foreach="option.synonymsTermOrder.bits" t-as="bit" t-key="bit.id">
+                                                    <small t-if="!option.synonymsTermOrder.termIndexes.includes(bit.id)" t-esc="bit.bit"/>
+                                                    <small t-else=""><mark class="o-autocomplete--mark" t-esc="bit.bit"/></small>
+                                                </t>
+                                            </t>  
+                                        </t>  
                                     </t>
                                 </li>
                             </t>

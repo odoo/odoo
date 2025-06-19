@@ -32,9 +32,9 @@
                     <div t-attf-class="dropdown o_configurator_type_dd d-inline-block {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}">
                         <div class="w-100 px-2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <a class="d-flex align-items-center">
-                                <i class="text-primary" t-if="state.selectedType">
+                                <div class="text-primary" t-if="state.selectedType">
                                     <t t-esc="state.getSelectedType(state.selectedType).label"/>
-                                </i>
+                                </div>
                                 <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
                             </a>
                         </div>
@@ -52,7 +52,7 @@
                     <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
                     <label class="o_configurator_industry_wrapper me-2" t-ref="industrySelection">
                         <AutoComplete
-                            placeholder.translate="Clothes, Marketing, ..."
+                            placeholder.translate="Restaurant, Hair Salon, Clothing Store,..."
                             value="state.selectedIndustry?.label ?? ''"
                             sources="sources"
                             inputDebounceDelay="400"
