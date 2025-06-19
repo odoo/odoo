@@ -1,9 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import operator
+
+from collections import defaultdict
 from datetime import datetime, timedelta
+from functools import reduce
 
 from odoo import api, models, fields
 from odoo.fields import Domain
+from odoo.osv import expression
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -71,16 +76,41 @@ class DiscussChannelMember(models.Model):
     def _create_or_update_history(self, values_by_member=None):
         if not values_by_member:
             values_by_member = {}
-        member_without_history = self.filtered(lambda m: not m.livechat_member_history_ids)
-        self.env["im_livechat.channel.member.history"].create(
+        members_without_history = self.filtered(lambda m: not m.livechat_member_history_ids)
+        history_domain = reduce(
+            operator.or_,
             [
-                {"member_id": member.id, **values_by_member.get(member, {})}
-                for member in member_without_history
-            ]
+                Domain([("channel_id", "=", h.channel_id.id), ("partner_id", "=", h.partner_id.id)])
+                if h.partner_id
+                else Domain(
+                    [("channel_id", "=", h.channel_id.id), ("guest_id", "=", h.guest_id.id)]
+                )
+                for h in members_without_history
+            ],
+            Domain(expression.FALSE_DOMAIN),
         )
-        for member in (self - member_without_history):
+        history_by_channel_persona = defaultdict(dict)
+        for history in self.env["im_livechat.channel.member.history"].search_fetch(
+            history_domain, ["channel_id", "partner_id", "guest_id"]
+        ):
+            history_by_channel_persona[history.channel_id][history.partner_id, history.guest_id] = (
+                history
+            )
+        to_create = members_without_history.filtered(
+            lambda m: (m.partner_id, m.guest_id) not in history_by_channel_persona[m.channel_id]
+        )
+        self.env["im_livechat.channel.member.history"].create(
+            [{"member_id": member.id, **values_by_member.get(member, {})} for member in to_create]
+        )
+        for member in self - to_create:
+            history = (
+                member.livechat_member_history_ids
+                or history_by_channel_persona[member.channel_id][member.partner_id, member.guest_id]
+            )
+            if history.member_id != member:
+                history.member_id = member
             if member in values_by_member:
-                member.livechat_member_history_ids.update(values_by_member[member])
+                history.write(values_by_member[member])
 
     def _inverse_livechat_member_type(self):
         # sudo - im_livechat.channel.member: creating/updating history following

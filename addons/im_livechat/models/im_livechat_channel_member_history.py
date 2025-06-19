@@ -37,6 +37,18 @@ class ImLivechatChannelMemberHistory(models.Model):
     _member_id_unique = models.Constraint(
         "UNIQUE(member_id)", "Members can only be linked to one history"
     )
+    _channel_id_partner_id_unique = models.Constraint(
+        "UNIQUE(channel_id, partner_id)",
+        "One partner can only be linked to one history on a channel",
+    )
+    _channel_id_guest_id_unique = models.Constraint(
+        "UNIQUE(channel_id, guest_id)",
+        "One guest can only be linked to one history on a channel",
+    )
+    _partner_id_or_guest_id_constraint = models.Constraint(
+        "CHECK(NOT (partner_id IS NOT NULL AND guest_id IS NOT NULL))",
+        "History should either be linked to a partner or a guest but not both",
+    )
 
     @api.constrains("channel_id")
     def _constraint_channel_id(self):

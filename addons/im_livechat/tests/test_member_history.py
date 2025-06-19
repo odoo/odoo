@@ -130,3 +130,33 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
         member = channel.add_members(partner_ids=john.partner_id.ids)
         with self.assertRaises(ValidationError):
             self.env["im_livechat.channel.member.history"].create({"member_id": member.id}).channel_id
+
+    def test_update_history_on_second_join(self):
+        john = self._create_operator("fr_FR")
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Livechat Channel", "user_ids": [john.id]},
+        )
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"anonymous_name": "Visitor", "channel_id": livechat_channel.id},
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        john_history = channel.channel_member_ids.livechat_member_history_ids.filtered(
+            lambda m: m.partner_id == john.partner_id
+        )
+        john_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == john.partner_id)
+        self.assertEqual(john_history.livechat_member_type, "agent")
+        self.assertEqual(john_member, john_history.member_id)
+        channel.with_user(john).action_unfollow()
+        john_history = channel.channel_member_ids.livechat_member_history_ids.filtered(
+            lambda m: m.partner_id == john.partner_id
+        )
+        self.assertFalse(john_history.member_id)
+        self.assertNotIn(john.partner_id, channel.channel_member_ids.partner_id)
+        channel._add_members(users=john)
+        self.assertIn(john.partner_id, channel.channel_member_ids.partner_id)
+        john_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == john.partner_id)
+        john_history = channel.channel_member_ids.livechat_member_history_ids.filtered(
+            lambda m: m.partner_id == john.partner_id
+        )
+        self.assertEqual(john_member, john_history.member_id)
