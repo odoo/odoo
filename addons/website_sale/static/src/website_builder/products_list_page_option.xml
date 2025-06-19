@@ -424,6 +424,28 @@
         </BuilderSelect>
     </BuilderRow>
 
+    <BuilderRow
+        label.translate="Show Secondary"
+        tooltip.translate="If a product has more than one image, showcase the second one on hover"
+        >
+        <BuilderCheckbox
+            id="'wsale_products_opt_img_secondary_show'"
+            classAction="'o_wsale_products_opt_img_secondary_show'"
+        />
+    </BuilderRow>
+    <BuilderRow
+        label.translate="Hover Effect"
+        level="1"
+        >
+        <BuilderSelect t-if="this.isActiveItem('wsale_products_opt_img_secondary_show')">
+            <BuilderSelectItem classAction="''">Match Primary One</BuilderSelectItem>
+            <BuilderSelectItem
+                classAction="'o_wsale_products_opt_img_secondary_show_instant'">
+                Instant
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
     <BuilderRow label.translate="Images Size">
         <BuilderSelect action="'websiteConfig'">
             <BuilderSelectItem classAction="'o_wsale_context_thumb_4_3'" actionParam="{views: ['website_sale.products_thumb_4_3']}">Landscape (4/3)</BuilderSelectItem>

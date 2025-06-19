@@ -138,6 +138,12 @@ class Website(models.Model):
         help="CSS class for product name color"
     )
 
+    shop_opt_products_img_secondary_class = fields.Char(
+        string="Shop Images Secondary Image behavior",
+        default='o_wsale_products_opt_img_secondary_show',
+        help="CSS class for the secondary product image on shop page"
+    )
+
     shop_opt_products_img_hover_class = fields.Char(
         string="Shop Images Hover Effect Class",
         default='o_wsale_products_opt_img_hover_zoom_in_light',

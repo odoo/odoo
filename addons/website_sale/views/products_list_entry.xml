@@ -20,7 +20,9 @@
         t-att-aria-label="product.name"
         >
 
-        <t t-if="context and 'shop'">
+        <t t-set="isShopPage" t-value="context and 'shop'"/>
+
+        <t t-if="isShopPage">
             <!-- URLs -->
             <t
                 t-set="product_path"
@@ -33,6 +35,11 @@
             <!-- Images -->
             <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
             <t t-set="image_holder" t-value="product._get_image_holder()"/>
+            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+            <t t-set="product_variant" t-value="request.env['product.product'].browse(product_variant_id) if product_variant_id else None"/>
+            <t t-set="all_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
+            <t t-set="primary_image" t-value="all_images[0] if all_images else image_holder"/>
+            <t t-set="secondary_image" t-value="all_images[1] if len(all_images) > 1 else None"/>
 
             <!-- Prices -->
             <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
@@ -44,46 +51,43 @@
             </t>
         </t>
 
-        <div class="oe_product_image position-relative flex-grow-0 overflow-hidden">
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
+        <div t-attf-class="oe_product_image position-relative flex-grow-0 overflow-hidden">
+            <input
+                type="hidden"
+                name="csrf_token"
+                t-att-value="request.csrf_token()"
+                t-nocache="The csrf token must always be up to date."
+            />
             <a
                 t-att-href="product_href"
-                class="oe_product_image_link d-block position-relative"
+                t-attf-class="oe_product_image_link position-relative {{secondary_image and 'oe_product_image_link_has_secondary'}}"
                 contenteditable="false"
                 t-att-title="product.name"
                 >
 
-                <t t-if="context and 'shop'">
-                    <t t-set="image_holder" t-value="product._get_image_holder()"/>
-                    <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
-                    <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-                    <t t-set="product_variant" t-value="request.env['product.product'].browse(product_variant_id) if product_variant_id else None"/>
-                    <t t-set="all_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
-                    <t t-set="primary_image" t-value="all_images[0] if all_images else image_holder"/>
-                    <t t-set="secondary_image" t-value="all_images[1] if len(all_images) > 1 else None"/>
-
+                <t t-if="isShopPage">
                     <!-- Primary image -->
                     <span t-field="primary_image.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'oe_product_image_img h-100 w-100 position-absolute'}"
-                        class="oe_product_image_img_wrapper o_product_image_primary d-flex h-100 justify-content-center align-items-center position-absolute"/>
+                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'oe_product_image_img h-100 w-100'}"
+                        class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center"/>
 
                     <!-- Secondary image (shown on hover) -->
                     <span t-if="secondary_image"
                         t-field="secondary_image.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'oe_product_image_img_secondary h-100 w-100 position-absolute'}"
-                        class="oe_product_image_img_wrapper oe_product_image_img_wrapper_hover o_product_image_secondary d-flex h-100 justify-content-center align-items-center position-absolute"/>
+                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'oe_product_image_img_secondary h-100 w-100'}"
+                        class="oe_product_image_img_wrapper oe_product_image_img_wrapper_secondary h-100 justify-content-center align-items-center"/>
                 </t>
                 <t t-else="">
                     <span
                         role="img"
                         t-attf-alt="{{product.name}} image"
-                        class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"
+                        class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center"
                     >
-                        <span class="oe_product_image_img h-100 w-100 position-absolute" t-attf-style="background-image: url({{product_image_href}});"/>
+                        <span class="oe_product_image_img h-100 w-100" t-attf-style="background-image: url({{product_image_href}});"/>
                     </span>
                 </t>
 
-                <t t-if="context and 'shop'">
+                <t t-if="isShopPage">
                     <t t-set="bg_color" t-value="td_product['ribbon'].bg_color"/>
                     <t t-set="text_color" t-value="td_product['ribbon'].text_color"/>
                     <t t-set="bg_class" t-value="td_product['ribbon']._get_position_class()"/>
@@ -163,7 +167,7 @@
                 </div>
                 <div class="o_wsale_product_btn d-flex gap-2">
                     <div class="o_wsale_product_btn_cta" groups="website.group_website_designer">
-                        <t t-if="context and 'shop'">
+                        <t t-if="isShopPage">
                             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
                             <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
                             <input name="product_template_id" t-att-value="product.id" type="hidden"/>

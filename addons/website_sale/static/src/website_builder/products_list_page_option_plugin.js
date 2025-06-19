@@ -57,6 +57,10 @@ class ProductsListPageOptionPlugin extends Plugin {
                     field: 'shop_opt_products_name_color_class'
                 },
                 {
+                    prefix: 'o_wsale_products_opt_img_secondary_',
+                    field: 'shop_opt_products_img_secondary_class'
+                },
+                {
                     prefix: 'o_wsale_products_opt_img_hover_',
                     field: 'shop_opt_products_img_hover_class'
                 },
@@ -72,7 +76,9 @@ class ProductsListPageOptionPlugin extends Plugin {
 
             // Single RPC call
             if (Object.keys(updateData).length > 0) {
+                console.log("Attempt rpc call:")
                 console.log(updateData)
+                console.log("////")
                 return rpc("/shop/config/website", updateData);
             }
         }
