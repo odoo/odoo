@@ -1,0 +1,16 @@
+<odoo>
+  <record id="view_move_form_fa3" model="ir.ui.view">
+    <field name="name">account.move.form.fa3</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="account.view_move_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//header" position="inside">
+        <button name="action_download_l10n_pl_ksef_xml"
+                string="Export FA(3) XML"
+                type="object"
+                class="btn-primary"
+                invisible = "not show_fa3_button"/>
+      </xpath>
+    </field>
+  </record>
+</odoo>

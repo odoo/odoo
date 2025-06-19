@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="l10n_pl_edi.fa3_xml_template" name="Polish FA(3) XML Template">
+    <Faktura xmlns="http://ksef.mf.gov.pl/wzor/2025/06/01/12345/"> <!-- Root element with official FA(3) namespace -->
+      <Naglowek> <!-- Invoice metadata -->
+        <KodFormularza kodSystemowy="FA (3)" wersjaSchemy="1-0E">FA</KodFormularza> <!-- Form type metadata as defined in the FA(3) schema -->
+        <WariantFormularza>3</WariantFormularza>
+        <DataWytworzeniaFa t-esc="invoice.write_date.strftime('%Y-%m-%dT%H:%M:%S')"/> <!-- Date when the invoice was created in Odoo -->
+        <KodWaluty t-esc="invoice.currency_id.name"/> <!-- Currency code: PLN, EUR, etc. -->
+        <RodzajFaktury>VAT</RodzajFaktury> <!-- Type of invoice: VAT, KOREKTA, etc. -->
+      </Naglowek>
+
+      <Podmiot1> <!-- Seller Information -->
+        <DaneIdentyfikacyjne>
+          <t t-if="invoice.company_id.vat"> <!-- Seller VAT number -->
+            <NIP t-esc="invoice.company_id.vat"/>
+          </t>
+          <PelnaNazwa t-esc="invoice.company_id.name"/> <!-- Seller's registered name -->
+        </DaneIdentyfikacyjne>
+
+        <Adres> <!-- Seller's address -->
+          <KodKraju>PL</KodKraju>
+          <Ulica t-esc="invoice.company_id.partner_id.street or ''"/>
+          <KodPocztowy t-esc="invoice.company_id.partner_id.zip or ''"/>
+          <Miejscowosc t-esc="invoice.company_id.partner_id.city or ''"/>
+        </Adres>
+      </Podmiot1>
+
+      <Podmiot2> <!-- Buyer Information -->
+        <DaneIdentyfikacyjne>
+          <t t-if="invoice.partner_id.vat">  <!-- Buyer's VAT number if available -->
+            <NIP t-esc="invoice.partner_id.vat"/>
+          </t>
+          <PelnaNazwa t-esc="invoice.partner_id.name"/> <!-- Buyer's full name -->
+        </DaneIdentyfikacyjne>
+
+        <t t-if="invoice.partner_id.street">
+          <Adres> <!-- Buyer's address-->
+            <KodKraju t-esc="invoice.partner_id.country_id.code or 'PL'"/>
+            <Ulica t-esc="invoice.partner_id.street"/>
+            <KodPocztowy t-esc="invoice.partner_id.zip or ''"/>
+            <Miejscowosc t-esc="invoice.partner_id.city or ''"/>
+          </Adres>
+        </t>
+      </Podmiot2>
+
+      <!-- Invoice Core Content -->
+      <Fa>
+        <P_1 t-esc="invoice.invoice_date.strftime('%Y-%m-%d')"/> <!-- Invoice date -->
+        <P_2 t-esc="invoice.name"/> <!-- Invoice number -->
+        <t t-set="line_index" t-value="0"/> <!-- Initialize line index -->
+        <t t-foreach="invoice.invoice_line_ids" t-as="line"> <!-- Loop through invoice lines -->
+          <t t-set="line_index" t-value="line_index + 1"/>
+          <FakturaWiersz>
+            <NrWierszaFa t-esc="line_index"/> <!-- Line number -->
+            <P_7 t-esc="line.name[:512]"/> <!-- Line description -->
+            <P_8A t-esc="line.product_uom_id.name"/> <!-- Unit of measure -->
+            <P_8B t-esc="'%.2f' % line.quantity"/>
+            <P_9A t-esc="'%.2f' % line.price_unit"/>
+            <P_11 t-esc="'%.2f' % line.price_subtotal"/>
+            <P_12 t-esc="line.tax_ids[0].l10n_pl_ksef_vat_rate if line.tax_ids else 'zw'"/>
+          </FakturaWiersz>
+        </t>
+
+        <Podsumowanie> <!-- Invoice totals -->
+          <P_13_1 t-esc="'%.2f' % invoice.amount_untaxed"/>
+          <P_14_1 t-esc="'%.2f' % invoice.amount_tax"/>
+          <P_15 t-esc="'%.2f' % invoice.amount_total"/>
+        </Podsumowanie>
+      </Fa>
+    </Faktura>
+  </template>
+</odoo>
