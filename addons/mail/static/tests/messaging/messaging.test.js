@@ -13,6 +13,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { animationFrame } from "@odoo/hoot-mock";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -56,7 +57,7 @@ test("Receiving a new message out of discuss app should open a chat bubble", asy
     await contains(".o-mail-ChatBubble[name='Dumbledore']");
 });
 
-test("Receiving a new message in discuss app should open a chat bubble after leaving discuss app", async () => {
+test("Receiving a new message in discuss app should not open a chat bubble after leaving discuss app", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -91,9 +92,11 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
             thread_model: "discuss.channel",
         })
     );
+    await contains(".o_notification_title", { text: "Dumbledore" });
     // leaving discuss.
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-ChatBubble[name='Dumbledore']");
+    await animationFrame();
+    await contains(".o-mail-ChatBubble[name='Dumbledore']", { count: 0 });
 });
 
 test("Posting a message in discuss app should not open a chat window after leaving discuss app", async () => {
