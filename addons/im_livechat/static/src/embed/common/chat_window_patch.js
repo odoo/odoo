@@ -28,6 +28,6 @@ patch(ChatWindow.prototype, {
         if (thread?.channel_type !== "livechat") {
             return false;
         }
-        return thread.chatbot?.completed || thread.livechat_active === false;
+        return thread.chatbot?.completed || thread.livechat_end_dt;
     },
 });

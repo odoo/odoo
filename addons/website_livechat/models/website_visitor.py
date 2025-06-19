@@ -23,11 +23,11 @@ class WebsiteVisitor(models.Model):
             create_column(self.env.cr, "website_visitor", "livechat_operator_id", "int4")
         return super()._auto_init()
 
-    @api.depends('discuss_channel_ids.livechat_active', 'discuss_channel_ids.livechat_operator_id')
+    @api.depends('discuss_channel_ids.livechat_end_dt', 'discuss_channel_ids.livechat_operator_id')
     def _compute_livechat_operator_id(self):
-        results = self.env['discuss.channel'].search_read(
-            [('livechat_visitor_id', 'in', self.ids), ('livechat_active', '=', True)],
-            ['livechat_visitor_id', 'livechat_operator_id']
+        results = self.env["discuss.channel"].search_read(
+            [("livechat_visitor_id", "in", self.ids), ("livechat_end_dt", "=", False)],
+            ["livechat_visitor_id", "livechat_operator_id"],
         )
         visitor_operator_map = {int(result['livechat_visitor_id'][0]): int(result['livechat_operator_id'][0]) for result in results}
         for visitor in self:
@@ -49,7 +49,9 @@ class WebsiteVisitor(models.Model):
         The visitor will receive the chat request the next time he navigates to a website page.
         (see _handle_webpage_dispatch for next step)"""
         # check if visitor is available
-        unavailable_visitors_count = self.env['discuss.channel'].search_count([('livechat_visitor_id', 'in', self.ids), ('livechat_active', '=', True)])
+        unavailable_visitors_count = self.env["discuss.channel"].search_count(
+            [("livechat_visitor_id", "in", self.ids), ("livechat_end_dt", "=", False)]
+        )
         if unavailable_visitors_count:
             raise UserError(_('Recipients are not available. Please refresh the page to get latest visitors status.'))
         # check if user is available as operator
@@ -76,7 +78,6 @@ class WebsiteVisitor(models.Model):
                 'anonymous_name': visitor_name,
                 'name': ', '.join([visitor_name, operator.livechat_username if operator.livechat_username else operator.name]),
                 'livechat_visitor_id': visitor.id,
-                'livechat_active': True,
             })
         discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
         for channel in discuss_channels:

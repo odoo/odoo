@@ -20,7 +20,10 @@ class DiscussChannel(models.Model):
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
     livechat_lang_id = fields.Many2one("res.lang", string="Language", help="Lang of the visitor of the channel.")
-    livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor or operator leaves the conversation.')
+    livechat_end_dt = fields.Datetime(
+        "Session end date",
+        help="Session is closed when either the visitor or the last agent leaves the conversation.",
+    )
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator', index='btree_not_null')
     livechat_channel_member_history_ids = fields.One2many("im_livechat.channel.member.history", "channel_id")
@@ -97,7 +100,7 @@ class DiscussChannel(models.Model):
         'Livechat Operator ID is required for a channel of type livechat.',
     )
 
-    _livechat_active_idx = models.Index("(livechat_active) WHERE livechat_active IS TRUE")
+    _livechat_end_dt_idx = models.Index("(livechat_end_dt) WHERE livechat_end_dt IS NULL")
     _livechat_failure_idx = models.Index(
         "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')"
     )
@@ -239,7 +242,7 @@ class DiscussChannel(models.Model):
             "anonymous_name",
             "chatbot_current_step",
             Store.One("country_id", ["code", "name"]),
-            "livechat_active",
+            Store.Attr("livechat_end_dt", predicate=lambda c: c.channel_type == "livechat"),
             # sudo - res.partner: accessing livechat operator is allowed
             Store.One(
                 "livechat_operator_id",
@@ -310,14 +313,14 @@ class DiscussChannel(models.Model):
     def _close_livechat_session(self, **kwargs):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
         self.ensure_one()
-        if self.livechat_active:
+        if not self.livechat_end_dt:
             member = self.channel_member_ids.filtered(lambda m: m.is_self)
             if member:
                 # sudo: discuss.channel.rtc.session - member of current user can leave call
                 member.sudo()._rtc_leave_call()
             # sudo: discuss.channel - visitor left the conversation, state must be updated
-            self.sudo().livechat_active = False
-            self.sudo()._bus_send_store(Store(self, "livechat_active"))
+            self.sudo().livechat_end_dt = fields.Datetime.now()
+            self.sudo()._bus_send_store(self, "livechat_end_dt")
             # avoid useless notification if the channel is empty
             if not self.message_ids:
                 return
@@ -475,7 +478,7 @@ class DiscussChannel(models.Model):
 
         if (
             # sudo: discuss.channel - visitor can access channel member history
-            self.livechat_active and self.sudo().livechat_channel_member_history_ids.filtered(
+            not self.livechat_end_dt and self.sudo().livechat_channel_member_history_ids.filtered(
                 lambda h: h.partner_id == message.author_id and h.livechat_member_type == "agent"
             )
         ):
@@ -487,7 +490,7 @@ class DiscussChannel(models.Model):
         # sudo: discuss.channel - visitor can clear current step to restart the script
         self.sudo().chatbot_current_step_id = False
         # sudo: discuss.channel - visitor can reactivate livechat
-        self.sudo().livechat_active = True
+        self.sudo().livechat_end_dt = False
         # sudo: chatbot.message - visitor can clear chatbot messages to restart the script
         self.sudo().chatbot_message_ids.unlink()
         return self._chatbot_post_message(
@@ -512,7 +515,11 @@ class DiscussChannel(models.Model):
         # sudo - discuss.channel: user just left but we need to close the live
         # chat if the last operator left.
         channel_sudo = self.sudo()
-        if channel_sudo.livechat_active and len(channel_sudo.channel_member_ids) == 1:
+        if (
+            channel_sudo.channel_type == "livechat"
+            and not channel_sudo.livechat_end_dt
+            and channel_sudo.member_count == 1
+        ):
             # sudo: discuss.channel - last operator left the conversation, state must be updated.
-            channel_sudo.livechat_active = False
-            self._bus_send_store(self, "livechat_active")
+            channel_sudo.livechat_end_dt = fields.Datetime.now()
+            self._bus_send_store(channel_sudo, "livechat_end_dt")

@@ -17,7 +17,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         store = Store()
         channels = request.env["discuss.channel"].search([
             ["is_member", "=", True],
-            ["livechat_active", "=", True],
+            ["livechat_end_dt", "=", False],
             ["chatbot_current_step_id.chatbot_script_id", "=", chatbot_script.id],
         ])
         for channel in channels:
@@ -37,7 +37,6 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
                 ),
                 Command.create({"partner_id": request.env.user.partner_id.id}),
             ],
-            'livechat_active': True,
             'livechat_operator_id': chatbot_script.operator_partner_id.id,
             'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id,
             'anonymous_name': False,

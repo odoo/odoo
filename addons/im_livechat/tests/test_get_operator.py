@@ -29,7 +29,6 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             {
                 "name": "Visitor 1",
                 "channel_type": "livechat",
-                "livechat_active": True,
                 "livechat_channel_id": livechat.id,
                 "livechat_operator_id": operator.partner_id.id,
                 "channel_member_ids": [Command.create({"partner_id": operator.partner_id.id})],
@@ -368,7 +367,6 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
         channel_data = {
             "name": "Visitor 1",
             "channel_type": "livechat",
-            "livechat_active": True,
             "livechat_channel_id": livechat_channel.id,
             "livechat_operator_id": operator.partner_id.id,
             "channel_member_ids": [Command.create({"partner_id": operator.partner_id.id})],

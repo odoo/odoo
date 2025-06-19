@@ -43,7 +43,6 @@ test("Can invite a partner to a livechat channel", async () => {
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
-        livechat_active: true,
     });
     await start();
     await openDiscuss(channelId);
@@ -86,7 +85,6 @@ test("Available operators come first", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_active: true,
     });
     await start();
     await openDiscuss(channelId);
@@ -121,7 +119,6 @@ test("Partners invited most frequently by the current user come first", async ()
             Command.create({ guest_id: guestId_1, last_interest_dt: "2021-01-03 12:00:00" }),
         ],
         livechat_operator_id: serverState.partnerId,
-        livechat_active: true,
     });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor #2" });
     pyEnv["discuss.channel"].create({
@@ -175,7 +172,6 @@ test("shows operators are in call", async () => {
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
-        livechat_active: true,
     });
     await start();
     await openDiscuss(channelId);
@@ -207,7 +203,6 @@ test("Operator invite shows livechat_username", async () => {
             Command.create({ guest_id: guestId_1, last_interest_dt: "2021-01-03 12:00:00" }),
         ],
         livechat_operator_id: serverState.partnerId,
-        livechat_active: true,
     });
     await start();
     await openDiscuss();

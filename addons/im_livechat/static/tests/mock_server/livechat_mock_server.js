@@ -68,7 +68,6 @@ async function get_session(request) {
             fetchChannelInfoState: "fetched",
             id: -1,
             isLoaded: true,
-            livechat_active: true,
             livechat_operator_id: mailDataHelpers.Store.one(
                 ResPartner.browse(channelVals.livechat_operator_id),
                 makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })

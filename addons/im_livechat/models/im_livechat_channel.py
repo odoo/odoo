@@ -90,7 +90,7 @@ class Im_LivechatChannel(models.Model):
 
     @api.depends(
         "user_ids.channel_ids.last_interest_dt",
-        "user_ids.channel_ids.livechat_active",
+        "user_ids.channel_ids.livechat_end_dt",
         "user_ids.channel_ids.livechat_channel_id",
         "user_ids.channel_ids.livechat_operator_id",
         "user_ids.channel_member_ids",
@@ -128,7 +128,7 @@ class Im_LivechatChannel(models.Model):
                 for (partner, livechat_channels, count) in self.env["discuss.channel"]._read_group(
                     [
                         ("livechat_operator_id", "in", limited_users.partner_id.ids),
-                        ("livechat_active", "=", True),
+                        ("livechat_end_dt", "=", False),
                         ("last_interest_dt", ">=", fields.Datetime.now() - timedelta(minutes=15)),
                     ],
                     groupby=["livechat_operator_id", "livechat_channel_id"],
@@ -279,7 +279,6 @@ class Im_LivechatChannel(models.Model):
         return {
             'channel_member_ids': members_to_add,
             "livechat_lang_id": self.env["res.lang"].search([("code", "=", lang)]).id,
-            'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
             "livechat_failure": "no_answer" if user_operator else "no_failure",
@@ -377,7 +376,7 @@ class Im_LivechatChannel(models.Model):
             LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = c.livechat_operator_id
             WHERE c.channel_type = 'livechat' AND c.create_date > ((now() at time zone 'UTC') - interval '24 hours')
             AND (
-                c.livechat_active IS TRUE
+                c.livechat_end_dt IS NULL
                 OR m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
             )
             AND c.livechat_operator_id in %s

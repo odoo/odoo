@@ -331,7 +331,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertFalse(member_of_operator.is_pinned, "read channel should be unpinned after one day")
-        self.assertFalse(member_of_operator.channel_id.livechat_active)
+        self.assertTrue(member_of_operator.channel_id.livechat_end_dt)
 
     def test_unread_channel_not_unpined_for_operator_after_autovacuum(self):
         data = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'visitor', 'channel_id': self.livechat_channel.id})
@@ -345,7 +345,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertTrue(member_of_operator.is_pinned, "unread channel should not be unpinned after autovacuum")
-        self.assertTrue(member_of_operator.channel_id.livechat_active)
+        self.assertFalse(member_of_operator.channel_id.livechat_end_dt)
 
     def test_livechat_manager_can_invite_anyone(self):
         channel = self.env["discuss.channel"].create(

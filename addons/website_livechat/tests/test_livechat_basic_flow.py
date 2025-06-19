@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+from freezegun import freeze_time
 
 from odoo import fields, tests, _
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -13,10 +14,14 @@ from odoo.tests.common import new_test_user
 class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
     def test_channel_created_on_user_interaction(self):
         self.start_tour('/', 'im_livechat_request_chat', login=None)
-        channel = self.env['discuss.channel'].search([['livechat_active', '=', True], ['livechat_visitor_id', '=', self.visitor.id]])
+        channel = self.env["discuss.channel"].search(
+            [["livechat_end_dt", "=", False], ["livechat_visitor_id", "=", self.visitor.id]]
+        )
         self.assertFalse(channel, 'Channel should not be created until user sends a message')
         self.start_tour('/', 'im_livechat_request_chat_and_send_message', login=None)
-        channel = self.env['discuss.channel'].search([['livechat_active', '=', True], ['livechat_visitor_id', '=', self.visitor.id]])
+        channel = self.env["discuss.channel"].search(
+            [["livechat_end_dt", "=", False], ["livechat_visitor_id", "=", self.visitor.id]]
+        )
         self.assertTrue(channel, 'Channel should be created after sending the first message')
 
     def test_visitor_banner_history(self):
@@ -48,7 +53,10 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         # Open a new live chat
         res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
-        channel_1 = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
+        channel_1 = self.env["discuss.channel"].search(
+            [("livechat_visitor_id", "=", self.visitor.id), ("livechat_end_dt", "=", False)],
+            limit=1,
+        )
 
         # Check Channel naming
         self.assertEqual(channel_1.name, "%s %s" % (f'Visitor #{channel_1.livechat_visitor_id.id}', self.operator.livechat_username))
@@ -66,7 +74,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         # Open a new live chat
         res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
-        channel_2 = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
+        channel_2 = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_end_dt', '=', False)], limit=1)
 
         # Check Channel naming
         self.assertEqual(channel_2.name, "%s %s" % (f'Visitor #{channel_2.livechat_visitor_id.id}', self.operator.name))
@@ -81,7 +89,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(len(channel.message_ids), 4)
         self.assertEqual(channel.message_ids[0].author_id, self.env.ref('base.partner_root'), "Odoobot must be the sender of the 'left the conversation' message.")
         self.assertIn(f"Visitor #{channel.livechat_visitor_id.id}", channel.message_ids[0].body)
-        self.assertEqual(channel.livechat_active, False, "The livechat session must be inactive as the visitor sent his feedback.")
+        self.assertTrue(channel.livechat_end_dt, "The livechat session must be inactive as the visitor sent his feedback.")
 
     def test_basic_flow_without_rating(self):
         channel = self._common_basic_flow()
@@ -91,7 +99,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(len(channel.message_ids), 3)
         self.assertEqual(channel.message_ids[0].author_id, self.env.ref('base.partner_root'), "Odoobot must be the author the message.")
         self.assertIn(f"Visitor #{channel.livechat_visitor_id.id}", channel.message_ids[0].body)
-        self.assertEqual(channel.livechat_active, False, "The livechat session must be inactive since visitor left the conversation.")
+        self.assertTrue(channel.livechat_end_dt, "The livechat session must be inactive since visitor left the conversation.")
 
     def test_visitor_info_access_rights(self):
         channel = self._common_basic_flow()
@@ -117,7 +125,10 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
 
-        channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
+        channel = self.env["discuss.channel"].search(
+            [("livechat_visitor_id", "=", self.visitor.id), ("livechat_end_dt", "=", False)],
+            limit=1,
+        )
 
         # Check Channel and Visitor naming
         self.assertEqual(self.visitor.display_name, "%s #%s" % (_("Website Visitor"), self.visitor.id))
@@ -130,7 +141,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(channel.message_ids[0].author_id.id, False, "The author of the message is not a partner.")
         self.assertEqual(channel.message_ids[0].email_from, self.visitor.display_name, "The sender's email should be the visitor's email.")
         self.assertEqual(channel.message_ids[0].body, "<p>Message from Visitor</p>")
-        self.assertEqual(channel.livechat_active, True, "The livechat session must be active as the visitor did not left the conversation yet.")
+        self.assertFalse(channel.livechat_end_dt, "The livechat session must be active as the visitor did not left the conversation yet.")
 
         # Post message from operator
         self._send_message(channel, self.operator.email, "Message from Operator", author_id=self.operator.partner_id.id)
@@ -139,7 +150,10 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(channel.message_ids[0].author_id, self.operator.partner_id, "The author of the message should be the operator.")
         self.assertEqual(channel.message_ids[0].email_from, self.operator.email, "The sender's email should be the operator's email.")
         self.assertEqual(channel.message_ids[0].body, "<p>Message from Operator</p>")
-        self.assertEqual(channel.livechat_active, True, "The livechat session must be active as the visitor did not left the conversation yet.")
+        self.assertFalse(
+            channel.livechat_end_dt,
+            "The livechat session must be active as the visitor did not left the conversation yet.",
+        )
 
         return channel
 
@@ -195,8 +209,8 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "invited_member_ids": [("ADD", [])],
                         "is_editable": True,
                         "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
-                        "livechat_active": True,
                         "livechat_channel_id": self.livechat_channel.id,
+                        "livechat_end_dt": False,
                         "livechat_operator_id": {
                             "id": self.operator.partner_id.id,
                             "type": "partner",
@@ -291,7 +305,9 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
     def test_channel_to_store_after_operator_left(self):
         channel = self._common_basic_flow()
         guest = self.env["mail.guest"].search([], order="id desc", limit=1)
-        channel.with_user(self.operator).action_unfollow()
+        agent_left_dt = fields.Datetime.now()
+        with freeze_time(agent_left_dt):
+            channel.with_user(self.operator).action_unfollow()
         self._reset_bus()
         self.assertFalse(
             channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
@@ -317,7 +333,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "is_editable": False,
                     "is_pinned": True,
                     "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
-                    "livechat_active": False,
+                    "livechat_end_dt": fields.Datetime.to_string(agent_left_dt),
                     "livechat_operator_id": {
                         "id": self.operator.partner_id.id,
                         "type": "partner",

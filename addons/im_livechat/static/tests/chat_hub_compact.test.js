@@ -19,7 +19,6 @@ test("Do not open chat windows automatically when chat hub is compact", async ()
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_active: true,
         livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
