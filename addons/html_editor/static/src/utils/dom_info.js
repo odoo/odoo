@@ -707,7 +707,15 @@ export function areSimilarElements(node, node2) {
         return false; // The nodes aren't the same type of element.
     }
     for (const name of new Set([...node.getAttributeNames(), ...node2.getAttributeNames()])) {
-        if (node.getAttribute(name) !== node2.getAttribute(name)) {
+        if (name === "style") {
+            if (!hasSameStyleAttributes(node, node2)) {
+                return false;
+            }
+        } else if (name === "class") {
+            if (!hasSameClasses(node, node2)) {
+                return false; // The nodes don't have the same classes.
+            }
+        } else if (node.getAttribute(name) !== node2.getAttribute(name)) {
             return false; // The nodes don't have the same attributes.
         }
     }
@@ -728,6 +736,32 @@ export function areSimilarElements(node, node2) {
         !+node2Style.padding.replace(NOT_A_NUMBER, "") &&
         !+nodeStyle.margin.replace(NOT_A_NUMBER, "") &&
         !+node2Style.margin.replace(NOT_A_NUMBER, "")
+    );
+}
+
+export function hasSameStyleAttributes(node, node2) {
+    const getNodeStyles = (node) =>
+        (node.getAttribute("style") || "")
+            .split(";")
+            .map((style) => style.trim())
+            .filter(Boolean);
+    const [nodeStyles, node2Styles] = [node, node2].map(getNodeStyles);
+    return (
+        nodeStyles.length === node2Styles.length &&
+        nodeStyles.every((style) => node2Styles.includes(style))
+    );
+}
+
+export function hasSameClasses(node, node2) {
+    const getNodeClasses = (node) =>
+        (node.getAttribute("class") || "")
+            .split(/\s+/)
+            .map((c) => c.trim())
+            .filter(Boolean);
+    const [nodeClasses, node2Classes] = [node, node2].map(getNodeClasses);
+    return (
+        nodeClasses.length === node2Classes.length &&
+        nodeClasses.every((cls) => node2Classes.includes(cls))
     );
 }
 
@@ -787,22 +821,12 @@ export function isRedundantElement(node) {
 
         if (attrName === "class") {
             // All classes on the node must exist in closest element.
-            const nodeClasses = nodeAttrVal.trim().split(/\s+/);
-            const closestElClasses = closestElAttrVal.trim().split(/\s+/);
-            if (!nodeClasses.every((cls) => closestElClasses.includes(cls))) {
+            if (!hasSameClasses(node, closestEl)) {
                 return false;
             }
         } else if (attrName === "style") {
             // All inline styles on the node must exist in closest element.
-            const nodeStyles = nodeAttrVal
-                .split(";")
-                .map((style) => style.trim())
-                .filter(Boolean);
-            const closestElStyles = closestElAttrVal
-                .split(";")
-                .map((style) => style.trim())
-                .filter(Boolean);
-            if (!nodeStyles.every((style) => closestElStyles.includes(style))) {
+            if (!hasSameStyleAttributes(node, closestEl)) {
                 return false;
             }
         } else {
