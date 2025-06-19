@@ -18,7 +18,11 @@ export class ResumeListRenderer extends CommonSkillsListRenderer {
         this.linkRef = useRef("link-target-blank");
         onMounted(this._setLinksToOpenInNewTab);
         onPatched(this._setLinksToOpenInNewTab);
+
+        onMounted(this._setResumeLineDescMaxSize);
+        onPatched(this._setResumeLineDescMaxSize);
     }
+
     get groupBy() {
         return "line_type_id";
     }
@@ -46,6 +50,25 @@ export class ResumeListRenderer extends CommonSkillsListRenderer {
             });
         }
     }
+
+    _setResumeLineDescMaxSize() {
+        const parentContainer = document.getElementById("o_employee_left");
+        if (parentContainer) {
+            const resumeLineDescs = document.querySelectorAll('.o_resume_line_title + .o_resume_line_desc');
+            const parentContainerWidth = parentContainer?.clientWidth;
+
+            resumeLineDescs.forEach(resumeLine => {
+                if (resumeLine.clientWidth > parentContainerWidth - 120) {
+                    resumeLine.style.width = `${parentContainerWidth - 120}px`;
+                    resumeLine.style.wordWrap = 'break-word'
+                    if (resumeLine.innerHTML.includes('<table')) {
+                        resumeLine.style.overflow = 'auto'
+                    }
+                }
+            });
+        }
+    }
+
 }
 
 export class ResumeX2ManyField extends SkillsX2ManyField {
