@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="hr_expense.ListButtons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+    <t t-name="hr_expense.ListButtons" t-inherit="web.ListView.Buttons">
 
        <!-- hr.expense -->
         <xpath expr="//div[hasclass('o_list_buttons')]" position="attributes">
@@ -37,7 +37,7 @@
         </xpath>
     </t>
 
-    <t t-name="hr_expense.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+    <t t-name="hr_expense.ListRenderer" t-inherit="web.ListRenderer">
         <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
             <div t-if="dragState.showDragZone" class="o_dropzone">
                 <i class="fa fa-upload fa-10x"></i>
@@ -48,10 +48,60 @@
         </xpath>
     </t>
 
-
-    <t t-name="hr_expense.DashboardListRenderer" t-inherit="hr_expense.ListRenderer" t-inherit-mode="primary">
+    <t t-name="hr_expense.OverviewListRenderer" t-inherit="hr_expense.ListRenderer" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
             <ExpenseDashboard/>
+            <div class="o_attachment_list"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_attachment_list')]" position="inside">
+            <xpath expr="//div[hasclass('o_list_renderer')]" position="move"/>
+            <div t-if="this.props.previewEnabled" class="o_attachment_preview d-print-none" t-att-class="{'hidden': !props.attachmentPreviewState.displayAttachment}">
+                <t t-if="this.props.attachmentPreviewState.displayAttachment">
+                    <t t-if="this.props.attachmentPreviewState.thread and this.props.attachmentPreviewState.thread.attachmentsInWebClientView.length > 0">
+                        <ExpenseAttachment
+                            threadId="this.props.attachmentPreviewState.thread.id"
+                            threadModel="this.props.attachmentPreviewState.thread.model"
+                            openInPopout="0"
+                        />
+                    </t>
+                    <t t-elif="!this.props.attachmentPreviewState.focusedRecord">
+                        <p class="text-center">Choose a line to preview its attachments.</p>
+                    </t>
+                    <t t-else="">
+                        <p class="text-center">No attachments linked.</p>
+                    </t>
+                </t>
+                <div class="o_attachment_control toggle" t-on-click="props.togglePreview"/>
+            </div>
+            <t t-else="">
+                <div class="o_popout_icon" t-on-click="() => this.setPopout(true)">
+                    <i class="fa fa-window-restore" title="Open attachment in pop out"/>
+                </div>
+                <t t-if="this.props.popout.active">
+                    <div class="o_attachment_preview d-print-none"
+                         t-if="this.props.attachmentPreviewState.thread?.attachmentsInWebClientView.length"
+                    >
+                        <ExpenseAttachment
+                            threadId="this.props.attachmentPreviewState.thread.id"
+                            threadModel="this.props.attachmentPreviewState.thread.model"
+                            openInPopout="1"
+                        />
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.OverviewListView" t-inherit="hr_expense.ListView" t-inherit-mode="primary">
+        <xpath expr="//div[@t-ref='root']" position="attributes" type="add">
+            <attribute name="class" add="o_expense_list_view" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="attachmentPreviewState">this.attachmentPreviewState</attribute>
+            <attribute name="popout">this.popout</attribute>
+            <attribute name="previewEnabled.bind">this.previewEnabled</attribute>
+            <attribute name="setFocusedRecord.bind">this.setFocusedRecord</attribute>
+            <attribute name="togglePreview.bind">this.togglePreview</attribute>
         </xpath>
     </t>
 </templates>

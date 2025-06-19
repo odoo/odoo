@@ -235,7 +235,7 @@ class HrExpense(models.Model):
     )
     payment_mode = fields.Selection(
         selection=[
-            ('own_account', "Employee (to reimburse)"),
+            ('own_account', "Employee"),
             ('company_account', "Company")
         ],
         string="Paid By",
