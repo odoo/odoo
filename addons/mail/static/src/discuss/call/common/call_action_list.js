@@ -22,6 +22,7 @@ export class CallActionList extends Component {
         this.pipService = useService("discuss.pip_service");
         this.callActions = useCallActions();
         this.more = useRef("more");
+        this.root = useRef("root");
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });
