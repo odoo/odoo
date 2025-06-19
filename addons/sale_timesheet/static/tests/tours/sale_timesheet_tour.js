@@ -257,10 +257,6 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Open embedded actions',
     run: "click",
 }, {
-    trigger: ".o_embedded_actions button i.fa-sliders",
-    content: "Open embedded actions dropdown",
-    run: "click",
-}, {
     trigger: ".o-dropdown-item div span:contains('Dashboard')",
     content: "Put Dashboard in the embedded actions",
     run: "click",

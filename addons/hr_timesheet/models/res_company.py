@@ -50,6 +50,9 @@ class ResCompany(models.Model):
             results += [{
                 'name': _('Internal'),
                 'allow_timesheets': True,
+                'allow_milestones': False,
+                'allow_recurring_tasks': False,
+                'allow_task_dependencies': False,
                 'company_id': company.id,
                 'type_ids': type_ids,
                 'task_ids': [(0, 0, {

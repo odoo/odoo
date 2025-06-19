@@ -11,6 +11,9 @@ export class ProjectProject extends models.Model {
     date = fields.Date({ string: "Expiration Date" });
     date_start = fields.Date();
     user_id = fields.Many2one({ relation: "res.users", falsy_value_label: "👤 Unassigned" });
+    allow_task_dependencies = fields.Boolean({ string: "Task Dependencies", default: false });
+    allow_milestones = fields.Boolean({ string: "Milestones", default: false });
+    allow_recurring_tasks = fields.Boolean({ string: "Recurring Tasks", default: false });
 
     _records = [
         {
