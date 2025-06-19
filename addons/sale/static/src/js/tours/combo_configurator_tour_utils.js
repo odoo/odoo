@@ -55,6 +55,19 @@ function assertSelectedComboItemCount(count) {
     };
 }
 
+function assertPreselectedComboItemCount(count) {
+    return {
+        content: `Assert that there are ${count} preselected combo items`,
+        trigger: '.sale-combo-configurator-dialog',
+        run() {
+            const selector = '.sale-combo-configurator-dialog div[name="preselected_product_name"]';
+            if (queryAll(selector).length !== count) {
+                console.error(`Assertion failed`);
+            }
+        },
+    };
+}
+
 function selectComboItem(comboItemName) {
     return {
         content: `Select combo item ${comboItemName}`,
@@ -70,9 +83,9 @@ function assertComboItemSelected(comboItemName) {
     };
 }
 
-function assertComboItemPreSelected(comboItemName) {
+function assertComboItemPreselected(comboItemName) {
     return {
-        content: `Assert that combo item ${comboItemName} is pre selected`,
+        content: `Assert that combo item ${comboItemName} is preselected`,
         trigger: `[name="preselected_product_name"]:contains(${comboItemName})`,
     };
 }
@@ -181,9 +194,10 @@ export default {
     assertComboCount,
     assertComboItemCount,
     assertSelectedComboItemCount,
+    assertPreselectedComboItemCount,
     selectComboItem,
     assertComboItemSelected,
-    assertComboItemPreSelected,
+    assertComboItemPreselected,
     increaseQuantity,
     decreaseQuantity,
     setQuantity,

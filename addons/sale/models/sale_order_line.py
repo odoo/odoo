@@ -1551,6 +1551,6 @@ class SaleOrderLine(models.Model):
         product can be computed by summing the prices of its combo items (i.e. its linked lines).
         """
         if self.product_type == 'combo':
-            # To filter between combo item line and optional product line
-            return self.linked_line_ids.filtered(lambda line: line.combo_item_id)
+            # Only consider combo item lines (not optional product lines)
+            return self.linked_line_ids.filtered('combo_item_id')
         return self

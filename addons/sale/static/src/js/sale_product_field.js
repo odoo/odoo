@@ -267,8 +267,8 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
                 await Promise.all([
-                    // Don't add main product if it is a combo product as it is already added from
-                    // combo configurator
+                    // Don't add main product if it's a combo product as it has already been added
+                    // from combo configurator
                     ...(
                         !selectedComboItems.length ?
                             [applyProduct(this.props.record, mainProduct)]: []
@@ -284,7 +284,9 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 saleOrderRecord.data.order_line.leaveEditMode();
             },
             discard: () => {
-                if (selectedComboItems.length == 0) {
+                if (!selectedComboItems.length) {
+                    // Don't delete the main product if it's a combo product as it has been added
+                    // from combo configurator
                     saleOrderRecord.data.order_line.delete(this.props.record);
                 }
             },
@@ -292,10 +294,35 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         });
     }
 
-    async _openComboConfigurator(edit = false, hasOptionProducts = false) {
+    async handleComboSave(comboProductData, selectedComboItems, edit, hasOptionalProducts) {
         const saleOrder = this.props.record.model.root.data;
         const comboLineRecord = this.props.record;
-        const comboItemLineRecords = getLinkedSaleOrderLines(comboLineRecord);
+        saleOrder.order_line.leaveEditMode();
+        const comboLineValues = {
+            product_uom_qty: comboProductData.quantity,
+            selected_combo_items: JSON.stringify(
+                selectedComboItems.map(serializeComboItem)
+            ),
+        };
+        if (!edit) {
+            comboLineValues.virtual_id = uuid();
+        }
+        await comboLineRecord.update(comboLineValues);
+        // Ensure that the order lines are sorted according to their sequence.
+        await saleOrder.order_line._sort();
+
+        if (hasOptionalProducts && !edit) {
+            const selectedComboProducts = selectedComboItems.map(
+                item => ({ name: item.product.display_name })
+            );
+            await this._openProductConfigurator(false, selectedComboProducts);
+        }
+    }
+
+    async _openComboConfigurator(edit = false, hasOptionalProducts = false) {
+        const saleOrder = this.props.record.model.root.data;
+        const comboLineRecord = this.props.record;
+        const comboItemLineRecords = getLinkedSaleOrderLines(comboLineRecord).filter(record => !!record.data.combo_item_id);
         const selectedComboItems = await Promise.all(comboItemLineRecords.map(async record => ({
             id: record.data.combo_item_id.id,
             no_variant_ptav_ids: edit ? this._getNoVariantPtavIds(record.data) : [],
@@ -312,44 +339,32 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             ...this._getAdditionalRpcParams(),
         });
 
-        const handleComboSave = async (comboProductData, selectedComboItems) => {
-            saleOrder.order_line.leaveEditMode();
-            const comboLineValues = {
-                product_uom_qty: comboProductData.quantity,
-                selected_combo_items: JSON.stringify(
-                    selectedComboItems.map(serializeComboItem)
-                ),
-            };
-            if (!edit) {
-                comboLineValues.virtual_id = uuid();
-            }
-            await comboLineRecord.update(comboLineValues);
-            // Ensure that the order lines are sorted according to their sequence.
-            await saleOrder.order_line._sort();
-
-            if(hasOptionProducts && !edit){
-                selectedComboItems = selectedComboItems.map(
-                    item => item.product.display_name
-                );
-                await this._openProductConfigurator(false, selectedComboItems);
-            }
-        }
-        const comboItems = combos.map(combo => new ProductCombo(combo))
-        const preSelectedComboItems = comboItems.map(
-            combo => combo.selectedComboItem
-        ).filter(Boolean);
-        if (preSelectedComboItems.length === comboItems.length && !edit) {
-            return handleComboSave(remainingData, preSelectedComboItems);
+        const comboChoices = combos.map(combo => new ProductCombo(combo));
+        const preselectedComboItems = comboChoices
+            .map(combo => combo.preselectedComboItem)
+            .filter(Boolean);
+        if (preselectedComboItems.length === comboChoices.length) {
+            return this.handleComboSave(
+                { 'quantity' : remainingData.quantity },
+                preselectedComboItems,
+                edit,
+                hasOptionalProducts
+            );
         }
         this.dialog.add(ComboConfiguratorDialog, {
-            combos: comboItems,
+            combos: comboChoices,
             ...remainingData,
             company_id: saleOrder.company_id.id,
             pricelist_id: saleOrder.pricelist_id.id,
             date: serializeDateTime(saleOrder.date_order),
             edit: edit,
             save: async (comboProductData, selectedComboItems) => {
-                handleComboSave(comboProductData, selectedComboItems);
+                this.handleComboSave(
+                    comboProductData,
+                    selectedComboItems,
+                    edit,
+                    hasOptionalProducts
+                );
             },
             discard: () => saleOrder.order_line.delete(comboLineRecord),
             ...this._getAdditionalDialogProps(),

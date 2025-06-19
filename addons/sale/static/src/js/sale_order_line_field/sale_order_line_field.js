@@ -45,16 +45,13 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
      * Combo logic
      */
 
-    /**
-     * @override
-     */
     getCellClass(column, record) {
-        let classNames = super.getCellClass(column, record);
+        const classNames = super.getCellClass(column, record);
         if (
-            this.isCombo(record) &&
-            ![this.titleField, "product_uom_qty", "discount"].includes(column.name)
+            this.isCombo(record)
+            && ![this.titleField, "product_uom_qty", "discount"].includes(column.name)
         ) {
-            return classNames + " invisible";
+            return `${classNames} invisible`;
         }
         return classNames;
     }

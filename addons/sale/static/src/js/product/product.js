@@ -30,7 +30,10 @@ export class Product extends Component {
         price_info: { type: String, optional: true },
         selectedComboItems: {
             type: Array,
-            element: String,
+            element: Object,
+            shape: {
+                name: String,
+            },
             optional: true,
         },
     };

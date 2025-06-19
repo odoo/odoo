@@ -74,13 +74,4 @@ export class ProductProduct {
             'value': ptav.custom_value,
         }));
     }
-
-    get isSimpleProductOrHasSelectedPtavs() {
-        return (
-            !this.ptals.length
-            || this.ptals.some(
-                ptal => ptal.selected_ptavs.length > 0
-            )
-        );
-    }
 }
