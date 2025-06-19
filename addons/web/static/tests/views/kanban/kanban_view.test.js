@@ -12909,6 +12909,31 @@ test("searchbar filters are displayed directly (with progressbar)", async () => 
 });
 
 test.tags("desktop");
+test(`searchbar in kanban view doesn't take focus after unselected all items`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+    expect(`.o_searchview_input`).toBeFocused({
+        message: "The search input should have the focus",
+    });
+
+    await contains(`.o_kanban_record`).click({ altKey: true });
+    await contains(`.o_kanban_record.o_record_selected`).click();
+    expect(`.o_searchview_input`).not.toBeFocused({
+        message: "The search input shouldn't have the focus",
+    });
+});
+
+test.tags("desktop");
 test("group by properties and drag and drop", async () => {
     expect.assertions(7);
 

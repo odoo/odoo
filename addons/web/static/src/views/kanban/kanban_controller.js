@@ -24,6 +24,7 @@ import { SelectionBox } from "@web/views/view_components/selection_box";
 
 import {
     Component,
+    onMounted,
     onWillStart,
     reactive,
     useEffect,
@@ -191,6 +192,10 @@ export class KanbanController extends Component {
             }
         });
         this.searchBarToggler = useSearchBarToggler();
+        this.firstLoad = true;
+        onMounted(() => {
+            this.firstLoad = false;
+        });
         useEffect(
             () => {
                 this.onSelectionChanged();
