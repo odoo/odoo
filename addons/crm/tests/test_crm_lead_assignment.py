@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
+import logging
 
 from ast import literal_eval
 from datetime import datetime, timedelta
@@ -9,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.addons.crm.models.crm_team import CrmTeam
 from odoo.addons.crm.tests.common import TestLeadConvertCommon
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
@@ -529,6 +531,36 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertEqual(leads[4].user_id, self.env['res.users'], 'Lost lead should not be assigned')
         self.assertEqual(leads[5].team_id, self.sales_team_convert, 'Assigned lead should not be reassigned')
         self.assertEqual(leads[5].user_id, self.user_sales_manager, 'Assigned lead should not be reassigned')
+
+    def test_cron_assign_leads(self):
+        """ Test fails at 3rd iteration in CrmTeam._action_assign_leads to check if _cron_assign_leads logs its output """
+        crm_team = self.env['crm.team']
+        crm_team.search([]).unlink()
+        crm_team.create([
+            {'name': f'Team {i}', 'use_leads': True, 'use_opportunities': True} for i in range(4, -1, -1)
+        ])
+
+        call_counter = {'count': 0}
+
+        def mock_action_assign_leads(*args, **kwargs):
+            call_counter['count'] += 1
+            if call_counter['count'] == 3:
+                raise Exception('Simulated crash on third team')
+            return {'leads': []}, {}
+
+        with patch.object(CrmTeam, '_action_assign_leads', side_effect=mock_action_assign_leads, autospec=True):
+            with self.assertLogs(logging.getLogger(CrmTeam.__module__)) as cm:
+                with self.assertRaises(Exception) as e:
+                    crm_team._cron_assign_leads()
+
+        self.assertEqual(str(e.exception), 'Simulated crash on third team')
+        self.assertEqual(call_counter['count'], 3)
+
+        logs = '\n'.join(cm.output)
+        self.assertIn("Successfully assigned 0 leads for team Team 0", logs)
+        self.assertIn("Successfully assigned 0 leads for team Team 1", logs)
+        self.assertIn('Crash while processing team Team 2', logs)
+        self.assertNotIn('Team 3', logs)  # Shouldn't reach Team 3 due to crash
 
     @mute_logger('odoo.models.unlink')
     def test_merge_assign_keep_master_team(self):
