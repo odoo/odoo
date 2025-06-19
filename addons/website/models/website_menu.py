@@ -168,6 +168,25 @@ class WebsiteMenu(models.Model):
                 url = "/%s" % self.url
         return url
 
+    def _get_current_pages_and_models_dict(self):
+        """ Allows to add (from inherit) menus who have a automatic redirection """
+        page_and_model_dict = {}
+        return page_and_model_dict
+
+    def _is_auto_redirection(self, unslug_request, request):
+        """ Checks if the `/menu` automatically redirect to `/menu/page` """
+        for page_name, model_name in self._get_current_pages_and_models_dict().items():
+            if page_name in unslug_request:
+                current_website_id = request.website.id
+                # Folders (eg. Blogs) that only appear in the current website
+                domain = [
+                    '|',
+                    ('website_id', '=', False),  # the folder is global to all websites
+                    ('website_id', '=', current_website_id)  # the folder only appears in the current website
+                ]
+                related_folders_current_website = request.env[model_name].search(domain)
+                return len(related_folders_current_website) == 1  # if equals 1, we have a redirection
+
     def _is_active(self):
         """ To be considered active, a menu should either:
 
@@ -186,7 +205,7 @@ class WebsiteMenu(models.Model):
           impossible to compare anyway as the client is not sending the anchor
           to the server as per RFC)
         - query string parameters should be the same to be considered equal, as
-          those could drasticaly alter a page result
+          those could drastically alter a page result
         """
         if not request or self.is_mega_menu:
             # There is no notion of `active` if we don't have a request to
@@ -199,7 +218,9 @@ class WebsiteMenu(models.Model):
         if not self.child_id:
             menu_url = url_parse(self._clean_url())
             unslug_url = self.env['ir.http']._unslug_url
-            if unslug_url(menu_url.path) == unslug_url(request_url.path):
+            unslug_menu = unslug_url(menu_url.path)
+            unslug_request = unslug_url(request_url.path)
+            if unslug_menu == unslug_request:
                 if not (
                     set(menu_url.decode_query().items(multi=True))
                     <= set(request_url.decode_query().items(multi=True))
@@ -210,6 +231,12 @@ class WebsiteMenu(models.Model):
                     # correct path but not correct domain
                     return False
                 return True
+
+            # Manage the state for automatic redirection
+            elif (unslug_menu != '/') and (unslug_menu in unslug_request):
+                if self._is_auto_redirection(unslug_request, request):
+                    return True
+
         else:
             # Child match (dropdown menu), `self` is just a parent/container,
             # don't check its URL, consider only its children
