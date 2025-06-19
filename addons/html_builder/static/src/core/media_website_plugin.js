@@ -14,6 +14,7 @@ export class MediaWebsitePlugin extends Plugin {
         on_replaced_media_handlers: ({ newMediaEl }) =>
             // Activate the new media options.
             this.dependencies.builderOptions.setNextTarget(newMediaEl),
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
 
     setup() {
@@ -104,5 +105,26 @@ export class MediaWebsitePlugin extends Plugin {
             tooltip: _t("Double-click to edit"),
         });
         setTimeout(this.removeCurrentTooltip, 1500);
+    }
+
+    async onSnippetDropped({ snippetEl }) {
+        if (!snippetEl.matches(".media_iframe_video")) {
+            return;
+        }
+        let isVideoSelected = false;
+        await new Promise((resolve) => {
+            const onClose = this.dependencies.media.openMediaDialog({
+                activeTab: "VIDEOS",
+                save: async (selectedVideoEl) => {
+                    isVideoSelected = true;
+                    snippetEl.insertAdjacentElement("afterend", selectedVideoEl);
+                    snippetEl.remove();
+                },
+            });
+            onClose.then(() => {
+                resolve();
+            });
+        });
+        return !isVideoSelected;
     }
 }
