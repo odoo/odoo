@@ -108,11 +108,7 @@ callActionsRegistry
         sequence: 70,
     })
     .add("picture-in-picture", {
-        condition: (component) =>
-            component.pipService &&
-            component.rtc &&
-            !component.env?.isSmall &&
-            !component.env?.embedLivechat,
+        condition: (component) => component.pipService && component.rtc && !component.env?.isSmall,
         available: (component) => !component.rtc?.isRemote,
         name: (component) => {
             if (component.rtc?.state.isPipMode) {
@@ -127,9 +123,8 @@ callActionsRegistry
             const isPipMode = component.rtc?.state.isPipMode;
             if (isPipMode) {
                 component.rtc.closePip();
-                window.focus();
             } else {
-                component.rtc.openPip();
+                component.rtc.openPip({ context: component });
             }
         },
         sequence: 80,
