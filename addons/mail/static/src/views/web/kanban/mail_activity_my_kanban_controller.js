@@ -1,7 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 
-export class ActivityMyKanbanController extends KanbanController {
+export class MailActivityMyKanbanController extends KanbanController {
     setup() {
         super.setup();
         this.store = useService("mail.store");
