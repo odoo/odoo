@@ -1012,8 +1012,8 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="o_header_force_no_radius d-none d-lg-block p-0 shadow-sm"/>
 
-            <div id="o_main_nav" class="o_main_nav">
-                <div aria-label="Top" t-attf-class="#{header_content_width} d-flex align-items-center justify-content-between py-3">
+            <div id="o_main_nav" t-attf-class="#{header_content_width} o_main_nav">
+                <div aria-label="Top" t-attf-class="d-flex flex-grow-1 align-items-center justify-content-between py-3">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
                         <t t-set="_link_class" t-valuef="me-4"/>
@@ -1210,8 +1210,8 @@
 
             <div id="o_main_nav" class="o_main_nav">
                 <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_search_box') or is_view_active('website.header_call_to_action')"
-                     class="o_header_sales_three_top o_header_hide_on_scroll position-relative border-bottom z-1 o_border_contrast">
-                    <div t-attf-class="#{header_content_width} d-flex justify-content-between gap-3 h-100">
+                     t-attf-class="o_header_sales_three_top #{header_content_width} o_header_hide_on_scroll position-relative border-bottom z-1 o_border_contrast">
+                    <div class=" d-flex justify-content-between gap-3 h-100">
                         <ul class="navbar-nav align-items-center gap-3 py-1">
                             <!-- Social -->
                             <t t-call="website.placeholder_header_social_links"/>
@@ -1347,31 +1347,29 @@
                         </t>
                     </ul>
                 </div>
-                <div aria-label="Bottom" class="o_header_sales_four_bot o_header_hide_on_scroll z-0">
-                    <div t-attf-class="#{header_content_width}">
-                        <ul class="navbar-nav d-grid align-items-center py-2 o_grid_header_3_cols">
-                            <!-- Search bar -->
-                            <li class="o_header_sales_four_search_placeholder" t-if="is_view_active('website.header_search_box') == False"/>
-                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
-                                <t t-set="_form_classes" t-valuef="me-auto"/>
-                                <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
-                                <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3 lh-1"/>
-                                <t t-set="_item_class" t-valuef="d-flex"/>
-                            </t>
-                            <!-- Brand -->
-                            <li t-if="is_view_active('website.placeholder_header_brand')">
-                            <t t-call="website.placeholder_header_brand">
-                                <t t-set="_link_class" t-valuef="mx-auto mw-100"/>
-                            </t>
-                            </li>
-                            <li class="d-flex align-items-center gap-3 ms-auto mb-0">
-                                <ul class="navbar-nav align-items-center gap-2">
-                                    <!-- Call To Action -->
-                                    <t t-call="website.placeholder_header_call_to_action"/>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+                <div aria-label="Bottom" t-attf-class="#{header_content_width} o_header_sales_four_bot o_header_hide_on_scroll z-0">
+                    <ul class="navbar-nav d-grid align-items-center py-2 o_grid_header_3_cols">
+                        <!-- Search bar -->
+                        <li class="o_header_sales_four_search_placeholder" t-if="is_view_active('website.header_search_box') == False"/>
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
+                            <t t-set="_form_classes" t-valuef="me-auto"/>
+                            <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
+                            <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3 lh-1"/>
+                            <t t-set="_item_class" t-valuef="d-flex"/>
+                        </t>
+                        <!-- Brand -->
+                        <li t-if="is_view_active('website.placeholder_header_brand')">
+                        <t t-call="website.placeholder_header_brand">
+                            <t t-set="_link_class" t-valuef="mx-auto mw-100"/>
+                        </t>
+                        </li>
+                        <li class="d-flex align-items-center gap-3 ms-auto mb-0">
+                            <ul class="navbar-nav align-items-center gap-2">
+                                <!-- Call To Action -->
+                                <t t-call="website.placeholder_header_call_to_action"/>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </t>
@@ -1522,7 +1520,7 @@
 <!-- "Rounded box" template -->
 <template id="template_header_boxed" inherit_id="website.layout" name="Template Header Rounded Box" active="False">
     <xpath expr="//header//nav" position="replace">
-        <div t-attf-class="#{header_content_width} py-3 px-0">
+        <div t-attf-class="#{header_content_width} py-3">
             <t t-call="website.navbar">
                 <t t-set="_navbar_classes" t-valuef="o_full_border d-none d-lg-block rounded-pill px-3 shadow-sm"/>
 
