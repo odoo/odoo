@@ -168,7 +168,7 @@ class PurchaseOrderSuggest(models.TransientModel):
         self.ensure_one()
         if self.based_on == 'actual_demand':
             context = {
-                'from_date': fields.Datetime.now(),
+                'from_date': datetime(1970, 1, 1),
                 'to_date': fields.Datetime.now() + relativedelta(days=self.number_of_days),
             }
         else:
