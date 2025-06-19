@@ -707,6 +707,12 @@ class AccountMove(models.Model):
         super()._make_sync_stack(stack, invoice_container, tax_container, misc_container)
         stack.enter_context(self._sync_india(invoice_container))
 
+    def _get_sync_stack(self, invoice_container, tax_container, misc_container):
+        stack = super()._get_sync_stack(invoice_container, tax_container, misc_container)
+        stack.append((9, self._sync_india(invoice_container)))
+        return stack
+
+
     @contextmanager
     def _sync_india(self, container):
         yield
