@@ -150,13 +150,17 @@ class ProjectProject(models.Model):
                 ("project_template_id", "in", project_ids),
         ], limit=limit)
 
+    def _fetch_linked_sale_orders(self, project_id, limit=None):
+        return self.env["sale.order"].search([("project_id", "=", project_id)], limit=limit)
+
     @api.onchange('allow_billable')
     def _onchange_allow_billable(self):
         """ show warning to user that linked products will be unlinked """
         message = None
         if not self.allow_billable:
             linked_product_ids = self._fetch_linked_products(self.ids, limit=1)
-            if linked_product_ids:
+            linked_sale_order_ids = self._fetch_linked_sale_orders(self.ids, limit=1)
+            if linked_product_ids or linked_sale_order_ids:
                 message = {
                     'warning': {
                         'title': _('Warning'),
@@ -167,7 +171,7 @@ class ProjectProject(models.Model):
 
     def _unlink_billable_products(self):
         linked_product_ids = self._fetch_linked_products(self.ids)
-        linked_product_ids.write({'service_tracking': 'no', 'project_id': False, 'project_template_id': False})
+        linked_product_ids.write({'project_id': False, 'project_template_id': False})
 
     def action_customer_preview(self):
         self.ensure_one()
