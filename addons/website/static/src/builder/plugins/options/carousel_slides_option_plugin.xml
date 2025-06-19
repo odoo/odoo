@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CarouselSlidesOption">
+    <BuilderRow label.translate="Make it clickable" tooltip.translate="Enable to make the slide clickable">
+        <BuilderCheckbox id="'slideLinkable'" action="'setSlideLink'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Your URL" t-if="isActiveItem('slideLinkable')" level="1">
+        <BuilderUrlPicker title.translate="Your URL"
+        action="'setSlideUrl'"
+        placeholder.translate="www.example.com"/>
+    </BuilderRow>
+</t>
+
+</templates>

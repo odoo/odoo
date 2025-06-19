@@ -20,6 +20,9 @@ export class CarouselSlider extends Interaction {
                 "min-height": this.maxHeight ? `${this.maxHeight}px` : "",
             }),
         },
+        ".slide-link": {
+            "t-on-click": this.onSlideLink,
+        }
     };
     carouselOptions = undefined;
 
@@ -150,6 +153,33 @@ export class CarouselSlider extends Interaction {
         if (ev.direction === "left") {
             const carouselItemsEls = this.carouselInnerEl.querySelectorAll(".carousel-item");
             this.carouselInnerEl.appendChild(carouselItemsEls[0]);
+        }
+    }
+
+    onSlideLink(ev) {
+        const anchorEl = ev.currentTarget; // directly reference the anchor
+        const allElsAtPoint = document.elementsFromPoint(ev.clientX, ev.clientY);
+
+        const elementBehind = allElsAtPoint.find((el) =>
+            el !== anchorEl &&
+            !anchorEl.contains(el) &&
+            (
+                el.tagName === "BUTTON" ||
+                (el.tagName === "A" && el.hasAttribute("href")) ||
+                el.getAttribute("role") === "button"
+            )
+        );
+
+        if (elementBehind) {
+            ev.preventDefault(); // stop the anchor navigation
+            if (typeof elementBehind.click === "function") {
+                elementBehind.click();
+            } else if (elementBehind.tagName === "A") {
+                const href = elementBehind.getAttribute("href");
+                if (href) {
+                    window.location.href = href;
+                }
+            }
         }
     }
 

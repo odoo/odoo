@@ -12,6 +12,20 @@ const CarouselSliderEdit = I => class extends I {
     // Pause carousel in edit mode.
     carouselOptions = { ride: false, pause: true };
 
+    start() {
+        super.start()
+        const anchorWrapperEl = this.el.querySelector(".slide-link-wrapper");
+        anchorWrapperEl?.classList.remove("z-3");
+        anchorWrapperEl?.classList.add("z-n1");
+    }
+
+    destroy() {
+        const anchorWrapperEl = this.el.querySelector(".slide-link-wrapper");
+        anchorWrapperEl?.classList.remove("z-n1");
+        anchorWrapperEl?.classList.add("z-3");
+
+    }
+
     onContentChanged() {
         this.computeMaxHeight();
     }
