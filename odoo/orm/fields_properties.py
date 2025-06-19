@@ -60,6 +60,7 @@ class Properties(Field):
     store = True
     readonly = False
     precompute = True
+    compute_sudo = True  # properties are stored, _compute needs to run in sudo
 
     definition = None
     definition_record = None         # field on the current model that point to the definition record
