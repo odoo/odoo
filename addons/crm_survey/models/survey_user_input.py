@@ -1,4 +1,5 @@
-from odoo import models
+from markupsafe import Markup
+from odoo import models, _
 
 
 class SurveyUser_Input(models.Model):
@@ -22,58 +23,84 @@ class SurveyUser_Input(models.Model):
         user_inputs._create_lead_if_generative_answer()
 
     def _create_lead_if_generative_answer(self):
-        """ This method will check and prepare lead fields data for an eventual new opportunity. """
+        """ This method will check and prepare lead fields data for an eventual new opportunity.
+            Here are 5 cases:
+                - Suggested answers question: Question — Answer 1, Answer 3
+                    (==> expected html line: <li>Question: — Answer 1, Answer 3</li>)
+                - Matrix question: Question
+                                    Line label 1 — Answer 1
+                                    Line label 1 — Answer 3
+                                    Line label 4 — Answer 2
+                    (==> expected html line: <li>
+                                                Question:
+                                                <br>&esmpLine label 1 — Answer 1
+                                                <br>&esmpLine label 1 — Answer 3
+                                                <br>&esmpLine label 4 — Answer 2
+                                             </li>)
+                - Long text question: Question
+                    (==> expected html line: <li>
+                                                Question:
+                                                <br>&esmpText line 1
+                                                <br>&esmpText line 2
+                                                <br>&esmpText line 3
+                                             </li>)
+                - Other types : Question — Answer
+                    (==> expected html line: <li>Question: — Answer</li>)
+                - Skipped question: Question — Skipped
+                    (==> expected html line: <li>Question: — <i>Skipped</i></li>)
+        """
+        line_break_with_indentation_tags = "<br/>&emsp;"
         for user_input in self:
-            is_lead_answer, user_nickname, public_user_mail, description = False, False, None, "Answers:<ul>"
-            current_question, first_answer, first_question = None, True, True
-            for answer_id in user_input.user_input_line_ids:
-                ### Write the lead description (in HTML format)
-                # Write question to the description
-                question = answer_id.question_id.title
-                if question != current_question:
-                    current_question = question
-                    first_answer = True
-                    if first_question:
-                        description += f"<li>{current_question}"
-                        first_question = False
-                    else:
-                        description += f"</li><li>{current_question}"
+            is_lead_answer, user_nickname, public_user_mail = False, False, None
+            html_input_lines = []
+            answers_grouped_by_question = user_input.user_input_line_ids.grouped('question_id')
+            for question_id, input_lines in answers_grouped_by_question.items():
+                tag_begin, question_title, separator, tag_end = "<li>", question_id.title, "", "</li>"
+                answer_tag_begin, answer_description, answer_tag_end = "", "", ""
+                first_answer = True
+                if not input_lines[0].skipped:
+                    for answer_id in input_lines:
+                        if question_id.question_type == "text_box":
+                            answer_tag_begin = line_break_with_indentation_tags
+                            answer_description = answer_id._get_answer_value().replace('\n', f"{line_break_with_indentation_tags}")
+                        elif question_id.question_type == "matrix":
+                            row_value = answer_id.matrix_row_id.display_name
+                            col_value = answer_id.suggested_answer_id.display_name
+                            answer_description += f"{line_break_with_indentation_tags}{row_value} — {col_value}"
+                        else:
+                            separator = " — "
+                            answer_description += "" if first_answer else ", "
+                            answer_description += answer_id.display_name
+                            first_answer = False
 
-                # Write answer(s) to the question
-                # Skipped question
-                if answer_id.skipped:
-                    description += " — <i> Skipped</i>"
-                    continue
-                # Long text box
-                if answer_id.question_id.question_type == "text_box":
-                    answer = "<br/>&emsp;" + answer_id._get_answer_value().replace('\n', "<br/>&emsp;")
-                    description += str(answer)
-                # Matrix
-                elif answer_id.question_id.question_type == "matrix":
-                    row_value = answer_id.matrix_row_id.display_name
-                    col_value = answer_id.suggested_answer_id.display_name
-                    description += '<br/>&emsp;' + f"{row_value} — {col_value}"
-                # Others
+                        # Check if answer should create a lead
+                        if not is_lead_answer and answer_id.suggested_answer_id and answer_id.suggested_answer_id.is_create_lead:
+                            is_lead_answer = True
+                        # Check if the question has a nickname recorded
+                        if not user_nickname and question_id.save_as_nickname:
+                            user_nickname = answer_id.display_name
+                        # Check if the question has a email answer
+                        if not public_user_mail and question_id.validation_email:
+                            public_user_mail = answer_id.display_name
                 else:
-                    if first_answer:
-                        description += " — "
-                    answer = answer_id.display_name
-                    if first_answer:
-                        description += str(answer)
-                        first_answer = False
-                    else:
-                        description += ', ' + str(answer)
+                    # To write "Skipped" in italic
+                    separator = " — "
+                    answer_tag_begin, answer_tag_end = "<i>", "</i>"
+                    answer_description = input_lines[0].display_name  # Note: The answer's display name already contains the word
 
-                # Check if answer should create a lead
-                if not is_lead_answer and answer_id.suggested_answer_id and answer_id.suggested_answer_id.is_create_lead:
-                    is_lead_answer = True
-                # Check if the question has a nickname recorded
-                if answer_id.question_id.save_as_nickname:
-                    user_nickname = answer
-                # Check if the question has a email answer
-                if answer_id.question_id.validation_email:
-                    public_user_mail = answer
-            description += "</li></ul>"
+                question_title = _("%s", question_title)
+                answer_description = _("%s", answer_description)
+                questions_with_answers_description = f"{tag_begin}{question_title}{separator}{answer_tag_begin}{answer_description}{answer_tag_end}{tag_end}"
+                questions_with_answers_description = Markup(
+                    "%s%s%s%s%s%s%s" %
+                    (tag_begin, question_title, separator, answer_tag_begin, answer_description, answer_tag_end, tag_end)
+                )
+                html_input_lines.append(questions_with_answers_description)
+
+            description_begin = f"{_('Answers')}:<ul>"
+            html_input_lines = ''.join(html_input_lines)
+            description_end = "</ul>"
+            description = f"{description_begin}{html_input_lines}{description_end}"
 
             ### Generate the lead
             if is_lead_answer:
