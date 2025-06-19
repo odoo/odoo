@@ -475,7 +475,7 @@ class HrLeaveType(models.Model):
         ]))
 
     @api.model
-    def get_allocation_data_request(self, target_date=None, hidden_allocations=True):
+    def get_allocation_data_request(self, target_date=None, hidden_allocations=True, update_accrual=False):
         domain = [
             '|',
             ('company_id', 'in', self.env.context.get('allowed_company_ids')),
@@ -486,17 +486,27 @@ class HrLeaveType(models.Model):
         leave_types = self.search(domain, order='id')
         employee = self.env['hr.employee']._get_contextual_employee()
         if employee:
-            return leave_types.get_allocation_data(employee, target_date)[employee]
+            return leave_types.get_allocation_data(employee, target_date, update_accrual)[employee]
         return []
 
-    def get_allocation_data(self, employees, target_date=None):
+    def get_allocation_data(self, employees, target_date=None, update_accrual=False):
+        """
+        :param target_date: for test purpose only
+        """
         allocation_data = defaultdict(list)
+        target_today = False
         if target_date and isinstance(target_date, str):
             target_date = datetime.fromisoformat(target_date).date()
         elif target_date and isinstance(target_date, datetime):
             target_date = target_date.date()
         elif not target_date:
             target_date = fields.Date.today()
+            target_today = True
+
+        # Just in case the cron hasn't been/is being run
+        # Should not run if target_date is set
+        if update_accrual and target_today and employees:
+            self.env['hr.leave.allocation']._update_accrual(employees.ids)
 
         allocations_leaves_consumed, extra_data = employees.with_context(
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
@@ -631,17 +641,11 @@ class HrLeaveType(models.Model):
         for allocation in allocations:
             expiration_date = allocation.date_to
 
-            accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(target_date)[0]
+            accrual_plan_level, _ = allocation.sudo().get_current_accrual_plan_level_id(target_date)
             carryover_date = False
             if accrual_plan_level and (accrual_plan_level.action_with_unused_accruals == 'lost'
             or accrual_plan_level.carryover_options == 'limited'):
-                carryover_date = allocation.sudo()._get_carryover_date(target_date)
-                # If carry over date == target date, then add 1 year to carry over date.
-                # Rational: for example if carry over date = 01/01 this year and target date = 01/01 this year,
-                # then any accrued days on 01/01 this year will have their carry over date 01/01 next year
-                # and not 01/01 this year.
-                if carryover_date == target_date:
-                    carryover_date += relativedelta(years=1)
+                carryover_date = allocation.sudo().get_next_carryover_date(target_date, date_from_included=False)
 
             carried_over_days_expiration_date = carried_over_days_expiration_data[allocation]['expiration_date']
 
@@ -663,7 +667,7 @@ class HrLeaveType(models.Model):
                 if expiration_date and expiration_date == closest_expiration_date:
                     expiring_leaves_count += remaining_leaves[allocation]['virtual_remaining_leaves']
                 elif carryover_date and carryover_date == closest_expiration_date:
-                    accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(target_date)[0]
+                    accrual_plan_level, _ = allocation.sudo().get_current_accrual_plan_level_id(target_date)
                     expiring_leaves_count += max(0, remaining_leaves[allocation]['virtual_remaining_leaves'] - accrual_plan_level.postpone_max_days)
                 elif carried_over_days_expiration_date and carried_over_days_expiration_date == closest_expiration_date:
                     expiring_leaves_count += carried_over_days_expiration_data[allocation]['no_expiring_days']

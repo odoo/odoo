@@ -3,8 +3,13 @@ from calendar import monthrange
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
 
 from odoo.addons.hr_holidays.models.hr_leave_accrual_plan_level import _get_selection_days
+
+
+def get_lvl_start_date(start_date, level):
+    return start_date + level.get_start_timedelta()
 
 
 class HrLeaveAccrualPlan(models.Model):
@@ -174,3 +179,69 @@ class HrLeaveAccrualPlan(models.Model):
             if not vals.get("name", False):
                 vals['name'] = self.env._("Unnamed Plan")
         return super().create(vals_list)
+
+    def get_lvls_intervals(self, start_date, sorted_levels=False):
+        """
+        Returns a list containing intervals extrema of each level.
+        The start of the level x is the end date of the previous level.
+        For instance, if there are 2 levels, this function will return a list of 2 dates :
+        the start of the first level, and the start of the second level
+        """
+        self.ensure_one()
+        if not self.level_ids:
+            return False
+        sorted_levels = sorted_levels or self.level_ids.sorted('sequence')
+
+        intervals = [get_lvl_start_date(start_date, sorted_levels[0])]
+        if len(sorted_levels) == 1:
+            return intervals
+
+        if self.transition_mode == 'immediately':
+            for i in range(1, len(sorted_levels)):
+                intervals.append(get_lvl_start_date(start_date, sorted_levels[i]))
+            return intervals
+
+        for i in range(1, len(sorted_levels)):
+            expected_lvl_start = get_lvl_start_date(start_date, sorted_levels[i])
+            current_lvl = sorted_levels[i]
+            lvl_start = current_lvl._get_next_date(expected_lvl_start + relativedelta(days=-1))
+            intervals.append(lvl_start)
+        return intervals
+
+    def get_lvl_last_date(self, start_date, level_idx, lvls_intervals=False, sorted_levels=False):
+        self.ensure_one()
+        lvls_intervals = lvls_intervals or self.get_lvls_intervals(start_date, sorted_levels)
+        if level_idx == len(lvls_intervals) - 1:
+            return False
+        return lvls_intervals[level_idx + 1]
+
+    def _get_current_accrual_plan_level_id(self, date, lvls_intervals):
+        """
+        Returns a tuple of tuples (lvl, idx) containing the levels we are currently in depending on "date" arg
+        It can return up to 2 tuples (on level transition).
+        Return example: ((level3, idx), (level4, idx)])
+        """
+        self.ensure_one()
+        if not self.level_ids:
+            return False
+
+        sorted_levels = self.level_ids.sorted('sequence')
+        current_level = False
+        current_lvl_start = False
+        current_level_idx = False
+        for idx, lvl_start in enumerate(lvls_intervals):
+            if date >= lvl_start:
+                current_level = sorted_levels[idx]
+                current_level_idx = idx
+                current_lvl_start = lvl_start
+
+        if not current_level:
+            return False
+
+        if current_level_idx > 0 and date == current_lvl_start:
+            return (
+                (sorted_levels[current_level_idx - 1], current_level_idx - 1),
+                (sorted_levels[current_level_idx], current_level_idx)
+            )
+
+        return ((sorted_levels[current_level_idx], current_level_idx),)
