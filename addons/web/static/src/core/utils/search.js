@@ -88,3 +88,78 @@ export function fuzzyLookup(pattern, list, fn) {
 export function fuzzyTest(pattern, string) {
     return _match(pattern, string) !== 0;
 }
+
+/**
+ * Performs fuzzy matching using a Levenshtein distance algorithm
+ * to find matches within an error margin between a pattern and a list of words.
+ * 
+ * If the pattern is found directly inside an item, it's treated as a perfect match (score 0).
+ * Otherwise, the `getScore` function calculates the distance between the pattern and
+ * each candidate
+ * 
+ * @param {string} pattern - The string to match.
+ * @param {string[]} list - The list of strings to compare against the pattern.
+ * @param {number} errorRatio - Controls how many errors can a word have depending of its length.
+ * @returns {string[]} The list of the words that matches within a defined number of errors.
+ */
+export function fuzzyLevenshteinLookup(pattern, list, errorRatio = 3) {
+    // We limit the maximum number of errors depending on the word length
+    // to not have "overcorrections" into words that doesn't have anything in common
+    // with what the user typed 
+    const maxNbrCorrection = Math.round(pattern.length / errorRatio); 
+    const results = [];
+    list.forEach((candidate) => {
+        let score = -1;
+        if (candidate.includes(pattern)) {
+            score = 0;
+            results.push({ score, elem: pattern });
+        } else {
+            score = getScore(pattern, candidate);
+            if (score >= 0 && score <= maxNbrCorrection) {
+                results.push({ score, elem: candidate });
+            }
+        }
+    });
+    results.sort((a, b) => a.score - b.score);
+    return results.map((r) => r.elem);
+}
+
+
+/**
+ * Computes the Levenshtein distance between two strings.
+ * 
+ * @param {string} a
+ * @param {string} b
+ * @returns {number} The Levenshtein distance between `a` and `b`.
+ */
+function getScore(a, b) {
+    let aLength = a.length;
+    let bLength = b.length;
+
+    let distanceMatrix = [];
+    for (let i = 0; i <= aLength; i++) {
+        distanceMatrix[i] = [];
+        for (let j = 0; j <= bLength; j++) {
+            distanceMatrix[i][j] = 0;
+        }
+    }
+
+    for (let i = 0; i <= aLength; i++) {
+        for (let j = 0; j <= bLength; j++) {
+            if (Math.min(i, j) === 0) {
+                distanceMatrix[i][j] = Math.max(i, j); 
+            } else {
+                if (a[i-1] === b[j-1]) {
+                    distanceMatrix[i][j] = distanceMatrix[i-1][j-1];
+                } else {
+                    distanceMatrix[i][j] = Math.min(
+                        distanceMatrix[i-1][j] + 1,
+                        distanceMatrix[i][j-1] + 1,
+                        distanceMatrix[i-1][j-1] + 1
+                    );
+                }
+            }
+        }
+    }
+    return distanceMatrix[aLength][bLength];
+}
