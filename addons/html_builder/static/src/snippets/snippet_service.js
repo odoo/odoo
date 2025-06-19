@@ -372,6 +372,12 @@ export class SnippetModel extends Reactive {
                         const thumbnailURL = this.getSnippetThumbnailURL(snippetKey);
 
                         const snippetCopyEl = snippetEl.cloneNode(true);
+                        // Remove element marked with `data-skip-history-hack`.
+                        // These elements have been inserted by an interaction
+                        // and shouldn't be saved (see website_edit_service.js).
+                        snippetCopyEl
+                            .querySelectorAll("[data-skip-history-hack]")
+                            .forEach((el) => el.remove());
                         // "CleanForSave" the snippet copy (only its children in
                         // the case of a popup, or it will be saved as invisible
                         // and will not be visible in the "add snippet" dialog).
