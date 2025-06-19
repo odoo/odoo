@@ -57,7 +57,7 @@
             </div>
             <t t-if="this.store.inPublicPage and this.store.self.type === 'guest'">
                 <button class="btn ps-1" t-if="!state.editingGuestName">
-                    <img class="o-mail-Discuss-selfAvatar rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl" t-on-click="() => state.editingGuestName = true"/>
+                    <img class="o-mail-Discuss-selfAvatar rounded-circle object-fit-cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl" t-on-click="() => state.editingGuestName = true"/>
                 </button>
                 <AutoresizeInput
                     t-if="state.editingGuestName"
@@ -99,7 +99,7 @@
         'ms-3': !thread,
         'ps-2': !hasActionsMenu,
     }" name="threadAvatar">
-        <img t-if="thread" class="rounded-3 o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
+        <img t-if="thread" class="rounded-3 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
         <ImStatus t-if="showImStatus" className="'o-mail-ChatWindow-imStatus position-absolute'" member="thread.correspondent" size="'sm'"/>
     </div>
     <t t-if="thread?.parent_channel_id">

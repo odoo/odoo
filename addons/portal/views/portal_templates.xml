@@ -120,7 +120,7 @@
                 <a href="#" role="button" data-bs-toggle="dropdown" t-attf-class="#{'' if _no_caret else 'dropdown-toggle'} #{_link_class}">
                     <t t-if="_avatar">
                         <t t-set="avatar_source" t-value="image_data_uri(user_id.avatar_256)"/>
-                        <img t-att-src="avatar_source" t-attf-class="rounded-circle o_object_fit_cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                        <img t-att-src="avatar_source" t-attf-class="rounded-circle object-fit-cover #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
                     </t>
                     <div t-if="_icon" t-attf-class="#{_icon_wrap_class}">
                         <i t-attf-class="fa fa-1x fa-fw fa-user #{_icon_class}"/>
@@ -742,7 +742,7 @@
         </div>
         <div t-attf-class="{{'offcanvas-body' if isOffcanvas else 'mt-3 mw-100'}}">
             <div class="d-flex justify-content-start align-items-start gap-3 mb-4">
-                <img class="rounded o_object_fit_cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50"/>
+                <img class="rounded object-fit-cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50"/>
                 <div class="d-flex flex-column justify-content-center">
                     <h5 class="mb-0" t-out="user_id.name"/>
                     <p class="mb-0 text-muted" t-out="user_id.company_name"/>
