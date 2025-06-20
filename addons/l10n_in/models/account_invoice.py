@@ -236,6 +236,20 @@ class AccountMove(models.Model):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and m.move_type != 'entry')
         line_filter_func = lambda line: line.display_type == 'product' and line.tax_ids and line._origin
         _xmlid_to_res_id = self.env['ir.model.data']._xmlid_to_res_id
+        exempt_tax_tag_id = _xmlid_to_res_id('l10n_in.tax_tag_exempt', raise_if_not_found=False)
+        non_exempt_tax_tag_xmlid = (
+            'base_sgst',
+            'base_cgst',
+            'base_igst',
+            'base_cess',
+            'zero_rated',
+            'nil_rated',
+            'non_gst_supplies',
+        )
+        tax_tags = {
+            _xmlid_to_res_id(f"l10n_in.tax_tag_{tax}", raise_if_not_found=False)
+            for tax in non_exempt_tax_tag_xmlid
+        }
         for move in indian_invoice:
             warnings = {}
             company = move.company_id
@@ -273,10 +287,11 @@ class AccountMove(models.Model):
                         'action_text': action_text,
                     }
 
+            filtered_lines = move.invoice_line_ids.filtered(line_filter_func)
             if (
                 company.l10n_in_is_gst_registered
                 and company.l10n_in_hsn_code_digit
-                and (filtered_lines := move.invoice_line_ids.filtered(line_filter_func))
+                and filtered_lines
             ):
                 lines = self.env['account.move.line']
                 for line in filtered_lines:
@@ -310,6 +325,17 @@ class AccountMove(models.Model):
                         'action_text': action_text,
                     }
 
+            if (
+                move.is_sale_document(include_receipts=False)
+                and company.l10n_in_is_gst_registered
+            ):
+                tag_ids = set(filtered_lines.tax_tag_ids.ids)
+                if (
+                    exempt_tax_tag_id in tag_ids and tax_tags & tag_ids
+                ):
+                    warnings['exempt_alert'] = {
+                        'message': _("This document includes both taxable and exempt goods. It is advisable to raise seperate document."),
+                    }
             move.l10n_in_warning = warnings
         (self - indian_invoice).l10n_in_warning = {}
 
