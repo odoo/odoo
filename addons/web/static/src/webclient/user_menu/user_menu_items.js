@@ -38,8 +38,16 @@ function shortCutsItem(env) {
         id: "shortcuts",
         hide: env.isSmall,
         description: markup(
+<<<<<<< 9e5101f947f15f723c4ff28c403da4a5d9573102
             `<div class="d-flex align-items-center justify-content-between">
                 <span>${escape(_t("Shortcuts"))}</span>
+||||||| bd7ce7ef6bba6d8bb70092ac199a74f63fc27e7d
+            `<div class="d-flex align-items-center justify-content-between">
+                <span>${escape(translatedText)}</span>
+=======
+            `<div class="d-flex align-items-center justify-content-between p-0 w-100">
+                <span>${escape(translatedText)}</span>
+>>>>>>> a1ba9ec1be7639b2bf55e0cd3b4f562921e39e4e
                 <span class="fw-bold">${isMacOS() ? "CMD" : "CTRL"}+K</span>
             </div>`
         ),
