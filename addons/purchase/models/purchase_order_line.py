@@ -489,8 +489,7 @@ class PurchaseOrderLine(models.Model):
         return res
 
     @api.model
-    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po):
-        partner = supplier.partner_id
+    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, partner, po):
         uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_id, rounding_method='HALF-UP')
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
@@ -525,7 +524,7 @@ class PurchaseOrderLine(models.Model):
             name += '\n' + product_lang.description_purchase
 
         date_planned = self.order_id.date_planned or self._get_date_planned(seller, po=po)
-        discount = seller.discount or 0.0
+        discount = seller.discount if seller and seller.discount else 0.0
 
         return {
             'name': name,
