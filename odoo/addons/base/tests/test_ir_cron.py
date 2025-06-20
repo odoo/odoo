@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# ruff: noqa: E201, E272, E301, E306
+# ruff: noqa: E201, E241, E272, E301, E306
 
 import contextlib
 import secrets
@@ -13,14 +13,16 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo import fields
+from odoo.tests.common import RecordCapturer, TransactionCase
+from odoo.tools import mute_logger
+
 from odoo.addons.base.models.ir_cron import (
     MIN_DELTA_BEFORE_DEACTIVATION,
     MIN_FAILURE_COUNT_BEFORE_DEACTIVATION,
+    MIN_TIME_PER_JOB,
     CompletionStatus,
     IrCron,
 )
-from odoo.tests.common import RecordCapturer, TransactionCase
-from odoo.tools import mute_logger
 
 
 class CronMixinCase:
@@ -242,6 +244,19 @@ class TestIrCron(TransactionCase, CronMixinCase):
                 )
             return f, state
 
+        def end_time(cron):
+            state = {
+                'call_count': 0,
+                'remaining': MIN_TIME_PER_JOB + 1,
+            }
+            def f(self):
+                state['call_count'] += 1
+                while self.env['ir.cron']._commit_progress(remaining=state['remaining']):
+                    state['remaining'] -= 1
+                    frozen_datetime.tick(delta=timedelta(seconds=1))
+                    self.env['ir.cron']._commit_progress(1)
+            return f, state
+
         def failure(cron):
             state = {'call_count': 0}
             def f(self):
@@ -280,6 +295,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
             ( eleven_success, almost_failed,    True,         10,         10,          0,  True),
             (   five_success,             0,   False,          5,          5,          0,  True),
             (   five_success, almost_failed,   False,          5,          5,          0,  True),
+            (       end_time,             0,    True,          2,         10,          0,  True),
             (        failure,             0,   False,          1,          0,          1,  True),
             (        failure, almost_failed,   False,          1,          0,          0, False),
             (failure_partial,             0,   False,          5,          5,          1,  True),
@@ -314,7 +330,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
 
                 self.assertEqual(self.cron.id in [job['id'] for job in self.cron._get_all_ready_jobs(self.env.cr)], trigger)
                 self.assertEqual(state['call_count'], call_count)
-                self.assertEqual(Progress.search_count([('cron_id', '=', self.cron.id), ('done', '=', 1)]), done_count)
+                self.assertEqual(sum(Progress.search([('cron_id', '=', self.cron.id), ('done', '>=', 1)]).mapped('done')), done_count)
                 self.assertEqual(self.cron.failure_count, fail_count)
                 self.assertEqual(self.cron.active, active)
 
