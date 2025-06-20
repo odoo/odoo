@@ -78,7 +78,16 @@ export class TourStep {
     get stringify() {
         return (
             JSON.stringify(
-                pick(this, "isActive", "content", "trigger", "run", "tooltipPosition", "timeout"),
+                pick(
+                    this,
+                    "isActive",
+                    "content",
+                    "trigger",
+                    "run",
+                    "tooltipPosition",
+                    "timeout",
+                    "expectUnloadPage"
+                ),
                 (_key, value) => {
                     if (typeof value === "function") {
                         return "[function]";
