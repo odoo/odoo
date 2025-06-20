@@ -1963,6 +1963,39 @@ describe("components", () => {
         expect(".test").toHaveOuterHTML(`<div class="test"></div>`);
     });
 
+    test("can receive the selected element with t-component", async () => {
+        let isCDestroyed = false;
+        class C extends Component {
+            static template = xml`<p>component<span t-out="props.prop"></span></p>`;
+            static props = {
+                prop: { optional: true, type: String },
+            };
+
+            setup() {
+                onWillDestroy(() => (isCDestroyed = true));
+            }
+        }
+
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                _root: { "t-component": (el) => [C, { prop: el.className }] },
+            };
+        }
+        const { core } = await startInteraction(Test, `<div class="test"></div>`);
+        expect(".test").toHaveOuterHTML(
+            `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"></owl-component></div>`
+        );
+        await animationFrame();
+        expect(".test").toHaveOuterHTML(
+            `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"><p>component<span>test</span></p></owl-component></div>`
+        );
+        expect(isCDestroyed).toBe(false);
+        core.stopInteractions();
+        expect(isCDestroyed).toBe(true);
+        expect(".test").toHaveOuterHTML(`<div class="test"></div>`);
+    });
+
     test("can insert a component with mountComponent", async () => {
         class C extends Component {
             static template = xml`component`;
