@@ -84,6 +84,7 @@ export class VideoSelector extends Component {
                         const { urlParameter } = this.OPTIONS[option.id];
                         return { ...option, value: src.indexOf(urlParameter) >= 0 };
                     });
+                    await this.updateVideo();
                 }
             }
         });
