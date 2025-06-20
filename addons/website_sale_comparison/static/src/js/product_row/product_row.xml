@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale_comparison.ProductRow">
+        <div class="row g-0 align-items-center my-1 o_product_row">
+            <div class="col-3 text-center">
+                <img
+                    t-attf-src="/web/image/product.product/${props.product_id}/image_128"
+                    class="o_image_64_max"
+                    alt="Product Image"
+                />
+            </div>
+            <div class="col-8 ps-2">
+                <a t-att-href="props.product_url"><t t-esc="props.display_name" /></a><br/>
+                <t t-if="!props.prevent_zero_price_sale">
+                    <span t-out="formattedPrice" class="h6 text-nowrap"/>
+                    <span
+                        t-if="props.strikethrough_price"
+                        t-out="formattedStrikethroughPrice"
+                        class="h6 oe_striked_price text-muted small"
+                    />
+                </t>
+            </div>
+            <div class="col-1 text-end">
+                <button t-on-click="removeProduct" class="btn btn-secondary">
+                    <i class="fa fa-trash"/>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

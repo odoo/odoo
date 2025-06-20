@@ -1,4 +1,5 @@
 import { browser } from '@web/core/browser/browser';
+import { rpc } from '@web/core/network/rpc';
 
 function animateClone($cart, $elem, offsetTop, offsetLeft) {
     if (!$cart.length) {
@@ -102,8 +103,20 @@ function showWarning(message) {
     cart_alert.children('span:last-child').text(message);
 }
 
+/**
+ * Return the selected attribute values from the given container.
+ *
+ * @param {Element} container the container to look into
+ */
+function getSelectedAttributeValues(container) {
+    return Array.from(container.querySelectorAll(
+        'input.js_variant_change:checked, select.js_variant_change'
+    )).map(el => parseInt(el.value));
+}
+
 export default {
     animateClone: animateClone,
     updateCartNavBar: updateCartNavBar,
     showWarning: showWarning,
+    getSelectedAttributeValues: getSelectedAttributeValues,
 };
