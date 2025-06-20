@@ -1298,6 +1298,73 @@ class TestPointOfSaleFlow(CommonPosTest):
         order.action_pos_order_cancel()
         self.assertEqual(order.state, 'cancel')
 
+    def test_sum_only_pos_locations(self):
+        """Test that quantities are summed only from POS source locations"""
+
+        self.product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'tracking': 'lot',
+            'is_storable': True,
+        })
+
+        self.warehouse = self.env['stock.warehouse'].create({
+            'name': 'Test Warehouse',
+            'code': 'TWH',
+        })
+
+        self.pos_child_location = self.env['stock.location'].create({
+            'name': 'POS Child Location',
+            'usage': 'internal',
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
+
+        self.other_location = self.env['stock.location'].create({
+            'name': 'Other Location',
+            'usage': 'internal',
+        })
+
+        picking_type = self.env['stock.picking.type'].create({
+            'name': 'POS Operations',
+            'code': 'outgoing',
+            'sequence_code': 'POS',
+            'warehouse_id': self.warehouse.id,
+            'default_location_src_id': self.warehouse.lot_stock_id.id,
+        })
+
+        self.pos_config = self.env['pos.config'].create({
+            'name': 'Test POS Config',
+            'picking_type_id': picking_type.id,
+        })
+
+        self.lot = self.env['stock.lot'].create({
+            'name': 'TEST_LOT',
+            'product_id': self.product.id,
+        })
+
+        # Create quants in different locations for the same lot
+        self.env['stock.quant'].create([{
+            'product_id': self.product.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'lot_id': self.lot.id,
+            'quantity': 10.0,
+        }, {
+            'product_id': self.product.id,
+            'location_id': self.pos_child_location.id,
+            'lot_id': self.lot.id,
+            'quantity': 5.0,
+        }, {
+            'product_id': self.product.id,
+            'location_id': self.other_location.id,
+            'lot_id': self.lot.id,
+            'quantity': 20.0,
+        }])
+
+        result = self.env['pos.order.line'].get_existing_lots(self.env.company.id, self.pos_config.id, self.product.id)
+
+        self.assertEqual(len(result), 1, "Should return exactly one lot")
+        self.assertEqual(result[0]['name'], 'TEST_LOT')
+        self.assertEqual(result[0]['product_qty'], 15.0, "Should sum only quantities from POS source locations")
+
     def test_order_invoiced_after_session_closed(self):
         """Test that an order can be invoiced after its session is closed.
         Scenario:
