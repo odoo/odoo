@@ -174,15 +174,17 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
+            trigger:
+                ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
             content: "Check the earlier provided extra attachment is listed",
-            trigger: '.o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer[title="extra.txt"]',
+            trigger:
+                '.o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer[title="extra.txt"]',
         },
         {
             content: "Save edited message",
-            trigger: ".o-mail-Message a:contains(save)",
+            trigger: ".o-mail-Message button:contains(save)",
             run: "click",
         },
         {
