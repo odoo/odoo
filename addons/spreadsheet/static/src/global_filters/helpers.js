@@ -89,7 +89,8 @@ export function checkFilterDefaultValueIsValid(filter, defaultValue) {
     }
     switch (filter.type) {
         case "text":
-            return isTextFilterValueValid(defaultValue);
+        case "selection":
+            return isTextSelectionFilterValueValid(defaultValue);
         case "date":
             return isDateFilterDefaultValueValid(defaultValue);
         case "relation":
@@ -112,7 +113,8 @@ export function checkFilterValueIsValid(filter, value) {
     }
     switch (filter.type) {
         case "text":
-            return isTextFilterValueValid(value);
+        case "selection":
+            return isTextSelectionFilterValueValid(value);
         case "date":
             return isDateFilterValueValid(value);
         case "relation":
@@ -124,11 +126,11 @@ export function checkFilterValueIsValid(filter, value) {
 }
 
 /**
- * A text filter value is valid if it is an array of strings. It's the same
- * for the default value.
+ * A text or selection filter value is valid if it is an array of strings. It's
+ * the same for the default value.
  * @returns {boolean}
  */
-function isTextFilterValueValid(value) {
+function isTextSelectionFilterValueValid(value) {
     return Array.isArray(value) && value.length && value.every((text) => typeof text === "string");
 }
 
@@ -596,6 +598,20 @@ export async function getFacetInfo(filter, filterValues, nameService) {
                 typeof value === "string" ? value : _t("Inaccessible/missing record ID")
             );
             break;
+        case "selection": {
+            const fields = await this.fields.loadFields(filter.resModel);
+            const field = fields[filter.selectionField];
+            if (!field) {
+                throw new Error(
+                    `Field ${filter.selectionField} not found in model ${filter.resModel}`
+                );
+            }
+            values = filterValues.map((value) => {
+                const option = field.selection.find((option) => option[0] === value);
+                return option ? option[1] : value;
+            });
+            break;
+        }
     }
     return {
         title: filter.label,

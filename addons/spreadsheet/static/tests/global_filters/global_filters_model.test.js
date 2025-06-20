@@ -2799,6 +2799,62 @@ test("Check boolean filter domain", async () => {
     );
 });
 
+test("Can add a selection filter", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "selection",
+        resModel: "res.currency",
+        selectionField: "position",
+    };
+    addGlobalFilterWithoutReload(model, filter);
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: ["after"],
+    });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(["after"]);
+});
+
+test("Check selection filter domain", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "selection",
+        resModel: "res.currency",
+        selectionField: "position",
+    };
+    addGlobalFilterWithoutReload(model, filter);
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: [],
+    });
+    const fieldMatching = { chain: "position", type: "selection" };
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual("[]");
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: ["after"],
+    });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `[("position", "in", ["after"])]`
+    );
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: ["before"],
+    });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `[("position", "in", ["before"])]`
+    );
+    await setGlobalFilterValue(model, {
+        id: "42",
+        value: ["after", "before"],
+    });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `[("position", "in", ["after", "before"])]`
+    );
+});
+
 test("Undo/Redo of global filter update", async () => {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     const filter = {
@@ -2889,6 +2945,61 @@ test("Default value of text filter", () => {
         type: "text",
         label: "Default value cannot be an empty array",
         defaultValue: [],
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+});
+
+test("Default value of selection filter", () => {
+    const model = new Model();
+    let result = addGlobalFilterWithoutReload(model, {
+        id: "1",
+        type: "selection",
+        label: "Default value cannot be a string, should be an array",
+        resModel: "res.currency",
+        selectionField: "position",
+        defaultValue: "default value",
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "2",
+        type: "selection",
+        label: "Default value is an array",
+        resModel: "res.currency",
+        selectionField: "position",
+        defaultValue: ["default value"],
+    });
+    expect(result.isSuccessful).toBe(true);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "3",
+        type: "selection",
+        label: "Default value is empty",
+        resModel: "res.currency",
+        selectionField: "position",
+    });
+    expect(result.isSuccessful).toBe(true);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "4",
+        type: "selection",
+        label: "Default value cannot be a number",
+        resModel: "res.currency",
+        selectionField: "position",
+        defaultValue: 5,
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "5",
+        type: "selection",
+        label: "Default value cannot be a boolean",
+        resModel: "res.currency",
+        selectionField: "position",
+        defaultValue: false,
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);

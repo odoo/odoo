@@ -74,6 +74,15 @@ declare module "@spreadsheet" {
         defaultValue?: string[];
     }
 
+    export interface SelectionGlobalFilter {
+        type: "selection";
+        id: string;
+        label: string;
+        resModel: string;
+        selectionField: string;
+        defaultValue?: string[];
+    }
+
     export interface CmdTextGlobalFilter extends TextGlobalFilter {
         rangesOfAllowedValues?: RangeData[];
     }
@@ -102,6 +111,6 @@ declare module "@spreadsheet" {
         defaultValue?: boolean[];
     }
 
-    export type GlobalFilter = TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter;
-    export type CmdGlobalFilter = CmdTextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter;
+    export type GlobalFilter = TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter | SelectionGlobalFilter;
+    export type CmdGlobalFilter = CmdTextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter | SelectionGlobalFilter;
 }
