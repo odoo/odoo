@@ -3,6 +3,8 @@ import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 
+const { DateTime } = luxon;
+
 describe.current.tags("desktop");
 defineHrHolidaysModels();
 

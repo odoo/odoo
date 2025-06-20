@@ -23,6 +23,7 @@ class HrEmployee(models.Model):
                                                       ('presence_office', 'At Office'),
                                                       ('presence_other', 'At Other')])
     today_location_name = fields.Char()
+    remote_work_location_type = fields.Char(compute="_compute_remote_work_location_type")
 
     @api.model
     def _get_current_day_location_field(self):
@@ -70,3 +71,10 @@ class HrEmployee(models.Model):
                 continue
             employee.hr_icon_display = f'presence_{today_employee_location_id.location_type}'
             employee.show_hr_icon_display = True
+
+    @api.depends(*DAYS, "exceptional_location_id")
+    def _compute_remote_work_location_type(self):
+        dayfield = self._get_current_day_location_field()
+        for employee in self:
+            remote_work_location = employee.exceptional_location_id or employee[dayfield]
+            employee.remote_work_location_type = remote_work_location.location_type

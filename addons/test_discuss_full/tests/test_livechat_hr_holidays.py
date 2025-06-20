@@ -34,7 +34,8 @@ class TestLivechatHrHolidays(MailCommon):
         livechat_channel = self.env["im_livechat.channel"].create(
             {"name": "support", "user_ids": [Command.link(self.user_employee.id)]}
         )
-        self.assertEqual(self.user_employee.im_status, "leave_online")
+        self.assertEqual(self.user_employee.im_status, "online")
+        self.assertTrue(self.user_employee.leave_date_to)
         self.assertEqual(livechat_channel.available_operator_ids, self.user_employee)
 
     def test_operator_limit_on_leave(self):
@@ -50,5 +51,6 @@ class TestLivechatHrHolidays(MailCommon):
         self.env["discuss.channel"].create(
             livechat_channel._get_livechat_discuss_channel_vals(anonymous_name="Visitor")
         )
-        self.assertEqual(self.user_employee.im_status, "leave_online")
+        self.assertEqual(self.user_employee.im_status, "online")
+        self.assertTrue(self.user_employee.leave_date_to)
         self.assertFalse(livechat_channel.available_operator_ids)

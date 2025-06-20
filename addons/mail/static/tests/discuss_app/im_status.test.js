@@ -103,6 +103,6 @@ test("show im status in messaging menu preview of chat", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", {
         text: "Demo",
-        contains: ["i[aria-label='User is online']"],
+        contains: ["i[aria-label='User is Online']"],
     });
 });
