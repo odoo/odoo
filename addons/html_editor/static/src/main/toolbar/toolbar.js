@@ -3,6 +3,7 @@ import { Component, useState, validate } from "@odoo/owl";
 export class Toolbar extends Component {
     static template = "html_editor.Toolbar";
     static props = {
+        overlayState: { type: Object, optional: true },
         class: { type: String, optional: true },
         toolbar: {
             type: Object,
@@ -91,4 +92,5 @@ export class Toolbar extends Component {
 export const toolbarButtonProps = {
     title: String,
     getSelection: Function,
+    overlayState: { type: Object, optional: true },
 };

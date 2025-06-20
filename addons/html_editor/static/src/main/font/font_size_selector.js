@@ -4,6 +4,8 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useDebounced } from "@web/core/utils/timing";
+import { useDropdownAutoVisibility } from "@html_editor/dropdown_autovisibility_hook";
+import { useChildRef } from "@web/core/utils/hooks";
 
 const MAX_FONT_SIZE = 144;
 
@@ -22,6 +24,8 @@ export class FontSizeSelector extends Component {
         this.items = this.props.getItems();
         this.state = useState(this.props.getDisplay());
         this.dropdown = useDropdownState();
+        this.menuRef = useChildRef();
+        useDropdownAutoVisibility(this.props.overlayState, this.menuRef);
         this.iframeContentRef = useRef("iframeContent");
         this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 200);
 
