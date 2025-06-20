@@ -35,9 +35,11 @@ export class BooleanToggleConfirm extends BooleanToggleField {
             this.props.record.update({ [this.props.name]: value }, { save: true });
         };
 
-        if (record.lot_valuated && !value) {
+        if (record.lot_valuated && !value && record.product_tmpl_valuation_layer_ids.count) {
             this.dialogService.add(ConfirmationDialog, {
-                body: _t("This operation might lead in a loss of data. Valuation will be identical for all lots/SN. Do you want to proceed ? "),
+                title: _t("Remove valuation by Lot/Serial Number"),
+                body: _t("Removing this option means all specific valuations per lot or serial number will definitely be lost. Are you sure you want to proceed? "),
+                confirmLabel: _t("Yes, set to the same value"),
                 confirm: updateAndSave,
                 cancel: () => {},
             });
