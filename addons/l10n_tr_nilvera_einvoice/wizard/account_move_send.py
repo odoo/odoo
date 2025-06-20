@@ -39,19 +39,40 @@ class AccountMoveSend(models.TransientModel):
 
     def _l10n_tr_nilvera_check_invoices(self):
         moves_to_check = self.move_ids.filtered(self._get_default_l10n_tr_nilvera_einvoice_enable_einvoice)
-        invalid_records = moves_to_check.partner_id.filtered(
+
+        partners = moves_to_check.partner_id
+
+        invalid_records = partners.filtered(
             lambda p: p.country_code != 'TR' or not p.city or not p.state_id or not p.street
         )
-        if invalid_records:
-            return {
-                "partner_data_missing": {
-                    "message": _("The following partner(s) are either not Turkish or are missing one of those fields: city, state and street."),
+        critical_invalid_records = partners.filtered(
+            lambda p: p.l10n_tr_nilvera_customer_status == 'einvoice' and not p.ref
+        )
+
+        if invalid_records or critical_invalid_records:
+            result = {}
+            if invalid_records:
+                result["partner_data_missing"] = {
+                    "message": _(
+                        "The following partner(s) are either not Turkish or are missing one of the following fields: city, state, or street."
+                    ),
                     "action_text": _("View Partner(s)"),
                     "action": invalid_records._get_records_action(
-                        name=_("Check data on Partner(s)"),
+                        name=_("Check data on Partner(s)")
                     ),
                 }
-            }
+            if critical_invalid_records:
+                result["critical_partner_data_missing"] = {
+                    "message": _(
+                        "The following E-Invoice partner(s) must have the reference field set to the tax office name."
+                    ),
+                    "action_text": _("View Partner(s)"),
+                    "action": critical_invalid_records._get_records_action(
+                        name=_("Check reference on Partner(s)")
+                    ),
+                    "critical": True
+                }
+            return result
 
         return {}
 
