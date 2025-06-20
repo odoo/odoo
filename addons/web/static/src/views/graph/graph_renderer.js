@@ -849,6 +849,15 @@ export class GraphRenderer extends Component {
      * @param {Object} context
      */
     openView(domain, views, context) {
+        if (this.model.metaData.openAction) {
+            const { action } = this.model.metaData.openAction;
+            this.actionService.loadAction(action, context).then(loadedAction => {
+                loadedAction.domain = domain;
+                this.actionService.doAction(loadedAction, {
+                    viewType: "list",
+                });
+            });
+        }
         this.actionService.doAction(
             {
                 context,
