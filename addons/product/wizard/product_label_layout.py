@@ -5,6 +5,21 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+PRODUCT_LABEL_SELECTION = [
+        ('dymo', 'Dymo'),
+        ('2x7xprice', '2 x 7 with price'),
+        ('4x7xprice', '4 x 7 with price'),
+        ('4x12', '4 x 12'),
+        ('4x12xprice', '4 x 12 with price'),
+        ('zpl', 'ZPL Labels'),
+        ('zplxprice', 'ZPL Labels with price')]
+
+LOT_LABEL_SELECTION = [
+        ('4x12_lots', '4 x 12 - One per lot/SN'),
+        ('4x12_units', '4 x 12 - One per unit'),
+        ('zpl_lots', 'ZPL Labels - One per lot/SN'),
+        ('zpl_units', 'ZPL Labels - One per unit')]
+
 
 class ProductLabelLayout(models.TransientModel):
     _name = 'product.label.layout'
