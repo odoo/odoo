@@ -12,6 +12,7 @@ import { user } from "@web/core/user";
 import { TextFilterValue } from "../filter_text_value/filter_text_value";
 import { getFields, ModelNotFoundError } from "@spreadsheet/data_sources/data_source";
 import { BooleanMultiSelector } from "../boolean_multi_selector/boolean_multi_selector";
+import { SelectionFilterValue } from "../selection_filter_value/selection_filter_value";
 
 const { ValidationMessages } = components;
 
@@ -22,6 +23,7 @@ export class FilterValue extends Component {
         DateFilterValue,
         MultiRecordSelector,
         BooleanMultiSelector,
+        SelectionFilterValue,
         ValidationMessages,
     };
     static props = {
@@ -99,6 +101,14 @@ export class FilterValue extends Component {
     }
 
     onBooleanInput(id, value) {
+        if (Array.isArray(value) && value.length === 0) {
+            this.clear(id);
+            return;
+        }
+        this.props.setGlobalFilterValue(id, value);
+    }
+
+    onSelectionInput(id, value) {
         if (Array.isArray(value) && value.length === 0) {
             this.clear(id);
             return;

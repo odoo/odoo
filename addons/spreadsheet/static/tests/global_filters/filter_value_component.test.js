@@ -259,3 +259,19 @@ test("boolean filter", async function () {
     await contains("a:first").click();
     expect(model.getters.getGlobalFilterValue("42")).toEqual([true], { message: "value is set" });
 });
+
+test("selection filter", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "selection",
+        label: "Selection Filter",
+        resModel: "res.currency",
+        selectionField: "position",
+    });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
+    await contains("input").click();
+    await contains("a:first").click();
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(["after"]);
+});
