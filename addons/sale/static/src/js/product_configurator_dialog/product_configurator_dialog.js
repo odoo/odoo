@@ -23,6 +23,14 @@ export class ProductConfiguratorDialog extends Component {
         companyId: { type: Number, optional: true },
         pricelistId: { type: Number, optional: true },
         currencyId: { type: Number, optional: true },
+        selectedComboItems: {
+            type: Array,
+            element: Object,
+            shape: {
+                name: String,
+            },
+            optional: true,
+        },
         soDate: String,
         edit: { type: Boolean, optional: true },
         options: {
@@ -77,6 +85,12 @@ export class ProductConfiguratorDialog extends Component {
                 optional_products,
                 currency_id,
             } = await this._loadData(this.props.edit);
+
+            // When product configurator open after combo configurator, the product configurator
+            // will only have a single main/configurable product which will contain the combo items
+            // selected using combo configrator
+            products[0].selectedComboItems = this.props.selectedComboItems || []
+
             this.state.products = products;
             this.state.optionalProducts = optional_products;
             for (const customPtav of this.props.customPtavs) {

@@ -70,6 +70,13 @@ function assertComboItemSelected(comboItemName) {
     };
 }
 
+function assertComboItemPreselected(comboItemName) {
+    return {
+        content: `Assert that combo item ${comboItemName} is preselected`,
+        trigger: `[name="preselected_product_name"]:contains(${comboItemName})`,
+    };
+}
+
 function increaseQuantity() {
     return {
         content: "Increase the combo quantity",
@@ -176,6 +183,7 @@ export default {
     assertSelectedComboItemCount,
     selectComboItem,
     assertComboItemSelected,
+    assertComboItemPreselected,
     increaseQuantity,
     decreaseQuantity,
     setQuantity,

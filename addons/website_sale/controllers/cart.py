@@ -113,6 +113,7 @@ class Cart(PaymentPortal):
         product_custom_attribute_values=None,
         no_variant_attribute_value_ids=None,
         linked_products=None,
+        combo_line_id=None,
         **kwargs
     ):
         """ Adds a product to the shopping cart.
@@ -130,6 +131,8 @@ class Cart(PaymentPortal):
             of `product.template.attribute.value` ids.
         :param list linked_products: A list of objects representing additional products linked to
             the product added to the cart. Can be combo item or optional products.
+        :param int combo_line_id: When adding a combo with optional products, for adding optional
+            product, this line indicates the main combo product line's id
         :param dict kwargs: Optional data. This parameter is not used here.
         :return: The values
         :rtype: dict
@@ -163,14 +166,21 @@ class Cart(PaymentPortal):
                 )
                 combo_quantity = min(combo_quantity, combo_item_quantity)
             quantity = combo_quantity
-
-        values = order_sudo._cart_add(
-            product_id=product_id,
-            quantity=quantity,
-            product_custom_attribute_values=product_custom_attribute_values,
-            no_variant_attribute_value_ids=no_variant_attribute_value_ids,
-            **kwargs
-        )
+        # If we're adding a combo with optional products, the `/shop/cart/add` route is called
+        # twice: first to add the combo product and its combo items, and second to add the optional
+        # products. As a result, we shouldn't add the combo product again during the second call
+        # (in which case a `combo_line_id` param is provided, identifying the already existing
+        # combo product line).
+        if not combo_line_id:
+            values = order_sudo._cart_add(
+                product_id=product_id,
+                quantity=quantity,
+                product_custom_attribute_values=product_custom_attribute_values,
+                no_variant_attribute_value_ids=no_variant_attribute_value_ids,
+                **kwargs,
+            )
+        else:
+            values = {'line_id': combo_line_id}
         line_ids = {product_template_id: values['line_id']}
 
         if linked_products and values['line_id']:
@@ -213,7 +223,10 @@ class Cart(PaymentPortal):
         main_product_line = request.env['sale.order.line'].browse(values['line_id'])
         if main_product_line.product_type == 'combo':
             main_product_line._check_validity()
-
+        if combo_line_id:
+            # If the combo product has already been added to the cart, we shouldn't include it in
+            # the cart notification nor track it.
+            del line_ids[product_template_id]
         values['notification_info'] = self._get_cart_notification_information(
             order_sudo, line_ids.values()
         )

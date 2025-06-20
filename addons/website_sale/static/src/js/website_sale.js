@@ -318,7 +318,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                 isBuyNow: isBuyNow,
                 isConfigured: isConfigured,
                 showQuantity: showQuantity,
-            });
+            }).quantity;
         };
         if ($('.js_add_cart_variants').children().length) {
             return this._getCombinationInfo(ev).then(() => {
