@@ -587,9 +587,18 @@ class ProjectTask(models.Model):
 
     @api.depends('partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
-        super()._compute_sale_line()
+        non_billable_tasks = self.filtered(
+            lambda task: (
+                task.timesheet_ids
+                and task.project_id.sale_line_employee_ids
+                and not task.sale_line_id
+                and not task.timesheet_ids.mapped('so_line')
+                and not task.parent_id.sale_line_id
+            )
+        )
+        super(ProjectTask, self - non_billable_tasks)._compute_sale_line()
         for task in self:
-            if task.allow_billable and not task.sale_line_id:
+            if task.allow_billable and not task.sale_line_id and task.pricing_type != "employee_rate":
                 task.sale_line_id = task._get_last_sol_of_customer()
 
     @api.depends('project_id.sale_line_employee_ids')
