@@ -6,18 +6,21 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    @template('fr')
-    def _get_fr_template_data(self):
+    @template('fr_asso')
+    def _get_fr_asso_template_data(self):
         return {
-            'name': _('General accounting plan'),
+            'name': _('Associations accounting plan'),
+            'parent': 'fr',
             'code_digits': 6,
             'property_account_receivable_id': 'fr_pcg_recv',
             'property_account_payable_id': 'fr_pcg_pay',
+            'property_account_expense_categ_id': 'pca_6071',
+            'property_account_income_categ_id': 'pca_7071',
             'property_account_downpayment_categ_id': 'pcg_4191',
         }
 
-    @template('fr', 'res.company')
-    def _get_fr_res_company(self):
+    @template('fr_asso', 'res.company')
+    def _get_fr_asso_res_company(self):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.fr',
@@ -32,28 +35,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'pcg_765',
                 'deferred_expense_account_id': 'pcg_486',
                 'deferred_revenue_account_id': 'pcg_487',
-                'l10n_fr_rounding_difference_loss_account_id': 'pcg_4768',
-                'l10n_fr_rounding_difference_profit_account_id': 'pcg_4778',
+                'l10n_fr_rounding_difference_loss_account_id': 'pca_658',
+                'l10n_fr_rounding_difference_profit_account_id': 'pca_758',
                 'account_sale_tax_id': 'tva_normale',
                 'account_purchase_tax_id': 'tva_acq_normale',
-                'expense_account_id': 'pcg_607_account',
-                'income_account_id': 'pcg_707_account',
+                'expense_account_id': 'pca_6071',
+                'income_account_id': 'pca_7071',
             },
         }
-
-    @template('fr', 'account.journal')
-    def _get_fr_account_journal(self):
-        return {
-            'sale': {'refund_sequence': True},
-            'purchase': {'refund_sequence': True},
-        }
-
-    def _get_bank_fees_reco_account(self, company):
-        # French account for the bank fees reco model. We need to be as precise
-        # as possible in case it's modified so it's missing and not replaced.
-        fr_account = self.env['account.account'].with_company(company).search([
-            ('code', '=', '627800'),
-            ('account_type', '=', 'expense'),
-            ('name', '=', 'Other expenses and commissions on services supplied'),
-        ], limit=1)
-        return fr_account or super()._get_bank_fees_reco_account(company)
