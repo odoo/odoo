@@ -48,6 +48,7 @@ class TestConfigureShops(TestPoSCommon):
             form.pos_config_id = pos_config1
             form.pos_is_header_or_footer = True
             form.pos_receipt_header = 'xxxxx'
+            form.account_tax_return_journal_id = self.account_tax_return_journal
 
         self.assertEqual(pos_config1.receipt_header, 'xxxxx')
         self.assertEqual(pos_config2.receipt_header, False)
