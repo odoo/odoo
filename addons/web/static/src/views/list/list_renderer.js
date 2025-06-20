@@ -413,8 +413,9 @@ export class ListRenderer extends Component {
     }
 
     get canCreateGroup() {
-        const { activeActions } = this.props.archInfo;
-        return activeActions.createGroup && this.props.list.groupByField.type === "many2one";
+        const { archInfo, list, readonly } = this.props;
+        const { activeActions } = archInfo;
+        return !readonly && activeActions.createGroup && list.groupByField.type === "many2one";
     }
 
     get canResequenceRows() {

@@ -362,6 +362,35 @@ test("SelectCreateDialog list view is readonly", async () => {
 });
 
 test.tags("desktop");
+test("SelectCreateDialog list view is readonly (grouped by m2o)", async () => {
+    Partner._views.search = /* xml */ `
+        <search>
+            <group expand="0" string="Group By">
+                <filter name="groupby_instrument" context="{'group_by' : 'instrument'}"/>
+            </group>
+        </search>
+    `;
+    Partner._views.list = /* xml */ `
+        <list string="Partner">
+            <field name="name"/>
+            <field name="foo"/>
+        </list>
+    `;
+
+    await mountWithCleanup(WebClient);
+
+    getService("dialog").add(SelectCreateDialog, {
+        resModel: "partner",
+        context: {
+            search_default_groupby_instrument: true,
+        },
+    });
+    await animationFrame();
+    expect(".o_group_header").toHaveCount(1);
+    expect(".o_list_footer .o_list_group_add").toHaveCount(0);
+});
+
+test.tags("desktop");
 test("SelectCreateDialog cascade x2many in create mode on desktop", async () => {
     expect.assertions(5);
 
