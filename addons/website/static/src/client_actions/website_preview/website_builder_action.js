@@ -153,12 +153,8 @@ export class WebsiteBuilder extends Component {
         );
     }
 
-    get menuProps() {
-        const websitePlugins = this.translation
-            ? registry.category("translation-plugins").getAll()
-            : registry.category("website-plugins").getAll();
-
-        return {
+    get instantiateBuilderProps() {
+        const builderProps = {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
             reloadEditor: this.reloadEditor.bind(this),
             snippetsName: "website.snippets",
@@ -166,8 +162,6 @@ export class WebsiteBuilder extends Component {
             overlayRef: this.overlayRef,
             iframeLoaded: this.iframeLoaded,
             isMobile: this.websiteContext.isMobile,
-            Plugins: websitePlugins,
-            instantiateCorePlugins : !this.translation,
             config: {
                 initialTarget: this.target,
                 initialTab: this.initialTab || this.translation ? "customize" : "blocks",
@@ -177,10 +171,11 @@ export class WebsiteBuilder extends Component {
                     },
                 },
                 customizeTab: this.translation ? "website.CustomizeTranslationTab" : "",
-             },
+            },
             getThemeTab: () =>
                 odoo.loader.modules.get("@website/builder/plugins/theme/theme_tab").ThemeTab,
         };
+        return { translation: this.translation, builderProps };
     }
 
     get systrayProps() {

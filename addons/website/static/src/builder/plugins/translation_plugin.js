@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
 import { AttributeTranslateDialog } from "../translation_components/attributeTranslateDialog";
 import { SelectTranslateDialog } from "../translation_components/selectTranslateDialog";
 import {
@@ -354,5 +353,3 @@ export class TranslationPlugin extends Plugin {
         }
     }
 }
-
-registry.category("translation-plugins").add(TranslationPlugin.id, TranslationPlugin);

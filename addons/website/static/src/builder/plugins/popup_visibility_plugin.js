@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-class PopupVisibilityPlugin extends Plugin {
+export class PopupVisibilityPlugin extends Plugin {
     static id = "popupVisibilityPlugin";
     static dependencies = ["visibility"];
     static shared = ["onTargetShow", "onTargetHide"];
@@ -53,4 +53,3 @@ class PopupVisibilityPlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(PopupVisibilityPlugin.id, PopupVisibilityPlugin);
-registry.category("translation-plugins").add(PopupVisibilityPlugin.id, PopupVisibilityPlugin);
