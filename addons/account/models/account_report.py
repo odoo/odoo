@@ -543,7 +543,7 @@ class AccountReportExpression(models.Model):
 
     report_line_id = fields.Many2one(string="Report Line", comodel_name='account.report.line', required=True, ondelete='cascade')
     report_line_name = fields.Char(string="Report Line Name", related="report_line_id.name")
-    label = fields.Char(string="Label", required=True)
+    label = fields.Char(string="Label", required=True, copy=True)
     engine = fields.Selection(
         string="Computation Engine",
         selection=[
@@ -709,10 +709,6 @@ class AccountReportExpression(models.Model):
                         self.env['account.account.tag'].create(tag_vals)
 
         return result
-
-    def copy_data(self, default=None):
-        vals_list = super().copy_data(default=default)
-        return [dict(vals, label=self.env._("%s (copy)", expression.label)) for expression, vals in zip(self, vals_list)]
 
     @api.ondelete(at_uninstall=False)
     def _unlink_archive_used_tags(self):
