@@ -489,6 +489,16 @@ class TestHrEmployee(TestHrCommon):
         self.assertTrue(employee.is_flexible)
         self.assertTrue(employee.is_fully_flexible)
 
+    def test_create_user_with_invalid_email(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Test Employee',
+            'work_email': 'test'
+        })
+
+        action = employee.action_create_users()
+        self.assertEqual(action['params']['message'], 'You need to set the correct work email address for Test Employee')
+        self.assertFalse(employee.user_id)
+
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeWebJson(HttpCase):
