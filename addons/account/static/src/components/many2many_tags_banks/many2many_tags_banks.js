@@ -44,7 +44,10 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
             type: "ir.actions.act_window",
             name: _t("Banks"),
             res_model: this.relation,
-            views: [[false, "list"], [false, "form"]],
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
             domain: this.getDomain(),
             target: "current",
         });
@@ -61,11 +64,6 @@ export const fieldMany2ManyTagsBanks = {
             name: "allow_out_payment_field",
             type: "boolean",
         },
-        {
-            label: _t("No search more"),
-            name: "no_search_more",
-            type: "boolean",
-        },
     ],
     additionalClasses: [
         ...(many2ManyTagsFieldColorEditable.additionalClasses || []),
@@ -76,13 +74,6 @@ export const fieldMany2ManyTagsBanks = {
             ...many2ManyTagsFieldColorEditable.relatedFields({ options }),
             { name: options.allow_out_payment_field, type: "boolean", readonly: false },
         ];
-    },
-    extractProps({ attrs, options, string }, dynamicInfo) {
-        const noSearchMore = Boolean(options.no_search_more);
-        return {
-            ...many2ManyTagsFieldColorEditable.extractProps({ attrs, options, string }, dynamicInfo),
-            noSearchMore,
-        };
     },
 };
 
