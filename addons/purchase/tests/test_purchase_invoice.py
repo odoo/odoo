@@ -949,13 +949,25 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             match_lines.action_match_lines()
 
     def test_manual_matching_restrict_multi_bill(self):
-        """ raises when multiple bill selected """
+        """ raises when multiple bill selected with different products """
         with self.assertRaisesRegex(UserError, "can't select lines from multiple Vendor Bill"):
             self.init_purchase(confirm=True, products=[self.product_order])
             self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
-            self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+            self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order_other_price])
             match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
             match_lines.action_match_lines()
+
+    def test_manual_matching_allow_multi_bill(self):
+        """ Allow matching lines from multiple bills if every line has the same product """
+        po = self.init_purchase(partner=self.partner_a, confirm=True, products=[self.product_order])
+        bill_1 = self.init_invoice(move_type='in_invoice', partner=self.partner_a, products=[self.product_order])
+        bill_2 = self.init_invoice(move_type='in_invoice', partner=self.partner_a, products=[self.product_order])
+        po.order_line.product_uom_qty = 2
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines.action_match_lines()
+        self.assertEqual(bill_1.invoice_line_ids.purchase_line_id, po.order_line)
+        self.assertEqual(bill_2.invoice_line_ids.purchase_line_id, po.order_line)
+        self.assertEqual(po.order_line.qty_invoiced, 2)
 
     def test_manual_matching_create_bill(self):
         """ Selecting POL without AML will create bill with the selected POL as the lines """
