@@ -27,6 +27,7 @@
         ],
         'html_builder.assets': [
             'website_mail_group/static/src/website_builder/**/*',
+            ('remove', 'website_mail_group/static/src/website_builder/**/*.inside.scss'),
         ],
     },
     'author': 'Odoo S.A.',

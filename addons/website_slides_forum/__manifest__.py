@@ -32,6 +32,7 @@
     'assets': {
         'html_builder.assets': [
             'website_slides_forum/static/src/website_builder/**/*',
+            ('remove', 'website_slides_forum/static/src/website_builder/**/*.inside.scss'),
         ],
     },
 }

@@ -21,6 +21,7 @@ your visitors to subscribe with their phone number.
     'assets': {
         'html_builder.assets': [
             'website_mass_mailing_sms/static/src/website_builder/**/*',
+            ('remove', 'website_mass_mailing_sms/static/src/website_builder/**/*.inside.scss'),
         ],
     },
 }
