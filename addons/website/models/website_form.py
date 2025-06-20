@@ -75,46 +75,45 @@ class website_form_model(models.Model):
             elif fields_get[field]['type'] == 'properties':
                 property_field = fields_get[field]
                 del fields_get[field]
-                if property_origins:
-                    # Add property pseudo-fields
-                    # The properties of a property field are defined in a
-                    # definition record (e.g. properties inside a project.task
-                    # are defined inside its related project.project)
-                    definition_record = property_field['definition_record']
-                    if definition_record in property_origins:
-                        definition_record_field = property_field['definition_record_field']
-                        relation_field = fields_get[definition_record]
-                        definition_model = self.env[relation_field['relation']]
-                        if not property_origins[definition_record].isdigit():
-                            # Do not fail on malformed forms.
+                # Add property pseudo-fields
+                # The properties of a property field are defined in a definition
+                # record (e.g. properties inside a project.task are defined
+                # inside its related project.project)
+                definition_record = property_field['definition_record']
+                definition_record_field = property_field['definition_record_field']
+                relation_field = fields_get[definition_record]
+                definition_model = self.env[relation_field['relation']]
+                properties_definitions = [
+                    property_definition
+                    for definition_record in
+                    definition_model.search([("applicant_properties_definition", "!=", False)])
+                    for property_definition in definition_record[definition_record_field]
+                ]
+                for property_definition in properties_definitions:
+                    if ((
+                        property_definition['type'] in ['many2one', 'many2many']
+                        and 'comodel' not in property_definition
+                    ) or (
+                        property_definition['type'] == 'selection'
+                        and not property_definition['selection']
+                    ) or (
+                        property_definition['type'] == 'tags'
+                        and not property_definition['tags']
+                    ) or (property_definition['type'] == 'separator')):
+                        # Ignore non-fully defined properties
+                        continue
+                    property_definition['_property'] = {
+                        'field': field,
+                    }
+                    property_definition['required'] = False
+                    if 'domain' in property_definition and isinstance(property_definition['domain'], str):
+                        property_definition['domain'] = literal_eval(property_definition['domain'])
+                        try:
+                            property_definition['domain'] = expression.normalize_domain(property_definition['domain'])
+                        except (AssertionError, ValueError):
+                            # Ignore non-fully defined properties
                             continue
-                        definition_record = definition_model.browse(int(property_origins[definition_record]))
-                        properties_definitions = definition_record[definition_record_field]
-                        for property_definition in properties_definitions:
-                            if ((
-                                property_definition['type'] in ['many2one', 'many2many']
-                                and 'comodel' not in property_definition
-                            ) or (
-                                property_definition['type'] == 'selection'
-                                and not property_definition['selection']
-                            ) or (
-                                property_definition['type'] == 'tags'
-                                and not property_definition['tags']
-                            ) or (property_definition['type'] == 'separator')):
-                                # Ignore non-fully defined properties
-                                continue
-                            property_definition['_property'] = {
-                                'field': field,
-                            }
-                            property_definition['required'] = False
-                            if 'domain' in property_definition and isinstance(property_definition['domain'], str):
-                                property_definition['domain'] = literal_eval(property_definition['domain'])
-                                try:
-                                    property_definition['domain'] = expression.normalize_domain(property_definition['domain'])
-                                except Exception:
-                                    # Ignore non-fully defined properties
-                                    continue
-                            fields_get[property_definition.get('name')] = property_definition
+                    fields_get[property_definition.get('name')] = property_definition
 
         return fields_get
 
