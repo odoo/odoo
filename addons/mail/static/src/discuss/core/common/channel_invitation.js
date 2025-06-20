@@ -163,7 +163,8 @@ export class ChannelInvitation extends Component {
             if (this.props.thread.correspondent) {
                 partnerIds.unshift(this.props.thread.correspondent.persona.id);
             }
-            await this.store.startChat(partnerIds);
+            const partners_to = [...new Set([this.store.self.id, ...partnerIds])];
+            await this.store.createGroupChat({ partners_to });
         } else {
             await this.orm.call("discuss.channel", "add_members", [[this.props.thread.id]], {
                 partner_ids: this.selectedPartners.map((partner) => partner.id),
