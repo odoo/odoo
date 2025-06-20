@@ -42,6 +42,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'pricing_currency_code': invoice.currency_id.name.upper() if invoice.currency_id != invoice.company_id.currency_id else False,
             'currency_dp': 2,
         })
+        # Nilvera will reject any <BuyerReference> tag, so remove it
+        if vals['vals'].get('buyer_reference'):
+            del vals['vals']['buyer_reference']
         return vals
 
     def _get_country_vals(self, country):
@@ -53,6 +56,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
     def _get_partner_party_identification_vals_list(self, partner):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_party_identification_vals_list(partner)
+        # Nilvera will reject any <ID> without a <schemeID>, so remove all items not
+        # having the following structure : {'id': '...', 'id_attrs': {'schemeID': '...'}}
+        vals = [v for v in vals if v.get('id') and v.get('id_attrs', {}).get('schemeID')]
         vals.append({
             'id_attrs': {
                 'schemeID': 'VKN' if partner.is_company else 'TCKN',
