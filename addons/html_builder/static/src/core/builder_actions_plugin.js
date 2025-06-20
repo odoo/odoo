@@ -15,7 +15,8 @@ export class BuilderActionsPlugin extends Plugin {
     setup() {
         this.actions = {};
         for (const actions of this.getResource("builder_actions")) {
-            for (const [actionKey, Action] of Object.entries(actions)) {
+            for (let [actionKey, Action] of Object.entries(actions)) {
+                actionKey = Action.id ?? actionKey;
                 if (actionKey in this.actions) {
                     throw new Error(`Duplicate builder action id: ${actionKey}`);
                 }
@@ -24,9 +25,9 @@ export class BuilderActionsPlugin extends Plugin {
                     for (const depName of Action.dependencies) {
                         deps[depName] = this.config.getShared()[depName];
                     }
-                    this.actions[Action.id] = new Action(this, deps);
+                    this.actions[actionKey] = new Action(this, deps);
                 } else {
-                    this.actions[actionKey] = { id: actionKey, ...Action };
+                    this.actions[actionKey] = Action;
                 }
             }
         }
