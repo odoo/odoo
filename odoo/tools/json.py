@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import date, datetime
+from types import MappingProxyType
 import json as json_
 import re
 
 import markupsafe
 from .func import lazy
-from .misc import ReadonlyDict
 
 JSON_SCRIPTSAFE_MAPPER = {
     '&': r'\u0026',
@@ -54,6 +54,8 @@ class JSON:
 
         Cf https://code.djangoproject.com/ticket/17419#comment:27
         """
+        if 'default' not in kwargs:
+            kwargs['default'] = json_default
         return _ScriptSafe(json_.dumps(*args, **kwargs))
 scriptsafe = JSON()
 
@@ -66,7 +68,7 @@ def json_default(obj):
         return fields.Date.to_string(obj)
     if isinstance(obj, lazy):
         return obj._value
-    if isinstance(obj, ReadonlyDict):
+    if isinstance(obj, MappingProxyType):
         return dict(obj)
     if isinstance(obj, bytes):
         return obj.decode()
