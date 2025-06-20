@@ -362,7 +362,7 @@ function usePrepareAction(getAllActions) {
     for (const descr of getAllActions()) {
         if (descr.actionId) {
             const action = getAction(descr.actionId);
-            if (action.prepare) {
+            if (action.has("prepare")) {
                 asyncActions.push({ action, descr });
             }
         }

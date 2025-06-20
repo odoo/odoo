@@ -12,6 +12,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -432,14 +433,15 @@ test("useDomState callback shouldn't be called when the editingElement is remove
         template: xml`<BuilderButton action="'addTestSnippet'">Add</BuilderButton>`,
     });
     addActionOption({
-        addTestSnippet: {
-            apply: ({ editingElement }) => {
+        addTestSnippet: class extends BuilderAction {
+            static id = "addTestSnippet";
+            apply({ editingElement }) {
                 const testEl = document.createElement("div");
                 testEl.classList.add("s_test", "alert-info");
                 testEl.textContent = "test";
                 editingElement.after(testEl);
                 editor.shared["builderOptions"].setNextTarget(testEl);
-            },
+            }
         },
     });
 
@@ -463,12 +465,13 @@ test("useDomState callback shouldn't be called when the editingElement is remove
 
 test("Update editing elements at dom change with multiple levels of applyTo", async () => {
     addActionOption({
-        customAction: {
-            apply: ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement }) {
                 const createdEl = editingElement.cloneNode(true);
                 const parentEl = editingElement.parentElement;
                 parentEl.appendChild(createdEl);
-            },
+            }
         },
     });
     addOption({

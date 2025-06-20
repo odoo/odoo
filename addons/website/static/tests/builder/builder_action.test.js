@@ -10,6 +10,7 @@ import {
     addBuilderOption,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 describe("website tests", () => {
     beforeEach(defineWebsiteModels);
@@ -41,15 +42,19 @@ describe("website tests", () => {
 
 describe.tags("desktop");
 describe("HTML builder tests", () => {
+    class TestAction extends BuilderAction {
+        static id = "testAction";
+        isApplied({ editingElement }) {
+            return editingElement.classList.contains("applied");
+        }
+        apply({ editingElement }) {
+            editingElement.classList.toggle("applied");
+            expect.step("apply");
+        }
+    }
     beforeEach(() => {
         addBuilderAction({
-            testAction: {
-                isApplied: ({ editingElement }) => editingElement.classList.contains("applied"),
-                apply: ({ editingElement }) => {
-                    editingElement.classList.toggle("applied");
-                    expect.step("apply");
-                },
-            },
+            TestAction,
         });
     });
 
@@ -97,14 +102,16 @@ describe("HTML builder tests", () => {
                 });
             }
         }
+        class CustomAction extends BuilderAction {
+            static id = "customAction";
+            async prepare() {
+                await prepareDeferred;
+                expect.step("prepare");
+            }
+            apply() {}
+        }
         addBuilderAction({
-            customAction: {
-                prepare: async () => {
-                    await prepareDeferred;
-                    expect.step("prepare");
-                },
-                apply: () => {},
-            },
+            CustomAction,
         });
         addBuilderOption({
             OptionComponent: TestOption,

@@ -9,6 +9,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 class Test extends models.Model {
     _name = "test";
@@ -83,17 +84,20 @@ test("many2many: async load", async () => {
         [3, "Third"],
     ]);
     addActionOption({
-        testAction: {
-            load: async ({ value }) => {
+        testAction: class extends BuilderAction {
+            static id = "testAction";
+            async load({ value }) {
                 expect.step("load");
                 await defWillLoad;
                 return value;
-            },
-            apply: ({ editingElement, value }) => {
+            }
+            apply({ editingElement, value }) {
                 editingElement.dataset.test = value;
                 defDidApply.resolve();
-            },
-            getValue: ({ editingElement }) => editingElement.dataset.test,
+            }
+            getValue({ editingElement }) {
+                return editingElement.dataset.test;
+            }
         },
     });
     addOption({

@@ -9,16 +9,20 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
 test("should get the initial value of the input", async () => {
     addActionOption({
-        customAction: {
-            getValue: ({ editingElement }) => editingElement.innerHTML,
-            apply: ({ params }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.innerHTML;
+            }
+            apply({ params }) {
                 expect.step(`customAction ${params}`);
-            },
+            }
         },
     });
     addOption({
@@ -43,8 +47,11 @@ test("hide/display base on applyTo", async () => {
         template: xml`<BuilderNumberInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
     });
     addActionOption({
-        customAction: {
-            getValue: () => "10",
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue() {
+                return "10";
+            }
         },
     });
 
@@ -86,11 +93,14 @@ test("input with classAction and styleAction", async () => {
 describe("default value", () => {
     test("should use the default value when there is no value onChange", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ value }) {
                     expect.step(`customAction ${value}`);
-                },
+                }
             },
         });
         addOption({
@@ -112,11 +122,14 @@ describe("default value", () => {
     });
     test("clear BuilderNumberInput without default value", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -137,11 +150,14 @@ describe("default value", () => {
     });
     test("clear BuilderNumberInput with default value", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -164,12 +180,15 @@ describe("default value", () => {
 describe("operations", () => {
     test("should preview changes", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -190,12 +209,15 @@ describe("operations", () => {
     });
     test("should commit changes", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -219,12 +241,15 @@ describe("operations", () => {
     });
     test("should commit changes after an undo", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -252,12 +277,15 @@ describe("operations", () => {
     });
     test("should not commit on input if no preview", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -279,12 +307,15 @@ describe("operations", () => {
 describe("keyboard triggers", () => {
     test("input should step up or down from by the step prop", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -310,12 +341,15 @@ describe("keyboard triggers", () => {
     });
     test("multi values: apply change on each value with up or down", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -342,11 +376,14 @@ describe("keyboard triggers", () => {
     });
     test("up on empty BuilderNumberInput gives 1", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.dataset.number,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.dataset.number;
+                }
+                apply({ editingElement, value }) {
                     editingElement.dataset.number = value;
-                },
+                }
             },
         });
         addOption({
@@ -364,11 +401,14 @@ describe("keyboard triggers", () => {
     });
     test("down on empty BuilderNumberInput gives -1", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.dataset.number,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.dataset.number;
+                }
+                apply({ editingElement, value }) {
                     editingElement.dataset.number = value;
-                },
+                }
             },
         });
         addOption({
@@ -387,12 +427,15 @@ describe("keyboard triggers", () => {
     });
     test("apply preview on keydown and debounce commit operation", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -422,12 +465,15 @@ describe("keyboard triggers", () => {
 describe("unit & saveUnit", () => {
     test("should handle unit", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -448,12 +494,15 @@ describe("unit & saveUnit", () => {
     });
     test("should handle saveUnit", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -474,12 +523,15 @@ describe("unit & saveUnit", () => {
     });
     test("should handle empty saveUnit", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -502,11 +554,14 @@ describe("unit & saveUnit", () => {
 describe("sanitized values", () => {
     test("don't allow multi values by default", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ editingElement, value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
                     editingElement.innerHTML = value;
-                },
+                }
             },
         });
         addOption({
@@ -523,11 +578,14 @@ describe("sanitized values", () => {
     });
     test("use min when the given value is smaller", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ value }) {
                     expect.step(`customAction ${value}`);
-                },
+                }
             },
         });
         addOption({
@@ -544,11 +602,14 @@ describe("sanitized values", () => {
     });
     test("use max when the given value is bigger", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ value }) {
                     expect.step(`customAction ${value}`);
-                },
+                }
             },
         });
         addOption({
@@ -566,11 +627,14 @@ describe("sanitized values", () => {
     });
     test("multi values: trailing space in BuilderNumberInput is ignored", async () => {
         addActionOption({
-            customAction: {
-                getValue: ({ editingElement }) => editingElement.innerHTML,
-                apply: ({ value }) => {
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ value }) {
                     expect.step(`customAction ${value}`);
-                },
+                }
             },
         });
         addOption({

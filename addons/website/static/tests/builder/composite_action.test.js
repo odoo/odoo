@@ -6,29 +6,36 @@ import {
     addBuilderOption,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 // TODO: test composite with each spec: prepare, load, getValue
 // TODO: test reloadComposite
 
 describe.current.tags("desktop");
 test("can call 2 separate actions with composite action", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        isApplied({ editingElement, params: { mainParam: cls } }) {
+            return editingElement.classList.contains(cls);
+        }
+        apply({ editingElement, params: { mainParam: cls } }) {
+            editingElement.classList.toggle(cls);
+            expect.step(`action1: ${cls}`);
+        }
+    }
+    class Action2 extends BuilderAction {
+        static id = "action2";
+        isApplied({ editingElement, params: { mainParam: cls } }) {
+            return editingElement.classList.contains(cls);
+        }
+        apply({ editingElement, params: { mainParam: cls } }) {
+            editingElement.classList.toggle(cls);
+            expect.step(`action2: ${cls}`);
+        }
+    }
     addBuilderAction({
-        action1: {
-            isApplied: ({ editingElement, params: { mainParam: cls } }) =>
-                editingElement.classList.contains(cls),
-            apply: ({ editingElement, params: { mainParam: cls } }) => {
-                editingElement.classList.toggle(cls);
-                expect.step(`action1: ${cls}`);
-            },
-        },
-        action2: {
-            isApplied: ({ editingElement, params: { mainParam: cls } }) =>
-                editingElement.classList.contains(cls),
-            apply: ({ editingElement, params: { mainParam: cls } }) => {
-                editingElement.classList.toggle(cls);
-                expect.step(`action2: ${cls}`);
-            },
-        },
+        Action1,
+        Action2,
     });
     addBuilderOption({
         selector: ".s_test",
@@ -57,15 +64,18 @@ test("can call 2 separate actions with composite action", async () => {
 });
 
 test("can call the same action twice with composite action", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        isApplied({ editingElement, params: { mainParam: cls } }) {
+            return editingElement.classList.contains(cls);
+        }
+        apply({ editingElement, params: { mainParam: cls } }) {
+            editingElement.classList.toggle(cls);
+            expect.step(`action1: ${cls}`);
+        }
+    }
     addBuilderAction({
-        action1: {
-            isApplied: ({ editingElement, params: { mainParam: cls } }) =>
-                editingElement.classList.contains(cls),
-            apply: ({ editingElement, params: { mainParam: cls } }) => {
-                editingElement.classList.toggle(cls);
-                expect.step(`action1: ${cls}`);
-            },
-        },
+        Action1,
     });
     addBuilderOption({
         selector: ".s_test",
@@ -94,12 +104,14 @@ test("can call the same action twice with composite action", async () => {
 });
 
 test("composite action's isApplied returns false if no action defined it", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        apply({ params: { mainParam: cls } }) {
+            expect.step(`action: ${cls}`);
+        }
+    }
     addBuilderAction({
-        action1: {
-            apply: ({ params: { mainParam: cls } }) => {
-                expect.step(`action: ${cls}`);
-            },
-        },
+        Action1,
     });
     addBuilderOption({
         selector: ".s_test",
@@ -115,9 +127,9 @@ test("composite action's isApplied returns false if no action defined it", async
     });
     await setupHTMLBuilder(`<section class="s_test">Test</section>`);
     await contains(":iframe .s_test").click();
-    expect("[data-action-id='composite'").not.toHaveClass("active");
+    expect("[data-action-id='composite']").not.toHaveClass("active");
     await contains("[data-action-id='composite']").click();
-    expect("[data-action-id='composite'").not.toHaveClass("active");
+    expect("[data-action-id='composite']").not.toHaveClass("active");
     expect.verifySteps([
         "action: class1", // preview
         "action: class2", // preview
@@ -126,18 +138,22 @@ test("composite action's isApplied returns false if no action defined it", async
     ]);
 });
 test("composite action's isApplied returns true if at least one action defined it", async () => {
+    class Action1 extends BuilderAction {
+        static id = "action1";
+        apply() {}
+    }
+    class Action2 extends BuilderAction {
+        static id = "action2";
+        isApplied({ editingElement, params: { mainParam: cls } }) {
+            return editingElement.classList.contains(cls);
+        }
+        apply({ editingElement, params: { mainParam: cls } }) {
+            editingElement.classList.add(cls);
+        }
+    }
     addBuilderAction({
-        action1: {
-            apply: () => {},
-        },
-        action2: {
-            isApplied: ({ editingElement, params: { mainParam: cls } }) => {
-                return editingElement.classList.contains(cls);
-            },
-            apply: ({ editingElement, params: { mainParam: cls } }) => {
-                editingElement.classList.add(cls);
-            },
-        },
+        Action1,
+        Action2,
     });
     addBuilderOption({
         selector: ".s_test",
@@ -153,7 +169,7 @@ test("composite action's isApplied returns true if at least one action defined i
     });
     await setupHTMLBuilder(`<section class="s_test">Test</section>`);
     await contains(":iframe .s_test").click();
-    expect("[data-action-id='composite'").not.toHaveClass("active");
+    expect("[data-action-id='composite']").not.toHaveClass("active");
     await contains("[data-action-id='composite']").click();
-    expect("[data-action-id='composite'").toHaveClass("active");
+    expect("[data-action-id='composite']").toHaveClass("active");
 });

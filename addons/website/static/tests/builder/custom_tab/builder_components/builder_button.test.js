@@ -10,6 +10,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -17,10 +18,11 @@ const falsy = () => false;
 
 test("call a specific action with some params and value", async () => {
     addActionOption({
-        customAction: {
-            apply: ({ params: { mainParam: testParam }, value }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ params: { mainParam: testParam }, value }) {
                 expect.step(`customAction ${testParam} ${value}`);
-            },
+            }
         },
     });
     addOption({
@@ -50,11 +52,12 @@ test("call a shorthand action", async () => {
 });
 test("call a shorthand action and a specific action", async () => {
     addActionOption({
-        customAction: {
-            apply: ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement }) {
                 expect.step(`customAction`);
                 editingElement.innerHTML = "c";
-            },
+            }
         },
     });
     addOption({
@@ -73,11 +76,12 @@ test("call a shorthand action and a specific action", async () => {
 });
 test("preview a shorthand action and a specific action", async () => {
     addActionOption({
-        customAction: {
-            apply: ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement }) {
                 expect.step(`customAction`);
                 editingElement.innerHTML = "c";
-            },
+            }
         },
     });
     addOption({
@@ -97,10 +101,11 @@ test("preview a shorthand action and a specific action", async () => {
 });
 test("prevent preview of a specific action", async () => {
     addActionOption({
-        customAction: {
-            apply: () => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply() {
                 expect.step(`customAction`);
-            },
+            }
         },
     });
     addOption({
@@ -117,13 +122,17 @@ test("prevent preview of a specific action", async () => {
 });
 
 test("prevent preview of a specific action (2)", async () => {
+    class CustomAction extends BuilderAction {
+        static id = "customAction";
+        setup() {
+            this.preview = false;
+        }
+        apply() {
+            expect.step(`customAction`);
+        }
+    }
     addActionOption({
-        customAction: {
-            preview: false,
-            apply: () => {
-                expect.step(`customAction`);
-            },
-        },
+        CustomAction,
     });
     addOption({
         selector: ".test-options-target",
@@ -151,10 +160,11 @@ test("should toggle when not in a BuilderButtonGroup", async () => {
 });
 test("should call apply when the button is active and none of its actions have a clean method", async () => {
     addActionOption({
-        customAction: {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
             apply() {
                 expect.step(`customAction apply`);
-            },
+            }
         },
     });
     addOption({
@@ -211,15 +221,16 @@ test("clean another action", async () => {
 });
 test("clean should provide the next action value", async () => {
     addActionOption({
-        customAction: {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
             clean({ nextAction }) {
                 expect.step(
                     `customAction clean ${nextAction.params.mainParam} ${nextAction.value}`
                 );
-            },
+            }
             apply() {
                 expect.step(`customAction apply`);
-            },
+            }
         },
     });
     addOption({
@@ -248,13 +259,14 @@ test("clean should provide the next action value", async () => {
 });
 test("clean should only be called on the currently selected item", async () => {
     function makeAction(n) {
-        const action = {
+        const action = class extends BuilderAction {
+            static id = `customAction${n}`;
             clean() {
                 expect.step(`customAction${n} clean`);
-            },
-            apply: () => {
+            }
+            apply() {
                 expect.step(`customAction${n} apply`);
-            },
+            }
         };
         return { action };
     }
@@ -387,21 +399,22 @@ test("hide/display base on applyTo", async () => {
 });
 describe("inherited actions", () => {
     function makeAction(n, { async, isApplied } = {}) {
-        const action = {
-            isApplied,
+        const action = class extends BuilderAction {
+            static id = `customAction${n}`;
+            isApplied = isApplied;
             clean({ params: { mainParam: testParam }, value }) {
                 expect.step(`customAction${n} clean ${testParam} ${value}`);
-            },
-            apply: ({ params: { mainParam: testParam }, value }) => {
+            }
+            apply({ params: { mainParam: testParam }, value }) {
                 expect.step(`customAction${n} apply ${testParam} ${value}`);
-            },
+            }
         };
         if (async) {
             let resolve;
             const promise = new Promise((r) => {
                 resolve = r;
             });
-            action.load = async ({ params: { mainParam: testParam }, value }) => {
+            action.prototype.load = async ({ params: { mainParam: testParam }, value }) => {
                 expect.step(`customAction${n} load ${testParam} ${value}`);
                 return promise;
             };
@@ -513,26 +526,28 @@ describe("Operation", () => {
             item.resolve = resolve;
         });
         addActionOption({
-            [actionName]: {
-                load: async () => {
+            [actionName]: class extends BuilderAction {
+                static id = actionName;
+                async load() {
                     expect.step(`load ${actionName}`);
                     await promise;
-                },
-                apply: async ({ editingElement }) => {
+                }
+                async apply({ editingElement }) {
                     expect.step(`apply ${actionName}`);
                     editingElement.innerText = editingElement.innerText + `-${actionName}`;
-                },
+                }
             },
         });
         return item;
     }
     function makeActionItem(actionName) {
         addActionOption({
-            [actionName]: {
-                apply: ({ editingElement }) => {
+            [actionName]: class extends BuilderAction {
+                static id = actionName;
+                apply({ editingElement }) {
                     expect.step(actionName);
                     editingElement.innerText = editingElement.innerText + `-${actionName}`;
-                },
+                }
             },
         });
     }
@@ -660,18 +675,21 @@ test("click on BuilderButton with inverseAction", async () => {
 
 test("do not load when an operation is cleaned", async () => {
     addActionOption({
-        customAction: {
-            isApplied: ({ editingElement }) => editingElement.classList.contains("applied"),
-            clean: () => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            isApplied({ editingElement }) {
+                return editingElement.classList.contains("applied");
+            }
+            clean() {
                 expect.step("clean");
-            },
-            load: async () => {
+            }
+            async load() {
                 expect.step("load");
-            },
-            apply: ({ editingElement }) => {
+            }
+            apply({ editingElement }) {
                 expect.step("apply");
                 editingElement.classList.add("applied");
-            },
+            }
         },
     });
     addOption({
@@ -688,12 +706,15 @@ test("do not load when an operation is cleaned", async () => {
 test("click on BuilderButton with async action", async () => {
     const def = new Deferred();
     addActionOption({
-        customAction: {
-            isApplied: ({ editingElement }) => editingElement.classList.contains("applied"),
-            apply: async ({ editingElement }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            isApplied({ editingElement }) {
+                return editingElement.classList.contains("applied");
+            }
+            async apply({ editingElement }) {
                 await def;
                 editingElement.classList.add("applied");
-            },
+            }
         },
     });
     addOption({

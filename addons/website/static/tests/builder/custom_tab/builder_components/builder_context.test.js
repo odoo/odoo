@@ -7,15 +7,17 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
 test("should pass the context", async () => {
     addActionOption({
-        customAction: {
-            apply: ({ params: { mainParam: testParam }, value }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ params: { mainParam: testParam }, value }) {
                 expect.step(`customAction ${testParam} ${value}`);
-            },
+            }
         },
     });
     addOption({

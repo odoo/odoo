@@ -9,17 +9,21 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
 test("should commit changes", async () => {
     addActionOption({
-        customAction: {
-            getValue: ({ editingElement }) => editingElement.innerHTML,
-            apply: ({ editingElement, value }) => {
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.innerHTML;
+            }
+            apply({ editingElement, value }) {
                 expect.step(`customAction ${value}`);
                 editingElement.innerHTML = value;
-            },
+            }
         },
     });
     addOption({
