@@ -34,6 +34,7 @@ export class BuilderAction {
     /**
      * Apply the action on the editing element.
      * @param {Object} context
+     * @param {boolean} context.isPreviewing
      * @param {HTMLElement} context.editingElement
      * @param {any} context.value
      * @param {Object} [context.params]
@@ -45,6 +46,7 @@ export class BuilderAction {
      * @param {Object} context
      * @param {HTMLElement} context.editingElement
      * @param {Object} [context.params]
+     * @returns {any}
      */
     getValue(context) {}
 
@@ -54,13 +56,17 @@ export class BuilderAction {
      * @param {HTMLElement} context.editingElement
      * @param {any} context.value
      * @param {Object} [context.params]
+     * @returns {boolean}
      */
-    isApplied() {}
+    isApplied(context) {}
 
     /**
      * Clean/reset the value if needed.
      * @param {Object} context
+     * @param {boolean} context.isPreviewing
      * @param {HTMLElement} context.editingElement
+     * @param {any} context.value
+     * @param {Object} [context.params]
      */
     clean(context) {}
 
@@ -74,6 +80,7 @@ export class BuilderAction {
     /**
      * Check if a method has been overridden.
      * @param {string} method
+     * @returns {boolean}
      */
     has(method) {
         const baseMethod = BuilderAction.prototype[method];
