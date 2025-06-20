@@ -103,7 +103,7 @@
                             <t t-set="seq_and_num" t-value="refunded_doc._get_tbai_sequence_and_number()"/>
                             <SerieFactura t-out="seq_and_num[0]"/>
                             <NumFactura t-out="seq_and_num[1]"/>
-                            <FechaExpedicionFactura t-out="format_date(refunded_doc.xml_attachment_id and refunded_doc._get_tbai_signature_and_date()[1] or refunded_doc_invoice_date)"/>
+                            <FechaExpedicionFactura t-out="format_date(refunded_doc._get_xml_attachment_id() and refunded_doc._get_tbai_signature_and_date()[1] or refunded_doc_invoice_date)"/>
                         </IDFacturaRectificadaSustituida>
                     </FacturasRectificadasSustituidas>
                 </t>
