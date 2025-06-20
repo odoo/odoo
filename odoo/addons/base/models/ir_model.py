@@ -633,7 +633,10 @@ class IrModelFields(models.Model):
     @api.constrains('domain')
     def _check_domain(self):
         for field in self:
-            safe_eval(field.domain or '[]')
+            try:
+                safe_eval(field.domain or '[]')
+            except SyntaxError:
+                raise ValidationError(_("Invalid domain syntax: %s", field.domain))
 
     @api.constrains('name')
     def _check_name(self):
