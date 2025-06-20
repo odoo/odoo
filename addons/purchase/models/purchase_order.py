@@ -1231,3 +1231,10 @@ class PurchaseOrder(models.Model):
 
     def _get_edi_builders(self):
         return []
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Requests for Quotations'),
+            'template': '/purchase/static/xls/requests_for_quotations_import_template.xlsx',
+        }]
