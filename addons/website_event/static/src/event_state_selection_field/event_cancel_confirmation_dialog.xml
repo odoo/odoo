@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="website_event.EventConfirmationDialog" t-inherit="web.ConfirmationDialog">
+    <xpath expr="//button[hasclass('btn')]" position="after">
+        <button class="btn btn-secondary" t-on-click="_unpublishEvent">
+            Unpublish my event instead
+        </button>
+    </xpath>
+  </t>
+
+</templates>

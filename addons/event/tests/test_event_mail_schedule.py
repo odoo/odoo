@@ -812,6 +812,45 @@ class TestMailSchedule(EventMailCommon):
                 'subject': f'Confirmation for {test_event.name}',
             })
 
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @users('user_eventmanager')
+    def test_event_mail_schedule_on_cancelled_event(self):
+        """ Test mail scheduling for following Cancelled events """
+        reference_now = datetime(2025, 7, 5, 14, 30, 15)
+        event_date_begin = datetime(2025, 7, 7, 7, 0, 0)
+        event_date_end = datetime(2025, 7, 28, 7, 0, 0)
+
+        with self.mock_datetime_and_now(reference_now):
+            test_event = self.env['event.event'].create({
+                'name': 'Test Event For Mail Scheduling',
+                'date_begin': event_date_begin,
+                'date_end': event_date_end,
+                'event_mail_ids': [
+                    (0, 0, {  # 12 hours before event
+                        'interval_nbr': 12,
+                        'interval_unit': 'hours',
+                        'interval_type': 'before_event',
+                        'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')})
+                ]
+            })
+
+        now_start = event_date_begin + relativedelta(hours=-12)
+        # Ensure event is in announced stage & mail state is in schedule
+        test_event.stage_id = self.env.ref('event.event_stage_announced')
+        self.assertEqual(test_event.event_mail_ids.mail_state, 'scheduled', 'Mail state should be scheduled')
+        with self.mock_mail_gateway():
+            self.env['event.registration'].create({
+                'create_date': reference_now,
+                'event_id': test_event.id,
+                'name': 'Attendee 1',
+                'email': 'attendee1@example.com',
+            })
+        # event cancelled
+        test_event.kanban_state = 'cancel'
+        self.assertEqual(test_event.event_mail_ids.mail_state, 'cancelled', 'Mail state should be cancelled')
+        self.execute_event_cron(freeze_date=now_start)
+        self.assertEqual(len(self._new_mails), 0, 'No mail should be sent for cancelled event')
+
 
 @tagged('event_mail', 'post_install', '-at_install')
 class TestMailScheduleInternals(EventMailCommon):

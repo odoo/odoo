@@ -52,6 +52,7 @@
     'assets': {
         'web.assets_backend': [
             'website_event/static/src/js/tours/**/*',
+            'website_event/static/src/event_state_selection_field/*',
         ],
         'web.assets_tests': [
             'website_event/static/tests/tours/**/*',
