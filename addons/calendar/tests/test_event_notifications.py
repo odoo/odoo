@@ -46,7 +46,10 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
 
 
     def test_message_invite_self(self):
-        with self.assertNoNotifications():
+        with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
+            'message_type': 'user_notification',
+            'subtype': 'mail.mt_note',
+        }):
             self.event.with_user(self.user).partner_ids = self.partner
 
     def test_message_inactive_invite(self):
