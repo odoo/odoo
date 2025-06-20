@@ -22,7 +22,7 @@ import odoo
 
 from odoo import http, models, fields, _
 from odoo.exceptions import AccessError
-from odoo.http import request, SessionExpiredException
+from odoo.http import request, SessionExpiredException, Response
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
 from odoo.addons.base.models.ir_qweb import QWebException
@@ -222,7 +222,14 @@ class Website(Home):
         # Don't use `request.website.domain` here, the template is in charge of
         # detecting if the current URL is the domain one and add a `Disallow: /`
         # if it's not the case to prevent the crawler to continue.
-        return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
+        allowed_routes = self._get_allowed_robots_routes()
+        content = request.env['ir.ui.view']._render_template(
+            'website.robots',
+            {
+                'url_root': request.httprequest.url_root,
+                'allowed_routes': allowed_routes,
+            })
+        return Response(content, headers=[('Content-Type', 'text/plain')])
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False, sitemap=False)
     def sitemap_xml_index(self, **kwargs):
