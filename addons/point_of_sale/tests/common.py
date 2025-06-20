@@ -160,6 +160,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         })
 
         # Set basic defaults
+        cls.account_tax_return_journal = cls.company_data['default_tax_return_journal']
         cls.sales_account = cls.company_data['default_account_revenue']
         cls.invoice_journal = cls.company_data['default_journal_sale']
         cls.receivable_account = cls.company_data['default_account_receivable']
