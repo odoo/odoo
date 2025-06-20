@@ -124,8 +124,11 @@ class Manager(Thread):
 
         # Set scheduled actions
         schedule and schedule.every().day.at("00:00").do(helpers.get_certificate_status)
+        # if mount point was held busy by a background process (e.g. apt upgrade)
+        # we need to ensure the system is remounted r/o later.
+        schedule and schedule.every(30).minutes.do(helpers.remount_ro)
 
-        #Setup the websocket connection
+        # Set up the websocket connection
         if server_url:
             iot_client.start()
         # Check every 3 secondes if the list of connected devices has changed and send the updated
