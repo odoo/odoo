@@ -1,36 +1,41 @@
 .o_overlay_options {
+    // TODO hardcoded
+    $-btn-height: 24px;
+    $-btn-width-lg: 30px;
 
-    button {
-        // @extend %we-generic-button;
+    .btn {
+        font-size: 1rem;
         margin: 0 1px 0;
-        min-width: 22px;
+        min-width: $-btn-height;
+        height: $-btn-height;
         padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
         color: $o-we-fg-lighter;
+        background-color: $o-we-sidebar-content-field-clickable-bg;
+    }
 
-        // TODO hardcoded
-        height: 22px;
-        font-size: 16px;
+    &:has(span:hover) > span:not(:hover) {
+        @include o-hover-opacity(.6);
     }
 
     button.o_move_handle {
         cursor: move;
-        width: 30px;
-        height: 22px;
+        width: $-btn-width-lg;
+        height: $-btn-height;
         background-position: center;
         background-repeat: no-repeat;
     }
 
     button.o_send_back {
-        width: 30px;
-        height: 22px;
+        width: $-btn-width-lg;
+        height: $-btn-height;
         background-image: url('/html_builder/static/img/options/bring-backward.svg');
         background-position: center;
         background-repeat: no-repeat;
     }
 
     button.o_bring_front {
-        width: 30px;
-        height: 22px;
+        width: $-btn-width-lg;
+        height: $-btn-height;
         background-image: url('/html_builder/static/img/options/bring-forward.svg');
         background-position: center;
         background-repeat: no-repeat;
