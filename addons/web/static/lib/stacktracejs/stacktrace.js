@@ -2272,128 +2272,86 @@
     return true;
   }
   
-  /**
-   * Comparator between two mappings where the original positions are compared.
-   *
-   * Optionally pass in `true` as `onlyCompareGenerated` to consider two
-   * mappings with the same original source/line/column, but different generated
-   * line and column the same. Useful when searching for a mapping with a
-   * stubbed out mapping.
-   */
-  function compareByOriginalPositions(mappingA, mappingB, onlyCompareOriginal) {
-    var cmp = mappingA.source - mappingB.source;
-    if (cmp !== 0) {
+/**
+ * Basic string compare returning -1, 0 or 1.
+ */
+function strcmp(a, b) {
+  return a === b ? 0 : a > b ? 1 : -1;
+}
+
+/**
+ * Walks the given list of comparison functions in order,
+ * optionally stopping after a “stopIfOnly” field if onlyFlag is true.
+ */
+function compareByFields(a, b, comparisons, onlyFlag) {
+  const cmp = 0;
+  for (const { fn, stopIfOnly } of comparisons) {
+    cmp = fn(a, b);
+
+    if (cmp !== 0 || (stopIfOnly && onlyFlag)) {
       return cmp;
     }
-  
-    cmp = mappingA.originalLine - mappingB.originalLine;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    cmp = mappingA.originalColumn - mappingB.originalColumn;
-    if (cmp !== 0 || onlyCompareOriginal) {
-      return cmp;
-    }
-  
-    cmp = mappingA.generatedColumn - mappingB.generatedColumn;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    cmp = mappingA.generatedLine - mappingB.generatedLine;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    return mappingA.name - mappingB.name;
   }
-  exports.compareByOriginalPositions = compareByOriginalPositions;
-  
-  /**
-   * Comparator between two mappings with deflated source and name indices where
-   * the generated positions are compared.
-   *
-   * Optionally pass in `true` as `onlyCompareGenerated` to consider two
-   * mappings with the same generated line and column, but different
-   * source/name/original line and column the same. Useful when searching for a
-   * mapping with a stubbed out mapping.
-   */
-  function compareByGeneratedPositionsDeflated(mappingA, mappingB, onlyCompareGenerated) {
-    var cmp = mappingA.generatedLine - mappingB.generatedLine;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    cmp = mappingA.generatedColumn - mappingB.generatedColumn;
-    if (cmp !== 0 || onlyCompareGenerated) {
-      return cmp;
-    }
-  
-    cmp = mappingA.source - mappingB.source;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    cmp = mappingA.originalLine - mappingB.originalLine;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    cmp = mappingA.originalColumn - mappingB.originalColumn;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    return mappingA.name - mappingB.name;
-  }
-  exports.compareByGeneratedPositionsDeflated = compareByGeneratedPositionsDeflated;
-  
-  function strcmp(aStr1, aStr2) {
-    if (aStr1 === aStr2) {
-      return 0;
-    }
-  
-    if (aStr1 > aStr2) {
-      return 1;
-    }
-  
-    return -1;
-  }
-  
-  /**
-   * Comparator between two mappings with inflated source and name strings where
-   * the generated positions are compared.
-   */
-  function compareByGeneratedPositionsInflated(mappingA, mappingB) {
-    var cmp = mappingA.generatedLine - mappingB.generatedLine;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    cmp = mappingA.generatedColumn - mappingB.generatedColumn;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    cmp = strcmp(mappingA.source, mappingB.source);
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    cmp = mappingA.originalLine - mappingB.originalLine;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    cmp = mappingA.originalColumn - mappingB.originalColumn;
-    if (cmp !== 0) {
-      return cmp;
-    }
-  
-    return strcmp(mappingA.name, mappingB.name);
-  }
-  exports.compareByGeneratedPositionsInflated = compareByGeneratedPositionsInflated;
+
+  return cmp;
+}
+
+/**
+ * Comparator between two mappings where the original positions are compared.
+ *
+ * Optionally pass in `true` as `onlyCompareOriginal` to consider two
+ * mappings with the same original source/line/column, but different generated
+ * line and column the same. Useful when searching for a mapping with a
+ * stubbed out mapping.
+ */
+function compareByOriginalPositions(mappingA, mappingB, onlyCompareOriginal) {
+  return compareByFields(mappingA, mappingB, [
+    { fn: (x, y) => x.source - y.source },
+    { fn: (x, y) => x.originalLine - y.originalLine },
+    { fn: (x, y) => x.originalColumn - y.originalColumn, stopIfOnly: true },
+    { fn: (x, y) => x.generatedColumn - y.generatedColumn },
+    { fn: (x, y) => x.generatedLine - y.generatedLine },
+    { fn: (x, y) => x.name - y.name }
+  ], onlyCompareOriginal);
+}
+exports.compareByOriginalPositions = compareByOriginalPositions;
+
+/**
+ * Comparator between two mappings with deflated source and name indices where
+ * the generated positions are compared.
+ *
+ * Optionally pass in `true` as `onlyCompareGenerated` to consider two
+ * mappings with the same generated line and column, but different
+ * source/name/original line and column the same. Useful when searching for a
+ * mapping with a stubbed out mapping.
+ */
+function compareByGeneratedPositionsDeflated(mappingA, mappingB, onlyCompareGenerated) {
+  return compareByFields(mappingA, mappingB, [
+    { fn: (x, y) => x.generatedLine - y.generatedLine },
+    { fn: (x, y) => x.generatedColumn - y.generatedColumn, stopIfOnly: true },
+    { fn: (x, y) => x.source - y.source },
+    { fn: (x, y) => x.originalLine - y.originalLine },
+    { fn: (x, y) => x.originalColumn - y.originalColumn },
+    { fn: (x, y) => x.name - y.name }
+  ], onlyCompareGenerated);
+}
+exports.compareByGeneratedPositionsDeflated = compareByGeneratedPositionsDeflated;
+
+/**
+ * Comparator between two mappings with inflated source and name strings where
+ * the generated positions are compared.
+ */
+function compareByGeneratedPositionsInflated(mappingA, mappingB) {
+  return compareByFields(mappingA, mappingB, [
+    { fn: (x, y) => x.generatedLine - y.generatedLine },
+    { fn: (x, y) => x.generatedColumn - y.generatedColumn },
+    { fn: (x, y) => strcmp(x.source, y.source) },
+    { fn: (x, y) => x.originalLine - y.originalLine },
+    { fn: (x, y) => x.originalColumn - y.originalColumn },
+    { fn: (x, y) => strcmp(x.name, y.name) }
+  ]);
+}
+exports.compareByGeneratedPositionsInflated = compareByGeneratedPositionsInflated;
   
   },{}],10:[function(require,module,exports){
   arguments[4][2][0].apply(exports,arguments)
