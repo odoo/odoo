@@ -85,6 +85,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         payment_means_node['cbc:InstructionID'] = None
         payment_means_node['cbc:PaymentID'] = None
 
+<<<<<<< 4e25350bde07ca4267887aa612b538bac0b3c6eb
     def _add_invoice_exchange_rate_nodes(self, document_node, vals):
         invoice = vals['invoice']
         if vals['currency_id'] != vals['company_currency_id']:
@@ -94,6 +95,27 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'cbc:CalculationRate': {'_text': round(invoice.currency_id._get_conversion_rate(invoice.currency_id, invoice.company_id.currency_id, invoice.company_id, invoice.invoice_date), 6)},
                 'cbc:Date': {'_text': invoice.invoice_date},
             }
+||||||| 507925fcf630f6ff3dde3038f93ca63548686355
+    def _get_partner_party_tax_scheme_vals_list(self, partner, role):
+        # EXTENDS account.edi.xml.ubl_21
+        vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
+        for vals in vals_list:
+            vals.pop('registration_address_vals', None)
+        return vals_list
+=======
+    def _get_partner_party_tax_scheme_vals_list(self, partner, role):
+        # EXTENDS account.edi.xml.ubl_21
+        vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
+        for vals in vals_list:
+            vals.pop('registration_address_vals', None)
+            vals["tax_scheme_vals"].update(
+                {
+                    "id": "",
+                    "name": partner.ref,
+                }
+            )
+        return vals_list
+>>>>>>> fff116b7cda73d12092c469534d9389f268a795d
 
     def _get_address_node(self, vals):
         partner = vals['partner']

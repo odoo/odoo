@@ -6,8 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< 4e25350bde07ca4267887aa612b538bac0b3c6eb
 "POT-Creation-Date: 2025-06-03 10:19+0000\n"
 "PO-Revision-Date: 2025-06-03 10:19+0000\n"
+||||||| 507925fcf630f6ff3dde3038f93ca63548686355
+"POT-Creation-Date: 2025-03-26 15:10+0000\n"
+"PO-Revision-Date: 2025-03-26 15:10+0000\n"
+=======
+"POT-Creation-Date: 2025-06-20 15:03+0000\n"
+"PO-Revision-Date: 2025-06-20 15:03+0000\n"
+>>>>>>> fff116b7cda73d12092c469534d9389f268a795d
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,6 +59,13 @@ msgstr "Ortak(lar) üzerindeki e-Fatura Formatını veya Nilvera Durumunu Kontro
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move_send__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#, python-format
+msgid "Check reference on Partner(s)"
+msgstr "Ortak(lar) üzerindeki referansı kontrol edin"
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__error
@@ -146,8 +161,27 @@ msgstr "Test modu etkinleştirildi."
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
+<<<<<<< 4e25350bde07ca4267887aa612b538bac0b3c6eb
 "The following company(s) either do not have their country set as Türkiye or "
 "are missing at least one of these fields: Tax ID, Street, City, or State"
+||||||| 507925fcf630f6ff3dde3038f93ca63548686355
+"The following partner(s) are either not Turkish or are missing one of those "
+"fields: city, state and street."
+=======
+"The following E-Invoice partner(s) must have the reference field set to the "
+"tax office name."
+msgstr ""
+"Aşağıdaki E-Fatura ortaklarının referans alanı vergi dairesi adına ayarlanmış "
+"olmalıdır."
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"The following partner(s) are either not Turkish or are missing one of those "
+"fields: city, state and street."
+>>>>>>> fff116b7cda73d12092c469534d9389f268a795d
 msgstr ""
 "Aşağıdaki şirket(ler)in ya ülkesi Türkiye olarak ayarlanmamış ya da "
 "şu alanlardan en az biri eksik: Vergi Numarası, Adres, Şehir veya İl"
