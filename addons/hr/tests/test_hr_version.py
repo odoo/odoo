@@ -4,7 +4,7 @@ from datetime import date
 from psycopg2.errors import CheckViolation
 
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, freeze_time
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 
@@ -344,3 +344,24 @@ class TestHrVersion(TransactionCase):
         self.assertFalse(employee._is_in_contract(date(2010, 1, 1)))
         self.assertTrue(employee._is_in_contract(date(2020, 1, 1)))
         self.assertFalse(employee._is_in_contract(date(2030, 1, 1)))
+
+    def test_cron_update_current_version(self):
+        cron = self.env.ref('hr.ir_cron_data_employee_update_current_version')
+
+        with freeze_time(date(2020, 1, 1)), self.enter_registry_test_mode():
+            employee = self.env['hr.employee'].create({
+                'name': 'John Doe',
+                'date_version': '2020-01-01',
+            })
+            v1 = employee.version_id
+            v2 = employee.create_version({
+                'date_version': '2020-01-02'
+            })
+            self.assertEqual(v1, employee.current_version_id)
+            cron.method_direct_trigger()
+            self.assertEqual(v1, employee.current_version_id)
+
+        with freeze_time(date(2020, 1, 2)), self.enter_registry_test_mode():
+            self.assertEqual(v1, employee.current_version_id)
+            cron.method_direct_trigger()
+            self.assertEqual(v2, employee.current_version_id)
