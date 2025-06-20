@@ -95,7 +95,7 @@ class StockQuant(models.Model):
 
     # Inventory Fields
     inventory_quantity = fields.Float(
-        'Counted Quantity', digits='Product Unit',
+        'Counted', digits='Product Unit',
         help="The product's counted quantity.")
     inventory_quantity_auto_apply = fields.Float(
         'Inventoried Quantity', digits='Product Unit',
@@ -107,7 +107,7 @@ class StockQuant(models.Model):
         help="Indicates the gap between the product's theoretical quantity and its counted quantity.",
         readonly=True, digits='Product Unit')
     inventory_date = fields.Date(
-        'Scheduled Date', compute='_compute_inventory_date', store=True, readonly=False,
+        'Scheduled', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
     last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated')
     inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False)
@@ -509,8 +509,9 @@ class StockQuant(models.Model):
                 'target': 'new',
                 'context': ctx,
             }
-        for quant in self:
-            quant.inventory_quantity = quant.quantity
+        if not self.env.context.get('from_request_count'):
+            for quant in self:
+                quant.inventory_quantity = quant.quantity
         self.user_id = self.env.user.id
         self.inventory_quantity_set = True
 
@@ -519,7 +520,7 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {}, default_quant_ids=quant_ids)
         view = self.env.ref('stock.stock_inventory_adjustment_name_form_view', False)
         return {
-            'name': _('Inventory Adjustment Reference / Reason'),
+            'name': _('Inventory Adjustment'),
             'type': 'ir.actions.act_window',
             'views': [(view.id, 'form')],
             'res_model': 'stock.inventory.adjustment.name',
@@ -550,15 +551,6 @@ class StockQuant(models.Model):
     def action_set_inventory_quantity_zero(self):
         self.filtered(lambda l: not l.inventory_quantity).inventory_quantity = 0
         self.user_id = self.env.user.id
-
-    def action_warning_duplicated_sn(self):
-        return {
-            'name': _('Warning Duplicated SN'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'stock.quant',
-            'views': [(self.env.ref('stock.duplicated_sn_warning').id, 'form')],
-            'target': 'new',
-        }
 
     @api.depends('location_id', 'lot_id', 'package_id', 'owner_id')
     def _compute_display_name(self):

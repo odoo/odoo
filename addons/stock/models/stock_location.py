@@ -380,9 +380,9 @@ class StockLocation(models.Model):
         if self.usage not in ['internal', 'transit']:
             return False
         next_inventory_date = False
-        if self.next_inventory_date:
-            next_inventory_date = self.next_inventory_date
-        elif self.company_id.annual_inventory_month:
+        company_inventory_date = False
+
+        if self.company_id.annual_inventory_month:
             today = fields.Date.today()
             annual_inventory_month = int(self.company_id.annual_inventory_month)
             # Manage 0 and negative annual_inventory_day
@@ -390,14 +390,18 @@ class StockLocation(models.Model):
             max_day = calendar.monthrange(today.year, annual_inventory_month)[1]
             # Manage annual_inventory_day bigger than last_day
             annual_inventory_day = min(annual_inventory_day, max_day)
-            next_inventory_date = today.replace(
+            company_inventory_date = today.replace(
                 month=annual_inventory_month, day=annual_inventory_day)
-            if next_inventory_date <= today:
+            if company_inventory_date <= today:
                 # Manage leap year with the february
                 max_day = calendar.monthrange(today.year + 1, annual_inventory_month)[1]
                 annual_inventory_day = min(annual_inventory_day, max_day)
-                next_inventory_date = next_inventory_date.replace(
+                company_inventory_date = company_inventory_date.replace(
                     day=annual_inventory_day, year=today.year + 1)
+        if self.next_inventory_date:
+            next_inventory_date = min(self.next_inventory_date, company_inventory_date) if company_inventory_date else self.next_inventory_date
+        elif self.company_id.annual_inventory_month:
+            next_inventory_date = company_inventory_date
         return next_inventory_date
 
     def should_bypass_reservation(self):
