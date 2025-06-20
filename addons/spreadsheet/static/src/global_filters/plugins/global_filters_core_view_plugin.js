@@ -132,6 +132,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 return this._getRelationDomain(filter, fieldMatching);
             case "boolean":
                 return this._getBooleanDomain(filter, fieldMatching);
+            case "selection":
+                return this._getSelectionDomain(filter, fieldMatching);
         }
     }
 
@@ -156,6 +158,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         switch (filter.type) {
             case "text":
             case "boolean":
+            case "selection":
                 return filter.defaultValue;
             case "date":
                 return this._getDateValueFromDefaultValue(filter.defaultValue);
@@ -198,6 +201,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         switch (filter.type) {
             case "text":
             case "boolean":
+            case "selection":
                 return [[{ value: value?.length ? value.join(", ") : "" }]];
             case "date":
                 return this._getDateFilterDisplayValue(filter);
@@ -439,6 +443,15 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             return new Domain([[field, "=", toBoolean(value[0])]]);
         }
         return new Domain([[field, "in", [toBoolean(value[0]), toBoolean(value[1])]]]);
+    }
+
+    _getSelectionDomain(filter, fieldMatching) {
+        const values = this.getGlobalFilterValue(filter.id);
+        if (!values || !values.length || !fieldMatching.chain) {
+            return new Domain();
+        }
+        const field = fieldMatching.chain;
+        return new Domain([[field, "in", values]]);
     }
 
     /**
