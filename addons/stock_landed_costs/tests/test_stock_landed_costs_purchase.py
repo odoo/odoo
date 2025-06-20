@@ -676,3 +676,68 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
 
         # 35 = Product price (10) + landed cost price (25)
         self.assertEqual(product.standard_price, 35)
+
+    def test_landed_cost_credit_note(self):
+        product, landed_cost = self.env['product.product'].create({
+            'name': 'real time valuated product',
+            'type': 'product',
+            'categ_id': self.categ_real_time.id,
+        }), self.productlc1
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 5,
+                'price_unit': 5,
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt = purchase_order.picking_ids
+        receipt.move_ids.quantity = 5
+        receipt.button_validate()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        with Form(bill) as bill_form:
+            with bill_form.invoice_line_ids.new() as lc_line:
+                lc_line.product_id = landed_cost
+                lc_line.price_unit = 8
+                lc_line.is_landed_costs_line = True
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+
+        # create initial lc on bill
+        action = bill.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(receipt)
+        lc = lc_form.save()
+        lc.button_validate()
+
+        # create reversal move for bill
+        reverse_action = bill.action_reverse()
+        credit_note_wizard = (self.env[reverse_action['res_model']].with_context(
+            active_ids=bill.ids,
+            active_model='account.move',
+        ).create({
+            'reason': 'landed cost adjustment',
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'date': fields.Date.today(),
+        }))
+        credit_note_wizard.refund_moves()
+        r_bill = bill.reversal_move_id
+        r_bill.invoice_line_ids.filtered(lambda line: not line.is_landed_costs_line).unlink()
+        r_bill.invoice_line_ids.price_unit = -3
+        # swap from and back to refund type in order to properly adapt cost/total fields sign
+        r_bill.action_switch_move_type()
+        r_bill.action_switch_move_type()
+        r_bill.action_post()
+
+        # create reversal lc
+        action = r_bill.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(receipt)
+        lc = lc_form.save()
+        lc.button_validate()
+        self.assertEqual(
+            lc.valuation_adjustment_lines.final_cost,
+            lc.valuation_adjustment_lines.former_cost - lc.valuation_adjustment_lines.additional_landed_cost
+        )
