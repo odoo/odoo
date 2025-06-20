@@ -94,8 +94,21 @@
                         </div>
                         <notebook>
                             <page string="Operators" name="operators">
-                                    <field name="user_ids" nolabel="1" colspan="2" domain="[['all_group_ids', 'in', %(im_livechat.im_livechat_group_user)d]]">
-                                        <kanban>
+                                    <field name="user_ids"
+                                           nolabel="1"
+                                           colspan="2"
+                                           domain="[['all_group_ids', 'in', %(im_livechat.im_livechat_group_user)d]]"
+                                           mode="list,kanban"
+                                           context="{'get_channel': True}">
+                                        <list>
+                                            <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
+                                            <field string="Agent" name="name"/>
+                                            <field string="Languages" name="livechat_lang_ids" widget="many2many_tags" optional="show"/>
+                                            <field string="Expertise" name="livechat_expertise_ids" widget="many2many_tags" optional="show"/>
+                                            <field name="is_in_call" widget="boolean_phone" nolabel="1"/>
+                                            <field string="Ongoing Conversations" name="ongoing_conversations" optional="show"/>
+                                        </list>
+                                        <kanban class="o_kanban_mobile">
                                             <templates>
                                                 <t t-name="card" class="flex-row">
                                                     <aside>
@@ -103,20 +116,54 @@
                                                     </aside>
                                                     <main class="ps-1">
                                                         <div class="d-flex justify-content-between align-items-baseline">
-                                                            <field name="name" class="fw-bold fs-5"/>
-                                                            <a class="btn p-0 opacity-75 opacity-100-hover" role="button" groups="im_livechat.im_livechat_group_user" type="delete">
-                                                                <i title="Remove operator" class="fa fa-fw fa-lg fa-close"/>
-                                                            </a>
+                                                            <div>
+                                                                <field name="name" class="fw-bold fs-5"/>
+                                                                <field name="is_in_call" invisible="1"/>
+                                                                <i t-if="record.is_in_call.raw_value" title="in a call" class="fa fa-phone ms-1"/>
+                                                            </div>
+                                                            <div>
+                                                                <a class="btn p-0 opacity-75 opacity-100-hover" role="button" groups="im_livechat.im_livechat_group_user" type="delete">
+                                                                    <i title="Remove operator" class="fa fa-fw fa-lg fa-close"/>
+                                                                </a>
+                                                            </div>
                                                         </div>
-                                                        <field name="livechat_username" string="Online Chat Name"/>
+                                                        <field t-if="record.livechat_lang_ids.raw_value.length > 0" name="livechat_lang_ids" widget="many2many_tags"/>
+                                                        <field t-if="record.livechat_expertise_ids.raw_value.length > 0" name="livechat_expertise_ids" widget="many2many_tags"/>
+                                                        <div class="column">
+                                                            <span>Ongoing Conversations:</span><field name="ongoing_conversations" class="ms-1"/>
+                                                        </div>
                                                     </main>
                                                 </t>
                                             </templates>
                                         </kanban>
                                     </field>
-                                    <p class="text-muted" colspan="2">
-                                        Operators that do not show any activity In Odoo for more than 30 minutes will be considered as disconnected.
-                                    </p>
+                                    <group>
+                                        <group class="order-1 order-lg-0">
+                                            <p class="text-muted" colspan="2">
+                                                Operators that do not show any activity In Odoo for more than 30 minutes will be considered as disconnected.
+                                            </p>
+                                        </group>
+                                        <group class="oe_subtotal_footer d-flex justify-content-end">
+                                            <div class="container">
+                                                <div class="row mb-2">
+                                                    <div class="col">
+                                                        <label class="fw-bold" for="total_conversations">Total Conversations</label>
+                                                    </div>
+                                                    <div class="col me-1">
+                                                        <field name="total_conversations" nolabel="1"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-2" invisible="max_sessions_mode!='limited'">
+                                                    <div class="col">
+                                                        <label class="fw-bold" for="total_capacity">Total Capacity</label>
+                                                    </div>
+                                                    <div class="col me-1">
+                                                        <field name="total_capacity" nolabel="1"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </group>
+                                    </group>
                             </page>
                             <page string="Options" name="options" groups="im_livechat.im_livechat_group_manager">
                                 <group>

@@ -80,6 +80,7 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.assets_backend': [
             'im_livechat/static/src/js/colors_reset_button/*',
+            'im_livechat/static/src/js/boolean_phone/*',
             'im_livechat/static/src/js/im_livechat_chatbot_steps_one2many.js',
             'im_livechat/static/src/js/im_livechat_chatbot_script_answers_m2m.js',
             'im_livechat/static/src/views/**/*',

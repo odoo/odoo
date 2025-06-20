@@ -71,6 +71,8 @@ class Im_LivechatChannel(models.Model):
     available_operator_ids = fields.Many2many('res.users', compute='_compute_available_operator_ids')
     script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
+    total_conversations = fields.Integer(string="Total Conversations", compute='_compute_total_conversations')
+    total_capacity = fields.Integer(string="Total Capacity", compute='_compute_total_capacity')
 
     image_128 = fields.Image("Image", max_width=128, max_height=128)
 
@@ -83,6 +85,11 @@ class Im_LivechatChannel(models.Model):
     _max_sessions_mode_greater_than_zero = models.Constraint(
         "CHECK(max_sessions > 0)", "Concurrent session number should be greater than zero."
     )
+
+    def web_read(self, specification: dict[str, dict]) -> list[dict]:
+        if len(self) == 1 and 'user_ids' in specification and 'get_channel' in specification['user_ids'].get('context', {}):
+            specification['user_ids']['context']['channel_id'] = self.id
+        return super().web_read(specification)
 
     def _are_you_inside(self):
         for channel in self:
@@ -184,6 +191,25 @@ class Im_LivechatChannel(models.Model):
         channel_count = {livechat_channel.id: count for livechat_channel, count in data}
         for record in self:
             record.nbr_channel = channel_count.get(record.id, 0)
+
+    @api.depends('user_ids.ongoing_conversations')
+    def _compute_total_conversations(self):
+        for channel in self:
+            channel.total_conversations = self.env['discuss.channel'].search_count([
+                ('livechat_channel_id', 'in', channel.ids),
+                ('livechat_active', '=', True),
+                ('livechat_operator_id', 'in', channel.user_ids.partner_id.ids),
+            ])
+
+    @api.depends('user_ids.is_in_call', 'max_sessions', 'block_assignment_during_call')
+    def _compute_total_capacity(self):
+        for channel in self:
+            operators = channel.user_ids
+            if channel.block_assignment_during_call:
+                incall_operators = len(operators.filtered(lambda l: l.is_in_call))
+                channel.total_capacity = (len(operators) - incall_operators) * channel.max_sessions + incall_operators
+            else:
+                channel.total_capacity = len(operators) * channel.max_sessions
 
     # --------------------------
     # Action Methods

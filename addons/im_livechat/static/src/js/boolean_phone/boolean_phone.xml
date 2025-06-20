@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="im_livechat.BooleanPhoneField" t-inherit="web.BooleanField" t-inherit-mode="primary">
+        <xpath expr="//CheckBox" position="replace">
+            <i t-attf-class="{{props.record.data[props.name] ? 'fa fa-phone' : ''}}" role="img" title="in a call"/>
+        </xpath>
+    </t>
+
+</templates>

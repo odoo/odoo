@@ -1,11 +1,12 @@
 from odoo.tests import new_test_user, tagged
 from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
+from odoo.addons.im_livechat.tests.test_get_operator import TestGetOperator
 from odoo.fields import Command
 
 
 @tagged("-at_install", "post_install")
-class TestImLivechatChannel(TestImLivechatCommon):
+class TestImLivechatChannel(TestGetOperator, TestImLivechatCommon):
     def test_user_cant_join_livechat_channel(self):
         bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
         with self.assertRaises(AccessError):
@@ -96,3 +97,30 @@ class TestImLivechatChannel(TestImLivechatCommon):
             self.livechat_channel.review_link = "https://"
         self.livechat_channel.review_link = "https://www.odoo.com"
         self.assertEqual(self.livechat_channel.review_link, "https://www.odoo.com")
+
+    def test_livechat_channel_computed_values(self):
+        livechat_channel1 = self.livechat_channel
+        operators = livechat_channel1.user_ids
+        self._create_chat(livechat_channel1, operators[0])
+        self.assertEqual(
+            livechat_channel1.total_conversations,
+            1,
+            'Total conversations of a livechat channel should be equal to the sum of all active livechat sessions of that livechat channel with an operator.'
+        )
+        livechat_channel1.max_sessions_mode = 'limited'
+        livechat_channel1.max_sessions = 2
+        self._create_chat(livechat_channel1, operators[1], in_call=True)
+        livechat_channel1.block_assignment_during_call = True
+        self.assertEqual(
+            livechat_channel1.total_capacity,
+            9,  # operators not in call (4) * max_sessions (2) + operators in call (1) = 9
+            'Total capacity should be equal to (operators not in call) * (max_sessions) + (operators in call) when number of sessions is limited and assignment of new sessions during a call is not allowed.'
+        )
+        livechat_channel2 = self.env["im_livechat.channel"].create({
+            "name": "Second Livechat Channel", "user_ids": [Command.link(operators[0].id)],
+        })
+        self.assertEqual(
+            livechat_channel2.user_ids[0].with_context(channel_id=livechat_channel2.id).ongoing_conversations,
+            0,
+            'Ongoing conversations should either match the operator\'s active sessions in a livechat channel if a channel is passed via context, or reflect the operator\'s active livechat sessions across all livechat channels.'
+        )
