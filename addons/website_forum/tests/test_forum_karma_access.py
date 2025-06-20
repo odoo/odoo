@@ -216,6 +216,8 @@ class TestForumKarma(TestForumCommon):
         self.post.with_user(self.user_portal).close(None)
 
     def test_close_post_crash(self):
+        self.user_portal.karma = KARMA['close_all'] - 1
+
         with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).close(None)
 
@@ -224,29 +226,77 @@ class TestForumKarma(TestForumCommon):
         self.post.close(None)
 
     def test_comment(self):
-        self.post.with_user(self.user_employee).message_post(body='Test0', message_type='notification')
         self.user_employee.karma = KARMA['com_all']
-        self.post.with_user(self.user_employee).message_post(body='Test1', message_type='comment')
-        self.assertEqual(len(self.post.message_ids), 4, 'website_forum: wrong behavior of message_post')
+        self.assertEqual(len(self.post.comment_ids), 0)
+        self.assertFalse(self.post.follower_ids)
+        self.env['forum.post.comment'].with_user(self.user_employee).create({
+            'body': 'Test0',
+            'post_id': self.post.id,
+        })
+        self.assertEqual(len(self.post.comment_ids), 1)
+        self.assertEqual(self.user_employee.karma, KARMA['com_all'])
+
+    def test_comment_edit_view_access(self):
+        self.user_employee.karma = KARMA['com_all']
+        comment = self.env['forum.post.comment'].with_user(self.user_employee).create({
+            'body': 'Test0',
+            'post_id': self.post.id,
+        })
+
+        with self.assertRaises(AccessError):
+            comment.post_id = self.answer
+
+        comment.forum_id.sudo().karma_edit_all = KARMA['com_all'] + 1
+        comment.forum_id.sudo().karma_edit_own = KARMA['com_all'] - 1
+
+        # can view the comment but not edit it (it's his comment, but not his post)
+        self.assertTrue(comment.post_id.can_view)
+        self.assertFalse(comment.post_id.can_edit)
+
+        with self.assertRaises(AccessError):
+            comment.body = 'edit'
+
+        # With SUDO / admin group we can
+        comment.sudo().body = 'edit'
+        self.user_employee.group_ids |= self.env.ref('base.group_erp_manager')
+        comment.body = 'edit'
+        self.user_employee.group_ids -= self.env.ref('base.group_erp_manager')
+
+        self.post.forum_id.privacy = 'private'
+
+        with self.assertRaises(AccessError):
+            comment.with_user(self.user_portal).body
+
+        self.assertIn(comment, self.env['forum.post.comment'].with_user(self.post.create_uid).search([]))
+        self.assertNotIn(comment, self.env['forum.post.comment'].with_user(self.user_employee).search([]))
+        self.assertNotIn(comment, self.env['forum.post.comment'].with_user(self.user_portal).search([]))
+
+        with self.assertRaises(AccessError):
+            self.env['forum.post.comment'].with_user(self.user_portal).create({
+                'body': 'Test0',
+                'post_id': self.post.id,
+            })
 
     def test_comment_crash(self):
+        self.user_portal.karma = KARMA['com_all'] - 1
         with self.assertRaises(AccessError):
-            self.post.with_user(self.user_portal).message_post(body='Should crash', message_type='comment')
+            self.env['forum.post.comment'].with_user(self.user_portal).create({
+                'body': 'Test0',
+                'post_id': self.post.id,
+            })
 
     def test_convert_answer_to_comment(self):
         self.user_portal.karma = KARMA['com_conv_all']
-        post_author = self.answer.create_uid.partner_id
+        post_author = self.answer.create_uid
         new_msg = self.answer.with_user(self.user_portal).convert_answer_to_comment()
         self.assertEqual(len(new_msg), 1, 'website_forum: wrong answer to comment conversion')
-        self.assertEqual(new_msg.author_id, post_author, 'website_forum: wrong answer to comment conversion')
+        self.assertEqual(new_msg.create_uid, post_author, 'website_forum: wrong answer to comment conversion')
         self.assertIn('I am an anteater', new_msg.body, 'website_forum: wrong answer to comment conversion')
 
     def test_convert_answer_to_comment_crash(self):
         Post = self.env['forum.post']
-
-        # converting a question does nothing
-        new_msg = self.post.with_user(self.user_portal).convert_answer_to_comment()
-        self.assertEqual(new_msg.id, False, 'website_forum: question to comment conversion failed')
+        with self.assertRaises(UserError):
+            self.post.with_user(self.user_portal).convert_answer_to_comment()
         self.assertEqual(Post.search([('name', '=', 'TestQuestion')])[0].forum_id.name, 'TestForum', 'website_forum: question to comment conversion failed')
 
         with self.assertRaises(AccessError):
@@ -257,6 +307,7 @@ class TestForumKarma(TestForumCommon):
         self.post.with_user(self.user_portal).write({'active': False})
 
     def test_deactivate_post_crash(self):
+        self.user_portal.karma = KARMA['unlink_all'] - 1
         with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).write({'active': False})
 
@@ -291,9 +342,14 @@ class TestForumKarma(TestForumCommon):
         self.post.create_uid.karma = KARMA['edit_own']
         self.post.write({'name': 'Actually I am your dog.'})
         self.user_portal.karma = KARMA['edit_all']
+        self.assertTrue(self.post.with_user(self.user_portal).can_edit)
         self.post.with_user(self.user_portal).write({'name': 'Actually I am your cat.'})
+        self.assertEqual(self.user_portal.karma, KARMA['edit_all'])
 
     def test_edit_post_crash(self):
+        self.user_portal.karma = KARMA['edit_all'] - 1
+        self.assertFalse(self.post.with_user(self.user_portal).can_edit)
+
         with self.assertRaises(AccessError):
             self.post.with_user(self.user_portal).write({'name': 'I am not your father.'})
 
@@ -314,6 +370,7 @@ class TestForumKarma(TestForumCommon):
         post.state = 'active'
         post.with_user(self.user_portal)._flag()
         self.assertEqual(post.state, 'flagged', 'website_forum: wrong state when flagging a post')
+        self.assertEqual(self.user_portal.karma, KARMA['flag'])
 
     def test_mark_a_post_as_offensive(self):
         Post = self.env['forum.post']
@@ -354,6 +411,7 @@ class TestForumKarma(TestForumCommon):
         post.with_user(self.user_portal)._refuse()
         self.assertEqual(post.moderator_id, self.user_portal, 'website_forum: wrong moderator_id when refusing')
         self.assertEqual(post.create_uid.karma, init_karma, 'website_forum: wrong karma when refusing a post')
+        self.assertEqual(self.user_portal.karma, KARMA['moderate'])
 
     def test_unlink_post_all(self):
         self.user_portal.karma = KARMA['unlink_all']
@@ -364,8 +422,18 @@ class TestForumKarma(TestForumCommon):
             self.post.with_user(self.user_portal).unlink()
 
     def test_unlink_post_own(self):
-        self.post.create_uid.karma = KARMA['unlink_own']
-        self.post.unlink()
+        self.user_portal.karma = 100
+        post = self.env['forum.post'].with_user(self.user_portal).create({'name': 'Test', 'forum_id': self.forum.id})
+        self.user_portal.karma = KARMA['unlink_own']
+        post.with_user(post.create_uid).unlink()
+
+    def test_unlink_post_own_crash(self):
+        self.user_portal.karma = 100
+        post = self.env['forum.post'].with_user(self.user_portal).create({'name': 'Test', 'forum_id': self.forum.id})
+        self.user_portal.karma = KARMA['unlink_own'] - 1
+
+        with self.assertRaises(AccessError):
+            post.with_user(post.create_uid).unlink()
 
     def test_validate_a_post(self):
         Post = self.env['forum.post']

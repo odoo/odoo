@@ -7,7 +7,7 @@
     'category': 'Website/Website',
     'sequence': 265,
     'summary': 'Manage a forum with FAQ and Q&A',
-    'version': '1.2',
+    'version': '1.3',
     'description': """
 Ask questions, get answers, no distractions
         """,
@@ -38,12 +38,12 @@ Ask questions, get answers, no distractions
 
         'views/base_contact_templates.xml',
         'views/forum_forum_templates.xml',
+        'views/forum_forum_templates_follow.xml',
         'views/forum_forum_templates_forum_all.xml',
         'views/forum_forum_templates_layout.xml',
         'views/forum_forum_templates_moderation.xml',
         'views/forum_forum_templates_post.xml',
         'views/forum_forum_templates_tools.xml',
-        'views/forum_templates_mail.xml',
         'views/website_profile_templates.xml',
         'views/snippets/snippets.xml',
 
