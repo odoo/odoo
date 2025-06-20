@@ -417,7 +417,8 @@ class PaymentPortal(portal.CustomerPortal):
                 raise werkzeug.exceptions.NotFound()  # Don't leak information about ids.
 
             # Display the payment confirmation page to the user
-            return request.render('payment.confirm', qcontext={'tx': tx_sudo})
+            payment_success_message = kwargs.get('display_success_msg', False)
+            return request.render('payment.confirm', qcontext={'tx': tx_sudo, 'display_success_msg': payment_success_message})
         else:
             # Display the portal homepage to the user
             return request.redirect('/my/home')
