@@ -8,7 +8,7 @@ class TextAlignmentOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(TEXT_ALIGNMENT, {
-                template: "website.TextAlignmentOption",
+                template: "html_builder.TextAlignmentOption",
                 selector: ".s_share, .s_text_highlight, .s_social_media",
             }),
         ],

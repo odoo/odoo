@@ -8,7 +8,7 @@ class WidthOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(WIDTH, {
-                template: "website.WidthOption",
+                template: "html_builder.WidthOption",
                 selector: ".s_alert, .s_blockquote, .s_text_highlight",
             }),
         ],

@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { VerticalAlignmentOption } from "@html_builder/plugins/vertical_alignment_option";
 import { withSequence } from "@html_editor/utils/resource";
-import { VERTICAL_ALIGNMENT, BOX_BORDER_SHADOW } from "@website/builder/option_sequence";
+import { VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
 
 class VerticalAlignmentOptionPlugin extends Plugin {
     static id = "verticalAlignmentOption";
@@ -18,15 +18,6 @@ class VerticalAlignmentOptionPlugin extends Plugin {
                     level: 1,
                 },
             }),
-            withSequence(BOX_BORDER_SHADOW, {
-                OptionComponent: VerticalAlignmentOption,
-                selector: ".s_attributes_horizontal_col",
-                applyTo: ":scope > .row",
-                props: {
-                    level: 0,
-                    justify: false,
-                },
-            }),
         ],
         builder_actions: {
             SetVerticalAlignmentAction,
@@ -34,7 +25,7 @@ class VerticalAlignmentOptionPlugin extends Plugin {
     };
 }
 
-class SetVerticalAlignmentAction extends ClassAction {
+export class SetVerticalAlignmentAction extends ClassAction {
     static id = "setVerticalAlignment";
     getPriority({ params: { mainParam: classNames } = { mainParam: "" } }) {
         return classNames === "align-items-stretch" ? 0 : 1;

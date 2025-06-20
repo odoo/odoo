@@ -1,7 +1,7 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class ReplaceMediaOption extends BaseOptionComponent {
-    static template = "website.ReplaceMediaOption";
+    static template = "html_builder.ReplaceMediaOption";
     static props = {};
     setup() {
         super.setup();

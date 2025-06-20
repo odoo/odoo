@@ -8,7 +8,7 @@ class RatingOptionPlugin extends Plugin {
     selector = ".s_rating";
     resources = {
         builder_options: {
-            template: "website.RatingOption",
+            template: "html_builder.RatingOption",
             selector: ".s_rating",
         },
         so_content_addition_selector: [".s_rating"],

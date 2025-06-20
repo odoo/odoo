@@ -1,7 +1,7 @@
 import { FontSizeSelector } from "@html_editor/main/font/font_size_selector";
 
-export class WebsiteFontSizeSelector extends FontSizeSelector {
-    static template = "website.FontSizeSelector";
+export class BuilderFontSizeSelector extends FontSizeSelector {
+    static template = "html_builder.FontSizeSelector";
     setup() {
         super.setup();
         this.fontSizeTags = {

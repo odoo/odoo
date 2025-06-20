@@ -46,7 +46,7 @@ class ImageToolOptionPlugin extends Plugin {
                 exclude: "[data-oe-type='image'] > img",
             }),
             withSequence(ALIGNMENT_STYLE_PADDING, {
-                template: "website.ImageAndFaOption",
+                template: "html_builder.ImageAndFaOption",
                 selector: "span.fa, i.fa, img",
                 exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
             }),

@@ -1,6 +1,7 @@
 import {
     splitBetween,
     SNIPPET_SPECIFIC_AFTER,
+    VERTICAL_ALIGNMENT,
     SNIPPET_SPECIFIC_NEXT,
     SNIPPET_SPECIFIC_END,
     END,
@@ -8,24 +9,23 @@ import {
 
 // Gives names to website options sequence.
 
-const [
-    LAYOUT,
-    LAYOUT_COLUMN,
-    LAYOUT_GRID,
+const [LAYOUT, LAYOUT_COLUMN, LAYOUT_GRID, ...__DETECT_ERROR_WEBSITE_0__] = splitBetween(
+    SNIPPET_SPECIFIC_AFTER,
     VERTICAL_ALIGNMENT,
-    WEBSITE_BACKGROUND_OPTIONS,
-    GRID_COLUMNS,
-    BOX_BORDER_SHADOW,
-    ...__DETECT_ERROR_WEBSITE_1__
-] = splitBetween(SNIPPET_SPECIFIC_AFTER, SNIPPET_SPECIFIC_NEXT, 7);
-if (__DETECT_ERROR_WEBSITE_1__.length > 0) {
+    3
+);
+if (__DETECT_ERROR_WEBSITE_0__.length > 0) {
     console.error("Wrong count in website split after specific");
+}
+const [WEBSITE_BACKGROUND_OPTIONS, GRID_COLUMNS, BOX_BORDER_SHADOW, ...__DETECT_ERROR_WEBSITE_1__] =
+    splitBetween(VERTICAL_ALIGNMENT, SNIPPET_SPECIFIC_NEXT, 3);
+if (__DETECT_ERROR_WEBSITE_1__.length > 0) {
+    console.error("Wrong count in website split after vertical alignment");
 }
 export {
     LAYOUT,
     LAYOUT_COLUMN,
     LAYOUT_GRID,
-    VERTICAL_ALIGNMENT,
     WEBSITE_BACKGROUND_OPTIONS,
     GRID_COLUMNS,
     BOX_BORDER_SHADOW,

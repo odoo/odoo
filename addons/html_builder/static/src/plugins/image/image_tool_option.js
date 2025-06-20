@@ -4,7 +4,7 @@ import { ImageFilterOption } from "@html_builder/plugins/image/image_filter_opti
 import { ImageFormatOption } from "@html_builder/plugins/image/image_format_option";
 
 export class ImageToolOption extends BaseOptionComponent {
-    static template = "website.ImageToolOption";
+    static template = "html_builder.ImageToolOption";
     static components = {
         ImageShapeOption,
         ImageFilterOption,

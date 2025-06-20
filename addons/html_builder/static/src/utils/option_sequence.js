@@ -108,8 +108,13 @@ if (__DETECT_ERROR_1__.length > 0) {
     console.error("Wrong count in split before default");
 }
 
-const [SNIPPET_SPECIFIC_AFTER, SNIPPET_SPECIFIC_NEXT, SNIPPET_SPECIFIC_END, ...__DETECT_ERROR_2__] =
-    splitBetween(SNIPPET_SPECIFIC, END, 3);
+const [
+    SNIPPET_SPECIFIC_AFTER,
+    VERTICAL_ALIGNMENT,
+    SNIPPET_SPECIFIC_NEXT,
+    SNIPPET_SPECIFIC_END,
+    ...__DETECT_ERROR_2__
+] = splitBetween(SNIPPET_SPECIFIC, END, 4);
 if (__DETECT_ERROR_2__.length > 0) {
     console.error("Wrong count in split after default");
 }
@@ -135,6 +140,7 @@ export {
     SNIPPET_SPECIFIC_BEFORE,
     SNIPPET_SPECIFIC,
     SNIPPET_SPECIFIC_AFTER,
+    VERTICAL_ALIGNMENT,
     SNIPPET_SPECIFIC_NEXT,
     SNIPPET_SPECIFIC_END,
     END,
