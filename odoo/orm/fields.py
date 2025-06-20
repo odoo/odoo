@@ -241,6 +241,10 @@ class Field(typing.Generic[T]):
         ``X`` has a dependency like ``parent_id.X``); declaring a field recursive
         must be explicit to guarantee that recomputation is correct
 
+    :param str compute_sql: name of a method that produces SQL for the field
+
+        .. seealso:: :ref:`Advanced Fields/Compute fields <reference/fields/compute>`
+
     :param str inverse: name of a method that inverses the field (optional)
 
     :param str related: sequence of field names
@@ -286,6 +290,7 @@ class Field(typing.Generic[T]):
     compute: str | Callable[[BaseModel], None] | None = None   # compute(recs) computes field on recs
     compute_sudo: bool = False          # whether field should be recomputed as superuser
     precompute: bool = False            # whether field has to be computed before creation
+    compute_sql: str | Callable[[BaseModel, str, Query], SQL] | None = None      # compute_sql(model, alias, query) that gets the SQL for the field
     inverse: str | Callable[[BaseModel], None] | None = None  # inverse(recs) inverses field on recs
     search: str | Callable[[BaseModel, str, typing.Any], DomainType] | None = None  # search(recs, operator, value) searches on self
     related: str | None = None          # sequence of field names, for related fields
@@ -443,6 +448,11 @@ class Field(typing.Generic[T]):
         if name == 'state':
             # by default, `state` fields should be reset on copy
             attrs['copy'] = attrs.get('copy', False)
+        if attrs.get('compute_sql'):
+            if not attrs.get('compute'):
+                warnings.warn(f"compute_sql attribute makes sense only if {self} is a computed field")
+            if 'compute_sudo' not in attrs:
+                warnings.warn(f"compute_sql requires an explicit compute_sudo parameter on {self}")
         if attrs.get('compute'):
             # by default, computed fields are not stored, computed in superuser
             # mode if stored, not copied (unless stored and explicitly not
@@ -634,6 +644,12 @@ class Field(typing.Generic[T]):
         self.compute = self._compute_related
         if self.inherited or not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
+        if (
+            not self.store
+            and (self.compute_sudo or self.inherited)
+            and all(f.column_type and (f.store or f.compute_sql) for f in field_seq)
+        ):
+            self.compute_sql = self._compute_sql_related
         if not self.store and all(f._description_searchable for f in field_seq):
             # allow searching on self only if the related field is searchable
             self.search = self._search_related
@@ -738,6 +754,10 @@ class Field(typing.Generic[T]):
         # assign final values to records
         for record, value in zip(records, values):
             record[self.name] = self._process_related(value[self.related_field.name], record.env)
+
+    def _compute_sql_related(self, model: BaseModel, alias: str, query: Query) -> SQL:
+        ref_model, field, ref_alias = self.traverse_related_sql(model, alias, query)
+        return ref_model._field_to_sql(ref_alias, field.name, query)
 
     def _process_related(self, value, env: Environment):
         """No transformation by default, but allows override."""
@@ -1228,6 +1248,12 @@ class Field(typing.Generic[T]):
 
         The query object is necessary for fields that need to add tables to the query.
         """
+        if self.compute_sql:
+            if self.compute_sudo:
+                model = model.sudo()
+            sql_field = determine(self.compute_sql, model, alias, query)
+            assert isinstance(sql_field, SQL), f"{self} invalid return of compute_sql"
+            return sql_field
         if not self.store or not self.column_type:
             if self.related and not self.store:
                 model, field, alias = self.traverse_related_sql(model, alias, query)
