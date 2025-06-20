@@ -481,7 +481,7 @@ class PosOrder(models.Model):
 
     @api.model
     def _complete_values_from_session(self, session, values):
-        if values.get('state') and values['state'] == 'paid' and not values.get('name'):
+        if values.get('state') and values['state'] == 'paid' and not values.get('name') and not self._context.get('refunded_order'):
             values['name'] = self._compute_order_name(session)
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
@@ -1041,15 +1041,19 @@ class PosOrder(models.Model):
             order_log_name = self._get_order_log_representation(order)
             _logger.debug("PoS synchronisation #%d processing order %s order full data: %s", sync_token, order_log_name, pformat(order))
 
-            if len(self._get_refunded_orders(order)) > 1:
+            refunded_orders = len(self._get_refunded_orders(order))
+            ctx = dict(self._context)
+            if refunded_orders > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
+            if refunded_orders == 1:
+                ctx['refunded_order'] = True
 
             existing_order = self._get_open_order(order)
             if existing_order and existing_order.state == 'draft':
-                order_ids.append(self._process_order(order, existing_order))
+                order_ids.append(self.with_context(ctx)._process_order(order, existing_order))
                 _logger.info("PoS synchronisation #%d order %s updated pos.order #%d", sync_token, order_log_name, order_ids[-1])
             elif not existing_order:
-                order_ids.append(self._process_order(order, False))
+                order_ids.append(self.with_context(ctx)._process_order(order, False))
                 _logger.info("PoS synchronisation #%d order %s created pos.order #%d", sync_token, order_log_name, order_ids[-1])
             else:
                 # In theory, this situation is unintended
