@@ -19,6 +19,12 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self):
         super().set_values()
+        if self.website_id:
+            website = self.with_context(website_id=self.website_id.id).website_id
+            website_newsletter_view = website.viewref('website_sale_mass_mailing.newsletter')
+            if website_newsletter_view.active != self.is_newsletter_enabled:
+                website_newsletter_view.active = self.is_newsletter_enabled
+
         newsletter_view = self.env.ref('website_sale_mass_mailing.newsletter')
         if newsletter_view.active != self.is_newsletter_enabled:
             newsletter_view.active = self.is_newsletter_enabled
