@@ -435,11 +435,19 @@ class ResourceCalendar(models.Model):
 
             for resource in resources:
                 if resource and resource._is_fully_flexible():
+<<<<<<< 4c1988a62e1788a5a258d276168a6c92ac401f81
+||||||| f7e090cf5aba1fcb5322e8606ba787a146ccf023
+                    # If the resource is fully flexible, return the whole period from start_dt to end_dt with a dummy attendance
+=======
+                    # If the resource is fully flexible, return the whole period from start_dt to end_dt with a dummy attendance
+                    hours = (end_dt - start_dt).total_seconds() / 3600
+                    days = hours / 24
+>>>>>>> 9aa007ce9f359ac3f1ab90b71d4122637126f730
                     dummy_attendance = self.env['resource.calendar.attendance'].new({
-                        'duration_hours': (end - start).total_seconds() / 3600,
-                        'duration_days': (end - start).days + 1,
+                        'duration_hours': hours,
+                        'duration_days': days,
                     })
-                    result_per_resource_id[resource.id] = WorkIntervals([(start, end, dummy_attendance)])
+                    result_per_resource_id[resource.id] = WorkIntervals([(start_dt, end_dt, dummy_attendance)])
                 elif resource and resource.calendar_id.flexible_hours:
                     # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
                     # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
