@@ -4,7 +4,7 @@ import {
     clickOnSave,
     openLinkPopup,
     registerWebsitePreviewTour,
-    selectFullText,
+    clickToolbarButton,
 } from "@website/js/tours/tour_utils";
 
 const toggleMegaMenu = (stepOptions) => Object.assign({}, {
@@ -255,15 +255,11 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
         trigger: '[data-select-label="Big Icons Subtitles"]',
         run: "click",
     },
-    selectFullText(
+    ...clickToolbarButton(
         "h4 of first menu link of the first column",
-        ".s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4"
+        ".s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4",
+        "Toggle bold"
     ),
-    {
-        content: "Convert it to Bold",
-        trigger: '#oe_snippets #toolbar #bold',
-        run: "click",
-    },
     ...clickOnSave(),
     clickOnExtraMenuItem({}, true),
     toggleMegaMenu(),

@@ -3,7 +3,7 @@ import {
     goBackToBlocks,
     goToTheme,
     registerWebsitePreviewTour,
-    selectFullText,
+    clickToolbarButton,
 } from "@website/js/tours/tour_utils";
 import { rgbToHex } from "@web/core/utils/colors";
 
@@ -31,17 +31,12 @@ registerWebsitePreviewTour("website_text_edition", {
     },
     goBackToBlocks(),
     ...insertSnippet({id: "s_text_block", name: "Text", groupName: "Text"}),
-    selectFullText("text block first paragraph", ".s_text_block p"),
-    {
-        content: "Expand toolbar to see the color picker",
-        trigger: ".o-we-toolbar button[name='expand_toolbar']",
-        run: "click",
-    },
-    {
-        content: "Select the color picker",
-        trigger: ".o-we-toolbar button.o-select-color-foreground",
-        run: "click",
-    },
+    ...clickToolbarButton(
+        "text block first paragraph",
+        ".s_text_block p",
+        "Apply Font Color",
+        true
+    ),
     {
         content: "Open solid section in color picker",
         trigger: ".o_font_color_selector button:contains('Custom')",

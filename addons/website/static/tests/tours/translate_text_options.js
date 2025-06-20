@@ -4,6 +4,7 @@ import {
     registerWebsitePreviewTour,
     selectElementInWeSelectWidget,
     selectFullText,
+    clickToolbarButton,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -18,18 +19,18 @@ registerWebsitePreviewTour(
             name: "Text",
             groupName: "Text",
         }),
-        selectFullText("first text block in the snippet", "#wrap .s_text_block p"),
-        {
-            content: "Click on the 'Animate Text' button to activate the option",
-            trigger: "div.o_we_animate_text",
-            run: "click",
-        },
-        selectFullText("second text block in the snippe", "#wrap .s_text_block p:last"),
-        {
-            content: "Click on the 'Highlight Effects' button to activate the option",
-            trigger: "div.o_we_text_highlight",
-            run: "click",
-        },
+        ...clickToolbarButton(
+            "first text block in the snippet",
+            "#wrap .s_text_block p",
+            "Animate Text",
+            true
+        ),
+        ...clickToolbarButton(
+            "second text block in the snippet",
+            "#wrap .s_text_block p:last",
+            "Apply highlight",
+            true
+        ),
         ...clickOnSave(),
         {
             content: "Change the language to French",

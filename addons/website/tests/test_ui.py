@@ -551,8 +551,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.assertFalse(menu_root.action, 'The top menu should not have an action (or the test/tour will not test anything).')
         self.start_tour('/', 'website_backend_menus_redirect', login='admin')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_30_website_text_animations(self):
         self.start_tour("/", 'text_animations', login='admin')
 
