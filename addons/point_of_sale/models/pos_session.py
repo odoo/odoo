@@ -316,31 +316,31 @@ class PosSession(models.Model):
             self._check_if_no_draft_orders()
             self._check_invoices_are_posted()
             cash_difference_before_statements = self.cash_register_difference
-            if self.update_stock_at_closing:
-                self._create_picking_at_end_of_session()
-                self._get_closed_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
+            # Creating the account move is just part of a big database transaction
+            # when closing a session. There are other database changes that will happen
+            # before attempting to create the account move, such as, creating the picking
+            # records.
+            # We don't, however, want them to be committed when the account move creation
+            # failed; therefore, we need to roll back this transaction before showing the
+            # close session wizard.
+            balance = 0
             try:
                 with self.env.cr.savepoint():
-                    data = self.with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
-            except AccessError as e:
-                if sudo:
-                    data = self.sudo().with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
-                else:
-                    raise e
+                    if self.update_stock_at_closing:
+                        self._create_picking_at_end_of_session()
+                        self._get_closed_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
+                    try:
+                        data = self.with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
+                    except AccessError:
+                        if sudo:
+                            data = self.sudo().with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
+                        else:
+                            raise
 
-            balance = sum(self.move_id.line_ids.mapped('balance'))
-            try:
-                with self.move_id._check_balanced({'records': self.move_id.sudo()}):
-                    pass
+                    balance = sum(self.move_id.line_ids.mapped('balance'))
+                    with self.move_id._check_balanced({'records': self.move_id.sudo()}):
+                        pass
             except UserError:
-                # Creating the account move is just part of a big database transaction
-                # when closing a session. There are other database changes that will happen
-                # before attempting to create the account move, such as, creating the picking
-                # records.
-                # We don't, however, want them to be committed when the account move creation
-                # failed; therefore, we need to roll back this transaction before showing the
-                # close session wizard.
-                self.env.cr.rollback()
                 return self._close_session_action(balance)
 
             self.sudo()._post_statement_difference(cash_difference_before_statements, False)
