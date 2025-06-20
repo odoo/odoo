@@ -1540,18 +1540,33 @@ class PosOrderLine(models.Model):
             raise UserError(_('No PoS configuration found'))
 
         src_loc = pos_config.picking_type_id.default_location_src_id
-        src_loc_quants = self.sudo().env['stock.quant'].search([
+
+        domain = [
             '|',
             ('company_id', '=', False),
             ('company_id', '=', company_id),
             ('product_id', '=', product_id),
             ('location_id', 'in', src_loc.child_internal_location_ids.ids),
-        ])
-        available_lots = src_loc_quants.\
-            filtered(lambda q: q.product_id.uom_id.compare(q.quantity, 0) > 0).\
-            mapped('lot_id')
+            ('quantity', '>', 0),
+            ('lot_id', '!=', False),
+        ]
 
-        return available_lots.read(['id', 'name', 'product_qty'])
+        groups = self.sudo().env['stock.quant']._read_group(
+            domain=domain,
+            groupby=['lot_id'],
+            aggregates=['quantity:sum']
+        )
+
+        result = []
+        for lot_recordset, total_quantity in groups:
+            if lot_recordset:
+                result.append({
+                    'id': lot_recordset.id,
+                    'name': lot_recordset.name,
+                    'product_qty': total_quantity
+                })
+
+        return result
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_order_state(self):
