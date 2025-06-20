@@ -43,6 +43,8 @@
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+
             'web/static/src/scss/bootstrap_overridden.scss',
             'html_builder/static/src/**/*.inside.scss',
             'html_editor/static/src/main/link/link.scss',
