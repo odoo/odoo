@@ -1,10 +1,9 @@
 import { useService } from "@web/core/utils/hooks";
-import { ListController } from "@web/views/list/list_controller";
+import { KanbanController } from "@web/views/kanban/kanban_controller";
 
-export class ArchiveDisabledListController extends ListController {
+export class MailActivityMyKanbanController extends KanbanController {
     setup() {
         super.setup();
-        this.archiveEnabled = false;
         this.store = useService("mail.store");
     }
 

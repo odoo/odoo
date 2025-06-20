@@ -588,13 +588,6 @@ class MailActivity(models.Model):
             'views': [(False, 'form')],
         }
 
-    # Deprecated in 18.3 onwards
-    def action_snooze(self):
-        today = date.today()
-        for activity in self:
-            if activity.active:
-                activity.date_deadline = max(activity.date_deadline, today) + timedelta(days=7)
-
     def action_reschedule_today(self):
         self.filtered('active').date_deadline = date.today()
 
