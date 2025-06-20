@@ -716,7 +716,7 @@ export class RelationalModel extends Model {
                 }
             });
         }
-
+        // TODO: should only have the one in progressbar
         const aggregates = getAggregateSpecifications(
             pick(config.fields, ...Object.keys(config.activeFields))
         );
