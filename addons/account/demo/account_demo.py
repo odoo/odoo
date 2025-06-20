@@ -79,6 +79,7 @@ class AccountChartTemplate(models.AbstractModel):
             + self.ref('demo_invoice_8')
             + self.ref('demo_invoice_equipment_purchase')
             + self.ref('demo_invoice_9')
+            + self.ref('demo_invoice_10')
             + self.ref('demo_move_auto_reconcile_1')
             + self.ref('demo_move_auto_reconcile_2')
             + self.ref('demo_move_auto_reconcile_3')
@@ -251,8 +252,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'partner_id': 'base.res_partner_5',
                 'invoice_user_id': 'base.user_demo',
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
-                'invoice_date': (fields.Date.today() + timedelta(days=-17)).strftime('%Y-%m-%d'),
-                'delivery_date': (fields.Date.today() + timedelta(days=-17)).strftime('%Y-%m-%d'),
+                'invoice_date': (fields.Date.today() + timedelta(days=-40)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-40)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.product_order_01', 'price_unit': 200, 'quantity': 10}),
                 ],
@@ -262,8 +263,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'partner_id': 'base.res_partner_5',
                 'invoice_user_id': 'base.user_demo',
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
-                'invoice_date': (fields.Date.today() + timedelta(days=-15)).strftime('%Y-%m-%d'),
-                'delivery_date': (fields.Date.today() + timedelta(days=-15)).strftime('%Y-%m-%d'),
+                'invoice_date': (fields.Date.today() + relativedelta(months=-1)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + relativedelta(months=-1)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.product_order_01', 'price_unit': 275, 'quantity': 1}),
                 ],
@@ -273,8 +274,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'partner_id': 'base.res_partner_5',
                 'invoice_user_id': 'base.user_demo',
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
-                'invoice_date': (fields.Date.today() + timedelta(days=-12)).strftime('%Y-%m-%d'),
-                'delivery_date': (fields.Date.today() + timedelta(days=-12)).strftime('%Y-%m-%d'),
+                'invoice_date': (fields.Date.today() + timedelta(days=-35)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-35)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.product_order_01', 'price_unit': 100.0, 'quantity': 10}),
                 ],
@@ -296,8 +297,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'ref': f'INV/{fifteen_months_ago.year}/0057',
                 'partner_id': 'base.res_partner_3',
                 'invoice_user_id': False,
-                'invoice_date': fifteen_months_ago.strftime("%Y-%m-17"),
-                'delivery_date': fifteen_months_ago.strftime("%Y-%m-17"),
+                'invoice_date': (fields.Date.today() + timedelta(days=-20)).strftime("%Y-%m-%d"),
+                'delivery_date': (fields.Date.today() + timedelta(days=-20)).strftime("%Y-%m-%d"),
                 'invoice_line_ids': [
                     Command.create({'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10,
                                     'tax_ids': self.env.company.account_purchase_tax_id.ids}),
@@ -308,10 +309,20 @@ class AccountChartTemplate(models.AbstractModel):
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_6',
                 'invoice_user_id': False,
-                'invoice_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
-                'delivery_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
+                'invoice_date': time.strftime('%Y-%m-%d'),
+                'delivery_date': time.strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
                     Command.create({'product_id': 'product.product_delivery_02', 'price_unit': 50.00, 'quantity': 15}),
+                ],
+            },
+            'demo_invoice_10': {
+                'move_type': 'out_invoice',
+                'partner_id': 'base.res_partner_5',
+                'invoice_user_id': False,
+                'invoice_date': (fields.Date.today() + timedelta(days=-5)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-5)).strftime('%Y-%m-%d'),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.consu_delivery_03', 'price_unit': 1799, 'quantity': 1}),
                 ],
             },
             'demo_move_auto_reconcile_1': {
@@ -397,29 +408,48 @@ class AccountChartTemplate(models.AbstractModel):
         )
         return {
             'demo_bank_statement_1': {
-                'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-03/1',
-                'balance_end_real': 7028.0,
+                'name': f'{bnk_journal.name} - {(fields.Date.today() + relativedelta(months=-1)).strftime("%Y-%m-%d")}',
+                'balance_end_real': 8312.84,
+                'balance_start': 5070.42,
+                'line_ids': [
+                    Command.create({
+                        'journal_id': bnk_journal.id,
+                        'payment_ref': 'Monthly Bank Fees',
+                        'amount': -32.58,
+                        'date': (fields.Date.today() + relativedelta(months=-1)).strftime('%Y-%m-%d'),
+                    }),
+                    Command.create({
+                        'journal_id': bnk_journal.id,
+                        'payment_ref': time.strftime('INV/%Y/00006 and INV/%Y/00007'),
+                        'amount': 1275.0,
+                        'date': (fields.Date.today() + relativedelta(months=-1)).strftime('%Y-%m-%d'),
+                        'partner_name': 'Open Wood Inc.',
+                    }),
+                    Command.create({
+                        'journal_id': bnk_journal.id,
+                        'payment_ref': time.strftime('Payment of your invoice #5'),
+                        'amount': 2000,
+                        'date': (fields.Date.today() + timedelta(days=-40)).strftime('%Y-%m-%d'),
+                        'partner_name': 'Open Wood Inc.',
+                    }),
+                ]
+            },
+            'demo_bank_statement_2': {
+                'name': f'{bnk_journal.name} - {(fields.Date.today() + relativedelta(months=-2)).strftime("%Y-%m-%d")}',
+                'balance_end_real': 5070.42,
                 'balance_start': 0.0,
                 'line_ids': [
                     Command.create({
                         'journal_id': bnk_journal.id,
                         'payment_ref': 'Initial balance',
                         'amount': 5103.0,
-                        'date': (datetime.now() - relativedelta(years=1)).strftime("%Y-12-15"),
+                        'date': (datetime.now() + relativedelta(months=-2)).strftime("%Y-%m-%d"),
                     }),
                     Command.create({
                         'journal_id': bnk_journal.id,
-                        'payment_ref': time.strftime('INV/%Y/00006 and INV/%Y/00007'),
-                        'amount': 1275.0,
-                        'date': time.strftime('%Y-01-03'),
-                        'partner_name': 'Open Wood Inc.',
-                    }),
-                    Command.create({
-                        'journal_id': bnk_journal.id,
-                        'payment_ref': 'Prepayment',
-                        'date': time.strftime('%Y-01-02'),
-                        'amount': 650,
-                        'partner_name': 'Open Wood Inc.',
+                        'payment_ref': 'Monthly Bank Fees',
+                        'amount': -32.58,
+                        'date': (fields.Date.today() + relativedelta(months=-2)).strftime('%Y-%m-%d'),
                     }),
                 ]
             },
@@ -444,13 +474,13 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'demo_bank_statement_line_1': {
                 'journal_id': bnk_journal.id,
-                'payment_ref': 'Bank Fees',
+                'payment_ref': 'Monthly Bank Fees',
                 'amount': -32.58,
             },
             'demo_bank_statement_line_2': {
                 'journal_id': bnk_journal.id,
-                'payment_ref': time.strftime('Payment of your invoice #5'),
-                'amount': 2000,
+                'payment_ref': 'Prepayment',
+                'amount': 650,
                 'partner_name': 'Open Wood Inc.',
             },
             'demo_bank_statement_line_3': {
@@ -461,7 +491,7 @@ class AccountChartTemplate(models.AbstractModel):
             'demo_bank_statement_line_4': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': time.strftime('INV/%Y/00008'),
-                'amount': 750,
+                'amount': 738.75,
                 'partner_id': 'base.res_partner_6',
             },
             'demo_bank_statement_line_5': {
