@@ -50,7 +50,14 @@ export class BackgroundPositionOverlay extends Component {
             this.bgDraggerEl.style.backgroundAttachment = getComputedStyle(
                 this.props.editingElement
             ).backgroundAttachment;
-            window.addEventListener("resize", this._dimensionOverlay);
+            this.resizeObserver = new ResizeObserver(this.dimensionOverlay.bind(this));
+            this.resizeObserver.observe(this.props.editingElement);
+            const shapeEl = this.props.editingElement.parentElement.querySelector(".o_we_shape");
+            if (shapeEl) {
+                const shapeOverlayEl = document.createElement("div");
+                shapeOverlayEl.classList.add(...shapeEl.classList);
+                this.parentBgDraggerRef.el.insertAdjacentElement("afterend", shapeOverlayEl);
+            }
         });
 
         useEffect(() => {
@@ -62,7 +69,7 @@ export class BackgroundPositionOverlay extends Component {
         });
 
         onWillUnmount(() => {
-            window.removeEventListener("resize", this._dimensionOverlay);
+            this.resizeObserver.disconnect();
             this.tooltip.dispose();
         });
     }
@@ -133,8 +140,11 @@ export class BackgroundPositionOverlay extends Component {
         overlayContentEl.style.left = `${targetRect.left + window.scrollX}px`;
 
         this.bgDraggerEl.style.width = `${this.props.editingElement.clientWidth}px`;
-        this.bgDraggerEl.style.height = `${this.props.editingElement.clientHeight}px`;
-
+        this.bgDraggerEl.style.setProperty(
+            "height",
+            `${this.props.editingElement.clientHeight}px`,
+            "important"
+        );
         const topPos = Math.max(
             0,
             window.scrollY -
