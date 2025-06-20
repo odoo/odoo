@@ -55,7 +55,7 @@ function shortCutsItem(env) {
         id: "shortcuts",
         hide: env.isSmall,
         description: markup(
-            `<div class="d-flex align-items-center justify-content-between">
+            `<div class="d-flex align-items-center justify-content-between p-0 w-100">
                 <span>${escape(translatedText)}</span>
                 <span class="fw-bold">${isMacOS() ? "CMD" : "CTRL"}+K</span>
             </div>`
