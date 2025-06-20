@@ -295,7 +295,13 @@ export const hotkeyService = {
                         document.activeElement.blur();
                     }
                     el.focus();
+<<<<<<< 99bea564168b9e71e9564068ccb99d162aa4f4fe
                     setTimeout(() => el.click());
+||||||| e4bfd1906e009b22b369e48c5bb1902c396e815d
+                    setTimeout(() => el.click());
+=======
+                    browser.setTimeout(() => el.click());
+>>>>>>> e735b080cb482feff003467e67b603b908f7ec70
                 },
             }));
         }
