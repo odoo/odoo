@@ -16,6 +16,39 @@ import { isIosApp } from "@web/core/browser/feature_detection";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 import { session } from "@web/session";
 
+function isAlphaNumeric(str) {
+    return /^[a-zA-Z0-9]+$/.test(str);
+}
+
+/**
+* Maps the raw keys from a barcode scanner to the English (US) keyboard layout.
+* @param {Array<{code: string, shiftKey: boolean}>} rawKeysBarcode - Array of key event objects from the barcode scanner.
+* @returns {string} The decoded alphanumeric string as if typed on an English keyboard.
+*/
+function mapCodeToEnglishKeyboard(rawKeysBarcode) {
+    const EN_US_KEYBOARD_MAP = {
+        // Number row
+        'Digit0': '0', 'Digit1': '1', 'Digit2': '2', 'Digit3': '3', 'Digit4': '4',
+        'Digit5': '5', 'Digit6': '6', 'Digit7': '7', 'Digit8': '8', 'Digit9': '9',
+        // Letters (QWERTY)
+        'KeyA': 'a', 'KeyB': 'b', 'KeyC': 'c', 'KeyD': 'd', 'KeyE': 'e',
+        'KeyF': 'f', 'KeyG': 'g', 'KeyH': 'h', 'KeyI': 'i', 'KeyJ': 'j',
+        'KeyK': 'k', 'KeyL': 'l', 'KeyM': 'm', 'KeyN': 'n', 'KeyO': 'o',
+        'KeyP': 'p', 'KeyQ': 'q', 'KeyR': 'r', 'KeyS': 's', 'KeyT': 't',
+        'KeyU': 'u', 'KeyV': 'v', 'KeyW': 'w', 'KeyX': 'x', 'KeyY': 'y', 'KeyZ': 'z',
+        // Numpad numbers (optional, useful for barcode scanners sometimes)
+        'Numpad0': '0', 'Numpad1': '1', 'Numpad2': '2', 'Numpad3': '3', 'Numpad4': '4',
+        'Numpad5': '5', 'Numpad6': '6', 'Numpad7': '7', 'Numpad8': '8', 'Numpad9': '9',
+    };
+
+    return rawKeysBarcode.map(keyEvent => {
+        const key = EN_US_KEYBOARD_MAP[keyEvent.code];
+        if (key)
+            return keyEvent.shiftKey ? key.toUpperCase() : key;
+        return '';
+    }).join('');
+}
+
 class kioskAttendanceApp extends Component{
     static template = "hr_attendance.public_kiosk_app";
     static props = {
@@ -53,10 +86,10 @@ class kioskAttendanceApp extends Component{
         this.lockScanner = false;
         if (this.props.kioskMode === 'settings' || this.props.fromTrialMode){
             this.manualKioskMode = false;
-            useBus(this.barcode.bus, "barcode_scanned", (ev) => this.onBarcodeScanned(ev.detail.barcode));
+            useBus(this.barcode.bus, "barcode_scanned", this.extractAndScanBarcode);
         }
         else if (this.props.kioskMode !== 'manual') {
-            useBus(this.barcode.bus, "barcode_scanned", (ev) => this.onBarcodeScanned(ev.detail.barcode));
+            useBus(this.barcode.bus, "barcode_scanned", this.extractAndScanBarcode);
             this.state.active_display = "main";
             this.manualKioskMode = false;
         } else {
@@ -186,6 +219,16 @@ class kioskAttendanceApp extends Component{
                 this.displayNotification(_t("Wrong Pin"))
             }
         }
+    }
+
+    extractAndScanBarcode(ev) {
+        let barcode = ev.detail.barcode;
+        // When the client has a different keyboard layout than the one used to generate the RFIDs,
+        // the barcode reader generates a different (unreadable) sequence of keys.
+        // As a fallback, we map the raw keys to the English keyboard layout.
+        if(!isAlphaNumeric(barcode) && ev.detail.rawKeysBarcode)
+            barcode = mapCodeToEnglishKeyboard(ev.detail.rawKeysBarcode);
+        this.onBarcodeScanned(barcode);
     }
 
     async onBarcodeScanned(barcode){
