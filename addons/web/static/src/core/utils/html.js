@@ -101,9 +101,9 @@ export function htmlReplaceAll(content, search, replacement) {
  * @param {Array<string|ReturnType<markup>>} args
  * @returns {ReturnType<markup>}
  */
-export function htmlJoin(...args) {
-    // markup: args are escaped (or markup), join is considered safe
-    return markup(args.map((arg) => htmlEscape(arg)).join(""));
+export function htmlJoin(list, separator = "") {
+    // markup: args and separator are escaped (or markup), join is considered safe
+    return markup(list.map((arg) => htmlEscape(arg)).join(htmlEscape(separator)));
 }
 
 /**
