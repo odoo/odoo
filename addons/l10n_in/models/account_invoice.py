@@ -236,6 +236,7 @@ class AccountMove(models.Model):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and m.move_type != 'entry')
         line_filter_func = lambda line: line.display_type == 'product' and line.tax_ids and line._origin
         _xmlid_to_res_id = self.env['ir.model.data']._xmlid_to_res_id
+        exempt_tax_tag = self.env.ref('l10n_in.tax_tag_exempt', raise_if_not_found=False)
         for move in indian_invoice:
             warnings = {}
             company = move.company_id
@@ -310,6 +311,32 @@ class AccountMove(models.Model):
                         'action_text': action_text,
                     }
 
+            exempt_goods_exists = False
+            taxable_goods_exists = False
+            for line in move.invoice_line_ids:
+                if line.display_type == 'product':
+                    if any(exempt_tax_tag in tax.invoice_repartition_line_ids.tag_ids for tax in line.tax_ids):
+                        exempt_goods_exists = True
+                    if any(exempt_tax_tag not in tax.invoice_repartition_line_ids.tag_ids for tax in line.tax_ids):
+                        taxable_goods_exists = True
+                if exempt_goods_exists and taxable_goods_exists:
+                    break
+
+            if (
+                move.move_type in move.get_sale_types(include_receipts=False)
+                and company.l10n_in_is_gst_registered
+                and move.l10n_in_gst_treatment in [
+                    'regular',
+                    'composition',
+                    'special_economic_zone',
+                    'deemed_export',
+                    'uin_holders',
+                ]
+                and exempt_goods_exists and taxable_goods_exists
+            ):
+                warnings['taxable_and_exempt_mix_goods'] = {
+                        'message': _("This document includes both taxable and exempt goods. It is advisable to raise seperate document."),
+                    }
             move.l10n_in_warning = warnings
         (self - indian_invoice).l10n_in_warning = {}
 
