@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 
 
-class TestSaleStockCommon(TestSaleCommon):
+class TestSaleStockCommon(TestSaleCommon, ProductVariantsCommon):
 
     @classmethod
     def setUpClass(cls):

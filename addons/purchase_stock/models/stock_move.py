@@ -44,7 +44,14 @@ class StockMove(models.Model):
 
     @api.depends('purchase_line_id.name')
     def _compute_description_picking(self):
-        super()._compute_description_picking()  # Only to update the depends
+        super()._compute_description_picking()
+        for move in self:
+            if move.purchase_line_id:
+                seller = move.purchase_line_id.selected_seller_id
+                vendor_reference = f'[{seller.product_code}]' if seller.product_code else ''
+                vendor_reference += f' {seller.product_name}' if seller.product_name else ''
+                no_variant_attributes = '\n'.join(f'{attribute.attribute_id.name}: {attribute.name}' for attribute in move.purchase_line_id.product_no_variant_attribute_value_ids)
+                move.description_picking = (no_variant_attributes + '\n' + vendor_reference + '\n' + move.description_picking).strip()
 
     def _get_description(self):
         return self.purchase_line_id.name if self.purchase_line_id else super()._get_description()
