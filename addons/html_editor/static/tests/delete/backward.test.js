@@ -502,6 +502,15 @@ describe("Selection collapsed", () => {
                 contentAfter: `<p>a[]</p>`,
             });
         });
+
+        test("should transform empty signature container into base container", async () => {
+            await testEditor({
+                contentBefore: `<div class="o-signature-container"><span data-oe-zws-empty-inline="">[]\u200B</span></div>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<div>[]<br></div>`,
+                config: { baseContainer: "DIV" },
+            });
+        });
     });
 
     describe("Line breaks", () => {

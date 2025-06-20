@@ -105,7 +105,7 @@ const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
 });
 
 const headingTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
-const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
+const handledTags = [...headingTags, "PRE", "BLOCKQUOTE"];
 
 export class FontPlugin extends Plugin {
     static id = "font";
@@ -270,8 +270,9 @@ export class FontPlugin extends Plugin {
             this.handleSplitBlockPRE.bind(this),
             this.handleSplitBlockquote.bind(this),
         ],
-        delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
-        delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
+
+        /** Predicates */
+        empty_base_container_candidates_predicates: (node) => handledTags.includes(node.nodeName),
     };
 
     setup() {
@@ -450,33 +451,6 @@ export class FontPlugin extends Plugin {
             }
             return true;
         }
-    }
-
-    /**
-     * Transform an empty heading, blockquote or pre at the beginning of the
-     * editable into a paragraph.
-     */
-    handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
-        // Detect if cursor is at the start of the editable (collapsed range).
-        const rangeIsCollapsed = startContainer === endContainer && startOffset === endOffset;
-        if (!rangeIsCollapsed) {
-            return;
-        }
-        // Check if cursor is inside an empty heading, blockquote or pre.
-        const closestHandledElement = closestElement(endContainer, handledElemSelector);
-        if (!closestHandledElement || closestHandledElement.textContent.length) {
-            return;
-        }
-        // Check if unremovable.
-        if (this.getResource("unremovable_node_predicates").some((p) => p(closestHandledElement))) {
-            return;
-        }
-        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        baseContainer.append(...closestHandledElement.childNodes);
-        closestHandledElement.after(baseContainer);
-        closestHandledElement.remove();
-        this.dependencies.selection.setCursorStart(baseContainer);
-        return true;
     }
 
     onInput(ev) {
