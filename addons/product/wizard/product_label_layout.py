@@ -16,7 +16,7 @@ class ProductLabelLayout(models.TransientModel):
         ('4x7xprice', '4 x 7 with price'),
         ('4x12', '4 x 12'),
         ('4x12xprice', '4 x 12 with price')], string="Format", default='2x7xprice', required=True)
-    custom_quantity = fields.Integer('Quantity', default=1, required=True)
+    custom_quantity = fields.Integer('Copies', default=1, required=True)
     product_ids = fields.Many2many('product.product')
     product_tmpl_ids = fields.Many2many('product.template')
     extra_html = fields.Html('Extra Content', default='')
