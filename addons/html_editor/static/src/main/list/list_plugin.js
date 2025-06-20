@@ -787,6 +787,12 @@ export class ListPlugin extends Plugin {
         if (listItems.length || navListItems.length) {
             this.indentListNodes(listItems);
             this.dependencies.tabulation.indentBlocks(nonListItems);
+            const listsToAdjustPadding = new Set(
+                listItems.map((li) => closestElement(li, "ul, ol")).filter(Boolean)
+            );
+            for (const list of listsToAdjustPadding) {
+                this.adjustListPadding(list);
+            }
             // Do nothing to nav-items.
             this.dependencies.history.addStep();
             return true;
