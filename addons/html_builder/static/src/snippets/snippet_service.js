@@ -16,6 +16,7 @@ export class SnippetModel extends Reactive {
         this.snippetsName = snippetsName;
         this.context = context;
         this.loadProm = null;
+        this.beforeReload = null;
 
         this.snippetsByCategory = {
             snippet_groups: [],
