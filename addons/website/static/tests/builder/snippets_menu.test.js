@@ -107,24 +107,24 @@ test("Clicking on the 'Blocks' or 'Theme' tab should deactivate the options", as
 
     await contains(":iframe .s_banner").click();
     await animationFrame();
-    expect(".oe_overlay").toHaveCount(1);
+    expect(".oe_overlay:not(.o_hover_overlay)").toHaveCount(1);
     expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
     expect(".o_customize_tab .options-container").toHaveCount(1);
 
     await contains(".o-snippets-tabs button:contains('Blocks')").click();
-    expect(".oe_overlay").toHaveCount(0);
+    expect(".oe_overlay:not(.o_hover_overlay)").toHaveCount(0);
     await contains(".o-snippets-tabs button:contains('Style')").click();
     expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
     expect(".o_customize_tab .options-container").toHaveCount(1);
 
     await contains(":iframe .s_banner").click();
     await waitFor(".o_customize_tab .options-container");
-    expect(".oe_overlay").toHaveCount(1);
+    expect(".oe_overlay:not(.o_hover_overlay)").toHaveCount(1);
     expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
     expect(".o_customize_tab .options-container").toHaveCount(1);
 
     await contains(".o-snippets-tabs button:contains('Theme')").click();
-    expect(".oe_overlay").toHaveCount(0);
+    expect(".oe_overlay:not(.o_hover_overlay)").toHaveCount(0);
     await contains(".o-snippets-tabs button:contains('Style')").click();
     expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
     expect(".o_customize_tab .options-container").toHaveCount(1);
