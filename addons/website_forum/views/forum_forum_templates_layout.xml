@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2 align-items-baseline">
-                    <h3 t-attf-class="col-lg-10 my-0" t-out="question.name"/>
+                    <h1 t-attf-class="col-lg-10 my-0 h3" t-out="question.name"/>
                     <div class="col d-flex justify-content-end align-items-center">
                         <i t-if="question.state == 'close'" class="fa fa-lock ms-2 fs-4" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
                         <span t-elif="not question.active" class="badge text-bg-danger">
@@ -72,16 +72,18 @@
         <t t-elif="_page_name == 'list_questions' or is_edit">
             <t t-set="target" t-value="post.parent_id if is_answer else post"/>
             <div class="o_wforum_breadcrumb_root_list_or_edit d-flex">
-                <div t-if="breadcrumb_kind=='base'" class="col-10 col-lg flex-grow-1 fs-5">
+                <h1 t-if="breadcrumb_kind=='base'" class="col-10 col-lg flex-grow-1 fs-5">
                     <span t-if="not is_edit" class="fw-bold mb-0" t-out="_forum_name"/>
                     <span t-elif="not is_answer" class="fw-bold mb-0">Edit Question</span>
                     <span t-else="is_answer" class="fw-bold mb-0">Edit Answer</span>
-                </div>
+                </h1>
             </div>
         </t>
         <ol t-else="" class="breadcrumb col-10 col-lg flex-grow-1 flex-nowrap my-0 p-0 fs-5">
             <li class="o_wforum_breadcrumb_root breadcrumb-item text-nowrap text-truncatet">
-                <a t-attf-href="/forum/#{ _forum_slug }" t-out="_forum_name"/>
+                <h1 class="m-0 fw-normal d-inline h4-fs">
+                    <a t-attf-href="/forum/#{ _forum_slug }" t-out="_forum_name"/>
+                </h1>
             </li>
             <li t-if="queue_type" class="breadcrumb-item text-nowrap d-none d-lg-flex">
                 <span>Moderation</span>
@@ -206,7 +208,7 @@
                 <meta name="robots" content="noindex, nofollow" />
             </t>
             <div class="text-center text-muted">
-                <p class="css_editable_hidden"><h2>This forum has been archived.</h2></p>
+                <p class="css_editable_hidden"><h1 class="h2-fs">This forum has been archived.</h1></p>
             </div>
         </t>
         <t t-else="">
@@ -278,7 +280,7 @@
             title="My profile">
             <img class="o_wforum_avatar rounded-circle o_object_fit_cover" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
             <div class="d-flex flex-column justify-content-center ms-2">
-                <h6 class="mt-0 mb-1" t-out="user_id.name"/>
+                <span class="mt-0 mb-1 h6-fs fw-bold" t-out="user_id.name"/>
                 <span class="fs-6 text-reset opacity-50"><t t-out="user_id.karma"/> XP</span>
             </div>
         </a>
