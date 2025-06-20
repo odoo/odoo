@@ -503,11 +503,7 @@ class CalendarEvent(models.Model):
                 start, stop)
             for event in events:
                 for partner in event.partner_ids:
-                    if any(
-                        intervals_overlap(
-                            (event.start, event.stop), (other_event.start, other_event.stop))
-                        for other_event in events_by_partner_id.get(partner._origin.id, []) if other_event != event
-                    ):
+                    if event._is_partner_unavailable(partner, events_by_partner_id.get(partner._origin.id, self.env["calendar.event"])):
                         event.unavailable_partner_ids |= partner
 
     @api.depends('videocall_source', 'access_token')
@@ -515,6 +511,14 @@ class CalendarEvent(models.Model):
         for event in self:
             if event.videocall_source == 'discuss':
                 event._set_discuss_videocall_location()
+
+    def _is_partner_unavailable(self, partner, partner_events):
+        self.ensure_one()
+        return any(
+            intervals_overlap((self.start, self.stop), (partner_event.start, partner_event.stop))
+            for partner_event in partner_events
+            if partner_event != self
+        )
 
     @api.model
     def _set_videocall_location(self, vals_list):
