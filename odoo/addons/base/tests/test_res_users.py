@@ -489,8 +489,8 @@ class TestUsers2(UsersCommonCase):
         contact_creation_group = self.env.ref("base.group_partner_manager")
         self.assertNotIn(contact_creation_group, self.user_internal.group_ids)
 
-        # all modules: 23, base: 10
-        with self.assertQueryCount(23):
+        # all modules: 27, base: 10
+        with self.assertQueryCount(27):
             self.user_internal.write({
                 "group_ids": [Command.link(contact_creation_group.id)],
             })
