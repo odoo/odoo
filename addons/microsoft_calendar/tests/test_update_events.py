@@ -1363,6 +1363,9 @@ class TestUpdateEvents(TestCommon):
         self.simple_event_values['user_id'] = self.organizer_user.id
         self.simple_event_values['partner_ids'] = [Command.set([self.organizer_user.partner_id.id])]
         event = self.env['calendar.event'].with_user(self.organizer_user).create(self.simple_event_values)
+        # Simulate sync where the api update the microsoft_id field
+        event.ms_universal_event_id = "test_id_for_event"
+        event.microsoft_id = "test_id_for_organizer"
 
         # Deactivate user B's calendar synchronization. Try changing the event organizer to user B.
         # A ValidationError must be thrown because user B's calendar is not synced.
@@ -1383,8 +1386,6 @@ class TestUpdateEvents(TestCommon):
         mock_get_events.return_value = ([], None)
 
         # Change the event organizer: user B (the organizer) is synced and now listed as an attendee.
-        event.ms_universal_event_id = "test_id_for_event"
-        event.microsoft_id = "test_id_for_organizer"
         event.with_user(self.organizer_user).write({
             'user_id': self.attendee_user.id,
             'partner_ids': [Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])]
