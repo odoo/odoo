@@ -58,6 +58,12 @@ class SaleOrderTemplateLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False)
 
+    print_details = fields.Boolean(
+        string="Print Details",
+        help="Whether to hide the section lines from SO, reports and portal.",
+        default=True,
+    )
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')

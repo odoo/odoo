@@ -307,6 +307,18 @@ class SaleOrderLine(models.Model):
     company_price_include = fields.Selection(related="company_id.account_price_include")
     sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
 
+    # Section hide related fields
+    print_details = fields.Boolean(
+        string="Print Details",
+        default=True,
+        help="Show and print the sale order lines under particular section.",
+    )
+    linked_section_line_id = fields.Many2one(
+        'sale.order.line',
+        string="Linked Section Line",
+        compute='_compute_linked_section_line_id',
+    )
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('order_partner_id', 'order_id', 'product_id')
@@ -785,9 +797,28 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return self.extra_tax_data and self.extra_tax_data.get('computation_key', '').startswith('global_discount,')
 
-    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_ids')
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_ids', 'sequence', 'display_type', 'order_id.order_line')
     def _compute_amount(self):
         for line in self:
+            if line.display_type == 'line_section':
+                subtotal = 0.0
+                total = 0.0
+                section_seq = line.sequence
+
+                sorted_lines = line.order_id.order_line.sorted(key=lambda l: l.sequence).filtered(lambda l: l.sequence > section_seq)
+
+                for l in sorted_lines:
+                    if l.display_type == 'line_section':
+                        break
+                    subtotal += l.price_subtotal
+                    total += l.price_total
+
+                line.update({
+                    'price_subtotal': subtotal,
+                    'price_total': total,
+                    'price_tax': total - subtotal,
+                })
+                continue
             base_line = line._prepare_base_line_for_taxes_computation()
             self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
             line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
@@ -1132,6 +1163,19 @@ class SaleOrderLine(models.Model):
             # line.ids checks whether it's a new record not yet saved
             line.product_uom_readonly = line.ids and line.state in ['sale', 'cancel']
 
+    def _compute_linked_section_line_id(self):
+        for line in self:
+            if line.display_type != 'line_section':
+                qualified_lines = line.order_id.order_line.filtered(
+                    lambda l: l.display_type == 'line_section' and l.sequence < line.sequence,
+                )
+                if qualified_lines:
+                    line.linked_section_line_id = max(qualified_lines, key=lambda l: l.sequence)
+                else:
+                    line.linked_section_line_id = False
+            else:
+                line.linked_section_line_id = False
+
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('combo_item_id')
@@ -1387,6 +1431,30 @@ class SaleOrderLine(models.Model):
             for l in self.invoice_lines
             if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
         )
+
+    def _get_grouped_section_summary(self):
+        """Return tax-wise grouped summary of lines linked to this section."""
+        self.ensure_one()
+
+        section_lines = self.order_id.order_line.filtered(
+            lambda l: l.linked_section_line_id == self,
+        )
+        result = []
+        for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
+            tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
+            subtotal = sum(l.price_subtotal for l in lines)
+
+            result.append({
+                'name': self.name,
+                'taxes': tax_labels,
+                'price_subtotal': subtotal,
+            })
+
+        return result or [{
+            'name': self.name,
+            'taxes': [],
+            'price_subtotal': 0.0,
+        }]
 
     #=== CORE METHODS OVERRIDES ===#
 
