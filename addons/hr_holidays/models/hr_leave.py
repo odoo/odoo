@@ -1667,6 +1667,8 @@ class HolidaysRequest(models.Model):
         day_period = self.env.context.get('day_period', False)
         if day_period:
             domain += [('day_period', '=', day_period)]
+        domain += ['|', ("date_from", "<=", request_date_from), ("date_from", "=", False)]
+        domain += ['|', ("date_to", ">=", request_date_from), ("date_to", "=", False)]
         attendances = self.env['resource.calendar.attendance'].read_group(domain,
             ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)',
              'week_type', 'dayofweek', 'day_period'],
