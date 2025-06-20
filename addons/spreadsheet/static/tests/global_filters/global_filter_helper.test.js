@@ -14,11 +14,18 @@ import {
     getDateDomainDurationInDays,
     assertDateDomainEqual,
 } from "@spreadsheet/../tests/helpers/date_domain";
-import { patchTranslations } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, patchTranslations } from "@web/../tests/web_test_helpers";
+import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
+
+import { defineSpreadsheetModels } from "../helpers/data";
 
 describe.current.tags("headless");
 
 const { DateTime } = luxon;
+
+const LAZY_TRANSLATED_SET = getOperatorLabel("set");
+const LAZY_TRANSLATED_NOT_SET = getOperatorLabel("not_set");
+const LAZY_TRANSLATED_CONTAINS = getOperatorLabel("ilike");
 
 beforeEach(() => {
     patchTranslations();
@@ -455,18 +462,20 @@ test("getFacetInfo for boolean values", async () => {
         label: "Boolean Filter",
         id: "1",
     };
-    const nameService = {};
-    expect(await getFacetInfo(filter, [true], nameService)).toEqual({
+    const env = {};
+    expect(await getFacetInfo(env, filter, { operator: "set" })).toEqual({
         title: "Boolean Filter",
         id: "1",
         separator: "or",
-        values: ["Is set"],
+        operator: "",
+        values: [LAZY_TRANSLATED_SET],
     });
-    expect(await getFacetInfo(filter, [true, false], nameService)).toEqual({
+    expect(await getFacetInfo(env, filter, { operator: "not_set" })).toEqual({
         title: "Boolean Filter",
         id: "1",
         separator: "or",
-        values: ["Is set", "Is not set"],
+        operator: "",
+        values: [LAZY_TRANSLATED_NOT_SET],
     });
 });
 
@@ -476,10 +485,11 @@ test("getFacetInfo for text values", async () => {
         label: "Text Filter",
         id: "1",
     };
-    const nameService = {};
-    expect(await getFacetInfo(filter, ["hello"], nameService)).toEqual({
+    const env = {};
+    expect(await getFacetInfo(env, filter, { operator: "ilike", strings: ["hello"] })).toEqual({
         title: "Text Filter",
         id: "1",
+        operator: LAZY_TRANSLATED_CONTAINS,
         separator: "or",
         values: ["hello"],
     });
@@ -491,59 +501,58 @@ test("getFacetInfo for date values", async () => {
         label: "Date Filter",
         id: "1",
     };
-    const nameService = {};
+    const env = {};
     for (const [period, label] of Object.entries(RELATIVE_PERIODS)) {
-        expect(await getFacetInfo(filter, { type: "relative", period }, nameService)).toEqual({
+        expect(await getFacetInfo(env, filter, { type: "relative", period })).toEqual({
             title: "Date Filter",
             id: "1",
             separator: "or",
+            operator: "",
             values: [label],
         });
     }
     expect(
-        await getFacetInfo(
-            filter,
-            { type: "range", from: "2022-01-01", to: "2022-12-31" },
-            nameService
-        )
+        await getFacetInfo(env, filter, { type: "range", from: "2022-01-01", to: "2022-12-31" })
     ).toEqual({
         title: "Date Filter",
         id: "1",
         separator: "or",
+        operator: "",
         values: ["January 1 – December 31, 2022"],
     });
-    expect(await getFacetInfo(filter, { type: "range", from: "2022-01-01" }, nameService)).toEqual({
+    expect(await getFacetInfo(env, filter, { type: "range", from: "2022-01-01" })).toEqual({
         title: "Date Filter",
         id: "1",
         separator: "or",
+        operator: "",
         values: ["Since January 1, 2022"],
     });
-    expect(await getFacetInfo(filter, { type: "range", to: "2022-12-31" }, nameService)).toEqual({
+    expect(await getFacetInfo(env, filter, { type: "range", to: "2022-12-31" })).toEqual({
         title: "Date Filter",
         id: "1",
         separator: "or",
+        operator: "",
         values: ["Until December 31, 2022"],
     });
-    expect(
-        await getFacetInfo(filter, { type: "month", month: 1, year: 2022 }, nameService)
-    ).toEqual({
+    expect(await getFacetInfo(env, filter, { type: "month", month: 1, year: 2022 })).toEqual({
         title: "Date Filter",
         id: "1",
         separator: "or",
+        operator: "",
         values: ["January 2022"],
     });
-    expect(
-        await getFacetInfo(filter, { type: "quarter", quarter: 1, year: 2022 }, nameService)
-    ).toEqual({
+    expect(await getFacetInfo(env, filter, { type: "quarter", quarter: 1, year: 2022 })).toEqual({
         title: "Date Filter",
         id: "1",
         separator: "or",
+        operator: "",
         values: ["Q1 2022"],
     });
-    expect(await getFacetInfo(filter, { type: "year", year: 2022 }, nameService)).toEqual({
+    expect(await getFacetInfo(env, filter, { type: "year", year: 2022 })).toEqual({
         title: "Date Filter",
         id: "1",
         separator: "or",
+        operator: "",
         values: ["2022"],
     });
 });
@@ -557,16 +566,53 @@ test("getFacetInfo for relation values", async () => {
     const nameService = {
         loadDisplayNames: (resModel, ids) => ids.map((id) => `Name ${id}`),
     };
-    expect(await getFacetInfo(filter, [1], nameService)).toEqual({
+    const env = await makeMockEnv({
+        services: {
+            name: nameService,
+        },
+    });
+    expect(await getFacetInfo(env, filter, { operator: "in", ids: [1] })).toEqual({
         title: "Relation Filter",
         id: "1",
         separator: "or",
+        operator: "",
         values: ["Name 1"],
     });
-    expect(await getFacetInfo(filter, [1, 2], nameService)).toEqual({
+    expect(await getFacetInfo(env, filter, { operator: "in", ids: [1, 2] })).toEqual({
         title: "Relation Filter",
         id: "1",
         separator: "or",
+        operator: "",
         values: ["Name 1", "Name 2"],
+    });
+});
+
+test("getFacetInfo for selection values", async () => {
+    defineSpreadsheetModels();
+    const filter = {
+        id: "42",
+        type: "selection",
+        label: "Selection Filter",
+        resModel: "res.currency",
+        selectionField: "position",
+    };
+    const env = await makeMockEnv();
+    expect(await getFacetInfo(env, filter, { operator: "in", selectionValues: ["after"] })).toEqual(
+        {
+            title: "Selection Filter",
+            id: "42",
+            separator: "or",
+            operator: "",
+            values: ["A"],
+        }
+    );
+    expect(
+        await getFacetInfo(env, filter, { operator: "in", selectionValues: ["after", "before"] })
+    ).toEqual({
+        title: "Selection Filter",
+        id: "42",
+        separator: "or",
+        operator: "",
+        values: ["A", "B"],
     });
 });
