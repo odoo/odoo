@@ -280,13 +280,17 @@ export class Composer extends Component {
                 open_em: markup("<em>"),
                 close_em: markup("</em>"),
                 open_cancel: markup(
-                    `<a role="button" href="#" data-type="${escape(EDIT_CLICK_TYPE.CANCEL)}">`
+                    `<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${escape(
+                        EDIT_CLICK_TYPE.CANCEL
+                    )}">`
                 ),
-                close_cancel: markup("</a>"),
+                close_cancel: markup("</button>"),
                 open_save: markup(
-                    `<a role="button" href="#" data-type="${escape(EDIT_CLICK_TYPE.SAVE)}">`
+                    `<button class="btn btn-link fst-italic p-0 align-baseline" data-type="${escape(
+                        EDIT_CLICK_TYPE.SAVE
+                    )}">`
                 ),
-                close_save: markup("</a>"),
+                close_save: markup("</button>"),
             };
             return this.env.inChatter
                 ? _t(
