@@ -73,6 +73,7 @@ export class SelectMenu extends Component {
         autoSort: { type: Boolean, optional: true },
         placeholder: { type: String, optional: true },
         searchPlaceholder: { type: String, optional: true },
+        searchClass: { type: String, optional: true },
         value: { optional: true },
         multiSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
