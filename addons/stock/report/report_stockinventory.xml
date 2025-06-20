@@ -4,7 +4,7 @@
         <template id="report_inventory">
             <t t-call="web.html_container">
                 <div class="oe_structure"></div>
-                <t t-call="web.external_layout">
+                <t t-call="web.internal_layout">
                     <div class="page">
                         <br/>
                         <h2>Inventory Count Sheet</h2>
@@ -17,15 +17,13 @@
                                     <th>Product</th>
                                     <th groups="stock.group_production_lot">Lot/Serial Number</th>
                                     <th groups="stock.group_tracking_lot">Package</th>
-                                    <th class="text-end">Available Quantity</th>
-                                    <th class="text-end">On hand Quantity</th>
-                                    <th class="text-end">Counted Quantity</th>
+                                    <th class="text-end">Quantity</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <t t-foreach="locations" t-as="location">
                                     <tr groups="stock.group_stock_multi_locations">
-                                        <td colspan="2"><span t-out="location.display_name">Shelf A</span></td>
+                                        <td colspan="2"><span class="fw-bold" t-out="location.display_name">Shelf A</span></td>
                                         <td groups="stock.group_production_lot"></td>
                                         <td groups="stock.group_tracking_lot"></td>
                                         <td></td>
@@ -35,12 +33,10 @@
                                         <td><span t-field="line.product_id">Laptop</span></td>
                                         <td groups="stock.group_production_lot"><span t-field="line.lot_id"/></td>
                                         <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
-                                        <td class="o_td_quantity text-end"><span t-field="line.available_quantity" class="text-nowrap">2</span> <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span></td>
-                                        <td class="o_td_quantity text-end"><span t-field="line.quantity" class="text-nowrap">5</span> <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span></td>
                                         <td class="o_td_quantity text-end">
                                             <!-- If 0, then leave blank so users have space to write a number -->
-                                            <t t-if="line.inventory_quantity == 0"><span></span></t>
-                                            <t t-else=""><span t-field="line.inventory_quantity" class="text-nowrap">7</span></t>
+                                            <t t-if="not line.env['ir.config_parameter'].get_param('stock.show_expected_quantity_count', default='False') == 'True'"><span></span></t>
+                                            <t t-else=""><span t-field="line.quantity" class="text-nowrap">7</span></t>
                                             <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span>
                                         </td>
                                     </tr>

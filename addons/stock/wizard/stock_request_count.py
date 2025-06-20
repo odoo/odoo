@@ -9,18 +9,28 @@ class StockRequestCount(models.TransientModel):
     _description = 'Stock Request an Inventory Count'
 
     inventory_date = fields.Date(
-        'Inventory Date', required=True,
+        'Scheduled at', required=True,
         help="Choose a date to get the inventory at that date",
         default=fields.Datetime.now)
-    user_id = fields.Many2one('res.users', string="User", domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)])
+    user_id = fields.Many2one('res.users', string="Assign to", domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)])
     quant_ids = fields.Many2many('stock.quant')
-    set_count = fields.Selection([('empty', 'Leave Empty'), ('set', 'Set Current Value')], default='empty', string='Count')
+    show_expected_quantity = fields.Boolean(help='If the user can see the expected quantity or not', compute='_compute_show_expected_quantity', inverse='_set_show_expected_quantity')
+
+    def _compute_show_expected_quantity(self):
+        show_quantity_count = self.env['ir.config_parameter'].sudo().get_param('stock.show_expected_quantity_count', default='False') == 'True'
+        for record in self:
+            record.show_expected_quantity = show_quantity_count
+
+    def _set_show_expected_quantity(self):
+        for record in self:
+            if record.show_expected_quantity:
+                self.env['ir.config_parameter'].sudo().set_param('stock.show_expected_quantity_count', 'True')
+            else:
+                self.env['ir.config_parameter'].sudo().set_param('stock.show_expected_quantity_count', 'False')
 
     def action_request_count(self):
         for count_request in self:
             quants_to_count = count_request._get_quants_to_count()
-            if count_request.set_count == 'set':
-                quants_to_count.filtered(lambda q: not q.inventory_quantity_set).action_set_inventory_quantity()
             values = count_request._get_values_to_write()
             quants_to_count.with_context(inventory_mode=True).write(values)
 

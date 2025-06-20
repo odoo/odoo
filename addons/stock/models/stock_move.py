@@ -2088,7 +2088,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
             self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
-        moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
+        moves_todo.write({'state': 'done', 'date': self.env.context.get('counting_date') or fields.Datetime.now()})
 
         move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
 

@@ -363,7 +363,7 @@ class TestInventory(TransactionCase):
         # should also be updated, other quants shouldn't
         request_wizard = self.env['stock.request.count'].create({
             'quant_ids': quants[1].ids,
-            'set_count': 'empty',
+            'show_expected_quantity': False,
             'user_id': self.env.user.id,
         })
         request_wizard.action_request_count()
