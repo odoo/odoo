@@ -39,14 +39,9 @@
             ('remove', 'html_builder/static/src/**/*.inside.scss'),
         ],
         'html_builder.inside_builder_style': [
-            ('include', 'web._assets_helpers'),
-
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables-dark.scss',
-            'web/static/lib/bootstrap/scss/_maps.scss',
-
-            'web/static/src/scss/bootstrap_overridden.scss',
+            ('include', 'web.assets_frontend'),
+            ('remove', 'web/static/**/*.js'),
+            ('remove', 'web/static/**/*.xml'),
             'html_builder/static/src/**/*.inside.scss',
             'html_editor/static/src/main/link/link.scss',
         ],
