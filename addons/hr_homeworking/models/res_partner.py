@@ -14,6 +14,6 @@ class ResPartner(models.Model):
             if not location_type:
                 continue
             im_status = user.partner_id.im_status
-            if im_status == "online" or im_status == "away" or im_status == "offline":
+            if im_status in ["online", "away", "busy", "offline"]:
                 user.partner_id.im_status = location_type + "_" + im_status
 

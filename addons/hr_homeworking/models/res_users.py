@@ -34,5 +34,5 @@ class ResUsers(models.Model):
             if not location_type:
                 continue
             im_status = user.im_status
-            if im_status == "online" or im_status == "away" or im_status == "offline":
+            if im_status in ["online", "away", "busy", "offline"]:
                 user.im_status = "presence_" + location_type + "_" + im_status

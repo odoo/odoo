@@ -40,7 +40,7 @@ export const imStatusService = {
         bus_service.addEventListener("connect", () => updateBusPresence(), { once: true });
         bus_service.subscribe(
             "bus.bus/im_status_updated",
-            async ({ presence_status, im_status, partner_id, guest_id }) => {
+            async ({ presence_status, im_status, partner_id, guest_id, debounce = true }) => {
                 const store = env.services["mail.store"];
                 const persona = store.Persona.get({
                     type: partner_id ? "partner" : "guest",
@@ -49,7 +49,11 @@ export const imStatusService = {
                 if (!persona) {
                     return; // Do not store unknown persona's status
                 }
-                persona.debouncedSetImStatus(im_status);
+                if (debounce) {
+                    persona.debouncedSetImStatus(im_status);
+                } else {
+                    persona.updateImStatus(im_status);
+                }
                 if (persona.notEq(store.self)) {
                     return;
                 }

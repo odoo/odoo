@@ -47,6 +47,8 @@ class ResUsers(models.Model):
                     user.im_status = 'leave_online'
                 elif user.im_status == 'away':
                     user.im_status = 'leave_away'
+                elif user.im_status == 'busy':
+                    user.im_status = 'leave_busy'
                 elif user.im_status == 'offline':
                     user.im_status = 'leave_offline'
 
