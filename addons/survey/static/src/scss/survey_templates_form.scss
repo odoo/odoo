@@ -288,6 +288,29 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
     }
 }
 
+// Allows to fade in/out main title when survey starts
+.o_main_title_fade_in {
+  opacity: 0;
+  animation: mainTitleFadeIn 400ms ease-in forwards;
+}
+
+@keyframes mainTitleFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.o_main_title_fade_out {
+  opacity: 1;
+  animation: mainTitleFadeOut 400ms ease-out forwards;
+}
+
+@keyframes mainTitleFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
 /**********************************************************
                 Survey Session Specific Style
  **********************************************************/

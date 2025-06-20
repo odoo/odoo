@@ -451,6 +451,17 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             this._prepareSubmitValues(formData, params);
         }
 
+        // Fade out the top title and remove it from the DOM
+        if (options.isFinish) {
+            const surveyTitleEl = document.querySelector('.o_survey_main_title');
+            if (surveyTitleEl) {
+                surveyTitleEl.classList.add("o_main_title_fade_out");
+                setTimeout(function () {
+                    surveyTitleEl.remove();
+                }, this.fadeInOutDelay);
+            }
+        }
+
         // prevent user from submitting more times using enter key
         this.preventEnterSubmit = true;
 
@@ -549,6 +560,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             // Hide timer if end screen (if page_per_question in case of conditional questions)
             if (self.options.questionsLayout === 'page_per_question' && this.$('.o_survey_finished').length > 0) {
                 options.isFinish = true;
+            }
+
+            // Force recompute the title's display condition and fade in it
+            if (this.options.isStartScreen && this.options.questionsLayout !== 'page_per_question') {
+                const surveyTitleEl = document.querySelector('.o_survey_main_title');
+                if (surveyTitleEl) {
+                    surveyTitleEl.classList.remove("d-none");
+                    surveyTitleEl.classList.add("o_main_title_fade_in");
+                }
             }
 
             // Start datetime pickers

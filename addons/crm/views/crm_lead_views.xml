@@ -1046,12 +1046,8 @@
             <field name="view_mode">list,kanban,graph,pivot,calendar,form,activity</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
-            <field name="context">{
-                    'default_type':'lead',
-                    'search_default_type': 'lead',
-                    'search_default_to_process':1,
-                }
-            </field>
+            <!-- Context dictionary is written like this to avoid potential issues with literal_eval -->
+            <field name="context">{'default_type': 'lead', 'search_default_type': 'lead', 'search_default_to_process': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a Lead
