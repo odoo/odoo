@@ -130,6 +130,13 @@ export class ColorPlugin extends Plugin {
             applyColorResetPreview: this.applyColorResetPreview.bind(this),
             colorPrefix: mode === "color" ? "text-" : "bg-",
             onClose: () => this.dependencies.selection.focusEditable(),
+            getSelectedElement: () => {
+                const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
+                if (nodes.length === 0) {
+                    return;
+                }
+                return closestElement(nodes[0]);
+            },
         };
     }
 

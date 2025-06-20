@@ -39,6 +39,8 @@
 
 .o_custom_gradient_button,
 .o_color_button {
+    @extend %o-preview-alpha-background;
+
     &:focus,
     &:hover {
         outline: solid $o-enterprise-action-color;
