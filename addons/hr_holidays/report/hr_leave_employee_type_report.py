@@ -133,7 +133,6 @@ class LeaveReport(models.Model):
             'search_view_id': [self.env.ref('hr_holidays.view_search_hr_holidays_employee_type_report').id],
             'domain': domain,
             'context': {
-                'search_default_year': True,
                 'search_default_company': True,
                 'search_default_employee': True,
                 'group_expand': True,
