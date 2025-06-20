@@ -17,6 +17,7 @@ class MapOptionPlugin extends Plugin {
         builder_actions: {
             MapUpdateSrcAction,
             MapDescriptionAction,
+            MapDescriptionTextAction,
         },
     };
 }
@@ -48,7 +49,7 @@ class MapDescriptionAction extends BuilderAction {
     apply({ editingElement }) {
         editingElement.appendChild(
             document.createRange().createContextualFragment(
-                `<div class="description">
+                `<div class="description" contenteditable="false">
                     <strong>${_t("Visit us:")}</strong>
                     ${_t("Our office is open Monday – Friday 8:30 a.m. – 4:00 p.m.")}
                 </div>`
@@ -57,6 +58,18 @@ class MapDescriptionAction extends BuilderAction {
     }
     clean({ editingElement }) {
         editingElement.querySelector(".description").remove();
+    }
+}
+class MapDescriptionTextAction extends BuilderAction {
+    static id = "mapDescriptionTextValue";
+    getValue({ editingElement }) {
+        return editingElement
+            .querySelector(".description")
+            ?.textContent.trim()
+            .replace(/\s+/g, " ") || "";
+    }
+    apply({ editingElement, value }) {
+        return editingElement.querySelector(".description").textContent = value;
     }
 }
 
