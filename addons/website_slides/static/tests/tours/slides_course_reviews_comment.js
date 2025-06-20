@@ -6,6 +6,7 @@ registry.category("web_tour.tours").add("course_reviews_comment", {
         {
             trigger: "a:contains(Basics of Gardening - Test)",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: "a[id=review-tab]",

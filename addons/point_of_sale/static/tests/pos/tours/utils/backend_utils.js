@@ -1,6 +1,10 @@
 export function editShopConfiguration(shop) {
     return [
         {
+            trigger: "body",
+            expectUnloadPage: true,
+        },
+        {
             trigger: ".o_main_navbar span:contains('Configuration')",
             run: "click",
         },
@@ -24,6 +28,7 @@ export function openShopSession(shop) {
         {
             trigger: `.o_kanban_record:contains(${shop}) .btn-primary`,
             run: "click",
+            expectUnloadPage: true,
         },
     ];
 }

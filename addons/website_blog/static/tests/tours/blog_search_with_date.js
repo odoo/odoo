@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add("blog_autocomplete_with_date", {
     content: "Select first month",
     trigger: 'select[name=archive]',
     run: "selectByIndex 1",
+    expectUnloadPage: true,
 },
 {
     trigger: '#o_wblog_posts_loop span:has(i.fa-calendar-o):has(a[href="/blog"])',
@@ -25,6 +26,7 @@ registry.category("web_tour.tours").add("blog_autocomplete_with_date", {
     content: "Wait for suggestions then click on search icon",
     trigger: '.o_searchbar_form button:has(i.oi-search)',
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: "Ensure both filters are applied",
     trigger: `#o_wblog_posts_loop:has(span a[href="/blog?search=a"]):has(span i.fa-calendar-o):has(span a[href^="/blog?date_begin"]):has(span i.fa-search)`,
