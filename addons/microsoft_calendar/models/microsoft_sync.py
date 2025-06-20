@@ -408,7 +408,9 @@ class MicrosoftCalendarSync(models.AbstractModel):
             if token:
                 self._ensure_attendees_have_email()
                 event_id, uid = microsoft_service.insert(values, token=token, timeout=timeout)
-                self.with_context(dont_notify=True).write({
+                # Attendees can sync calendar of another organizer (user_id). We update the microsoft_id in sudo
+                # to avoid triggering acl in that case
+                self.with_context(dont_notify=True).sudo().write({
                     'microsoft_id': event_id,
                     'ms_universal_event_id': uid,
                     'need_sync_m': False,

@@ -118,6 +118,7 @@ class TestCalendarMail(CalendarMailCommon):
         ], 'Correctly filters out robodoo and aliases')
 
     def test_event_template(self):
+        self.event.partner_ids = [fields.Command.link(self.user_employee.partner_id.id)]
         event, template = self.event.with_user(self.user_employee), self.test_template_event.with_user(self.user_employee)
         message = event.message_post_with_source(
             template,
@@ -187,6 +188,7 @@ class TestEventNotifications(CalendarMailCommon):
         )
 
     def test_message_invite_self(self):
+        self.event.user_id = self.user
         with self.assertNoNotifications():
             self.event.with_user(self.user).partner_ids = self.partner
 
@@ -308,11 +310,11 @@ class TestEventNotifications(CalendarMailCommon):
                 'interval': 'minutes',
                 'duration': 20,
             })
+            self.event.partner_ids = [fields.Command.link(self.partner.id)]  # Add the partner to the attendees list in order to grant edit permissions for the event
             self.event.with_user(self.user).write({
                 'name': 'test event',
                 'start': now + relativedelta(minutes=15),
                 'stop': now + relativedelta(minutes=18),
-                'partner_ids': [fields.Command.link(self.partner.id)],
                 'alarm_ids': [fields.Command.link(alarm.id)],
             })
             self.env.flush_all()  # flush is required to make partner_ids be present in the event

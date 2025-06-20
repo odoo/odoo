@@ -140,23 +140,32 @@ class TestAccessRights(TransactionCase):
         (self.john | self.raoul | self.george).write({'notification_type': 'inbox'})
 
         # raoul creates a meeting for john, excluding themselves
+        now = datetime.now()
         meeting = self.env['calendar.event'].with_user(self.raoul).create({
             'name': 'Test Meeting',
-            'start': datetime.now(),
-            'stop': datetime.now() + timedelta(hours=2),
+            'start': now,
+            'stop': now + timedelta(hours=2),
             'user_id': self.john.id,
             'partner_ids': [(4, self.raoul.partner_id.id)],
         })
 
         # george tries to modify the start date of the meeting to a future date
-        # this verifies that users with "handle in Odoo" notification setting can
-        # successfully edit meetings created by other users. If this write fails,
-        # it indicates that there might be an issue with access rights for meeting attendees.
+        # this verifies that users with "handle in Odoo" notification setting cannot
+        # successfully edit meetings created by other users.
         meeting = meeting.with_user(self.george)
+        # meeting.invalidate_recordset(fnames=['user_can_edit'])
+        with self.assertRaises(AccessError):
+            meeting.write({
+                'start': now + timedelta(days=2),
+                'stop': now + timedelta(days=2, hours=2),
+            })
+        # georges is now admin
+        self.george.group_ids |= self.env.ref('base.group_partner_manager')
         meeting.write({
-            'start': datetime.now() + timedelta(days=2),
-            'stop': datetime.now() + timedelta(days=2, hours=2),
+                'start': now + timedelta(days=2),
+                'stop': now + timedelta(days=2, hours=2),
         })
+        self.assertNotEqual(meeting.start, now, "The admin user is able to modify the event")
 
     def test_event_default_privacy_as_private(self):
         """ Check the privacy of events with owner's event default privacy as 'private'. """
@@ -259,8 +268,9 @@ class TestAccessRights(TransactionCase):
             john_event = self.create_event(self.john, name='event', privacy=privacy, location='loc')
 
             # Ensure that uninvited admin can edit this type of event.
+            john_event.invalidate_recordset(fnames=['user_can_edit'])
             john_event.with_user(self.admin_user)._compute_user_can_edit()
-            self.assertTrue(john_event.user_can_edit, f"Event of type {privacy} must be editable by uninvited admins.")
+            self.assertTrue(john_event.with_user(self.admin_user).user_can_edit, f"Event of type {privacy} must be editable by uninvited admins.")
             john_event.with_user(self.admin_user).write({'name': 'update'})
             self.assertEqual(john_event.name, 'update', f"Simple write must be allowed for uninvited admins in {privacy} events.")
 
