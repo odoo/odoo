@@ -3438,6 +3438,106 @@ test("quick create is disabled until record is created and onchange is done", as
 });
 
 test.tags("desktop");
+<<<<<<< 7fa38f156e9d7285687cd1dd3e41964a9602c6da
+||||||| 67e0828c42cf8d4dda3de0c3b288eb06a22adc6f
+test("kanban grouped by stage_id: move record from to the None column", async () => {
+    // Fake model: partner.stage (only for group headers)
+    const Stage = class extends models.Model {
+        _name = "partner.stage";
+        name = fields.Char();
+        _records = [{ id: 10, name: "New" }];
+    };
+    defineModels([Stage]);
+
+    // Set up a record with no stage initially
+    Partner._records = [
+        { id: 1, foo: "Task A", stage_id: false },
+        { id: 2, foo: "Task B", stage_id: 10},
+    ];
+    Partner._fields.stage_id = fields.Many2one({ relation: "partner.stage" });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["stage_id"],
+    });
+
+    expect(queryAll(".o_kanban_group")).toHaveCount(2); // None and New
+
+    await click(".o_kanban_group:first .o_kanban_header");
+    
+    // Drag a record to the "None" column
+    let dragActions = await contains(".o_kanban_record:contains(Task B)").drag();
+    await dragActions.moveTo(".o_kanban_group:nth-child(1) .o_kanban_header");
+    await dragActions.drop();
+
+    // Reload
+    await validateSearch();
+
+    // Assert it's back in "None"
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
+    expect(queryAllTexts(".o_kanban_record", { root: getKanbanColumn(0) })[1]).toBe("Task B");
+});
+
+test.tags("desktop");
+=======
+test("kanban grouped by stage_id: move record from to the None column", async () => {
+    // Fake model: partner.stage (only for group headers)
+    const Stage = class extends models.Model {
+        _name = "partner.stage";
+        name = fields.Char();
+        _records = [{ id: 10, name: "New" }];
+    };
+    defineModels([Stage]);
+
+    // Set up a record with no stage initially
+    Partner._records = [
+        { id: 1, foo: "Task A", stage_id: false },
+        { id: 2, foo: "Task B", stage_id: 10 },
+    ];
+    Partner._fields.stage_id = fields.Many2one({ relation: "partner.stage" });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["stage_id"],
+    });
+
+    expect(queryAll(".o_kanban_group")).toHaveCount(2); // None and New
+
+    await click(".o_kanban_group:first .o_kanban_header");
+
+    // Drag a record to the "None" column
+    const dragActions = await contains(".o_kanban_record:contains(Task B)").drag();
+    await dragActions.moveTo(".o_kanban_group:nth-child(1) .o_kanban_header");
+    await dragActions.drop();
+
+    // Reload
+    await validateSearch();
+
+    // Assert it's back in "None"
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
+    expect(queryAllTexts(".o_kanban_record", { root: getKanbanColumn(0) })[1]).toBe("Task B");
+});
+
+test.tags("desktop");
+>>>>>>> 7e85ef00fe1f7b8c6ab46188dc884b507400e36b
 test("quick create record fail in grouped by many2one", async () => {
     Partner._views["form"] = `
         <form>
@@ -9404,10 +9504,16 @@ test("progress bar with aggregates: activate bars (grouped by many2one)", async 
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
+                        <field name="float_field"/>
                     </t>
                 </templates>
             </kanban>`,
         groupBy: ["product_id"],
+    });
+
+    onRpc("partner", "web_read_group", ({ kwargs }) => {
+        // float_field is not in the progressbar, then never ask his aggregation
+        expect(kwargs.aggregates).not.toInclude("float_field:sum");
     });
 
     expect(getKanbanColumnTooltips(0)).toEqual(["2 yop", "1 gnap", "1 blip"]);
