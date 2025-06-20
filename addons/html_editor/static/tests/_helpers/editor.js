@@ -4,7 +4,7 @@ import { queryOne } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent } from "./selection";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { dispatchCleanForSave } from "./dispatch";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 
@@ -182,7 +182,7 @@ export async function testEditor(config) {
     }
 
     // Wait for selectionchange handlers to react before any actual testing.
-    await Promise.resolve();
+    await tick();
 
     if (contentBeforeEdit) {
         // we should do something before (sanitize)
