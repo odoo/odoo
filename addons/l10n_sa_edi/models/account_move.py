@@ -19,6 +19,13 @@ class AccountMove(models.Model):
         string="ZATCA chain index", copy=False, readonly=True,
         help="Invoice index in chain, set if and only if an in-chain XML was submitted and did not error",
     )
+    l10n_sa_edi_chain_head_id = fields.Many2one(
+      'account.move',
+      string="ZATCA chain stopping move",
+      copy=False,
+      readonly=True,
+      help="Technical field to know if the chain has been stopped by a previous invoice",
+  )
 
     def _l10n_sa_is_simplified(self):
         """
@@ -262,6 +269,26 @@ class AccountMove(models.Model):
         return {
             'total_amount': invoice_vals['vals']['monetary_total_vals']['tax_inclusive_amount'],
             'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
+        }
+
+    def _retry_edi_documents_error(self):
+        """
+            Hook to reset the chain head error prior to retrying the submission
+        """
+        self.filtered(lambda m: m.country_code == 'SA').write({'l10n_sa_edi_chain_head_id': False})
+        return super()._retry_edi_documents_error()
+
+    def action_show_chain_head(self):
+        """
+            Action to show the chain head of the invoice
+        """
+        self.ensure_one()
+        return {
+            'name': _("Chain Head"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'view_mode': 'form',
+            'res_id': self.l10n_sa_edi_chain_head_id.id,
         }
 
 
