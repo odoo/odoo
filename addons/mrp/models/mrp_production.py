@@ -2053,6 +2053,18 @@ class MrpProduction(models.Model):
         if res is not True:
             return res
 
+        if self.env.context.get('from_wizard', False):
+            generated_lot_ids_by_picking_type = {}
+            if generated_lots := self.env.context.get('generated_lots', False):
+                generated_lot_ids_by_picking_type = {self.env.context.get('picking_type'): generated_lots}
+        else:
+            generated_lot_ids_by_picking_type = defaultdict(self.env['stock.lot'].browse)
+            for production in self:
+                if not production.lot_producing_id and production.product_tracking in ['lot', 'serial']:
+                    production._set_lot_producing()
+                    if production.picking_type_id.auto_print_generated_mrp_lot:
+                        generated_lot_ids_by_picking_type[production.picking_type_id] |= production.lot_producing_id
+
         if self.env.context.get('mo_ids_to_backorder'):
             productions_to_backorder = self.browse(self.env.context['mo_ids_to_backorder'])
             productions_not_to_backorder = self - productions_to_backorder
@@ -2096,7 +2108,7 @@ class MrpProduction(models.Model):
         for backorder in backorders_to_assign:
             backorder.action_assign()
 
-        report_actions = self._get_autoprint_done_report_actions()
+        report_actions = self._get_autoprint_done_report_actions(generated_lot_ids_by_picking_type)
         if self.env.context.get('skip_redirection'):
             if report_actions:
                 return {
@@ -2758,8 +2770,6 @@ class MrpProduction(models.Model):
     def _set_quantities(self):
         self.ensure_one()
         missing_lot_id_products = ""
-        if self.product_tracking in ('lot', 'serial') and not self.lot_producing_id:
-            self.action_generate_serial()
         if self.product_tracking == 'serial' and self.product_uom_id.compare(self.qty_producing, 1) == 1:
             self.qty_producing = 1
         else:
@@ -2780,7 +2790,7 @@ class MrpProduction(models.Model):
             )
             raise UserError(error_msg)
 
-    def _get_autoprint_done_report_actions(self):
+    def _get_autoprint_done_report_actions(self, generated_lot_ids_by_picking_type):
         """ Reports to auto-print when MO is marked as done
         """
         report_actions = []
@@ -2839,6 +2849,17 @@ class MrpProduction(models.Model):
                     action = self.env.ref("stock.label_lot_template").report_action(lots_to_print.ids, config=False)
                     clean_action(action, self.env)
                     report_actions.append(action)
+        if generated_lot_ids_by_picking_type:
+            for picking_type_id, lot_ids in generated_lot_ids_by_picking_type.items():
+                if picking_type_id.generated_mrp_lot_label_to_print == 'pdf':
+                    action = self.env.ref("stock.action_report_lot_label").report_action(lot_ids, config=False)
+                    clean_action(action, self.env)
+                    report_actions.append(action)
+                elif picking_type_id.generated_mrp_lot_label_to_print == 'zpl':
+                    action = self.env.ref("stock.label_lot_template").report_action(lot_ids, config=False)
+                    clean_action(action, self.env)
+                    report_actions.append(action)
+
         return report_actions
 
     def _autoprint_generated_lot(self, lot_id):
