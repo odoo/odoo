@@ -57,12 +57,15 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_consistency_between_cap_accrued_time_and_maximum_leave(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
+                'milestone_date': 'after',
                 'start_count': 1,
                 'start_type': 'day',
                 'added_value': 1,
                 'added_value_type': 'day',
                 'frequency': 'hourly',
+                'action_with_unused_accruals': 'all',
                 'cap_accrued_time': True,
                 'maximum_leave': 10000
             })],
@@ -80,6 +83,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_unlink(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
         })
 
         allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -101,12 +105,15 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'added_value_type': 'day',
                     'frequency': 'hourly',
+                    'action_with_unused_accruals': 'all',
                     'cap_accrued_time': True,
                     'maximum_leave': 10000
                 })],
@@ -137,16 +144,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_frequency_hourly_worked_hours(self):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
                 'is_based_on_worked_time': True,
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'added_value_type': 'day',
                     'frequency': 'hourly',
                     'cap_accrued_time': True,
-                    'maximum_leave': 10000
+                    'maximum_leave': 10000,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -194,14 +203,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'added_value_type': 'day',
                     'frequency': 'daily',
                     'cap_accrued_time': True,
-                    'maximum_leave': 10000
+                    'maximum_leave': 10000,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -231,14 +243,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'weekly',
                     'cap_accrued_time': True,
-                    'maximum_leave': 10000
+                    'maximum_leave': 10000,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -275,8 +290,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-09-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
@@ -285,6 +302,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'second_day': 15,
                     'cap_accrued_time': True,
                     'maximum_leave': 10000,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -320,14 +338,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-09-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'monthly',
                     'cap_accrued_time': True,
-                    'maximum_leave': 10000
+                    'maximum_leave': 10000,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -358,14 +379,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-09-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'biyearly',
                     'cap_accrued_time': True,
                     'maximum_leave': 10000,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             # this sets up an accrual on the 1st of January and the 1st of July
@@ -401,14 +425,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-09-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'yearly',
                     'cap_accrued_time': True,
                     'maximum_leave': 10000,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             # this sets up an accrual on the 1st of January
@@ -474,27 +501,32 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
             accrual_plan_not_based_on_worked_time = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 5,
                     'frequency': 'weekly',
                     'cap_accrued_time': True,
                     'maximum_leave': 10000,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             accrual_plan_based_on_worked_time = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
                 'is_based_on_worked_time': True,
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 5,
                     'frequency': 'weekly',
                     'cap_accrued_time': True,
                     'maximum_leave': 10000,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation_not_worked_time = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -562,14 +594,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'daily',
                     'cap_accrued_time': True,
                     'maximum_leave': 1,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -602,14 +637,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'hour',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'daily',
                     'cap_accrued_time': True,
                     'maximum_leave': 4,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -642,14 +680,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2024-10-10"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual plan - hours and max postpone',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'hour',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'first_day': 31,
                     'frequency': 'monthly',
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 4,  # confusing name but is in hours when added_value_type == 'hour'
                 })],
             })
@@ -677,10 +718,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             # 1 accrual with 2 levels and level transition immediately
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
                 'transition_mode': 'immediately',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
@@ -688,12 +730,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'cap_accrued_time': True,
                     'maximum_leave': 1,
                 }), (0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 10,
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'weekly',
                     'cap_accrued_time': True,
                     'maximum_leave': 1,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -713,10 +757,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             # 1 accrual with 2 levels and level transition after
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
                 'transition_mode': 'end_of_accrual',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
@@ -724,12 +769,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'cap_accrued_time': True,
                     'maximum_leave': 1,
                 }), (0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 10,
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'weekly',
                     'cap_accrued_time': True,
                     'maximum_leave': 1,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -771,8 +818,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-12-15'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
@@ -806,8 +855,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-12-15'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
@@ -838,15 +889,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-01-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
-                    'start_count': 0,
+                    'milestone_date': 'creation',
                     'start_type': 'day',
                     'added_value': 2,
                     'frequency': 'yearly',
                     'cap_accrued_time': True,
                     'maximum_leave': 100,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 10,
                 })],
             })
@@ -896,17 +949,19 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         # This also tests retroactivity
         with freeze_time('2021-12-15'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
                 'accrued_gain_time': 'start',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'daily',
                     'cap_accrued_time': True,
                     'maximum_leave': 25,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 15,
                 })],
             })
@@ -952,15 +1007,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-01-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
-                    'start_count': 0,
+                    'milestone_date': 'creation',
                     'start_type': 'day',
                     'added_value': 15,
                     'frequency': 'yearly',
                     'cap_accrued_time': True,
                     'maximum_leave': 100,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 7,
                 })],
             })
@@ -987,9 +1044,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         #  that the first level is not skipped completely.
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 15,
                 'frequency': 'biyearly',
@@ -997,6 +1055,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 100,
                 'action_with_unused_accruals': 'all',
             }), (0, 0, {
+                'milestone_date': 'after',
                 'start_count': 4,
                 'start_type': 'month',
                 'added_value': 10,
@@ -1024,8 +1083,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_three_levels_accrual(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
+                'milestone_date': 'after',
                 'start_count': 2,
                 'start_type': 'month',
                 'added_value': 3,
@@ -1035,6 +1096,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'first_day': 31,
             }), (0, 0, {
+                'milestone_date': 'after',
                 'start_count': 3,
                 'start_type': 'month',
                 'added_value': 6,
@@ -1044,6 +1106,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'first_day': 31,
             }), (0, 0, {
+                'milestone_date': 'after',
                 'start_count': 4,
                 'start_type': 'month',
                 'added_value': 1,
@@ -1103,10 +1166,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'level_ids': [
                 (0, 0, {
                     'added_value_type': 'day',
-                    'start_count': 0,
+                    'milestone_date': 'creation',
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'monthly',
@@ -1115,6 +1179,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'lost',
                 }),
                 (0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'year',
                     'added_value': 1,
@@ -1163,12 +1228,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         The total number of days should be 3.
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
+            'can_be_carryover': True,
             'level_ids': [
                 (0, 0, {
                     'added_value_type': 'day',
-                    'start_count': 0,
+                    'milestone_date': 'creation',
                     'start_type': 'day',
                     'added_value': 3,
                     'frequency': 'yearly',
@@ -1197,14 +1262,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_maximum_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
+                'milestone_date': 'after',
                 'start_count': 1,
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'daily',
                 'cap_accrued_time': True,
                 'maximum_leave': 5,
+                'action_with_unused_accruals': 'all',
             })],
         })
         with freeze_time("2021-09-03"):
@@ -1227,13 +1295,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_maximum_leaves_no_limit(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
+                'milestone_date': 'after',
                 'start_count': 1,
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'daily',
                 'cap_accrued_time': False,
+                'action_with_unused_accruals': 'all',
             })],
         })
         with freeze_time("2021-09-03"):
@@ -1256,15 +1327,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_leaves_taken_maximum(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'weekly',
                 'week_day': '0',
                 'cap_accrued_time': True,
                 'maximum_leave': 5,
+                'action_with_unused_accruals': 'all',
             })],
         })
         with freeze_time("2022-01-01"):
@@ -1300,15 +1373,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_leaves_taken_maximum_hours(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'hour',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'weekly',
                 'week_day': '0',
                 'cap_accrued_time': True,
                 'maximum_leave': 10,
+                'action_with_unused_accruals': 'all',
             })],
         })
         with freeze_time(datetime.date(2022, 1, 1)):
@@ -1344,17 +1419,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @mute_logger('odoo.sql_db')
     def test_yearly_cap_constraint(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'end',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'daily',
                 'week_day': '0',
                 'cap_accrued_time': True,
                 'maximum_leave': 5,
+                'action_with_unused_accruals': 'all',
             })],
         })
         with self.assertRaises(IntegrityError):
@@ -1383,11 +1459,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'hour',
         })
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'end',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'hour',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 0.06,
                 'frequency': 'hourly',
@@ -1396,6 +1472,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 180,
                 'cap_accrued_time_yearly': True,
                 'maximum_leave_yearly': 120,
+                'action_with_unused_accruals': 'all',
             })],
         })
 
@@ -1464,17 +1541,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_accrual_period_start(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'end',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'weekly',
                 'week_day': '0',
                 'cap_accrued_time': True,
                 'maximum_leave': 5,
+                'action_with_unused_accruals': 'all',
             })],
         })
         with freeze_time("2023-04-24"):
@@ -1512,17 +1590,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_accrual_period_start_multiple_runs(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
+            'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1.5,
                 'frequency': 'monthly',
                 'first_day': 13,
                 'cap_accrued_time': True,
                 'maximum_leave': 15,
+                'action_with_unused_accruals': 'all',
             })],
         })
         with freeze_time("2023-04-13"):
@@ -1547,12 +1626,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_accrual_period_start_level_transfer(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
+            'can_be_carryover': True,
             'level_ids': [
                 (0, 0, {
                     'added_value_type': 'day',
-                    'start_count': 0,
+                    'milestone_date': 'creation',
                     'start_type': 'day',
                     'added_value': 1,
                     'frequency': 'weekly',
@@ -1561,6 +1640,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'maximum_leave': 10,
                 }),
                 (0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 3,
                     'start_type': 'month',
                     'added_value': 2,
@@ -1598,10 +1678,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
+            'can_be_carryover': True,
             'carryover_date': 'allocation',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'monthly',
@@ -1644,18 +1725,20 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
+            'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 20,
             'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'monthly',
                 'first_day': 11,
                 'cap_accrued_time': False,
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
                 'postpone_max_days': 69,
             })],
         })
@@ -1736,12 +1819,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'end',
+            'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 5,
             'carryover_month': '6',
             'level_ids': [
                 (0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 5,
                     'start_type': 'day',
                     'added_value': 1,
@@ -1749,10 +1834,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'first_day': 9,
                     'cap_accrued_time': True,
                     'maximum_leave': 15,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 13,
                 }),
                 (0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 9,
                     'start_type': 'month',
                     'added_value': 2,
@@ -1763,10 +1850,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'second_month': '10',
                     'cap_accrued_time': True,
                     'maximum_leave': 10,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 20,
                 }),
                 (0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 17,
                     'start_type': 'month',
                     'added_value': 12,
@@ -1798,10 +1887,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_creation_on_anterior_date(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Weekly accrual',
+            'can_be_carryover': True,
             'carryover_date': 'allocation',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'weekly',
@@ -1843,8 +1933,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Accrual Plan For Test',
                 'is_based_on_worked_time': False,
                 'accrued_gain_time': 'end',
+                'can_be_carryover': True,
                 'carryover_date': 'year_start',
                 'level_ids': [(0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
@@ -1852,6 +1944,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'frequency': 'monthly',
                     'cap_accrued_time': True,
                     'maximum_leave': 100,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].create({
@@ -1876,8 +1969,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'level_ids': [(0, 0, {
+                'milestone_date': 'after',
                 'start_count': 1,
                 'start_type': 'day',
                 'added_value': 4,
@@ -1885,6 +1980,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'monthly',
                 'cap_accrued_time': True,
                 'maximum_leave': 100,
+                'action_with_unused_accruals': 'all',
             })],
         })
         # Simulate the onchange of the dialog form view
@@ -1896,10 +1992,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_immediate_cron_run(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Weekly accrual',
+            'can_be_carryover': True,
             'carryover_date': 'allocation',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'daily',
@@ -1929,11 +2026,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_creation_for_history(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Monthly accrual',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'monthly',
@@ -1968,17 +2066,19 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_with_report_creation_for_history(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Monthly accrual',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'monthly',
                 'first_day': '31',
                 'cap_accrued_time': False,
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
                 'postpone_max_days': 5
             })],
         })
@@ -2008,16 +2108,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_period_start_past_start_date(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Monthly accrual',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'start',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'monthly',
                 'first_day': '1',
                 'cap_accrued_time': False,
+                'action_with_unused_accruals': 'all',
             })],
         })
         with freeze_time('2024-03-01'):
@@ -2040,16 +2142,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_cancel_invalid_leaves_with_regular_and_accrual_allocations(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Monthly accrual',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'start',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'monthly',
                 'first_day': '1',
                 'cap_accrued_time': False,
+                'action_with_unused_accruals': 'all',
             })],
         })
         allocations = self.env['hr.leave.allocation'].create([
@@ -2104,17 +2208,19 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Monthly accrual',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'frequency': 'monthly',
                 'first_day': '31',
                 'cap_accrued_time': False,
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
                 'postpone_max_days': 5
             })],
         })
@@ -2218,15 +2324,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'level_ids': [(0, 0, {
+                'milestone_date': 'after',
                 'start_count': 1,
                 'start_type': 'day',
                 'added_value': 1,
                 'added_value_type': 'day',
                 'frequency': 'daily',
                 'cap_accrued_time': True,
-                'maximum_leave': 10
+                'maximum_leave': 10,
+                'action_with_unused_accruals': 'all',
             })],
         })
 
@@ -2259,15 +2368,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'level_ids': [(0, 0, {
+                'milestone_date': 'after',
                 'start_count': 1,
                 'start_type': 'day',
                 'added_value': 1,
                 'added_value_type': 'day',
                 'frequency': 'daily',
                 'cap_accrued_time': True,
-                'maximum_leave': 10
+                'maximum_leave': 10,
+                'action_with_unused_accruals': 'all',
             })],
         })
 
@@ -2356,11 +2468,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Monthly accrual',
             'is_based_on_worked_time': True,
             'transition_mode': 'immediately',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
             'level_ids':
                 [(0, 0, {
                     'added_value_type': 'day',
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
@@ -2448,17 +2562,19 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         On 01/01/2026 (Accrual date), 10 days are accrued to the employee. Total accrued days = 20 days.
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
-                'carryover_date': 'other',
-                'carryover_day': 1,
-                'carryover_month': '7',
-                'level_ids': [(0, 0, {
-                    'added_value': 10,
-                    'added_value_type': 'day',
-                    'start_count': 0,
-                    'start_type': 'day',
-                    'frequency': 'yearly',
-                })],
+            'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
+            'carryover_date': 'other',
+            'carryover_day': 1,
+            'carryover_month': '7',
+            'level_ids': [(0, 0, {
+                'added_value': 10,
+                'added_value_type': 'day',
+                'milestone_date': 'creation',
+                'start_type': 'day',
+                'frequency': 'yearly',
+                'action_with_unused_accruals': 'all',
+            })],
         })
         with freeze_time('2024-01-01'):
             allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
@@ -2510,16 +2626,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             * Total employee should have 10 days.
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
-                'carryover_date': 'year_start',
-                'level_ids': [(0, 0, {
-                    'added_value': 10,
-                    'added_value_type': 'day',
-                    'start_count': 0,
-                    'start_type': 'day',
-                    'frequency': 'yearly',
-                    'action_with_unused_accruals': 'lost'
-                })],
+            'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
+            'carryover_date': 'year_start',
+            'level_ids': [(0, 0, {
+                'added_value': 10,
+                'added_value_type': 'day',
+                'milestone_date': 'creation',
+                'start_type': 'day',
+                'frequency': 'yearly',
+                'action_with_unused_accruals': 'lost'
+            })],
         })
         with freeze_time('2024-01-01'):
             allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
@@ -2571,26 +2688,28 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             - Total number of days = 6 + 7 = 13 days
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
-                'carryover_date': 'other',
-                'carryover_day': 1,
-                'carryover_month': '7',
-                'level_ids': [(0, 0, {
-                    'added_value': 12,
-                    'added_value_type': 'day',
-                    'frequency': 'yearly',
-                    'start_count': 0,
-                    'start_type': 'day',
-                    'action_with_unused_accruals': 'lost'
-                }),
-                (0, 0, {
-                    'added_value': 14,
-                    'added_value_type': 'day',
-                    'frequency': 'yearly',
-                    'start_count': 18,
-                    'start_type': 'month',
-                    'action_with_unused_accruals': 'lost'
-                })],
+            'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
+            'carryover_date': 'other',
+            'carryover_day': 1,
+            'carryover_month': '7',
+            'level_ids': [(0, 0, {
+                'added_value': 12,
+                'added_value_type': 'day',
+                'frequency': 'yearly',
+                'milestone_date': 'creation',
+                'start_type': 'day',
+                'action_with_unused_accruals': 'lost'
+            }),
+            (0, 0, {
+                'added_value': 14,
+                'added_value_type': 'day',
+                'frequency': 'yearly',
+                'milestone_date': 'after',
+                'start_count': 18,
+                'start_type': 'month',
+                'action_with_unused_accruals': 'lost'
+            })],
         })
         with freeze_time('2024-01-01'):
             allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
@@ -2650,28 +2769,31 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         Total number of days =  8 days
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
-                'accrued_gain_time': 'start',
-                'carryover_date': 'other',
-                'carryover_day': 1,
-                'carryover_month': '6',
-                'level_ids': [(0, 0, {
-                    'added_value': 1,
-                    'added_value_type': 'day',
-                    'frequency': 'monthly',
-                    'start_count': 0,
-                    'start_type': 'day',
-                    'action_with_unused_accruals': 'lost'
-                }),
-                (0, 0, {
-                    'added_value': 1,
-                    'added_value_type': 'day',
-                    'frequency': 'monthly',
-                    'start_count': 20,
-                    'start_type': 'month',
-                    'action_with_unused_accruals': 'maximum',
-                    'postpone_max_days': 5
-                })],
+            'name': 'Accrual Plan For Test',
+            'accrued_gain_time': 'start',
+            'can_be_carryover': True,
+            'carryover_date': 'other',
+            'carryover_day': 1,
+            'carryover_month': '6',
+            'level_ids': [(0, 0, {
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'monthly',
+                'milestone_date': 'creation',
+                'start_type': 'day',
+                'action_with_unused_accruals': 'lost'
+            }),
+            (0, 0, {
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'monthly',
+                'milestone_date': 'after',
+                'start_count': 20,
+                'start_type': 'month',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
+                'postpone_max_days': 5
+            })],
         })
         with freeze_time('2024-01-01'):
             allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
@@ -2741,27 +2863,29 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             - Total number of days is 6.67 + 4 + 12 = 22.67 days.
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
-                'accrued_gain_time': 'start',
-                'carryover_date': 'other',
-                'carryover_day': 1,
-                'carryover_month': '6',
-                'level_ids': [(0, 0, {
-                    'added_value': 10,
-                    'added_value_type': 'day',
-                    'frequency': 'yearly',
-                    'start_count': 0,
-                    'start_type': 'day',
-                    'action_with_unused_accruals': 'lost'
-                }),
-                (0, 0, {
-                    'added_value': 12,
-                    'added_value_type': 'day',
-                    'frequency': 'yearly',
-                    'start_count': 32,
-                    'start_type': 'month',
-                    'action_with_unused_accruals': 'all',
-                })],
+            'name': 'Accrual Plan For Test',
+            'accrued_gain_time': 'start',
+            'can_be_carryover': True,
+            'carryover_date': 'other',
+            'carryover_day': 1,
+            'carryover_month': '6',
+            'level_ids': [(0, 0, {
+                'added_value': 10,
+                'added_value_type': 'day',
+                'frequency': 'yearly',
+                'milestone_date': 'creation',
+                'start_type': 'day',
+                'action_with_unused_accruals': 'lost'
+            }),
+            (0, 0, {
+                'added_value': 12,
+                'added_value_type': 'day',
+                'frequency': 'yearly',
+                'milestone_date': 'after',
+                'start_count': 32,
+                'start_type': 'month',
+                'action_with_unused_accruals': 'all',
+            })],
         })
         with freeze_time('2024-01-01'):
             allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
@@ -2828,12 +2952,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'biyearly',
@@ -2848,6 +2973,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             }),
             (0, 0, {
                 'added_value_type': 'day',
+                'milestone_date': 'after',
                 'start_count': 17,
                 'start_type': 'month',
                 'added_value': 20,
@@ -2904,12 +3030,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'yearly',
@@ -2920,6 +3047,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             }),
             (0, 0, {
                 'added_value_type': 'day',
+                'milestone_date': 'after',
                 'start_count': 2,
                 'start_type': 'year',
                 'added_value': 20,
@@ -2977,12 +3105,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '5',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'yearly',
@@ -2993,6 +3122,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             }),
             (0, 0, {
                 'added_value_type': 'day',
+                'milestone_date': 'after',
                 'start_count': 29,
                 'start_type': 'month',
                 'added_value': 20,
@@ -3048,12 +3178,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '5',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'yearly',
@@ -3109,12 +3240,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '5',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'monthly',
@@ -3170,16 +3302,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 20,
             'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'yearly',
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
                 'postpone_max_days': 5,
                 'accrual_validity': True,
                 'accrual_validity_type': 'day',
@@ -3232,12 +3366,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'biyearly',
@@ -3315,16 +3450,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '4',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'yearly',
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
                 'postpone_max_days': 5,
                 'accrual_validity': True,
                 'accrual_validity_type': 'month',
@@ -3430,9 +3567,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
+            'can_be_carryover': True,
             'carryover_date': 'allocation',
             'level_ids': [(0, 0, {
-                'start_count': 0,
+                'milestone_date': 'creation',
                 'start_type': 'day',
                 'added_value': 1,
                 'added_value_type': 'day',
@@ -3471,12 +3609,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': '1.25 days each 1st of the month',
             'transition_mode': 'immediately',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'start',
             'level_ids':
                 [(0, 0, {
                     'start_type': 'day',
-                    'start_count': 0,
+                    'milestone_date': 'creation',
                     'added_value_type': 'day',
                     'added_value': 1.25,
                     'frequency': 'monthly',
@@ -3518,10 +3657,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
                 'name': '2 days on the 1st of each month',
                 'accrued_gain_time': 'start',
+                'can_be_carryover': True,
                 'carryover_date': 'year_start',
                 'level_ids': [Command.create({
                     'added_value_type': 'day',
-                    'start_count': 0,
+                    'milestone_date': 'creation',
                     'start_type': 'day',
                     'added_value': 2,
                     'frequency': 'monthly',
@@ -3549,12 +3689,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': '1 days every last day of the month',
             'transition_mode': 'immediately',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
             'level_ids':
                 [(0, 0, {
                     'start_type': 'day',
-                    'start_count': 0,
+                    'milestone_date': 'creation',
                     'added_value_type': 'day',
                     'added_value': 1,
                     'frequency': 'monthly',
@@ -3593,12 +3734,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': '21 days per year, 28 days cap, 7 carryover max',
             'transition_mode': 'immediately',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'start',
             'level_ids':
                 [(0, 0, {
                 "accrued_gain_time": "start",
-                "action_with_unused_accruals": "maximum",
+                "action_with_unused_accruals": "all",
+                "carryover_options": "limited",
                 "added_value": 21,
                 "cap_accrued_time": True,
                 "first_day": 1,
@@ -3643,6 +3786,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': '21 days per year, 28 days cap, 7 carryover max',
             'transition_mode': 'immediately',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'start',
         })
@@ -3659,7 +3803,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             f.maximum_leave = 28
             f.start_count = 0
             # Set a maximum carry-over
-            f.action_with_unused_accruals = 'maximum'
+            f.action_with_unused_accruals = 'all'
+            f.carryover_options = 'limited'
             f.postpone_max_days = 7
             # Set it back to 'lost'
             f.action_with_unused_accruals = 'lost'
@@ -3698,14 +3843,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'resource_calendar_id': False,
             })
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'accrual plan',
                 'is_based_on_worked_time': True,
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'added_value_type': 'hour',
                     'frequency': 'hourly',
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             past_date = datetime.date.today() - relativedelta(days=1)
@@ -3745,6 +3892,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan with no carryover',
             'accrued_gain_time': 'start',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'level_ids': [Command.create({
                 'added_value': 8,
