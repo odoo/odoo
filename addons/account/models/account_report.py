@@ -34,6 +34,12 @@ class AccountReport(models.Model):
     sequence = fields.Integer(string="Sequence")
     active = fields.Boolean(string="Active", default=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
+    groupby = fields.Char(string="Group By", help="Comma-separated list of fields from account.move.line (Journal Item). When set, this report will have report lines generating sublines grouped by those keys except when specified on the report line.")
+    user_groupby = fields.Char(
+        string="User Group By",
+        compute='_compute_user_groupby', store=True, readonly=False, precompute=True,
+        help="Comma-separated list of fields from account.move.line (Journal Item). When set, the report lines will generate sublines grouped by those keys except when specified on the report line.",
+    )
     column_ids = fields.One2many(string="Columns", comodel_name='account.report.column', inverse_name='report_id')
     root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', index='btree_not_null', help="The report this report is a variant of.")
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
@@ -211,6 +217,12 @@ class AccountReport(models.Model):
     def _compute_use_sections(self):
         for report in self:
             report.use_sections = bool(report.section_report_ids)
+
+    @api.depends('groupby')
+    def _compute_user_groupby(self):
+        for report in self:
+            if not report.id and not report.user_groupby:
+                report.user_groupby = report.groupby
 
     @api.constrains('root_report_id')
     def _validate_root_report_id(self):
@@ -641,9 +653,10 @@ class AccountReportExpression(models.Model):
     @api.constrains('engine', 'report_line_id')
     def _validate_engine(self):
         for expression in self:
-            if expression.engine == 'aggregation' and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
+            if (expression.engine == 'aggregation' or expression.engine == 'external') and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
                 raise ValidationError(_(
-                    "Groupby feature isn't supported by aggregation engine. Please remove the groupby value on '%s'",
+                    "Groupby feature isn't supported by %s engine. Please remove the groupby value on '%s'",
+                    expression.engine,
                     expression.report_line_id.display_name,
                 ))
 
