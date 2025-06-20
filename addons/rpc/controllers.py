@@ -4,12 +4,12 @@ import xmlrpc.client
 from datetime import date, datetime
 from collections import defaultdict
 from markupsafe import Markup
+from types import MappingProxyType
 
 import odoo.exceptions
 from odoo.http import Controller, route, dispatch_rpc, request, Response
 from odoo.fields import Date, Datetime, Command
 from odoo.tools import lazy
-from odoo.tools.misc import frozendict
 
 # ==========================================================
 # XML-RPC helpers
@@ -97,7 +97,7 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
         # XML 1.0 disallows control characters, remove them otherwise they break clients
         return super().dump_unicode(value.translate(CONTROL_CHARACTERS), write)
 
-    dispatch[frozendict] = dump_frozen_dict
+    dispatch[MappingProxyType] = dump_frozen_dict
     dispatch[bytes] = dump_bytes
     dispatch[datetime] = dump_datetime
     dispatch[date] = dump_date
