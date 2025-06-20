@@ -79,9 +79,9 @@ class StockRule(models.Model):
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, compute_sudo=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
-        required=True, check_company=True,
-        domain="[('code', '=?', picking_type_code_domain)]")
-    picking_type_code_domain = fields.Char(compute='_compute_picking_type_code_domain')
+        required=True,
+        domain="picking_type_code_domain and [('code', 'in', picking_type_code_domain)] or ['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    picking_type_code_domain = fields.Json(compute='_compute_picking_type_code_domain')
     delay = fields.Integer('Lead Time', default=0, help="The expected date of the created transfer will be computed based on this lead time.")
     partner_address_id = fields.Many2one(
         'res.partner', 'Partner Address',
