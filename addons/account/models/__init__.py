@@ -42,6 +42,7 @@ from . import ir_http
 from . import ir_module
 from . import mail_message
 from . import mail_template
+from . import mail_scheduled_message
 from . import mail_tracking_value
 from . import merge_partner_automatic
 from . import res_currency

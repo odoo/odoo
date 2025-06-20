@@ -23,10 +23,18 @@ export class MailComposerAttachmentSelector extends Component {
 
     /** @param {Object} data */
     async onFileUploaded({ data, name, type }) {
-        const resIds = JSON.parse(this.props.record.data.res_ids);
+        let resIds = null;
+        const res_ids = this.props.record.data.res_ids;
+        if(res_ids) {
+            resIds = JSON.parse(res_ids);
+            resIds = resIds[0]
+        }
+        else {
+            resIds = this.props.record.data.res_id.resId;
+        }
         const thread = await this.mailStore.Thread.insert({
             model: this.props.record.data.model,
-            id: resIds[0],
+            id: resIds,
         });
         const file = new File([dataUrlToBlob(data, type)], name, { type });
         const attachment = await this.attachmentUploadService.upload(thread, thread.composer, file);
