@@ -4,7 +4,7 @@
         <template id="report_inventory">
             <t t-call="web.html_container">
                 <div class="oe_structure"></div>
-                <t t-call="web.external_layout">
+                <t t-call="web.internal_layout">
                     <div class="page">
                         <br/>
                         <h2>Inventory Count Sheet</h2>
@@ -17,9 +17,7 @@
                                     <th>Product</th>
                                     <th groups="stock.group_production_lot">Lot/Serial Number</th>
                                     <th groups="stock.group_tracking_lot">Package</th>
-                                    <th class="text-end">Available Quantity</th>
-                                    <th class="text-end">On hand Quantity</th>
-                                    <th class="text-end">Counted Quantity</th>
+                                    <th class="text-end">Quantity</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -35,8 +33,6 @@
                                         <td><span t-field="line.product_id">Laptop</span></td>
                                         <td groups="stock.group_production_lot"><span t-field="line.lot_id"/></td>
                                         <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
-                                        <td class="text-end"><span t-field="line.available_quantity">2</span> <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span></td>
-                                        <td class="text-end"><span t-field="line.quantity">5</span> <span t-field="line.product_uom_id" groups="uom.group_uom">Units</span></td>
                                         <td class="text-end">
                                             <!-- If 0, then leave blank so users have space to write a number -->
                                             <t t-if="line.inventory_quantity == 0"><span></span></t>
