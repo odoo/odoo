@@ -26,6 +26,10 @@ export class KanbanMany2OneAvatarUserField extends Component {
         return computeM2OProps(this.props);
     }
 
+    get resId() {
+        return this.props.record.resId;
+    }
+
     get value() {
         return this.props.record.data[this.props.name];
     }
