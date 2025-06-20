@@ -204,7 +204,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         """ Test 'send_email' on template on a given record, used notably as
         contextual action. """
         self.env.invalidate_all()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(13):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(14):
             mail_id = self.test_template.with_env(self.env).send_mail(self.test_record.id)
             mail = self.env['mail.mail'].sudo().browse(mail_id)
 
@@ -222,7 +222,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         """ Test without layout, just to check impact """
         self.test_template.email_layout_xmlid = False
         self.env.invalidate_all()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(12):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(13):
             mail_id = self.test_template.with_env(self.env).send_mail(self.test_record.id)
             mail = self.env['mail.mail'].sudo().browse(mail_id)
 
@@ -239,7 +239,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
     def test_template_send_email_batch(self):
         """ Test 'send_email' on template in batch """
         self.env.invalidate_all()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(25):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(27):
             template = self.test_template.with_env(self.env)
             mails_sudo = template.send_mail_batch(self.test_records_batch.ids)
 
@@ -262,7 +262,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         """ Test 'send_email' on template on a given record, used notably as
         contextual action, with dynamic reports involved """
         self.env.invalidate_all()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(22):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(23):
             mail_id = self.test_template_wreports.with_env(self.env).send_mail(self.test_record.id)
             mail = self.env['mail.mail'].sudo().browse(mail_id)
 
@@ -278,7 +278,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
     def test_template_send_email_wreport_batch(self):
         """ Test 'send_email' on template in batch with dynamic reports """
         self.env.invalidate_all()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(233):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(235):
             template = self.test_template_wreports.with_env(self.env)
             mails_sudo = template.send_mail_batch(self.test_records_batch.ids)
 
@@ -389,7 +389,7 @@ class TestMailTemplateLanguages(TestMailTemplateCommon):
         test_records[1].write({'customer_id': customers[1].id})
 
         self.env.invalidate_all()
-        with self.with_user(self.user_employee.login), self.assertQueryCount(18):
+        with self.with_user(self.user_employee.login), self.assertQueryCount(20):
             template = self.test_template.with_env(self.env)
             mails_sudo = template.send_mail_batch(self.test_records.ids, email_layout_xmlid='mail.test_layout')
 

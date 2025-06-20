@@ -545,6 +545,10 @@ class MailRenderMixin(models.AbstractModel):
         return scheduled_date
 
     @api.model
+    def _render_template_get_valid_options(self):
+        return {'post_process', 'preserve_comments'}
+
+    @api.model
     def _render_template(self, template_src, model, res_ids, engine='inline_template',
                          add_context=None, options=None):
         """ Render the given string on records designed by model / res_ids using
@@ -586,7 +590,7 @@ class MailRenderMixin(models.AbstractModel):
                 _('Template rendering supports only inline_template, qweb, or qweb_view (view or raw); received %(engine)s instead.',
                   engine=engine)
             )
-        valid_render_options = {'post_process', 'preserve_comments'}
+        valid_render_options = self._render_template_get_valid_options()
         if not set((options or {}).keys()) <= valid_render_options:
             raise ValueError(
                 _('Those values are not supported as options when rendering: %(param_names)s',
@@ -709,7 +713,7 @@ class MailRenderMixin(models.AbstractModel):
 
         # rendering options (update default defined on field by asked options)
         engine = getattr(self._fields[field], 'render_engine', engine)
-        field_options = getattr(self._fields[field], 'render_options', {})
+        field_options = getattr(self._fields[field], 'render_options', {}).copy()
         if options:
             field_options.update(**options)
 
