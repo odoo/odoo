@@ -805,6 +805,68 @@ test("t-if t-else as toggler", async () => {
     expect(DROPDOWN_MENU).toHaveCount(1);
 });
 
+test("cap dropdown's popover height with too many items", async () => {
+    class HugeDropdown extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
+            <div class="outside">outside</div>
+            <Dropdown t-props="dropdownProps">
+                <button t-ref="button" style="top: 40%;">Dropdown</button>
+                <t t-set-slot="content">
+                    <t t-foreach="[...Array(50).keys()]" t-as="number" t-key="number">
+                        <DropdownItem class="'item-' + number" t-out="'Item ' + number"/>
+                    </t>
+                </t>
+            </Dropdown>
+        `;
+        setup() {
+            this.button = useRef("button");
+        }
+    }
+    const dropdownComp = await mountWithCleanup(HugeDropdown);
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+    expect(".popover").toHaveStyle({ bottom: "0px" });
+    const computedHeight =
+        parseFloat(getComputedStyle(document.documentElement).height) -
+        dropdownComp.button.el.getBoundingClientRect().bottom -
+        8;
+    // Compare floored values to avoid float pixel rounding errors.
+    expect(parseInt(getComputedStyle(queryOne(".popover")).maxHeight)).toBe(
+        parseInt(computedHeight)
+    );
+});
+
+test("cap dropup's popover height with too many items", async () => {
+    class HugeDropdown extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
+            <div class="outside">outside</div>
+            <Dropdown t-props="dropdownProps">
+                <button t-ref="button" style="top: 55%;">Dropdown</button>
+                <t t-set-slot="content">
+                    <t t-foreach="[...Array(50).keys()]" t-as="number" t-key="number">
+                        <DropdownItem class="'item-' + number" t-out="'Item ' + number"/>
+                    </t>
+                </t>
+            </Dropdown>
+        `;
+        setup() {
+            this.button = useRef("button");
+        }
+    }
+    const dropdownComp = await mountWithCleanup(HugeDropdown);
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+    expect(".popover").toHaveStyle({ top: "0px" });
+    // Compare floored values to avoid float pixel rounding errors.
+    expect(parseInt(getComputedStyle(queryOne(".popover")).maxHeight)).toBe(
+        parseInt(dropdownComp.button.el.getBoundingClientRect().top - 8)
+    );
+});
+
 test("Dropdown in dialog in dropdown, first dropdown should stay open when clicking inside the second one", async () => {
     const env = await makeMockEnv();
 
