@@ -25,7 +25,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
-        if waiting_moves := moves.filtered(lambda m: m.l10n_ro_edi_state == 'invoice_sent'):
+        if waiting_moves := moves.filtered(lambda m: m.l10n_ro_edi_state in ['invoice_not_indexed', 'invoice_sent']):
             alerts['l10n_ro_edi_warning_waiting_moves'] = {
                 'message': _(
                     "The following invoice(s) are waiting for answer from the Romanian SPV: %s."
@@ -41,40 +41,33 @@ class AccountMoveSend(models.AbstractModel):
     # SENDING METHOD
     # -------------------------------------------------------------------------
 
+    def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
+        if 'ro_edi' in invoice_data['extra_edis']:
+            invoice_data['invoice_edi_format'] = 'ciusro'
+        super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
+
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
         super()._call_web_service_after_invoice_pdf_render(invoices_data)
 
         for invoice, invoice_data in invoices_data.items():
             if 'ro_edi' in invoice_data['extra_edis']:
-                build_errors = None
+
+                if invoice.l10n_ro_edi_document_ids:
+                    # If a document is on the invoice, we shouldn't send it again
+                    invoice_data['error'] = _("The CIUS-RO E-Factura has already been sent")
+                    continue
+
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_data = invoice_data['ubl_cii_xml_attachment_values']['raw']
-                elif invoice.l10n_ro_edi_document_ids:
-                    # If a document is on the invoice but the invoice's l10n_ro_edi_state is False,
-                    # this means that the previously sent XML are invalid and have to be rebuilt
-                    xml_data, build_errors = self.env['account.edi.xml.ubl_ro']._export_invoice(invoice)
                 elif invoice.ubl_cii_xml_id:
                     xml_data = invoice.ubl_cii_xml_id.raw
                 else:
-                    xml_data, build_errors = self.env['account.edi.xml.ubl_ro']._export_invoice(invoice)
-
-                if build_errors:
-                    invoice_data['error'] = {
-                        'error_title': _("Error when building the CIUS-RO E-Factura XML"),
-                        'errors': build_errors,
-                    }
+                    invoice_data['error'] = _("The CIUS-RO E-Factura could not be found")
                     continue
 
-                invoice._l10n_ro_edi_send_invoice(xml_data)
-
-                if self._can_commit():
-                    self.env.cr.commit()
-
-                active_document = invoice.l10n_ro_edi_document_ids.sorted()[0]
-
-                if active_document.state == 'invoice_sending_failed':
+                if errors := invoice._l10n_ro_edi_send_invoice(xml_data):
                     invoice_data['error'] = {
                         'error_title': _("Error when sending CIUS-RO E-Factura to the SPV"),
-                        'errors': active_document.message.split('\n'),
+                        'errors': errors,
                     }

@@ -12,6 +12,7 @@ class ResConfigSettings(models.TransientModel):
     l10n_ro_edi_refresh_expiry_date = fields.Date(related='company_id.l10n_ro_edi_refresh_expiry_date', readonly=False)
     l10n_ro_edi_callback_url = fields.Char(related='company_id.l10n_ro_edi_callback_url')
     l10n_ro_edi_test_env = fields.Boolean(related='company_id.l10n_ro_edi_test_env', readonly=False)
+    l10n_ro_edi_anaf_imported_inv_journal_id = fields.Many2one(related='company_id.l10n_ro_edi_anaf_imported_inv_journal_id', readonly=False)
 
     def button_l10n_ro_edi_generate_token(self):
         """ Redirects to controllers/main.py ~ `authorize` method """
