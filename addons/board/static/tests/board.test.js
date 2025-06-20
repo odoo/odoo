@@ -737,7 +737,7 @@ describe("board_mobile", () => {
         expect(".o-dashboard-layout-1").toHaveCount(1, {
             message: "The display layout is force to 1",
         });
-        expect(".o-dashboard-action .o_control_panel").not.toBeVisible();
+        expect(".o-dashboard-action .o_control_panel").not.toHaveCount();
         expect(".o-dashboard-action-header .fa-close").toHaveCount(0, {
             message: "Should not have a close action button",
         });

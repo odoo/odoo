@@ -25,23 +25,27 @@ const {
  * @param {T} schema
  * @returns {{ [key in keyof T]: ReturnType<T[key]["parse"]> }}
  */
-const getSchemaDefaults = (schema) =>
-    $fromEntries($entries(schema).map(([key, value]) => [key, value.default]));
+function getSchemaDefaults(schema) {
+    return $fromEntries($entries(schema).map(([key, value]) => [key, value.default]));
+}
 
 /**
  * @template {Record<string, any>} T
  * @param {T} schema
  * @returns {(keyof T)[]}
  */
-const getSchemaKeys = (schema) => $keys(schema);
+function getSchemaKeys(schema) {
+    return $keys(schema);
+}
 
 /**
  * @template T
  * @param {(values: string[]) => T} parse
  * @returns {(valueIfEmpty: T) => (values: string[]) => T}
  */
-const makeParser = (parse) => (valueIfEmpty) => (values) =>
-    values.length ? parse(values) : valueIfEmpty;
+function makeParser(parse) {
+    return (valueIfEmpty) => (values) => values.length ? parse(values) : valueIfEmpty;
+}
 
 const parseBoolean = makeParser(([value]) => value === "true");
 

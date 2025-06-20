@@ -4,14 +4,13 @@ import {
     click,
     hover,
     press,
-    queryAll,
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
 } from "@odoo/hoot-dom";
 import {
-    Deferred,
     animationFrame,
+    Deferred,
     mockTimeZone,
     mockTouch,
     runAllTimers,
@@ -10414,7 +10413,7 @@ test(`form view with inline list view with optional fields and local storage moc
     ]);
     expect(`.o_list_table th`).toHaveCount(2);
     expect(`th[data-name="foo"]`).toBeVisible();
-    expect(`th[data-name="bar"]`).not.toBeVisible();
+    expect(`th[data-name="bar"]`).not.toHaveCount();
 
     // optional fields
     await contains(`.o_optional_columns_dropdown .dropdown-toggle`).click();
@@ -10478,7 +10477,7 @@ test(`form view with list_view_ref with optional fields and local storage mock`,
         `getItem debug_open_view,${localStorageKey}`,
     ]);
     expect(`.o_list_table th`).toHaveCount(2);
-    expect(`th[data-name="foo"]`).not.toBeVisible();
+    expect(`th[data-name="foo"]`).not.toHaveCount();
     expect(`th[data-name="bar"]`).toBeVisible();
 
     // optional fields
@@ -10600,20 +10599,19 @@ test("resequence list lines when previous resequencing crashed", async () => {
     await contains(".o_form_button_save").click();
     await animationFrame();
 
-    const getNames = () => [...queryAll(".o_list_char")].map((el) => el.textContent);
-    expect(getNames()).toEqual(["first line", "second line"]);
+    expect(queryAllTexts(".o_list_char")).toEqual(["first line", "second line"]);
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
         "tbody.ui-sortable tr:nth-child(2)"
     );
     await animationFrame();
     expect.verifyErrors(["RPC_ERROR"]);
-    expect(getNames()).toEqual(["first line", "second line"]);
+    expect(queryAllTexts(".o_list_char")).toEqual(["first line", "second line"]);
 
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
         "tbody.ui-sortable tr:nth-child(2)"
     );
     await animationFrame();
-    expect(getNames()).toEqual(["second line", "first line"]);
+    expect(queryAllTexts(".o_list_char")).toEqual(["second line", "first line"]);
     expect.verifySteps(["resequence onChange crash", "resequence onChange ok"]);
 });
 

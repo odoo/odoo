@@ -94,9 +94,7 @@ describe.current.tags("desktop");
 onRpc("/lunch/user_location_get", function () {
     return this.env["lunch.location"][0].id;
 });
-onRpc("/lunch/infos", () => {
-    return lunchInfos;
-});
+onRpc("/lunch/infos", () => lunchInfos);
 
 test("Basic rendering", async () => {
     await mountLunchView();
@@ -135,12 +133,8 @@ test("Basic rendering with alerts", async () => {
             },
         ],
     };
-    onRpc("/lunch/user_location_get", () => {
-        return userInfos.user_location[0];
-    });
-    onRpc("/lunch/infos", () => {
-        return userInfos;
-    });
+    onRpc("/lunch/user_location_get", () => userInfos.user_location[0]);
+    onRpc("/lunch/infos", () => userInfos);
 
     await mountLunchView();
 
@@ -152,9 +146,7 @@ test("Location change", async () => {
     expect.assertions(3);
 
     const userInfos = { ...lunchInfos };
-    onRpc("/lunch/user_location_get", () => {
-        return userInfos.user_location[0];
-    });
+    onRpc("/lunch/user_location_get", () => userInfos.user_location[0]);
     onRpc("/lunch/user_location_set", async (request) => {
         const { params } = await request.json();
         expect(params.location_id).toBe(2);
@@ -183,9 +175,7 @@ test("Manager: user change", async () => {
     );
     let userInfos = { ...lunchInfos, is_manager: true };
     let expectedUserId = false; // false as we are requesting for the current user
-    onRpc("/lunch/user_location_get", () => {
-        return userInfos.user_location[0];
-    });
+    onRpc("/lunch/user_location_get", () => userInfos.user_location[0]);
     onRpc("/lunch/infos", async (request) => {
         const { params } = await request.json();
         expect(expectedUserId).toBe(params.user_id);
@@ -247,12 +237,8 @@ test("Trash existing order", async () => {
         paid_subtotal: "0",
         unpaid_subtotal: "4.95",
     };
-    onRpc("/lunch/user_location_get", () => {
-        return userInfos.user_location[0];
-    });
-    onRpc("/lunch/infos", () => {
-        return userInfos;
-    });
+    onRpc("/lunch/user_location_get", () => userInfos.user_location[0]);
+    onRpc("/lunch/infos", () => userInfos);
     onRpc("/lunch/trash", () => {
         userInfos = {
             ...userInfos,
@@ -302,15 +288,10 @@ test("Change existing order", async () => {
         paid_subtotal: "0",
         unpaid_subtotal: "4.95",
     };
-    onRpc("/lunch/user_location_get", () => {
-        return userInfos.user_location[0];
-    });
-    onRpc("/lunch/infos", () => {
-        return userInfos;
-    });
-    onRpc("/web/dataset/call_kw/lunch.order/update_quantity", async (request) => {
-        const { params } = await request.json();
-        expect(params.args[1]).toBe(1, { message: "should increment order quantity by 1" });
+    onRpc("/lunch/user_location_get", () => userInfos.user_location[0]);
+    onRpc("/lunch/infos", () => userInfos);
+    onRpc("lunch.order", "update_quantity", ({ args }) => {
+        expect(args[1]).toBe(1, { message: "should increment order quantity by 1" });
         userInfos = {
             ...userInfos,
             lines: [
@@ -354,12 +335,8 @@ test("Confirm existing order", async () => {
         paid_subtotal: "0",
         unpaid_subtotal: "4.95",
     };
-    onRpc("/lunch/user_location_get", () => {
-        return userInfos.user_location[0];
-    });
-    onRpc("/lunch/infos", () => {
-        return userInfos;
-    });
+    onRpc("/lunch/user_location_get", () => userInfos.user_location[0]);
+    onRpc("/lunch/infos", () => userInfos);
     onRpc("/lunch/pay", async (request) => {
         const { params } = await request.json();
         expect(params.user_id).toBe(false); // Should confirm order of current user

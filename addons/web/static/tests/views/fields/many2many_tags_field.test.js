@@ -1422,9 +1422,9 @@ test("Many2ManyTagsField with attribute 'can_create' set to false", async () => 
 });
 
 test("Many2ManyTagsField with arch context in form view", async () => {
-    onRpc("name_search", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("name_search", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("name search with context given");
             for (const res of result) {
                 res[1] += " coucou";
@@ -1432,9 +1432,9 @@ test("Many2ManyTagsField with arch context in form view", async () => {
         }
         return result;
     });
-    onRpc("web_read", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("web_read", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("read with context given");
             result[0].display_name += " coucou";
         }
@@ -1453,9 +1453,9 @@ test("Many2ManyTagsField with arch context in form view", async () => {
 });
 
 test("Many2ManyTagsField with arch context in list view", async () => {
-    onRpc("name_search", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("name_search", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("name search with context given");
             for (const res of result) {
                 res[1] += " coucou";
@@ -1463,9 +1463,9 @@ test("Many2ManyTagsField with arch context in list view", async () => {
         }
         return result;
     });
-    onRpc("web_read", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("web_read", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("read with context given");
             result[0].display_name += " coucou";
         }
