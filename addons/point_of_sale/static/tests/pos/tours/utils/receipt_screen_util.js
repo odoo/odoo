@@ -226,7 +226,34 @@ export function containsOrderLine(name, quantity, price_unit, line_price) {
     return [
         {
             content: `Order line with name: ${name}, quantity: ${quantity}, price per unit: ${price_unit}, and line price: ${line_price} exists`,
-            trigger: `.pos-receipt .orderline:has(.product-name:contains('${name}') .qty:contains('${quantity}')):has(.product-price:contains('${line_price}')):has(.price-per-unit:contains('${price_unit}'))`,
+            trigger: `.pos-receipt .orderline:has(.product-name:contains('${name}')):has(.qty:contains('${quantity}')):has(.product-price:contains('${line_price}')):has(.price-per-unit:contains('${price_unit}'))`,
+        },
+    ];
+}
+
+export function hasLayout(layoutName) {
+    return [
+        {
+            content: `receipt should use the ${layoutName} layout format`,
+            trigger: `.receipt-screen .pos-receipt.pos-receipt-${layoutName}-layout`,
+        },
+    ];
+}
+
+export function containsReceiptHeader(headerText) {
+    return [
+        {
+            content: "receipt should have header text",
+            trigger: `.receipt-screen .pos-receipt .pos-receipt-header:has(h2:contains(${headerText}))`,
+        },
+    ];
+}
+
+export function noReceiptLogo() {
+    return [
+        {
+            content: "receipt should not display a logo",
+            trigger: ".receipt-screen .pos-receipt:not(:contains('.pos-receipt-logo'))",
         },
     ];
 }

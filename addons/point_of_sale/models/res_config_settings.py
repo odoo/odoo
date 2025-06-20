@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 import logging
 
@@ -78,7 +78,6 @@ class ResConfigSettings(models.TransientModel):
     pos_iface_tax_included = fields.Selection(related='pos_config_id.iface_tax_included', readonly=False)
     pos_iface_tipproduct = fields.Boolean(related='pos_config_id.iface_tipproduct', readonly=False)
     pos_invoice_journal_id = fields.Many2one(related='pos_config_id.invoice_journal_id', readonly=False)
-    pos_is_header_or_footer = fields.Boolean(related='pos_config_id.is_header_or_footer', readonly=False)
     pos_is_margins_costs_accessible_to_every_user = fields.Boolean(related='pos_config_id.is_margins_costs_accessible_to_every_user', readonly=False)
     pos_is_posbox = fields.Boolean(related='pos_config_id.is_posbox', readonly=False)
     pos_journal_id = fields.Many2one(related='pos_config_id.journal_id', readonly=False)
@@ -91,8 +90,6 @@ class ResConfigSettings(models.TransientModel):
     pos_picking_type_id = fields.Many2one(related='pos_config_id.picking_type_id', readonly=False)
     pos_pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', compute='_compute_pos_pricelist_id', readonly=False, store=True)
     pos_proxy_ip = fields.Char(string='IP Address', related="pos_config_id.proxy_ip", readonly=False)
-    pos_receipt_footer = fields.Text(string='Receipt Footer', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
-    pos_receipt_header = fields.Text(string='Receipt Header', compute='_compute_pos_receipt_header_footer', readonly=False, store=True)
     pos_restrict_price_control = fields.Boolean(related='pos_config_id.restrict_price_control', readonly=False)
     pos_rounding_method = fields.Many2one(related='pos_config_id.rounding_method', readonly=False)
     pos_route_id = fields.Many2one(related='pos_config_id.route_id', readonly=False)
@@ -258,16 +255,6 @@ class ResConfigSettings(models.TransientModel):
             else:
                 res_config.pos_iface_cashdrawer = False
 
-    @api.depends('pos_is_header_or_footer', 'pos_config_id')
-    def _compute_pos_receipt_header_footer(self):
-        for res_config in self:
-            if res_config.pos_is_header_or_footer:
-                res_config.pos_receipt_header = res_config.pos_config_id.receipt_header
-                res_config.pos_receipt_footer = res_config.pos_config_id.receipt_footer
-            else:
-                res_config.pos_receipt_header = False
-                res_config.pos_receipt_footer = False
-
     @api.depends('pos_tax_regime_selection', 'pos_config_id')
     def _compute_pos_fiscal_positions(self):
         for res_config in self:
@@ -346,3 +333,13 @@ class ResConfigSettings(models.TransientModel):
                     old._add_trusted_config_id(config.pos_config_id)
                 if old.id in removed_trusted_configs:
                     old._remove_trusted_config_id(config.pos_config_id)
+
+    def action_view_pos_receipt_layout(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Configure receipt'),
+            'res_model': 'pos.receipt.layout',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_pos_config_id': self.pos_config_id.id, 'dialog_size': 'extra-large'},
+        }

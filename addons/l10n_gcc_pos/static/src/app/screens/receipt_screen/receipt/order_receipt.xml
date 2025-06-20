@@ -25,6 +25,10 @@
     </t>
 
     <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('label-total-qty')]" position="replace">
+            <span t-if="order.isGccCountry" class="label-total-qty" t-translation="off">Total Qty / إجمالي الكمية</span>
+            <span t-else="" class="label-total-qty">Total Qty: </span>
+        </xpath>
         <xpath expr="//span[hasclass('label-rounding')]" position="replace">
             <span t-if="order.isGccCountry" class="label-rounding" t-translation="off">Rounding / التقريب</span>
             <span t-else="" class="label-rounding">Rounding</span>
