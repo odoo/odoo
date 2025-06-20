@@ -11,7 +11,6 @@ export class HRTimesheet extends models.Model {
     project_id = fields.Many2one({ relation: "project.project", required: true });
     task_id = fields.Many2one({ relation: "project.task" });
     unit_amount = fields.Float();
-    is_timesheet = fields.Boolean();
 
     _records = [
         {
