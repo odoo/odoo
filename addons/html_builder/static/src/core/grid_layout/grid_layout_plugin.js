@@ -61,12 +61,12 @@ export class GridLayoutPlugin extends Plugin {
         if (!isMobileView(this.overlayTarget)) {
             buttons.push(
                 {
-                    class: "o_send_back",
+                    class: "o_send_back oi",
                     title: _t("Send to back"),
                     handler: this.sendGridItemToBack.bind(this),
                 },
                 {
-                    class: "o_bring_front",
+                    class: "o_bring_front oi",
                     title: _t("Bring to front"),
                     handler: this.bringGridItemToFront.bind(this),
                 }
