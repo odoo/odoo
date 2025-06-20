@@ -56,6 +56,7 @@ const StepSchema = {
         },
     },
     trigger: { type: String },
+    expectUnloadPage: { type: Boolean, optional: true },
     //ONLY IN DEBUG MODE
     pause: { type: Boolean, optional: true },
     break: { type: Boolean, optional: true },
@@ -74,7 +75,7 @@ const debugMenuRegistry = registry.category("debug").category("default");
 export const tourService = {
     // localization dependency to make sure translations used by tours are loaded
     dependencies: ["orm", "effect", "overlay", "localization"],
-    start: async (_env, { orm, effect, overlay }) => {
+    start: async (env, { orm, effect, overlay }) => {
         await whenReady();
         let toursEnabled = session?.tour_enabled;
         const tourRegistry = registry.category("web_tour.tours");
