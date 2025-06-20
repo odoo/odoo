@@ -36,6 +36,7 @@
             'web/static/lib/bootstrap/scss/_maps.scss',
             'web/static/fonts/fonts.scss',
             'html_builder/static/src/**/*',
+            ('remove', 'html_builder/static/src/**/*.inside.scss'),
         ],
         'html_builder.inside_builder_style': [
             ('include', 'web._assets_helpers'),

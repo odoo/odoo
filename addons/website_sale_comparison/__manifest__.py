@@ -35,6 +35,7 @@ Finally, the module comes with an option to display an attribute summary table i
         ],
         'html_builder.assets': [
             'website_sale_comparison/static/src/website_builder/**/*',
+            ('remove', 'website_sale_comparison/static/src/website_builder/**/*.inside.scss'),
         ],
     },
     'author': 'Odoo S.A.',

@@ -30,6 +30,7 @@ Publish your customers as business references on your website to attract new pot
     'assets': {
         'html_builder.assets': [
             'website_customer/static/src/website_builder/**/*',
+            ('remove', 'website_customer/static/src/website_builder/**/*.inside.scss'),
         ],
     },
 }
