@@ -1078,7 +1078,7 @@ class TestReorderingRule(TransactionCase):
             'date': dt.today() + td(days=6),
         })
         move._action_confirm()
-        self.assertEqual(op.qty_to_order, 0, 'sale order is ignored')
+        self.assertEqual(op.qty_to_order, 1, 'out move is ignored')
         # out move today to force the forecast to be negative
         move = self.env['stock.move'].create({
             'name': 'Test move',

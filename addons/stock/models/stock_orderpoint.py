@@ -265,7 +265,7 @@ class StockWarehouseOrderpoint(models.Model):
         return self.action_replenish()
 
     @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state',
-                 'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty', 'product_id.seller_ids.delay')
+                 'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty', 'product_id.seller_ids.delay', 'visibility_days')
     def _compute_qty(self):
         orderpoints_contexts = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         for orderpoint in self:
@@ -273,7 +273,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = False
                 orderpoint.qty_forecast = False
                 continue
-            orderpoint_context = orderpoint._get_product_context()
+            orderpoint_context = orderpoint._get_product_context(orderpoint.visibility_days)
             product_context = frozendict({**orderpoint_context})
             orderpoints_contexts[product_context] |= orderpoint
         for orderpoint_context, orderpoints_by_context in orderpoints_contexts.items():
