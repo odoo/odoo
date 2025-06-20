@@ -17,22 +17,14 @@ class AddToCartOptionPlugin extends Plugin {
         builder_actions: {
             ProductToCartAction,
             VariantToCartAction,
-            AddToCartAction,
+            AddToCartActionAction,
         },
     };
-
-    resetDefaultAction(editingElement) {
-        const addToCartAction = this.dependencies.builderActions.getAction("addToCartAction");
-        if (addToCartAction.isApplied({ editingElement, params: addToCartValues.buyNow })) {
-            addToCartAction.clean({ editingElement, params: addToCartValues.buyNow });
-            addToCartAction.apply({ editingElement, params: addToCartValues.addToCart });
-        }
-    }
 }
 
 export class ProductToCartAction extends BuilderAction {
     static id = "productToCart";
-    static dependencies = ["builderActions", "addToCartOption"];
+    static dependencies = ["builderActions"];
     apply({ editingElement, value }) {
         const classAction = this.dependencies.builderActions.getAction("classAction");
 
@@ -57,7 +49,9 @@ export class ProductToCartAction extends BuilderAction {
             params: { mainParam: "disabled" },
         });
         if (!oneVariant) {
-            this.dependencies.addToCartOption.resetDefaultAction(editingElement);
+            this.dependencies.builderActions
+                .getAction("addToCartAction")
+                .resetDefaultAction(editingElement);
         }
     }
     clean({ editingElement }) {
@@ -74,7 +68,9 @@ export class ProductToCartAction extends BuilderAction {
             editingElement: buttonEl,
             params: { mainParam: "disabled" },
         });
-        this.dependencies.addToCartOption.resetDefaultAction(editingElement);
+        this.dependencies.builderActions
+            .getAction("addToCartAction")
+            .resetDefaultAction(editingElement);
     }
     getValue({ editingElement }) {
         const value = {};
@@ -98,7 +94,7 @@ export class ProductToCartAction extends BuilderAction {
 }
 export class VariantToCartAction extends BuilderAction {
     static id = "variantToCart";
-    static dependencies = ["addToCartOption"];
+    static dependencies = ["builderActions"];
     apply({ editingElement, value }) {
         const { id } = JSON.parse(value);
         editingElement.dataset.productVariant = id;
@@ -109,7 +105,9 @@ export class VariantToCartAction extends BuilderAction {
         delete editingElement.dataset.productVariant;
         const buttonEl = editingElement.querySelector(".s_add_to_cart_btn");
         delete buttonEl.dataset.productVariantId;
-        this.dependencies.addToCartOption.resetDefaultAction(editingElement);
+        this.dependencies.builderActions
+            .getAction("addToCartAction")
+            .resetDefaultAction(editingElement);
     }
     getValue({ editingElement }) {
         const id = editingElement.dataset.productVariant;
@@ -118,8 +116,8 @@ export class VariantToCartAction extends BuilderAction {
         }
     }
 }
-export class AddToCartAction extends BuilderAction {
-    static id = "addToCart";
+export class AddToCartActionAction extends BuilderAction {
+    static id = "addToCartAction";
     static dependencies = ["builderActions"];
     apply({ editingElement, params: { action, icon, label } }) {
         const classAction = this.dependencies.builderActions.getAction("classAction");
@@ -147,6 +145,13 @@ export class AddToCartAction extends BuilderAction {
     }
     isApplied({ editingElement, params: { action } }) {
         return editingElement.dataset.action === action;
+    }
+
+    resetDefaultAction(editingElement) {
+        if (this.isApplied({ editingElement, params: addToCartValues.buyNow })) {
+            this.clean({ editingElement, params: addToCartValues.buyNow });
+            this.apply({ editingElement, params: addToCartValues.addToCart });
+        }
     }
 }
 
