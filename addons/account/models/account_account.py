@@ -105,7 +105,7 @@ class AccountAccount(models.Model):
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes',
         check_company=True,
-        context={'append_fields': ['type_tax_use', 'company_id']})
+        context={'append_fields': ['type_tax_use', 'company_id'], 'active_test': False})
     note = fields.Text('Internal Notes', tracking=True)
     company_ids = fields.Many2many('res.company', string='Companies', required=True, readonly=False,
         default=lambda self: self.env.company)

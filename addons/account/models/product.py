@@ -45,6 +45,7 @@ class ProductTemplate(models.Model):
         string="Purchase Taxes",
         help="Default taxes used when buying the product",
         domain=[('type_tax_use', '=', 'purchase')],
+        context={'active_test': False},
         default=lambda self: self.env.companies.account_purchase_tax_id or self.env.companies.root_id.sudo().account_purchase_tax_id,
     )
     property_account_income_id = fields.Many2one('account.account', company_dependent=True, ondelete='restrict',
