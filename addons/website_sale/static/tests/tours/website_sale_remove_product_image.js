@@ -54,13 +54,18 @@ registerWebsitePreviewTour("add_and_remove_main_product_image_no_variant", {
         run: "dblclick",
     },
     {
-        content: "Click on the new image",
+        content: "Select default image",
         trigger: ".o_select_media_dialog img[title='s_default_image.jpg']",
         run: "click",
     },
     {
+        content: "Click on the product image",
+        trigger: ":iframe #o-carousel-product img.o_we_custom_image",
+        run: "click",
+    },
+    {
         content: "Check that the snippet editor of the clicked image has been loaded",
-        trigger: "we-customizeblock-options:has(we-title:contains('Re-order'))",
+        trigger: ".o_customize_tab [data-container-title='Image']",
     },
     ...removeImg,
 ]);
