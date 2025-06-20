@@ -40,7 +40,10 @@ patch(PosData.prototype, {
             ? await super.getLocalDataFromIndexedDB(...arguments)
             : {};
     },
-    async missingRecursive(recordMap) {
+    async missingRecursive(recordMap, idsMap = {}, acc = {}) {
+        if (recordMap["product.template"] || acc["product.template"]) {
+            return super.missingRecursive(...arguments);
+        }
         return recordMap;
     },
     async checkAndDeleteMissingOrders(results) {},
