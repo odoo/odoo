@@ -492,6 +492,7 @@ export class Wysiwyg extends Component {
             preHistoryUndo: () => {
                 this.destroyLinkTools();
             },
+            postHistoryUndo: this._postHistoryUndo.bind(this),
             beforeAnyCommand: this._beforeAnyCommand.bind(this),
             commands: powerboxOptions.commands,
             categories: powerboxOptions.categories,
@@ -988,6 +989,19 @@ export class Wysiwyg extends Component {
         this.el.replaceWith($el[0]);
         this.el = $el[0];
         this.$el = $el;
+    }
+    /**
+     * @private
+     */
+    _postHistoryUndo() {
+        // Re-initialized all dynamic elements which were added by undo.
+        const dynamicEls = this.$root[0].querySelectorAll(".s_dynamic");
+        for (const element of dynamicEls) {
+            this._websiteRootEvent("widgets_start_request", {
+                $target: $(element),
+                editableMode: true,
+            });
+        }
     }
     //--------------------------------------------------------------------------
     // Public
