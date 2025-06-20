@@ -9,6 +9,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
+import { Deferred } from "@odoo/hoot-mock";
 
 defineWebsiteModels();
 
@@ -81,6 +82,31 @@ test("input with classAction and styleAction", async () => {
     expect(":iframe .test-options-target").toHaveStyle({
         "--custom-property": "2",
     });
+});
+
+test("input kept on async action", async () => {
+    const def = new Deferred();
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.dataset.test,
+            apply: async ({ editingElement, value }) => {
+                await def;
+                editingElement.dataset.test = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target" data-test="1">Hello</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input").edit("2");
+    await click(".options-container input");
+    await fill("3");
+    def.resolve();
+    await animationFrame();
+    expect(".options-container input").toHaveValue("23");
 });
 
 describe("default value", () => {

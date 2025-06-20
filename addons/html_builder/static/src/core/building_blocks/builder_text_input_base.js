@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { useActionInfo } from "../utils";
 
@@ -28,16 +28,25 @@ export class BuilderTextInputBase extends Component {
     };
 
     setup() {
+        this.isEditing = false;
         this.info = useActionInfo();
         this.inputRef = useForwardRefToParent("inputRef");
+        this.state = useState({ value: this.props.value });
+        onWillUpdateProps((nextProps) => {
+            if ("value" in nextProps) {
+                this.state.value = this.isEditing ? this.inputRef.el.value : nextProps.value;
+            }
+        });
     }
 
     onChange(ev) {
+        this.isEditing = false;
         const normalizedDisplayValue = this.props.commit(ev.target.value);
         ev.target.value = normalizedDisplayValue;
     }
 
     onInput(ev) {
+        this.isEditing = true;
         this.props.preview(ev.target.value);
     }
 
