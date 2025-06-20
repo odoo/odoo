@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.DocRequest">
+    <div class="o_doc_request ps-2 h-100 border-start">
+        <div class="flex justify-content-between align-items-center mb-1">
+            <h3>Request</h3>
+            <div class="flex">
+                <select class="me-1" t-on-change="event => this.selectLanguage(event.target.value)">
+                    <option
+                        t-foreach="LANGUAGES"
+                        t-as="lang"
+                        t-key="lang"
+                        t-att-selected="state.exampleLanguage === lang"
+                        t-att-value="lang"
+                        t-out="lang"
+                    />
+                </select>
+                <button
+                    class="btn primary flex align-items-center"
+                    t-on-click="execute"
+                    t-att-disabled="state.exampleLanguage !== 'json'"
+                >
+                    <span>Run</span>
+                    <i class="fa fa-play ms-1" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <CodeViewer
+            language="LANGUAGES[state.exampleLanguage]"
+            value="state.exampleLanguage === 'json' ? state.requestCode : state.exampleCode"
+            editable="state.exampleLanguage === 'json'"
+            onChange="value => this.state.requestCode = value"
+        />
+
+        <div class="mt-2 flex align-items-center mb-1">
+            <h3>Response</h3>
+            <span t-if="hasResponse and !state.response.error" class="badge success ms-1">Success</span>
+            <span t-if="hasResponse and state.response.error" class="badge error ms-1">Failed</span>
+        </div>
+
+        <t t-if="hasResponse">
+            <CodeViewer t-if="!state.response.error" language="'json'" value="state.response.body"/>
+            <div t-else="" class="alert error mt-1flex flex-column">
+                <h5 class="mb-2 flex align-items-center">
+                    <i class="pe-1 fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    <span>Error <t t-out="state.response.status"/> while executing request</span>
+                </h5>
+                <div>
+                    <div t-out="htmlResponse"></div>
+                </div>
+            </div>
+        </t>
+        <p t-else="" class="text-muted">Run to get a response</p>
+    </div>
+</t>
+
+</templates>
