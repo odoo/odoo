@@ -95,6 +95,36 @@
             <field name="main_button_label">Confirm</field>
         </record>
 
+        <record id="website_shop_page" model="website.technical.page">
+            <field name="name_technical_page">Shop-product Page</field>
+            <field name="website_url_technical_page">/shop</field>
+            <field name="view_id" ref="website_sale.products"/>
+        </record>
+
+        <record id="website_shop-checkout_page" model="website.technical.page">
+            <field name="name_technical_page">Shop-checkout Page</field>
+            <field name="website_url_technical_page">/shop/checkout</field>
+            <field name="view_id" ref="website_sale.checkout"/>
+        </record>
+
+        <record id="website_shop-extra-info_page" model="website.technical.page">
+            <field name="name_technical_page">Shop-extra-info Page</field>
+            <field name="website_url_technical_page">/shop/extra_info</field>
+            <field name="view_id" ref="website_sale.extra_info"/>
+        </record>
+        
+        <record id="website_shop-payment_page" model="website.technical.page">
+            <field name="name_technical_page">Shop-payment Page</field>
+            <field name="website_url_technical_page">/shop/payment</field>
+            <field name="view_id" ref="website_sale.payment"/>
+        </record>
+
+        <record id="website_shop-confirmation_page" model="website.technical.page">
+            <field name="name_technical_page">Shop-confirmation Page</field>
+            <field name="website_url_technical_page">/shop/confirmation</field>
+            <field name="view_id" ref="website_sale.confirmation"/>
+        </record>
+
     </data>
     <data>
         <!-- Filters for Dynamic Filter -->

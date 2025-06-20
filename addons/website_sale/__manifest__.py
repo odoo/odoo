@@ -16,13 +16,6 @@
         'security/ir_rules.xml',
         'security/res_groups.xml',
 
-        # Record data
-        'data/data.xml',
-        'data/mail_template_data.xml',
-        'data/product_snippet_template_data.xml',
-        'data/digest_data.xml',
-        'data/ir_cron_data.xml',
-        'data/tour.xml',
 
         # Reports
         'report/sale_report_views.xml',
@@ -31,6 +24,13 @@
         'views/delivery_form_templates.xml',
         'views/gmc_templates.xml',
         'views/templates.xml',
+        # Record data
+        'data/data.xml',
+        'data/mail_template_data.xml',
+        'data/product_snippet_template_data.xml',
+        'data/digest_data.xml',
+        'data/ir_cron_data.xml',
+        'data/tour.xml',
 
         # Model views.
         'views/account_move_views.xml',

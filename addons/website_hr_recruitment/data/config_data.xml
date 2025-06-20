@@ -23,6 +23,11 @@
             <field name="website_form_access">True</field>
             <field name="website_form_label">Apply for a Job</field>
         </record>
+        <record id="website_jobs_page" model="website.technical.page">
+            <field name="name_technical_page">Jobs Page</field>
+            <field name="website_url_technical_page">/jobs</field>
+            <field name="view_id" ref="website_hr_recruitment.index"/>
+        </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>hr.applicant</value>
             <value eval="[
