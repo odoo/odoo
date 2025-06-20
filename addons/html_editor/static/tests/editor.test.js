@@ -137,3 +137,10 @@ test("Convert self closing t elements to opening/closing tags", async () => {
         '<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>'
     );
 });
+
+test("Remove comments from content", async () => {
+    const { el } = await setupEditor(`
+        <div><!-- This is a comment -->Hello <!-- Another comment --></div>
+    `);
+    expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(`<div class="o-paragraph">Hello </div>`);
+});
