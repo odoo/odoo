@@ -14,6 +14,7 @@ export const pttExtensionHookService = {
             window.chrome?.runtime?.sendMessage(EXT_ID, { type: "ask-version" }) ??
             Promise.resolve("1.0.0.0");
         let isEnabled = false;
+        let isExtensionMode = false;
         let voiceActivated = false;
 
         browser.addEventListener("message", ({ data, origin, source }) => {
@@ -29,6 +30,7 @@ export const pttExtensionHookService = {
             switch (data.type) {
                 case "push-to-talk-pressed":
                     {
+                        isExtensionMode = true;
                         voiceActivated = false;
                         const isFirstPress = !rtc.state.selfSession?.isTalking;
                         rtc.onPushToTalk();
@@ -44,8 +46,10 @@ export const pttExtensionHookService = {
                 case "toggle-voice":
                     {
                         if (voiceActivated) {
+                            isExtensionMode = false;
                             rtc.setPttReleaseTimeout(0);
                         } else {
+                            isExtensionMode = true;
                             rtc.onPushToTalk();
                         }
                         voiceActivated = !voiceActivated;
@@ -90,6 +94,13 @@ export const pttExtensionHookService = {
             },
             get isEnabled() {
                 return isEnabled;
+            },
+            get isExtensionMode() {
+                return isExtensionMode;
+            },
+            resetExtensionState() {
+                isExtensionMode = false;
+                voiceActivated = false;
             },
         };
     },
