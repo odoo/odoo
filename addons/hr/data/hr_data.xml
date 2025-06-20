@@ -163,6 +163,15 @@
             <field name="interval_type">days</field>
         </record>
 
+        <record id="ir_cron_data_employee_update_current_version" model="ir.cron">
+            <field name="name">HR Employee: Update Current Version</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_update_current_version_id()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
         <!-- Structure Type -->
         <record id="structure_type_employee" model="hr.payroll.structure.type">
             <field name="name">Employee</field>
