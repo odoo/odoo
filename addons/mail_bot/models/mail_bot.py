@@ -26,13 +26,15 @@ class MailBot(models.AbstractModel):
             return
         body = values.get("body", "").replace("\xa0", " ").strip().lower().strip(".!")
         if answer := self._get_answer(channel, body, values, command):
-            channel.sudo().message_post(
-                author_id=odoobot_id,
-                body=answer,
-                message_type="comment",
-                silent=True,
-                subtype_xmlid="mail.mt_comment",
-            )
+            answers = answer if isinstance(answer, list) else [answer]
+            for ans in answers:
+                channel.sudo().message_post(
+                    author_id=odoobot_id,
+                    body=ans,
+                    message_type="comment",
+                    silent=True,
+                    subtype_xmlid="mail.mt_comment",
+                )
 
     @staticmethod
     def _get_style_dict():
@@ -105,14 +107,17 @@ class MailBot(models.AbstractModel):
                 ]).unlink()
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "idle"
-                return self.env._(
-                    "Good, you can customize canned responses in the Discuss application."
-                    "%(new_line)s%(new_line)s%(bold_start)sIt's the end of this "
-                    "overview%(bold_end)s, you can now %(bold_start)sclose this "
-                    "conversation%(bold_end)s or start the tour again with typing "
-                    "%(command_start)sstart the tour%(command_end)s. Enjoy discovering Odoo!",
-                    **self._get_style_dict()
-                )
+                return [
+                    self.env._(
+                        "Great! You can customize %(bold_start)scanned responses%(bold_end)s in the Discuss app.",
+                        **self._get_style_dict(),
+                    ),
+                    self.env._(
+                        "That’s the end of this overview. You can %(bold_start)sclose this conversation%(bold_end)s or type "
+                        "%(command_start)sstart the tour%(command_end)s to see it again. Enjoy exploring Odoo!",
+                        **self._get_style_dict(),
+                    ),
+                ]
             # repeat question if needed
             elif odoobot_state == 'onboarding_canned' and not self._is_help_requested(body):
                 self.env.user.odoobot_failed = True
