@@ -13,13 +13,15 @@ import { CustomInnerSnippet } from "./custom_inner_snippet";
 export class BlockTab extends Component {
     static template = "html_builder.BlockTab";
     static components = { Snippet, CustomInnerSnippet };
-    static props = {};
+    static props = {
+        snippetModel: { type: Object },
+    };
 
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
         this.popover = useService("popover");
-        this.snippetModel = useState(useService("html_builder.snippets"));
+        this.snippetModel = useState(this.props.snippetModel);
         this.blockTabRef = useRef("block-tab");
         // Needed to avoid race condition in tours.
         this.state = useState({ ongoingInsertion: false });

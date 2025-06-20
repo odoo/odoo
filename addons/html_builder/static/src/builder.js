@@ -32,7 +32,7 @@ export class Builder extends Component {
     static props = {
         closeEditor: { type: Function },
         reloadEditor: { type: Function, optional: true },
-        snippetsName: { type: String },
+        snippetModel: { type: Object },
         toggleMobile: { type: Function },
         overlayRef: { type: Function },
         isTranslation: { type: Boolean },
@@ -65,6 +65,8 @@ export class Builder extends Component {
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.notification = useService("notification");
+        this.snippetModel = useState(this.props.snippetModel);
+        this.snippetModel.registerBeforeReload(this.save.bind(this));
 
         const editorBus = new EventBus();
 
@@ -146,8 +148,7 @@ export class Builder extends Component {
                     key: this.env.localOverlayContainerKey,
                     ref: this.props.overlayRef,
                 },
-                saveSnippet: (snippetEl, cleanForSaveHandlers) =>
-                    this.snippetModel.saveSnippet(snippetEl, cleanForSaveHandlers),
+                snippetModel: this.snippetModel,
                 getShared: () => this.editor.shared,
                 updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
                 allowCustomStyle: true,
@@ -156,9 +157,6 @@ export class Builder extends Component {
             },
             this.env.services
         );
-
-        this.snippetModel = useState(useService("html_builder.snippets"));
-        this.snippetModel.registerBeforeReload(this.save.bind(this));
 
         onWillStart(async () => {
             await this.snippetModel.load();

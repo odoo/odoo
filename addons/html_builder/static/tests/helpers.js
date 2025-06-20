@@ -17,6 +17,7 @@ import {
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
+import { useService } from "@web/core/utils/hooks";
 
 export function patchWithCleanupImg() {
     const defaultImg =
@@ -93,6 +94,7 @@ class BuilderContainer extends Component {
         useSubEnv({
             builderRef: useRef("container"),
         });
+        this.snippetModel = useService("html_builder.snippets").makeSnippetModel("");
     }
 
     onLoad() {
@@ -102,7 +104,7 @@ class BuilderContainer extends Component {
     getBuilderProps() {
         return {
             closeEditor: () => {},
-            snippetsName: "",
+            snippetModel: this.snippetModel,
             toggleMobile: () => {
                 this.state.isMobile = !this.state.isMobile;
             },
