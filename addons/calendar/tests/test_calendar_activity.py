@@ -53,14 +53,8 @@ class TestCalendarActivity(ActivityScheduleCase):
             'start': now + timedelta(days=-2),
             'user_id': self.user_employee.id,
         })
-        # TDE FIXME: currently failing if microsoft_calendar is installed as it
-        # creates a copy of the event (organizer change) and therefore copies
-        # activities also, see '_recreate_event_different_organizer'. Waiting
-        # proper investigation of behavior by calendar people.
-        if len(test_record.activity_ids) == 2:
-            activity = test_record.activity_ids[1]
-        else:
-            activity = test_record.activity_ids[0]
+
+        activity = test_record.activity_ids[0]
         self.assertEqual(activity.summary, '%s2' % test_name)
         self.assertEqual(activity.note, test_note2)
         self.assertEqual(activity.user_id, self.user_employee)

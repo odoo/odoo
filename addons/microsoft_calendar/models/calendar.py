@@ -180,8 +180,9 @@ class CalendarEvent(models.Model):
         # Updates from Microsoft must skip this check since changing the organizer on their side is not possible.
         change_from_microsoft = self.env.context.get('dont_notify', False)
         deactivated_events_ids = []
+        new_user_id = values.get('user_id')
         for event in self:
-            if values.get('user_id') and event.user_id.id != values['user_id'] and not change_from_microsoft:
+            if new_user_id and event.user_id.id != new_user_id and not change_from_microsoft and event.microsoft_id:
                 sender_user, partner_ids = event._get_organizer_user_change_info(values)
                 partner_included = sender_user.partner_id in event.attendee_ids.partner_id or sender_user.partner_id.id in partner_ids
                 event._check_organizer_validation(sender_user, partner_included)
