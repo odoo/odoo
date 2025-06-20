@@ -2043,8 +2043,7 @@ describe("Special cases", () => {
                         unformat(`
                             <ul>
                                 <li>abc</li>
-                                <li>def</li>
-                                <li class="oe-nested">
+                                <li>def
                                     <ul>
                                         <li>123</li>
                                         <li>456</li>
@@ -2058,8 +2057,7 @@ describe("Special cases", () => {
                     <ol>
                         <li>Alpha</li>
                         <li>abc</li>
-                        <li>def</li>
-                        <li class="oe-nested">
+                        <li><p>def</p>
                             <ol>
                                 <li>123</li>
                                 <li>456[]</li>
@@ -2100,8 +2098,7 @@ describe("Special cases", () => {
                 },
                 contentAfter: unformat(`
                     <ul>
-                        <li>Alpha</li>
-                        <li class="oe-nested">
+                        <li><p>Alpha</p>
                             <ul>
                                 <li class="oe-nested">
                                     <ul>
@@ -2131,12 +2128,10 @@ describe("Special cases", () => {
                         unformat(`
                             <ul>
                                 <li>ab</li>
-                                <li>cd</li>
-                                <li class="oe-nested">
+                                <li>cd
                                     <ol>
                                         <li>ef</li>
-                                        <li>gh</li>
-                                        <li class="oe-nested">
+                                        <li>gh
                                             <ul class="o_checklist">
                                                 <li>ij</li>
                                                 <li>kl</li>
@@ -2151,12 +2146,10 @@ describe("Special cases", () => {
                 contentAfter: unformat(`
                     <ol>
                         <li>ab</li>
-                        <li>cd</li>
-                        <li class="oe-nested">
+                        <li><p>cd</p>
                             <ol>
                                 <li>ef</li>
-                                <li>gh</li>
-                                <li class="oe-nested">
+                                <li><p>gh</p>
                                     <ol>
                                         <li>ij</li>
                                         <li>kl[]</li>
@@ -2178,12 +2171,10 @@ describe("Special cases", () => {
                         unformat(`
                             <ul>
                                 <li>ab</li>
-                                <li>cd</li>
-                                <li class="oe-nested">
+                                <li>cd
                                     <ol>
                                         <li>ef</li>
-                                        <li>gh</li>
-                                        <li class="oe-nested">
+                                        <li>gh
                                             <ul class="o_checklist">
                                                 <li>ij</li>
                                                 <li>kl</li>
@@ -2198,12 +2189,10 @@ describe("Special cases", () => {
                 contentAfter: unformat(`
                     <ul>
                         <li>ab</li>
-                        <li>cd</li>
-                        <li class="oe-nested">
+                        <li><p>cd</p>
                             <ul>
                                 <li>ef</li>
-                                <li>gh</li>
-                                <li class="oe-nested">
+                                <li><p>gh</p>
                                     <ul>
                                         <li>ij</li>
                                         <li>kl[]</li>
@@ -2310,12 +2299,10 @@ describe("Special cases", () => {
                 },
                 contentAfter: unformat(`
                     <ul>
-                        <li>ab</li>
-                        <li class="oe-nested">
+                        <li><p>ab</p>
                             <ul>
                                 <li>cd</li>
-                                <li>ef</li>
-                                <li class="oe-nested">
+                                <li><p>ef</p>
                                     <ul>
                                         <li>gh</li>
                                         <li>ij</li>
@@ -2324,8 +2311,7 @@ describe("Special cases", () => {
                                     </ul>
                                 </li>
                                 <li>op</li>
-                                <li>qr</li>
-                                <li class="oe-nested">
+                                <li><p>qr</p>
                                     <ul>
                                         <li>st</li>
                                         <li>uv[]</li>

@@ -61,6 +61,11 @@ describe("visibility", () => {
         expect(".o_we_power_buttons").not.toBeVisible();
     });
 
+    test("should not show power buttons withing a nested list", async () => {
+        await setupEditor("<ul><li><p>[]<br></p><ul><li>abc</li></ul></li></ul>");
+        expect(".o_we_power_buttons").not.toBeVisible();
+    });
+
     test("should not overlap with long placeholders", async () => {
         const placeholder = "This is a very very very very long placeholder";
         class TestPowerboxPlugin extends PowerboxPlugin {
