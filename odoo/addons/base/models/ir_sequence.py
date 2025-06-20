@@ -4,9 +4,10 @@ from datetime import datetime, timedelta
 import logging
 import pytz
 from psycopg2 import sql
+import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -97,6 +98,25 @@ class IrSequence(models.Model):
     _order = 'name'
     _allow_sudo_commands = False
 
+    _BASE_LEGENDS = {
+        'year', 'y', 'month', 'day',
+        'doy', 'woy', 'weekday',
+        'h24', 'h12', 'min', 'sec',
+    }
+
+    _ALLOWED_LEGENDS = {
+        f'%({key})s' for key in _BASE_LEGENDS
+    }.union({
+        f'%(range_{key})s' for key in _BASE_LEGENDS
+    })
+
+    _LEGEND_REGEX = re.compile(r'%\([a-zA-Z0-9_]+\)s')
+    _MALFORMED_REGEXES = [
+        re.compile(r'%\([^\)]*$'),                    # Incomplete: '%(year'
+        re.compile(r'%\([a-zA-Z0-9_]+\)(?!s)'),       # Missing 's': '%(year)'
+        re.compile(r'%\(\)'),                         # Empty: '%()'
+    ]
+
     def _get_number_next_actual(self):
         '''Return number from ir_sequence row when no_gap implementation,
         and number from postgres sequence when standard implementation.'''
@@ -153,6 +173,29 @@ class IrSequence(models.Model):
                                  default=lambda s: s.env.company)
     use_date_range = fields.Boolean(string='Use subsequences per date_range')
     date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_id', string='Subsequences')
+
+    @api.constrains('prefix', 'suffix')
+    def _check_prefix_and_suffix(self):
+        for sequence in self:
+            for field_name in ['prefix', 'suffix']:
+                value = sequence[field_name]
+                if not value:
+                    continue
+                # Find all valid-looking legends
+                found_legends = set(self._LEGEND_REGEX.findall(value))
+                # Check for malformed patterns
+                malformed_legends = set()
+                for regex in self._MALFORMED_REGEXES:
+                    malformed_legends.update(regex.findall(value))
+                invalid_legends = (found_legends - self._ALLOWED_LEGENDS).union(malformed_legends)
+                if invalid_legends:
+                    raise ValidationError(
+                        _(
+                            "The %(field)s contains invalid legends: %(legends)s",
+                            field=field_name,
+                            legends=", ".join(sorted(invalid_legends)),
+                        )
+                    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -234,7 +277,7 @@ class IrSequence(models.Model):
         try:
             interpolated_prefix = _interpolate(self.prefix, d)
             interpolated_suffix = _interpolate(self.suffix, d)
-        except (ValueError, TypeError):
+        except (ValueError, TypeError, KeyError):
             raise UserError(_('Invalid prefix or suffix for sequence %r', self.name))
         return interpolated_prefix, interpolated_suffix
 
