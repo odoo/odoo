@@ -3727,6 +3727,46 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertNotEqual(invoice_tax_matching, refund_tax_matching)
         self.assertTrue(all([invoice_tax_matching, refund_tax_matching, invoice_receivable_matching, refund_receivable_matching]))
 
+    def test_out_invoice_caba_move_name(self):
+        self.env.company.tax_exigibility = True
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        caba_tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+        })
+        caba_tax.invoice_repartition_line_ids.account_id.reconcile = True
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'price_unit': 1000.0,
+                    'tax_ids': [Command.set(caba_tax.ids)],
+                })
+            ],
+        })
+        invoice.invoice_line_ids.tax_ids = caba_tax
+        invoice.action_post()
+
+        with Form(self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=invoice.ids
+        )) as payment_register:
+            pass
+        payment_register = payment_register.save()
+        payment_register.action_create_payments()
+
+        for move in invoice.tax_cash_basis_created_move_ids:
+            for line in move.line_ids:
+                with self.subTest(move=move, line=line):
+                    self.assertEqual(line.move_name, move.name)
 
     def test_tax_grid_remove_tax(self):
         # Add a tag to tax_sale_a
