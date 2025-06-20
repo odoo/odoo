@@ -130,7 +130,6 @@ export class RtcSession extends Record {
     sequence = 0;
     // RTC stats
     connectionState;
-    logStep;
 
     get channel() {
         return this.channel_member_id?.thread;
