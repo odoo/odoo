@@ -23,10 +23,13 @@ class ProductPublicCategory(models.Model):
         return 10000
 
     name = fields.Char(required=True, translate=True)
+    cover_image = fields.Image(
+        string="Cover Image", help="Displayed only in the Category List Snippet.",
+    )
     sequence = fields.Integer(default=_default_sequence, index=True)
 
     parent_id = fields.Many2one(
-        string="Parent Category",
+        string="Parent",
         comodel_name='product.public.category',
         ondelete='cascade',
         index=True,
@@ -54,7 +57,7 @@ class ProductPublicCategory(models.Model):
     )
 
     website_description = fields.Html(
-        string="Category Description",
+        string="Description",
         sanitize_attributes=False,
         sanitize_form=False,
         sanitize_overridable=True,
@@ -146,3 +149,38 @@ class ProductPublicCategory(models.Model):
         for data in results_data:
             data['url'] = '/shop/category/%s' % data['id']
         return results_data
+
+    @staticmethod
+    def _get_available_category_domain(website_id):
+        """
+        Return the domain to filter ecommerce categories that are available for the given website.
+        :param int website_id: ID of the website for which categories are being retrieved
+        :return: A domain list to be used in search/filter operations
+        :rtype list
+        """
+        return [
+            ('has_published_products', '=', True),
+            ('website_id', 'in', (False, website_id)),
+        ]
+
+    @api.model
+    def get_snippet_categories(self, website_id):
+        """
+        Return categories to be displayed in category list snippet.
+        :param int website_id: ID of the current website
+        :rtype dict
+        :return list of dictionaries with the following structure:
+            {
+                'id': int,
+                'name': string,
+            }
+        """
+        allowed_categories = self.search(self._get_available_category_domain(website_id))
+        categories = []
+        for category in allowed_categories.filtered(lambda c: not c.parent_id):
+            children = category.child_id & allowed_categories
+            categories.append({
+                'id': category.id,
+                'name': f"{category.name} ({len(children)})" if children else category.name,
+            })
+        return categories

@@ -1830,6 +1830,59 @@ class WebsiteSale(payment_portal.PaymentPortal):
             request.env['website.track'].sudo().search(domain).unlink()
         return {}
 
+    @route('/shop/get_categories', type='jsonrpc', auth='public', website=True)
+    def get_shop_categories(self, category_id=None):
+        """
+        Return a list of public product categories available on the website.
+
+        If `category_id` is provided, returns the children of that category.
+        If no children are found, the category itself is returned.
+        If `category_id` is not provided, top-level categories are returned.
+
+        :param category_id: (optional) ID of the parent category to fetch children for
+        :returns: A list of dictionaries representing the filtered product categories.
+              Each dictionary contains:
+                  - `id` (int): The category's ID
+                  - `name` (str): The category's display name
+                  - `cover_image_url` (str): image URL for the category
+        :rtype: list[dict]
+        """
+        if not request.website.has_ecommerce_access():
+            return []
+
+        CategorySudo = request.env['product.public.category'].sudo()
+        domain = CategorySudo._get_available_category_domain(request.website.id)
+        default_image = request.env['product.template']._get_product_placeholder_filename()
+        if not category_id:
+            categories = CategorySudo.search(domain + [('parent_id', '=', False)])
+        else:
+            parent = CategorySudo.browse(category_id)
+            categories = parent.child_id.filtered_domain(domain) or parent
+        return [{
+            'id': cat.id,
+            'name': cat.name,
+            'cover_image_url': (
+                f'{request.website.get_base_url()}{request.website.image_url(cat, "cover_image")}'
+                if cat.cover_image else default_image
+            ),
+        } for cat in categories]
+
+    @route('/snippets/category/set_image', type='jsonrpc', auth='user')
+    def set_category_image(self, category_id, attachment_id):
+        """
+        Set the cover image of a public product category record to the given attachment.
+
+        :param int category_id: ID of the product public category to update.
+        :param int attachment_id: ID of the attachment containing the image data.
+        :raises NotFound: If the user does not have website editing rights.
+        """
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise NotFound()
+        image_data = request.env['ir.attachment'].browse(attachment_id).datas
+        category = request.env['product.public.category'].browse(category_id).exists()
+        if category:
+            category.write({'cover_image': image_data})
+
     @staticmethod
     def _populate_currency_and_pricelist(kwargs):
         website = request.website

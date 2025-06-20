@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="website_sale.dynamic_filter_template_categories">
+        <t t-foreach="data" t-as="category" t-key="category.id">
+            <div
+                class="s_dynamic_category_item category_item position-relative bg-black overflow-hidden oe_unremovable oe_unmovable"
+                t-att-data-category-id="category.id"
+                t-attf-style="grid-row: span {{size}};"
+                contenteditable="false"
+                role="article"
+            >
+                <t t-out="cover_image_url"/>
+                <img
+                    loading="lazy"
+                    t-att-src="category.cover_image_url"
+                    alt="Category Image"
+                    class="s_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
+                />
+                <div t-attf-class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between {{alignmentClass}}">
+                    <h3 class="h4" t-out="category.name"/>
+                    <a
+                        role="button"
+                        t-attf-href="/shop/category/{{category.id}}"
+                        class="s_dynamic_category_button btn btn-primary align-self-start oe_unremovable"
+                        t-out="buttonText"
+                    />
+                </div>
+            </div>
+        </t>
+    </t>
+    <t
+        t-name="website_sale.dynamic_filter_template_categories_clickable_items"
+        t-inherit="website_sale.dynamic_filter_template_categories"
+    >
+        <xpath expr="//div[hasclass('s_dynamic_category_item')]" position="attributes">
+            <attribute name="class" add="opacity-trigger-hover" separator=" "/>
+        </xpath>
+        <xpath expr="//div[contains(@t-attf-class,'s_category_overlay')]" position="attributes">
+            <attribute name="t-attf-class" add="z-0" separator=" "/>
+        </xpath>
+        <xpath expr="//h3" position="before">
+            <span
+                class="s_category_filter position-absolute start-0 top-0 end-0 bottom-0 bg-black-25 transition-base z-n1"
+                aria-hidden="true"
+            />
+        </xpath>
+        <xpath expr="//h3" position="attributes">
+            <attribute name="class" add="mb-0" separator=" "/>
+        </xpath>
+        <xpath expr="//img[hasclass('s_category_image')]" position="attributes">
+            <attribute name="class" add="transition-base" separator=" "/>
+        </xpath>
+        <xpath expr="//a[hasclass('s_dynamic_category_button')]" position="attributes">
+            <attribute
+                name="class"
+                add="stretched-link h-0 p-0 opacity-0 o_not_editable o_not-animable"
+                separator=" "
+            />
+            <attribute name="contenteditable">false</attribute>
+        </xpath>
+        <xpath expr="//a[hasclass('s_dynamic_category_button')]" position="after">
+            <p class="s_dynamic_category_arrow position-absolute end-0 bottom-0 mb-3 me-3">
+                <i class="oi oi-arrow-right fa-lg"/>
+            </p>
+        </xpath>
+    </t>
+</templates>
