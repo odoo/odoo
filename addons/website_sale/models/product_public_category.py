@@ -145,4 +145,5 @@ class ProductPublicCategory(models.Model):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for data in results_data:
             data['url'] = '/shop/category/%s' % data['id']
+            data['website_description'] = data['website_description'] or ''
         return results_data

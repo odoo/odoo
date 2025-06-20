@@ -25,7 +25,8 @@ const searchTemplate = /* html */ `
                     data-display-detail="false"
                     data-order-by="name asc"
                     autocomplete="off"/>
-            <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button border border-start-0 px-4 bg-o-color-4">
+                    <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button border border-start-0 px-4 bg-o-color-4">
+                <span class="o_total_search_count"></span>
                 <i class="oi oi-search"></i>
             </button>
         </div>
@@ -75,6 +76,7 @@ function supportAutocomplete() {
 test("searchbar triggers a search when text is entered", async () => {
     supportAutocomplete();
     const { core } = await startInteractions(searchTemplate);
+    const totalSearchCountEl = queryOne(".o_total_search_count");
     expect(core.interactions).toHaveLength(1);
     await click("form input[type=search]");
     await press("x");
@@ -84,12 +86,14 @@ test("searchbar triggers a search when text is entered", async () => {
     await press("z");
     await advanceTime(400);
     expect(queryAll("form .o_search_result_item")).toHaveLength(3);
+    expect(totalSearchCountEl).toHaveText("(3 results)");
 });
 
 test("searchbar selects first result on cursor down", async () => {
     supportAutocomplete();
     await startInteractions(searchTemplate);
     const inputEl = queryOne("form input[type=search]");
+    const totalSearchCountEl = queryOne(".o_total_search_count");
     await click(inputEl);
     await press("x");
     await press("y");
@@ -97,6 +101,7 @@ test("searchbar selects first result on cursor down", async () => {
     await advanceTime(400);
     const resultEls = queryAll("form a:has(.o_search_result_item)");
     expect(resultEls).toHaveLength(3);
+    expect(totalSearchCountEl).toHaveText("(3 results)");
     expect(document.activeElement).toBe(inputEl);
     await press("down");
     expect(document.activeElement).toBe(resultEls[0]);
@@ -106,6 +111,7 @@ test("searchbar selects last result on cursor up", async () => {
     supportAutocomplete();
     await startInteractions(searchTemplate);
     const inputEl = queryOne("form input[type=search]");
+    const totalSearchCountEl = queryOne(".o_total_search_count");
     await click(inputEl);
     await press("x");
     await press("y");
@@ -113,6 +119,7 @@ test("searchbar selects last result on cursor up", async () => {
     await advanceTime(400);
     const resultEls = queryAll("form a:has(.o_search_result_item)");
     expect(resultEls).toHaveLength(3);
+    expect(totalSearchCountEl).toHaveText("(3 results)");
     expect(document.activeElement).toBe(inputEl);
     await press("up");
     expect(document.activeElement).toBe(resultEls[2]);
@@ -121,12 +128,15 @@ test("searchbar selects last result on cursor up", async () => {
 test("searchbar removes results on escape", async () => {
     supportAutocomplete();
     await startInteractions(searchTemplate);
+    const totalSearchCountEl = queryOne(".o_total_search_count");
     await click("form input[type=search]");
     await press("x");
     await press("y");
     await press("z");
     await advanceTime(400);
     expect(queryAll("form a:has(.o_search_result_item)")).toHaveLength(3);
+    expect(totalSearchCountEl).toHaveText("(3 results)");
     await press("escape");
     expect(queryAll("form a:has(.o_search_result_item)")).toHaveLength(0);
+    expect(totalSearchCountEl).toHaveText("");
 });

@@ -15,6 +15,7 @@ class SearchbarOptionPlugin extends Plugin {
                 props: {
                     getOrderByItems: () => this.getResource("searchbar_option_order_by_items"),
                     getDisplayItems: () => this.getResource("searchbar_option_display_items"),
+                    getTemplates: () => this.getResource("searchbar_option_templates"),
                 },
             },
         ],
@@ -22,6 +23,8 @@ class SearchbarOptionPlugin extends Plugin {
             SetSearchTypeAction,
             SetOrderByAction,
             SetSearchbarStyleAction,
+            SetTemplateAction,
+            SetPlaceholderAction,
             // This resets the data attribute to an empty string on clean.
             // TODO: modify the Python `_search_get_detail()` (grep
             // `with_description = options['displayDescription']`) so we can use
@@ -62,12 +65,25 @@ class SearchbarOptionPlugin extends Plugin {
                 dependency: "search_all_opt",
             },
         ],
+        searchbar_option_templates:[
+            {
+                label: _t("Default Template"),
+                templateId: "website.s_searchbar.autocomplete",
+                image: "/website/static/src/img/snippets_options/searchbar_template_default.svg",
+            },
+            {
+                label: _t("Second Template"),
+                templateId: "website.s_searchbar.autocomplete_second",
+                image: "/website/static/src/img/snippets_options/searchbar_template_second.svg",
+            }
+        ],
     };
 }
 
 class BaseSearchBarAction extends BuilderAction {
     id = "baseSearchBar";
     defaultSearchType = "name asc";
+    defaultTemplateId = "website.s_searchbar.autocomplete";
 
     getFormEl(editingElement) {
         return editingElement.closest("form");
@@ -112,6 +128,10 @@ class SetSearchTypeAction extends BaseSearchBarAction {
                 delete editingElement.dataset[item.dataAttribute];
             }
         }
+
+        // Set the default template id.
+        editingElement.dataset.templateId = this.defaultTemplateId;
+
         for (const dataAttribute of displayDataAttributes) {
             editingElement.dataset[dataAttribute] = "true";
         }
@@ -124,6 +144,12 @@ class SetOrderByAction extends BaseSearchBarAction {
     }
 }
 
+class SetTemplateAction extends BaseSearchBarAction {
+    static id = "setTemplate";
+    apply({ editingElement, value: templateId }) {
+        return editingElement.dataset.templateId = templateId;
+    }
+}
 class SetSearchbarStyleAction extends BaseSearchBarAction {
     static id = "setSearchbarStyle";
     isApplied({ editingElement, params: { mainParam: style } }) {
@@ -146,6 +172,17 @@ class SetSearchbarStyleAction extends BaseSearchBarAction {
         searchButtonEl?.classList.toggle("btn-primary", !isLight);
     }
 }
+class SetPlaceholderAction extends BaseSearchBarAction {
+    static id = "setPlaceholder";
+    getValue({ editingElement }) {
+        return editingElement.getAttribute("placeholder");
+    }
+    apply({ editingElement, value: widgetValue }) {
+        editingElement.setAttribute("placeholder", widgetValue);
+        editingElement.dataset.placeholder = widgetValue;
+    }
+}
+
 // This resets the data attribute to an empty string on clean.
 // TODO: modify the Python `_search_get_detail()` (grep
 // `with_description = options['displayDescription']`) so we can use

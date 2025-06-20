@@ -30,7 +30,9 @@ export class SearchBar extends Interaction {
         this.inputEl = this.el.querySelector(".search-query");
         this.menuEl = null;
         this.searchType = this.inputEl.dataset.searchType;
+        this.template = this.inputEl.dataset.templateId || "website.s_searchbar.autocomplete";
         const orderByEl = this.el.querySelector(".o_search_order_by");
+        this.totalSearchCountEl = this.el.querySelector(".o_total_search_count");
         const form = orderByEl.closest("form");
         this.order = orderByEl.value;
         this.limit = parseInt(this.inputEl.dataset.limit) || 5;
@@ -115,8 +117,11 @@ export class SearchBar extends Interaction {
         }
         const prevMenuEl = this.menuEl;
         if (res && this.limit) {
+            if(this.totalSearchCountEl) {
+                this.totalSearchCountEl.textContent = `(${res["results_count"]} result${res["results_count"] > 1 ? "s)" : ")"}`;
+            }
             const results = res["results"];
-            let template = "website.s_searchbar.autocomplete";
+            let template = this.template;
             const candidate = template + "." + this.searchType;
             if (getTemplate(candidate)) {
                 template = candidate;
@@ -159,6 +164,7 @@ export class SearchBar extends Interaction {
 
     onFocusOut() {
         if (!this.linkHasFocus && document.activeElement?.closest(".o_searchbar_form") !== this.el) {
+            this.totalSearchCountEl.textContent = "";
             this.render();
         }
     }
@@ -169,6 +175,7 @@ export class SearchBar extends Interaction {
     onKeydown(ev) {
         switch (ev.key) {
             case "Escape":
+                this.totalSearchCountEl.textContent = "";
                 this.render();
                 break;
             case "ArrowUp":
