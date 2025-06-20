@@ -7,7 +7,7 @@ from functools import wraps
 from markupsafe import Markup
 
 import odoo
-from odoo import models
+from odoo import models, release
 from odoo.http import request
 from odoo.tools import groupby
 from odoo.addons.bus.websocket import wsrequest
@@ -49,17 +49,18 @@ def get_twilio_credentials(env) -> (str, str):
 
 def get_sfu_url(env) -> str | None:
     sfu_url = env['ir.config_parameter'].sudo().get_param("mail.sfu_server_url")
-    if not sfu_url:
+    is_saas = "saas" in release.version
+    if is_saas and not sfu_url:
         sfu_url = os.getenv("ODOO_SFU_URL")
-    if sfu_url:
-        return sfu_url.rstrip("/")
+    return sfu_url.rstrip("/") if sfu_url else None
 
 
 def get_sfu_key(env) -> str | None:
     sfu_key = env['ir.config_parameter'].sudo().get_param('mail.sfu_server_key')
-    if not sfu_key:
-        return os.getenv("ODOO_SFU_KEY")
-    return sfu_key
+    is_saas = "saas" in release.version
+    if is_saas and not sfu_key:
+        sfu_key = os.getenv("ODOO_SFU_KEY")
+    return sfu_key or None
 
 
 ids_by_model = defaultdict(lambda: ("id",))
