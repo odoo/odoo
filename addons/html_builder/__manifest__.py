@@ -43,9 +43,8 @@
             'html_builder/static/src/**/*.dark.scss',
         ],
         'html_builder.inside_builder_style': [
-            ('include', 'web._assets_helpers'),
+            ('include', 'web.assets_frontend'),
 
-            'web/static/src/scss/bootstrap_overridden.scss',
             'html_builder/static/src/**/*.inside.scss',
             'html_editor/static/src/main/chatgpt/chatgpt_plugin.scss',
             'html_editor/static/src/main/link/link.scss',
