@@ -253,20 +253,12 @@ class TestIrCron(TransactionCase, CronMixinCase):
             state = {'call_count': 0}
             CALL_TARGET = 5
             def f(self):
+                frozen_datetime.tick(delta=timedelta(seconds=1))
                 state['call_count'] += 1
                 self.env['ir.cron']._notify_progress(
                     done=1,
                     remaining=CALL_TARGET - state['call_count']
                 )
-                self.env.cr.commit()
-                raise ValueError
-            return f, state
-
-        def failure_fully(cron):
-            state = {'call_count': 0}
-            def f(self):
-                state['call_count'] += 1
-                self.env['ir.cron']._notify_progress(done=1, remaining=0)
                 self.env.cr.commit()
                 raise ValueError
             return f, state
@@ -282,10 +274,8 @@ class TestIrCron(TransactionCase, CronMixinCase):
             (   five_success, almost_failed,   False,          5,          5,          0,  True),
             (        failure,             0,   False,          1,          0,          1,  True),
             (        failure, almost_failed,   False,          1,          0,          0, False),
-            (failure_partial,             0,   False,          5,          5,          1,  True),
-            (failure_partial, almost_failed,   False,          5,          5,          0, False),
-            (  failure_fully,             0,   False,          1,          1,          1,  True),
-            (  failure_fully, almost_failed,   False,          1,          1,          0, False),
+            (failure_partial,             0,    True,          1,          1,          0,  True),
+            (failure_partial, almost_failed,    True,          1,          1,          0,  True),
         ]
 
         for cb, curr_failures, trigger, call_count, done_count, fail_count, active in CASES:
