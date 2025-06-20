@@ -36,6 +36,10 @@ class ResUsers(models.Model):
     presence_ids = fields.One2many("mail.presence", "user_id", groups="base.group_system")
     # sudo: res.users - can access presence of accessible user
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+    manual_im_status = fields.Selection(
+        [("away", "Away"), ("busy", "Do Not Disturb"), ("offline", "Offline")],
+        string="IM status manually set by the user",
+    )
 
     _notification_type = models.Constraint(
         "CHECK (notification_type = 'email' OR NOT share)",
@@ -64,10 +68,14 @@ class ResUsers(models.Model):
         new_portal_users.notification_type = 'email'
         new_portal_users.write({"group_ids": [Command.unlink(inbox_group_id)]})
 
-    @api.depends("presence_ids.status")
+    @api.depends("manual_im_status", "presence_ids.status")
     def _compute_im_status(self):
         for user in self:
-            user.im_status = user.presence_ids.status or "offline"
+            user.im_status = (
+                "offline"
+                if user.presence_ids.status in ["offline", False]
+                else user.manual_im_status or user.presence_ids.status
+            )
 
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
@@ -312,14 +320,17 @@ class ResUsers(models.Model):
     def _init_store_data(self, store: Store):
         """Initialize the store of the user."""
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
+        # sudo: res.partner - exposing OdooBot data is considered acceptable
+        odoobot = self.env.ref("base.partner_root").sudo()
+        if not self.env.user._is_public():
+            odoobot = odoobot.with_prefetch((odoobot + self.env.user.partner_id).ids)
         store.add_global_values(
             action_discuss_id=xmlid_to_res_id("mail.action_discuss"),
             hasLinkPreviewFeature=self.env["mail.link.preview"]._is_link_preview_enabled(),
             internalUserGroupId=self.env.ref("base.group_user").id,
             mt_comment=xmlid_to_res_id("mail.mt_comment"),
             mt_note=xmlid_to_res_id("mail.mt_note"),
-            # sudo: res.partner - exposing OdooBot data is considered acceptable
-            odoobot=Store.One(self.env.ref("base.partner_root").sudo()),
+            odoobot=Store.One(odoobot),
         )
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
@@ -329,6 +340,7 @@ class ResUsers(models.Model):
                     [
                         "active",
                         "avatar_128",
+                        "im_status",
                         Store.One(
                             "main_user_id",
                             [

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.UserMenu">
-        <div class="o_user_menu d-none d-md-block pe-0">
+        <div class="o_user_menu d-none d-md-block pe-0 bg-inherit">
             <DropdownGroup group="'web-navbar-group'">
                 <Dropdown>
                     <button class="py-1 py-lg-0">
@@ -17,6 +17,7 @@
                     <t t-set-slot="content">
                         <t t-foreach="getElements()" t-as="element" t-key="element_index">
                             <t t-if="!element.hide">
+                                <t t-if="element.type === 'component'" t-component="element.contentComponent"/>
                                 <DropdownItem
                                     t-if="element.type == 'item' || element.type == 'switch'"
                                     attrs="{ href: element.href, 'data-menu': element.id }"

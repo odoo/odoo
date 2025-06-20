@@ -38,15 +38,19 @@ class ResPartner(models.Model):
             # replace any successive \n with a single comma
             partner.contact_address_inline = re.sub(r'\n(\s|\n)*', ', ', partner.contact_address).strip().strip(',')
 
-    @api.depends("user_ids.presence_ids.status")
+    @api.depends("user_ids.manual_im_status", "user_ids.presence_ids.status")
     def _compute_im_status(self):
         for partner in self:
-            all_status = partner.user_ids.presence_ids.mapped("status")
+            all_status = partner.user_ids.presence_ids.mapped(
+                lambda p: "offline" if p.status == "offline" else p.user_id.manual_im_status or p.status
+            )
             partner.im_status = (
                 "online"
                 if "online" in all_status
                 else "away"
                 if "away" in all_status
+                else "busy"
+                if "busy" in all_status
                 else "offline"
                 if partner.user_ids
                 else "im_partner"
