@@ -5,8 +5,8 @@ import { _t } from '@web/core/l10n/translation';
 
 export class IoTLongpolling {
     static serviceDependencies = ["notification", "orm"];
-    actionRoute = '/hw_drivers/action';
-    pollRoute = '/hw_drivers/event';
+    actionRoute = '/iot_drivers/action';
+    pollRoute = '/iot_drivers/event';
 
     rpcDelay = 1500;
     maxRpcDelay = 15000;
@@ -78,7 +78,7 @@ export class IoTLongpolling {
      * @param {string} device_identifier
      * @param {Object} data contains the information needed to perform an action on this device_identifier
      * @param {boolean} fallback if true, no notification will be displayed on fail
-     * @param {string} route endpoint to call on the IoT Box (default: /hw_drivers/action)
+     * @param {string} route endpoint to call on the IoT Box (default: /iot_drivers/action)
      */
     action(iot_ip, device_identifier, data, fallback = false, route = null) {
         this.protocol = window.location.protocol;
