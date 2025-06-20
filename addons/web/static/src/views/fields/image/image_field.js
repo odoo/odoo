@@ -36,6 +36,7 @@ export class ImageField extends Component {
         height: { type: Number, optional: true },
         reload: { type: Boolean, optional: true },
         convertToWebp: { type: Boolean, optional: true },
+        transparentBackground: { type: Boolean, optional: true },
     };
     static defaultProps = {
         acceptedFileExtensions: "image/*",
@@ -108,6 +109,17 @@ export class ImageField extends Component {
         }
         return style;
     }
+
+    get bgStyle() {
+        return this.props.transparentBackground
+            ? "--ImageField-background-color: transparent;"
+            : "";
+    }
+
+    get imgStyle() {
+        return this.sizeStyle + this.bgStyle;
+    }
+
     get hasTooltip() {
         return this.props.enableZoom && this.props.record.data[this.props.name];
     }
@@ -292,6 +304,12 @@ export const imageField = {
             type: "field",
             availableTypes: ["binary"],
         },
+        {
+            label: _t("Transparent background"),
+            name: "bg_transparent",
+            type: "boolean",
+            help: _t("Apply a transparent background to the image."),
+        },
     ],
     supportedTypes: ["binary", "many2one"],
     fieldDependencies: [{ name: "write_date", type: "datetime" }],
@@ -307,6 +325,7 @@ export const imageField = {
         width: options.size && Boolean(options.size[0]) ? options.size[0] : attrs.width,
         height: options.size && Boolean(options.size[1]) ? options.size[1] : attrs.height,
         reload: "reload" in options ? Boolean(options.reload) : true,
+        transparentBackground: Boolean(options.bg_transparent),
     }),
 };
 
