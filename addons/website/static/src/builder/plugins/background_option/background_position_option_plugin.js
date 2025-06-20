@@ -91,6 +91,10 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
                 { onRemove: onRemove }
             );
             const applyPosition = (bgPosition) => {
+                this.apply({
+                    editingElement: editingElement,
+                    loadResult: bgPosition,
+                });
                 appliedBgPosition = bgPosition;
                 overlay.close();
             };
@@ -101,7 +105,13 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
                     editingElement: editingElement,
                     mockEditingElOnImg: imgEl,
                     applyPosition: applyPosition,
-                    discardPosition: () => overlay.close(),
+                    discardPosition: () => {
+                        this.apply({
+                            editingElement: editingElement,
+                            loadResult: "",
+                        });
+                        overlay.close();
+                    },
                     editable: this.editable,
                 },
             });
@@ -114,9 +124,16 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
         return copyEl.outerHTML;
     }
     apply({ editingElement, loadResult: bgPosition }) {
+        editingElement.classList.add("o_toggle_bg_position");
         if (bgPosition) {
             editingElement.style.backgroundPosition = bgPosition;
         }
+    }
+    clean({ editingElement }) {
+        editingElement.classList.remove("o_toggle_bg_position");
+    }
+    isApplied({ editingElement }) {
+        return editingElement.classList.contains("o_toggle_bg_position");
     }
 }
 
