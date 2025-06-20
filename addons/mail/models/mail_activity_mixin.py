@@ -253,23 +253,6 @@ class MailActivityMixin(models.AbstractModel):
             ('user_id', '=', self.env.user.id)
         ])]
 
-    def write(self, vals):
-        # Delete activities of archived record.
-        if 'active' in vals and vals['active'] is False:
-            self.env['mail.activity'].sudo().search(
-                [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
-            ).unlink()
-        return super(MailActivityMixin, self).write(vals)
-
-    def unlink(self):
-        """ Override unlink to delete records activities through (res_model, res_id). """
-        record_ids = self.ids
-        result = super(MailActivityMixin, self).unlink()
-        self.env['mail.activity'].with_context(active_test=False).sudo().search(
-            [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
-        ).unlink()
-        return result
-
     def _read_group_groupby(self, groupby_spec, query):
         if groupby_spec != 'activity_state':
             return super()._read_group_groupby(groupby_spec, query)
@@ -308,20 +291,6 @@ class MailActivityMixin(models.AbstractModel):
         alias = query.left_join(self._table, "id", sql_join, "res_id", "last_activity_state")
 
         return SQL.identifier(alias, 'activity_state')
-
-    def action_archive(self):
-        """ Before archiving the record we should also remove its ongoing
-        activities. Otherwise they stay in the systray and concerning archived
-        records it makes no sense. """
-        records = self.filtered(self._active_name)
-        res = super(MailActivityMixin, records).action_archive()
-        if records:
-            # use a sudo to bypass every access rights; all activities should be removed
-            self.env['mail.activity'].sudo().search([
-                ('res_model', '=', self._name),
-                ('res_id', 'in', records.ids)
-            ]).unlink()
-        return res
 
     # Reschedules next my activity to Today
     def action_reschedule_my_next_today(self):
