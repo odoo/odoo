@@ -45,3 +45,15 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
 
         self.assertEqual(configurator_data['category_name'], "Test category")
         self.assertEqual(configurator_data['currency_name'], 'EUR')
+
+    def test_archived_product_erased_form_sol(self):
+        self.product.action_archive()
+        for prod in self.cart.order_line:
+            self.assertTrue(prod.product_id != self.product, "archived product need to be erased form cart")
+
+    def test_archived_product_template_erased_form_sol(self):
+        product_template_variants = self.product.product_tmpl_id.product_variant_ids
+        self.product.product_tmpl_id.action_archive()
+        for prod in self.cart.order_line:
+            for product_variant in product_template_variants:
+                self.assertTrue(prod.product_id != product_variant, "archived product need to be erased form cart")
