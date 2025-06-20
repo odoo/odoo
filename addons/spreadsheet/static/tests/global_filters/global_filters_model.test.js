@@ -176,6 +176,27 @@ test("Cannot have duplicated names", async function () {
     expect(result).toBe(DispatchResult.Success);
 });
 
+test("Cannot have empty names", async function () {
+    const { model } = await createSpreadsheetWithPivotAndList();
+    const filter = {
+        type: "text",
+        id: "1",
+    };
+    let result = await addGlobalFilter(model, filter);
+    expect(result.reasons).toEqual([CommandResult.InvalidFilterLabel]);
+    expect(model.getters.getGlobalFilters().length).toBe(0);
+
+    addGlobalFilter(model, { type: "text", label: "hello", id: "1" });
+    expect(model.getters.getGlobalFilters().length).toBe(1);
+
+    result = await editGlobalFilter(model, {
+        id: "1",
+        type: "text",
+        label: undefined,
+    });
+    expect(result.reasons).toEqual([CommandResult.InvalidFilterLabel]);
+});
+
 test("Can name/rename filters with special characters", async function () {
     const { model } = await createSpreadsheetWithPivot();
     const filter = {
@@ -2276,6 +2297,7 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
         model,
         {
             id: "42",
+            label: "Relation",
             type: "relation",
             defaultValue: [],
         },
@@ -2303,6 +2325,7 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
         model,
         {
             id: "42",
+            label: "Relation",
             type: "relation",
             defaultValue: [],
         },
