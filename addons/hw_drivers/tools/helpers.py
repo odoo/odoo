@@ -165,7 +165,7 @@ def check_git_branch(server_url=None, get_db_branch=False):
             db_branch,
         )
         if db_branch != local_branch:
-            update_conf({'database_version', db_branch})
+            update_conf({'database_version': db_branch})
             try:
                 with writable():
                     subprocess.run(git + ['branch', '-m', db_branch], check=True)
