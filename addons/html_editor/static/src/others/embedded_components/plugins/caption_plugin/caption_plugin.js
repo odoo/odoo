@@ -250,11 +250,11 @@ export class CaptionPlugin extends Plugin {
     onImageReplaced(media) {
         const figure = closestElement(media, "figure");
         if (media.nodeName === "IMG" && figure) {
-            const caption = figure.querySelector("[data-embedded='caption'] input")?.value;
-            if (caption) {
-                media.setAttribute("data-caption", caption);
-            }
             const [anchorNode, anchorOffset] = rightPos(figure);
+            const caption = figure.querySelector("[data-embedded='caption'] input")?.value;
+            figure.before(media);
+            figure.remove();
+            this.addImageCaption(media, caption, false);
             this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         }
     }
