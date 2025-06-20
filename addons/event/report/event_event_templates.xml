@@ -18,7 +18,7 @@
                         <h5 class="o_event_foldable_badge_event_name text-odoo fw-bold text-center" t-field="event.name"/>
                         <div class="text-center o_event_foldable_badge_font_small">
                             <span itemprop="startDate" t-field="event.date_begin"
-                                t-options='{"widget": "datetime", "date_only": True}'
+                                t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
                                 class="fw-bold"/>
                             <span itemprop="startDateTime" t-field="event.date_begin"
                                 class="fw-bold"
@@ -26,7 +26,7 @@
                             <span class="fa fa-arrow-right o_event_foldable_badge_font_faded"/>
                             <span t-if="not event.is_one_day"
                                 itemprop="endDate" t-field="event.date_end"
-                                t-options='{"widget": "datetime", "date_only": True}'
+                                t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
                                 class="fw-bold"/>
                             <span itemprop="endDateTime" t-field="event.date_end"
                                 class="fw-bold"
@@ -121,7 +121,7 @@
                                 </div>
                                 <h5 class="o_event_full_page_ticket_event_name text-odoo fw-bold py-0 my-0" t-field="event.name"/>
                                 <span itemprop="startDate" t-field="event.date_begin"
-                                     t-options='{"widget": "datetime", "date_only": True}'
+                                     t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
                                      class="fw-bold"/>
                                 <span itemprop="startDateTime" t-field="event.date_begin"
                                     class="fw-bold"
@@ -129,7 +129,7 @@
                                 <span class="fa fa-arrow-right o_event_full_page_ticket_font_faded"/>
                                 <span t-if="not event.is_one_day"
                                     itemprop="endDate" t-field="event.date_end"
-                                    t-options='{"widget": "datetime", "date_only": True}'
+                                    t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
                                     class="fw-bold"/>
                                 <span itemprop="endDateTime" t-field="event.date_end"
                                     class="fw-bold"
