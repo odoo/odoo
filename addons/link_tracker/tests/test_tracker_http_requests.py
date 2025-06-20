@@ -21,7 +21,8 @@ class TestTrackerHttpRequests(MockLinkTracker, common.HttpCase):
             link,
             headers={
                 'User-Agent': 'Mozilla/5.0 MicrosoftPreview/2.0 +https://aka.ms/MicrosoftPreview',
-            }
+            },
+            allow_redirects=False,
         )
         self.assertEqual(len(link_tracker.link_click_ids), 0)
 
@@ -30,7 +31,8 @@ class TestTrackerHttpRequests(MockLinkTracker, common.HttpCase):
             link,
             headers={
                 'User-Agent': 'Mozilla/5.0 Google-PageRenderer Google (+https://developers.google.com/+/web/snippet/)'
-            }
+            },
+            allow_redirects=False,
         )
         self.assertEqual(len(link_tracker.link_click_ids), 0)
 
@@ -39,6 +41,7 @@ class TestTrackerHttpRequests(MockLinkTracker, common.HttpCase):
             link,
             headers={
                 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0'
-            }
+            },
+            allow_redirects=False,
         )
         self.assertEqual(len(link_tracker.link_click_ids), 1)
