@@ -181,12 +181,14 @@ class IrAttachment(models.Model):
             cr.rollback()
             return False
 
-        self._gc_file_store_unsafe()
+        done, remaining = self._gc_file_store_unsafe()
 
         # commit to release the lock
         cr.commit()
 
-    def _gc_file_store_unsafe(self):
+        return done, remaining
+
+    def _gc_file_store_unsafe(self, limit=10_000):
         # retrieve the file names from the checklist
         checklist = {}
         for dirpath, _, filenames in os.walk(self._full_path('checklist')):
@@ -194,6 +196,10 @@ class IrAttachment(models.Model):
             for filename in filenames:
                 fname = "%s/%s" % (dirname, filename)
                 checklist[fname] = os.path.join(dirpath, filename)
+                if len(checklist) == limit:
+                    break
+            if len(checklist) == limit:
+                break
 
         # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
         # for each chunk.
@@ -217,6 +223,7 @@ class IrAttachment(models.Model):
                     os.unlink(filepath)
 
         _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
+        return len(checklist), len(checklist) == limit
 
     @api.depends('store_fname', 'db_datas', 'file_size')
     @api.depends_context('bin_size')
