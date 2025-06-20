@@ -71,10 +71,10 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
-                'price_unit': 200.0,
+                'price_unit': 182.25,
                 'analytic_distribution': {
-                    self.analytic_account_a.id: 100,
-                    self.analytic_account_b.id: 50,
+                    self.analytic_account_a.id: 98,
+                    self.analytic_account_b.id: 2,
                 },
             })]
         }])
@@ -82,13 +82,14 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         out_invoice.action_post()
 
         # Analytic lines are created when posting the invoice
+        # With the current distribution, the sum of each analytic line should amount to 182.25 exactly (and not 182.26 or 162.24)
         self.assertRecordValues(get_analytic_lines(), [{
-            'amount': 100,
+            'amount': 3.64,
             'account_id': self.analytic_account_b.id,
             'partner_id': self.partner_a.id,
             'product_id': self.product_a.id,
         }, {
-            'amount': 200,
+            'amount':  178.61,
             'account_id': self.analytic_account_a.id,
             'partner_id': self.partner_a.id,
             'product_id': self.product_a.id,
@@ -100,10 +101,10 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
             self.analytic_account_b.id: 25,
         }
         self.assertRecordValues(get_analytic_lines(), [{
-            'amount': 50,
+            'amount': 45.56,
             'account_id': self.analytic_account_b.id,
         }, {
-            'amount': 200,
+            'amount': 182.25,
             'account_id': self.analytic_account_a.id,
         }])
 
