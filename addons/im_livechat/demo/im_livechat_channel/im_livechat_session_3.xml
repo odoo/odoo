@@ -10,17 +10,29 @@
             <field name="anonymous_name">Joel Willis</field>
             <field name="create_date" eval="DateTime.today() + relativedelta(months=-1, days=-2)"/>
         </record>
+        <record id="im_livechat.livechat_channel_session_3_history_member_admin" model="im_livechat.channel.member.history">
+            <field name="channel_id" ref="livechat_channel_session_3"/>
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="livechat_member_type">agent</field>
+            <field name="create_date" eval="DateTime.today() + relativedelta(months=-1, days=-2)"/>
+        </record>
         <record id="im_livechat.livechat_channel_session_3_member_admin" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_3"/>
             <field name="unpin_dt" eval="DateTime.today()"/>
             <field name="last_interest_dt" eval="DateTime.today() + relativedelta(months=-1)"/>
-            <field name="livechat_member_type">agent</field>
+            <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_3_history_member_admin'))]"/>
+        </record>
+        <record id="im_livechat.livechat_channel_session_3_history_member_portal" model="im_livechat.channel.member.history">
+            <field name="channel_id" ref="livechat_channel_session_3"/>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="livechat_member_type">visitor</field>
+            <field name="create_date" eval="DateTime.today() + relativedelta(months=-1, days=-2)"/>
         </record>
         <record id="im_livechat.livechat_channel_session_3_member_portal" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_3"/>
-            <field name="livechat_member_type">visitor</field>
+            <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_3_history_member_portal'))]"/>
         </record>
 
         <record id="livechat_channel_session_3_message_1" model="mail.message">

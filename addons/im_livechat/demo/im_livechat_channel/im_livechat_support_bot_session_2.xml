@@ -20,10 +20,16 @@
         <record id="support_bot_session_2_guest_demo" model="mail.guest">
             <field name="name">Visitatore #302</field>
         </record>
+        <record id="support_bot_session_2_history_member_guest_demo" model="im_livechat.channel.member.history">
+            <field name="channel_id" ref="support_bot_session_2_demo"/>
+            <field name="guest_id" ref="support_bot_session_2_guest_demo"/>
+            <field name="livechat_member_type">visitor</field>
+            <field name="create_date" eval="DateTime.today() + relativedelta(weeks=-2)"/>
+        </record>
         <record id="support_bot_session_2_member_guest_demo" model="discuss.channel.member">
             <field name="guest_id" ref="support_bot_session_2_guest_demo"/>
             <field name="channel_id" ref="support_bot_session_2_demo"/>
-            <field name="livechat_member_type">visitor</field>
+            <field name="livechat_member_history_ids" eval="[(4, ref('support_bot_session_2_history_member_guest_demo'))]"/>
         </record>
         <record id="support_bot_session_2_message_1" model="mail.message">
             <field name="model">discuss.channel</field>

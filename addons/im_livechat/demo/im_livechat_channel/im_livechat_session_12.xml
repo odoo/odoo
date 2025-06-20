@@ -12,18 +12,28 @@
             <field name="anonymous_name">Visitor</field>
             <field name="country_id" ref="base.us"/>
         </record>
+        <record id="im_livechat.livechat_channel_session_12_history_member_admin" model="im_livechat.channel.member.history">
+            <field name="channel_id" ref="livechat_channel_session_12"/>
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="livechat_member_type">agent</field>
+        </record>
         <record id="im_livechat.livechat_channel_session_12_member_admin" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_12"/>
-            <field name="livechat_member_type">agent</field>
+            <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_12_history_member_admin'))]"/>
         </record>
         <record id="im_livechat.livechat_channel_session_12_guest" model="mail.guest">
             <field name="name">Visitor</field>
         </record>
+        <record id="im_livechat.livechat_channel_session_12_history_member_guest" model="im_livechat.channel.member.history">
+            <field name="channel_id" ref="livechat_channel_session_12"/>
+            <field name="guest_id" ref="im_livechat.livechat_channel_session_12_guest"/>
+            <field name="livechat_member_type">visitor</field>
+        </record>
         <record id="im_livechat.livechat_channel_session_12_member_guest" model="discuss.channel.member">
             <field name="guest_id" ref="im_livechat.livechat_channel_session_12_guest"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_12"/>
-            <field name="livechat_member_type">visitor</field>
+            <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_12_history_member_guest'))]"/>
         </record>
 
         <record id="livechat_channel_session_12_message_1" model="mail.message">
