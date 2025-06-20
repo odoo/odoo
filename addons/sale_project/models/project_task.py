@@ -110,7 +110,7 @@ class ProjectTask(models.Model):
                     sale_line = task.parent_id.sale_line_id
                 elif task.project_id.sale_line_id and task.project_id.partner_id.commercial_partner_id == task.partner_id.commercial_partner_id:
                     sale_line = task.project_id.sale_line_id
-                task.sale_line_id = sale_line or task.milestone_id.sale_line_id
+                task.sale_line_id = task.milestone_id.sale_line_id or sale_line
 
     @api.depends('sale_order_id')
     def _compute_display_sale_order_button(self):
