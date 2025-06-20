@@ -62,6 +62,53 @@ test("Value of text filter", () => {
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
 });
 
+test("Value of selection filter", () => {
+    const model = new Model();
+    addGlobalFilterWithoutReload(model, {
+        id: "1",
+        type: "selection",
+        label: "selection Filter",
+        resModel: "res.currency",
+        selectionField: "position",
+    });
+
+    let result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+        value: "test",
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "2",
+        type: "selection",
+        label: "Default value is an array",
+        resModel: "res.currency",
+        selectionField: "position",
+        defaultValue: ["default value"],
+    });
+    expect(result.isSuccessful).toBe(true);
+
+    result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+    });
+    expect(result.isSuccessful).toBe(true);
+
+    result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+        value: 5,
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+        value: false,
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+});
+
 test("Value of date filter", () => {
     const model = new Model();
     addGlobalFilterWithoutReload(model, {
