@@ -78,3 +78,12 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             **super()._get_line_xpaths(),
             'delivered_qty': ('./{*}Quantity'),
         }
+
+    def _get_product_xpaths(self):
+        """Override of `account.edi.xml.ubl_bis3` to support the `ExtendedID` field used to
+        identify product variants."""
+        return {
+            **super()._get_product_xpaths(),
+            'variant_barcode': './cac:Item/cac:StandardItemIdentification/cbc:ExtendedID',
+            'variant_default_code': './cac:Item/cac:SellersItemIdentification/cbc:ExtendedID',
+        }
