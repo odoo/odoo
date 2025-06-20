@@ -22,9 +22,9 @@
             <label name="no_of_recruitment_label" position="before">
                 <field name="website_published" string="Published" widget="boolean_toggle"/>
             </label>
-            <xpath expr="//div[@name='recruitment_target']" position="after">
-                <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
-            </xpath>
+            <group name="hiring_process" position="inside">
+                <field name="website_id" placeholder="All websites" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
+            </group>
         </field>
     </record>
 
