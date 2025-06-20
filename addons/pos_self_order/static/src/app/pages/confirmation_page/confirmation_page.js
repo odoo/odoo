@@ -63,13 +63,9 @@ export class ConfirmationPage extends Component {
 
         this.selfOrder.selectedOrderUuid = order.uuid;
 
-        const paymentMethods = this.selfOrder.filterPaymentMethods(
-            this.selfOrder.models["pos.payment.method"].getAll()
-        ); // Stripe, Adyen, Online
-
         if (
             !order ||
-            (paymentMethods.length > 0 &&
+            (this.selfOrder.hasPaymentMethod() &&
                 this.selfOrder.config.self_ordering_mode === "mobile" &&
                 this.selfOrder.config.self_ordering_pay_after === "each" &&
                 order.state !== "paid")
@@ -115,7 +111,7 @@ export class ConfirmationPage extends Component {
             } catch (e) {
                 if (e.errorCode === "EPTR_REC_EMPTY") {
                     this.dialog.add(OutOfPaperPopup, {
-                        title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
+                        trackingNumber: this.confirmedOrder.trackingNumber,
                         close: () => {
                             this.router.navigate("default");
                         },

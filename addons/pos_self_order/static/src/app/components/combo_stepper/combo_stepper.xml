@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.comboStepper">
+        <div class="self_order_combo_stepper_container d-flex justify-content-center user-select-none position-relative" t-ref="stepperContainer">
+          <ul class="stepper_list d-flex mw-100 overflow-y-hidden overflow-x-auto" t-ref="stepperScroll">
+            <li class="d-flex text-nowrap" t-foreach="props.steps" t-as="step" t-key="step.id" t-att-data-stepper="step.id">
+                <t t-set="isSelectedStep" t-value="step.id === props.selectedStep?.id" />
+                <a class="px-3 py-2 rounded-pill fs-4 fw-medium cursor-pointer" t-on-click="()=> this.props.onStepClicked(step_index)" t-att-class="{'active text-bg-light': isSelectedStep, 'text-muted': !isSelectedStep}">
+                    <t t-esc="step.name"/>
+                </a>
+             </li>
+          </ul>
+        </div>
+    </t>
+</templates>

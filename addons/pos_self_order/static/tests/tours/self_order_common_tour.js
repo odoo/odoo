@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add("self_order_is_close", {
     steps: () => [
         LandingPage.isClosed(),
         Utils.clickBtn("Order Now"),
-        ProductPage.clickKioskProduct("Coca-Cola"),
+        ProductPage.clickProduct("Coca-Cola"),
         Utils.checkIsNoBtn("Checkout"),
     ],
 });
@@ -73,14 +73,14 @@ registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
     steps: () => [
         LandingPage.isClosed(),
         Utils.clickBtn("Order Now"),
-        ProductPage.clickKioskCategory("Miscellaneous"),
+        ProductPage.clickCategory("Miscellaneous"),
 
-        ProductPage.clickKioskProduct("Coca-Cola"),
+        ProductPage.clickProduct("Coca-Cola"),
         Utils.checkIsNoBtn("Checkout"),
 
         // Product with attributes
-        ProductPage.clickKioskProduct("Desk Organizer"),
-        ...ProductPage.setupKioskAttribute(
+        ProductPage.clickProduct("Desk Organizer"),
+        ...ProductPage.setupAttribute(
             [
                 { name: "Size", value: "M" },
                 { name: "Fabric", value: "Leather" },
@@ -88,11 +88,11 @@ registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
             false
         ),
         Utils.checkIsNoBtn("Add to cart"),
-        ProductPage.clickKioskComboDiscard(),
+        ProductPage.clickDiscard(),
         // Combo product
-        ProductPage.clickKioskCategory("Category 2"),
-        ProductPage.clickKioskProduct("Office Combo"),
-        ...ProductPage.setupKioskCombo(
+        ProductPage.clickCategory("Category 2"),
+        ProductPage.clickProduct("Office Combo"),
+        ...ProductPage.setupCombo(
             [
                 {
                     product: "Desk Organizer",
