@@ -1781,7 +1781,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 'reward_type': 'discount',
                 'discount_mode': 'per_point',
                 'discount': 1,
-                'discount_applicability': 'cheapest',
+                'discount_applicability': 'order',
                 'required_points': 1,
             })],
         })
@@ -1799,7 +1799,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             'amount': 15,
         })
 
-        # Set tax and prices on products as neeed for the test
+        # Set tax and prices on products as needed for the test
         self.product_A.write({
             'list_price': 140.0,
             'taxes_id': [Command.set(tax_15pc_excl.ids)]

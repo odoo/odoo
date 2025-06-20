@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity2", {
             // Valid
             Chrome.startPoS(),
             ProductScreen.addOrderline("Whiteboard Pen", "5"),
-            PosLoyalty.hasRewardLine("90% on the cheapest product", "-2.88"),
+            PosLoyalty.hasRewardLine("Buy 2, get 90% on the cheapest", "-5.76"),
             PosLoyalty.finalizeOrder("Cash", "20"),
 
             // Not valid -> usage
