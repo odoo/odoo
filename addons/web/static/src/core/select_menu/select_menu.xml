@@ -42,6 +42,7 @@
                         t-if="props.searchable"
                         type="text"
                         class="dropdown-item o_select_menu_sticky px-3 py-3 position-sticky top-0 start-0 border-bottom"
+                        t-att-class="props.searchClass"
                         t-ref="inputRef"
                         t-on-input="debouncedOnInput"
                         t-att-placeholder="props.searchPlaceholder"
