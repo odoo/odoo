@@ -5,6 +5,8 @@ import { Domain } from "@web/core/domain";
  * This class handles the setup and management of dynamic (flexible) models
  * that can be created in the frontend and static models that are predefined.
  */
+const { DateTime } = luxon;
+
 export default class DevicesSynchronisation {
     constructor(dynamicModels, staticModels, posStore) {
         this.setup(dynamicModels, staticModels, posStore);
@@ -171,7 +173,9 @@ export default class DevicesSynchronisation {
 
             recordIdsByModel[model] = ids;
             for (const record of serverRecs) {
-                const recordDateTime = record.write_date.plus({ seconds: 1 }).toUTC();
+                const recordDateTime = DateTime.fromISO(record.write_date)
+                    .plus({ seconds: 1 })
+                    .toUTC();
                 const recordDateTimeString = recordDateTime.toFormat("yyyy-MM-dd HH:mm:ss", {
                     numberingSystem: "latn",
                 });
