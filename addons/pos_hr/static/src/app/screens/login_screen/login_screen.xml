@@ -9,8 +9,8 @@
                 <div class="d-flex bg-white p-3 gap-2 rounded">
                     <input t-model="this.state.pin"
                         t-ref="autofocus"
-                        type="password"
-                        class="form-control form-control-lg rounded flex-grow-1"
+                        type="text"
+                        class="form-control form-control-lg rounded flex-grow-1 password-mask"
                         placeholder="Enter your PIN" />
                     <button class="select-cashier btn btn-secondary px-4" t-on-click="() => this.selectCashier(false, true)">
                         <i class="fa fa-users" aria-hidden="true"></i>
