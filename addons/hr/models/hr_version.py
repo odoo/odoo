@@ -325,7 +325,7 @@ class HrVersion(models.Model):
     @api.depends('date_version')
     def _compute_display_name(self):
         for version in self:
-            version.display_name = version.name if not version.employee_id else format_date(version.env, version.date_version, date_format='dd MMM yyyy')
+            version.display_name = version.name if not version.employee_id else format_date(version.env, version.date_version, date_format='MMM d, y')
 
     def _compute_state(self):
         for version in self:
