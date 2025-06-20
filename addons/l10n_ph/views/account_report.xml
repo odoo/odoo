@@ -1,0 +1,12 @@
+<odoo>
+    <record id="action_report_disbursement_voucher_ph" model="ir.actions.report">
+        <field name="name">Philippines : Disbursement Voucher</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ph.report_disbursement_voucher</field>
+        <field name="report_file">l10n_ph.report_disbursement_voucher</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+        <field name="domain" eval="[('company_id.country_code', '=', 'PH')]"/>
+    </record>
+</odoo>
