@@ -218,7 +218,7 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         const previousElementToIdMap = new Map(this.lastContainers.map((c) => [c.element, c.id]));
-        return [...elementToOptions]
+        let containers = [...elementToOptions]
             .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
             .map(([element, options]) => ({
                 id: previousElementToIdMap.get(element) || uniqueId(),
@@ -235,6 +235,13 @@ export class BuilderOptionsPlugin extends Plugin {
                 cloneDisabledReason: this.getCloneDisabledReason(element),
                 optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
             }));
+        const lastValidContainerIdx = containers.findLastIndex((c) =>
+            this.getResource("no_parent_containers").some((selector) => c.element.matches(selector))
+        );
+        if (lastValidContainerIdx > 0) {
+            containers = containers.slice(lastValidContainerIdx);
+        }
+        return containers;
     }
 
     getPageContainers() {
