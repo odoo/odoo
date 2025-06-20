@@ -235,6 +235,7 @@ export class LinkPlugin extends Plugin {
         delete_handlers: this.onInputDeleteNormalizeLink.bind(this),
         before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         after_paste_handlers: this.onPasteNormalizeLink.bind(this),
+        after_image_delete_handlers: this.afterImageDeleteNormalizeLink.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
         normalize_handlers: this.normalizeLink.bind(this),
@@ -835,6 +836,14 @@ export class LinkPlugin extends Plugin {
     onPasteNormalizeLink() {
         this.updateCurrentLinkSyncState();
         this.onInputDeleteNormalizeLink();
+    }
+
+    afterImageDeleteNormalizeLink(removedImageParentElement) {
+        if (removedImageParentElement.tagName === "A") {
+            // If the link is empty after removing the image, remove it.
+            this.overlay.close();
+            this.removeCurrentLinkIfEmtpy();
+        }
     }
 
     /**
