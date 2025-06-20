@@ -42,6 +42,7 @@ This is a bridge module that adds multi-website support for payment providers.
         ],
         'html_builder.assets': [
             'website_payment/static/src/website_builder/**/*',
+            ('remove', 'website_payment/static/src/website_builder/**/*.inside.scss'),
         ],
     },
     'author': 'Odoo S.A.',
