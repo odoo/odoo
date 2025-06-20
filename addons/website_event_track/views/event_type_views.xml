@@ -7,13 +7,13 @@
         <field name="inherit_id" ref="website_event.event_type_view_form"/>
         <field name="arch" type="xml">
                 <xpath expr="//span[@name='website_menu']" position='after'>
-                <span>
-                    <label for="website_track" string="Tracks Menu Item"/>
+                <span class="d-inline-block">
                     <field name="website_track"/>
+                    <label for="website_track" string="Tracks Menu Item"/>
                 </span>
-                <span name="website_track_proposal">
-                    <label for="website_track_proposal" string="Track Proposals Menu Item"/>
+                <span name="website_track_proposal" class="d-inline-block">
                     <field name="website_track_proposal"/>
+                    <label for="website_track_proposal" string="Track Proposals Menu Item"/>
                 </span>
             </xpath>
         </field>
