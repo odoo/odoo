@@ -141,6 +141,7 @@ class MrpWorkorder(models.Model):
                                      column1="blocked_by_id", column2="workorder_id", string="Blocks",
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
+    product_variant_attributes = fields.Many2many('product.template.attribute.value', related='product_id.product_template_attribute_value_ids')
 
     @api.depends('qty_ready')
     def _compute_state(self):
