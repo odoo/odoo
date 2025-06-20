@@ -1,4 +1,8 @@
-import { getCSSVariableValue, isCSSVariable } from "@html_builder/utils/utils_css";
+import {
+    getCSSVariableValue,
+    isCSSVariable,
+    setBuilderCSSVariables,
+} from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { parseHTML } from "@html_editor/utils/html";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -760,6 +764,7 @@ class CustomizeWebsiteColorAction extends BuilderAction {
                 { colorType, combinationColor, nullValue }
             );
         }
+        setBuilderCSSVariables();
     }
 }
 

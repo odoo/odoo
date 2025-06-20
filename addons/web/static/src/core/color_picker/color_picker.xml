@@ -46,7 +46,7 @@
                     <t t-set="activeClass" t-value="this.props.state.selectedColorCombination === className ? 'selected' : ''"/>
                     <button
                             type="button"
-                            class="w-100 p-0 border-0 bg-transparent color-combination-button"
+                            class="w-100 p-0 border-0 color-combination-button"
                             t-att-class="[className, activeClass].join(' ')"
                             t-att-data-color="className"
                             t-attf-title="Preset {{number}}">

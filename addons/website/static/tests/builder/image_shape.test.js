@@ -44,11 +44,14 @@ test("Should set a shape on an image", async () => {
     expect(":iframe .test-options-target img").toHaveAttribute("data-shape-colors", ";;;;");
 });
 test("Should change the shape color of an image", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`
-        <div class="test-options-target">
+    const { getEditor } = await setupWebsiteBuilder(
+        `<div class="test-options-target">
             ${testImg}
-        </div>
-    `);
+        </div>`,
+        {
+            loadIframeBundles: true,
+        }
+    );
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
@@ -105,11 +108,14 @@ test("Should change the shape color of an image", async () => {
     );
 });
 test("Should change the shape color of an image with a class color", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`
-        <div class="test-options-target">
+    const { getEditor } = await setupWebsiteBuilder(
+        `<div class="test-options-target">
             ${testImg}
-        </div>
-    `);
+        </div>`,
+        {
+            loadIframeBundles: true,
+        }
+    );
     const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
