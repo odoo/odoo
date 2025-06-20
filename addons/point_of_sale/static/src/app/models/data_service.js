@@ -8,7 +8,7 @@ import IndexedDB from "./utils/indexed_db";
 import { DataServiceOptions } from "./data_service_options";
 import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
@@ -42,6 +42,10 @@ export class PosData extends Reactive {
             unsyncData: [],
         };
 
+        if (!navigator.onLine) {
+            await this.checkConnectivity();
+        }
+
         this.intializeWebsocket();
         this.initIndexedDB();
         await this.initData();
@@ -52,24 +56,36 @@ export class PosData extends Reactive {
 
         effect(this._debouncedSync, [this.records]);
 
-        browser.addEventListener("online", () => {
-            if (this.network.offline) {
-                this.network.offline = false;
-                this.network.warningTriggered = false; // Avoid the display of the offline popup multiple times
-            }
-
-            this.syncData();
-        });
-
-        browser.addEventListener("offline", () => {
-            this.network.offline = true;
-        });
-
+        browser.addEventListener("online", () => this.checkConnectivity());
+        browser.addEventListener("offline", () => this.checkConnectivity());
         this.bus.addEventListener("connect", this.reconnectWebSocket.bind(this));
     }
 
     intializeWebsocket() {
         this.onNotified = getOnNotified(this.bus, odoo.access_token);
+    }
+
+    async checkConnectivity() {
+        try {
+            // Runbot tests will soon be run in dockers with no access to the outside world,
+            // so all their interfaces will be disconnected. The problem is that the browser
+            // considers itself offline when no interface is connected. However, in this case,
+            // if the Odoo server is still accessible.
+            //
+            // This method also makes it possible to run local tests when no connection is
+            // available and an Odoo server is running locally.
+            //
+            // A ping is required to verify that the connection to the server is not possible.
+            await rpc("/pos/ping");
+            await this.syncData();
+
+            this.network.offline = false;
+            this.network.warningTriggered = false;
+        } catch (error) {
+            if (error instanceof ConnectionLostError) {
+                this.network.offline = true;
+            }
+        }
     }
 
     reconnectWebSocket() {
