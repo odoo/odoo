@@ -1,3 +1,12 @@
+@keyframes o_hover_overlay_fade_in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.3;
+    }
+}
+
 div[data-oe-local-overlay-id="builder-overlay-container"] {
     position: absolute;
     pointer-events: none;
@@ -17,13 +26,33 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
         }
 
         &.oe_active,
+        &.o_hover_overlay,
         &.o_we_overlay_preview {
             display: block;
             z-index: 1;
         }
 
+        &.o_hover_overlay,
         &.o_we_overlay_preview {
             transition: none;
+        }
+
+        &.o_hover_overlay {
+            opacity: 0.3;
+            animation: o_hover_overlay_fade_in 0.1s ease-in-out forwards;
+            .o_side {
+                &::before {
+                    background: rgb(126, 114, 114) !important;
+                }
+                background-color: transparent !important;
+                border-bottom: none !important;
+                border-top: none !important;
+                border-left: none !important;
+                border-right: none !important;
+            }
+            .o_handle_indicator {
+                display: none !important;
+            }
         }
 
         // HANDLES
