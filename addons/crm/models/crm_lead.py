@@ -1340,13 +1340,6 @@ class CrmLead(models.Model):
         }
         return action
 
-    # Deprecated in 18.3 onwards
-    def action_snooze(self):
-        self.ensure_one()
-        my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
-        my_next_activity.action_snooze()
-        return True
-
     # ------------------------------------------------------------
     # VIEWS
     # ------------------------------------------------------------

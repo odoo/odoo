@@ -12,11 +12,13 @@ const { DateTime } = luxon;
  */
 
 // Version of the widget to use on mail.activity lists
-class ActivityListRescheduleDropdown extends Component {
+export class MailActivityListRescheduleDropdown extends Component {
     static components = { Dropdown, DropdownItem };
     static props = {
         ...standardWidgetProps,
     };
+    static template = "mail.MailActivityListRescheduleDropdown";
+
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
@@ -36,7 +38,6 @@ class ActivityListRescheduleDropdown extends Component {
             },
         };
     }
-    static template = "mail.ActivityListRescheduleDropdown";
 
     async rescheduleActivity(click, actionName) {
         await this.action.doActionButton({
@@ -54,7 +55,8 @@ class ActivityListRescheduleDropdown extends Component {
 }
 
 // Version of the widget to use on lists of records inheriting from mail.activity.mixin
-class ActivityMixinListRescheduleDropdown extends ActivityListRescheduleDropdown {
+export class MailActivityMixinListRescheduleDropdown extends MailActivityListRescheduleDropdown {
+    static template = "mail.MailActivityMixinListRescheduleDropdown";
     setup() {
         super.setup();
         this.targetDays.today.actionName = "action_reschedule_my_next_today";
@@ -63,22 +65,12 @@ class ActivityMixinListRescheduleDropdown extends ActivityListRescheduleDropdown
     }
 }
 
-registry.category("view_widgets").add("activity_list_reschedule_dropdown", {
-    component: ActivityListRescheduleDropdown,
-    extractProps: ({ attrs }) => {
-        const { readonly } = attrs;
-        return {
-            readonly,
-        };
-    },
+registry.category("view_widgets").add("mail_activity_list_reschedule_dropdown", {
+    component: MailActivityListRescheduleDropdown,
+    listViewWidth: [50, 100],
 });
 
-registry.category("view_widgets").add("activity_mixin_list_reschedule_dropdown", {
-    component: ActivityMixinListRescheduleDropdown,
-    extractProps: ({ attrs }) => {
-        const { readonly } = attrs;
-        return {
-            readonly,
-        };
-    },
+registry.category("view_widgets").add("mail_activity_mixin_list_reschedule_dropdown", {
+    component: MailActivityMixinListRescheduleDropdown,
+    listViewWidth: [50, 100],
 });

@@ -26,17 +26,9 @@ export class BadgeSelectionWithIconsField extends BadgeSelectionField {
     static template = "mail.BadgeSelectionIconsField";
 
     /**
+     * @override
      * many2one fields use attribute "specialData" to store information pertaining to many2one relations.
      * As such, this.specialData is used by the inherited BadgeSelectionField to store the Many2one selection options for this field.
-     *
-     * todo guce postfreeze: use overriden setup()?
-     * Not sure that's a practical option however, as the overriden setup() essentially does what this method does,
-     * but without the fetched iconField, so this logic essentially overwrites the result of the overriden method?
-     * (maybe setup() should be called and then the results enriched with a call to search_read?)
-     *
-     * overriding setup() isn't obvious due to stuff happening with useSpecialData, which hasn't been called
-     * even as the overriden setup() returns; perhaps useSpecialData() is some sort of hook that will be used later
-     * in the execution stack
      */
     async setup() {
         this.type = this.props.record.fields[this.props.name].type;
