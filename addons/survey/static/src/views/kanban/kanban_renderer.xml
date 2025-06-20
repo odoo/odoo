@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="survey.SurveyTypeKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
-        <t t-call="web.ActionHelper" position="replace">
+        <ActionHelper position="replace">
             <t t-if="showNoContentHelper">
                 <SurveyTypeActionHelper/>
             </t>
-        </t>
+        </ActionHelper>
     </t>
 </templates>
