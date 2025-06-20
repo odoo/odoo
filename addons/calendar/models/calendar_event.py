@@ -1118,7 +1118,8 @@ class CalendarEvent(models.Model):
                     activity_values['summary'] = event.name
                 if 'description' in fields:
                     activity_values['note'] = event.description
-                if 'start' in fields:
+                # protect against loops in case of ill-managed timezones
+                if 'start' in fields and not self.env.context.get('mail_activity_meeting_update'):
                     # self.start is a datetime UTC *only when the event is not allday*
                     # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)
                     # See 72254129dbaeae58d0a2055cba4e4a82cde495b7 for the same issue, but elsewhere
@@ -1128,6 +1129,8 @@ class CalendarEvent(models.Model):
                         deadline = pytz.utc.localize(deadline)
                         deadline = deadline.astimezone(pytz.timezone(user_tz))
                     activity_values['date_deadline'] = deadline.date()
+                    # also protect against loops in case of ill-managed timezones
+                    event = event.with_context(calendar_event_meeting_update=True)
                 if 'user_id' in fields:
                     activity_values['user_id'] = event.user_id.id
                 if activity_values.keys():
