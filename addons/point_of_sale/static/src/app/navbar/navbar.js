@@ -58,7 +58,15 @@ export class Navbar extends Component {
         return this.pos.config.customer_display_type !== "none" && !isMobileOS();
     }
     get showCashMoveButton() {
+<<<<<<< 7dd7351d492babdfb7c671960c5e90755fbc2233
         return Boolean(this.pos.config.cash_control);
+||||||| 4f6dd3603cb95efe917ae2ee08391fda70a4e7f0
+        return Boolean(this.pos?.config?.cash_control);
+=======
+        return Boolean(
+            this.pos?.config?.cash_control && this.pos?.config?.has_cash_move_permission
+        );
+>>>>>>> 34ad62dcea22a3ffc3aee640a68d66bfc8a995e6
     }
     async clearCache() {
         await this.pos.data.resetIndexedDB();

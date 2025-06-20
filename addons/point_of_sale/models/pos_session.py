@@ -1752,8 +1752,28 @@ class PosSession(models.Model):
         if not sessions:
             raise UserError(_("There is no cash payment method for this PoS Session"))
 
+<<<<<<< 7dd7351d492babdfb7c671960c5e90755fbc2233
         vals_list = [
             self._prepare_account_bank_statement_line_vals(session, sign, amount, reason, extras)
+||||||| 4f6dd3603cb95efe917ae2ee08391fda70a4e7f0
+        self.env['account.bank.statement.line'].sudo().create([
+            {
+                'pos_session_id': session.id,
+                'journal_id': session.cash_journal_id.id,
+                'amount': sign * amount,
+                'date': fields.Date.context_today(self),
+                'payment_ref': '-'.join([session.name, extras['translatedType'], reason]),
+            }
+=======
+        self.env['account.bank.statement.line'].create([
+            {
+                'pos_session_id': session.id,
+                'journal_id': session.cash_journal_id.id,
+                'amount': sign * amount,
+                'date': fields.Date.context_today(self),
+                'payment_ref': '-'.join([session.name, extras['translatedType'], reason]),
+            }
+>>>>>>> 34ad62dcea22a3ffc3aee640a68d66bfc8a995e6
             for session in sessions
         ]
 
@@ -1821,6 +1841,225 @@ class PosSession(models.Model):
 
         return record.id if record else None
 
+<<<<<<< 7dd7351d492babdfb7c671960c5e90755fbc2233
+||||||| 4f6dd3603cb95efe917ae2ee08391fda70a4e7f0
+    def _loader_params_decimal_precision(self):
+        return {'search_params': {'domain': [], 'fields': ['name', 'digits']}}
+
+    def _get_pos_ui_decimal_precision(self, params):
+        decimal_precisions = self.env['decimal.precision'].search_read(**params['search_params'])
+        return {dp['name']: dp['digits'] for dp in decimal_precisions}
+
+    def _loader_params_uom_uom(self):
+        return {'search_params': {'domain': [], 'fields': []}, 'context': {'active_test': False}}
+
+    def _get_pos_ui_uom_uom(self, params):
+        return self.env['uom.uom'].with_context(**params['context']).search_read(**params['search_params'])
+
+    def _loader_params_res_country_state(self):
+        return {'search_params': {'domain': [], 'fields': ['name', 'country_id']}}
+
+    def _get_pos_ui_res_country_state(self, params):
+        return self.env['res.country.state'].search_read(**params['search_params'])
+
+    def _loader_params_res_country(self):
+        return {'search_params': {'domain': [], 'fields': ['name', 'vat_label', 'code']}}
+
+    def _get_pos_ui_res_country(self, params):
+        return self.env['res.country'].search_read(**params['search_params'])
+
+    def _loader_params_res_lang(self):
+        return {'search_params': {'domain': [], 'fields': ['name', 'code']}}
+
+    def _get_pos_ui_res_lang(self, params):
+        return self.env['res.lang'].search_read(**params['search_params'])
+
+    def _get_pos_ui_product_tag(self, params):
+        return self.env['product.tag'].search_read(**params['search_params'])
+
+    def _loader_params_product_tag(self):
+        return {'search_params': {'domain': [], 'fields': ['name']}}
+
+    def _loader_params_account_tax(self):
+        return {
+            'search_params': {
+                'domain': self.env['account.tax']._check_company_domain(self.company_id),
+                'fields': [
+                    'name', 'price_include', 'include_base_amount', 'is_base_affected',
+                    'amount_type', 'children_tax_ids', 'amount', 'company_id', 'id'
+                ],
+            },
+        }
+
+    def _get_pos_ui_account_tax(self, params):
+        taxes = self.env['account.tax'].search_read(**params['search_params'])
+
+        # Add the 'sum_repartition_factor' as needed in the compute_all
+        # Note that the factor = factor_percent/100
+        groups = self.env['account.tax.repartition.line']._read_group(
+            domain=[
+                ('tax_id', 'in', tuple([t['id'] for t in taxes])),
+                ('document_type', '=', 'invoice'),
+                ('repartition_type', '=', 'tax'),
+            ],
+            groupby=["tax_id"],
+            aggregates=["factor_percent:sum"],
+        )
+        tax_id_to_factor_sum = {tax.id: factor_sum / 100 for tax, factor_sum in groups}
+        for tax in filter(lambda t: t['amount_type'] != 'group', taxes):
+            tax['sum_repartition_factor'] = tax_id_to_factor_sum.get(tax['id'], 0)
+
+        return taxes
+
+    def _ensure_access_token(self):
+        # Code taken from addons/portal/models/portal_mixin.py
+        if not self.access_token:
+            self.sudo().write({'access_token': secrets.token_hex(16)})
+        return self.access_token
+
+    def _get_bus_channel_name(self):
+        return f'pos_session-{self.id}-{self._ensure_access_token()}'
+
+    def _loader_params_pos_session(self):
+        self._ensure_access_token()
+        return {
+            'search_params': {
+                'domain': [('id', '=', self.id)],
+                'fields': [
+                    'id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number',
+                    'payment_method_ids', 'state', 'update_stock_at_closing', 'cash_register_balance_start', 'access_token'
+                ],
+            },
+        }
+
+    def _get_pos_ui_pos_session(self, params):
+        return self.env['pos.session'].search_read(**params['search_params'])[0]
+
+    def _loader_params_pos_config(self):
+        return {'search_params': {'domain': [('id', '=', self.config_id.id)], 'fields': []}}
+
+    def _get_pos_ui_pos_config(self, params):
+        config = self.env['pos.config'].search_read(**params['search_params'])[0]
+        config['use_proxy'] = config['is_posbox'] and (config['iface_electronic_scale'] or config['iface_print_via_proxy']
+                                                       or config['iface_scan_via_proxy'] or config['iface_customer_facing_display_via_proxy'])
+        return config
+
+    def _loader_params_pos_bill(self):
+        return {'search_params': {'domain': ['|', ('id', 'in', self.config_id.default_bill_ids.ids), ('pos_config_ids', '=', False)], 'fields': ['name', 'value']}}
+
+    def _get_pos_ui_pos_bill(self, params):
+        return self.env['pos.bill'].search_read(**params['search_params'])
+
+=======
+    def _loader_params_decimal_precision(self):
+        return {'search_params': {'domain': [], 'fields': ['name', 'digits']}}
+
+    def _get_pos_ui_decimal_precision(self, params):
+        decimal_precisions = self.env['decimal.precision'].search_read(**params['search_params'])
+        return {dp['name']: dp['digits'] for dp in decimal_precisions}
+
+    def _loader_params_uom_uom(self):
+        return {'search_params': {'domain': [], 'fields': []}, 'context': {'active_test': False}}
+
+    def _get_pos_ui_uom_uom(self, params):
+        return self.env['uom.uom'].with_context(**params['context']).search_read(**params['search_params'])
+
+    def _loader_params_res_country_state(self):
+        return {'search_params': {'domain': [], 'fields': ['name', 'country_id']}}
+
+    def _get_pos_ui_res_country_state(self, params):
+        return self.env['res.country.state'].search_read(**params['search_params'])
+
+    def _loader_params_res_country(self):
+        return {'search_params': {'domain': [], 'fields': ['name', 'vat_label', 'code']}}
+
+    def _get_pos_ui_res_country(self, params):
+        return self.env['res.country'].search_read(**params['search_params'])
+
+    def _loader_params_res_lang(self):
+        return {'search_params': {'domain': [], 'fields': ['name', 'code']}}
+
+    def _get_pos_ui_res_lang(self, params):
+        return self.env['res.lang'].search_read(**params['search_params'])
+
+    def _get_pos_ui_product_tag(self, params):
+        return self.env['product.tag'].search_read(**params['search_params'])
+
+    def _loader_params_product_tag(self):
+        return {'search_params': {'domain': [], 'fields': ['name']}}
+
+    def _loader_params_account_tax(self):
+        return {
+            'search_params': {
+                'domain': self.env['account.tax']._check_company_domain(self.company_id),
+                'fields': [
+                    'name', 'price_include', 'include_base_amount', 'is_base_affected',
+                    'amount_type', 'children_tax_ids', 'amount', 'company_id', 'id'
+                ],
+            },
+        }
+
+    def _get_pos_ui_account_tax(self, params):
+        taxes = self.env['account.tax'].search_read(**params['search_params'])
+
+        # Add the 'sum_repartition_factor' as needed in the compute_all
+        # Note that the factor = factor_percent/100
+        groups = self.env['account.tax.repartition.line']._read_group(
+            domain=[
+                ('tax_id', 'in', tuple([t['id'] for t in taxes])),
+                ('document_type', '=', 'invoice'),
+                ('repartition_type', '=', 'tax'),
+            ],
+            groupby=["tax_id"],
+            aggregates=["factor_percent:sum"],
+        )
+        tax_id_to_factor_sum = {tax.id: factor_sum / 100 for tax, factor_sum in groups}
+        for tax in filter(lambda t: t['amount_type'] != 'group', taxes):
+            tax['sum_repartition_factor'] = tax_id_to_factor_sum.get(tax['id'], 0)
+
+        return taxes
+
+    def _ensure_access_token(self):
+        # Code taken from addons/portal/models/portal_mixin.py
+        if not self.access_token:
+            self.sudo().write({'access_token': secrets.token_hex(16)})
+        return self.access_token
+
+    def _get_bus_channel_name(self):
+        return f'pos_session-{self.id}-{self._ensure_access_token()}'
+
+    def _loader_params_pos_session(self):
+        self._ensure_access_token()
+        return {
+            'search_params': {
+                'domain': [('id', '=', self.id)],
+                'fields': [
+                    'id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number',
+                    'payment_method_ids', 'state', 'update_stock_at_closing', 'cash_register_balance_start', 'access_token'
+                ],
+            },
+        }
+
+    def _get_pos_ui_pos_session(self, params):
+        return self.env['pos.session'].search_read(**params['search_params'])[0]
+
+    def _loader_params_pos_config(self):
+        return {'search_params': {'domain': [('id', '=', self.config_id.id)], 'fields': []}}
+
+    def _get_pos_ui_pos_config(self, params):
+        config = self.env['pos.config'].search_read(**params['search_params'])[0]
+        config['use_proxy'] = config['is_posbox'] and (config['iface_electronic_scale'] or config['iface_print_via_proxy']
+                                                       or config['iface_scan_via_proxy'] or config['iface_customer_facing_display_via_proxy'])
+        config['has_cash_move_permission'] = self.user_has_groups('account.group_account_invoice')
+        return config
+
+    def _loader_params_pos_bill(self):
+        return {'search_params': {'domain': ['|', ('id', 'in', self.config_id.default_bill_ids.ids), ('pos_config_ids', '=', False)], 'fields': ['name', 'value']}}
+
+    def _get_pos_ui_pos_bill(self, params):
+        return self.env['pos.bill'].search_read(**params['search_params'])
+
+>>>>>>> 34ad62dcea22a3ffc3aee640a68d66bfc8a995e6
     def _get_partners_domain(self):
         return []
 
