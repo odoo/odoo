@@ -1,3 +1,6 @@
+// Selector for full-day events that are not half-left or half-right
+$full-day-event: ".fc-bg-event:where(:not(.o_event_half_left):not(.o_event_half_right))";
+
 .o_timeoff_calendar {
     background-color: $o-view-background-color;
     flex-grow: 1;
@@ -18,7 +21,7 @@
         }
 
         .fc-bg-event {
-            border-radius: $border-radius-pill;
+            border-radius: var(--o-half-event-border-radius, $border-radius-pill);
         }
 
         .fc-dayGridMonth-view .fc-day.fc-day-today[class*="hr_mandatory_day_"] {
@@ -31,12 +34,35 @@
             }
         }
 
-        .o_event_half_left {
-          clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
+        .o_event_half_left, .o_event_half_right {
+            --o-half-event-border-radius: 0;
+
+          width: 50%;
         }
 
         .o_event_half_right {
-          clip-path: polygon(100% 0, 50% 0, 50% 100%, 100% 100%);
+          margin-left: 50%;
+        }
+
+        // Full-day event followed by a left-half day.
+        .fc-day:has(+ .fc-day .o_event_half_left) {
+            #{$full-day-event} {
+                --o-half-event-border-radius: #{$border-radius-pill} 0 0 #{$border-radius-pill};
+            }
+        }
+
+        // Half-right day followed by a full-day event.
+        .fc-day:has(.o_event_half_right) + .fc-day {
+            #{$full-day-event} {
+                --o-half-event-border-radius: 0 #{$border-radius-pill} #{$border-radius-pill} 0;
+            }
+        }
+
+        // Full-day event between a half-right and a half-left day.
+        .fc-day:has(.o_event_half_right) + .fc-day:has(+ .fc-day .o_event_half_left) {
+            #{$full-day-event} {
+                --o-half-event-border-radius: 0;
+            }
         }
     }
 }
