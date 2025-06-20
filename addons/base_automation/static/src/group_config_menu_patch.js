@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-import { KanbanHeader } from "@web/views/kanban/kanban_header";
+import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 import { TRIGGER_FILTERS } from "./utils";
 
 const SUPPORTED_TRIGGERS = [
@@ -46,10 +46,11 @@ function enrichContext(context, group) {
     return { ...context, default_trigger: "on_create_or_write" };
 }
 
-patch(KanbanHeader.prototype, {
+patch(GroupConfigMenu.prototype, {
     setup() {
         super.setup();
         this.action = useService("action");
+        this.orm = useService("orm");
     },
 
     /**
@@ -82,7 +83,7 @@ patch(KanbanHeader.prototype, {
     },
 });
 
-registry.category("kanban_header_config_items").add(
+registry.category("group_config_items").add(
     "open_automations",
     {
         label: _t("Automations"),
