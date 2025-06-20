@@ -1,4 +1,4 @@
-import { markup } from "@odoo/owl";
+import { htmlEscape, markup } from "@odoo/owl";
 
 const Markup = markup().constructor;
 
@@ -6,7 +6,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     createDocumentFragmentFromContent,
     createElementWithContent,
-    htmlEscape,
     htmlFormatList,
     htmlJoin,
     htmlReplace,

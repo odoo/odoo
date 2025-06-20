@@ -1,10 +1,9 @@
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
 
-import { markup, toRaw } from "@odoo/owl";
+import { htmlEscape, markup, toRaw } from "@odoo/owl";
 import { RecordInternal } from "./record_internal";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
-import { htmlEscape } from "@web/core/utils/html";
 import { IS_DELETING_SYM, isCommand, isMany } from "./misc";
 
 const Markup = markup().constructor;
