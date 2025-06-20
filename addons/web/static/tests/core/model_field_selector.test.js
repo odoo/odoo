@@ -173,11 +173,18 @@ test("use the filter option", async () => {
             readonly: false,
             path: "",
             resModel: "partner",
-            filter: (field) => field.type === "many2one" && field.searchable,
+            filter: (field, path, resModel) => {
+                const result = field.type === "many2one" && field.searchable;
+                if (result) {
+                    expect.step(resModel);
+                }
+                return result;
+            },
         },
     });
     await openModelFieldSelectorPopover();
     expect(getDisplayedFieldNames()).toEqual(["Product"]);
+    expect.verifySteps(["partner"]);
 });
 
 test("use the sort option", async () => {
