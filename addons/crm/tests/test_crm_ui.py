@@ -192,3 +192,32 @@ class TestCrmKanbanUI(TransactionCase):
             'name': "Childless Company's lead",
         })
         self.assertEqual(lead.partner_id, self.parent_company, 'Default partner should take precedence over commercial_partner_id')
+
+        # check default_partner_id behaviors
+        orphan = self.orphan_contact
+        orphan.write({'email': 'orphan_individual@example.com', 'phone': '+32 488 00 00 00'})
+        child_contact = self.child_contact_1
+        child_contact.write({'email': 'child_contact@example.com', 'phone': '+32 477 00 00 00'})
+
+        test_cases_default = {
+            child_contact: {
+                'partner_id': child_contact, 'email_from': child_contact.email, 'phone': child_contact.phone,
+                'partner_name': self.parent_company.name, 'commercial_partner_id': self.parent_company
+            },
+            company: {
+                'partner_id': company, 'email_from': company.email, 'phone': company.phone,
+                'partner_name': company.name, 'commercial_partner_id': self.env['res.partner']
+            },
+            orphan: {
+                'partner_id': orphan, 'email_from': orphan.email, 'phone': orphan.phone,
+                'partner_name': False, 'commercial_partner_id': self.env['res.partner']
+            }
+        }
+
+        for default_partner, expected_lead_values in test_cases_default.items():
+            # check default partner in both the form and quick create form views
+            for view in [None, self.quick_create_form_view]:
+                with self.subTest(default_partner=default_partner, view=view):
+                    lead_form = Form(self.env['crm.lead'].with_context(default_partner_id=default_partner), view)
+                    for field_name, expected_value in expected_lead_values.items():
+                        self.assertEqual(lead_form[field_name], expected_value)
