@@ -88,6 +88,16 @@ export class BuilderOptionsPlugin extends Plugin {
             ".transfo-container",
             ".o_datetime_picker",
         ].join(", ");
+
+        this.addDomListener(this.editable, "mousemove", (ev) => {
+            let el = ev.target;
+            while (el && !this.hasOverlayOptions(el)) {
+                el = el.parentElement;
+            }
+            if (el) {
+                this.dependencies.builderOverlay.showHoverOverlay(el);
+            }
+        });
     }
 
     destroy() {

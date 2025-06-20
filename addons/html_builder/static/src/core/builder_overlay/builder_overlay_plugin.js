@@ -15,7 +15,7 @@ function isResizable(el) {
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
     static dependencies = ["localOverlay", "history", "operation"];
-    static shared = ["showOverlayPreview", "hideOverlayPreview"];
+    static shared = ["showOverlayPreview", "hideOverlayPreview", "showHoverOverlay"];
     resources = {
         step_added_handlers: this.refreshOverlays.bind(this),
         change_current_options_containers_listeners: this.openBuilderOverlays.bind(this),
@@ -24,6 +24,7 @@ export class BuilderOverlayPlugin extends Plugin {
     };
 
     setup() {
+        this.hoverOverlay = null;
         // TODO find how to not overflow the mobile preview.
         this.iframe = this.editable.ownerDocument.defaultView.frameElement;
         this.overlayContainer = this.dependencies.localOverlay.makeLocalOverlay(
@@ -55,6 +56,11 @@ export class BuilderOverlayPlugin extends Plugin {
             this.editable.removeEventListener("mousedown", onMouseMoveOrDown);
         });
         this.addDomListener(this.editable, "keydown", () => {
+            if (this.hoverOverlay) {
+                this.hoverOverlay.destroy();
+                this.hoverOverlay.overlayElement.remove();
+                this.hoverOverlay = null;
+            }
             this.toggleOverlaysVisibility(false);
             this.editable.addEventListener("mousemove", onMouseMoveOrDown);
             this.editable.addEventListener("mousedown", onMouseMoveOrDown);
@@ -137,15 +143,47 @@ export class BuilderOverlayPlugin extends Plugin {
     }
 
     refreshPositions() {
+        if (this.hoverOverlay) {
+            this.hoverOverlay.refreshPosition();
+        }
         this.overlays.forEach((overlay) => {
             overlay.refreshPosition();
         });
     }
 
     toggleOverlaysVisibility(show) {
+        if (this.hoverOverlay) {
+            this.hoverOverlay.toggleOverlayVisibility(show);
+        }
         this.overlays.forEach((overlay) => {
             overlay.toggleOverlayVisibility(show);
         });
+    }
+
+    showHoverOverlay(el) {
+        const overlay = new BuilderOverlay(el, {
+            iframe: this.iframe,
+            overlayContainer: this.overlayContainer,
+            history: this.dependencies.history,
+            hasOverlayOptions: false,
+            next: this.dependencies.operation.next,
+        });
+        if (this.hoverOverlay) {
+            this.hoverOverlay.destroy();
+            this.hoverOverlay.overlayElement.remove();
+            this.hoverOverlay = null;
+        }
+        this.hoverOverlay = overlay;
+        overlay.overlayElement.style.opacity = "0.3";
+        overlay.overlayElement.classList.add("ggggg");
+        for (const gridHandle of overlay.overlayElement.querySelectorAll(".o_handle_indicator")) {
+            gridHandle.classList.add("d-none");
+        }
+        // this.overlays.push(overlay);
+        overlay.toggleOverlayPreview(true);
+        overlay.toggleOverlayVisibility(true);
+        this.overlayContainer.append(overlay.overlayElement);
+        this.resizeObserver.observe(overlay.overlayTarget, { box: "border-box" });
     }
 
     showOverlayPreview(el) {
