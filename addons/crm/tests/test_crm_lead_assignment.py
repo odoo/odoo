@@ -120,8 +120,12 @@ class TestLeadAssign(TestLeadAssignCommon):
             count=8,
             suffix='Initial',
         )
-        # commit probability and related fields
+        # Explicitely assert auto_proba is 0. This is done because it will not be updated
+        # by the compute, as we set the stored computed field 'probability', that shares
+        # the same compute method as automated_probability, leading to both fields being
+        # protected at creation. This ensures no lead is using automated probability. (*)
         leads.flush_recordset()
+        self.assertTrue(all(lead.automated_probability == 0 for lead in leads))
         self.assertInitialData()
 
         # archived members should not be taken into account
@@ -132,10 +136,9 @@ class TestLeadAssign(TestLeadAssignCommon):
         # assign probability to leads (bypass auto probability as purpose is not to test pls)
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
         for idx, lead in enumerate(leads):
-            lead.probability = idx * 10
+            lead.probability = idx * 10 + 1  # Prevent P = AP = 0 (*)
         # commit probability and related fields
         leads.flush_recordset()
-        self.assertEqual(leads[0].probability, 0)
 
         # create exiting leads for user_sales_salesman (sales_team_1_m3, sales_team_convert_m1)
         existing_leads = self._create_leads_batch(
@@ -176,18 +179,13 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertEqual(
             Leads.browse(teams_data[self.sales_team_1]['merged']).mapped('name'),
             ['TestLeadInitial_0003']
-        )
-
-        # TestLeadInitial_0007 has same partner as TestLeadInitial_0003
+        )  # TestLeadInitial_0007 has same partner as TestLeadInitial_0003 -> merged in 0003
         self.assertEqual(len(teams_data[self.sales_team_1]['duplicates']), 1)
 
-        # TestLeadInitial_0005 had a 0 auto_proba when its proba was set to 0.
-        # Therefore, it is auto_proba. At this point, its proba is 9x.xx %, and it is selected.
-        # These are the two leads with the highest probabilities, as they are sorted before assignment.
         self.assertEqual(
             sorted(members_data[self.sales_team_1_m3]['assigned'].mapped('name')),
-            ['TestLeadInitial_0000', 'TestLeadInitial_0005']
-        )
+            ['TestLeadInitial_0000', 'TestLeadInitial_0003']
+        )  # Highest probability is assigned first, 71% and 61% respectively.
 
         # salespersons assign
         self.members.invalidate_model(['lead_month_count'])

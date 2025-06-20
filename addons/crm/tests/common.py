@@ -169,6 +169,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
         # make lead 1 take team history into account for its automated proba.
         # it should now be 50% as auto proba. (1 lost 1 won for team 1)
+        cls.env['crm.lead']._process_pls_pending_updates()
         cls.lead_1._compute_probabilities()
         cls.lead_1.flush_recordset()
 
