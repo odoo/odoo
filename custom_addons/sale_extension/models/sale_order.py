@@ -47,6 +47,24 @@ class SaleOrder(models.Model):
             except Exception as e:
                     print(e)
 
+    @api.model
+    def create(self, vals):
+
+        order_date = vals.get('date_order')
+        date = fields.Datetime.to_datetime(order_date) or fields.Datetime.now()
+
+        domain = [('name', 'like', f"P{date.year}-{date.month:02d}-")]
+        last_order = self.search(domain, order='id desc', limit=1)
+        if last_order and last_order.name:
+            last_seq = int(last_order.name.split('-')[-1])
+        else:
+            last_seq = 0
+
+        new_number = f"P{date.year}-{date.month:02d}-{last_seq + 1}"
+        vals['name'] = new_number
+
+        return super().create(vals)
+
     @api.depends('delivery_date')
     def _inverse_delivery_date(self):
         pass
