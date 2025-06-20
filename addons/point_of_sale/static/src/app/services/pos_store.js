@@ -2438,7 +2438,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
     getDate(date) {
         const todayTs = DateTime.now().startOf("day").ts;
-        if (DateTime.fromSQL(date, { zone: "utc" }).toLocal().startOf("day").ts === todayTs) {
+        if (date.toLocal().startOf("day").ts === todayTs) {
             return _t("Today");
         } else {
             return formatDate(date);

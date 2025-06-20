@@ -13,6 +13,7 @@ from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_c
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.exceptions import UserError
+from freezegun import freeze_time
 
 _logger = logging.getLogger(__name__)
 
@@ -1801,6 +1802,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductCardUoMPrecision', login="pos_user")
 
+    @freeze_time("2025-06-15 11:09")
     def test_cash_in_out(self):
         self.pos_user.write({
             'group_ids': [
