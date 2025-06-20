@@ -38,7 +38,7 @@ export class SaveSnippetPlugin extends Plugin {
 
     async saveSnippet(el) {
         const cleanForSaveHandlers = this.getResource("clean_for_save_handlers");
-        const savedName = await this.config.saveSnippet(el, cleanForSaveHandlers);
+        const savedName = await this.config.snippetModel.saveSnippet(el, cleanForSaveHandlers);
         if (savedName) {
             const message = markup(
                 _t(

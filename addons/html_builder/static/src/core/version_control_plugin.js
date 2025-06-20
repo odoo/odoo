@@ -14,7 +14,7 @@ export class VersionControlPlugin extends Plugin {
             return this.accessPerOutdatedEl.get(el);
         }
         const snippetKey = el.dataset.snippet;
-        const snippet = this.services["html_builder.snippets"].getOriginalSnippet(snippetKey);
+        const snippet = this.config.snippetModel.getOriginalSnippet(snippetKey);
         let isUpToDate = true;
         if (snippet) {
             const {
@@ -34,7 +34,7 @@ export class VersionControlPlugin extends Plugin {
     }
     replaceWithNewVersion(el) {
         const snippetKey = el.dataset.snippet;
-        const snippet = this.services["html_builder.snippets"].getOriginalSnippet(snippetKey);
+        const snippet = this.config.snippetModel.getOriginalSnippet(snippetKey);
         const cloneEl = snippet.content.cloneNode(true);
         el.replaceWith(cloneEl);
         this.dependencies["builderOptions"].updateContainers(cloneEl);
