@@ -12,6 +12,7 @@
                         </button>
                     </div>
                     <div t-if="state.isReady and props.mode === MODES.add" class="o_form_view o_xxs_form_view gap-2 mt-2">
+                        <h5 t-if="props.model.multiCreateFormTitle" t-out="props.model.multiCreateFormTitle"/>
                         <div t-if="props.model.showMultiCreateTimeRange" class="d-flex align-items-baseline gap-2">
                             <TimePicker
                                 value="this.props.model.data.multiCreateTimeRange.start"
