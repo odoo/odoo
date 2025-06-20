@@ -6,12 +6,12 @@ import json
 import locale
 import logging
 import re
+from collections.abc import Mapping
 from typing import Any, Literal
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import OrderedSet
-from odoo.tools.misc import ReadonlyDict
 
 _logger = logging.getLogger(__name__)
 
@@ -21,12 +21,27 @@ DEFAULT_TIME_FORMAT = '%H:%M:%S'
 DEFAULT_SHORT_TIME_FORMAT = '%H:%M'
 
 
-class LangData(ReadonlyDict):
+class LangData(Mapping):
     """ A ``dict``-like class which can access field value like a ``res.lang`` record.
     Note: This data class cannot store data for fields with the same name as
     ``dict`` methods, like ``dict.keys``.
     """
-    __slots__ = ()
+    __slots__ = ('__data',)
+
+    def __init__(self, data):
+        self.__data = dict(data)
+
+    def __getitem__(self, key):
+        return self.__data[key]
+
+    def __len__(self):
+        return len(self.__data)
+
+    def __iter__(self):
+        return iter(self.__data)
+
+    def __contains__(self, key):
+        return key in self.__data
 
     def __bool__(self) -> bool:
         return bool(self.id)
@@ -38,18 +53,30 @@ class LangData(ReadonlyDict):
             raise AttributeError
 
 
-class LangDataDict(ReadonlyDict):
+class LangDataDict(Mapping):
     """ A ``dict`` of :class:`LangData` objects indexed by some key, which returns
     a special dummy :class:`LangData` for missing keys.
     """
-    __slots__ = ()
+    __slots__ = ('__data',)
 
-    def __getitem__(self, key: Any) -> LangData:
+    def __init__(self, data):
+        self.__data = dict(data)
+
+    def __getitem__(self, key) -> LangData:
         try:
-            return self._data__[key]
+            return self.__data[key]
         except KeyError:
             some_lang = next(iter(self.values()))  # should have at least one active language
             return LangData(dict.fromkeys(some_lang, False))
+
+    def __len__(self):
+        return len(self.__data)
+
+    def __iter__(self):
+        return iter(self.__data)
+
+    def __contains__(self, key):
+        return key in self.__data
 
 
 class ResLang(models.Model):
