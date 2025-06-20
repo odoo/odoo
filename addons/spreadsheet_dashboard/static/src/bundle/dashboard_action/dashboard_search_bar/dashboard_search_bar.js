@@ -20,6 +20,7 @@ export class DashboardSearchBar extends Component {
         this.firstDateFilter = undefined;
         this.nameService = useService("name");
         this.dialog = useService("dialog");
+        this.fields = useService("field");
 
         this.searchBarDropdownState = useDropdownState();
         onWillStart(this.computeState.bind(this));
@@ -87,6 +88,20 @@ export class DashboardSearchBar extends Component {
                 values = await this.nameService.loadDisplayNames(filter.modelName, filterValues);
                 values = Object.values(values);
                 break;
+            case "selection": {
+                const fields = await this.fields.loadFields(filter.resModel);
+                const field = fields[filter.selectionField];
+                if (!field) {
+                    throw new Error(
+                        `Field ${filter.selectionField} not found in model ${filter.resModel}`
+                    );
+                }
+                values = filterValues.map((value) => {
+                    const option = field.selection.find((option) => option[0] === value);
+                    return option ? option[1] : value;
+                });
+                break;
+            }
         }
         return {
             title: filter.label,
