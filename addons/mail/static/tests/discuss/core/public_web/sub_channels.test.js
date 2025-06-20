@@ -293,3 +293,41 @@ test("show notification when clicking on deleted thread", async () => {
         text: "This thread is no longer available.",
     });
 });
+
+test("should only show 5 sub-threads in the sidebar", async () => {
+    const pyEnv = await startServer();
+    const partnerId = serverState.partnerId;
+    const partnerId2 = pyEnv["res.partner"].create({ name: "Demo" });
+    const userId2 = pyEnv["res.users"].create({ partner_id: partnerId2 });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const subChannelIds = Array.from({ length: 6 }).map((_, i) =>
+        pyEnv["discuss.channel"].create({
+            name: `general_${i + 1}`,
+            parent_channel_id: channelId,
+            channel_member_ids: [
+                Command.create({ partner_id: partnerId }),
+                Command.create({ partner_id: partnerId2 }),
+            ],
+        })
+    );
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebarSubchannel", { count: 5 });
+    await contains(".o-mail-DiscussSidebarSubchannel-subChannel", { text: "general_1", count: 0 });
+    await click("button[title='Threads']");
+    await click(".o-mail-SubChannelList-thread", { text: "general_1" });
+    await contains(".o-mail-DiscussSidebarSubchannel", { text: "general_1" });
+    await click(".o-mail-DiscussSidebarChannel-subChannel", { text: "general_6" });
+    await contains(".o-mail-DiscussSidebarSubchannel", { text: "general_1", count: 0 });
+    withUser(userId2, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "Some message",
+                message_type: "comment",
+            },
+            thread_id: subChannelIds[0],
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-DiscussSidebarSubchannel", { text: "general_1" });
+});
