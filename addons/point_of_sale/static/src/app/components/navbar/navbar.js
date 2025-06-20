@@ -166,6 +166,10 @@ export class Navbar extends Component {
         }
     }
 
+    clickBackend() {
+        this.pos.closePos();
+    }
+
     get showCreateProductButton() {
         return this.isSystemUser;
     }

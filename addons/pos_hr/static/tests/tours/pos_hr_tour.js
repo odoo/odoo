@@ -139,6 +139,63 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosHrTourAdminLoginNoPin", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            Dialog.is("Opening Control"),
+            Dialog.confirm(),
+            PosHr.clickLockButton(),
+            Chrome.clickBtn("Backend"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosHrTourAdminLoginWithPin", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Unlock Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            NumberPopup.enterValue("1234"),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm(),
+            PosHr.clickLockButton(),
+            Chrome.clickBtn("Backend"),
+            NumberPopup.enterValue("1234"),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm(),
+            Chrome.clickBtn("Continue selling"),
+            // to verify PIN prompt when navigating to backend via menu
+            Chrome.clickBtn("Unlock Register"),
+            PosHr.clickLoginButton(),
+            NumberPopup.enterValue("1234"),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm(),
+            ProductScreen.isShown(),
+            Chrome.clickMenuOption("Backend"),
+            NumberPopup.enterValue("1234"),
+            NumberPopup.isShown("••••"),
+            Dialog.confirm(),
+            Chrome.clickBtn("Continue selling"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosHrTourEmployeeSelectionNoPins", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            SelectionPopup.has("Pos Employee1"),
+            SelectionPopup.has("Mitchell Admin"),
+            SelectionPopup.has("Pos Employee1", { run: "click" }),
+            Dialog.is("Opening Control"),
+            Dialog.confirm(),
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_basic_user_can_change_price", {
     steps: () =>
         [
