@@ -63,18 +63,42 @@ class IoTRestart(Thread):
 
 if platform.system() == 'Windows':
     writable = contextlib.nullcontext
+    def remount_ro():
+        return
 elif platform.system() == 'Linux':
+    def is_fs_rw(*path):
+        with open("/proc/mounts", encoding="utf-8") as f:
+            return next((
+                "rw," in line for line in f if line.split()[1] in path
+            ), False)
+
+    def remount_ro():
+        if not is_fs_rw("/", "/root_bypass_ramdisks"):
+            return
+        subprocess.run(["sudo", "mount", "-o", "remount,ro", "/"], check=False)
+        subprocess.run(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"], check=False)
+        subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"], check=False)
+
     @contextlib.contextmanager
     def writable():
-        with lock:
-            try:
-                subprocess.run(["sudo", "mount", "-o", "remount,rw", "/"], check=False)
-                subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"], check=False)
-                yield
-            finally:
-                subprocess.run(["sudo", "mount", "-o", "remount,ro", "/"], check=False)
-                subprocess.run(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"], check=False)
-                subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"], check=False)
+        """Contextmanager to ensure the filesystem is remounted r/w while writing
+        and remounted r/o right after.
+
+        To avoid remounting r/o if an operation is keeping the mount point busy,
+        we only remount r/o if the system was previously in this state.
+        """
+        _logger.critical("is rw: %s", is_fs_rw("/", "/root_bypass_ramdisks"))
+        was_rw = is_fs_rw("/", "/root_bypass_ramdisks")
+
+        if not was_rw:
+            subprocess.run(["sudo", "mount", "-o", "remount,rw", "/"], check=False)
+            subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"], check=False)
+        try:
+            yield
+        finally:
+            if was_rw:
+                return
+            remount_ro()
 
 def access_point():
     return get_ip() == '10.11.12.1'
