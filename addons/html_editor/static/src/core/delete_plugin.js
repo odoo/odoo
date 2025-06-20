@@ -924,7 +924,7 @@ export class DeletePlugin extends Plugin {
             // @todo @phoenix: Review this spec. I suggest this instead (no block merge after removing):
             // startContainer = startUneditable.parentElement;
             // startOffset = childNodeIndex(startUneditable);
-            const leaf = previousLeaf(startUneditable);
+            const leaf = previousLeaf(startUneditable, this.editable);
             if (leaf) {
                 range.setStart(leaf, nodeSize(leaf));
             } else {
