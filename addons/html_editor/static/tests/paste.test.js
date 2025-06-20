@@ -4179,6 +4179,64 @@ describe("onDrop", () => {
             `<p>ab<img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]c</p>`
         );
     });
+    test("should be able to drag and drop icon", async () => {
+        const { el } = await setupEditor(`<p>a<span class="fa fa-heart">[]</span>bc</p><p>def</p>`);
+        const pElement = el.lastElementChild;
+        const iconElement = el.querySelector(".fa");
+        const defTextNode = pElement.firstChild;
+
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({
+                offsetNode: defTextNode,
+                offset: defTextNode.textContent.length,
+            }),
+        });
+
+        const dragdata = new DataTransfer();
+        await dispatch(iconElement, "dragstart", { dataTransfer: dragdata });
+
+        const dropData = new DataTransfer();
+        // Simulate the text/html data with unwanted styles that the browser would do.
+        dropData.setData(
+            "text/html",
+            `<span class="fa fa-heart" contenteditable="false" style="font-weight: normal">\u200b</span>`
+        );
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            '<p>abc</p><p>def\ufeff<span class="fa fa-heart" contenteditable="false">\u200b</span>\ufeff[]</p>'
+        );
+    });
+    test("should be able to drag and drop icon along with text", async () => {
+        const { el } = await setupEditor(`<p>a[b<span class="fa fa-heart"></span>cd]</p><p>ef</p>`);
+        const pElement = el.lastElementChild;
+        const iconElement = el.querySelector(".fa");
+        const efTextNode = pElement.firstChild;
+
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({
+                offsetNode: efTextNode,
+                offset: efTextNode.textContent.length,
+            }),
+        });
+
+        const dragdata = new DataTransfer();
+        await dispatch(iconElement, "dragstart", { dataTransfer: dragdata });
+
+        const dropData = new DataTransfer();
+        // Simulate the text/html data with unwanted styles that the browser would do.
+        dropData.setData(
+            "text/html",
+            `<span style="font-weight: normal">b<span class="fa fa-heart" contenteditable="false" style="font-weight: normal">\u200b</span>cd</span>`
+        );
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            '<p>a</p><p>efb\ufeff<span class="fa fa-heart" contenteditable="false">\u200b</span>\ufeffcd[]</p>'
+        );
+    });
 });
 
 function dataURItoBlob(dataURI) {

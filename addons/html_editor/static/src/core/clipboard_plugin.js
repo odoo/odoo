@@ -1,4 +1,4 @@
-import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
+import { isTextNode, isParagraphRelatedElement, isIconElement } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents, wrapInlinesInBlocks, splitTextNode, setTagName } from "../utils/dom";
@@ -578,14 +578,13 @@ export class ClipboardPlugin extends Plugin {
             // Remove all illegal attributes and classes from the node, then
             // clean its children.
             for (const attribute of [...node.attributes]) {
-                // Keep allowed styles on nodes with allowed tags.
                 // todo: should the whitelist be a resource?
                 if (
                     CLIPBOARD_WHITELISTS.styledTags.includes(node.nodeName) &&
                     attribute.name === "style"
                 ) {
                     node.removeAttribute(attribute.name);
-                    if (["SPAN", "FONT"].includes(node.tagName)) {
+                    if (["SPAN", "FONT"].includes(node.tagName) && !isIconElement(node)) {
                         for (const unwrappedNode of unwrapContents(node)) {
                             this.cleanForPaste(unwrappedNode);
                         }
