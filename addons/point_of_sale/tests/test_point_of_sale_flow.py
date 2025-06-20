@@ -1143,8 +1143,15 @@ class TestPointOfSaleFlow(CommonPosTest):
             'name': 'Product A',
             'categ_id': categ.id,
             'lst_price': 10,
+            'standard_price': 10,
             'is_storable': True,
-            'standard_price': 10
+        })
+        productB = self.env['product.product'].create({
+            'name': 'Product B',
+            'categ_id': categ.id,
+            'lst_price': 10,
+            'standard_price': 10,
+            'is_storable': True,
         })
 
         order_data = {
@@ -1154,6 +1161,16 @@ class TestPointOfSaleFlow(CommonPosTest):
             'lines': [[0, 0, {
                 'name': "OL/0001",
                 'product_id': product.id,
+                'price_unit': 10,
+                'discount': 0,
+                'qty': 2,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': 20,
+                'price_subtotal_incl': 20,
+                'total_cost': 20,
+            }], [0, 0, {
+                'name': "OL/0001",
+                'product_id': productB.id,
                 'price_unit': 10,
                 'discount': 0,
                 'qty': 2,
@@ -1196,6 +1213,16 @@ class TestPointOfSaleFlow(CommonPosTest):
                 'price_subtotal': -20,
                 'price_subtotal_incl': -20,
                 'refunded_orderline_id': order.lines[0].id,
+                'price_type': 'automatic'
+            }], [0, 0, {
+                'product_id': productB.id,
+                'price_unit': 10,
+                'discount': 0,
+                'qty': -2,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': -20,
+                'price_subtotal_incl': -20,
+                'refunded_orderline_id': order.lines[1].id,
                 'price_type': 'automatic'
             }]],
             'shipping_date': fields.Date.today(),
