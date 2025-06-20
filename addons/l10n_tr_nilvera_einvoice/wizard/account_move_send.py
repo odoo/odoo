@@ -1,9 +1,6 @@
 from io import BytesIO
-import logging
 
 from odoo import _, api, fields, models
-
-_logger = logging.getLogger(__name__)
 
 
 class AccountMoveSend(models.TransientModel):
@@ -68,6 +65,18 @@ class AccountMoveSend(models.TransientModel):
                 "action_text": _("View Partner(s)"),
                 "action": critical_invalid_records._get_records_action(
                     name=_("Check reference on Partner(s)")
+                ),
+                "critical": True,
+            }
+
+        if invalid_subscription_dates := moves_to_check.filtered(
+            lambda move: move._l10n_tr_nilvera_einvoice_check_invalid_subscription_dates()
+        ):
+            warnings["critical_invalid_subscription_dates"] = {
+                "message": _("The following invoice(s) need to have the same Start Date and End Date on all their respective Invoice Lines."),
+                "action_text": _("View Invoice(s)"),
+                "action": invalid_subscription_dates._get_records_action(
+                    name=_("Check data on Invoice(s)"),
                 ),
                 "critical": True,
             }
