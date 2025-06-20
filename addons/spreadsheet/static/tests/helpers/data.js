@@ -173,8 +173,11 @@ export class IrModel extends webModels.IrModel {
         }));
     }
 
-    has_searchable_parent_relation() {
-        return false;
+    /**
+     * @param {string[]} modelNames
+     */
+    has_searchable_parent_relation(modelNames) {
+        return Object.fromEntries(modelNames.map((modelName) => [modelName, false]));
     }
 
     get_available_models() {

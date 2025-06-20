@@ -2,43 +2,37 @@
 <templates>
     <t t-name="spreadsheet.FilterValue">
         <div class="o-filter-value d-flex align-items-start w-100" t-att-title="props.showTitle and filter.label">
-            <div t-if="filter.type === 'boolean'" class="w-100">
-                <BooleanMultiSelector
-                    selectedValues="filterValue || []"
-                    update="(value) => this.onBooleanInput(filter.id, value)"
-                />
-            </div>
-            <div t-if="filter.type === 'text'" class="w-100">
+            <div t-if="isSetOperator" class="w-100"></div>
+            <div t-elif="isTextualOperator || filter.type === 'text'" class="w-100">
                 <TextFilterValue
-                    value="filterValue"
+                    value="filterValue?.strings"
                     options="textAllowedValues"
                     onValueChanged="(value) => this.onTextInput(filter.id, value)"
                 />
             </div>
-            <div t-if="filter.type === 'selection'" class="w-100">
+            <div t-elif="filter.type === 'selection'" class="w-100">
                 <SelectionFilterValue
                     resModel="filter.resModel"
                     field="filter.selectionField"
-                    value="filterValue"
+                    value="filterValue?.selectionValues ?? []"
                     onValueChanged="(value) => this.onSelectionInput(filter.id, value)"
                 />
             </div>
-            <span t-if="filter.type === 'relation'" class="w-100">
+            <div t-elif="filter.type === 'date'" class="w-100">
+                <DateFilterValue value="filterValue"
+                                 update.bind="(value) => this.onDateInput(filter.id, value)"/>
+            </div>
+            <span t-elif="filter.type === 'relation'" class="w-100">
                 <MultiRecordSelector
                     t-if="isValid"
                     resModel="filter.modelName"
-                    resIds="filterValue || []"
+                    resIds="filterValue?.ids ?? []"
                     domain="relationalAllowedDomain"
                     update="(resIds) => this.onTagSelected(filter.id, resIds)" />
                 <ValidationMessages t-else="1"
                                     messages="[invalidModel]"
                                     msgType="'error'"/>
-
             </span>
-            <div t-if="filter.type === 'date'" class="w-100">
-                <DateFilterValue value="filterValue"
-                                 update.bind="(value) => this.onDateInput(filter.id, value)"/>
-            </div>
             <i t-if="props.showClear and getters.isGlobalFilterActive(filter.id)"
                 class="fa fa-times btn btn-link text-muted ms-1 mt-1"
                 title="Clear"

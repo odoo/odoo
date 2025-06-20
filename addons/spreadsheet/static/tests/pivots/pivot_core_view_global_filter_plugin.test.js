@@ -32,5 +32,5 @@ test("getFiltersMatchingPivotArgs should returns correct value for each filter",
     const filters = model.getters.getFiltersMatchingPivotArgs(pivotId, [
         { field: "foo", type: "char", value: "hello" },
     ]);
-    expect(filters).toEqual([{ filterId: "1", value: ["hello"] }]);
+    expect(filters).toEqual([{ filterId: "1", value: { operator: "ilike", strings: ["hello"] } }]);
 });

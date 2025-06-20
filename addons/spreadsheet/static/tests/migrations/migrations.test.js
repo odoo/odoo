@@ -362,7 +362,7 @@ test("group year/quarter/month filters to a single filter type", () => {
             id: "1",
             type: "relation",
             label: "a relational filter",
-            defaultValue: [2],
+            defaultValue: { operator: "in", ids: [2] },
             defaultValueDisplayNames: ["Mitchell Admin"],
             modelName: "res.users",
         },
@@ -621,13 +621,73 @@ test("text global filter default value is now an array of strings", () => {
         ],
     };
     const migratedData = load(data);
-    expect(migratedData.globalFilters[0].defaultValue).toEqual(["foo"]);
+    expect(migratedData.globalFilters[0].defaultValue).toEqual({
+        operator: "ilike",
+        strings: ["foo"],
+    });
     expect(migratedData.globalFilters[0].rangeOfAllowedValues).toBe(undefined);
     expect(migratedData.globalFilters[0].rangesOfAllowedValues).toEqual(["Sheet1!A1:A2"]);
     expect(migratedData.globalFilters[1].defaultValue).toBe(undefined);
     expect(migratedData.globalFilters[1].rangeOfAllowedValues).toBe(undefined);
     expect(migratedData.globalFilters[1].rangesOfAllowedValues).toBe(undefined);
     expect(migratedData.globalFilters[2].defaultValue).toBe(undefined);
+});
+
+test("global filter default value have operators", () => {
+    const data = {
+        version: "18.4.14",
+        globalFilters: [
+            {
+                id: "1",
+                type: "text",
+                defaultValue: ["foo"],
+            },
+            {
+                id: "2",
+                type: "relation",
+                modelName: "res.partner",
+                defaultValue: [1],
+            },
+            {
+                id: "3",
+                type: "relation",
+                modelName: "res.company",
+                defaultValue: [2],
+                includeChildren: true,
+            },
+            {
+                id: "4",
+                type: "boolean",
+                defaultValue: [true],
+            },
+            {
+                id: "5",
+                type: "boolean",
+                defaultValue: [false],
+            },
+            {
+                id: "6",
+                type: "boolean",
+                defaultValue: [true, false],
+            },
+        ],
+    };
+    const migratedData = load(data);
+    expect(migratedData.globalFilters[0].defaultValue).toEqual({
+        operator: "ilike",
+        strings: ["foo"],
+    });
+    expect(migratedData.globalFilters[1].defaultValue).toEqual({
+        operator: "in",
+        ids: [1],
+    });
+    expect(migratedData.globalFilters[2].defaultValue).toEqual({
+        operator: "child_of",
+        ids: [2],
+    });
+    expect(migratedData.globalFilters[3].defaultValue).toEqual({ operator: "set" });
+    expect(migratedData.globalFilters[4].defaultValue).toEqual({ operator: "not_set" });
+    expect(migratedData.globalFilters[5].defaultValue).toBe(undefined);
 });
 
 test("Date with antepenultimate_year is not supported anymore", () => {

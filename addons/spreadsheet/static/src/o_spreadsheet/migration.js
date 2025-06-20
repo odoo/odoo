@@ -130,6 +130,35 @@ migrationStepRegistry.add("18.4.14", {
     },
 });
 
+migrationStepRegistry.add("18.5.10", {
+    migrate(data) {
+        for (const globalFilter of data.globalFilters || []) {
+            if (globalFilter.type === "relation" && globalFilter.defaultValue) {
+                const operator = globalFilter.includeChildren ? "child_of" : "in";
+                delete globalFilter.includeChildren;
+                globalFilter.defaultValue = {
+                    operator,
+                    ids: globalFilter.defaultValue,
+                };
+            } else if (globalFilter.type === "text" && globalFilter.defaultValue) {
+                globalFilter.defaultValue = {
+                    operator: "ilike",
+                    strings: globalFilter.defaultValue,
+                };
+            } else if (globalFilter.type === "boolean" && globalFilter.defaultValue) {
+                if (globalFilter.defaultValue.length === 2) {
+                    delete globalFilter.defaultValue; // [true, false] no longer supported
+                } else {
+                    globalFilter.defaultValue = {
+                        operator: globalFilter.defaultValue[0] ? "set" : "not_set",
+                    };
+                }
+            }
+        }
+        return data;
+    },
+});
+
 function migrateOdooData(data) {
     const version = data.odooVersion || 0;
     if (version < 1) {

@@ -3,10 +3,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Domain } from "@web/core/domain";
+import { getOperatorLabel as getDomainOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { Registry } from "@spreadsheet/o_spreadsheet/o_spreadsheet";
+import { deepEqual } from "@web/core/utils/objects";
 
 export const globalFieldMatchingRegistry = new Registry();
 
@@ -80,7 +82,7 @@ export function dateFilterValueToString(value) {
  */
 
 /**
- * Check if the default value is valid for given filter.
+ * Check if the default value is valid for a given filter.
  * @returns {boolean}
  */
 export function checkFilterDefaultValueIsValid(filter, defaultValue) {
@@ -88,18 +90,146 @@ export function checkFilterDefaultValueIsValid(filter, defaultValue) {
         return true;
     }
     switch (filter.type) {
-        case "text":
-        case "selection":
-            return isTextSelectionFilterValueValid(defaultValue);
         case "date":
             return isDateFilterDefaultValueValid(defaultValue);
-        case "relation":
-            return isRelationFilterDefaultValueValid(defaultValue);
-        case "boolean":
-            return isBooleanFilterValueValid(defaultValue);
+        default: {
+            const { validateDefaultValue } = getFilterBehavior(filter, defaultValue.operator);
+            return validateDefaultValue(defaultValue);
+        }
     }
-    return false;
 }
+
+const SET_OPERATORS_BEHAVIORS = {
+    operators: ["set", "not_set"],
+    validateValue: isSetValueValid,
+    validateDefaultValue: isSetValueValid,
+    getSearchBarFacetValues: (env, filter, filterValue) => [
+        getDomainOperatorLabel(filterValue.operator),
+    ],
+    toDomain(fieldPath, filterValue) {
+        const domainOperator = filterValue.operator === "set" ? "!=" : "=";
+        return new Domain([[fieldPath, domainOperator, false]]);
+    },
+    toCellValue(getters, filter, filterValue) {
+        return { value: filterValue.operator === "set" };
+    },
+};
+
+const FILTERS_BEHAVIORS = {
+    text: [
+        {
+            operators: ["ilike", "not ilike"],
+            defaultValue: { strings: [] },
+            validateValue: (filterValue) => isArrayOfStrings(filterValue.strings),
+            validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.strings),
+            getSearchBarFacetValues: (env, filter, filterValue) => filterValue.strings,
+            toDomain(fieldPath, filterValue) {
+                return Domain.or(
+                    filterValue.strings.map((str) => [[fieldPath, filterValue.operator, str]])
+                );
+            },
+            toCellValue(getters, filter, filterValue) {
+                return { value: filterValue.strings.join(", ") };
+            },
+        },
+        {
+            operators: ["in", "not in"],
+            defaultValue: { strings: [] },
+            validateValue: (filterValue) => isArrayOfStrings(filterValue.strings),
+            validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.strings),
+            getSearchBarFacetValues: (env, filter, filterValue) => filterValue.strings,
+            toDomain(fieldPath, filterValue) {
+                return new Domain([[fieldPath, filterValue.operator, filterValue.strings]]);
+            },
+            toCellValue(getters, filter, filterValue) {
+                return { value: filterValue.strings.join(", ") };
+            },
+        },
+        {
+            operators: ["starts_with"],
+            defaultValue: { strings: [] },
+            validateValue: (filterValue) => isArrayOfStrings(filterValue.strings),
+            validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.strings),
+            getSearchBarFacetValues: (env, filter, filterValue) => filterValue.strings,
+            toDomain(fieldPath, filterValue) {
+                return Domain.or(
+                    filterValue.strings.map((str) => [[fieldPath, "=ilike", `${str}%`]])
+                );
+            },
+            toCellValue(getters, filter, filterValue) {
+                return { value: filterValue.strings.join(", ") };
+            },
+        },
+        SET_OPERATORS_BEHAVIORS,
+    ],
+    relation: [
+        {
+            operators: ["in", "not in", "child_of"],
+            defaultValue: { ids: [] },
+            validateValue: (filterValue) => isArrayOfIds(filterValue.ids),
+            validateDefaultValue: isCurrentUserOrArrayOfIds,
+            async getSearchBarFacetValues(env, filter, filterValue) {
+                const values = await env.services.name.loadDisplayNames(
+                    filter.modelName,
+                    filterValue.ids
+                );
+                return Object.values(values).map((value) =>
+                    typeof value === "string" ? value : _t("Inaccessible/missing record ID")
+                );
+            },
+            toDomain(fieldPath, filterValue) {
+                return new Domain([[fieldPath, filterValue.operator, filterValue.ids]]);
+            },
+            toCellValue(getters, filter, filterValue) {
+                return [[{ value: filterValue.ids.join(", ") }]];
+            },
+        },
+        {
+            operators: ["ilike", "not ilike"],
+            defaultValue: { strings: [] },
+            validateValue: (filterValue) => isArrayOfStrings(filterValue.strings),
+            validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.strings),
+            getSearchBarFacetValues: (env, filter, filterValue) => filterValue.strings,
+            toDomain(fieldPath, filterValue) {
+                return Domain.or(
+                    filterValue.strings.map((str) => [[fieldPath, filterValue.operator, str]])
+                );
+            },
+            toCellValue(getters, filter, filterValue) {
+                return { value: filterValue.strings.join(", ") };
+            },
+        },
+        SET_OPERATORS_BEHAVIORS,
+    ],
+    selection: [
+        {
+            operators: ["in", "not in"],
+            defaultValue: { selectionValues: [] },
+            validateValue: (filterValue) => isArrayOfStrings(filterValue.selectionValues),
+            validateDefaultValue: (filterValue) => isArrayOfStrings(filterValue.selectionValues),
+            async getSearchBarFacetValues(env, filter, filterValue) {
+                const fields = await env.services.field.loadFields(filter.resModel);
+                const field = fields[filter.selectionField];
+                if (!field) {
+                    throw new Error(
+                        `Field ${filter.selectionField} not found in model ${filter.resModel}`
+                    );
+                }
+                return filterValue.selectionValues.map((value) => {
+                    const option = field.selection.find((option) => option[0] === value);
+                    return option ? option[1] : value;
+                });
+            },
+            toDomain(fieldPath, filterValue) {
+                return new Domain([[fieldPath, filterValue.operator, filterValue.selectionValues]]);
+            },
+            toCellValue(getters, filter, filterValue) {
+                return { value: filterValue.selectionValues.join(", ") };
+            },
+        },
+    ],
+    boolean: [SET_OPERATORS_BEHAVIORS],
+};
 
 /**
  * Check if the value is valid for given filter.
@@ -112,44 +242,29 @@ export function checkFilterValueIsValid(filter, value) {
         return true;
     }
     switch (filter.type) {
-        case "text":
-        case "selection":
-            return isTextSelectionFilterValueValid(value);
         case "date":
             return isDateFilterValueValid(value);
-        case "relation":
-            return isRelationFilterValueValid(value);
-        case "boolean":
-            return isBooleanFilterValueValid(value);
+        default: {
+            const { validateValue } = getFilterBehavior(filter, value.operator);
+            return validateValue(value);
+        }
     }
-    return false;
 }
 
-/**
- * A text or selection filter value is valid if it is an array of strings. It's
- * the same for the default value.
- * @returns {boolean}
- */
-function isTextSelectionFilterValueValid(value) {
-    return Array.isArray(value) && value.length && value.every((text) => typeof text === "string");
+function isArrayOfStrings(strings) {
+    return (
+        Array.isArray(strings) &&
+        strings.length &&
+        strings.every((item) => typeof item === "string")
+    );
 }
 
-/**
- * A relation filter default value is valid if it is either "current_user" or an array of numbers.
- * It differs from the relation filter value, which can only be an array of numbers.
- * @returns {boolean}
- */
-function isRelationFilterDefaultValueValid(value) {
-    return value === "current_user" || isRelationFilterValueValid(value);
+function isArrayOfIds(ids) {
+    return Array.isArray(ids) && ids.length && ids.every((id) => Number.isInteger(id));
 }
 
-/**
- * A relation filter value is valid if it is an array of numbers.
- * It differs from the relation filter default value, which can also be "current_user".
- * @returns {boolean}
- */
-function isRelationFilterValueValid(value) {
-    return Array.isArray(value) && value.length && value.every((v) => typeof v === "number");
+function isCurrentUserOrArrayOfIds(value) {
+    return value.ids === "current_user" || isArrayOfIds(value.ids);
 }
 
 /**
@@ -157,8 +272,8 @@ function isRelationFilterValueValid(value) {
  * for the default value.
  * @returns {boolean}
  */
-function isBooleanFilterValueValid(value) {
-    return Array.isArray(value) && value.length && value.every((v) => typeof v === "boolean");
+function isSetValueValid(value) {
+    return value.operator === "set" || value.operator === "not_set";
 }
 
 /**
@@ -575,41 +690,98 @@ export function getDateDomain(from, to, field, fieldType) {
     return new Domain();
 }
 
-export async function getFacetInfo(filter, filterValues, nameService) {
+const TEXT_OPERATORS = ["ilike", "not ilike", "starts_with"];
+
+export function getFilterTypeOperators(filterType) {
+    if (filterType === "date") {
+        return [];
+    }
+    return FILTERS_BEHAVIORS[filterType].flatMap((entry) => entry.operators);
+}
+
+export function isTextualOperator(operator) {
+    return TEXT_OPERATORS.includes(operator);
+}
+
+export function isSetOperator(operator) {
+    return SET_OPERATORS_BEHAVIORS.operators.includes(operator);
+}
+
+export function getDefaultValue(type) {
+    if (type === "date") {
+        return undefined;
+    }
+    const defaultOperator = FILTERS_BEHAVIORS[type][0].operators[0];
+    return {
+        operator: defaultOperator,
+        ...getEmptyFilterValue({ type }, defaultOperator),
+    };
+}
+
+function getFilterBehavior(filter, operator) {
+    const entry = FILTERS_BEHAVIORS[filter.type].find((entry) =>
+        entry.operators.includes(operator)
+    );
+    if (!entry) {
+        throw new Error(
+            `No behavior found for filter type "${filter.type}" and operator "${operator}"`
+        );
+    }
+    return entry;
+}
+
+export function getFilterValueDomain(filter, filterValue, fieldPath) {
+    return getFilterBehavior(filter, filterValue.operator).toDomain(fieldPath, filterValue);
+}
+
+export function getEmptyFilterValue(filter, operator) {
+    if (filter.type === "date") {
+        return undefined;
+    }
+    return getFilterBehavior(filter, operator).defaultValue;
+}
+
+export function isEmptyFilterValue(filter, filterValue) {
+    if (!filterValue) {
+        return true;
+    }
+    const emptyValue = getEmptyFilterValue(filter, filterValue.operator);
+    if (!emptyValue) {
+        return false;
+    }
+    for (const key in emptyValue) {
+        if (!deepEqual(emptyValue[key], filterValue[key])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export function getFilterCellValue(getters, filter, filterValue) {
+    return getFilterBehavior(filter, filterValue.operator).toCellValue(
+        getters,
+        filter,
+        filterValue
+    );
+}
+
+export async function getFacetInfo(env, filter, filterValue) {
     let values;
     const separator = _t("or");
     switch (filter.type) {
-        case "boolean":
-            values = filterValues.map((value) => (value ? _t("Is set") : _t("Is not set")));
-            break;
-        case "text":
-            values = filterValues;
-            break;
         case "date": {
-            if (!filterValues) {
+            if (!filterValue) {
                 throw new Error("Should be defined at this point");
             }
-            values = [dateFilterValueToString(filterValues)];
+            values = [dateFilterValueToString(filterValue)];
             break;
         }
-        case "relation":
-            values = await nameService.loadDisplayNames(filter.modelName, filterValues);
-            values = Object.values(values).map((value) =>
-                typeof value === "string" ? value : _t("Inaccessible/missing record ID")
+        default: {
+            values = await getFilterBehavior(filter, filterValue.operator).getSearchBarFacetValues(
+                env,
+                filter,
+                filterValue
             );
-            break;
-        case "selection": {
-            const fields = await this.fields.loadFields(filter.resModel);
-            const field = fields[filter.selectionField];
-            if (!field) {
-                throw new Error(
-                    `Field ${filter.selectionField} not found in model ${filter.resModel}`
-                );
-            }
-            values = filterValues.map((value) => {
-                const option = field.selection.find((option) => option[0] === value);
-                return option ? option[1] : value;
-            });
             break;
         }
     }
@@ -618,5 +790,23 @@ export async function getFacetInfo(filter, filterValues, nameService) {
         values,
         id: filter.id,
         separator,
+        operator: getOperatorLabel(filterValue.operator),
     };
+}
+
+function getOperatorLabel(operator) {
+    if (!operator) {
+        return "";
+    }
+    switch (operator) {
+        case "=":
+        case "in":
+        case "set":
+        case "not_set":
+            return "";
+        case "!=":
+        case "not in":
+            return _t("not");
+    }
+    return getDomainOperatorLabel(operator);
 }

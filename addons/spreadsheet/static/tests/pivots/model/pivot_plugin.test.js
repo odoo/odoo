@@ -228,7 +228,7 @@ test("Renaming a pivot with a matching global filter does not retrigger RPCs", a
             id: "42",
             type: "relation",
             label: "test",
-            defaultValue: [41],
+            defaultValue: { operator: "in", ids: [41] },
             modelName: undefined,
         },
         {
@@ -1460,7 +1460,7 @@ test("field matching is removed when filter is deleted", async function () {
             id: "42",
             type: "relation",
             label: "test",
-            defaultValue: [41],
+            defaultValue: { operator: "in", ids: [41] },
             modelName: undefined,
         },
         {

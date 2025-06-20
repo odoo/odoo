@@ -724,7 +724,7 @@ test("field matching is removed when filter is deleted", async function () {
             id: "42",
             type: "relation",
             label: "test",
-            defaultValue: [41],
+            defaultValue: { operator: "in", ids: [41] },
             modelName: undefined,
         },
         {

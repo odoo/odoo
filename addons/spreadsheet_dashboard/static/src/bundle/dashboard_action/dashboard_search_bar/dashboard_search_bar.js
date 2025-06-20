@@ -3,8 +3,8 @@ import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
-import { getFacetInfo } from "@spreadsheet/global_filters/helpers";
 import { FiltersSearchDialog } from "@spreadsheet/global_filters/components/filters_search_dialog/filters_search_dialog";
+import { getFacetInfo } from "@spreadsheet/global_filters/helpers";
 
 export class DashboardSearchBar extends Component {
     static template = "spreadsheet_dashboard.DashboardSearchBar";
@@ -67,7 +67,7 @@ export class DashboardSearchBar extends Component {
     }
 
     async getFacetFor(filter) {
-        const filterValues = this.props.model.getters.getGlobalFilterValue(filter.id);
-        return getFacetInfo(filter, filterValues, this.nameService);
+        const filterValue = this.props.model.getters.getGlobalFilterValue(filter.id);
+        return getFacetInfo(this.env, filter, filterValue);
     }
 }

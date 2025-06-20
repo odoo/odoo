@@ -424,7 +424,7 @@ test("Can remove a global filter from the dialog", async function () {
                 type: "relation",
                 label: "Relation Filter",
                 modelName: "product",
-                defaultValue: [37], // xphone
+                defaultValue: { operator: "in", ids: [37] }, // xphone
             },
         ],
     };
@@ -450,7 +450,7 @@ test("Can open the dialog by clicking on a facet", async function () {
                 type: "relation",
                 label: "Relation Filter",
                 modelName: "product",
-                defaultValue: [37], // xphone
+                defaultValue: { operator: "in", ids: [37] }, // xphone
             },
         ],
     };
@@ -470,7 +470,7 @@ test("Can open the dialog by clicking on the search bar", async function () {
                 type: "relation",
                 label: "Relation Filter",
                 modelName: "product",
-                defaultValue: [37], // xphone
+                defaultValue: { operator: "in", ids: [37] }, // xphone
             },
         ],
     };
@@ -505,7 +505,7 @@ test("Changes of global filters are not dispatched while inside the dialog", asy
     await contains(".o-autocomplete--dropdown-item").click();
     expect(model.getters.getGlobalFilterValue("1")).toBe(undefined);
     await contains(".modal-footer .btn-primary").click();
-    expect(model.getters.getGlobalFilterValue("1")).toEqual([37]);
+    expect(model.getters.getGlobalFilterValue("1")).toEqual({ operator: "in", ids: [37] });
 });
 
 test("First global filter date is displayed as button", async function () {
@@ -516,7 +516,7 @@ test("First global filter date is displayed as button", async function () {
                 type: "relation",
                 label: "Relation Filter",
                 modelName: "product",
-                defaultValue: [37],
+                defaultValue: { operator: "in", ids: [37] },
             },
             {
                 id: "2",
@@ -556,7 +556,7 @@ test("Unknown value for relation filter is displayed as inaccessible", async fun
                 type: "relation",
                 label: "Relation Filter",
                 modelName: "product",
-                defaultValue: [9999], // unknown product
+                defaultValue: { operator: "in", ids: [9999] }, // unknown product
             },
         ],
     };

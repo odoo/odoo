@@ -8,6 +8,13 @@
                     <div class="me-1 w-25">
                         <t t-esc="getTranslatedFilterLabel(item.globalFilter)"/>
                     </div>
+                    <t t-set="operators" t-value="getOperators(item.globalFilter)"/>
+                    <div t-if="!operators?.length" class="w-25 me-3"/>
+                    <select t-else="" class="o_input w-25 pe-3 me-3 text-truncate" t-on-change="(ev) => this.updateOperator(item, ev.target.value)">
+                        <t t-foreach="operators" t-as="operator" t-key="operator">
+                            <option class="text-black" t-att-value="operator" t-att-selected="item.value?.operator === operator" t-esc="getOperatorLabel(operator)" />
+                        </t>
+                    </select>
                     <FilterValue filter="item.globalFilter"
                                  model="props.model"
                                  setGlobalFilterValue="(id, value) => this.setGlobalFilterValue(item, value)"

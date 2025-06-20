@@ -72,7 +72,10 @@ test("basic text filter", async function () {
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     await contains(".o-autocomplete input").edit("foo");
     await contains(".o-autocomplete input").press("Enter");
-    expect(model.getters.getGlobalFilterValue("42")).toEqual(["foo"], { message: "value is set" });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual(
+        { operator: "ilike", strings: ["foo"] },
+        { message: "value is set" }
+    );
 });
 
 test("can clear a text filter value", async function () {
@@ -82,14 +85,20 @@ test("can clear a text filter value", async function () {
         id: "42",
         type: "text",
         label: "Text Filter",
-        defaultValue: ["foo", "bar"],
+        defaultValue: { operator: "ilike", strings: ["foo", "bar"] },
     });
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     expect(queryAllTexts(".o_tag")).toEqual(["foo", "bar"]);
-    expect(model.getters.getGlobalFilterValue("42")).toEqual(["foo", "bar"]);
+    expect(model.getters.getGlobalFilterValue("42")).toEqual({
+        operator: "ilike",
+        strings: ["foo", "bar"],
+    });
     await contains(".o_tag .o_delete").click();
     expect(queryAllTexts(".o_tag")).toEqual(["bar"]);
-    expect(model.getters.getGlobalFilterValue("42")).toEqual(["bar"]);
+    expect(model.getters.getGlobalFilterValue("42")).toEqual({
+        operator: "ilike",
+        strings: ["bar"],
+    });
 });
 
 test("text filter with range", async function () {
@@ -116,7 +125,7 @@ test("text filter with range", async function () {
     await click(".dropdown-item:last");
     await animationFrame();
     expect(".o_tag").toHaveText("0.00");
-    expect(model.getters.getGlobalFilterValue("42")).toEqual(["0"]);
+    expect(model.getters.getGlobalFilterValue("42").strings).toEqual(["0"]);
 
     // select a second value
     await click(".o-autocomplete input");
@@ -125,7 +134,7 @@ test("text filter with range", async function () {
     await click(".dropdown-item:last");
     await animationFrame();
     expect(queryAllTexts(".o_tag")).toEqual(["0.00", "foo"]);
-    expect(model.getters.getGlobalFilterValue("42")).toEqual(["0", "foo"]);
+    expect(model.getters.getGlobalFilterValue("42").strings).toEqual(["0", "foo"]);
 });
 
 test("cannot edit text filter input with range", async function () {
@@ -165,7 +174,10 @@ test("text filter cannot have the same value twice", async function () {
     await contains(".o-autocomplete input").press("Enter");
     await contains(".o-autocomplete input").edit("foo");
     await contains(".o-autocomplete input").press("Enter");
-    expect(model.getters.getGlobalFilterValue("42")).toEqual(["foo"]);
+    expect(model.getters.getGlobalFilterValue("42")).toEqual({
+        operator: "ilike",
+        strings: ["foo"],
+    });
 });
 
 test("relational filter with domain", async function () {
@@ -195,7 +207,7 @@ test("Filter with showClear should display the clear icon", async function () {
         id: "42",
         type: "text",
         label: "Text Filter",
-        defaultValue: ["foo"],
+        defaultValue: { operator: "ilike", strings: ["foo"] },
     });
     await mountFilterValueComponent({
         model,
@@ -212,7 +224,7 @@ test("Filter without showClear should not display the clear icon", async functio
         id: "42",
         type: "text",
         label: "Text Filter",
-        defaultValue: ["foo"],
+        defaultValue: { operator: "ilike", strings: ["foo"] },
     });
     await mountFilterValueComponent({
         model,
@@ -246,20 +258,6 @@ test("relational filter with a contextual domain", async function () {
     expect.verifySteps(["name_search"]);
 });
 
-test("boolean filter", async function () {
-    const env = await makeMockEnv();
-    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
-    await addGlobalFilter(model, {
-        id: "42",
-        type: "boolean",
-        label: "Boolean Filter",
-    });
-    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
-    await contains("input").click();
-    await contains("a:first").click();
-    expect(model.getters.getGlobalFilterValue("42")).toEqual([true], { message: "value is set" });
-});
-
 test("selection filter", async function () {
     const env = await makeMockEnv();
     const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
@@ -273,5 +271,5 @@ test("selection filter", async function () {
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     await contains("input").click();
     await contains("a:first").click();
-    expect(model.getters.getGlobalFilterValue("42")).toEqual(["after"]);
+    expect(model.getters.getGlobalFilterValue("42")).toEqual({ operator: "in", selectionValues: ["after"]});
 });
