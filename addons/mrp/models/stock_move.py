@@ -97,8 +97,14 @@ class StockMoveLine(models.Model):
             qty_bom_uom = move.product_uom._compute_quantity(qty_move_uom, bom_line.product_uom_id)
             # calculate the bom's kit qty in kit product uom qty
             bom_qty_product_uom = kit_bom.product_uom_id._compute_quantity(kit_bom.product_qty, kit_bom.product_tmpl_id.uom_id)
-            # calculate the quantity needed of packging
-            move_line.product_packaging_qty = (qty_bom_uom / (bom_line.product_qty / bom_qty_product_uom)) / move_line.move_id.product_packaging_id.qty
+            
+            # FIX: avoid zero division error
+            if bom_line.product_qty == 0 or bom_qty_product_uom == 0 or move_line.move_id.product_packaging_id.qty == 0:
+                move_line.product_packaging_qty = 0
+            else:
+                # calculate the quantity needed of packaging
+                move_line.product_packaging_qty = (qty_bom_uom / (bom_line.product_qty / bom_qty_product_uom)) / move_line.move_id.product_packaging_id.qty
+
         super(StockMoveLine, self - kit_lines)._compute_product_packaging_qty()
 
     @api.model
