@@ -17,13 +17,32 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
         }
 
         &.oe_active,
+        &.o_hover_overlay,
         &.o_we_overlay_preview {
             display: block;
             z-index: 1;
         }
 
+        &.o_hover_overlay,
         &.o_we_overlay_preview {
             transition: none;
+        }
+
+        &.o_hover_overlay {
+            opacity: 0.3;
+            .o_side {
+                &::before {
+                    background: rgb(126, 114, 114) !important;
+                }
+                background-color: transparent !important;
+                border-bottom: none !important;
+                border-top: none !important;
+                border-left: none !important;
+                border-right: none !important;
+            }
+            .o_handle_indicator {
+                display: none !important;
+            }
         }
 
         // HANDLES

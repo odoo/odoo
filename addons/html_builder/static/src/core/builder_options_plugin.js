@@ -6,6 +6,7 @@ import { isClonable } from "./clone_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /** @typedef {import("@html_builder/core/utils").BaseOptionComponent} BaseOptionComponent */
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -43,6 +44,7 @@ import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 /**
  * @typedef { Object } BuilderOptionsShared
  * @property { BuilderOptionsPlugin['checkElement'] } checkElement
+ * @property { BuilderOptionsPlugin['closestWithOption'] } closestWithOption
  * @property { BuilderOptionsPlugin['computeContainers'] } computeContainers
  * @property { BuilderOptionsPlugin['findOption'] } findOption
  * @property { BuilderOptionsPlugin['getContainers'] } getContainers
@@ -115,6 +117,7 @@ export class BuilderOptionsPlugin extends Plugin {
     static dependencies = ["operation", "history"];
     static shared = [
         "checkElement",
+        "closestWithOption",
         "computeContainers",
         "findOption",
         "getContainers",
@@ -303,6 +306,14 @@ export class BuilderOptionsPlugin extends Plugin {
         this.target = null;
         this.lastContainers = [];
         this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+    }
+
+    closestWithOption(el) {
+        return closestElement(el, (el) =>
+            this.builderOptions.some(
+                (Option) => el.matches(Option.selector) && this.checkElement(el, Option)
+            )
+        );
     }
 
     computeContainers(target) {

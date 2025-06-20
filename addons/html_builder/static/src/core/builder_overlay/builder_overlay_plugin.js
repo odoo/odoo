@@ -31,6 +31,7 @@ export class BuilderOverlayPlugin extends Plugin {
     };
 
     setup() {
+        this.hoverOverlay = null;
         // TODO find how to not overflow the mobile preview.
         this.iframe = this.editable.ownerDocument.defaultView.frameElement;
         this.overlayContainer = this.dependencies.localOverlay.makeLocalOverlay(
@@ -84,6 +85,14 @@ export class BuilderOverlayPlugin extends Plugin {
             }),
             { capture: true }
         );
+
+        this.addDomListener(this.editable, "mouseleave", () => {
+            this.removeHoverOverlay();
+        });
+        this.addDomListener(this.editable, "mousemove", (ev) => {
+            const el = this.dependencies.builderOptions.closestWithOption(ev.target);
+            el ? this.showHoverOverlay(el) : this.removeHoverOverlay();
+        });
 
         this._cleanups.push(() => {
             this.removeBuilderOverlays();
@@ -139,7 +148,17 @@ export class BuilderOverlayPlugin extends Plugin {
         }
     }
 
+    removeHoverOverlay() {
+        if (this.hoverOverlay) {
+            this.hoverOverlay.destroy();
+            this.hoverOverlay.overlayElement.remove();
+            this.resizeObserver.unobserve(this.hoverOverlay.overlayTarget);
+            this.hoverOverlay = null;
+        }
+    }
+
     removeBuilderOverlays() {
+        this.removeHoverOverlay();
         this.overlays.forEach((overlay) => {
             overlay.destroy();
             overlay.overlayElement.remove();
@@ -156,15 +175,40 @@ export class BuilderOverlayPlugin extends Plugin {
     }
 
     refreshPositions() {
+        this.hoverOverlay?.refreshPosition();
         this.overlays.forEach((overlay) => {
             overlay.refreshPosition();
         });
     }
 
     toggleOverlaysVisibility(show) {
+        if (!show) {
+            this.removeHoverOverlay();
+        }
         this.overlays.forEach((overlay) => {
             overlay.toggleOverlayVisibility(show);
         });
+    }
+
+    showHoverOverlay(el) {
+        if (this.hoverOverlay && this.hoverOverlay?.el === el) {
+            return;
+        }
+        this.removeHoverOverlay();
+        const overlay = new BuilderOverlay(el, {
+            iframe: this.iframe,
+            overlayContainer: this.overlayContainer,
+            history: this.dependencies.history,
+            hasOverlayOptions: false,
+            next: this.dependencies.operation.next,
+            isMobileView: this.config.isMobileView,
+            mobileBreakpoint: this.config.mobileBreakpoint,
+            isRtl: this.config.isEditableRTL,
+            isHoverOverlay: true,
+        });
+        this.hoverOverlay = overlay;
+        this.overlayContainer.append(overlay.overlayElement);
+        this.resizeObserver.observe(overlay.overlayTarget, { box: "border-box" });
     }
 
     showOverlayPreview(el) {
