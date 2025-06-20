@@ -25,6 +25,7 @@ import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { EDITOR_COLOR_CSS_VARIABLES, getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
+import { CustomizeTranslationTabPlugin } from "../../../website/static/src/builder/plugins/translate/customize_translation_tab_plugin";
 
 export class Builder extends Component {
     static template = "html_builder.Builder";
@@ -41,6 +42,7 @@ export class Builder extends Component {
         Plugins: { type: Array, optional: true },
         config: { type: Object, optional: true },
         getThemeTab: { type: Function, optional: true },
+        getCustomizeTranslationTab: { type: Function, optional: true },
     };
     static defaultProps = {
         config: {},
@@ -48,6 +50,7 @@ export class Builder extends Component {
 
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();
+        this.CustomizeTranslationTab = this.props.getCustomizeTranslationTab?.();
         // const actionService = useService("action");
         this.builder_sidebarRef = useRef("builder_sidebar");
         this.state = useState({
@@ -68,18 +71,49 @@ export class Builder extends Component {
 
         const editorBus = new EventBus();
 
-        const mainPlugins = removePlugins(
-            [...MAIN_PLUGINS],
-            [
-                "PowerButtonsPlugin",
-                "DoubleClickImagePreviewPlugin",
-                "SeparatorPlugin",
-                "StarPlugin",
-                "BannerPlugin",
-            ]
-        );
-        const corePlugins = this.props.isTranslation ? [] : CORE_PLUGINS;
-        const Plugins = [...mainPlugins, ...corePlugins, ...(this.props.Plugins || [])];
+        const basePluginsToRemove = [
+            "PowerButtonsPlugin",
+            "DoubleClickImagePreviewPlugin",
+            "SeparatorPlugin",
+            "StarPlugin",
+            "BannerPlugin"
+        ];
+
+        const translationExtraPlugins = [
+            "PowerboxPlugin",
+            "SearchPowerboxPlugin",
+            "YoutubePlugin",
+            "ImagePlugin",
+            "AlignPlugin",
+            "StylePlugin",
+            "FontPlugin",
+            "FontFamilyPlugin",
+            "ListPlugin",
+            "ImagePostProcessPlugin",
+            "ImageCropPlugin",
+        ];
+
+        const pluginsToRemove = this.props.isTranslation
+            ? [...basePluginsToRemove, ...translationExtraPlugins]
+            : basePluginsToRemove;
+
+        const mainPlugins = removePlugins([...MAIN_PLUGINS, CustomizeTranslationTabPlugin], pluginsToRemove);
+        const corePlugins = CORE_PLUGINS;
+
+        const Plugins = dedupePlugins([
+            ...mainPlugins,
+            ...corePlugins,
+            ...(this.props.Plugins || []),
+        ]);
+        function dedupePlugins(plugins) {
+            const seen = new Set();
+            return plugins.filter((plugin) => {
+                const id = plugin?.id;
+                if (seen.has(id)) return false;
+                seen.add(id);
+                return true;
+            });
+        }
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
         this.editor = new Editor(
@@ -114,7 +148,7 @@ export class Builder extends Component {
                     }),
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
-                        if (!currentOptionsContainers.length) {
+                        if (!currentOptionsContainers.length && !this.props.isTranslation) {
                             // If there is no option, fallback on the current
                             // fallback tab.
                             this.setTab(this.noSelectionTab);
@@ -243,7 +277,7 @@ export class Builder extends Component {
     getInvisibleSelector(isMobile = this.props.isMobile) {
         return `.o_snippet_invisible, ${
             isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
-        }`;
+            }`;
     }
 
     async save() {

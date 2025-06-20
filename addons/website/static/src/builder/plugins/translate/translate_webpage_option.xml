@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TranslateWebpageOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Translation"
+            tooltip.translate="Translate the whole content with AI">
+            <BuilderSelect preview="false">
+                <BuilderSelectItem t-foreach="state.languages" t-as="lang"
+                    t-key="lang[0]" t-out="lang[1]"
+                    action="'translateWebpageAI'" actionValue="lang[0]"/>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>
