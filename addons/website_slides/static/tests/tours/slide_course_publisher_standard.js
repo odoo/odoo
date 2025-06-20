@@ -13,11 +13,11 @@ registerWebsitePreviewTour('course_publisher_standard', {
     url: '/slides',
 }, () => [{
     content: 'eLearning: click on New (top-menu)',
-    trigger: 'div.o_new_content_container a',
+    trigger: 'div.o_new_content_container button',
     run: "click",
 }, {
     content: 'eLearning: click on New Course',
-    trigger: '#o_new_content_menu_choices a:contains("Course")',
+    trigger: '#o_new_content_menu_choices button[aria-label="Course"]',
     run: "click",
 }, {
     content: 'eLearning: set name',
@@ -29,7 +29,7 @@ registerWebsitePreviewTour('course_publisher_standard', {
     run: "edit Gard",
 }, {
     content: 'eLearning: select Gardening tag',
-    trigger: '.ui-autocomplete a:contains("Gardening")',
+    trigger: '.ui-autocomplete span:contains("Gardening")',
     run: "click",
 }, {
     content: 'eLearning: set description',
@@ -95,7 +95,7 @@ registerWebsitePreviewTour('course_publisher_standard', {
     timeout: 30000,
 }, {
     content: "eLearning: save article",
-    trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
+    trigger: '.o-snippets-top-actions button[data-action="save"]',
     run: "click",
 },
 {
