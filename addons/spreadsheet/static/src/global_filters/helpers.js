@@ -129,7 +129,14 @@ export function checkFilterValueIsValid(filter, value) {
  * @returns {boolean}
  */
 function isTextFilterValueValid(value) {
-    return Array.isArray(value) && value.every((text) => typeof text === "string");
+    switch (value.operator) {
+        case "ilike": {
+            const texts = value.texts;
+            return Array.isArray(texts) && texts.every((text) => typeof text === "string");
+        }
+        default:
+            return false;
+    }
 }
 
 /**
@@ -138,7 +145,13 @@ function isTextFilterValueValid(value) {
  * @returns {boolean}
  */
 function isRelationFilterDefaultValueValid(value) {
-    return value === "current_user" || isRelationFilterValueValid(value);
+    switch (value.operator) {
+        case "child_of":
+        case "in":
+            return value.ids === "current_user" || isRelationFilterValueValid(value);
+        default:
+            return isRelationFilterValueValid(value);
+    }
 }
 
 /**
@@ -146,8 +159,14 @@ function isRelationFilterDefaultValueValid(value) {
  * It differs from the relation filter default value, which can also be "current_user".
  * @returns {boolean}
  */
-function isRelationFilterValueValid(value) {
-    return Array.isArray(value) && value.every((v) => typeof v === "number");
+function isRelationFilterValueValid({ operator, ids }) {
+    switch (operator) {
+        case "child_of":
+        case "in":
+            return Array.isArray(ids) && ids.every((v) => typeof v === "number");
+        default:
+            return false;
+    }
 }
 
 /**

@@ -75,7 +75,7 @@ declare module "@spreadsheet" {
     }
 
     interface CurrentUser {
-        operator: "in" | "not in";
+        operator: RelationIdsValue["operator"];
         ids: "current_user";
     }
 
@@ -137,7 +137,6 @@ declare module "@spreadsheet" {
         id: string;
         label: string;
         modelName: string;
-        includeChildren: boolean;
         defaultValue?: RelationDefaultValue;
         domainOfAllowedValues?: DomainListRepr | string;
     }

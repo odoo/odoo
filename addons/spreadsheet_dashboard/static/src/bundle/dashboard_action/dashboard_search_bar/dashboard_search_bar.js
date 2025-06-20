@@ -84,7 +84,10 @@ export class DashboardSearchBar extends Component {
                 break;
             }
             case "relation":
-                values = await this.nameService.loadDisplayNames(filter.modelName, filterValues);
+                values = await this.nameService.loadDisplayNames(
+                    filter.modelName,
+                    filterValues.ids
+                );
                 values = Object.values(values);
                 break;
         }

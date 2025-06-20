@@ -10,7 +10,7 @@
             </div>
             <div t-if="filter.type === 'text'" class="w-100">
                 <TextFilterValue
-                    value="filterValue"
+                    value="filterValue?.texts"
                     options="textAllowedValues"
                     onValueChanged="(value) => this.onTextInput(filter.id, value)"
                 />
@@ -19,7 +19,7 @@
                 <MultiRecordSelector
                     t-if="isValid"
                     resModel="filter.modelName"
-                    resIds="filterValue || []"
+                    resIds="filterValue?.ids ?? []"
                     domain="relationalAllowedDomain"
                     update="(resIds) => this.onTagSelected(filter.id, resIds)" />
                 <ValidationMessages t-else="1"

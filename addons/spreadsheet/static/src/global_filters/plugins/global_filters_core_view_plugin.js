@@ -160,8 +160,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             case "date":
                 return this._getDateValueFromDefaultValue(filter.defaultValue);
             case "relation":
-                if (filter.defaultValue === "current_user") {
-                    return [user.userId];
+                if (filter.defaultValue.ids === "current_user") {
+                    return { ...filter.defaultValue, ids: [user.userId] };
                 }
                 return filter.defaultValue;
         }
@@ -197,6 +197,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const value = this.getGlobalFilterValue(filter.id);
         switch (filter.type) {
             case "text":
+                return [[{ value: value?.texts.join(", ") ?? "" }]];
             case "boolean":
                 return [[{ value: value?.length ? value.join(", ") : "" }]];
             case "date":
@@ -220,8 +221,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const additionOptions = [
             // add the current value because it might not be in the range
             // if the range cells changed in the meantime
-            ...(this.getGlobalFilterValue(filterId) ?? []),
-            ...(filter.defaultValue ?? []),
+            ...(this.getGlobalFilterValue(filterId)?.texts ?? []),
+            ...(filter.defaultValue?.texts ?? []),
         ];
         const options = this.getTextFilterOptionsFromRanges(
             filter.rangesOfAllowedValues,
@@ -354,12 +355,12 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     _getRelationFilterDisplayValue(filter, value) {
-        if (!value?.length || !this.nameService) {
+        if (!value?.ids.length || !this.nameService) {
             return [[{ value: "" }]];
         }
         if (!this.recordsDisplayName[filter.id]) {
             const promise = this.nameService
-                .loadDisplayNames(filter.modelName, value)
+                .loadDisplayNames(filter.modelName, value.ids)
                 .then((result) => {
                     this.recordsDisplayName[filter.id] = Object.values(result);
                 });
@@ -402,11 +403,11 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      */
     _getTextDomain(filter, fieldMatching) {
         const value = this.getGlobalFilterValue(filter.id);
-        if (!value || !value.length || !fieldMatching.chain) {
+        if (!value || !value.texts.length || !fieldMatching.chain) {
             return new Domain();
         }
         const field = fieldMatching.chain;
-        return Domain.or(value.map((text) => [[field, "ilike", text]]));
+        return Domain.or(value.texts.map((text) => [[field, value.operator, text]]));
     }
 
     /**
@@ -420,13 +421,21 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      * @returns {Domain}
      */
     _getRelationDomain(filter, fieldMatching) {
-        const values = this.getGlobalFilterValue(filter.id);
-        if (!values || values.length === 0 || !fieldMatching.chain) {
+        const value = this.getGlobalFilterValue(filter.id);
+        if (!value || !fieldMatching.chain) {
             return new Domain();
         }
         const field = fieldMatching.chain;
-        const operator = filter.includeChildren ? "child_of" : "in";
-        return new Domain([[field, operator, values]]);
+        switch (value.operator) {
+            case "in":
+            case "child_of":
+                if (value.ids.length === 0) {
+                    return new Domain();
+                }
+                return new Domain([[field, value.operator, value.ids]]);
+            default:
+                throw new Error("unsupported operator for relation filter: " + value.operator);
+        }
     }
 
     _getBooleanDomain(filter, fieldMatching) {
