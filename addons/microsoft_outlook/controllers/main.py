@@ -3,11 +3,11 @@
 
 import json
 import logging
-import werkzeug
+import requests
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import http
+from odoo import _, http
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import consteq
@@ -24,9 +24,11 @@ class MicrosoftOutlookController(http.Controller):
         We will fetch the refresh token and the access token thanks to this authorization
         code and save those values on the given mail server.
         """
-        if not request.env.user.has_group('base.group_system'):
-            _logger.error('Microsoft Outlook: Non system user try to link an Outlook account.')
-            raise Forbidden()
+        if error_description:
+            return request.render('microsoft_outlook.microsoft_outlook_oauth_error', {
+                'error': error_description,
+                'redirect_url': self._get_redirect_url(),
+            })
 
         try:
             state = json.loads(state)
@@ -37,40 +39,85 @@ class MicrosoftOutlookController(http.Controller):
             _logger.error('Microsoft Outlook: Wrong state value %r.', state)
             raise Forbidden()
 
-        if error_description:
-            return request.render('microsoft_outlook.microsoft_outlook_oauth_error', {
-                'error': error_description,
-                'model_name': model_name,
-                'rec_id': rec_id,
-            })
-
-        model = request.env[model_name]
-
-        if not isinstance(model, request.env.registry['microsoft.outlook.mixin']):
-            # The model must inherits from the "microsoft.outlook.mixin" mixin
-            raise Forbidden()
-
-        record = model.browse(rec_id).exists()
-        if not record:
-            raise Forbidden()
-
-        if not csrf_token or not consteq(csrf_token, record._get_outlook_csrf_token()):
-            _logger.error('Microsoft Outlook: Wrong CSRF token during Outlook authentication.')
-            raise Forbidden()
+        record = self._get_outlook_record(model_name, rec_id, csrf_token)
 
         try:
             refresh_token, access_token, expiration = record._fetch_outlook_refresh_token(code)
         except UserError as e:
             return request.render('microsoft_outlook.microsoft_outlook_oauth_error', {
                 'error': str(e),
-                'model_name': model_name,
-                'rec_id': rec_id,
+                'redirect_url': self._get_redirect_url(record),
+            })
+
+        return self._redirect_to_outlook_record(access_token, expiration, refresh_token, record)
+
+    @http.route('/microsoft_outlook/iap_confirm', type='http', auth='user')
+    def microsoft_outlook_iap_callback(self, model, rec_id, csrf_token, access_token, refresh_token, expiration, **kwargs):
+        record = self._get_outlook_record(model, rec_id, csrf_token)
+        return self._redirect_to_outlook_record(access_token, expiration, refresh_token, record)
+
+    def _get_outlook_record(self, model_name, rec_id, csrf_token):
+        """Return the given record after checking the CSRF token."""
+        model = request.env[model_name]
+
+        if not isinstance(model, request.env.registry['microsoft.outlook.mixin']):
+            # The model must inherits from the "microsoft.outlook.mixin" mixin
+            _logger.error('Microsoft Outlook: Wrong model %r.', model_name)
+            raise Forbidden()
+
+        record = model.browse(int(rec_id)).exists().sudo()
+        if not record:
+            _logger.error('Microsoft Outlook: Record not found.')
+            raise Forbidden()
+
+        if not csrf_token or not consteq(csrf_token, record._get_outlook_csrf_token()):
+            _logger.error('Microsoft Outlook: Wrong CSRF token during Outlook authentication.')
+            raise Forbidden()
+
+        return record
+
+    def _redirect_to_outlook_record(self, access_token, expiration, refresh_token, record):
+        # Verify the token information (that the email set on the
+        # server is the email used to login on Outlook)
+        response = requests.get(
+            "https://outlook.office.com/api/v2.0/me",
+            headers={"Authorization": f"Bearer {access_token}"},
+            timeout=5,
+        )
+        if not response.ok:
+            _logger.error('Microsoft Outlook: Could not verify the token information: %s.', response.text)
+            raise Forbidden()
+
+        response = response.json()
+        if (
+            not request.env.user.has_group('base.group_system')
+            and response.get('EmailAddress') != record[record._email_field]
+        ):
+            _logger.error('Microsoft Outlook: Invalid email address: %r != %s.', response, record[record._email_field])
+            return request.render('microsoft_outlook.microsoft_outlook_oauth_error', {
+                'error': _(
+                    'You logged in as %(email_login)s but your email address is %(email_server)s.',
+                    email_login=response.get('EmailAddress'),
+                    email_server=record[record._email_field],
+                ),
+                'redirect_url': self._get_redirect_url(record),
             })
 
         record.write({
+            'active': True,
             'microsoft_outlook_refresh_token': refresh_token,
             'microsoft_outlook_access_token': access_token,
             'microsoft_outlook_access_token_expiration': expiration,
         })
+        return request.redirect(self._get_redirect_url(record))
 
-        return request.redirect(f'/odoo/{model_name}/{rec_id}')
+    def _get_redirect_url(self, record=False):
+        if not record:
+            return "/odoo"
+        if (
+            (record._name != 'ir.mail_server'
+            or record != request.env.user.outgoing_mail_server_id)
+            and request.env.user.has_group('base.group_system')
+        ):
+            return f'/odoo/{record._name}/{record.id}'
+        return f'/odoo/my-preferences/{request.env.user.id}'
