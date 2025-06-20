@@ -2554,3 +2554,38 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.save()
         self.invoice.action_post()
         self.assertEqual(payment_term_line.name, 'XYZ', 'Manual name of payment term line should be kept')
+
+    def test_reversal_with_language_context_and_pdf(self):
+        # Create partner with French language
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env.context = dict(self.env.context, lang='en_US')
+        self.partner_a.write({'lang': 'fr_FR'})
+
+        # Create and post invoice
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Test Product',
+                'quantity': 1,
+                'price_unit': 100.0,
+            })],
+        })
+        invoice.action_post()
+
+        # Create reversal wizard
+        reversal_wizard = self.env['account.move.reversal'].with_context({
+            'active_model': 'account.move',
+            'active_ids': [invoice.id],
+        }).create({
+            'reason': 'Test reversal',
+            'journal_id': invoice.journal_id.id,
+        })
+
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+
+        html_content = self.env['ir.actions.report']._render_qweb_html(
+            'account.account_invoices', credit_note.ids)[0].decode('utf-8').split('\n')
+
+        self.assertTrue(any('Extourne de :' in line for line in html_content))
