@@ -28,7 +28,7 @@ export class DynamicPlaceholderPopover extends Component {
     static components = {
         ModelFieldSelectorPopover,
     };
-    static props = ["resModel", "validate", "close"];
+    static props = ["resModel", "validate", "close", "canFollowRelationFor?"];
 
     setup() {
         useAutofocus();

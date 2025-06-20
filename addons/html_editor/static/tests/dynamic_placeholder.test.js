@@ -59,3 +59,21 @@ test("inserted value from dynamic placeholder should contain the data-oe-t-inlin
 
     expect("t[data-oe-t-inline]").toHaveCount(1);
 });
+
+test("Should not show `__date` fields for dynamic placeholders", async () => {
+    const { editor } = await setupEditor("<p>test[]</p>", {
+        config: {
+            Plugins: [...MAIN_PLUGINS, ...DYNAMIC_PLACEHOLDER_PLUGINS],
+            dynamicPlaceholderResModel: "res.users",
+        },
+    });
+    onRpc("/web/dataset/call_kw/res.users/mail_get_partner_fields", () => ["partner_id"]);
+
+    await insertText(editor, "/dynamicplaceholder");
+    await press("Enter");
+    await animationFrame();
+
+    expect(
+        'li[data-name="write_date"] > .o_model_field_selector_popover_item_relation'
+    ).toHaveCount(0);
+});
