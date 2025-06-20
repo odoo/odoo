@@ -852,7 +852,7 @@
                                 <label for="commitment_date" string="Delivery Date"/>
                                 <div name="commitment_date_div" class="o_row">
                                     <field name="commitment_date" readonly="state == 'cancel' or locked"/>
-                                    <span name="expected_date_span" class="text-muted">Expected: <field name="expected_date" class="oe_inline"/></span>
+                                    <span name="expected_date_span" invisible="not expected_date" class="text-muted">Expected: <field name="expected_date" class="oe_inline"/></span>
                                 </div>
                             </group>
                             <group name="sale_reporting" string="Tracking">
