@@ -3,7 +3,7 @@ import { mockFetch } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { clearRegistry, mountWithCleanup, patchTranslations } from "@web/../tests/web_test_helpers";
-import { renderService, htmlToCanvas } from "@point_of_sale/app/services/render_service";
+import { renderService, htmlToCanvas } from "@base_printer/epson_printer/services/render_service";
 
 describe("RenderService", () => {
     test("test the render service", async () => {

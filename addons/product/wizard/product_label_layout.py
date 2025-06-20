@@ -4,6 +4,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import format_amount
 
 
 class ProductLabelLayout(models.TransientModel):
@@ -15,7 +16,8 @@ class ProductLabelLayout(models.TransientModel):
         ('2x7xprice', '2 x 7 with price'),
         ('4x7xprice', '4 x 7 with price'),
         ('4x12', '4 x 12'),
-        ('4x12xprice', '4 x 12 with price')], string="Format", default='2x7xprice', required=True)
+        ('4x12xprice', '4 x 12 with price'),
+        ('epson', 'EPSON Labels')], string="Format", default='2x7xprice', required=True)
     custom_quantity = fields.Integer('Quantity', default=1, required=True)
     product_ids = fields.Many2many('product.product')
     product_tmpl_ids = fields.Many2many('product.template')
@@ -45,6 +47,8 @@ class ProductLabelLayout(models.TransientModel):
             xml_id = 'product.report_product_template_label_%sx%s' % (self.columns, self.rows)
             if 'xprice' not in self.print_format:
                 xml_id += '_noprice'
+        elif 'epson' in self.print_format:
+            xml_id = 'product.report_product_template_label_epson'
         else:
             xml_id = ''
 
@@ -67,11 +71,36 @@ class ProductLabelLayout(models.TransientModel):
         }
         return xml_id, data
 
+    def _get_product_data(self):
+        products = self.product_ids or self.product_tmpl_ids
+
+        return {
+            'products': [{
+                'id': product.id,
+                'name': product.name,
+                'barcode': product.barcode,
+                'price': format_amount(self.env, (product.list_price if self.env.context.get('active_model') == 'product.template' else product.lst_price) if not self.pricelist_id else self.pricelist_id._get_product_price(product, 1.0, uom=product.uom_id), self.env.company.currency_id),
+            } for product in products]
+        }
+
     def process(self):
         self.ensure_one()
         xml_id, data = self._prepare_report_data()
         if not xml_id:
             raise UserError(_('Unable to find report template for %s format', self.print_format))
         report_action = self.env.ref(xml_id).report_action(None, data=data, config=False)
+        if self.print_format == 'epson':
+            ip_printers = [printer['name'] for printer in report_action.get('linked_printer_ids', [])]
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'epson_label_action',
+                'params': {
+                    'report_id': report_action.get('id'),
+                    'ip_printers': ip_printers,
+                    'quantity': self.custom_quantity,
+                    'products': self._get_product_data().get('products'),
+                    'next': {'type': 'ir.actions.act_window_close'}
+                },
+            }
         report_action.update({'close_on_report_download': True})
         return report_action

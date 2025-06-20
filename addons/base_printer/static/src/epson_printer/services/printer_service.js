@@ -1,4 +1,4 @@
-import { loadAllImages } from "@point_of_sale/utils";
+import { loadAllImages } from "@base_printer/epson_printer/utils/utils";
 
 import { Reactive } from "@web/core/utils/reactive";
 
@@ -40,8 +40,8 @@ export class PrinterService extends Reactive {
             errorCode: printResult.errorCode,
         };
     }
-    async print(component, props, options = {}) {
-        if (!this.device && !options?.webPrintFallback) {
+    async print(component, props, options = {}, printerIp = "") {
+        if (!this.device && !options?.webPrintFallback && !printerIp) {
             console.log("No printer device available and webPrintFallback is not enabled");
             return;
         }

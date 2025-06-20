@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { htmlToCanvas } from "@point_of_sale/app/services/render_service";
+import { htmlToCanvas } from "@base_printer/epson_printer/services/render_service";
+
 /**
  * Implements basic printer functions.
  */
