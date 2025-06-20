@@ -198,7 +198,8 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
             ProductScreen.addOrderline("Desk Organizer", "1"),
             ProductScreen.addOrderline("Whiteboard Pen", "1"),
             PosLoyalty.isRewardButtonHighlighted(true, true),
-            PosLoyalty.claimReward("100% on the cheapest product"),
+            PosLoyalty.claimReward("Buy 2, get 100% on the cheapest"),
+            PosLoyalty.hasRewardLine("Buy 2, get 100% on the cheapest", "-3.20", "1"),
 
             PosLoyalty.orderTotalIs("5.10"),
             PosLoyalty.finalizeOrder("Cash", "5.10"),
@@ -228,7 +229,7 @@ registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
             combo.select("Combo Product 4"),
             combo.select("Combo Product 6"),
             Dialog.confirm(),
-            inLeftSide(Order.hasLine({ productName: "10% on the cheapest product" })),
+            inLeftSide(Order.hasLine({ productName: "Buy 2, get 10% on the cheapest" })),
             PosLoyalty.orderTotalIs("1,204.25"),
             PosLoyalty.finalizeOrder("Cash", "1204.25"),
             ProductScreen.clickDisplayedProduct("Cheap product"),
@@ -237,7 +238,7 @@ registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
             combo.select("Combo Product 4"),
             combo.select("Combo Product 6"),
             Dialog.confirm(),
-            Order.hasLine({ productName: "10% on the cheapest product" }),
+            Order.hasLine({ productName: "Buy 2, get 10% on the cheapest" }),
             PosLoyalty.orderTotalIs("61.03"),
             PosLoyalty.finalizeOrder("Cash", "61.03"),
         ].flat(),
@@ -259,6 +260,48 @@ registry.category("web_tour.tours").add("PosComboSpecificProductProgram", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosCheapestRewardProgramMultipleTimes", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Expensive product"),
+            inLeftSide(Order.doesNotHaveLine({ productName: "Buy 2, get 10% on the cheapest" })),
+            PosLoyalty.orderTotalIs("1,150.00"),
+            ProductScreen.clickDisplayedProduct("Cheap product"),
+            inLeftSide(Order.hasLine({ productName: "Buy 2, get 10% on the cheapest" })),
+            PosLoyalty.orderTotalIs("1,151.03"),
+            ProductScreen.clickDisplayedProduct("Expensive product"),
+            inLeftSide(Order.hasLine({ productName: "Buy 2, get 10% on the cheapest" })),
+            PosLoyalty.orderTotalIs("2,186.15"),
+            ProductScreen.clickDisplayedProduct("Expensive product"),
+            inLeftSide(Order.hasLine({ productName: "Buy 2, get 10% on the cheapest" })),
+            PosLoyalty.orderTotalIs("3,336.03"),
+            PosLoyalty.finalizeOrder("Cash", "3336.03"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosCheapestRewardProgramWhenClearWallet", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Expensive product"),
+            inLeftSide(Order.doesNotHaveLine({ productName: "Buy 2, get 10% on the cheapest" })),
+            PosLoyalty.orderTotalIs("1,150.00"),
+            ProductScreen.clickDisplayedProduct("Cheap product"),
+            inLeftSide(Order.hasLine({ productName: "Buy 2, get 10% on the cheapest" })),
+            PosLoyalty.orderTotalIs("1,151.03"),
+            ProductScreen.clickDisplayedProduct("Expensive product"),
+            inLeftSide(Order.hasLine({ productName: "Buy 2, get 10% on the cheapest" })),
+            PosLoyalty.orderTotalIs("2,186.15"),
+            ProductScreen.clickDisplayedProduct("Expensive product"),
+            inLeftSide(Order.hasLine({ productName: "Buy 2, get 10% on the cheapest" })),
+            PosLoyalty.orderTotalIs("3,336.15"),
+            PosLoyalty.finalizeOrder("Cash", "3336.15"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosCheapestProductTaxInclude", {
     steps: () =>
         [
@@ -266,7 +309,7 @@ registry.category("web_tour.tours").add("PosCheapestProductTaxInclude", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Product"),
             ProductScreen.addOrderline("Desk Organizer", "1"),
-            Order.hasLine({ productName: "10% on the cheapest product" }),
+            Order.hasLine({ productName: "Buy 2, get 10% on the cheapest" }),
             PosLoyalty.orderTotalIs("6.00"),
         ].flat(),
 });

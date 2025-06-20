@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.tests import new_test_user
 
 from odoo.addons.sale.tests.common import SaleCommon
 
@@ -13,6 +14,10 @@ class TestSaleCouponCommon(SaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.user_salemanager = new_test_user(
+            cls.env, login='user_salemanager', groups='sales_team.group_sale_manager'
+        )
 
         # set currency to not rely on demo data and avoid possible race condition
         cls.currency_ratio = 1.0
