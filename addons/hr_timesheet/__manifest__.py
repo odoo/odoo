@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -37,6 +36,7 @@ up a management by affair.
         'report/report_timesheet_templates.xml',
         'views/hr_department_views.xml',
         'views/hr_employee_views.xml',
+        'views/hr_employee_public_views.xml',
         'data/hr_timesheet_data.xml',
         'views/project_task_sharing_views.xml',
         'views/project_update_views.xml',

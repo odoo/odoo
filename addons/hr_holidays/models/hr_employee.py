@@ -40,8 +40,7 @@ class HrEmployee(models.Model):
     show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
     is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
     allocation_display = fields.Char(compute='_compute_allocation_remaining_display')
-    allocation_remaining_display = fields.Char(compute='_compute_allocation_remaining_display',
-                                               groups="hr.group_hr_user")
+    allocation_remaining_display = fields.Char(compute='_compute_allocation_remaining_display')
     hr_icon_display = fields.Selection(selection_add=[
         ('presence_holiday_absent', 'On leave'),
         ('presence_holiday_present', 'Present but on leave')])
