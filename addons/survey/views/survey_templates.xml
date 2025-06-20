@@ -240,7 +240,8 @@
                 <div class="col-12 text-center mt16">
                     <t t-set="submit_value" t-value="'finish' if survey_last or answer.is_session_answer else 'next_skipped'
                         if answer.survey_first_submitted and skipped_questions.page_id and page in skipped_questions.page_id else 'next'"/>
-                    <button type="submit" t-att-value="submit_value" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} disabled">
+                    <button type="submit" t-att-value="submit_value" t-att-data-survey-first-submitted="answer.survey_first_submitted"
+                        t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} disabled">
                         <t t-if="submit_value == 'finish'">Submit</t>
                         <t t-elif="submit_value == 'next_skipped'">Next Skipped</t>
                         <t t-else="">Continue</t>
@@ -280,7 +281,8 @@
                     <div class="col-12 text-center mt16">
                         <t t-set="submit_value" t-value="'finish' if survey_last or answer.is_session_answer else
                             'next_skipped' if answer.survey_first_submitted and skipped_questions and question in skipped_questions else 'next'"/>
-                        <button type="submit" t-att-value="submit_value" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} disabled">
+                        <button type="submit" t-att-value="submit_value" t-att-data-survey-first-submitted="answer.survey_first_submitted"
+                            t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} disabled">
                             <t t-if="submit_value == 'finish'">Submit</t>
                             <t t-elif="submit_value == 'next_skipped'">Next Skipped</t>
                             <t t-else="">Continue</t>
