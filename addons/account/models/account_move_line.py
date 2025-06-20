@@ -7,7 +7,7 @@ import re
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.fields import Domain
-from odoo.tools import frozendict, float_compare, Query, SQL
+from odoo.tools import frozendict, float_compare, Query, SQL, OrderedSet
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -104,6 +104,8 @@ class AccountMoveLine(models.Model):
     )
     account_name = fields.Char(related='account_id.name') # Used for easy configuration of consolidation in the reports
     account_code = fields.Char(related='account_id.code') # Used for easy configuration of consolidation in the reports
+    # TODO: move the search method on the `account_id` field when it's possible to add a search on a stored field
+    search_account_id = fields.Many2one('account.account', search='_search_account_id', store=False)
     name = fields.Char(
         string='Label',
         compute='_compute_name', store=True, readonly=False, precompute=True,
@@ -634,6 +636,31 @@ class AccountMoveLine(models.Model):
                     line.account_id = previous_two_accounts
                 else:
                     line.account_id = line.move_id.journal_id.default_account_id
+
+    @api.model
+    def _search_account_id(self, operator, value):
+        """
+        Search method that can be a drop-in replacement for searching on `account_id`.
+        Resolves the domain and inlines the resulting ids to yield better final queries
+        and avoids joining on the `account.account` model.
+        This should be a net positive on average, under the assertion that the cardinality of
+        `account.account` doesn't grow too large. (e.g. <10k rows)
+        """
+        if (
+            operator in ('in', 'not in', 'any', 'not any')
+            and not isinstance(value, (tuple, list, OrderedSet))
+        ):
+            if operator in ('any', 'not any'):
+                operator = {'any': 'in', 'not any': 'not in'}[operator]
+
+            if isinstance(value, (Query, SQL)):
+                query_value = value.select('id') if isinstance(value, Query) else value
+                value = [row[0] for row in self.env.execute_query(query_value)]
+            else:  # isinstance(value, Domain) is True
+                # sudo reason: ignore ir.rules, `account_id` is with `auto_join=True`
+                value = self.env['account.account'].sudo()._search(value).get_result_ids()
+
+        return [('account_id', operator, value)]
 
     @api.depends('move_id')
     def _compute_balance(self):
