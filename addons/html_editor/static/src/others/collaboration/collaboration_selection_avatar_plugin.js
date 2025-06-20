@@ -96,7 +96,7 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
             avatarElement.append(image);
             image.onload = () => avatarElement.style.removeProperty("display");
             image.setAttribute("src", avatarUrl);
-            image.classList.add("o_object_fit_cover");
+            image.classList.add("object-fit-cover");
         }
         // Avoid re-appending the element in the dom.
         if (!avatarElement.parentElement) {
