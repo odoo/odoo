@@ -133,3 +133,28 @@ class TestUi(TestPosHrHttpCommon):
             "test_change_on_rights_reflected_directly",
             login="pos_admin",
         )
+
+    def setup_employees_roles(self):
+        # all backend users
+        self.admin.pin = False
+        self.emp1.pin = False
+        self.emp3.pin = False
+        self.main_pos_config.advanced_employee_ids = [Command.link(self.admin.id)]
+        self.main_pos_config.basic_employee_ids = [Command.link(self.emp1.id)]
+        self.main_pos_config.minimal_employee_ids = [Command.link(self.emp3.id)]
+
+    def test_edit_or_create_product_backend_admin(self):
+        # backend admin
+        self.setup_employees_roles()
+        self.start_pos_tour("UserEditOrCreateProduct", login="pos_admin")
+
+    def test_edit_or_create_product_backend_user_no_product(self):
+        # pos user has no write access on product
+        self.setup_employees_roles()
+        self.start_pos_tour("UserEditOrCreateProduct2", login="pos_user")
+
+    def test_edit_or_create_product_backend_user_product(self):
+        # pos user has write access on product
+        self.setup_employees_roles()
+        self.pos_user.groups_id += self.env.ref('product.group_product_manager')
+        self.start_pos_tour("UserEditOrCreateProduct", login="pos_user")
