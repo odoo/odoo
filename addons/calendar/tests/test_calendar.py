@@ -3,13 +3,14 @@
 from datetime import datetime, timedelta
 
 from odoo import fields, Command
-from odoo.tests import Form, new_test_user
+from odoo.tests import Form, new_test_user, tagged
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 import freezegun
 import base64
 
 
+@tagged('post_install', '-at_install')
 class TestCalendar(SavepointCaseWithUserDemo):
 
     def setUp(self):
