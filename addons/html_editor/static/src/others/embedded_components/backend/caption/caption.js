@@ -32,7 +32,11 @@ export class EmbeddedCaptionComponent extends Component {
         this.updateCaption();
         this.observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
-                if (mutation.type === "attributes" && mutation.attributeName === "data-caption") {
+                if (
+                    mutation.type === "attributes" &&
+                    mutation.attributeName === "data-caption" &&
+                    mutation.target.isConnected
+                ) {
                     this.updateCaption();
                 }
             }
