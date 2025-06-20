@@ -85,7 +85,7 @@ test("delete an item", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container > button").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
         JSON.stringify(defaultValueWithIds([0]))
@@ -106,9 +106,9 @@ test("reorder items", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container > button").click();
-    await contains(".we-bg-options-container > button").click();
-    await contains(".we-bg-options-container > button").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
     function expectOrder(ids) {
         expect(":iframe .test-options-target").toHaveAttribute(
             "data-list",

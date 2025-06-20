@@ -21,10 +21,15 @@
         }
     }
 
-    &:focus, &:hover, &:focus-visible {
-        .form-check-input:not(disabled) {
+    &:focus, &:hover {
+        .form-check-input:not(:disabled) {
             border-color: var(--o-hb-form-switch-color-active, #{$o-hb-form-check-input-checked-border-color});
             box-shadow: none;
         }
+    }
+    .form-check-input:focus-visible:not(:disabled) {
+        box-shadow:
+            0 0 0 #{$o-we-border-width} #{$o-we-bg-light},
+            0 0 0 #{$o-we-border-width * 2} var(--o-hb-form-switch-color-active, #{$o-hb-form-check-input-checked-border-color});
     }
 }
