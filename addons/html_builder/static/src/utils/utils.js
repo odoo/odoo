@@ -37,6 +37,9 @@ export function getSnippetName(snippetEl) {
     if (snippetEl.matches(".media_iframe_video")) {
         return _t("Video");
     }
+    if (snippetEl.matches(".o_file_box")) {
+        return _t("File");
+    }
     if (snippetEl.parentNode?.matches(".row")) {
         return _t("Column");
     }
