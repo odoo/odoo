@@ -3,7 +3,7 @@
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo import Command
 
 
@@ -775,20 +775,45 @@ class TestLotValuation(TestStockValuationCommon):
 
     def test_adjustment_post_validation(self):
         """
-        Check if an error is raised when updating a stock move quantity.
+        On a picking order test the behavior of changing the quantity on a stock.move
         """
-        in_move = self._make_in_move(self.product1, 2, 2, lot_ids=[self.lot1])
+        in_move = self._make_in_move(self.product1, 2, 2, create_picking=True, lot_ids=[self.lot1])
 
-        in_move.write({"quantity": 5.0})
-        self.assertEqual(in_move.quantity, 5.0)
-        self.assertEqual(self.lot1.quantity_svl, 5.0)
-        in_move.write({"quantity": 3.0})
-        self.assertEqual(in_move.quantity, 3.0)
-        self.assertEqual(self.lot1.quantity_svl, 3.0)
+        picking = self.env['stock.picking'].search([('id', '=', in_move.picking_id.id)])
+
+        picking.button_validate()
+        picking.action_toggle_is_locked()
+
+        picking_form = Form(picking)
+
+        picking_form.move_ids_without_package.edit(0).quantity = 5.0
+        pick = picking_form.save()
+        self.assertEqual(picking_form.move_ids_without_package.edit(0).move_lines_count, 1)
+        self.assertEqual(picking_form.move_ids_without_package.edit(0).move_line_ids.edit(0).quantity, 5.0)
+        picking_form.move_ids_without_package.edit(0).quantity = 3.0
+        self.assertEqual(picking_form.move_ids_without_package.edit(0).move_lines_count, 1)
+        self.assertEqual(picking_form.move_ids_without_package.edit(0).move_line_ids.edit(0).quantity, 3.0)
+
+        picking_form.move_ids_without_package.edit(0).move_line_ids.edit(0).quantity = 5.0
+        pick = picking_form.save()
+        self.assertEqual(picking_form.move_ids_without_package.edit(0).move_lines_count, 1)
+        self.assertEqual(picking_form.move_ids_without_package.edit(0).quantity, 5.0)
+        self.assertEqual(picking_form.move_ids_without_package.edit(0).move_line_ids.edit(0).quantity, 5.0)
+        picking_form.move_ids_without_package.edit(0).move_line_ids.edit(0).quantity = 3.0
+        self.assertEqual(picking_form.move_ids_without_package.edit(0).move_lines_count, 1)
+        self.assertEqual(picking_form.move_ids_without_package.edit(0).quantity, 3.0)
+        self.assertEqual(picking_form.move_ids_without_package.edit(0).move_line_ids.edit(0).quantity, 3.0)
 
         in_move_lots = self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot2, self.lot3])
 
+        picking_lots = self.env['stock.picking'].search([('id', '=', in_move_lots.picking_id.id)])
+
+        picking_lots.button_validate()
+        picking_lots.action_toggle_is_locked()
+
+        picking_lots_form = Form(picking_lots)
+
         with self.assertRaises(UserError):
-            in_move_lots.write({"quantity": 16.0})
+            picking_lots_form.move_ids_without_package.edit(0).quantity = 16.0
         with self.assertRaises(UserError):
-            in_move_lots.write({"quantity": 14.0})
+            picking_lots_form.move_ids_without_package.edit(0).quantity = 8.0

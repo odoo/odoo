@@ -94,11 +94,6 @@ class StockMoveLine(models.Model):
     # -------------------------------------------------------------------------
     def _create_correction_svl(self, move, diff):
         lot = self.lot_id if self.product_id.lot_valuated else self.env['stock.lot']
-        if self.product_id.lot_valuated and not lot:
-            if len(move.lot_ids) == 1:
-                lot = move.lot_ids
-            else:
-                raise UserError(_("Lot/Serial number is mandatory for product valuated by lot"))
         qty = (lot, abs(diff))
         stock_valuation_layers = self.env['stock.valuation.layer']
         if (move._is_in() and diff > 0) or (move._is_out() and diff < 0):

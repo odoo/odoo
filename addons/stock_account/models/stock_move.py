@@ -787,3 +787,16 @@ class StockMove(models.Model):
 
     def _get_all_related_sm(self, product):
         return self.filtered(lambda m: m.product_id == product)
+
+    @api.onchange('quantity')
+    def _onchange_quantity(self):
+        for product in self.product_id:
+            if product.lot_valuated:
+                before_compute_quantity = self.quantity
+                self._compute_quantity()
+                if before_compute_quantity != self.quantity:
+                    if self.move_lines_count == 1:
+                        self.quantity = before_compute_quantity
+                        self.move_line_ids.quantity = self.quantity
+                    else:
+                        raise UserError(_("Lot/Serial number is mandatory for product valuated by lot"))
