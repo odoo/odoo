@@ -303,13 +303,62 @@ class TestMrpReplenish(TestMrpCommon):
         orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
         self.assertFalse(orderpoint.show_supply_warning)
 
+<<<<<<< 8e304ab52981aca6143d2cd28720303b259841de
     def test_set_bom_on_orderpoint(self):
         """ Test that action_set_bom_on_orderpoint correctly sets a bom on selected orderpoint. """
+||||||| 67490af868f8bd3a502085836d64217fa5fbb459
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.product_min_qty = 3
+        self.assertEqual(orderpoint.qty_to_order, 1)
+
+        orderpoint.trigger = 'manual'
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.product_min_qty = 10
+            self.assertEqual(form.qty_to_order, 0)
+        self.assertEqual(form.qty_to_order, 8)
+        self.assertEqual(orderpoint.qty_to_order, 8)
+
+    def test_manuf_lead_time_without_bom(self):
+        """
+        Test that the manufacturing lead time is correctly applied to a product
+        without a Bill of Materials (BoM).
+        """
+        self.env.company.write({'manufacturing_lead': 3.0})
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        product = self.env['product.product'].create({
+            'name': 'test',
+            'is_storable': True,
+            'route_ids': route_manufacture.ids,
+        })
+=======
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.product_min_qty = 3
+        self.assertEqual(orderpoint.qty_to_order, 1)
+
+        orderpoint.trigger = 'manual'
+        with Form(orderpoint, view='stock.view_warehouse_orderpoint_tree_editable') as form:
+            form.product_min_qty = 10
+            self.assertEqual(form.qty_to_order, 0)
+        self.assertEqual(form.qty_to_order, 8)
+        self.assertEqual(orderpoint.qty_to_order, 8)
+
+    def test_lead_time_with_no_bom(self):
+        """Test that lead time is incremented by 365 days (1 year) when there
+        is no BoM defined.
+        """
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        product = self.env['product.product'].create({
+            'name': 'test',
+            'is_storable': True,
+            'route_ids': route_manufacture.ids,
+        })
+>>>>>>> 390040dcf12de6ca204faea6d6f20284132a3f4c
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'product_id': self.product_4.id,
             'product_min_qty': 10,
             'product_max_qty': 50,
         })
+<<<<<<< 8e304ab52981aca6143d2cd28720303b259841de
         self.product_4.bom_ids.with_context(orderpoint_id=orderpoint.id).action_set_bom_on_orderpoint()
         self.assertEqual(orderpoint.bom_id.id, self.product_4.bom_ids.id)
 
@@ -353,3 +402,8 @@ class TestMrpReplenish(TestMrpCommon):
         self.assertEqual(orderpoint.bom_id_placeholder, 'Ref 1234: Product A')
         # The actual BoM remains empty
         self.assertFalse(orderpoint.bom_id)
+||||||| 67490af868f8bd3a502085836d64217fa5fbb459
+        self.assertEqual(orderpoint.lead_days_date, fields.Date.today() + timedelta(days=3))
+=======
+        self.assertEqual(orderpoint.lead_days_date, fields.Date.today() + timedelta(days=365))
+>>>>>>> 390040dcf12de6ca204faea6d6f20284132a3f4c
