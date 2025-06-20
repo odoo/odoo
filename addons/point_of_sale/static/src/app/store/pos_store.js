@@ -1626,24 +1626,25 @@ export class PosStore extends Reactive {
                     true,
                     diningModeUpdate
                 );
+                changes.new = [];
                 if (!printed) {
                     unsuccedPrints.push("Detailed Receipt");
                 }
-            } else {
-                // Print all receipts related to line changes
-                const toPrintArray = this.preparePrintingData(order, changes);
-                for (const [key, value] of Object.entries(toPrintArray)) {
-                    const printed = await this.printReceipts(order, printer, key, value, false);
-                    if (!printed) {
-                        unsuccedPrints.push(key);
-                    }
+            }
+
+            // Print all receipts related to line changes
+            const toPrintArray = this.preparePrintingData(order, changes);
+            for (const [key, value] of Object.entries(toPrintArray)) {
+                const printed = await this.printReceipts(order, printer, key, value, false);
+                if (!printed) {
+                    unsuccedPrints.push(key);
                 }
-                // Print Order Note if changed
-                if (orderChange.generalNote) {
-                    const printed = await this.printReceipts(order, printer, "Message", []);
-                    if (!printed) {
-                        unsuccedPrints.push("General Message");
-                    }
+            }
+            // Print Order Note if changed
+            if (orderChange.generalNote && anyChangesToPrint) {
+                const printed = await this.printReceipts(order, printer, "Message", []);
+                if (!printed) {
+                    unsuccedPrints.push("General Message");
                 }
             }
         }
