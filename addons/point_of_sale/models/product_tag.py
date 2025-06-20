@@ -10,7 +10,7 @@ class ProductTag(models.Model):
     pos_description = fields.Html(string='Description', translate=True)
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['name', 'pos_description']
 
     def write(self, vals):

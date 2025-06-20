@@ -5,9 +5,9 @@ class MailTemplate(models.Model):
     _inherit = ['mail.template', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return [('id', 'in', [preset['mail_template_id'] for preset in data['pos.preset']])]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id']

@@ -6,5 +6,5 @@ class DecimalPrecision(models.Model):
     _inherit = ['decimal.precision', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id', 'name', 'digits']

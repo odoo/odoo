@@ -44,7 +44,7 @@ class PosPayment(models.Model):
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config):
         return [('pos_order_id', 'in', [order['id'] for order in data['pos.order']])]
 
     @api.depends('amount', 'currency_id')

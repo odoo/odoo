@@ -18,8 +18,8 @@ class PosOrderLine(models.Model):
                 line.l10n_in_hsn_code = line.product_id.l10n_in_hsn_code
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
         if self.env.company.country_id.code == 'IN':
             params += ['l10n_in_hsn_code']
         return params
