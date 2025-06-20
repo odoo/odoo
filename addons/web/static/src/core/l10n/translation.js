@@ -1,9 +1,8 @@
-import { markup } from "@odoo/owl";
+import { htmlEscape, markup } from "@odoo/owl";
 
 import { formatList } from "@web/core/l10n/utils";
 import { isIterable } from "@web/core/utils/arrays";
 import { Deferred } from "@web/core/utils/concurrency";
-import { htmlEscape } from "@web/core/utils/html";
 import { isObject } from "@web/core/utils/objects";
 import { sprintf } from "@web/core/utils/strings";
 
