@@ -2577,23 +2577,30 @@ class AccountMove(models.Model):
                 )
         return product_infos
 
-    def _get_product_catalog_record_lines(self, product_ids, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, *, selected_section_id=False, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['account.move.line'])
-        for line in self.line_ids:
+        move_lines = self.line_ids.filtered_domain([
+            ('linked_section_line_id', '=', selected_section_id),
+        ])
+        for line in move_lines:
             if line.display_type == 'product' and line.product_id.id in product_ids:
                 grouped_lines[line.product_id] |= line
         return grouped_lines
 
-    def _update_order_line_info(self, product_id, quantity, **kwargs):
+    def _update_order_line_info(self, product_id, quantity, *, selected_section_id=False, **kwargs):
         """ Update account_move_line information for a given product or create a
         new one if none exists yet.
         :param int product_id: The product, as a `product.product` id.
         :param int quantity: The quantity selected in the catalog
+        :param int selected_section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
                  sale order and the quantity selected.
         :rtype: float
         """
-        move_line = self.line_ids.filtered(lambda line: line.product_id.id == product_id)
+        move_line = self.line_ids.filtered_domain([
+            ('product_id', '=', product_id),
+            ('linked_section_line_id', '=', selected_section_id),
+        ])
         if move_line:
             if quantity != 0:
                 move_line.quantity = quantity
@@ -2607,10 +2614,14 @@ class AccountMove(models.Model):
             else:
                 move_line.quantity = 0
         elif quantity > 0:
+            child_field = kwargs.get('child_field', 'line_ids')
+            sequence = self._get_new_line_sequence(child_field, selected_section_id)
+
             move_line = self.env['account.move.line'].create({
                 'move_id': self.id,
                 'quantity': quantity,
                 'product_id': product_id,
+                'sequence': sequence,
             })
         return move_line.price_unit
 
@@ -2620,6 +2631,24 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         return self.state == 'cancel'
+
+    def _create_order_section(self, name, child_field, **kwargs):
+        return super()._create_order_section(
+            name, child_field, line_model='account.move.line', parent_field='move_id',
+        )
+
+    def _get_order_sections(self, child_field, **kwargs):
+        sections = super()._get_order_sections(child_field=child_field, **kwargs)
+        if not child_field:
+            return sections
+
+        for section in sections:
+            section['line_count'] = len(self[child_field].filtered_domain([
+                ('display_type', '=', 'product'),
+                ('linked_section_line_id', '=', section['id']),
+                ('product_id.product_tmpl_id.type', '!=', 'combo'),
+            ]))
+        return sections
 
     # -------------------------------------------------------------------------
     # EARLY PAYMENT DISCOUNT

@@ -113,6 +113,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/services/*.js',
             'account/static/src/views/**/*',
             'account/static/src/js/tours/account.js',
+            'account/static/src/js/tours/tour_utils.js',
             'account/static/src/js/search/search_bar/search_bar.js',
             'account/static/src/helpers/*.js',
             'account/static/src/core/utils/*.js',

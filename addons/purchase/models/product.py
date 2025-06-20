@@ -62,6 +62,10 @@ class ProductProduct(models.Model):
         compute='_compute_is_in_purchase_order',
         search='_search_is_in_purchase_order',
     )
+    is_in_selected_section_of_purchase_order = fields.Boolean(
+        compute='_compute_is_in_selected_section_of_purchase_order',
+        search='_search_is_in_selected_section_of_purchase_order',
+    )
 
     def _compute_purchased_product_qty(self):
         date_from = fields.Datetime.to_string(fields.Date.context_today(self) - relativedelta(years=1))
@@ -94,6 +98,12 @@ class ProductProduct(models.Model):
         for product in self:
             product.is_in_purchase_order = bool(data.get(product.id, 0))
 
+    @api.depends_context('order_id', 'selected_section_id')
+    def _compute_is_in_selected_section_of_purchase_order(self):
+        product_ids = self._get_product_ids_in_selected_section_of_purchase_order()
+        for product in self:
+            product.is_in_selected_section_of_purchase_order = product.id in product_ids
+
     def _search_is_in_purchase_order(self, operator, value):
         if operator != 'in':
             return NotImplemented
@@ -101,6 +111,11 @@ class ProductProduct(models.Model):
             ('order_id', 'in', [self.env.context.get('order_id', '')]),
         ]).product_id.ids
         return [('id', 'in', product_ids)]
+
+    def _search_is_in_selected_section_of_purchase_order(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        return [('id', 'in', self._get_product_ids_in_selected_section_of_purchase_order())]
 
     def action_view_po(self):
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
@@ -110,6 +125,16 @@ class ProductProduct(models.Model):
 
     def _get_backend_root_menu_ids(self):
         return super()._get_backend_root_menu_ids() + [self.env.ref('purchase.menu_purchase_root').id]
+
+    def _get_product_ids_in_selected_section_of_purchase_order(self):
+        order_id = self.env.context.get('order_id')
+        if not order_id:
+            return []
+
+        return self.env['purchase.order'].browse(order_id).order_line.filtered_domain([
+            ('linked_section_line_id', '=', self.env.context.get('selected_section_id')),
+            ('product_uom_qty', '>', 0),
+        ]).mapped('product_id').ids
 
     def _update_uom(self, to_uom_id):
         for uom, product, po_lines in self.env['purchase.order.line']._read_group(

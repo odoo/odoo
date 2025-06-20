@@ -56,7 +56,8 @@ export class ProductCatalogKanbanModel extends RelationalModel {
             order_id: params.context.order_id,
             product_ids: productIds,
             res_model: params.context.product_catalog_order_model,
-            child_field: params.context?.child_field,
+            child_field: params.context.child_field,
+            selected_section_id: this.env.searchModel.selectedSection.sectionId,
         }
     }
 
@@ -76,5 +77,20 @@ export class ProductCatalogKanbanModel extends RelationalModel {
             };
         }
         return sampleOrderLineInfo;
+    }
+
+    _applySectionFilter(params, {sectionFilterField, orderModel}) {
+        const selectedSection = this.env.searchModel.selectedSection;
+        if (selectedSection.filtered && params.context.product_catalog_order_model === orderModel) {
+            return {
+                ...params,
+                domain: [...(params.domain || []), [sectionFilterField, '=', true]],
+                context: {
+                    ...params.context,
+                    selected_section_id: selectedSection.sectionId,
+                },
+            };
+        }
+        return params;
     }
 }

@@ -1,3 +1,4 @@
+import { addSectionFromProductCatalog } from "@account/js/tours/tour_utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('sale_catalog', {
@@ -68,5 +69,30 @@ registry.category("web_tour.tours").add('sale_catalog', {
             trigger: '.o-kanban-button-back',
             run: 'click',
         },
+    ]
+});
+
+registry.category("web_tour.tours").add('test_add_section_from_product_catalog_on_sale_order', {
+    steps: () => [
+        {
+            content: "Create a new SO",
+            trigger: '.o_list_button_add',
+            run: 'click',
+        },
+        {
+            content: "Select the customer field",
+            trigger: '.o_field_res_partner_many2one input.o_input',
+            run: 'click',
+        },
+        {
+            content: "Wait for the field to be active",
+            trigger: '.o_field_res_partner_many2one input[aria-expanded=true]',
+        },
+        {
+            content: "Select a customer from the dropdown",
+            trigger: '.o_field_res_partner_many2one .dropdown-item:not([id$="_loading"]):first',
+            run: 'click',
+        },
+        ...addSectionFromProductCatalog(),
     ]
 });
