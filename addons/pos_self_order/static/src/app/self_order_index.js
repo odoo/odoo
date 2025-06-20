@@ -58,12 +58,29 @@ export class selfOrderIndex extends Component {
         }
 
         if (this.selfOrder.kioskMode) {
+<<<<<<< d2113d610097b999d7b3d5e565d44d68746530c3
             const styleConfig = this.selfOrder.config._self_ordering_style;
             if (styleConfig) {
                 const { primaryBgColor, primaryTextColor } = styleConfig;
                 insertKioskStyle(primaryBgColor, primaryTextColor);
             }
             document.body.classList.add("kiosk");
+||||||| 6831ac478c49b1b1ad0441fd69afb2016c5cae86
+            const styleConfig = this.selfOrder.config._self_ordering_style;
+            if (styleConfig) {
+                const { primaryBgColor, primaryTextColor } = styleConfig;
+                insertKioskStyle(primaryBgColor, primaryTextColor);
+            }
+            document.documentElement.classList.add("kiosk");
+=======
+            document.documentElement.classList.add("kiosk");
+>>>>>>> c3056d5bac2ad64aba279f69a40941fbf0527ac5
+        }
+
+        const styleConfig = this.selfOrder.config._self_ordering_style;
+        if (styleConfig) {
+            const { primaryBgColor, primaryTextColor } = styleConfig;
+            insertKioskStyle(primaryBgColor, primaryTextColor);
         }
 
         if (this.env.debug) {
