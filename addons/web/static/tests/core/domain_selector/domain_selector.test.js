@@ -3260,7 +3260,7 @@ test("date options (edit): This day/This month", async () => {
     await openModelFieldSelectorPopover();
     await contains(`.o_model_field_selector_popover_item[data-name='day_of_month'] button`).click();
     expect.verifySteps([`[("date.day_of_month", "in", [])]`]);
-    expect(getCurrentValue()).toBe("Select one or several criteria");
+    expect(getCurrentValue()).toBe(`Select at least one criterion`);
     await selectValue("context_today().day");
     expect(getCurrentValue()).toBe("This day");
     expect.verifySteps([`[("date.day_of_month", "in", [context_today().day])]`]);
@@ -3322,7 +3322,7 @@ test("many2one: placeholders for in operator", async () => {
     });
     expect(`${SELECTORS.valueEditor} input`).toHaveAttribute(
         "placeholder",
-        `Select one or several criteria`
+        `Select at least one criterion`
     );
 });
 
@@ -3332,7 +3332,7 @@ test("datetime: placeholders for in operator", async () => {
     });
     expect(`${SELECTORS.valueEditor} input`).toHaveAttribute(
         "placeholder",
-        `Select one or several criteria`
+        `Select at least one criterion`
     );
 });
 
@@ -3342,7 +3342,7 @@ test("date: placeholders for in operator", async () => {
     });
     expect(`${SELECTORS.valueEditor} input`).toHaveAttribute(
         "placeholder",
-        `Select one or several criteria`
+        `Select at least one criterion`
     );
 });
 
@@ -3352,7 +3352,7 @@ test("char: placeholders for in operator", async () => {
     });
     expect(`${SELECTORS.valueEditor} input`).toHaveAttribute(
         "placeholder",
-        `Press "Enter" to add criterion`
+        `Enter at least one criterion`
     );
 });
 
@@ -3360,7 +3360,7 @@ test("selection: placeholders for in operator", async () => {
     await makeDomainSelector({
         domain: `[("state", "in", [])]`,
     });
-    expect(`${SELECTORS.valueEditor} select`).toHaveValue(`Select one or several criteria`);
+    expect(`${SELECTORS.valueEditor} select`).toHaveValue(`Select at least one criterion`);
 });
 
 test(`datetime option 'Date': placeholders for in operator`, async () => {
@@ -3372,7 +3372,7 @@ test(`datetime option 'Date': placeholders for in operator`, async () => {
     await contains(".o_model_field_selector_popover_item:contains('Date') button").click();
     expect(`${SELECTORS.valueEditor} input`).toHaveAttribute(
         "placeholder",
-        `Select one or several criteria`
+        `Select at least one criterion`
     );
 });
 
