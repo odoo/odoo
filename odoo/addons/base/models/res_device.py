@@ -28,13 +28,14 @@ class ResDeviceLog(models.Model):
     user_id = fields.Many2one("res.users", index='btree')
     first_activity = fields.Datetime("First Activity")
     last_activity = fields.Datetime("Last Activity", index='btree')
-    revoked = fields.Boolean("Revoked",
+    revoked = fields.Boolean("Revoked", required=True,
                             help="""If True, the session file corresponding to this device
                                     no longer exists on the filesystem.""")
     is_current = fields.Boolean("Current Device", compute="_compute_is_current")
     linked_ip_addresses = fields.Text("Linked IP address", compute="_compute_linked_ip_addresses")
 
     _composite_idx = models.Index("(user_id, session_identifier, platform, browser, last_activity, id) WHERE revoked IS NOT TRUE")
+    _revoked_idx = models.Index("(revoked) WHERE revoked IS NOT TRUE")
 
     def _compute_display_name(self):
         for device in self:
@@ -130,6 +131,33 @@ class ResDeviceLog(models.Model):
         """)
         _logger.info("GC device logs delete %d entries", self.env.cr.rowcount)
 
+    @api.autovacuum
+    def _update_revoked(self):
+        """
+            Set the field ``revoked`` to ``False`` for ``res.device.log``
+            for which the session file no longer exists on the filesystem.
+
+            Note:
+            Only the ``res.device.log`` of the current user are revoked.
+            The use of ``api.autovacuum`` is useful to update all ``res.device.log``.
+        """
+        device_logs_by_session_identifier = {}
+        for session_identifier, device_logs in self.env['res.device.log']._read_group(
+            domain=[('revoked', '=', False)],
+            groupby=['session_identifier'],
+            aggregates=['id:recordset'],
+        ):
+            device_logs_by_session_identifier[session_identifier] = device_logs
+
+        revoked_session_identifiers = root.session_store.get_missing_session_identifiers(
+            device_logs_by_session_identifier.keys()
+        )
+        device_logs_to_revoke = self.env['res.device.log'].concat(*map(
+            device_logs_by_session_identifier.get,
+            revoked_session_identifiers
+        ))
+        device_logs_to_revoke.sudo().write({'revoked': True})
+
 
 class ResDevice(models.Model):
     _name = 'res.device'
@@ -178,9 +206,9 @@ class ResDevice(models.Model):
                             D2.last_activity > D.last_activity
                             OR (D2.last_activity = D.last_activity AND D2.id > D.id)
                         )
-                        AND D2.revoked = False
+                        AND D2.revoked IS NOT TRUE
                 )
-                AND D.revoked = False
+                AND D.revoked IS NOT TRUE
         """
 
     @property
