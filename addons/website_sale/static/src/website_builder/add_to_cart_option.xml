@@ -21,7 +21,7 @@
         />
     </BuilderRow>
     <BuilderRow label.translate="Action" t-if="this.domState.shouldShowActionChoice">
-        <BuilderSelect action="'addToCart'">
+        <BuilderSelect action="'addToCartAction'">
             <BuilderSelectItem actionParam="addToCartValues.addToCart"><t t-out="addToCartValues.addToCart.label"/></BuilderSelectItem>
             <BuilderSelectItem actionParam="addToCartValues.buyNow"><t t-out="addToCartValues.buyNow.label"/></BuilderSelectItem>
         </BuilderSelect>
