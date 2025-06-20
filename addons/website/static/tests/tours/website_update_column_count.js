@@ -177,7 +177,12 @@ registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop", {
     {
         content: "Drag a 'Text-Image' column and drop it in the same snippet",
         trigger: "body .o_overlay_options .o_move_handle",
-        run: `drag_and_drop ${textImageSnippetRow}`,
+        run(helpers) {
+            return helpers.drag_and_drop(textImageSnippetRow, {
+                position: "bottom",
+                relative: true,
+            });
+        }
     },
     checkIfNoMobileOrder(textImageSnippetRow),
     // Add again a mobile order to the "Text-Image" snippet columns.
