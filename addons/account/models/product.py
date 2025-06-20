@@ -129,8 +129,17 @@ class ProductTemplate(models.Model):
 
     def _force_default_purchase_tax(self, companies):
         default_supplier_taxes = companies.filtered('account_purchase_tax_id').account_purchase_tax_id
-        for product_grouped_by_tax in self.grouped('supplier_taxes_id').values():
-            product_grouped_by_tax.supplier_taxes_id += default_supplier_taxes
+        if not default_supplier_taxes:
+            return
+        product_ids = self.ids
+        tax_ids = default_supplier_taxes.ids
+        argslist = [(pid, tid) for pid in product_ids for tid in tax_ids]
+        query = """
+            INSERT INTO product_supplier_taxes_rel (prod_id, tax_id)
+            VALUES %s
+            ON CONFLICT DO NOTHING
+        """
+        self.env.cr.execute_values(query, argslist)
         self.invalidate_recordset(['supplier_taxes_id'])
 
     def _force_default_tax(self, companies):
