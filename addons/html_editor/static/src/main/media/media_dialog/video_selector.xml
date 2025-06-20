@@ -2,14 +2,10 @@
 
 <t t-name="html_editor.VideoOption">
     <div class="mb-1">
-        <label class="d-flex align-items-start gap-2 cursor-pointer" t-on-change="props.onChangeOption">
-            <div class="o_switch flex-shrink-0">
-                <input type="checkbox" t-att-checked="props.value"/>
-                <span/>
-            </div>
-            <span t-esc="props.label"/>
-            <span t-if="props.description" class="text-muted" t-esc="props.description"/>
-        </label>
+        <Switch value="props.value" onChange="props.onChangeOption"
+            label="props.label" description="props.description"
+            extraClasses="'d-flex align-items-start cursor-pointer flex-shrink-0'"
+        />
     </div>
 </t>
 

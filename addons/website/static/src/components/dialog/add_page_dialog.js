@@ -6,7 +6,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { _t } from "@web/core/l10n/translation";
 import { WebsiteDialog } from '@website/components/dialog/dialog';
-import { Switch } from '@website/components/switch/switch';
+import { Switch } from '@html_editor/components/switch/switch';
 import { applyTextHighlight } from "@website/js/text_processing";
 import { useRef, useState, useSubEnv, Component, onWillStart, onMounted, status } from "@odoo/owl";
 import wUtils from '@website/js/utils';
