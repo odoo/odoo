@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 <t t-name="website.MetaImage">
-    <div t-att-class="props.active ? 'o_active_image o_meta_img m-1' : 'o_meta_img m-1'" t-on-click="() => props.selectImage(props.src)">
+    <div class="my-1 me-2" t-att-class="props.active ? 'o_active_image o_meta_img' : 'o_meta_img'" t-on-click="() => props.selectImage(props.src)">
         <span t-if="props.custom" class="o-custom-label w-100 text-white text-center">Custom</span>
         <img t-att-src="props.src"/>
     </div>
@@ -10,11 +10,11 @@
 <t t-name="website.ImageSelector">
     <section>
         <div class="o_seo_og_image">
-            <h4><small>Cover image</small></h4>
+            <div><label>Cover image</label></div>
             <t t-foreach="state.images" t-as="image" t-key="image.src">
                 <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
             </t>
-            <div class="o_meta_img_upload m-1" title="Click to choose more images" t-on-click="openMediaDialog">
+            <div class="o_meta_img_upload my-1 me-2" title="Click to choose more images" t-on-click="openMediaDialog">
                 <i class="fa fa-upload"/>
             </div>
         </div>
@@ -70,7 +70,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + img.id" t-model="img.decorative" t-on-change="() => imgUpdated(img)"/>
                             <label t-att-for="'decorative-' + img.id">Mark as decorative
-                                <i class="fa fa-question-circle-o" title="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
+                                <i class="fa fa-question-circle text-primary" title="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
                             </label>
                         </div>
                         <div t-if="!img.decorative" class="input-group mt-2">
@@ -200,25 +200,33 @@
 <t t-name="website.TitleDescription">
     <section>
         <div class="row">
+            <div class="col-12">
+                <div class="mb-3 p-2 d-flex align-items-center bg-200 rounded">
+                    <button class="btn btn-primary me-2" t-on-click="autoFill">Auto-fill</button>
+                    <small class="text-primary">Use AI to optimize your page</small>
+                </div>
+            </div>
             <div class="col-lg-6">
                 <div class="mb-3">
                     <label for="website_meta_title">
-                        Title <i class="fa fa-question-circle-o" title="Your page title should contain max 65 characters"/>
+                        Title <i class="fa fa-question-circle text-primary" data-tooltip-position="right"
+                            t-att-data-tooltip="'Add your own title or leave empty to use &quot;' + props.defaultTitle + '&quot;. Your page title should contain max 65 characters.'"/>
                     </label>
-                    <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" placeholder="Keep empty to use default value" maxlength="70" size="70" t-ref="autofocus"/>
+                    <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" t-att-placeholder="props.defaultTitle" maxlength="70" size="70" t-ref="autofocus"/>
                 </div>
                 <div class="mb-3">
                     <label for="website_meta_description">
-                        Description <i class="fa fa-question-circle-o" t-att-title="props.previewDescription"/>
+                        Description <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="props.previewDescription"/>
                     </label>
-                    <textarea t-model="seoContext.description" t-att-disabled="!props.canEditDescription" name="website_meta_description" placeholder="Keep empty to use default value" class="form-control"/>
-                    <div t-if="descriptionWarning.length" class="alert alert-warning mt16 mb0 small">
-                        <span t-esc="descriptionWarning"/>
-                    </div>
+                    <textarea t-model="seoContext.description" t-att-disabled="!props.canEditDescription" name="website_meta_description" placeholder="Describe the content of this page" class="form-control" rows="4"/>
+                    <t t-if="descriptionWarning.length">
+                        <i class="fa fa-info-circle text-warning me-1"/>
+                        <span class="small text-warning" t-esc="descriptionWarning"/>
+                    </t>
                 </div>
                 <div class="mb-3" t-if='props.canEditUrl'>
                     <label for="website_seo_name">
-                        Custom Url <i class="fa fa-question-circle-o" t-att-title="props.seoNameHelp" />
+                        Custom Url <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="props.seoNameHelp" />
                     </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -232,16 +240,11 @@
                     </div>
                 </div>
             </div>
-            <div t-if="titleOrDescriptionNotSet and props.canEditSeo" class="col-lg-6">
-                <div class="card h-100">
-                    <div class="card-body my-4 d-flex flex-column align-items-center justify-content-around">
-                        <button class="btn btn-primary" t-on-click="autoFill">Auto Fill</button>
-                        <p>Use AI to propose SEO optimization for you</p>
-                    </div>
-                </div>
-            </div>
-            <div t-else="" class="col-lg-6">
-                <label>Preview</label>
+            <div class="col-lg-6">
+                <label>
+                    Preview <i class="fa fa-question-circle text-primary" data-tooltip-position="right"
+                        data-tooltip="See how this page might look in search results and on social media."/>
+                </label>
                 <div class="card mb0 p-0">
                     <div class="card-body">
                         <SEOPreview isIndexed="props.isIndexed" title="title" description="description" url="url"/>

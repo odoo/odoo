@@ -555,7 +555,7 @@ class TitleDescription extends Component {
     }
 
     get description() {
-        return this.seoContext.description || this.props.previewDescription;
+        return this.seoContext.description;
     }
 
     get descriptionWarning() {
@@ -563,9 +563,9 @@ class TitleDescription extends Component {
             return false;
         }
         if (this.seoContext.description.length < this.minRecommendedDescriptionSize) {
-            return _t("Your description looks too short.");
+            return _t("Your description is too short (min 50 characters).");
         } else if (this.seoContext.description.length > this.maxRecommendedDescriptionSize) {
-            return _t("Your description looks too long.");
+            return _t("Your description is too long (max 160 characters).");
         }
         return false;
     }
@@ -867,7 +867,7 @@ export class OptimizeSEODialog extends Component {
             this.seoNameDefault = this.canEditUrl && this.data.seo_name_default;
 
             seoContext.description = this.getMeta({ name: 'description' });
-            this.previewDescription = _t("Your page description should contain max 160 characters.");
+            this.previewDescription = _t("Your page description should be between 50 and 160 characters long.");
             this.defaultTitle = this.getMeta({ name: "default_title" }) || "";
             seoContext.defaultTitle = this.defaultTitle;
             this.url = path;
