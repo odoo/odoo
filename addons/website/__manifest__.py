@@ -273,6 +273,7 @@
             ('remove', 'website/static/src/js/content/adapt_content.js'),
         ],
         'website.assets_edit_frontend': [
+            'html_editor/static/src/main/chatgpt/chatgpt_plugin.scss',
             'website/static/src/**/*.edit.js',
             'website/static/src/**/*.edit.scss',
             'website/static/src/core/website_edit_service.js',
