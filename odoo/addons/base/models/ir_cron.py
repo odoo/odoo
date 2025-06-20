@@ -448,39 +448,65 @@ class IrCron(models.Model):
 
             # stop after MIN_RUNS_PER_JOB runs and MIN_TIME_PER_JOB seconds, or
             # upon full completion or failure
-            while (
+            while status is None and (
                 loop_count < MIN_RUNS_PER_JOB
                 or time.monotonic() < env.context['cron_end_time']
             ):
                 cron, progress = cron._add_progress(timed_out_counter=timed_out_counter)
                 job_cr.commit()
 
+                success = False
                 try:
                     # signaling check and commit is done inside `_callback`
                     cron._callback(job['cron_name'], job['ir_actions_server_id'])
+                    success = True
                 except Exception:  # noqa: BLE001
                     _logger.exception('Job %r (%s) server action #%s failed',
                         job['cron_name'], job['id'], job['ir_actions_server_id'])
-                    if progress.done and progress.remaining:
-                        # we do not consider it a failure if some progress has
-                        # been committed
-                        status = CompletionStatus.PARTIALLY_DONE
-                    else:
-                        status = CompletionStatus.FAILED
-                else:
-                    if not progress.remaining:
-                        # assume the server action doesn't use the progress API
-                        # and that there is nothing left to process
-                        status = CompletionStatus.FULLY_DONE
-                    else:
-                        status = CompletionStatus.PARTIALLY_DONE
-                        if not progress.done:
-                            break
-
-                    if status == CompletionStatus.FULLY_DONE and progress.deactivate:
-                        job['active'] = False
                 finally:
                     done, remaining = progress.done, progress.remaining
+                    match (success, done, remaining):
+                        case (False, d, r) if d and r:
+                            # The cron action failed but was nonetheless able
+                            # to commit some progress.
+                            # Hopefully this failure is temporary.
+                            pass
+
+                        case (False, _, _):
+                            # The cron action failed, and was unable to commit
+                            # any progress this time. Consider it failed even
+                            # if it progressed in a previous loop iteration.
+                            status = CompletionStatus.FAILED
+
+                        case (True, _, 0):
+                            # The cron action completed. Either it doesn't use
+                            # the progress API, either it reported no remaining
+                            # stuff to process.
+                            status = CompletionStatus.FULLY_DONE
+                            if progress.deactivate:
+                                job['active'] = False
+
+                        case (True, 0, _) if loop_count == 0:
+                            # The cron action was able to determine there are
+                            # remaining records to process, but couldn't
+                            # process any of them.
+                            # Hopefully this condition is temporary.
+                            status = CompletionStatus.PARTIALLY_DONE
+                            _logger.warning("Job %r (%s) processed no record",
+                                job['cron_name'], job['id'])
+
+                        case (True, 0, _):
+                            # The cron action was able to determine there are
+                            # remaining records to process, did process some
+                            # records in a previous loop iteration, but
+                            # processed none this time.
+                            status = CompletionStatus.PARTIALLY_DONE
+
+                        case (True, _, _):
+                            # The cron action was able to process some but not
+                            # all records. Loop.
+                            pass
+
                     loop_count += 1
                     progress.timed_out_counter = 0
                     timed_out_counter = 0
@@ -489,9 +515,7 @@ class IrCron(models.Model):
                     _logger.debug('Job %r (%s) processed %s records, %s records remaining',
                         job['cron_name'], job['id'], done, remaining)
 
-                if status in (CompletionStatus.FULLY_DONE, CompletionStatus.FAILED):
-                    break
-
+            status = status or CompletionStatus.PARTIALLY_DONE
             _logger.info(
                 'Job %r (%s) %s (#loop %s; done %s; remaining %s; duration %.2fs)',
                 job['cron_name'], job['id'], status,
