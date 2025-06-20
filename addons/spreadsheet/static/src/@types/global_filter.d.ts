@@ -60,6 +60,53 @@ declare module "@spreadsheet" {
         | RelativeDateValue
         | DateRangeValue;
 
+    interface SetValue {
+        operator: "set" | "not_set";
+    }
+
+    interface RelationIdsValue {
+        operator: "in" | "not in" | "child_of" | "not child_of";
+        ids: number[];
+    }
+
+    interface RelationContainsValue {
+        operator: "ilike" | "not ilike" | "starts_with" | "ends_with";
+        text: string;
+    }
+
+    interface CurrentUser {
+        operator: "in" | "not in";
+        ids: "current_user";
+    }
+
+    export type RelationValue = RelationIdsValue | SetValue | RelationContainsValue;
+    type RelationDefaultValue = RelationValue | CurrentUser;
+
+    interface NumericUnaryValue {
+        operator: "=" | "!=" | "<" | ">";
+        operand: number;
+    }
+
+    interface NumericRangeValue {
+        operator: "between" | "not_between";
+        min: number;
+        max: number;
+    }
+
+    export type NumericValue = NumericUnaryValue | NumericRangeValue | SetValue;
+
+    interface TextInValue {
+        operator: "in" | "not in";
+        texts: string[];
+    }
+
+    interface TextContainsValue {
+        operator: "ilike" | "not ilike" | "starts_with" | "ends_with";
+        text: string;
+    }
+
+    export type TextValue = TextInValue | TextContainsValue | SetValue;
+
     export interface FieldMatching {
         chain: string;
         type: string;
@@ -71,7 +118,7 @@ declare module "@spreadsheet" {
         id: string;
         label: string;
         rangesOfAllowedValues?: Range[];
-        defaultValue?: string[];
+        defaultValue?: TextValue;
     }
 
     export interface CmdTextGlobalFilter extends TextGlobalFilter {
@@ -91,7 +138,7 @@ declare module "@spreadsheet" {
         label: string;
         modelName: string;
         includeChildren: boolean;
-        defaultValue?: "current_user" | number[];
+        defaultValue?: RelationDefaultValue;
         domainOfAllowedValues?: DomainListRepr | string;
     }
 
@@ -99,7 +146,7 @@ declare module "@spreadsheet" {
         type: "boolean";
         id: string;
         label: string;
-        defaultValue?: boolean[];
+        defaultValue?: SetValue;
     }
 
     export type GlobalFilter = TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter;
