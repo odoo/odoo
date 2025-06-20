@@ -124,6 +124,200 @@ def start_nginx_server():
     elif platform.system() == 'Linux':
         subprocess.check_call(["sudo", "service", "nginx", "restart"])
 
+<<<<<<< 6c04e426d8f320d35251ec39d9e490d884099b60:addons/iot_drivers/tools/helpers.py
+||||||| c70bca77d0447b005b3898e1861facc2828475fc:addons/hw_drivers/tools/helpers.py
+def check_certificate():
+    """
+    Check if the current certificate is up to date or not authenticated
+    :return CheckCertificateStatus
+    """
+    server = get_odoo_server_url()
+
+    if not server:
+        _logger.info('Ignoring the nginx certificate check without a connected database')
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
+
+    if platform.system() == 'Windows':
+        path = Path(get_path_nginx()).joinpath('conf/nginx-cert.crt')
+    elif platform.system() == 'Linux':
+        path = Path('/etc/ssl/certs/nginx-cert.crt')
+
+    if not path.exists():
+        return {"status": CertificateStatus.NEED_REFRESH}
+
+    try:
+        with path.open('r') as f:
+            cert = crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
+    except EnvironmentError:
+        _logger.exception("Unable to read certificate file")
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_CERT_READ_EXCEPTION"}
+
+    cert_end_date = datetime.datetime.strptime(cert.get_notAfter().decode('utf-8'), "%Y%m%d%H%M%SZ") - datetime.timedelta(days=10)
+    for key in cert.get_subject().get_components():
+        if key[0] == b'CN':
+            cn = key[1].decode('utf-8')
+    if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
+        message = 'Your certificate %s must be updated' % cn
+        _logger.info(message)
+        return {"status": CertificateStatus.NEED_REFRESH}
+    else:
+        message = 'Your certificate %(certificate)s is valid until %(end_date)s' % {"certificate": cn, "end_date": cert_end_date}
+        _logger.info(message)
+        return {"status": CertificateStatus.OK, "message": message}
+
+
+@toggleable
+@require_db
+def check_git_branch(server_url=None, get_db_branch=False):
+    """Check if the local branch is the same as the connected Odoo DB and
+    checkout to match it if needed.
+
+    :param server_url: The URL of the connected Odoo database (provided by decorator).
+    """
+    try:
+        response = requests.post(server_url + "/web/webclient/version_info", json={}, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.HTTPError:
+        _logger.exception('Could not reach configured server to get the Odoo version')
+        return
+    except ValueError:
+        _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
+        return
+
+    try:
+        git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
+
+        # For master ['server_serie'] is formatted like "18.4". For db < master the format is like "saas~18.3"
+        db_branch = data['result']['server_serie'].replace('~', '-')
+        if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
+            db_branch = 'master'
+        if get_db_branch:
+            return db_branch
+        local_branch = (
+            subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+        )
+        _logger.info(
+            "Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s",
+            local_branch,
+            db_branch,
+        )
+        if db_branch != local_branch:
+            update_conf({'database_version', db_branch})
+            try:
+                with writable():
+                    subprocess.run(git + ['branch', '-m', db_branch], check=True)
+                    subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
+                    _logger.info("Updating odoo folder to the branch %s", db_branch)
+                    subprocess.run(
+                        ['/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh'], check=True
+                    )
+            except subprocess.CalledProcessError:
+                _logger.exception("Failed to update the code with git.")
+            finally:
+                odoo_restart()
+    except Exception:
+        _logger.exception('An error occurred while trying to update the code with git')
+
+=======
+def check_certificate():
+    """
+    Check if the current certificate is up to date or not authenticated
+    :return CheckCertificateStatus
+    """
+    server = get_odoo_server_url()
+
+    if not server:
+        _logger.info('Ignoring the nginx certificate check without a connected database')
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
+
+    if platform.system() == 'Windows':
+        path = Path(get_path_nginx()).joinpath('conf/nginx-cert.crt')
+    elif platform.system() == 'Linux':
+        path = Path('/etc/ssl/certs/nginx-cert.crt')
+
+    if not path.exists():
+        return {"status": CertificateStatus.NEED_REFRESH}
+
+    try:
+        with path.open('r') as f:
+            cert = crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
+    except EnvironmentError:
+        _logger.exception("Unable to read certificate file")
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_CERT_READ_EXCEPTION"}
+
+    cert_end_date = datetime.datetime.strptime(cert.get_notAfter().decode('utf-8'), "%Y%m%d%H%M%SZ") - datetime.timedelta(days=10)
+    for key in cert.get_subject().get_components():
+        if key[0] == b'CN':
+            cn = key[1].decode('utf-8')
+    if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
+        message = 'Your certificate %s must be updated' % cn
+        _logger.info(message)
+        return {"status": CertificateStatus.NEED_REFRESH}
+    else:
+        message = 'Your certificate %(certificate)s is valid until %(end_date)s' % {"certificate": cn, "end_date": cert_end_date}
+        _logger.info(message)
+        return {"status": CertificateStatus.OK, "message": message}
+
+
+@toggleable
+@require_db
+def check_git_branch(server_url=None, get_db_branch=False):
+    """Check if the local branch is the same as the connected Odoo DB and
+    checkout to match it if needed.
+
+    :param server_url: The URL of the connected Odoo database (provided by decorator).
+    """
+    try:
+        response = requests.post(server_url + "/web/webclient/version_info", json={}, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.HTTPError:
+        _logger.exception('Could not reach configured server to get the Odoo version')
+        return
+    except ValueError:
+        _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
+        return
+
+    try:
+        git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
+
+        # For master ['server_serie'] is formatted like "18.4". For db < master the format is like "saas~18.3"
+        db_branch = data['result']['server_serie'].replace('~', '-')
+        if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
+            db_branch = 'master'
+        if get_db_branch:
+            return db_branch
+        local_branch = (
+            subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+        )
+        _logger.info(
+            "Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s",
+            local_branch,
+            db_branch,
+        )
+        if db_branch != local_branch:
+            update_conf({'database_version': db_branch})
+            try:
+                with writable():
+                    subprocess.run(git + ['branch', '-m', db_branch], check=True)
+                    subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
+                    _logger.info("Updating odoo folder to the branch %s", db_branch)
+                    subprocess.run(
+                        ['/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh'], check=True
+                    )
+            except subprocess.CalledProcessError:
+                _logger.exception("Failed to update the code with git.")
+            finally:
+                odoo_restart()
+    except Exception:
+        _logger.exception('An error occurred while trying to update the code with git')
+
+>>>>>>> 3457add7e75d2df03b3f3b592668cbf35ac590f3:addons/hw_drivers/tools/helpers.py
 
 def check_image():
     """Check if the current image of IoT Box is up to date
