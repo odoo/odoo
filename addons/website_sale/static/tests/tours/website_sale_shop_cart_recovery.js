@@ -75,9 +75,9 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     },
     {
         content: "check the mail is sent, grab the recovery link, and logout",
-        trigger: ".o-mail-Message-body a:contains(/^Resume order$/)",
+        trigger: "a:contains(/^Resume order$/)",
         run: function () {
-            var link = queryOne('.o-mail-Message-body a:contains("Resume order")').getAttribute('href');
+            var link = queryOne('a:contains("Resume Order")').getAttribute('href');
             browser.localStorage.setItem(recoveryLinkKey, link);
             window.location.href = "/web/session/logout?redirect=/";
         }
