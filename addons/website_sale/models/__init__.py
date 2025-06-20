@@ -23,6 +23,7 @@ from . import res_config_settings
 from . import res_partner
 from . import sale_order
 from . import sale_order_line
+from . import theme_utils
 from . import website
 from . import website_base_unit
 from . import website_checkout_step
