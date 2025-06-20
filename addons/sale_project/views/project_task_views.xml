@@ -122,6 +122,7 @@
                 <field name="reinvoiced_sale_order_id" invisible="not allow_billable or not partner_id or is_template"/>
                 <label for="sale_line_id" invisible="not allow_billable or not partner_id or is_template"/>
                 <div 
+                    name = "sale_line_block"
                     class="o_row" 
                     invisible="not allow_billable or not partner_id or is_template">
                     <field name="sale_line_id"
