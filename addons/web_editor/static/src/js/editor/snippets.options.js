@@ -8873,10 +8873,11 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
 
         this._initOverlay();
 
-        // Resize overlay content on window resize because background images
+        // Resize overlay content on body resize because background images
         // change size, and on carousel slide because they sometimes take up
         // more space and move elements around them.
-        $(window).on('resize.bgposition', () => this._dimensionOverlay());
+        this.resizeObserver = new ResizeObserver(this._dimensionOverlay.bind(this));
+        this.resizeObserver.observe(this.ownerDocument.body);
     },
     /**
      * @override
@@ -8885,6 +8886,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         this._toggleBgOverlay(false);
         $(window).off('.bgposition');
         this._super.apply(this, arguments);
+        this.resizeObserver.disconnect();
     },
 
     //--------------------------------------------------------------------------
@@ -8907,6 +8909,11 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @see this.selectClass for params
      */
     backgroundPositionOverlay: async function (previewMode, widgetValue, params) {
+        if (!widgetValue) {
+            this._toggleBgOverlay(false);
+            return;
+        }
+        this.el.querySelector(".fa-arrows-alt").classList.add("o_toggle_background_position_overlay");
         // Updates the internal image
         await new Promise(resolve => {
             this.img = document.createElement('img');
@@ -8970,6 +8977,9 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         if (methodName === 'backgroundType') {
             return this.$target.css('background-repeat') === 'repeat' ? 'repeat-pattern' : 'cover';
         }
+        if (methodName === "backgroundPositionOverlay") {
+            return this.el.querySelector(".fa-arrows-alt").classList.contains("o_toggle_background_position_overlay");
+        }
         return this._super(...arguments);
     },
     /**
@@ -9014,10 +9024,8 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
 
         this.$overlayContent.offset(targetOffset);
 
-        this.$bgDragger.css({
-            width: `${this.$target.innerWidth()}px`,
-            height: `${this.$target.innerHeight()}px`,
-        });
+        this.$bgDragger[0].style.setProperty("width", `${this.$target.innerWidth()}px`, "important");
+        this.$bgDragger[0].style.setProperty("height", `${this.$target.innerHeight()}px`, "important");
 
         const topPos = Math.max(0, $(window).scrollTop() - this.$target.offset().top);
         this.$overlayContent.find('.o_we_overlay_buttons').css('top', `${topPos}px`);
@@ -9034,6 +9042,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         }
 
         if (!activate) {
+            this.el.querySelector(".fa-arrows-alt").classList.remove("o_toggle_background_position_overlay", "active");
             this.$backgroundOverlay.removeClass('oe_active');
             this.trigger_up('unblock_preview_overlays');
             this.trigger_up('activate_snippet', {$snippet: this.$target});
@@ -9073,6 +9082,12 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         this.$overlayBackground.empty().append(this.$bgDragger);
         this.$backgroundOverlay.addClass('oe_active');
         this._dimensionOverlay();
+        const shapeEl =  this.$bsTarget[0].querySelector(".o_we_shape");
+        if (shapeEl) {
+            const shapeOverlayEl = document.createElement("div");
+            shapeOverlayEl.classList.add(...shapeEl.classList);
+            this.$bgDragger[0].insertAdjacentElement("afterend", shapeOverlayEl);
+        }
         this.$bgDragger.tooltip('show');
 
         // Needs to be deferred or the click event that activated the overlay deactivates it as well.

@@ -68,6 +68,7 @@ class BackgroundPositionOverlayAction extends BuilderAction {
     static id = "backgroundPositionOverlay";
     static dependencies = ["overlayButtons", "overlay"];
     async load({ editingElement }) {
+        console.log("load");
         let imgEl;
         await new Promise((resolve) => {
             imgEl = document.createElement("img");
@@ -78,34 +79,37 @@ class BackgroundPositionOverlayAction extends BuilderAction {
         copyEl.classList.remove("o_editable");
         // Hide the builder overlay buttons when the user changes
         // the background position.
-        return new Promise((resolve) => {
+        setTimeout(() => {
             this.dependencies.overlayButtons.hideOverlayButtonsUi();
-            let appliedBgPosition = "";
-            const onRemove = () => {
-                this.dependencies.overlayButtons.showOverlayButtonsUi();
-                resolve(appliedBgPosition);
-            };
             const overlay = this.dependencies.overlay.createOverlay(
                 BackgroundPositionOverlay,
                 { positionOptions: { position: "over-fit", flip: false } },
-                { onRemove: onRemove }
+                {
+                    onRemove: () => {
+                        this.dependencies.overlayButtons.showOverlayButtonsUi();
+                    },
+                }
             );
-            const applyPosition = (bgPosition) => {
-                appliedBgPosition = bgPosition;
-                overlay.close();
-            };
             overlay.open({
                 target: editingElement,
                 props: {
                     outerHtmlEditingElement: markup(this.safeCloneOuterHTML(copyEl)),
                     editingElement: editingElement,
                     mockEditingElOnImg: imgEl,
-                    applyPosition: applyPosition,
-                    discardPosition: () => overlay.close(),
+                    applyPosition: (bgPosition) => {
+                        editingElement.classList.remove("o_toggle_bg_position");
+                        editingElement.style.backgroundPosition = bgPosition;
+                        overlay.close();
+                    },
+                    discardPosition: () => {
+                        editingElement.classList.remove("o_toggle_bg_position");
+                        overlay.close();
+                    },
                     editable: this.editable,
                 },
             });
         });
+        return "";
     }
     safeCloneOuterHTML(el) {
         const copyEl = document.createElement(el.tagName);
@@ -114,9 +118,19 @@ class BackgroundPositionOverlayAction extends BuilderAction {
         return copyEl.outerHTML;
     }
     apply({ editingElement, loadResult: bgPosition }) {
+        console.log("apply");
+        editingElement.classList.add("o_toggle_bg_position");
         if (bgPosition) {
             editingElement.style.backgroundPosition = bgPosition;
         }
+    }
+    clean({ editingElement }) {
+        console.log("clean");
+        editingElement.classList.remove("o_toggle_bg_position");
+    }
+    isApplied({ editingElement }) {
+        console.log("isApplied : ", editingElement.classList.contains("o_toggle_bg_position"));
+        return editingElement.classList.contains("o_toggle_bg_position");
     }
 }
 
