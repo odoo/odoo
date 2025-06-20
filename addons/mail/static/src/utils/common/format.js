@@ -1,4 +1,4 @@
-import { markup } from "@odoo/owl";
+import { htmlEscape, markup } from "@odoo/owl";
 
 import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
@@ -6,7 +6,6 @@ import { normalize } from "@web/core/l10n/utils";
 import {
     createDocumentFragmentFromContent,
     createElementWithContent,
-    htmlEscape,
     htmlFormatList,
     htmlJoin,
     htmlReplace,

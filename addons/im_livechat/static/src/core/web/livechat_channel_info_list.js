@@ -2,8 +2,8 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
 import { Component } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
 
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
 export class LivechatChannelInfoList extends Component {
