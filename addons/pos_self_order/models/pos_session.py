@@ -18,6 +18,8 @@ class PosSession(models.Model):
         return [('config_id', '=', data['pos.config'][0]['id']), ('state', '=', 'opened')]
 
     def _post_read_pos_data(self, data):
+        if not data:
+            return data
         data[0]['_self_ordering'] = (
             self.env["pos.config"]
             .sudo()
