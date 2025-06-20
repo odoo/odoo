@@ -9,6 +9,7 @@ import { isVisible } from "@web/core/utils/ui";
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
 import { WebsiteLoader } from '../components/website_loader/website_loader';
 import { reactive, EventBus } from "@odoo/owl";
+import { rpc } from "@web/core/network/rpc";
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
@@ -272,7 +273,7 @@ export const websiteService = {
                 ]);
             },
             async fetchWebsites() {
-                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name', 'language_ids']))];
+                websites = await rpc("/websites/data");
             },
             async loadWysiwyg() {
                 await ensureJQuery();

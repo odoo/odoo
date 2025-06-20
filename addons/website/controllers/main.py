@@ -353,6 +353,32 @@ class Website(Home):
             action_url += '&step=' + str(step)
         return request.redirect(action_url)
 
+    @http.route('/websites/data', type='jsonrpc', auth="user", readonly=True)
+    def websites_data(self):
+        """
+        Returns a list of all websites with their domain, ID, name, associated
+        language IDs, and default language code.
+        """
+        websites = request.env['website'].sudo().search_read(
+            [], ['domain', 'id', 'name', 'language_ids', 'default_lang_id']
+        )
+
+        # Get all unique lang IDs
+        lang_ids = list({lang_id for website in websites for lang_id in website['language_ids']})
+        langs = {}
+        if lang_ids:
+            langs_data = request.env['res.lang'].sudo().search_read(
+                [('id', 'in', lang_ids)], ['id', 'code']
+            )
+            langs = {lang['id']: lang['code'] for lang in langs_data}
+
+        for website in websites:
+            default_lang_id = website.get('default_lang_id')
+            if default_lang_id:
+                website['default_lang_code'] = langs.get(default_lang_id[0])
+
+        return websites
+
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
     def social(self, social, **kwargs):
         url = getattr(request.website, 'social_%s' % social, False)

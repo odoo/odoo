@@ -430,10 +430,9 @@ registry.category("services").add("html_builder.snippets", {
         const services = { orm, dialog, website, notification, ui };
         const context = {
             website_id: website.currentWebsite?.id,
-            lang: website.currentWebsite?.metadata.lang,
+            lang: website.currentWebsite?.default_lang_code,
             user_lang: user.context.lang,
         };
-
         return new SnippetModel(services, {
             snippetsName: "website.snippets",
             context,
