@@ -18,7 +18,13 @@ LQ Modules to easy work on anothers
 
     'data':[
         
-    ]
+    ],
+
+    'assets': {
+        'web.assets_backend': [
+            'global_utilities/static/src/scss/hide_discuss.scss',
+        ],
+    },
 
 }
 

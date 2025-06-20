@@ -1,7 +1,7 @@
 {
     'name': 'Sale Extension',
     'version': '1.0',
-    'depends': ['sale', 'product', 'global_utilities'],
+    'depends': ['sale', 'product', 'global_utilities', 'base', 'calendar', 'mail'],
     'data': [
         'views/sale_order_form_inherit.xml',
         'views/res_partner_form_extension.xml',
