@@ -351,6 +351,34 @@ test("toolbar works: can select font size", async () => {
     expect(inputEl).toHaveValue(oSmallSize);
 });
 
+test("toolbar works: change font size correctly when closest block element has already font size class", async () => {
+    const { el } = await setupEditor(`<h2 class="h3-fs">abc <strong>def [ghi]</strong></h2>`);
+    const style = getHtmlStyle(document);
+    const getFontSizeFromVar = (cssVar) => {
+        const strValue = getCSSVariableValue(cssVar, style);
+        const remValue = parseFloat(strValue);
+        const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
+        return Math.round(pxValue);
+    };
+
+    await waitFor(".o-we-toolbar");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    expect(inputEl).toHaveValue(getFontSizeFromVar("h3-font-size").toString());
+
+    await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
+    const sizes = new Set(
+        fontSizeItems.map((item) => getFontSizeFromVar(item.variableName).toString())
+    );
+    expect(queryAllTexts(".o_font_size_selector_menu .dropdown-item")).toEqual([...sizes]);
+    const h1Size = getFontSizeFromVar("h1-font-size").toString();
+    await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
+    expect(getContent(el)).toBe(
+        `<h2 class="h3-fs">abc <strong>def </strong><span class="h1-fs"><strong>[ghi]</strong></span></h2>`
+    );
+    expect(inputEl).toHaveValue(h1Size);
+});
+
 test("toolbar works: show the correct text alignment", async () => {
     const { el } = await setupEditor("<p>[test</p><p><br>]</p>");
     await expandToolbar();
