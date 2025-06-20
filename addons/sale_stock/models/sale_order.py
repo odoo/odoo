@@ -14,16 +14,18 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    def _default_picking_policy(self):
+        return self.env['ir.config_parameter'].sudo().get_param('sale_stock.picking_policy', 'direct')
+
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     incoterm_location = fields.Char(string='Incoterm Location')
     picking_policy = fields.Selection([
-        ('direct', 'As soon as possible'),
+        ('direct', 'As soon as possible, with back orders'),
         ('one', 'When all products are ready')],
-        string='Shipping Policy', required=True, default='direct',
-        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
-        "product lead time. Otherwise, it will be based on the shortest.")
+        string='Shipping Policy', required=True, default=_default_picking_policy,
+        help="It specifies goods to be deliver partially or all at once")
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse',
         compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,

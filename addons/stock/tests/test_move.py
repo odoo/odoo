@@ -6604,11 +6604,11 @@ class StockMove(TransactionCase):
         receipt.action_confirm()
         self.assertNotEqual(old_reference, receipt.move_ids.reference)
 
-    def test_internal_picking_uses_shipping_policy_from_picking_type(self):
+    def test_internal_picking_uses_shipping_policy_from_system_config(self):
         picking_type_internal = self.env.ref('stock.picking_type_internal')
 
         for move_type in ["direct", "one"]:
-            picking_type_internal.move_type = move_type
+            self.env['ir.config_parameter'].sudo().set_param('sale_stock.picking_policy', move_type)
 
             picking = self.env['stock.picking'].create({
                 'picking_type_id': picking_type_internal.id,
