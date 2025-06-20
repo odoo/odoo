@@ -221,6 +221,8 @@
                             <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@
                             <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
                                    options="{'no_create': True, 'no_open': True}"/>
+                            <field name="alias_domain" invisible="1"/> <!-- needed in view to use it in copy_alias_email widget -->
+                            <widget name="copy_alias_email" invisible="not alias_domain_id or not alias_name"/>
                         </div>
                         <div class="text-muted">Incoming emails create applications automatically. Use it for direct applications or when posting job offers on LinkedIn, Monster, etc.</div>
                     </div>
@@ -275,6 +277,8 @@
                         <field name="alias_name" class="oe_inline" placeholder="e.g. jobs"/>@
                         <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
                                options="{'no_create': True, 'no_open': True}"/>
+                        <field name="alias_domain" invisible="1"/> <!-- needed in view to use it in copy_alias_email widget -->
+                        <widget name="copy_alias_email" invisible="not alias_domain_id or not alias_name"/>
                     </div>
                 </div>
             </xpath>

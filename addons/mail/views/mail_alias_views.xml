@@ -31,6 +31,8 @@
                                 <field name="alias_name" placeholder="alias" class="oe_inline"/>@
                                 <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
                                        options="{'no_create': True, 'no_open': True}"/>
+                                <field name="alias_domain" invisible="1"/> <!-- needed in view to use it in copy_alias_email widget -->
+                                <widget name="copy_alias_email" invisible="not alias_domain_id or not alias_name"/>
                             </h2>
                             <field name="alias_status" widget="badge"
                                    decoration-success="alias_status == 'valid'"
