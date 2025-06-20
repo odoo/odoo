@@ -414,19 +414,22 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 self[model_name]._setup_done__ = False
 
             # recursively mark fields to re-setup
-            todo = [
-                field
-                for model_cls in self.models.values()
-                if not model_cls._setup_done__
-                for field in model_cls._fields.values()
-            ]
+            todo = []
+            for model_cls in self.models.values():
+                if not model_cls._setup_done__:
+                    todo.extend(model_cls._fields.values())
+
+            done = set()
             for field in todo:
-                if field._setup_done and field._base_fields__:
+                if field in done:
+                    continue
+
+                model_cls = self[field.model_name]
+                if model_cls._setup_done__ and field._base_fields__:
                     # the field has been created by model_classes._setup() as
                     # Field(_base_fields__=...); restore it to force its setup
-                    base_fields = field._base_fields__
-                    model_cls = self[field.model_name]
                     name = field.name
+                    base_fields = field._base_fields__
 
                     field.__dict__.clear()
                     field.__init__(_base_fields__=base_fields)
@@ -434,6 +437,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     field.__set_name__(model_cls, name)
                     field._setup_done = False
 
+                done.add(field)
                 todo.extend(self.field_setup_dependents.pop(field, ()))
 
         self.many2one_company_dependents.clear()
