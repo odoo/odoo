@@ -99,6 +99,10 @@ class PosController(PortalAccount):
         response.headers['Cache-Control'] = 'no-store'
         return response
 
+    @http.route(['/pos/ping'], type='jsonrpc', auth='user')
+    def pos_ping(self):
+        return {'response': 'pong'}
+
     @http.route('/pos/sale_details_report', type='http', auth='user')
     def print_sale_details(self, date_start=False, date_stop=False, **kw):
         r = request.env['report.point_of_sale.report_saledetails']
