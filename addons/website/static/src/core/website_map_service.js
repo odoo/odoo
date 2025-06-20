@@ -72,7 +72,7 @@ registry.category("services").add("website_map", {
                                         <span>${escape(message)}</span><br/>
                                         <a href="/odoo/action-website.action_website_configuration">${escape(urlTitle)}</a>
                                     </div>`),
-                                    { type: 'warning', sticky: true }
+                                    { type: 'warning', autocloseDelay: 0 }
                                 );
                             }
                             resolve(false);

@@ -10,7 +10,7 @@ export function displayNotificationAction(env, action) {
     const params = action.params || {};
     const options = {
         className: params.className || "",
-        sticky: params.sticky || false,
+        autocloseDelay: params.sticky ? 0 : undefined,
         title: params.title,
         type: params.type || "info",
     };

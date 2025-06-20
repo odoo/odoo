@@ -117,7 +117,7 @@ export class Follow extends Interaction {
                 this.services.notification.add(tokenCaptcha.error, {
                     type: "danger",
                     title: _t("Error"),
-                    sticky: true,
+                    autocloseDelay: 0,
                 });
                 return false;
             }

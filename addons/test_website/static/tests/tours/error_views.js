@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('test_error_website', {
         run: "click",
     },
     {
-        trigger: 'div.o_notification_content:contains("This is a user rpc test")',
+        trigger: 'span.o_notification_content:contains("This is a user rpc test")',
     },
     {
         content: "rpc user error modal has message",
@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add('test_error_website', {
         run: "click",
     },
     {
-        trigger: 'div.o_notification_content:contains("This is an access rpc test")',
+        trigger: 'span.o_notification_content:contains("This is an access rpc test")',
     },
     {
         content: "rpc access error modal has message",
@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add('test_error_website', {
         run: "click",
     },
     {
-        trigger: 'div.o_notification_content:contains("This is a validation rpc test")',
+        trigger: 'span.o_notification_content:contains("This is a validation rpc test")',
     },
     {
         content: "rpc validation error modal has message",
@@ -46,7 +46,7 @@ registry.category("web_tour.tours").add('test_error_website', {
         run: "click",
     },
     {
-        trigger: 'div.o_notification_content:contains("This is a missing rpc test")',
+        trigger: 'span.o_notification_content:contains("This is a missing rpc test")',
     },
     {
         content: "rpc missing error modal has message",
@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add('test_error_website', {
         run: "click",
     },
     {
-        trigger: 'div.o_notification_content:contains("This is an access denied rpc test")',
+        trigger: 'span.o_notification_content:contains("This is an access denied rpc test")',
     },
     {
         content: "rpc error 403 modal has message",

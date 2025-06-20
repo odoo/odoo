@@ -15294,7 +15294,6 @@ test(`Auto save: modify a record and leave action (reject)`, async () => {
 
     mockService("notification", {
         add(message, options) {
-            expect.step(options.title.toString());
             expect.step(message.toString());
         },
     });
@@ -15310,7 +15309,7 @@ test(`Auto save: modify a record and leave action (reject)`, async () => {
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["", "blip", "gnap", "blip"]);
     expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
     expect(`.o_data_row`).toHaveCount(4);
-    expect.verifySteps(["Invalid fields: ", "<ul><li>Foo</li></ul>"]);
+    expect.verifySteps(["Invalid fields:<br/><ul><li>Foo</li></ul>"]);
 });
 
 test(`Auto save: add a record and change page`, async () => {

@@ -73,7 +73,7 @@ patch(WebClient.prototype, {
                 this.notification.add(error.message, {
                     title: _t("Failed to enable push notifications"),
                     type: "danger",
-                    sticky: true,
+                    autocloseDelay: 0,
                 });
                 if (await navigator.brave?.isBrave()) {
                     this.notification.add(
@@ -82,7 +82,7 @@ patch(WebClient.prototype, {
                         ),
                         {
                             type: "warning",
-                            sticky: true,
+                            autocloseDelay: 0,
                         }
                     );
                 }

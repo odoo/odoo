@@ -616,7 +616,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                         onFailure: () => {
                             this.notification.add(_t("Something went wrong."), {
                                 type: 'danger',
-                                sticky: true,
+                                autocloseDelay: 0,
                             });
                             reject();
                         },

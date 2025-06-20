@@ -44,7 +44,7 @@ patch(PaymentScreen.prototype, {
                     _t(
                         "Adding a new Razorpay payment line is not allowed under the current conditions."
                     ),
-                    { type: "warning", sticky: false }
+                    { type: "warning" }
                 );
                 return false;
             }

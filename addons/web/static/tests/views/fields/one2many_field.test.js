@@ -12521,8 +12521,7 @@ test('Add a line, click on "Save & New" with an invalid form', async () => {
     mockService("notification", {
         add: (message, params) => {
             expect.step(params.type);
-            expect(params.title).toBe("Invalid fields: ");
-            expect(message.toString()).toBe("<ul><li>Name</li></ul>");
+            expect(message.toString()).toBe("Invalid fields:<br/><ul><li>Name</li></ul>");
         },
     });
     await mountView({

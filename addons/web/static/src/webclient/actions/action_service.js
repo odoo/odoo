@@ -1122,7 +1122,7 @@ export function makeActionManager(env, router = _router) {
                     "browser settings to allow popup windows for this page."
             );
             env.services.notification.add(msg, {
-                sticky: true,
+                autocloseDelay: 0,
                 type: "warning",
             });
         }
@@ -1333,7 +1333,7 @@ export function makeActionManager(env, router = _router) {
             }
             if (message) {
                 env.services.notification.add(message, {
-                    sticky: true,
+                    autocloseDelay: 0,
                     title: _t("Report"),
                 });
             }

@@ -295,7 +295,7 @@ FullCalendar.TimeGrid = (function (exports, core, internal$1, preact, internal$2
                 sections.push({
                     key: 'footer',
                     type: 'footer',
-                    isSticky: true,
+                    isautocloseDelay: 0,
                     chunks: [
                         {
                             key: 'axis',
@@ -790,7 +790,7 @@ FullCalendar.TimeGrid = (function (exports, core, internal$1, preact, internal$2
             }
             return segs.map((seg, i) => (preact.createElement(internal$1.NowIndicatorContainer
             // key doesn't matter. will only ever be one
-            , { 
+            , {
                 // key doesn't matter. will only ever be one
                 key: i, elClasses: ['fc-timegrid-now-indicator-line'], elStyle: {
                     top: slatCoords.computeDateTop(seg.start, date),

@@ -150,8 +150,7 @@ export class KanbanQuickCreateController extends Component {
                     this.showFormDialogInError(e);
                 }
             } else {
-                this.model.notification.add(_t("Display Name"), {
-                    title: _t("Invalid fields: "),
+                this.model.notification.add(_t("Invalid field: Display Name"), {
                     type: "danger",
                 });
             }
