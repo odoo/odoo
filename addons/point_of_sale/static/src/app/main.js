@@ -30,7 +30,7 @@ whenReady(() => {
         props: { disableLoader: () => (loader.isShown = false) },
     });
     window.addEventListener("beforeunload", function (event) {
-        if (!navigator.onLine) {
+        if (app.env.services.pos_data.network.offline) {
             var confirmationMessage = _t(
                 "You are currently offline. Reloading the page may cause you to lose unsaved data."
             );
