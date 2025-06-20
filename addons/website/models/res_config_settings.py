@@ -3,7 +3,7 @@
 
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
 from werkzeug import urls
@@ -120,6 +120,22 @@ class ResConfigSettings(models.TransientModel):
         inverse='_inverse_has_plausible_shared_key')
     module_website_livechat = fields.Boolean()
     module_marketing_automation = fields.Boolean()
+
+    @api.constrains('website_domain')
+    def _check_website_domain(self):
+        """
+        Validates that the website domain does not contain spaces
+        and does not exceed 71 characters in length.
+        """
+        for record in self:
+            domain = record.website_domain
+            if domain:
+                if ' ' in domain:
+                    raise ValidationError(_("Website domain must not contain spaces."))
+                if len(domain) > 71:
+                    raise ValidationError(_(
+                        "Website domain is too long (%s characters). It must be 71 characters or less."
+                    ) % len(domain))
 
     @api.depends('website_id')
     def _compute_shared_user_account(self):
