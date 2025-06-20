@@ -1,3 +1,5 @@
+from num2words import num2words
+
 from odoo import models
 
 
@@ -42,7 +44,19 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'pricing_currency_code': invoice.currency_id.name.upper() if invoice.currency_id != invoice.company_id.currency_id else False,
             'currency_dp': 2,
         })
+        vals['vals']['note_vals'].append({'note': self._get_amount_in_text_note(invoice.amount_residual_signed, self.env.ref('base.TRY')), 'note_attrs': {}})
+        if vals['invoice'].currency_id.name != 'TRY':
+            vals['vals']['note_vals'].append({'note': self._get_amount_in_text_note(invoice.amount_residual, vals['invoice'].currency_id), 'note_attrs': {}})
         return vals
+
+    def _get_amount_in_text_note(self, amount, currency):
+        sign = 1 if amount >= 0 else -1
+        amount_i, amount_d = divmod(abs(amount), 1)
+        amount_d = int(amount_d * 100)
+
+        text_i = num2words(amount_i * sign, lang="tr") or 'Sifir'
+        text_d = num2words(amount_d * sign, lang="tr") or 'Sifir'
+        return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.currency_subunit_label}'.upper()
 
     def _get_country_vals(self, country):
         # EXTENDS account.edi.xml.ubl_21
