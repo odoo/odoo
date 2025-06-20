@@ -65,7 +65,8 @@ class ProductTemplateAttributeExclusion(models.Model):
     @api.model
     def _load_pos_data_domain(self, data):
         loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
-        return [('product_tmpl_id', 'in', loaded_product_tmpl_ids), ('product_template_attribute_value_id.ptav_active', '=', True)]
+        loaded_ptav_ids = list({ptav['id'] for ptav in data['product.template.attribute.value']})
+        return [('product_tmpl_id', 'in', loaded_product_tmpl_ids), ('product_template_attribute_value_id', 'in', loaded_ptav_ids)]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
