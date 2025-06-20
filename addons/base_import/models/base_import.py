@@ -35,11 +35,7 @@ from odoo.tools.translate import _
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
-DEFAULT_IMAGE_TIMEOUT = 3
-DEFAULT_IMAGE_MAXBYTES = 10 * 1024 * 1024
-DEFAULT_IMAGE_REGEX = r"^(?:http|https)://"
-DEFAULT_IMAGE_CHUNK_SIZE = 32768
-IMAGE_FIELDS = ["icon", "image", "logo", "picture"]
+DEFAULT_CHUNK_SIZE = 32768
 _logger = logging.getLogger(__name__)
 BOM_MAP = {
     'utf-16le': codecs.BOM_UTF16_LE,
@@ -1268,21 +1264,20 @@ class Base_ImportImport(models.TransientModel):
                 # We should be able to manage both case
                 index = import_fields.index(name)
                 self._parse_float_from_data(data, index, name, options)
-            elif field['type'] == 'binary' and field.get('attachment') and any(f in name for f in IMAGE_FIELDS) and name in import_fields:
+            elif field['type'] == 'binary' and field.get('attachment') and name in import_fields:
                 index = import_fields.index(name)
 
                 with requests.Session() as session:
                     session.stream = True
 
                     for num, line in enumerate(data):
-                        if re.match(config.get("import_image_regex", DEFAULT_IMAGE_REGEX), line[index]):
+                        if re.match(config.get("import_url_regex"), line[index]):
                             if not self.env.user._can_import_remote_urls():
                                 raise ImportValidationError(
-                                    _("You can not import images via URL, check with your administrator or support for the reason."),
+                                    _("You can not import file via URL, check with your administrator or support for the reason."),
                                     field=name, field_type=field['type']
                                 )
-
-                            line[index] = self._import_image_by_url(line[index], session, name, num)
+                            line[index] = self._import_file_by_url(line[index], session, name, num)
                         elif '.' in line[index]:
                             # Detect if it's a filename
                             pass
@@ -1329,8 +1324,8 @@ class Base_ImportImport(models.TransientModel):
                     field=name, field_type=field_type
                 )
 
-    def _import_image_by_url(self, url, session, field, line_number):
-        """ Imports an image by URL
+    def _import_file_by_url(self, url, session, field, line_number):
+        """ Imports a file by URL
 
         :param str url: the original field value
         :param requests.Session session:
@@ -1339,10 +1334,11 @@ class Base_ImportImport(models.TransientModel):
         :return: the replacement value
         :rtype: bytes
         """
-        maxsize = int(config.get("import_image_maxbytes", DEFAULT_IMAGE_MAXBYTES))
-        _logger.debug("Trying to import image from URL: %s into field %s, at line %s" % (url, field, line_number))
+        assert re.match(config.get("import_url_regex"), url)
+        maxsize = config.get("import_file_maxbytes")
+        _logger.debug("Trying to import file from URL: %s into field %s, at line %s", url, field, line_number)
         try:
-            response = session.get(url, timeout=int(config.get("import_image_timeout", DEFAULT_IMAGE_TIMEOUT)))
+            response = session.get(url, timeout=config.get("import_file_timeout"))
             response.raise_for_status()
 
             if response.headers.get('Content-Length') and int(response.headers['Content-Length']) > maxsize:
@@ -1352,13 +1348,16 @@ class Base_ImportImport(models.TransientModel):
                 )
 
             content = bytearray()
-            for chunk in response.iter_content(DEFAULT_IMAGE_CHUNK_SIZE):
+            for chunk in response.iter_content(DEFAULT_CHUNK_SIZE):
                 content += chunk
                 if len(content) > maxsize:
                     raise ImportValidationError(
                         _("File size exceeds configured maximum (%s bytes)", maxsize),
                         field=field
                     )
+
+            if not guess_mimetype(content).startswith('image/'):
+                return base64.b64encode(content)
 
             image = Image.open(io.BytesIO(content))
             w, h = image.size
@@ -1521,13 +1520,13 @@ class Base_ImportImport(models.TransientModel):
             if any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
                 # Recursive call with the relational as new model and add the field name to the prefix
                 binary_filenames = self._extract_binary_filenames(import_fields, data, field.comodel_name, name + '/', binary_filenames)
-            elif field.type == 'binary' and field.attachment and any(f in name for f in IMAGE_FIELDS) and name in import_fields:
+            elif field.type == 'binary' and field.attachment and name in import_fields:
                 index = import_fields.index(name)
                 for line in data:
                     filename = None
                     value = line[index]
                     if isinstance(value, str):
-                        if re.match(config.get("import_image_regex", DEFAULT_IMAGE_REGEX), value):
+                        if re.match(config.get("import_url_regex"), value):
                             pass
                         elif '.' in value:
                             # Detect if it's a filename
