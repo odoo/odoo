@@ -3,49 +3,56 @@
 
 <t t-name="hr_org_chart.hr_org_chart_employee">
     <t t-set="is_self" t-value="employee.id == view_employee_id"/>
+    <t t-set="entryUtilityClasses" t-value="'position-relative d-flex align-items-center overflow-visible'"/>
 
     <section t-if="employee_type == 'self'" t-attf-class="o_org_chart_entry_self_container #{managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
-        <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} d-flex position-relative py-2 overflow-visible #{managers.length &gt; 0 ? 'o_treeEntry' : ''}">
+        <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} #{managers.length &gt; 0 ? 'o_treeEntry' : ''} #{entryUtilityClasses}">
             <t t-call="hr_org_chart.hr_org_chart_employee_content">
                 <t t-set="is_self" t-value="is_self"/>
             </t>
         </div>
     </section>
 
-    <div t-else="" t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} o_treeEntry d-flex position-relative py-2 overflow-visible">
+    <div t-else="" t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} o_treeEntry #{entryUtilityClasses}">
         <t t-call="hr_org_chart.hr_org_chart_employee_content">
             <t t-set="is_self" t-value="is_self"/>
         </t>
     </div>
 </t>
 
-<t t-name="hr_org_chart.hr_org_chart_employee_content">
-    <div class="o_media_left position-relative">
-        <!-- NOTE: Since by the default on not squared images odoo add white borders,
-            use bg-images to get a clean and centred images -->
-        <a t-if="! is_self"
-            class="o_media_object d-block rounded o_employee_redirect"
-            t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"
+<t t-name="hr_org_chart.hr_org_chart_employee_informations">
+    <div t-attf-class="o_media_object d-block flex-shrink-0 rounded z-1 #{is_self ? 'border border-info' : ''}">
+        <img
+            t-att-src="'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/'"
             t-att-alt="employee.name"
+            t-attf-class="img-fluid rounded #{is_self ? 'border border-white' : ''}"
+        />
+    </div>
+    <div class="position-relative d-flex flex-column flex-grow-1 justify-content-center ps-2 lh-sm">
+        <b t-attf-class="o_media_heading m-0 fs-6 #{is_self ? 'fw-semibold' : 'fw-medium'}" t-esc="employee.name"/>
+        <small t-attf-class="o_employee_job text-muted #{is_self ? 'fw-medium' : ''}" t-esc="employee.job_name"/>
+    </div>
+</t>
+
+<t t-name="hr_org_chart.hr_org_chart_employee_content">
+    <t t-set="employeeInformationsUtilityClasses" t-value="'d-flex w-100 mw-75 me-auto'"/>
+        <a t-if="! is_self"
+            t-attf-class="o_employee_redirect #{employeeInformationsUtilityClasses}"
             t-att-data-employee-id="employee.id"
             t-att-href="employee.link"
-            t-on-click.prevent="() => this._onEmployeeRedirect(employee.id)"/>
-        <div t-if="is_self"
-            class="o_media_object d-block rounded border border-info"
-            t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"/>
-    </div>
-
-    <div class="d-flex flex-grow-1 align-items-center justify-content-between position-relative px-3">
-        <a t-if="!is_self" t-att-href="employee.link" class="o_employee_redirect d-flex flex-column" t-att-data-employee-id="employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(employee.id)">
-            <b class="o_media_heading m-0 fs-6" t-esc="employee.name"/>
-            <small class="text-muted fw-bold" t-esc="employee.job_name"/>
+            t-on-click.prevent="() => this._onEmployeeRedirect(employee.id)"
+        >
+            <t t-call="hr_org_chart.hr_org_chart_employee_informations">
+                <t t-set="is_self" t-value="is_self"/>
+            </t>
         </a>
-        <div t-if="is_self" class="d-flex flex-column">
-            <h5 class="o_media_heading m-0" t-esc="employee.name"/>
-            <small class="text-muted fw-bold" t-esc="employee.job_name"/>
+        <div t-if="is_self" t-attf-class="#{employeeInformationsUtilityClasses}">
+            <t t-call="hr_org_chart.hr_org_chart_employee_informations">
+                <t t-set="is_self" t-value="is_self"/>
+            </t>
         </div>
         <button t-if="employee.indirect_sub_count &gt; 0"
-                class="btn p-0 fs-3"
+                class="o_employee_button btn align-self-start ms-4 p-2 fs-6"
                 tabindex="0"
                 t-att-data-emp-name="employee.name"
                 t-att-data-emp-id="employee.id"
@@ -59,8 +66,6 @@
                 t-esc="employee.indirect_sub_count"
                 />
         </button>
-
-    </div>
 </t>
 
 <t t-name="hr_org_chart.hr_org_chart">
@@ -73,7 +78,7 @@
     <t t-set="emp_count" t-value="0"/>
     <div t-if='managers.length &gt; 0' class="o_org_chart_group_up position-relative">
         <div t-if='managers_more' class="o_org_chart_more pe-3">
-            <a href="#" t-att-data-employee-id="managers[0].id" class="o_employee_more_managers d-block bg-100 px-3" t-on-click.prevent="() => this._onEmployeeMoreManager(managers[0].id)">
+            <a href="#" t-att-data-employee-id="managers[0].id" class="o_employee_more_managers d-block bg-100 px-2" t-on-click.prevent="() => this._onEmployeeMoreManager(managers[0].id)">
                 <i class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
             </a>
         </div>
@@ -92,10 +97,44 @@
     </t>
 
     <t t-if="!children.length &amp;&amp; !managers.length">
-        <div class="alert alert-info" role="alert">
-            <p><b>No hierarchy defined.</b></p>
-            <p>Define a manager or subordinates to see this employee in the org chart.</p>
+        <p class="mb-3 text-muted fst-italic">Define a manager or subordinates to see this employee in the org chart.</p>
+        <div class="o_org_chart_group_up opacity-50">
+            <div class="o_org_chart_entry o_org_chart_entry_manager d-flex py-2 pe-none">
+                <div class="o_media_left">
+                    <div class="o_media_object placeholder rounded opacity-25"></div>
+                </div>
+                <div class="position-relative d-flex flex-grow-1 align-items-center px-2">
+                    <div class="d-flex flex-column w-100">
+                        <b class="o_media_heading placeholder col-6 m-0 opacity-25"></b>
+                        <small class="placeholder placeholder-xs col-3 mt-1 text-muted opacity-25"></small>
+                    </div>
+                </div>
+            </div>
         </div>
+        <section class="o_org_chart_entry_self_container o_org_chart_has_managers opacity-50">
+            <div class="o_org_chart_entry o_treeEntry position-relative d-flex py-2 overflow-visible pe-none">
+                <div class="o_media_left">
+                    <div class="o_media_object o_employee_redirect placeholder rounded opacity-25"></div>
+                </div>
+                <div class="d-flex flex-grow-1 align-items-center justify-content-between px-2">
+                    <div class="d-flex flex-column w-100 lh-sm">
+                        <b class="o_media_heading placeholder col-3 m-0 opacity-25"></b>
+                        <small class="placeholder placeholder-xs col-7 mt-1 text-muted opacity-25"></small>
+                    </div>
+                </div>
+            </div>
+            <div class="o_org_chart_entry o_treeEntry position-relative d-flex py-2 overflow-visible pe-none">
+                <div class="o_media_left">
+                    <div class="o_media_object o_employee_redirect placeholder rounded opacity-25"></div>
+                </div>
+                <div class="d-flex flex-grow-1 align-items-center px-2">
+                    <div class="d-flex flex-column w-100">
+                        <b class="o_media_heading placeholder col-5 m-0 opacity-25"></b>
+                        <small class="placeholder placeholder-xs col-4 mt-1 text-muted opacity-25"></small>
+                    </div>
+                </div>
+            </div>
+        </section>
     </t>
 
     <div t-if="children.length" t-attf-class="o_org_chart_group_down position-relative #{managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
@@ -123,15 +162,13 @@
 </t>
 
 <t t-name="hr_org_chart.hr_orgchart_emp_popover">
-    <div class="popover o_org_chart_popup" role="tooltip">
-        <div class="tooltip-arrow">
-            
-        </div>
+    <div class="o_org_chart_popup" role="tooltip">
+        <div class="tooltip-arrow"></div>
         <h3 class="popover-header">
             <div class="d-flex align-items-center">
                 <span class="flex-shrink-0" t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + props.employee.id + "/avatar_1024/\")"'/>
-                <b class="flew-grow-1"><t t-esc="props.employee.name"/></b>
-                <a href="#" class="ms-auto o_employee_redirect" t-att-data-employee-id="props.employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(props.employee.id)"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></a>
+                <b class="flew-grow-1 fw-medium"><t t-esc="props.employee.name"/></b>
+                <a href="#" class="o_employee_redirect btn btn-link ms-auto" t-att-data-employee-id="props.employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(props.employee.id)"><i class="fa fa-user" role="img" aria-label='View employee' title="View employee"></i></a>
             </div>
         </h3>
         <div class="popover-body">
