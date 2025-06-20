@@ -23,6 +23,16 @@ registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Eat In"),
         Utils.checkIsDisabledBtn("Order"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        CartPage.removeLine("Coca-Cola"),
+        ProductPage.isShown(),
+        {
+            content: "Last tour step",
+            trigger: "body",
+            isCheck: true,
+        },
     ],
 });
 
