@@ -37,6 +37,10 @@ function generateKioskCSS(primaryBg, primaryText = "#fff") {
   --btn-disabled-border-color: ${primaryBg};
 }
 
+.bg-primary {
+    --background-color: ${primaryBg};
+}
+
 .text-primary {
   --color: rgba(${primaryRGB}, var(--text-opacity, 1));
 }

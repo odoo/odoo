@@ -47,12 +47,13 @@ export class selfOrderIndex extends Component {
         }
 
         if (this.selfOrder.kioskMode) {
-            const styleConfig = this.selfOrder.config._self_ordering_style;
-            if (styleConfig) {
-                const { primaryBgColor, primaryTextColor } = styleConfig;
-                insertKioskStyle(primaryBgColor, primaryTextColor);
-            }
             document.documentElement.classList.add("kiosk");
+        }
+
+        const styleConfig = this.selfOrder.config._self_ordering_style;
+        if (styleConfig) {
+            const { primaryBgColor, primaryTextColor } = styleConfig;
+            insertKioskStyle(primaryBgColor, primaryTextColor);
         }
 
         if (this.env.debug) {
