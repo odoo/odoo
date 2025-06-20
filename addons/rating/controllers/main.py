@@ -30,7 +30,15 @@ class Rating(http.Controller):
         rating, _record_sudo = self._get_rating_and_record(token)
 
         lang = rating.partner_id.lang or get_lang(request.env).code
-        return request.env['ir.ui.view'].with_context(lang=lang)._render_template('rating.rating_external_page_submit', {
+        # Apply .sudo() to avoid error if public_user does not have this allowed company
+        view_model = request.env['ir.ui.view'].sudo()
+        if (
+            rating.resource_ref
+            and "company_id" in rating.resource_ref._fields
+            and rating.resource_ref.company_id
+        ):
+            view_model = view_model.with_company(rating.resource_ref.company_id)
+        return view_model.with_context(lang=lang)._render_template('rating.rating_external_page_submit', {
             'rating': rating,
             'token': token,
             'rate_names': {
@@ -57,7 +65,15 @@ class Rating(http.Controller):
             )
 
         lang = rating.partner_id.lang or get_lang(request.env).code
-        return request.env['ir.ui.view'].with_context(lang=lang)._render_template('rating.rating_external_page_view', {
+        # Apply .sudo() to avoid error if public_user does not have this allowed company
+        view_model = request.env['ir.ui.view'].sudo()
+        if (
+            rating.resource_ref
+            and "company_id" in rating.resource_ref._fields
+            and rating.resource_ref.company_id
+        ):
+            view_model = view_model.with_company(rating.resource_ref.company_id)
+        return view_model.with_context(lang=lang)._render_template('rating.rating_external_page_view', {
             'web_base_url': rating.get_base_url(),
             'rating': rating,
         })
