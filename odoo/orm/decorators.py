@@ -276,6 +276,14 @@ def autovacuum(method: C) -> C:
     return method
 
 
+class AutovacuumProgress(typing.NamedTuple):
+    done: int
+    remaining: int | bool
+
+
+autovacuum.Progress = AutovacuumProgress
+
+
 def model(method: C) -> C:
     """ Decorate a record-style method where ``self`` is a recordset, but its
         contents is not relevant, only the model is. Such a method::

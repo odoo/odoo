@@ -19,6 +19,11 @@ def is_autovacuum(func):
     return callable(func) and getattr(func, '_autovacuum', False)
 
 
+def is_autovacuum_progress(value):
+    return isinstance(value, tuple) and len(value) == 2
+assert is_autovacuum_progress(api.autovacuum.Progress)  # noqa: E305
+
+
 class IrAutovacuum(models.AbstractModel):
     """ Helper model to the ``@api.autovacuum`` method decorator. """
     _name = 'ir.autovacuum'
@@ -48,7 +53,7 @@ class IrAutovacuum(models.AbstractModel):
                 start_time = time.monotonic()
                 result = func(model)
                 self.env['ir.cron']._commit_progress(1)
-                if isinstance(result, tuple) and len(result) == 2:
+                if is_autovacuum_progress(result):
                     func_done, func_remaining = result
                     _logger.debug(
                         '%s.%s  vacuumed %r records, remaining %r',

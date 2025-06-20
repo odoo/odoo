@@ -13,6 +13,7 @@ import uuid
 import werkzeug
 
 from collections import defaultdict
+from itertools import islice
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, ValidationError, UserError
@@ -155,11 +156,11 @@ class IrAttachment(models.Model):
             open(full_path, 'ab').close()
 
     @api.autovacuum
-    def _gc_file_store(self):
+    def _gc_file_store(self) -> api.autovacuum.Progress:
         """ Perform the garbage collection of the filestore. """
         assert isinstance(self, IrAttachment)
         if self._storage() != 'file':
-            return
+            return api.autovacuum.Progress(done=0, remaining=False)
 
         # Continue in a new transaction. The LOCK statement below must be the
         # first one in the current transaction, otherwise the database snapshot
@@ -179,44 +180,55 @@ class IrAttachment(models.Model):
             cr.execute("LOCK ir_attachment IN SHARE MODE")
         except psycopg2.errors.LockNotAvailable:
             cr.rollback()
-            return False
+            return api.autovacuum.Progress(done=0, remaining=True)
 
-        self._gc_file_store_unsafe()
+        autovacuum_progress = self._gc_file_store_unsafe()
 
         # commit to release the lock
         cr.commit()
 
-    def _gc_file_store_unsafe(self):
-        # retrieve the file names from the checklist
-        checklist = {}
-        for dirpath, _, filenames in os.walk(self._full_path('checklist')):
-            dirname = os.path.basename(dirpath)
-            for filename in filenames:
-                fname = "%s/%s" % (dirname, filename)
-                checklist[fname] = os.path.join(dirpath, filename)
+        return autovacuum_progress
 
-        # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
-        # for each chunk.
+    def _gc_file_store_unsafe(self, limit=10_000) -> api.autovacuum.Progress:
+        if not (0 <= limit <= self.env.cr.IN_MAX):
+            e = f"limit is not between 0 and {self.env.cr.IN_MAX}: {limit}"
+            raise ValueError(e)
+
+        # Everytime an attachment is unlinked, its store_fname is added
+        # to the checklist, get {limit} entries from the checklist.
+        checklist = dict(islice((
+            (f"{dirname}/{filename}", os.path.join(dirpath, filename))
+            for dirpath, _, filenames in os.walk()
+            for dirname in [os.path.basename(dirpath)]
+            for filename in filenames
+        ), None, limit))
+
+        # Find if there are other attachments that are using the same
+        # file, to skip removing those.
+        self.env.cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", checklist)
+        attachments_fnames = {row[0] for row in self.env.cr.fetchall()}
+
         removed = 0
-        for names in split_every(self.env.cr.IN_MAX, checklist):
-            # determine which files to keep among the checklist
-            self.env.cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
-            whitelist = set(row[0] for row in self.env.cr.fetchall())
+        for filestore_fname, checklist_filepath in checklist.items():
+            # Remove the file if it is not used by any other attachment.
+            if filestore_fname not in attachments_fnames:
+                filestore_filepath = self._full_path(filestore_fname)
+                try:
+                    os.unlink(filestore_filepath)
+                    _logger.debug("_file_gc unlinked %s", filestore_filepath)
+                    removed += 1
+                except OSError:
+                    _logger.info("_file_gc could not unlink %s", filestore_filepath, exc_info=True)
 
-            # remove garbage files, and clean up checklist
-            for fname in names:
-                filepath = checklist[fname]
-                if fname not in whitelist:
-                    try:
-                        os.unlink(self._full_path(fname))
-                        _logger.debug("_file_gc unlinked %s", self._full_path(fname))
-                        removed += 1
-                    except OSError:
-                        _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
-                with contextlib.suppress(OSError):
-                    os.unlink(filepath)
+            # Always remove the entry from the checklist.
+            with contextlib.suppress(OSError):
+                os.unlink(checklist_filepath)
 
         _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
+        return api.autovacuum.Progress(
+            done=len(checklist),
+            remaining=len(checklist) == limit,
+        )
 
     @api.depends('store_fname', 'db_datas', 'file_size')
     @api.depends_context('bin_size')
