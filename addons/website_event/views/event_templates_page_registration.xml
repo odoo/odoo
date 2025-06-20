@@ -665,7 +665,7 @@
                             <time t-out="date" class="text-nowrap pe-5 me-5" t-options="{'widget': 'date', 'format': 'full'}"/>
                             <div class="d-flex flex-wrap gap-2">
                                 <button type="button" t-foreach="slots[date]" t-as="slot" class="o_wevent_slot_btn btn btn-sm btn-light"
-                                    t-att-data-slot-id="slot.id" t-att-data-slot-start="slot.start_datetime">
+                                    t-att-data-slot-id="slot.id" t-att-data-slot-start="slot.start_datetime" t-att-data-slot-end="slot.end_datetime">
                                     <time t-out="slot.start_datetime" class="lh-1"
                                         t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
                                 </button>
