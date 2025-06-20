@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.PrintDetailsToggleField" t-inherit="web.BooleanToggleField" t-inherit-mode="primary">
+        <xpath expr="//CheckBox" position="inside">
+            Print Details
+        </xpath>
+    </t>
+
+    <t t-name="account.ListPrintDetailsToggleField" t-inherit="web.ListBooleanToggleField" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.BooleanToggleField']" position="attributes">
+            <attribute name="t-call">account.PrintDetailsToggleField</attribute>
+        </xpath>
+    </t>
+
+</templates>

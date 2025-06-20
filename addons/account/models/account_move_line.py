@@ -7,7 +7,7 @@ import re
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.fields import Domain
-from odoo.tools import frozendict, float_compare, Query, SQL
+from odoo.tools import frozendict, float_compare, groupby, Query, SQL
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -427,6 +427,18 @@ class AccountMoveLine(models.Model):
         currency_field='company_currency_id',
     )
 
+    # === Section related fields === #
+    print_details = fields.Boolean(
+        string="Print Details",
+        default=True,
+        help="Show and print the invoice lines under particular section.",
+    )
+    linked_section_line_id = fields.Many2one(
+        'account.move.line',
+        string="Linked Section Line",
+        compute='_compute_linked_section_line_id',
+    )
+
     # === Payment Fields === #
     # payment_date is the closest date to the date the aml was created between discount_date and date_maturity.
     payment_date = fields.Date(
@@ -836,22 +848,40 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.sequence = seq_map.get(line.display_type, 100)
 
-    @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id')
+    @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id', 'move_id.invoice_line_ids')
     def _compute_totals(self):
         """ Compute 'price_subtotal' / 'price_total' outside of `_sync_tax_lines` because those values must be visible for the
         user on the UI with draft moves and the dynamic lines are synchronized only when saving the record.
         """
         AccountTax = self.env['account.tax']
         for line in self:
-            # TODO remove the need of cogs lines to have a price_subtotal/price_total
-            if line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total'):
-                line.price_total = line.price_subtotal = False
-                continue
+            if line.display_type == 'line_section' and line.move_type == 'out_invoice':
+                subtotal = 0.0
+                total = 0.0
+                section_seq = line.sequence
 
-            base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
-            AccountTax._add_tax_details_in_base_line(base_line, line.company_id)
-            line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
-            line.price_total = base_line['tax_details']['raw_total_included_currency']
+                sorted_lines = line.move_id.invoice_line_ids.filtered(
+                    lambda l: l.sequence > section_seq,
+                ).sorted('sequence')
+
+                for sorted_line in sorted_lines:
+                    if sorted_line.display_type == 'line_section':
+                        break
+                    subtotal += sorted_line.price_subtotal
+                    total += sorted_line.price_total
+
+                line.update({
+                    'price_subtotal': subtotal,
+                    'price_total': total,
+                })
+            # TODO remove the need of cogs lines to have a price_subtotal/price_total
+            elif line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total'):
+                line.price_total = line.price_subtotal = False
+            else:
+                base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
+                AccountTax._add_tax_details_in_base_line(base_line, line.company_id)
+                line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
+                line.price_total = base_line['tax_details']['raw_total_included_currency']
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
@@ -1161,6 +1191,19 @@ class AccountMoveLine(models.Model):
             'target': 'new',
             'type': 'ir.actions.act_window',
         }
+
+    def _compute_linked_section_line_id(self):
+        for line in self:
+            if line.display_type != 'line_section':
+                qualified_lines = line.move_id.invoice_line_ids.filtered(
+                    lambda l: l.display_type == 'line_section' and l.sequence < line.sequence,
+                )
+                if qualified_lines:
+                    line.linked_section_line_id = max(qualified_lines, key=lambda l: l.sequence)
+                else:
+                    line.linked_section_line_id = False
+            else:
+                line.linked_section_line_id = False
 
     # -------------------------------------------------------------------------
     # SEARCH METHODS
@@ -3206,6 +3249,37 @@ class AccountMoveLine(models.Model):
             'partner_id': self.partner_id.id,
             **kwargs,
         }
+
+    def _get_grouped_section_summary(self):
+        """
+        Return a tax-wise summary of invoice lines linked to section.
+
+        Groups lines by their tax IDs and computes subtotal and total for each group.
+        """
+        self.ensure_one()
+
+        section_lines = self.move_id.invoice_line_ids.filtered(
+            lambda l: l.linked_section_line_id == self,
+        )
+        result = []
+        for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
+            tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
+            subtotal = sum(l.price_subtotal for l in lines)
+            total = sum(l.price_total for l in lines)
+
+            result.append({
+                'name': self.name,
+                'taxes': tax_labels,
+                'price_subtotal': subtotal,
+                'price_total': total,
+            })
+
+        return result or [{
+            'name': self.name,
+            'taxes': [],
+            'price_subtotal': 0.0,
+            'price_total': 0.0,
+        }]
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS

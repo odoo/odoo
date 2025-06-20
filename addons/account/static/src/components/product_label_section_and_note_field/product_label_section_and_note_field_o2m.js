@@ -9,6 +9,7 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
     setup() {
         super.setup();
         this.productColumns = ["product_id", "product_template_id"];
+        this.sectionCols.push("price_total", "price_subtotal");
     }
 
     getCellTitle(column, record) {

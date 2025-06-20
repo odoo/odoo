@@ -7,6 +7,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component, useEffect } from "@odoo/owl";
 
 export class SectionAndNoteListRenderer extends ListRenderer {
+    static rowsTemplate = "account.sectionAndNoteListRenderer.Rows";
     static template = "account.sectionAndNoteListRenderer";
 
     /**
@@ -18,6 +19,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     setup() {
         super.setup();
         this.titleField = "name";
+        this.sectionCols = ["print_details"];
         useEffect(
             (editedRecord) => this.focusToName(editedRecord),
             () => [this.editedRecord]
@@ -32,8 +34,17 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     isSectionOrNote(record=null) {
+        return this.isSection(record) || this.isNote(record);
+    }
+
+    isSection(record=null) {
         record = record || this.record;
-        return ['line_section', 'line_note'].includes(record.data.display_type);
+        return record.data.display_type === 'line_section';
+    }
+
+    isNote(record=null) {
+        record = record || this.record;
+        return record.data.display_type === 'line_note';
     }
 
     getRowClass(record) {
@@ -43,25 +54,62 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     getCellClass(column, record) {
         const classNames = super.getCellClass(column, record);
-        if (this.isSectionOrNote(record) && column.widget !== "handle" && column.name !== this.titleField) {
+        if (
+            (this.isSection(record) && !this.sectionCols.includes(column.name) || this.isNote(record))
+            && column.widget !== "handle"
+            && column.name !== this.titleField
+        ) {
             return `${classNames} o_hidden`;
         }
         return classNames;
     }
 
+    getActiveColumns() {
+        return super.getActiveColumns().filter((col) => col.name !== "print_details" );
+    }
+
     getColumns(record) {
         const columns = super.getColumns(record);
-        if (this.isSectionOrNote(record)) {
-            return this.getSectionColumns(columns);
+        if (this.isSection(record)) {
+            return this.getSectionColumns(super.getActiveColumns());
+        } else if (this.isNote(record)) {
+            return this.getNoteColumns(columns);
         }
         return columns;
     }
 
     getSectionColumns(columns) {
-        const sectionCols = columns.filter((col) => col.widget === "handle" || col.type === "field" && col.name === this.titleField);
+        const sectionCols = columns.filter(
+            (col) =>
+                col.widget === "handle"
+                || (
+                    col.type === "field"
+                    && (col.name === this.titleField || this.sectionCols.includes(col.name))
+                )
+        );
+        const hasProductRelatedColumn = ['product_id', 'product_template_id', 'name'].some(name =>
+            this.columns.map(col => col.name).includes(name)
+        );
         return sectionCols.map((col) => {
+            if (
+                col.name === this.titleField
+                || (col.name === "print_details" && !hasProductRelatedColumn)
+            ) {
+                return {...col, colspan: this.columns.length - sectionCols.length + 1 };
+            } else {
+                return { ...col };
+            }
+        });
+    }
+
+    getNoteColumns(columns) {
+        const noteCols = columns.filter((col) =>
+            col.widget === "handle"
+            || (col.type === "field" && col.name === this.titleField)
+        );
+        return noteCols.map((col) => {
             if (col.name === this.titleField) {
-                return { ...col, colspan: columns.length - sectionCols.length + 1 };
+                return { ...col, colspan: columns.length - noteCols.length + 1 };
             } else {
                 return { ...col };
             }

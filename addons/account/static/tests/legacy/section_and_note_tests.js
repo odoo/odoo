@@ -47,11 +47,15 @@ QUnit.module('section_and_note', (hooks) => {
                         price: {
                             string: "Price",
                             type: 'monetary',
-                        }
+                        },
+                        print_details: {
+                            string: "Print Details",
+                            type: "boolean"
+                        },
                     },
                     records: [
                         {id: 1, display_type: false, invoice_id: 1, name: 'product\n2 lines', price: 123.45},
-                        {id: 2, display_type: 'line_section', invoice_id: 1, name: 'section'},
+                        {id: 2, display_type: 'line_section', invoice_id: 1, name: 'section', print_details: true},
                         {id: 3, display_type: 'line_note', invoice_id: 1, name: 'note'},
                     ]
                 },
@@ -61,7 +65,7 @@ QUnit.module('section_and_note', (hooks) => {
     });
 
     QUnit.test('correct display of section and note fields', async (assert) => {
-        assert.expect(9);
+        assert.expect(11);
         await makeView({
             type: 'form',
             resModel: 'invoice',
@@ -73,6 +77,7 @@ QUnit.module('section_and_note', (hooks) => {
                             <field name="sequence" widget="handle"/>
                             <field name="display_type" column_invisible="1"/>
                             <field name="name" widget="section_and_note_text"/>
+                            <field name="print_details" widget="print_details_boolean_toggle"/>
                             <field name="price"/>
                         </list>
                     </field>
@@ -89,9 +94,12 @@ QUnit.module('section_and_note', (hooks) => {
         // section should be displayed correctly
         const section_line = target.querySelector('tr.o_data_row:nth-child(2)');
         const section_cell = section_line.querySelector('td.o_section_and_note_text_cell');
+        const print_details_cell = section_line.querySelector('td.o_print_details_boolean_toggle_cell > div');
         assert.hasClass(section_line, 'o_is_line_section',
             "should have a section class");
-        assert.hasAttrValue(section_cell, 'colspan', '2')
+        assert.hasClass(print_details_cell, 'o_field_print_details_boolean_toggle',
+            "should have a print details toggle");
+        assert.hasAttrValue(section_cell, 'colspan', '1')
 
         // note should be displayed correctly
         const note_line = target.querySelector('tr.o_data_row:nth-child(3)');
@@ -116,5 +124,10 @@ QUnit.module('section_and_note', (hooks) => {
             getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_text")),
             ["section", "product\n2 lines", "note"]
         );
+
+        // check that lines below section are hidden when print_details toggle is false
+        await click(section_line.querySelector('input.form-check-input'));
+        assert.isNotVisible(target.querySelector('tr.o_data_row:nth-child(2)'),
+            "lines below section line should be hidden");
     });
 });

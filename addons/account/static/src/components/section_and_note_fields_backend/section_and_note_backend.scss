@@ -33,3 +33,13 @@ table.o_section_and_note_list_view tr.o_data_row {
         white-space: pre-wrap !important;
     }
 }
+
+.o_list_renderer {
+    .o_list_table {
+        .o_print_details_boolean_toggle_cell {
+            > .o_field_widget:not(.o_readonly_modifier) .form-check {
+                pointer-events: auto;
+            }
+        }
+    }
+}

@@ -10,4 +10,30 @@
         <t t-component="componentToUse" t-props="props"/>
     </t>
 
+    <t
+        t-name="account.sectionAndNoteListRenderer.Rows"
+        t-inherit="web.ListRenderer.Rows"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//t[@t-call='{{ constructor.recordRowTemplate }}']" position="before">
+            <t
+                t-set="shouldShowSection"
+                t-value="record.data.print_details"
+                t-if="record.data.display_type == 'line_section'"
+            />
+        </xpath>
+
+        <xpath expr="//t[@t-call='{{ constructor.recordRowTemplate }}']" position="attributes">
+            <attribute name="t-if">
+                shouldShowSection
+                or record.isNew
+                or record.data.display_type == 'line_section'
+            </attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-foreach='list.records']" position="before">
+            <t t-set="shouldShowSection" t-value="true"/>
+        </xpath>
+    </t>
+
 </templates>
