@@ -35,7 +35,7 @@ export class OutdatedPageWatcherService {
             }
             wasBusAlreadyConnected = true;
         });
-        bus_service.addEventListener("reconnect", () => this.checkHasMissedNotifications());
+        bus_service.addEventListener("reconnect", async () => this.checkHasMissedNotifications());
         multi_tab.bus.addEventListener("shared_value_updated", ({ detail: { key } }) => {
             if (key === "bus.has_missed_notifications") {
                 this.showOutdatedPageNotification();
@@ -44,7 +44,7 @@ export class OutdatedPageWatcherService {
     }
 
     async checkHasMissedNotifications() {
-        if (!this.multi_tab.isOnMainTab() || !this.lastNotificationId) {
+        if (!(await this.multi_tab.isOnMainTab()) || !this.lastNotificationId) {
             return;
         }
         const hasMissedNotifications = await rpc(
