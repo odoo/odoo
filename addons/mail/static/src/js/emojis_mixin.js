@@ -1,4 +1,4 @@
-import { htmlEscape } from "@web/core/utils/html";
+import { htmlEscape } from "@odoo/owl";
 
 /**
  * Adds a span with a CSS class around chains of emojis in the message for styling purposes.

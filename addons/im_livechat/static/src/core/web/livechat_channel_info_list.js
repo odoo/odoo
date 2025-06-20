@@ -1,10 +1,9 @@
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component } from "@odoo/owl";
+import { Component, htmlEscape } from "@odoo/owl";
 
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { htmlEscape } from "@web/core/utils/html";
 
 export class LivechatChannelInfoList extends Component {
     static components = { ActionPanel };

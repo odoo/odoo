@@ -1,6 +1,5 @@
-import { markup } from "@odoo/owl";
+import { htmlEscape, markup } from "@odoo/owl";
 
-import { escape } from "@web/core/utils/strings";
 import { formatList } from "../l10n/utils";
 
 const Markup = markup().constructor;
@@ -27,16 +26,6 @@ export function createElementWithContent(elementName, content) {
     const element = document.createElement(elementName);
     setElementContent(element, content);
     return element;
-}
-
-/**
- * Escapes content for HTML. Content is unchanged if it is already a Markup.
- *
- * @param {string|ReturnType<markup>} content
- * @returns {ReturnType<markup>}
- */
-export function htmlEscape(content) {
-    return content instanceof Markup ? content : markup(escape(content));
 }
 
 /**
