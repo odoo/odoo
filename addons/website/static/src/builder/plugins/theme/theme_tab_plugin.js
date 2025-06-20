@@ -1,4 +1,4 @@
-import { BuilderFontFamilyPicker } from "@website/builder/builder_fontfamilypicker";
+import { BuilderFontFamilyPicker } from "@html_builder/core/building_blocks/builder_fontfamilypicker";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { ThemeColorsOption } from "./theme_colors_option";
