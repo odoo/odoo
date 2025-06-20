@@ -915,6 +915,7 @@ class TestAccountAccount(TestAccountMergeCommon):
 
             account_form.name = "My Test Account"
             account_form.code = 'test1'
+            account_form.account_type = 'asset_current'
             with account_form.code_mapping_ids.edit(1) as code_mapping_form:
                 code_mapping_form.code = 'test2'
             with account_form.code_mapping_ids.edit(2) as code_mapping_form:
