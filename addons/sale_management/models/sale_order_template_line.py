@@ -58,6 +58,12 @@ class SaleOrderTemplateLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False)
 
+    print_details = fields.Boolean(
+        string="Print Details",
+        default=True,
+        help="Show and print the sale order template lines under particular section.",
+    )
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')

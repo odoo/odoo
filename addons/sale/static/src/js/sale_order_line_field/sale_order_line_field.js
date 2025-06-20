@@ -46,16 +46,16 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
      */
 
     /**
-     * Whether the provided record is a section, a note, or a combo.
+     * Whether the provided record is a note or a combo.
      *
      * This method's name isn't ideal since it doesn't mention combos, but we'd have to override a
      * few other methods to fix this, and the added complexity isn't worth it.
      *
      * @param record The record to check
-     * @return {Boolean} Whether the record is a section, a note, or a combo.
+     * @return {Boolean} Whether the record is a note or a combo.
      */
-    isSectionOrNote(record=null) {
-        return super.isSectionOrNote(record) || this.isCombo(record);
+    isNote(record=null) {
+        return super.isNote(record) || this.isCombo(record);
     }
 
     getRowClass(record) {

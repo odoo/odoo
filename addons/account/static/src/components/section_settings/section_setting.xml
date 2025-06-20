@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="account.SectionSettings">
+        <t t-if="['line_section', 'line_subsection'].includes(props.record.data.display_type)">        
+            <Dropdown>
+                <button
+                    class="d-print-none btn lh-sm p-0 border-0'"
+                    data-tooltip="Section Settings"
+                >
+                    <i class="fa fa-fw fa-cog"/>
+                </button>
+
+                <t t-set-slot="content">
+                    <DropdownItem
+                        t-foreach="sortedActions"
+                        t-as="action"
+                        t-if="action.visible"
+                        t-key="action.id"
+                        onSelected="action.onSelected"
+                        class="'o_menu_item'"
+                    >
+                        <i t-att-class="action.icon" class="me-2"/>
+                        <t t-esc="action.label"/>
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+        </t>
+    </t>
+
+</templates>

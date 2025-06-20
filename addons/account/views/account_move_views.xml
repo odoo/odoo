@@ -1141,10 +1141,17 @@
                                            'default_display_type': 'product',
                                            'quick_encoding_vals': quick_encoding_vals,
                                        }" readonly="state != 'draft'">
-                                    <list name="journal_items" editable="bottom" string="Journal Items" default_order="sequence, id">
+                                    <list
+                                        name="journal_items"
+                                        editable="bottom"
+                                        string="Journal Items"
+                                        default_order="sequence, id"
+                                        decoration-muted="move_type == 'out_invoice' and is_linked_section_hidden"
+                                    >
                                         <control>
                                             <create name="add_line_control" string="Add a line"/>
                                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                            <create name="add_subsection_control" string="Add a subsection" context="{'default_display_type': 'line_subsection'}"/>
                                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                             <button name="action_add_from_catalog" string="Catalog" type="object" class="btn-link" context="{'order_id': parent.id}"/>
                                         </control>
@@ -1184,8 +1191,18 @@
                                         <!-- /l10n_in_edi.test_edi_json -->
                                         <!-- required for @api.onchange('product_id') -->
                                         <field name="product_uom_id" column_invisible="True"/>
-                                        <field name="price_unit" string="Price"/>
-                                        <field name="discount" width="50px" string="Disc.%" optional="hide"/>
+                                        <field
+                                            name="price_unit"
+                                            string="Price"
+                                            decoration-muted="is_linked_section_amount_hidden"
+                                        />
+                                        <field
+                                            name="discount"
+                                            width="50px"
+                                            string="Disc.%"
+                                            optional="hide"
+                                            decoration-muted="is_linked_section_amount_hidden"
+                                        />
                                         <field name="tax_ids" widget="many2many_tax_tags"
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                                context="{
@@ -1199,18 +1216,30 @@
                                                column_invisible="parent.move_type not in ['in_invoice', 'in_refund']"
                                                string="Professional %"
                                                optional="hide"/>
-                                        <field name="price_subtotal"
-                                               column_invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"
-                                               string="Amount"/>
-                                        <field name="price_total"
-                                               column_invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
-                                               string="Amount"/>
+                                        <field
+                                            name="price_subtotal"
+                                            column_invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"
+                                            invisible="display_type in ('line_section', 'line_subsection') and (move_type != 'out_invoice' or show_section_line_amount)"
+                                            decoration-muted="is_linked_section_amount_hidden or (display_type == 'line_section' and not show_section_line_amount)"
+                                            string="Amount"
+                                        />
+                                        <field
+                                            name="price_total"
+                                            column_invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
+                                            invisible="display_type in ('line_section', 'line_subsection') and (move_type != 'out_invoice' or show_section_line_amount)"
+                                            decoration-muted="is_linked_section_amount_hidden or (display_type == 'line_section' and not show_section_line_amount)"
+                                            string="Amount"
+                                        />
                                         <!-- Others fields -->
                                         <field name="partner_id" column_invisible="True"/>
                                         <field name="currency_id" column_invisible="True"/>
                                         <field name="company_id" column_invisible="True"/>
                                         <field name="company_currency_id" column_invisible="True"/>
                                         <field name="display_type" force_save="1" column_invisible="True"/>
+                                        <field name="show_composition" column_invisible="True"/>
+                                        <field name="show_section_line_amount" column_invisible="True"/>
+                                        <field name="linked_section_line_id" column_invisible="True"/>
+                                        <widget name="section_settings"/>
                                     </list>
                                     <kanban class="o_kanban_mobile">
                                         <!-- Displayed fields -->

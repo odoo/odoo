@@ -353,7 +353,7 @@ class AccountMove(models.Model):
         'move_id',
         string='Invoice lines',
         copy=False,
-        domain=[('display_type', 'in', ('product', 'line_section', 'line_note'))],
+        domain=[('display_type', 'in', ('product', 'line_section', 'line_subsection', 'line_note'))],
     )
 
     # === Date fields === #

@@ -66,6 +66,7 @@ class SaleOrderLine(models.Model):
     display_type = fields.Selection(
         selection=[
             ('line_section', "Section"),
+            ('line_subsection', "Subsection"),
             ('line_note', "Note"),
         ],
         default=False)
@@ -305,6 +306,33 @@ class SaleOrderLine(models.Model):
         string='Tax calculation rounding method', readonly=True)
     company_price_include = fields.Selection(related="company_id.account_price_include")
     sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
+
+    # Section related fields
+    show_composition = fields.Boolean(
+        string="Show Composition",
+        default=True,
+        help="Show and print the SO lines under particular section or subsection.",
+    )
+    show_section_line_amount = fields.Boolean(
+        string="Show Section Amount",
+        default=True,
+        help="Show and print amount of SO lines under particular section or subsection.",
+    )
+    linked_section_line_id = fields.Many2one(
+        'sale.order.line',
+        string="Linked Section Line",
+        compute='_compute_linked_section_line_id',
+    )
+    is_linked_section_hidden = fields.Boolean(
+        string="Is Linked Section Hidden",
+        compute='_compute_is_linked_section_hidden',
+        help="If true, the line is muted in the UI and not printed.",
+    )
+    is_linked_section_amount_hidden = fields.Boolean(
+        string="Is Linked Section Price Hidden",
+        compute='_compute_is_linked_section_amount_hidden',
+        help="If true, the column is muted in the UI and not printed.",
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -783,9 +811,42 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return self.extra_tax_data and self.extra_tax_data.get('computation_key', '').startswith('global_discount,')
 
-    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_ids')
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_ids', 'order_id.order_line')
     def _compute_amount(self):
         for line in self:
+            if line.display_type in ('line_section', 'line_subsection'):
+                subtotal = 0.0
+                total = 0.0
+                section_seq = line.sequence
+
+                sorted_lines = line.order_id.order_line.filtered(
+                    lambda l: l.sequence > section_seq,
+                ).sorted('sequence')
+
+                for sorted_line in sorted_lines:
+                    if (
+                        line.display_type == 'line_subsection'
+                        and sorted_line.display_type
+                        in ('line_subsection', 'line_section')
+                    ) or (
+                        line.display_type == 'line_section'
+                        and sorted_line.display_type == 'line_section'
+                    ):
+                        break
+                    if (
+                        line.display_type == 'line_section'
+                        and sorted_line.display_type == 'line_subsection'
+                    ):
+                        continue
+                    subtotal += sorted_line.price_subtotal
+                    total += sorted_line.price_total
+
+                line.update({
+                    'price_subtotal': subtotal,
+                    'price_total': total,
+                    'price_tax': total - subtotal,
+                })
+                continue
             base_line = line._prepare_base_line_for_taxes_computation()
             self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
             line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
@@ -1130,6 +1191,71 @@ class SaleOrderLine(models.Model):
             # line.ids checks whether it's a new record not yet saved
             line.product_uom_readonly = line.ids and line.state in ['sale', 'cancel']
 
+    def _compute_linked_section_line_id(self):
+        for line in self:
+            if line.display_type not in ('line_section', 'line_subsection'):
+                qualified_lines = line.order_id.order_line.filtered(
+                    lambda l: l.display_type in ('line_section', 'line_subsection') and l.sequence < line.sequence,
+                )
+                if qualified_lines:
+                    line.linked_section_line_id = max(qualified_lines, key=lambda l: l.sequence)
+                else:
+                    line.linked_section_line_id = False
+            elif line.display_type == 'line_subsection':
+                qualified_lines = line.order_id.order_line.filtered(
+                    lambda l: l.display_type == 'line_section' and l.sequence < line.sequence,
+                )
+                if qualified_lines:
+                    line.linked_section_line_id = max(qualified_lines, key=lambda l: l.sequence)
+                else:
+                    line.linked_section_line_id = False
+            else:
+                line.linked_section_line_id = False
+
+    def _compute_is_linked_section_hidden(self):
+        for line in self:
+            if (
+                line.display_type not in ('line_subsection', 'line_section')
+                and line.linked_section_line_id
+            ):
+                if line.linked_section_line_id.display_type == 'line_subsection':
+                    line.is_linked_section_hidden = (
+                        line.linked_section_line_id.is_linked_section_hidden
+                    )
+                else:
+                    line.is_linked_section_hidden = not line.linked_section_line_id.show_composition
+            elif line.display_type == 'line_subsection':
+                line.is_linked_section_hidden = (
+                    not line.linked_section_line_id.show_composition
+                    if line.linked_section_line_id
+                    and not line.linked_section_line_id.show_composition
+                    else not line.show_composition
+                )
+            else:
+                line.is_linked_section_hidden = False
+
+    def _compute_is_linked_section_amount_hidden(self):
+        for line in self:
+            if (
+                line.display_type not in ('line_subsection', 'line_section')
+                and line.linked_section_line_id
+            ):
+                if line.linked_section_line_id.display_type == 'line_subsection':
+                    line.is_linked_section_amount_hidden = (
+                        line.linked_section_line_id.is_linked_section_amount_hidden
+                    )
+                else:
+                    line.is_linked_section_amount_hidden = not line.linked_section_line_id.show_section_line_amount
+            elif line.display_type == 'line_subsection':
+                line.is_linked_section_amount_hidden = (
+                    not line.linked_section_line_id.show_section_line_amount
+                    if line.linked_section_line_id
+                    and not line.linked_section_line_id.show_section_line_amount
+                    else not line.show_section_line_amount
+                )
+            else:
+                line.is_linked_section_amount_hidden = not line.show_section_line_amount
+
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('combo_item_id')
@@ -1385,6 +1511,34 @@ class SaleOrderLine(models.Model):
             for l in self.invoice_lines
             if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
         )
+
+    def _get_grouped_section_summary(self):
+        """
+        Return a tax-wise summary of sale order lines linked to section.
+
+        Groups lines by their tax IDs and computes subtotal and total for each group.
+        """
+        self.ensure_one()
+
+        section_lines = self.order_id.order_line.filtered(
+            lambda l: l.linked_section_line_id == self,
+        )
+        result = []
+        for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
+            tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
+            subtotal = sum(l.price_subtotal for l in lines)
+
+            result.append({
+                'name': self.name,
+                'taxes': tax_labels,
+                'price_subtotal': subtotal,
+            })
+
+        return result or [{
+            'name': self.name,
+            'taxes': [],
+            'price_subtotal': 0.0,
+        }]
 
     #=== CORE METHODS OVERRIDES ===#
 

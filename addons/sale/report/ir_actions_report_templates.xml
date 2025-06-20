@@ -94,56 +94,105 @@
                 <tbody class="sale_tbody">
 
                     <t t-set="current_subtotal" t-value="0"/>
+                    <t t-set="show_section_details" t-value="true"/>
 
                     <t t-foreach="lines_to_report" t-as="line">
 
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
+                        <t
+                            t-if="line.display_type == 'line_section'"
+                            t-set="show_section_details"
+                            t-value="line.print_details"
+                        />
 
-                        <tr
-                            t-att-class="'fw-bold o_line_section' if (
-                                line.display_type == 'line_section'
+                        <t
+                            t-if="line.display_type != 'line_section'
                                 or line.product_type == 'combo'
-                            )
-                            else 'fst-italic o_line_note' if line.display_type == 'line_note'
-                            else ''"
+                                or show_section_details"
                         >
-                            <t t-if="not line.display_type and line.product_type != 'combo'">
-                                <td name="td_name"><span t-field="line.name">Bacon Burger</span></td>
-                                <td name="td_quantity" class="text-end text-nowrap">
-                                    <span t-field="line.product_uom_qty">3</span>
-                                    <span t-field="line.product_uom_id">units</span>
-                                    <span t-if="line.product_uom_id != line.product_id.uom_id" class="text-muted small">
-                                        <t t-set="quantity_in_product_uom" t-value="line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)"/>
-                                        <br/><span t-esc="quantity_in_product_uom" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="line.product_id.uom_id"/>
-                                    </span>
-                                </td>
-                                <td name="td_priceunit" class="text-end text-nowrap">
-                                    <span t-field="line.price_unit">3</span>
-                                </td>
-                                <td name="td_discount" t-if="display_discount" class="text-end">
-                                    <span t-field="line.discount">-</span>
-                                </td>
-                                <t t-set="taxes" t-value="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
-                                <td name="td_taxes" t-if="display_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
-                                    <span t-out="taxes">Tax 15%</span>
-                                </td>
-                                <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
-                                    <span t-field="line.price_subtotal">27.00</span>
-                                </td>
+                            <tr
+                                t-att-class="'fw-bold o_line_section' if (
+                                    line.display_type == 'line_section'
+                                    or line.product_type == 'combo'
+                                )
+                                else 'fst-italic o_line_note' if line.display_type == 'line_note'
+                                else ''"
+                            >
+                                <t
+                                    t-if="not line.display_type
+                                        and line.product_type != 'combo'
+                                        and show_section_details"
+                                >
+                                    <td name="td_name"><span t-field="line.name">Bacon Burger</span></td>
+                                    <td name="td_quantity" class="text-end text-nowrap">
+                                        <span t-field="line.product_uom_qty">3</span>
+                                        <span t-field="line.product_uom_id">units</span>
+                                        <span t-if="line.product_uom_id != line.product_id.uom_id" class="text-muted small">
+                                            <t t-set="quantity_in_product_uom" t-value="line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)"/>
+                                            <br/><span t-esc="quantity_in_product_uom" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="line.product_id.uom_id"/>
+                                        </span>
+                                    </td>
+                                    <td name="td_priceunit" class="text-end text-nowrap">
+                                        <span t-field="line.price_unit">3</span>
+                                    </td>
+                                    <td name="td_discount" t-if="display_discount" class="text-end">
+                                        <span t-field="line.discount">-</span>
+                                    </td>
+                                    <t t-set="taxes" t-value="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
+                                    <td name="td_taxes" t-if="display_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                        <span t-out="taxes">Tax 15%</span>
+                                    </td>
+                                    <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
+                                        <span t-field="line.price_subtotal">27.00</span>
+                                    </td>
+                                </t>
+                                <t t-elif="line.display_type == 'line_section' or line.product_type == 'combo'">
+                                    <td name="td_section_line" colspan="99">
+                                        <span t-field="line.name">A section title</span>
+                                    </td>
+                                    <t t-set="current_section" t-value="line"/>
+                                    <t t-set="current_subtotal" t-value="0"/>
+                                </t>
+                                <t t-elif="line.display_type == 'line_note' and show_section_details">
+                                    <td name="td_note_line" colspan="99">
+                                        <span t-field="line.name">A note, whose content usually applies to the section or product above.</span>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+
+                        <t t-else="">
+                            <t t-foreach="line._get_grouped_section_summary()" t-as="section_line">
+                                <tr class="o_line_section">
+                                    <td name="td_name">
+                                        <span t-out="section_line['name']">Section Summary</span>
+                                    </td>
+                                    <td name="td_quantity" class="text-end text-nowrap">
+                                        <span>1 Unit</span>
+                                    </td>
+                                    <td name="td_priceunit" class="text-end text-nowrap">
+                                        <span t-out="section_line['price_subtotal']"/>
+                                    </td>
+                                    <td name="td_discount" t-if="display_discount"/>
+                                    <td
+                                        name="td_taxes"
+                                        t-if="display_taxes"
+                                        t-attf-class="text-end {{ 'text-nowrap' if len(section_line['taxes']) &lt; 10 else '' }}"
+                                    >
+                                        <span t-out="', '.join(section_line['taxes'])">
+                                            Tax 15%
+                                        </span>
+                                    </td>
+                                    <td class="text-end o_price_total">
+                                        <span t-out="section_line['price_subtotal']">
+                                            31.05
+                                        </span>
+                                    </td>
+                                </tr>
                             </t>
-                            <t t-elif="line.display_type == 'line_section' or line.product_type == 'combo'">
-                                <td name="td_section_line" colspan="99">
-                                    <span t-field="line.name">A section title</span>
-                                </td>
-                                <t t-set="current_section" t-value="line"/>
-                                <t t-set="current_subtotal" t-value="0"/>
-                            </t>
-                            <t t-elif="line.display_type == 'line_note'">
-                                <td name="td_note_line" colspan="99">
-                                    <span t-field="line.name">A note, whose content usually applies to the section or product above.</span>
-                                </td>
-                            </t>
-                        </tr>
+                            <t t-set="current_section" t-value="line"/>
+                            <t t-set="current_subtotal" t-value="0"/>
+                        </t>
 
                         <t
                             t-if="current_section and (
@@ -154,7 +203,10 @@
                                     line.combo_item_id
                                     and not lines_to_report[line_index+1].combo_item_id
                                 )
-                            ) and not line.is_downpayment"
+                            )
+                            and not line.is_downpayment
+                            and show_section_details
+                            "
                         >
                             <t t-set="current_section" t-value="None"/>
                             <tr class="is-subtotal text-end">

@@ -37,6 +37,11 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
         return record.data.display_type === "line_section";
     }
 
+    isSubsection(record = null) {
+        record = record || this.props.record;
+        return record.data.display_type === "line_subsection";
+    }
+
     isNote(record = null) {
         record = record || this.props.record;
         return record.data.display_type === "line_note";
@@ -44,10 +49,11 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
 
     shouldShowWarning() {
         return (
-            !this.productName &&
-            this.props.show_label_warning &&
-            !this.isSection() &&
-            !this.isNote()
+            !this.productName
+            && this.props.show_label_warning
+            && !this.isSection()
+            && !this.isSubsection()
+            && !this.isNote()
         );
     }
 }

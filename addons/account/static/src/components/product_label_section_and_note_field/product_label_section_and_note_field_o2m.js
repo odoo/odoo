@@ -12,6 +12,7 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         super.setup();
         this.descriptionColumn = "name";
         this.productColumns = ["product_id", "product_template_id"];
+        this.sectionCols.push("price_total", "price_subtotal");
     }
 
     processAllColumn(allColumns, list) {
