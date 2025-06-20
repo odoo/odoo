@@ -14,6 +14,7 @@ import {
     click,
     getFixture,
     makeDeferred,
+    mockTimeout,
     mount,
     mouseEnter,
     nextTick,
@@ -816,6 +817,7 @@ QUnit.module("Components", ({ beforeEach }) => {
 
     QUnit.test("multi-level dropdown: keynav", async (assert) => {
         assert.expect(213);
+        const { execRegisteredTimeouts } = mockTimeout();
         class Parent extends Component {
             onItemSelected(value) {
                 assert.step(value);
@@ -893,6 +895,7 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         for (const [stepIndex, step] of scenarioSteps.entries()) {
             triggerHotkey(step.hotkey);
+            execRegisteredTimeouts();
             await nextTick();
             if (step.highlighted !== undefined) {
                 let index = 0;
