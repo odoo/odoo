@@ -9,6 +9,7 @@ from lxml import etree
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_der_x509_certificate
+from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -269,6 +270,11 @@ class AccountMove(models.Model):
             'total_amount': invoice_vals['vals']['monetary_total_vals']['tax_inclusive_amount'],
             'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
         }
+
+    def action_post(self):
+        if self.filtered(lambda move: move.country_code == "SA" and move.move_type in ('out_invoice', 'out_refund') and move.company_id != move.journal_id.company_id):
+            raise UserError(_("Please make sure that the invoice company matches the journal company on all invoices you wish to confirm"))
+        return super().action_post()
 
 
 class AccountMoveLine(models.Model):
