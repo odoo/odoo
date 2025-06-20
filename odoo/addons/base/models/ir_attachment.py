@@ -762,13 +762,12 @@ class IrAttachment(models.Model):
               file extension at the end of the filename unless the
               filename already had a valid extension.
         """
+        raw = file.read()  # load the entire file in memory :(
         if mimetype == 'TRUST':
             mimetype = file.content_type
             filename = file.filename
         elif mimetype == 'GUESS':
-            head = file.read(1024)
-            file.seek(-len(head), 1)  # rewind
-            mimetype = guess_mimetype(head)
+            mimetype = guess_mimetype(raw)
             filename = fix_filename_extension(file.filename, mimetype)
         elif all(mimetype.partition('/')):
             filename = fix_filename_extension(file.filename, mimetype)
@@ -778,7 +777,7 @@ class IrAttachment(models.Model):
         return self.create({
             'name': filename,
             'type': 'binary',
-            'raw': file.read(),  # load the entire file in memory :(
+            'raw': raw,
             'mimetype': mimetype,
             **vals,
         })
