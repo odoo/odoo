@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+from freezegun import freeze_time
 from psycopg2 import IntegrityError
 from unittest import skip
 from unittest.mock import patch
@@ -109,6 +111,28 @@ class TestUser(MailCommon):
         self.assertTrue(admin._is_portal())
         self.assertEqual(admin.notification_type, 'email')
         self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), admin.group_ids)
+
+    @freeze_time("2025-06-18 08:45:12")
+    def test_out_of_office(self):
+        """ Test Out-of-Office computation, defined on user itself. """
+        test_user = self.user_employee.with_user(self.user_employee)
+        now = datetime(2025, 6, 8, 8, 45, 12)
+        for ooo_from, ooo_to, exp_ooo in [
+            (False, False, False),
+            (now - timedelta(hours=1), False, False),  # invalid interval
+            (False, now + timedelta(hours=1), False),  # invalid interval
+            (now - timedelta(hours=1), now + timedelta(hours=1), True),
+            (now, now, True),
+            (now - timedelta(hours=4), now - timedelta(hours=2), False),  # past
+            (now + timedelta(hours=2), now + timedelta(hours=4), False),  # future
+        ]:
+            with self.subTest(ooo_from=ooo_from, ooo_to=ooo_to):
+                with self.mock_datetime_and_now(now):  # also mock cr.now()
+                    test_user.write({
+                        'out_of_office_from': ooo_from,
+                        'out_of_office_to': ooo_to,
+                    })
+                    self.assertEqual(test_user.is_out_of_office, exp_ooo)
 
     def test_web_create_users(self):
         src = [

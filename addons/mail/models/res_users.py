@@ -34,6 +34,11 @@ class ResUsers(models.Model):
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
     presence_ids = fields.One2many("mail.presence", "user_id", groups="base.group_system")
+    # OOO management
+    out_of_office_from = fields.Datetime()
+    out_of_office_to = fields.Datetime()
+    out_of_office_message = fields.Html('Vacation Responder')
+    is_out_of_office = fields.Boolean('Out of Office', compute='_compute_is_out_of_office')
     # sudo: res.users - can access presence of accessible user
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
 
@@ -64,6 +69,14 @@ class ResUsers(models.Model):
         new_portal_users.notification_type = 'email'
         new_portal_users.write({"group_ids": [Command.unlink(inbox_group_id)]})
 
+    @api.depends('out_of_office_from', 'out_of_office_to')
+    def _compute_is_out_of_office(self):
+        now = self.env.cr.now()
+        todo = self.filtered(lambda u: u.out_of_office_from and u.out_of_office_to and u._is_internal())
+        for user in todo:
+            user.is_out_of_office = (user.out_of_office_from <= now <= user.out_of_office_to)
+        (self - todo).is_out_of_office = False
+
     @api.depends("presence_ids.status")
     def _compute_im_status(self):
         for user in self:
@@ -87,13 +100,22 @@ class ResUsers(models.Model):
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + [
             "can_edit_role",
+            "is_out_of_office",
             "notification_type",
+            "out_of_office_from",
+            "out_of_office_message",
+            "out_of_office_to",
             "role_ids",
         ]
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['notification_type']
+        return super().SELF_WRITEABLE_FIELDS + [
+            "notification_type",
+            "out_of_office_from",
+            "out_of_office_message",
+            "out_of_office_to",
+        ]
 
     @api.model_create_multi
     def create(self, vals_list):
