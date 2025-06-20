@@ -27,7 +27,7 @@
         &.show {
             color: var(--btn-hover-color);
             background-color: var(--btn-hover-bg);
-            border-color: var(--o-hb-input-active-border, $o-we-sidebar-content-field-input-border-color);
+            border-color: var(--o-hb-btn-active-color, $o-we-color-accent);
         }
 
         > img {
@@ -48,24 +48,29 @@
     }
 }
 
+// These styles are common between BuilderSelect and Many2X builder components.
+// TODO: review the SelectMenu template to allow both light/dark backgrounds and
+// remove most '!important' needed here to override Bootstrap classes. See
+// implementations of Many2X builder components for examples.
 .o-hb-select-dropdown {
-    --select-bg: #{$o-we-bg-lighter};
+    --select-bg: #{$o-we-item-clickable-bg};
     --select-color: #{$o-we-fg-light};
-    --select-hover-bg: #{$o-we-bg-dark};
+    --select-hover-bg: #{$o-we-bg-lighter};
     --select-hover-color: #{$o-we-fg-lighter};
+    --border-color: #{$o-we-bg-darker};
 
     font-family: $o-we-font-family;
     font-size: $o-we-font-size;
-    border-color: $o-we-bg-darker;
-    background-color: var(--select-bg);
+    border-color: var(--border-color);
+    background-color: var(--select-bg) !important;
     padding: 0;
 
-    .o-hb-select-dropdown-item {
+    .dropdown-item {
         color: var(--select-color, $white);
         background-color: transparent !important;
         line-height: 2rem;
-        padding-block: 0;
-        border-bottom: $o-we-border-width solid $o-we-bg-darker;
+        padding-block: 0 !important;
+        border-bottom: $o-we-border-width solid var(--border-color);
 
         &:hover, &:focus-visible {
             background-color: var(--select-hover-bg) !important;
@@ -75,6 +80,10 @@
         &::before {
             color: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg) !important;
         }
+    }
+
+    .text-muted {
+        color: var(--select-color, $white) !important;
     }
 }
 
