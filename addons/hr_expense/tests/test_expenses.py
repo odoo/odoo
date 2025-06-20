@@ -1246,3 +1246,53 @@ class TestExpenses(TestExpenseCommon):
             {'balance': 4000.0, 'name': 'expense_employee: Test expense line', 'quantity': 5},
             {'balance': -4000.0, 'name': 'expense_employee: Test expense line', 'quantity': 1},
         ])
+
+    def test_expense_sheet_journal_id(self):
+        """
+        Ensure the journal_id is set to the one defined on the payment method line
+        when adding an expense line which uses the 'Company Account' payment method
+        and set back to the employee journal when using the 'Own Account' payment method.
+        """
+
+        expense_paid_by_company = self.env['hr.expense'].create({
+            'name': 'Company expense',
+            'payment_mode': 'company_account',
+            'total_amount_currency': 1000.00,
+            'employee_id': self.expense_employee.id,
+
+        })
+
+        expense_paid_by_employee = self.env['hr.expense'].create({
+            'name': 'Employee expense',
+            'payment_mode': 'own_account',
+            'total_amount_currency': 1000.00,
+            'employee_id': self.expense_employee.id,
+        })
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'expense_line_ids': [],
+        })
+
+        self.assertEqual(
+            expense_sheet.journal_id,
+            expense_sheet.employee_journal_id,
+            "The journal_id should be set to the employee journal when no expense line is set",
+        )
+
+        expense_sheet.expense_line_ids = expense_paid_by_company.ids
+
+        self.assertEqual(
+            expense_sheet.journal_id,
+            expense_sheet.payment_method_line_id.journal_id,
+            "The journal_id should be set to the one defined on the payment method line when using the 'Company Account' payment method",
+        )
+
+        expense_sheet.expense_line_ids = expense_paid_by_employee.ids
+
+        self.assertEqual(
+            expense_sheet.journal_id,
+            expense_sheet.employee_journal_id,
+            "The journal_id should be set back to the employee journal when using the 'Own Account' payment method",
+        )
