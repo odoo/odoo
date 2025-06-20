@@ -43,3 +43,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             self._make_request(f"{server_url}/api/l10n_it_edi/1/reactivate_user")
 
         self.active = not self.active
+
+    def _register_proxy_user(self, company, proxy_type, edi_mode):
+        if proxy_type == 'l10n_it_edi':
+            company = company._l10n_it_get_edi_company()
+        return super()._register_proxy_user(company, proxy_type, edi_mode)
