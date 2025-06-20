@@ -601,6 +601,57 @@ test("replace an image with a caption", async () => {
     });
 });
 
+test("edit caption after replacing image", async () => {
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
+    const env = await makeMockEnv();
+    await testEditor({
+        env,
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<figure>
+                <img src="/web/static/img/logo.png">
+                <figcaption>ab</figcaption>
+            </figure>
+            <h1>[]Heading</h1>`
+        ),
+        stepFunction: async (editor) => {
+            await click("img");
+            await waitFor(".o-we-toolbar button[name='replace_image']");
+            await click("button[name='replace_image']");
+            await waitFor(".o_select_media_dialog");
+            await click("img.o_we_attachment_highlight");
+            await animationFrame();
+            expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
+            expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
+            const input = queryOne("figure > figcaption > input");
+            await click(input);
+            expect(editor.document.activeElement).toBe(input);
+            await press("c");
+            expect(input.value).toBe("abc");
+            expect(editor.document.activeElement).toBe(input);
+            await click("img");
+            await animationFrame();
+        },
+        contentAfter: unformat(
+            `<p><br></p>
+            <figure>
+                [<img src="/web/static/img/logo2.png" alt="" data-attachment-id="1" class="img img-fluid o_we_custom_image">]
+                <figcaption>abc</figcaption>
+            </figure>
+            <h1>Heading</h1>`
+        ),
+    });
+});
+
 test("add a link to an image with a caption", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
