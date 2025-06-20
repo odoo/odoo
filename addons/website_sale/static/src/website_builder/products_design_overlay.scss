@@ -1,0 +1,16 @@
+.o_wsale_editor_overlay {
+    background: $o-we-bg-darker;
+    z-index: var(--zindex-offcanvas, 1045);
+
+    .o_customize_tab:has(&) {
+        position: relative;
+
+        .options-container:not(:has(&)) {
+            display: none;
+        }
+    }
+
+    .o_wsale_design_panel {
+        background-color: $o-we-bg-lighter;
+    }
+}

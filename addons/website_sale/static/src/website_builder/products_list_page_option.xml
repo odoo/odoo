@@ -60,23 +60,37 @@
         </BuilderSelect>
     </BuilderRow>
 
+    <!--
+    Should be into `ProductsDesignOverlayContent`.
+    Temporary moved here 'cause it requires reload. -->
+    <BuilderRow label.translate="Gap" level="1">
+        <BuilderRange
+            action="'setGap'"
+            min="0"
+            max="28"
+            unit="'px'"
+            displayRangeValue="true"/>
+    </BuilderRow>
 
-    <t t-call="website_sale.ProductsDesignOption">
+
+    <t t-call="website_sale.ProductsDesignSelector">
         <t t-set="level" t-value="1"/>
         <t t-set="showCatalogs" t-value="isActiveItem('grid_view_opt')"/>
         <t t-set="showLists" t-value="!isActiveItem('grid_view_opt')"/>
         <t t-set="showImgs" t-value="false"/>
-        <button class="btn o-hb-btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#o_wsale_editor_shop_design_overlay">
-            <i class="fa fa-cog"/>
+
+        <button class="btn o-hb-btn btn-primary flex-grow-0" t-on-click="openDesignOverlay">
+            <i class="fa fa-cog" role="presentation"/>
         </button>
     </t>
 
-    <t t-call="website_sale.ProductsDesignOverlay">
-        <t t-set="overlayId" t-value="'o_wsale_editor_shop_design_overlay'"/>
-        <t t-set="showCatalogs" t-value="isActiveItem('grid_view_opt')"/>
-        <t t-set="showLists" t-value="!isActiveItem('grid_view_opt')"/>
-        <t t-set="showImgs" t-value="true"/>
-    </t>
+    <ProductsDesignOverlay isVisible="state.overlayVisible">
+        <t t-call="website_sale.ProductsDesignOverlayContent">
+            <t t-set="showCatalogs" t-value="isActiveItem('grid_view_opt')"/>
+            <t t-set="showLists" t-value="!isActiveItem('grid_view_opt')"/>
+            <t t-set="showImgs" t-value="true"/>
+        </t>
+    </ProductsDesignOverlay>
 
     <BuilderRow label.translate="Categories" action="'websiteConfig'">
         <BuilderButton
@@ -175,7 +189,7 @@
     </BuilderRow>
 </t>
 
-<t t-name="website_sale.ProductsDesignOption">
+<t t-name="website_sale.ProductsDesignSelector">
     <BuilderRow label.translate="Style" level="level">
         <BuilderSelect action="'composite'">
             <t t-set="thumbnailsLabel">Thumbnails</t>
@@ -280,213 +294,194 @@
     </BuilderRow>
 </t>
 
-<t t-name="website_sale.ProductsDesignOverlay">
-    <div
-        t-att-id="overlayId"
-        class="o_wsale_editor_overlay offcanvas offcanvas-end position-absolute pb-4"
-        data-bs-backdrop="true"
-        tabindex="-1"
-        aria-label="Products Design"
+<t t-name="website_sale.ProductsDesignOverlayContent">
+    <t t-call="website_sale.ProductsDesignSelector"/>
+
+    <!-- Designs Map -->
+    <t t-set="anyThumb" t-value="this.isActiveItem('wsale_design_thumbs_catalog') || this.isActiveItem('wsale_design_thumbs_list')"/>
+    <t t-set="anyCard" t-value="this.isActiveItem('wsale_design_cards_catalog') || this.isActiveItem('wsale_design_cards_list')"/>
+    <t t-set="catalogThumb" t-value="this.isActiveItem('wsale_design_thumbs_catalog')"/>
+    <t t-set="catalogChips" t-value="this.isActiveItem('wsale_design_thumbs_chips')"/>
+    <BuilderRow
+        label.translate="Hover Effect"
+        t-if="anyThumb || anyCard || catalogThumb || catalogChips"
         >
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">
+                None
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="anyThumb"
+                classAction="'o_wsale_products_opt_hover_background'"
+                >
+                Background
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="anyThumb"
+                classAction="'o_wsale_products_opt_hover_background o_wsale_products_opt_hover_background_zoom'"
+                >
+                Background Zoom
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="anyCard"
+                classAction="'o_wsale_products_opt_hover_shadow_out'"
+                >
+                Shadow-Out
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="anyCard"
+                classAction="'o_wsale_products_opt_hover_shadow_in'"
+                >
+                Shadow-In
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="anyCard || catalogChips"
+                classAction="'o_wsale_products_opt_hover_border_primary'"
+                >
+                Border-Primary
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="catalogThumb || catalogChips"
+                classAction="'o_wsale_products_opt_hover_background_rainbow'"
+                >
+                Rainbow
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
 
-        <div class="options-container-header d-flex align-items-center justify-content-between">
-            <div class="options-container-label flex-grow-1 ps-2 py-2">
-                <button type="button" class="btn btn-lg btn-accent-color-hover" data-bs-dismiss="offcanvas" aria-label="Close">
-                    <i class="oi oi-chevron-left"/>
-                </button>
-                Products Design
-            </div>
-        </div>
+    <div class="ps-2 pt-2 pb-1 fw-bold">Text</div>
+    <hr class="mx-2 mt-0 mb-2"/>
 
-        <t t-call="website_sale.ProductsDesignOption"/>
+    <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Text Align">
+        <BuilderButtonGroup>
+            <BuilderButton classAction="''">
+                Regular
+            </BuilderButton>
+            <BuilderButton classAction="'o_wsale_products_opt_text_align_center'">
+                Center
+            </BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
 
-        <BuilderRow label.translate="Gap">
-            <BuilderRange
-                action="'setGap'"
-                min="0"
-                max="28"
-                unit="'px'"
-                displayRangeValue="true"/>
-        </BuilderRow>
+    <BuilderRow label.translate="Title color">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">
+                Link Color
+            </BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_wsale_products_opt_name_color_regular'">
+                Default Color
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
 
-        <BuilderRow label.translate="Hover Effect">
-            <BuilderSelect>
-                <BuilderSelectItem classAction="''">
-                    None
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    t-if="this.isActiveItem('wsale_design_thumbs_catalog') || this.isActiveItem('wsale_design_thumbs_list')"
-                    classAction="'o_wsale_products_opt_hover_background'"
-                    >
-                    Background
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    t-if="this.isActiveItem('wsale_design_thumbs_catalog') || this.isActiveItem('wsale_design_thumbs_list')"
-                    classAction="'o_wsale_products_opt_hover_background o_wsale_products_opt_hover_background_zoom'"
-                    >
-                    Background Zoom
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    t-if="this.isActiveItem('wsale_design_cards_catalog') || this.isActiveItem('wsale_design_cards_list')"
-                    classAction="'o_wsale_products_opt_hover_shadow_out'"
-                    >
-                    Shadow-Out
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    t-if="this.isActiveItem('wsale_design_cards_catalog') || this.isActiveItem('wsale_design_cards_list')"
-                    classAction="'o_wsale_products_opt_hover_shadow_in'"
-                    >
-                    Shadow-In
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    t-if="this.isActiveItem('wsale_design_cards_catalog') || this.isActiveItem('wsale_design_cards_list') || this.isActiveItem('wsale_design_chips_catalog')"
-                    classAction="'o_wsale_products_opt_hover_border_primary'"
-                    >
-                    Border-Primary
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    t-if="this.isActiveItem('wsale_design_thumbs_catalog') || this.isActiveItem('wsale_design_chips_catalog')"
-                    classAction="'o_wsale_products_opt_hover_background_rainbow'"
-                    >
-                    Rainbow
-                </BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
+    <BuilderRow label.translate="Description">
+        <BuilderCheckbox
+            classAction="'o_wsale_products_opt_has_description'"
+            action="'websiteConfig'"
+            actionParam="{
+                views: [
+                    'website_sale.products_description',
+                    'website_sale.products_description_class'
+                ]
+            }"
+        />
+    </BuilderRow>
 
-        <div class="ps-2 pt-2 pb-1 fw-bold">Text</div>
-        <hr class="mx-2 mt-0 mb-2"/>
+    <div class="ps-2 pt-2 pb-1 fw-bold">Images</div>
+    <hr class="mx-2 mt-0 mb-2"/>
 
-        <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Text Align">
-            <BuilderButtonGroup>
-                <BuilderButton classAction="''">
-                    Regular
-                </BuilderButton>
-                <BuilderButton classAction="'o_wsale_products_opt_text_align_center'">
-                    Center
-                </BuilderButton>
-            </BuilderButtonGroup>
-        </BuilderRow>
+    <BuilderRow label.translate="Hover Effect">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">
+                None
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                classAction="'o_wsale_products_opt_img_hover_zoom_in'"
+                >
+                Zoom-In
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                classAction="'o_wsale_products_opt_img_hover_zoom_in_light'"
+                >
+                Zoom-In Light
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                classAction="'o_wsale_products_opt_img_hover_zoom_out'"
+                >
+                Zoom-Out
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                classAction="'o_wsale_products_opt_img_hover_zoom_out_light'"
+                >
+                Zoom-Out Light
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                t-if="this.isActiveItem('wsale_design_thumbs_catalog')"
+                classAction="'o_wsale_products_opt_img_hover_shadow'"
+                >
+                Image Shadow
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
 
-        <BuilderRow label.translate="Title color">
-            <BuilderSelect>
-                <BuilderSelectItem classAction="''">
-                    Link Color
-                </BuilderSelectItem>
-                <BuilderSelectItem classAction="'o_wsale_products_opt_name_color_regular'">
-                    Default Color
-                </BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
+    <BuilderRow label.translate="Images Size">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem classAction="'o_wsale_context_thumb_4_3'" actionParam="{views: ['website_sale.products_thumb_4_3']}">Landscape (4/3)</BuilderSelectItem>
+            <BuilderSelectItem classAction="''" actionParam="{views: []}">Default (1/1)</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_wsale_context_thumb_4_5'" actionParam="{views: ['website_sale.products_thumb_4_5']}">Portrait (4/5)</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_wsale_context_thumb_2_3'" actionParam="{views: ['website_sale.products_thumb_2_3']}">Vertical (2/3)</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
 
-        <BuilderRow label.translate="Description">
-            <BuilderCheckbox
-                classAction="'o_wsale_products_opt_has_description'"
-                action="'websiteConfig'"
-                actionParam="{
-                    views: [
-                        'website_sale.products_description',
-                        'website_sale.products_description_class'
-                    ]
-                }"
-            />
-        </BuilderRow>
-
-        <div class="ps-2 pt-2 pb-1 fw-bold">Images</div>
-        <hr class="mx-2 mt-0 mb-2"/>
-
-        <BuilderRow label.translate="Hover Effect">
-            <BuilderSelect>
-                <BuilderSelectItem classAction="''">
-                    None
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    classAction="'o_wsale_products_opt_img_hover_zoom_in'"
-                    >
-                    Zoom-In
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    classAction="'o_wsale_products_opt_img_hover_zoom_in_light'"
-                    >
-                    Zoom-In Light
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    classAction="'o_wsale_products_opt_img_hover_zoom_out'"
-                    >
-                    Zoom-Out
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    classAction="'o_wsale_products_opt_img_hover_zoom_out_light'"
-                    >
-                    Zoom-Out Light
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    t-if="this.isActiveItem('wsale_design_thumbs_catalog')"
-                    classAction="'o_wsale_products_opt_img_hover_shadow'"
-                    >
-                    Image Shadow
-                </BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-
-        <BuilderRow label.translate="Images Size">
-            <BuilderSelect action="'websiteConfig'">
-                <BuilderSelectItem classAction="'o_wsale_context_thumb_4_3'" actionParam="{views: ['website_sale.products_thumb_4_3']}">Landscape (4/3)</BuilderSelectItem>
-                <BuilderSelectItem classAction="''" actionParam="{views: []}">Default (1/1)</BuilderSelectItem>
-                <BuilderSelectItem classAction="'o_wsale_context_thumb_4_5'" actionParam="{views: ['website_sale.products_thumb_4_5']}">Portrait (4/5)</BuilderSelectItem>
-                <BuilderSelectItem classAction="'o_wsale_context_thumb_2_3'" actionParam="{views: ['website_sale.products_thumb_2_3']}">Vertical (2/3)</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-
-        <BuilderRow label.translate="Images Fill">
-            <BuilderButtonGroup action="'websiteConfig'">
-                <BuilderButton
-                        title.translate="Contain within the box"
-                        classAction="''"
-                        actionParam="{views: []}"
-                        iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
-                />
-                <BuilderButton
-                        title.translate="Always Fill the box"
-                        id="'thumb_cover'"
-                        classAction="'o_wsale_context_thumb_cover'"
-                        actionParam="{views: ['website_sale.products_thumb_cover']}"
-                        iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
-                />
-            </BuilderButtonGroup>
-        </BuilderRow>
-
-        <BuilderRow label.translate="Actions">
+    <BuilderRow label.translate="Images Fill">
+        <BuilderButtonGroup action="'websiteConfig'">
             <BuilderButton
-                classAction="'o_wsale_products_opt_has_cta'"
-                title.translate="Add to Cart"
-                icon="'fa-shopping-cart'"
-                action="'websiteConfig'"
-                actionParam="{
-                    views: [
-                        'website_sale.products_add_to_cart',
-                        'website_sale.products_add_to_cart_class'
-                    ]
-                }"
-                id="'button_add_to_cart_opt'"
+                    title.translate="Contain within the box"
+                    classAction="''"
+                    actionParam="{views: []}"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
             />
-            <div class="flex-basis-100"/>
-        </BuilderRow>
+            <BuilderButton
+                    title.translate="Always Fill the box"
+                    id="'thumb_cover'"
+                    classAction="'o_wsale_context_thumb_cover'"
+                    actionParam="{views: ['website_sale.products_thumb_cover']}"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
+            />
+        </BuilderButtonGroup>
+    </BuilderRow>
 
-        <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Show" level="2">
-            <BuilderSelect action="'websiteConfig'">
-                <BuilderSelectItem classAction="''" actionParam="{views: []}">
-                    Inline
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    classAction="'o_wsale_products_opt_actions_onhover'"
-                    actionParam="{views: ['website_sale.products_opt_actions_hover']}"
-                    >
-                    On Hover
-                </BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
+    <BuilderRow label.translate="Actions">
+        <BuilderButton
+            classAction="'o_wsale_products_opt_has_cta'"
+            title.translate="Add to Cart"
+            icon="'fa-shopping-cart'"
+            action="'websiteConfig'"
+            actionParam="{
+                views: [
+                    'website_sale.products_add_to_cart',
+                    'website_sale.products_add_to_cart_class'
+                ]
+            }"
+            id="'button_add_to_cart_opt'"
+        />
+        <div class="flex-basis-100"/>
+    </BuilderRow>
 
-    </div>
+    <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Show" level="2">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem classAction="''" actionParam="{views: []}">
+                Inline
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                classAction="'o_wsale_products_opt_actions_onhover'"
+                actionParam="{views: ['website_sale.products_opt_actions_hover']}"
+                >
+                On Hover
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
 </t>
+
 
 </templates>
