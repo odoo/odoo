@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="minimal_layout" inherit_id="web.minimal_layout">
+        <xpath expr="//script[@t-if='subst']" position="replace">
+            <script t-if="subst">
+                function subst() {
+                    var vars = {};
+                    var x = document.location.search.substring(1).split('&amp;');
+                    for (var i in x) {
+                        var z = x[i].split('=', 2);
+                        vars[z[0]] = unescape(z[1]);
+                    }
+                    var x = ['sitepage', 'sitepages', 'section', 'subsection', 'subsubsection'];
+                    var z = {'sitepage': 'page', 'sitepages': 'topage'};
+                    for (var i in x) {
+                        var y = document.getElementsByClassName(z[x[i]] || x[i])
+                        for (var j=0; j&lt;y.length; ++j)
+                            y[j].textContent = vars[x[i]];
+                    }
+
+                    var index = vars['webpage'].split('.', 4)[3];
+                    var header = document.getElementById('minimal_layout_report_headers');
+                    if(header){
+                        var companyHeader = header.children[index];
+                        header.textContent = '';
+                        header.appendChild(companyHeader);
+                    }
+                    var footer = document.getElementById('minimal_layout_report_footers');
+                    if(footer){
+                        var companyFooter = footer.children[index];
+                        footer.textContent = '';
+                        footer.appendChild(companyFooter);
+                    }
+
+                    var reportId = document.body.getAttribute("data-report-id");
+                    if (reportId === 'l10n_ph.action_report_disbursement_voucher'){
+                        var operations = {
+                            'last-page': function (elt) {
+                                elt.style.display = (vars.sitepage === vars.sitepages) ? "inherit" : "none";
+                            },
+                        };
+                        for (var klass in operations) {
+                            var y = document.getElementsByClassName(klass);
+                            for (var j=0; j&lt;y.length; ++j){
+                                operations[klass](y[j]);
+                            }
+                        }
+                    }
+                }
+            </script>
+        </xpath>
+    </template>
+
+    <template id="report_disbursement_voucher_document_footer">
+        <div class="last-page">
+            <div class="row">
+                <div class="col-8">
+                    Prepared By: <span t-out="user.name"/>
+                </div>
+                <div class="col-4">
+                    Received Date: <span style="display: inline-block; border-bottom: 1px solid #000; min-width: 150px;"/>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-8">
+                    Received By:
+                </div>
+                <div class="col-4">
+                    Approved By:
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="before">
+            <t t-if="is_disbursement_voucher">
+                <t t-call="l10n_ph.report_disbursement_voucher_document_footer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template inherit_id="account.report_payment_receipt_document" id="report_disbursement_voucher_document">
+        <xpath expr="//h3[strong/span[@t-field='o.payment_receipt_title']]" position="replace">
+            <t t-if="is_disbursement_voucher">
+                <h3><strong>Disbursement Voucher: <span t-field="o.name"/></strong></h3>
+            </t>
+            <t t-else="">
+                <h3><strong><span t-field="o.payment_receipt_title">Payment Receipt</span>: <span t-field="o.name"/></strong></h3>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[hasclass('row')][div[hasclass('col-6')][@t-if='o.memo']]" position="after">
+            <t t-if="is_disbursement_voucher">
+                <div class="row">
+                    <div class="col-6 offset-6" t-if="o.check_number">
+                        Check Number: <span t-field="o.check_number"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[table[@name='invoices']]" position="after">
+            <t t-if="is_disbursement_voucher">
+                <table name="journal_entries"
+                    t-if="o.move_id and o.move_id.move_type == 'entry'"
+                    class="table table-borderless"
+                    style="page-break-inside: avoid;">
+                    <thead>
+                        <tr>
+                            <th class="col-8"><span>Account</span></th>
+                            <th class="text-end col-2"><span>Debit</span></th>
+                            <th class="text-end col-2"><span>Credit</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="o.move_id.line_ids" t-as="line">
+                        <tr>
+                            <td><span t-field="line.account_id.name"/></td>
+                            <td class="text-end">
+                                <span t-field="line.debit" t-options="{'widget': 'monetary', 'display_currency': line.company_currency_id}"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="line.credit" t-options="{'widget': 'monetary', 'display_currency': line.company_currency_id}"/>
+                            </td>
+                        </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="report_disbursement_voucher">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="is_disbursement_voucher" t-value="True"/>
+                <t t-set="lang" t-value="o.partner_id.lang or o.company_id.partner_id.lang"/>
+                <t t-call="l10n_ph.report_disbursement_voucher_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>
