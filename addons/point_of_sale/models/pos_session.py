@@ -3,12 +3,15 @@ from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby, starmap
 from markupsafe import Markup
+import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_is_zero, float_compare, frozendict, plaintext2html, split_every
 from odoo.tools.constants import PREFETCH_MAX
+
+_logger = logging.getLogger(__name__)
 
 
 class PosSession(models.Model):
@@ -161,8 +164,9 @@ class PosSession(models.Model):
 
             try:
                 response[model] = self.env[model]._load_pos_data_search_read(response, self.config_id)
-            except AccessError:
+            except AccessError as e:
                 response[model] = []
+                _logger.info("Could not load model %s due to AccessError: %s", model, e)
 
         return response
 
