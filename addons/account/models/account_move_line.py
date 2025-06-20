@@ -83,7 +83,7 @@ class AccountMoveLine(models.Model):
     )
     is_storno = fields.Boolean(
         string="Company Storno Accounting",
-        related='move_id.is_storno',
+        compute='_compute_is_storno', store=True, readonly=False, copy=False,
         help="Utility field to express whether the journal item is subject to storno accounting",
     )
     sequence = fields.Integer(compute='_compute_sequence', store=True, readonly=False, precompute=True)
@@ -118,6 +118,10 @@ class AccountMoveLine(models.Model):
         string='Credit',
         compute='_compute_debit_credit', inverse='_inverse_credit', store=True, precompute=True,
         currency_field='company_currency_id',
+    )
+    expected_amount = fields.Monetary(
+        currency_field='company_currency_id',
+        default=0.0,
     )
     balance = fields.Monetary(
         string='Balance',
@@ -635,6 +639,13 @@ class AccountMoveLine(models.Model):
                 else:
                     line.account_id = line.move_id.journal_id.default_account_id
 
+    @api.depends('balance', 'move_id.is_storno')
+    def _compute_is_storno(self):
+        for line in self:
+            line.is_storno = line.is_storno or line.move_id.is_storno
+            if hasattr(line, 'is_downpayment') and line.is_downpayment:
+                line.is_storno = line.company_id.account_storno and line.balance > 0.0
+
     @api.depends('move_id')
     def _compute_balance(self):
         for line in self:
@@ -663,6 +674,14 @@ class AccountMoveLine(models.Model):
             else:
                 line.debit = line.balance if line.balance < 0.0 else 0.0
                 line.credit = -line.balance if line.balance > 0.0 else 0.0
+
+            if line.company_id.account_storno and line.expected_amount:
+                if line.debit and not line.credit and line.debit == -line.expected_amount:
+                    line.debit = 0.0
+                    line.credit = line.expected_amount
+                elif line.credit and not line.debit and line.credit == -line.expected_amount:
+                    line.debit = line.expected_amount
+                    line.credit = 0.0
 
     @api.depends('currency_id', 'company_id', 'move_id.invoice_currency_rate', 'move_id.date')
     def _compute_currency_rate(self):
@@ -1205,6 +1224,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.debit:
                 line.credit = 0
+            line.expected_amount = line.debit
             line.balance = line.debit - line.credit
 
     @api.onchange('credit')
@@ -1212,6 +1232,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.credit:
                 line.debit = 0
+            line.expected_amount = line.credit
             line.balance = line.debit - line.credit
 
     def _inverse_analytic_distribution(self):
@@ -1454,11 +1475,11 @@ class AccountMoveLine(models.Model):
     def _sanitize_vals(self, vals):
         if 'debit' in vals or 'credit' in vals:
             vals = vals.copy()
-            if 'balance' in vals:
-                vals.pop('debit', None)
-                vals.pop('credit', None)
-            else:
-                vals['balance'] = vals.pop('debit', 0) - vals.pop('credit', 0)
+            debit = vals.pop('debit', 0)
+            credit = vals.pop('credit', 0)
+            vals['expected_amount'] = debit if debit else credit
+            if 'balance' not in vals:
+                vals['balance'] = debit - credit
         if (
             vals.get('matching_number')
             and not vals['matching_number'].startswith('I')

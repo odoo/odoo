@@ -501,12 +501,15 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'move_type': 'entry',
             'date': fields.Date.from_string('2021-01-01'),
             'line_ids': [
-                (0, None, self.entry_line_vals_1),
-                (0, None, self.entry_line_vals_2),
-            ]
+                Command.create(self.entry_line_vals_1),
+                Command.create(self.entry_line_vals_2),
+            ],
         })
         move.action_post()
+        self.assertEqual(move.amount_total_signed, 500.0)
+        self.assertEqual(move.amount_total_in_currency_signed, 500.0)
 
+        # Reversal of the move should create a new move with negative amounts
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=move.ids).create({
             'date': fields.Date.from_string('2021-02-01'),
             'journal_id': move.journal_id.id,
@@ -516,28 +519,120 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertRecordValues(reversed_move.line_ids, [
             {
                 **self.entry_line_vals_1,
-                'debit': 0.0,
-                'credit': 500.0,
-            }, {
-                **self.entry_line_vals_2,
-                'debit': 500.0,
-                'credit': 0.0,
-            }
-        ])
-
-        reversed_move.is_storno = True
-
-        self.assertRecordValues(reversed_move.line_ids, [
-            {
-                **self.entry_line_vals_1,
                 'debit': -500.0,
                 'credit': 0.0,
             }, {
                 **self.entry_line_vals_2,
                 'debit': 0.0,
                 'credit': -500.0,
-            }
+            },
         ])
+        self.assertEqual(reversed_move.amount_total_signed, -500.0)
+        self.assertEqual(reversed_move.amount_total_in_currency_signed, -500.0)
+
+        # Reversing the reversal should create a new move with positive amounts
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=reversed_move.ids).create({
+            'date': fields.Date.from_string('2021-03-01'),
+            'journal_id': reversed_move.journal_id.id,
+        })
+        reversal = move_reversal.refund_moves()
+        reversed_move_2 = self.env['account.move'].browse(reversal['res_id'])
+        self.assertRecordValues(reversed_move_2.line_ids, [
+            {
+                **self.entry_line_vals_1,
+                'debit': 500.0,
+                'credit': 0.0,
+            }, {
+                **self.entry_line_vals_2,
+                'debit': 0.0,
+                'credit': 500.0,
+            },
+        ])
+        self.assertEqual(reversed_move_2.amount_total_signed, 500.0)
+        self.assertEqual(reversed_move_2.amount_total_in_currency_signed, 500.0)
+
+    def test_manual_entries_storno(self):
+        # Test creating manual entries with negative amounts
+        # while Storno disabled/enabled and reversing them
+
+        line_1 = {
+            'name': 'Line 1',
+            'account_id': self.company_data['default_account_revenue'].id,
+            'debit': 0.0,
+            'credit': -1000.0,
+        }
+        line_2 = {
+            'name': 'Line 2',
+            'account_id': self.company_data['default_account_expense'].id,
+            'debit': -1000.0,
+            'credit': 0.0,
+        }
+
+        def manual_entry(is_storno, normal_assert_vals, reverse_assert_vals):
+            """Helper function to create a manual entry and check its reversal."""
+            self.env.company.account_storno = is_storno
+            move = self.env['account.move'].create({
+                'move_type': 'entry',
+                'partner_id': self.partner_a.id,
+                'date': fields.Date.from_string('2025-01-01'),
+                'currency_id': self.other_currency.id,
+                'line_ids': [
+                    Command.create({**line_1, 'expected_amount': -1000.0}),
+                    Command.create({**line_2, 'expected_amount': -1000.0}),
+                ],
+            })
+            move.action_post()
+            self.assertRecordValues(move.line_ids, normal_assert_vals)
+            self.assertEqual(move.amount_total, -1000.0 if is_storno else 1000.0)
+            self.assertEqual(move.amount_total_signed, -1000.0 if is_storno else 1000.0)
+            self.assertEqual(move.amount_total_in_currency_signed, -1000.0 if is_storno else 1000.0)
+
+            move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=move.ids).create({
+                'date': fields.Date.from_string('2025-01-01'),
+                'journal_id': move.journal_id.id,
+            })
+            reversal = move_reversal.refund_moves()
+            reversed_move = self.env['account.move'].browse(reversal['res_id'])
+            self.assertRecordValues(reversed_move.line_ids, reverse_assert_vals)
+            self.assertEqual(reversed_move.amount_total, 1000.0)
+            self.assertEqual(reversed_move.amount_total_signed, 1000.0)
+            self.assertEqual(reversed_move.amount_total_in_currency_signed, 1000.0)
+
+        # While Storno disabled
+        manual_entry(False,
+            normal_assert_vals=[{
+                    **line_1,
+                    'debit': 1000.0,
+                    'credit': 0.0,
+                }, {
+                    **line_2,
+                    'debit': 0.0,
+                    'credit': 1000.0,
+            }],
+            reverse_assert_vals=[{
+                    **line_1,
+                    'debit': 0.0,
+                    'credit': 1000.0,
+                }, {
+                    **line_2,
+                    'debit': 1000.0,
+                    'credit': 0.0,
+            }]
+        )
+
+        # While Storno enabled
+        manual_entry(True,
+            normal_assert_vals=[line_1, line_2],
+            reverse_assert_vals=[{
+                    **line_1,
+                    'debit': 0.0,
+                    'credit': 1000.0,
+                }, {
+                    **line_2,
+                    'debit': 1000.0,
+                    'credit': 0.0,
+            }]
+        )
 
     def test_invoice_like_entry_reverse_caba(self):
         tax_waiting_account = self.env['account.account'].create({
