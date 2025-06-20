@@ -4672,7 +4672,26 @@ class TestComputeSudo(TransactionCaseWithUserDemo):
         self.assertEqual(record.with_user(self.user_demo).name_for_uid, self.user_demo.name)
 
 
-class test_shared_cache(TransactionCaseWithUserDemo):
+class TestFlush(TransactionCase):
+    def test_flush_public(self):
+        env = self.env(user=self.env.ref('base.public_user'))
+        self.assertFalse(env.su)
+        env.transaction.default_env = env
+        self.env = env
+
+        root = self.env.ref('base.user_root')
+        discussion1, discussion2 = env['test_new_api.discussion'].sudo().create([
+            {'name': name, 'participants': [(4, root.id), (4, env.uid)]} for name in ('a', 'b')])
+        discussion2.attributes_definition = [{'name': 'test', 'type': 'char'}]
+        message = env['test_new_api.message'].sudo().create({})
+        env.invalidate_all()  # so that we don't have the definition anymore
+        message.discussion = discussion1
+        env.invalidate_all()
+        message.discussion = discussion2
+        env.invalidate_all()
+
+
+class TestSharedCache(TransactionCaseWithUserDemo):
     def test_shared_cache_computed_field(self):
         # Test case: Check that the shared cache is not used if a compute_sudo stored field
         # is computed IF there is an ir.rule defined on this specific model.
