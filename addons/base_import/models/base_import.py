@@ -578,7 +578,7 @@ class Base_ImportImport(models.TransientModel):
             if bom and csv_data.startswith(bom):
                 encoding = options['encoding'] = encoding[:-2]
 
-        csv_text = csv_data.decode(encoding)
+        csv_text = csv_data.decode(encoding, errors='replace')
 
         separator = options.get('separator')
         if not separator:
