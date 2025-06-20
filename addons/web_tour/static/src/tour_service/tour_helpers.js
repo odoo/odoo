@@ -1,6 +1,4 @@
 import * as hoot from "@odoo/hoot-dom";
-import { waitForStable } from "@web/core/macro";
-
 export class TourHelpers {
     /**
      * @typedef {string|Node} Selector
@@ -300,8 +298,6 @@ export class TourHelpers {
     async goToUrl(url) {
         const linkEl = document.createElement("a");
         linkEl.href = url;
-        //We want DOM is stable before quit it.
-        await waitForStable();
         await hoot.click(linkEl);
     }
 
