@@ -195,13 +195,12 @@ class EventEvent(models.Model):
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
     # questions
-    question_ids = fields.One2many(
-        'event.question', 'event_id', 'Questions', copy=True,
-        compute='_compute_question_ids', readonly=False, store=True, precompute=True)
-    general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
-                                           domain=[('once_per_order', '=', True)])
-    specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
-                                            domain=[('once_per_order', '=', False)])
+    question_ids = fields.Many2many('event.question', 'event_event_event_question_rel',
+        string='Questions', compute='_compute_question_ids', readonly=False, store=True, precompute=True)
+    general_question_ids = fields.Many2many('event.question', 'event_event_event_question_rel',
+        string='General Questions', domain=[('once_per_order', '=', True)])
+    specific_question_ids = fields.Many2many('event.question', 'event_event_event_question_rel',
+        string='Specific Questions', domain=[('once_per_order', '=', False)])
 
     def _compute_use_barcode(self):
         use_barcode = self.env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'
@@ -221,18 +220,18 @@ class EventEvent(models.Model):
 
         When synchronizing questions:
 
-          * lines with no registered answers are removed;
+          * lines with no registered answers for the event are removed;
           * type lines are added;
         """
-        if self._origin.question_ids:
-            # lines to keep: those with already given answers
-            questions_tokeep_ids = self.env['event.registration.answer'].search(
-                [('question_id', 'in', self._origin.question_ids.ids)]
-            ).question_id.ids
-        else:
-            questions_tokeep_ids = []
         for event in self:
-            if not event.event_type_id and not event.question_ids:
+            questions_tokeep_ids = []
+            if self._origin.question_ids:
+                # Keep questions with attendee answers for the event.
+                questions_tokeep_ids.extend(
+                    (event.registration_ids.registration_answer_ids.question_id & self._origin.question_ids).ids
+                )
+
+            if not event.event_type_id and not questions_tokeep_ids:
                 event.question_ids = self._default_question_ids()
                 continue
 
@@ -243,11 +242,7 @@ class EventEvent(models.Model):
             else:
                 command = [(5, 0)]
             event.question_ids = command
-
-            # copy questions so changes in the event don't affect the event type
-            event.question_ids += event.event_type_id.question_ids.copy({
-                'event_type_id': False,
-            })
+            event.question_ids = [Command.link(question_id.id) for question_id in event.event_type_id.question_ids]
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
