@@ -19,7 +19,7 @@ import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useChildRef, useService, useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { redirect } from "@web/core/utils/urls";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
@@ -29,12 +29,13 @@ import { isHTTPSorNakedDomainRedirection } from "./utils";
 import { WebsiteSystrayItem } from "./website_systray_item";
 import { renderToElement } from "@web/core/utils/render";
 import { isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
+import { CreatePageMessage } from "./create_page_message";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 
 export class WebsiteBuilder extends Component {
     static template = "website.WebsiteBuilder";
-    static components = { LazyComponent, LocalOverlayContainer, ResizablePanel, ResourceEditor };
+    static components = { LazyComponent, LocalOverlayContainer, ResizablePanel, ResourceEditor, CreatePageMessage };
     static props = { ...standardActionServiceProps };
 
     setup() {
@@ -52,11 +53,17 @@ export class WebsiteBuilder extends Component {
         useSubEnv({
             builderRef: useRef("container"),
         });
-        this.state = useState({ isEditing: false, showSidebar: true, key: 1 });
+        this.state = useState({ isEditing: false, showSidebar: true, key: 1, is404: false });
         this.websiteContext = useState(this.websiteService.context);
         this.component = useComponent();
 
         this.onKeydownRefresh = this._onKeydownRefresh.bind(this);
+
+        useBus(
+            websiteSystrayRegistry,
+            "CONTENT-UPDATED",
+            () => (this.state.is404 = this.websiteService.is404)
+        );
 
         onMounted(() => {
             // You can't wait for rendering because the Builder depends on the
