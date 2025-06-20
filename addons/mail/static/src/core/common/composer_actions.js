@@ -46,7 +46,8 @@ composerActionsRegistry
             return "";
         },
         condition: (component) =>
-            !component.env.inChatter && (!component.props.composer.message || component.ui.isSmall),
+            (component.ui.isSmall && component.props.composer.message) ||
+            (!component.env.inChatter && !component.props.composer.message),
         disabledCondition: (component) => component.isSendButtonDisabled,
         icon: "fa fa-paper-plane-o",
         name(component) {
