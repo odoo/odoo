@@ -29,7 +29,7 @@ export class TimeOffCalendarController extends CalendarController {
 
     newTimeOffRequest() {
         const context = {};
-        if (this.props.context.active_id) {
+        if (this.props.context.active_id && this.props.context.active_model === 'hr.employee') {
             context["default_employee_id"] = this.props.context.active_id;
         }
         else if (this.employeeId) {

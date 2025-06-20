@@ -40,7 +40,10 @@ export class TimeOffCalendarModel extends CalendarModel {
 
     makeContextDefaults(record) {
         const context = super.makeContextDefaults(record);
-        const default_employee_id = context.active_id || this.employeeId
+        let default_employee_id = this.employeeId;
+        if(context['active_model'] === 'hr.employee') {
+            default_employee_id = context.active_id
+        }
         if (default_employee_id) {
             context["default_employee_id"] = default_employee_id
         }
