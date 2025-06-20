@@ -31,15 +31,16 @@ export class ModelSelector extends Component {
             }
 
             this.models = this.models.map((record) => ({
-                cssClass: `o_model_selector_${record.model}`,
+                cssClass: `o_model_selector_${record.model.replaceAll(".", "_")}`,
                 data: {
                     technical: record.model,
                 },
                 label: record.display_name,
-                onSelect: () => this.props.onModelSelected({
-                    label: record.display_name,
-                    technical: record.model,
-                }),
+                onSelect: () =>
+                    this.props.onModelSelected({
+                        label: record.display_name,
+                        technical: record.model,
+                    }),
             }));
         });
     }
