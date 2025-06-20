@@ -29,6 +29,7 @@ import { isHTTPSorNakedDomainRedirection } from "./utils";
 import { WebsiteSystrayItem } from "./website_systray_item";
 import { renderToElement } from "@web/core/utils/render";
 import { isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
+import { user } from "@web/core/user";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 
@@ -115,7 +116,7 @@ export class WebsiteBuilder extends Component {
             if (!this.ui.isSmall) {
                 // preload builder and snippets so clicking on "edit" is faster
                 loadBundle("html_builder.assets").then(() => {
-                    this.env.services["html_builder.snippets"].load();
+                    this.snippetModel.load();
                 });
             }
         });
@@ -154,6 +155,34 @@ export class WebsiteBuilder extends Component {
         );
     }
 
+    /**
+     * Require `html_builder.assets` to be loaded.
+     */
+    get snippetModel() {
+        if (!this._snippetModel) {
+            this._snippetModel = this.env.services["html_builder.snippets"].makeSnippetModel(
+                "website.snippets",
+                {
+                    context: {
+                        website_id: this.websiteService.currentWebsite?.id,
+                        lang: this.websiteService.currentWebsite?.metadata.lang,
+                        user_lang: user.context.lang,
+                    },
+                    onSnippetModuleInstalled: () => {
+                        const currentPath = encodeURIComponent(window.location.pathname);
+                        const websiteId = this.websiteService.currentWebsite.id;
+                        redirect(
+                            `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
+                                websiteId
+                            )}&path=${currentPath}&enable_editor=1`
+                        );
+                    },
+                }
+            );
+        }
+        return this._snippetModel;
+    }
+
     get menuProps() {
         const websitePlugins = this.translation
             ? registry.category("translation-plugins").getAll()
@@ -162,7 +191,7 @@ export class WebsiteBuilder extends Component {
         return {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
             reloadEditor: this.reloadEditor.bind(this),
-            snippetsName: "website.snippets",
+            snippetModel: this.snippetModel,
             toggleMobile: this.toggleMobile.bind(this),
             overlayRef: this.overlayRef,
             isTranslation: this.translation,

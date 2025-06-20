@@ -5,22 +5,34 @@ import { Reactive } from "@web/core/utils/reactive";
 import { escape } from "@web/core/utils/strings";
 import { AddSnippetDialog } from "./add_snippet_dialog";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { markup } from "@odoo/owl";
 import { RPCError } from "@web/core/network/rpc";
-import { redirect } from "@web/core/utils/urls";
+
+export class SnippetModelFactory {
+    constructor(services) {
+        this.services = services;
+    }
+
+    makeSnippetModel(snippetsName, { context = {}, onSnippetModuleInstalled = () => {} } = {}) {
+        return new SnippetModel(this.services, {
+            snippetsName,
+            context,
+            onSnippetModuleInstalled,
+        });
+    }
+}
 
 export class SnippetModel extends Reactive {
-    constructor(services, { snippetsName, context }) {
+    constructor(services, { snippetsName, context, onSnippetModuleInstalled }) {
         super();
         this.orm = services.orm;
         this.dialog = services.dialog;
         this.notification = services.notification;
         this.snippetsName = snippetsName;
-        this.websiteService = services.website;
         this.uiService = services.ui;
         this.context = context;
         this.loadProm = null;
+        this.onSnippetModuleInstalled = onSnippetModuleInstalled;
         this.beforeReload = null;
 
         this.snippetsByCategory = {
@@ -111,13 +123,7 @@ export class SnippetModel extends Reactive {
                         if (this.beforeReload) {
                             await this.beforeReload();
                         }
-                        const currentPath = encodeURIComponent(window.location.pathname);
-                        const websiteId = this.websiteService.currentWebsite.id;
-                        redirect(
-                            `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
-                                websiteId
-                            )}&path=${currentPath}&enable_editor=1`
-                        );
+                        this.onSnippetModuleInstalled?.();
                     } catch (e) {
                         if (e instanceof RPCError) {
                             const message = _t("Could not install module %(title)s", {
@@ -424,19 +430,11 @@ export class SnippetModel extends Reactive {
 }
 
 registry.category("services").add("html_builder.snippets", {
-    dependencies: ["orm", "dialog", "website", "notification", "ui"],
+    dependencies: ["orm", "dialog", "notification", "ui"],
 
-    start(env, { orm, dialog, website, notification, ui }) {
-        const services = { orm, dialog, website, notification, ui };
-        const context = {
-            website_id: website.currentWebsite?.id,
-            lang: website.currentWebsite?.metadata.lang,
-            user_lang: user.context.lang,
-        };
+    start(env, { orm, dialog, notification, ui }) {
+        const services = { orm, dialog, notification, ui };
 
-        return new SnippetModel(services, {
-            snippetsName: "website.snippets",
-            context,
-        });
+        return new SnippetModelFactory(services);
     },
 });
