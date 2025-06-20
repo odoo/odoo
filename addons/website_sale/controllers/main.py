@@ -1869,6 +1869,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @route('/snippets/category/set_image', type='jsonrpc', auth='user')
     def set_category_image(self, category_id, attachment_id):
+        """
+        Set the cover image of a public product category record to the given attachment.
+
+        :param int category_id: ID of the product public category to update.
+        :param int attachment_id: ID of the attachment containing the image data.
+        :raises NotFound: If the user does not have website editing rights.
+        """
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
         image_data = request.env['ir.attachment'].browse(attachment_id).datas
