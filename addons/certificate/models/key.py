@@ -1,5 +1,6 @@
 import base64
 
+from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, padding, rsa
 from cryptography.hazmat.primitives.serialization import Encoding
@@ -116,10 +117,11 @@ class CertificateKey(models.Model):
                         format=serialization.PublicFormat.SubjectPublicKeyInfo,
                     ))
                 else:
+                    encryption = serialization.BestAvailableEncryption(pkey_password) if pkey_password else serialization.NoEncryption()
                     key.pem_key = base64.b64encode(pkey.private_bytes(
                         encoding=Encoding.PEM,
                         format=serialization.PrivateFormat.PKCS8,
-                        encryption_algorithm=serialization.NoEncryption()
+                        encryption_algorithm=encryption,
                     ))
 
                 key.loading_error = ""
@@ -128,7 +130,7 @@ class CertificateKey(models.Model):
     #                   Business Methods                    #
     # -------------------------------------------------------
 
-    def _sign(self, message, hashing_algorithm='sha256', formatting='encodebytes'):
+    def _sign(self, message, hashing_algorithm='sha256', formatting='encodebytes', password=None):
         ''' Compute and return the message's signature.
 
         :param str|bytes message: The message to sign
@@ -137,6 +139,7 @@ class CertificateKey(models.Model):
             - 'encodebytes' returns a base64-encoded block of 76 characters lines
             - 'base64' returns the raw base64-encoded data
             - other returns non-encoded data
+        :param str | bytes | None password: Password of the certificate (if encrypted), uses the stored password if any
         :return: The formatted signature bytes of the message
         :rtype: bytes
         '''
@@ -152,29 +155,48 @@ class CertificateKey(models.Model):
         return self._sign_with_key(
             message,
             pem_key,
-            pwd=None,
+            pwd=password or self.password,
             hashing_algorithm=hashing_algorithm,
             formatting=formatting
         )
 
-    def _get_public_key_numbers_bytes(self, formatting='encodebytes'):
+    def _verify(self, signed_message, signature, hashing_algorithm='sha256'):
+        """  Return the verification of the signature """
+        self.ensure_one()
+
+        if not self.public:
+            raise UserError(_("Make sure to use a public key to verify the signature of documents."))
+
+        pem_key = self.with_context(bin_size=False).pem_key
+        if self.loading_error:
+            raise UserError(self.name + " - " + self.loading_error)
+
+        return self._verify_with_key(
+            signed_message,
+            signature,
+            pem_key,
+            signature_algorithm=hashing_algorithm,
+        )
+
+    def _get_public_key_numbers_bytes(self, formatting='encodebytes', password=None):
         ''' Get the public key's public numbers bytes.
 
         :param optional,default='encodebytes' formatting: The formatting of the returned bytes
             - 'encodebytes' returns a base64-encoded block of 76 characters lines
             - 'base64' returns the raw base64-encoded data
             - other returns non-encoded data
+        :param str | bytes | None password: The password used to encrypt the ket, if not stored in the password field
         :return: A tuple containing formatted public number bytes of the public key
         :rtype: tuple(bytes,bytes)
         '''
         self.ensure_one()
 
         return self._numbers_public_key_bytes_with_key(
-            self._get_public_key_bytes(encoding='PEM'),
+            self._get_public_key_bytes(encoding='PEM', password=password),
             formatting=formatting,
         )
 
-    def _get_public_key_bytes(self, encoding='der', formatting='encodebytes'):
+    def _get_public_key_bytes(self, encoding='der', formatting='encodebytes', password=None):
         ''' Get the public key bytes.
 
         :param optional,default='der' encoding: The formatting of the returned bytes
@@ -184,6 +206,7 @@ class CertificateKey(models.Model):
             - 'encodebytes' returns a base64-encoded block of 76 characters lines
             - 'base64' returns the raw base64-encoded data
             - other returns non-encoded data
+        :param str | bytes | None password: The password used to encrypt the ket, if not stored in the password field
         :return: The formatted public key bytes in the corresponding format
         :rtype: bytes
         '''
@@ -192,7 +215,13 @@ class CertificateKey(models.Model):
         if self.public:
             public_key = serialization.load_pem_public_key(base64.b64decode(self.with_context(bin_size=False).pem_key))
         else:
-            public_key = serialization.load_pem_private_key(base64.b64decode(self.with_context(bin_size=False).pem_key), None).public_key()
+            password = password or self.password
+            if password and not isinstance(password, bytes):
+                password = password.encode()
+            public_key = serialization.load_pem_private_key(
+                base64.b64decode(self.with_context(bin_size=False).pem_key),
+                password or None
+            ).public_key()
 
         encoding = serialization.Encoding.DER if encoding == 'der' else serialization.Encoding.PEM
         return _get_formatted_value(
@@ -234,6 +263,37 @@ class CertificateKey(models.Model):
             )
         ).decode()
 
+    def _encrypt(self, message, hashing_algorithm='sha256'):
+        """ Encrypt the given message using the provided algorithm.
+
+        :param str|bytes message: The message to decode
+        :param str hashing_algorithm: The digest algorithm to use. Currently, only 'sha1' and 'sha256' are available.
+        :return: The plaintext encrypted message
+        :rtype: str
+        """
+        self.ensure_one()
+        if not isinstance(message, bytes):
+            message = message.encode()
+
+        if not self.public:
+            raise UserError(_("A public key is required to encrypt data."))
+        if hashing_algorithm not in STR_TO_HASH:
+            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")  # pylint: disable=missing-gettext
+
+        public_key = serialization.load_pem_public_key(base64.b64decode(self.pem_key))
+        if not isinstance(public_key, rsa.RSAPublicKey):
+            raise UserError(
+                _("Unsupported asymmetric cryptography algorithm '%s'. Currently supported for encryption: RSA.", type(public_key))
+            )
+        return public_key.encrypt(
+            message,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None,
+            )
+        )
+
     @api.model
     def _sign_with_key(self, message, pem_key, pwd=None, hashing_algorithm='sha256', formatting='encodebytes'):
         ''' Compute and return the message's signature for a given private key.
@@ -261,7 +321,7 @@ class CertificateKey(models.Model):
             raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")  # pylint: disable=missing-gettext
 
         try:
-            private_key = serialization.load_pem_private_key(base64.b64decode(pem_key), pwd)
+            private_key = serialization.load_pem_private_key(base64.b64decode(pem_key), pwd or None)
         except ValueError:
             raise UserError(_("The private key could not be loaded."))
 
@@ -280,6 +340,51 @@ class CertificateKey(models.Model):
             raise UserError(_("Unsupported asymmetric cryptography algorithm '%s'. Currently supported for signature: EC and RSA.", type(private_key)))
 
         return _get_formatted_value(signature, formatting=formatting)
+
+    @api.model
+    def _verify_with_key(self, signed_message, signature, pem_key, signature_algorithm='sha256'):
+        """  Return the verification of the signature """
+
+        if not isinstance(signed_message, bytes):
+            signed_message = signed_message.encode('utf-8')
+
+        if not isinstance(pem_key, bytes):
+            pem_key = pem_key.encode('utf-8')
+
+        if signature_algorithm not in STR_TO_HASH:
+            raise UserError(f"Unsupported signature algorithm '{signature_algorithm}'. Currently supported: sha1 and sha256.")  # pylint: disable=missing-gettext
+
+        try:
+            public_key = serialization.load_pem_public_key(base64.b64decode(pem_key))
+        except ValueError:
+            raise UserError(_("The public key could not be loaded."))
+
+        if isinstance(public_key, ec.EllipticCurvePublicKey):
+            try:
+                public_key.verify(
+                    signature,
+                    signed_message,
+                    ec.ECDSA(STR_TO_HASH[signature_algorithm])
+                )
+                return True
+            except InvalidSignature:
+                return False
+        elif isinstance(public_key, rsa.RSAPublicKey):
+            try:
+                public_key.verify(
+                    signature,
+                    signed_message,
+                    padding.PKCS1v15(),
+                    STR_TO_HASH[signature_algorithm],
+                )
+                return True
+            except InvalidSignature:
+                return False
+        else:
+            raise UserError(_(
+                "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for signature: EC and RSA.",
+                type(public_key),
+            ))
 
     @api.model
     def _numbers_public_key_bytes_with_key(self, pem_key, formatting='encodebytes'):
@@ -316,12 +421,13 @@ class CertificateKey(models.Model):
         )
 
     @api.model
-    def _generate_ec_private_key(self, company, name='id_ec', curve='SECP256R1'):
+    def _generate_ec_private_key(self, company, name='id_ec', curve='SECP256R1', password=None):
         ''' Generate an elliptic curve private key.
 
         :param res.company company: A company record
         :param str,optional,default='id_ec' name: The name of the newly created key.
         :param optional,default='SECP256R1' curve: The type of elliptic curve algorithm. Currently, only SECP256R1 is supported.
+        :param str | bytes | None password: Encrypts (best available algorithm) the key with the given password
         :return: A certificate.key record
         :rtype: certificate.key
         '''
@@ -330,23 +436,28 @@ class CertificateKey(models.Model):
 
         private_key = ec.generate_private_key(STR_TO_CURVE[curve])
 
+        if password and not isinstance(password, bytes):
+            password = password.encode()
+
         return self.env['certificate.key'].create({
             'name': name,
             'content': base64.b64encode(private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.PKCS8,
-                encryption_algorithm=serialization.NoEncryption())),
+                encryption_algorithm=serialization.BestAvailableEncryption(password) if password else serialization.NoEncryption())),
             'company_id': company.id,
+            'password': password,
         })
 
     @api.model
-    def _generate_rsa_private_key(self, company, name='id_rsa', public_exponent=65537, key_size=2048):
+    def _generate_rsa_private_key(self, company, name='id_rsa', public_exponent=65537, key_size=2048, password=None):
         ''' Generate an RSA private key.
 
         :param res.company company: A company record
         :param str,optional,default='id_rsa' name: The name of the newly created key.
         :param int,optional,default=65537 public_exponent: The public exponent of the new key: either 65537 or 3 (for legacy purposes)
         :param int,optional,default=2048 key_size: The length of the modulus in bits; it is strongly recommended to be at least 2048 and must not be less than 512
+        :param str | bytes | None password: Encrypts (best available algorithm) the key with the given password
         :return: A certificate.key record
         :rtype: certificate.key
         '''
@@ -360,11 +471,17 @@ class CertificateKey(models.Model):
             key_size=key_size
         )
 
+        if password and not isinstance(password, bytes):
+            password = password.encode()
+
+        encryption_algorithm = serialization.BestAvailableEncryption(password) if password else serialization.NoEncryption()
         return self.env['certificate.key'].create({
             'name': name,
             'content': base64.b64encode(private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.PKCS8,
-                encryption_algorithm=serialization.NoEncryption())),
+                encryption_algorithm=encryption_algorithm,
+            )),
             'company_id': company.id,
+            'password': password,
         })
