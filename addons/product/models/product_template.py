@@ -144,7 +144,12 @@ class ProductTemplate(models.Model):
         'Internal Reference', compute='_compute_default_code',
         inverse='_set_default_code', store=True)
 
-    pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_item_count")
+    pricelist_rule_ids = fields.One2many(
+        string="Pricelist Rules",
+        comodel_name='product.pricelist.item',
+        inverse_name='product_tmpl_id',
+        domain=lambda self: self._domain_pricelist_rule_ids(),
+    )
 
     product_document_ids = fields.One2many(
         string="Documents",
@@ -170,22 +175,15 @@ class ProductTemplate(models.Model):
     # Properties
     product_properties = fields.Properties('Properties', definition='categ_id.product_properties_definition', copy=True)
 
+    def _domain_pricelist_rule_ids(self):
+        return []
+
     @api.depends('type')
     def _compute_service_tracking(self):
         self.filtered(lambda product: product.type != 'service').service_tracking = 'no'
 
     def _compute_purchase_ok(self):
         pass
-
-    def _compute_item_count(self):
-        for template in self:
-            # Pricelist item count counts the rules applicable on current template or on its variants.
-            template.pricelist_item_count = template.env['product.pricelist.item'].search_count([
-                '&',
-                '|', ('product_tmpl_id', 'in', template.ids), ('product_id', 'in', template.product_variant_ids.ids),
-                ('pricelist_id.active', '=', True),
-                ('compute_price', '=', 'fixed'),
-            ])
 
     def _compute_product_document_count(self):
         for template in self:
@@ -594,29 +592,6 @@ class ProductTemplate(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
         action['context'] = {'default_product_tmpl_ids': self.ids}
         return action
-
-    def open_pricelist_rules(self):
-        self.ensure_one()
-        domain = ['|',
-            ('product_tmpl_id', '=', self.id),
-            ('product_id', 'in', self.product_variant_ids.ids),
-            ('compute_price', '=', 'fixed'),
-        ]
-        return {
-            'name': _('Price Rules'),
-            'view_mode': 'list,form',
-            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'list')],
-            'res_model': 'product.pricelist.item',
-            'type': 'ir.actions.act_window',
-            'target': 'current',
-            'domain': domain,
-            'context': {
-                'default_product_tmpl_id': self.id,
-                'default_applied_on': '1_product',
-                'product_without_variants': self.product_variant_count == 1,
-                'search_default_visible': True,
-            },
-        }
 
     @api.readonly
     def action_open_documents(self):

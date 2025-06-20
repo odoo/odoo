@@ -101,7 +101,6 @@ class ProductCatalogMixin(models.AbstractModel):
             }
         """
         order_line_info = {}
-        default_data = self._default_order_line_values(child_field)
 
         for product, record_lines in self._get_product_catalog_record_lines(product_ids, child_field=child_field, **kwargs).items():
             order_line_info[product.id] = {
@@ -111,12 +110,16 @@ class ProductCatalogMixin(models.AbstractModel):
             }
             if not order_line_info[product.id]['uomDisplayName']:
                 order_line_info[product.id]['uomDisplayName'] = product.uom_id.display_name
-            product_ids.remove(product.id)
 
+        default_data = self._default_order_line_values(child_field)
         products = self.env['product.product'].browse(product_ids)
         product_data = self._get_product_catalog_order_data(products, **kwargs)
+
         for product_id, data in product_data.items():
+            if product_id in order_line_info:
+                continue
             order_line_info[product_id] = {**default_data, **data}
+
         return order_line_info
 
     def _get_action_add_from_catalog_extra_context(self):

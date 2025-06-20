@@ -16,6 +16,15 @@ class ProductPricelist(models.Model):
     def _default_currency_id(self):
         return self.env.company.currency_id.id
 
+    def _base_domain_item_ids(self):
+        return [
+            '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
+            '|', ('product_id', '=', None), ('product_id.active', '=', True),
+        ]
+
+    def _domain_item_ids(self):
+        return self._base_domain_item_ids()
+
     name = fields.Char(string="Pricelist Name", required=True, translate=True)
 
     active = fields.Boolean(
@@ -50,11 +59,8 @@ class ProductPricelist(models.Model):
         comodel_name='product.pricelist.item',
         inverse_name='pricelist_id',
         string="Pricelist Rules",
-        domain=[
-            '&',
-            '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
-            '|', ('product_id', '=', None), ('product_id.active', '=', True),
-        ],
+        # must be given as lambda for overrides to work
+        domain=lambda self: self._domain_item_ids(),
         copy=True)
 
     @api.depends('currency_id')
@@ -161,8 +167,8 @@ class ProductPricelist(models.Model):
         return self._compute_price_rule(product, *args, compute_price=False, **kwargs)[product.id][1]
 
     def _compute_price_rule(
-            self, products, quantity, *, currency=None, uom=None, date=False, compute_price=True,
-            **kwargs
+        self, products, quantity, *, currency=None, uom=None, date=False, compute_price=True,
+        **kwargs
     ):
         """ Low-level method - Mono pricelist, multi products
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
@@ -220,10 +226,11 @@ class ProductPricelist(models.Model):
 
             if compute_price:
                 price = suitable_rule._compute_price(
-                    product, quantity, target_uom, date=date, currency=currency)
+                    product, quantity, target_uom, date=date, currency=currency, **kwargs)
             else:
                 # Skip price computation when only the rule is requested.
                 price = 0.0
+
             results[product.id] = (price, suitable_rule.id)
 
         return results
@@ -234,12 +241,9 @@ class ProductPricelist(models.Model):
         if not self:
             return self.env['product.pricelist.item']
 
-        # Do not filter out archived pricelist items, since it means current pricelist is also archived
-        # We do not want the computation of prices for archived pricelist to always fallback on the Sales price
-        # because no rule was found (thanks to the automatic orm filtering on active field)
-        return self.env['product.pricelist.item'].with_context(active_test=False).search(
+        return self.env['product.pricelist.item'].search(
             self._get_applicable_rules_domain(products=products, date=date, **kwargs)
-        ).with_context(self.env.context)
+        )
 
     def _get_applicable_rules_domain(self, products, date, **kwargs):
         self and self.ensure_one()  # self is at most one record
@@ -368,7 +372,7 @@ class ProductPricelist(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_as_rule_base(self):
-        linked_items = self.env['product.pricelist.item'].sudo().with_context(active_test=False).search([
+        linked_items = self.env['product.pricelist.item'].sudo().search([
             ('base', '=', 'pricelist'),
             ('base_pricelist_id', 'in', self.ids),
             ('pricelist_id', 'not in', self.ids),
