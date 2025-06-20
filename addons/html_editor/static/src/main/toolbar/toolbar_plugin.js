@@ -298,6 +298,7 @@ export class ToolbarPlugin extends Plugin {
     shouldBeVisible(selectionData) {
         const inEditable =
             selectionData.documentSelectionIsInEditable &&
+            selectionData.documentSelectionIsContenteditable &&
             !selectionData.documentSelectionIsProtected &&
             !selectionData.documentSelectionIsProtecting;
         if (!inEditable) {
