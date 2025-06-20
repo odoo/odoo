@@ -53,7 +53,7 @@ class FleetVehicle(models.Model):
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', tracking=True, copy=False)
     trailer_hook = fields.Boolean(default=False, string='Trailer Hitch',
-        compute='_compute_model_fields', store=True, readonly=False,
+        compute='_compute_trailer_hook', store=True, readonly=False,
         help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes, \
             such as pulling trailers, boats, or other vehicles.")
     driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver address of the vehicle', copy=False)
@@ -75,18 +75,18 @@ class FleetVehicle(models.Model):
         help='Date of vehicle registration')
     write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
     contract_date_start = fields.Date(string="First Contract Date", default=fields.Date.today, tracking=True)
-    color = fields.Char(help='Color of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
+    color = fields.Char(help='Color of the vehicle', compute='_compute_color', store=True, readonly=False)
     state_id = fields.Many2one('fleet.vehicle.state', 'State',
         default=_get_default_state, group_expand='_read_group_expand_full',
         tracking=True,
         help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
     seats = fields.Integer('Seating Capacity', help='Number of seats of the vehicle',
-        compute='_compute_model_fields', store=True, readonly=False)
+        compute='_compute_seats', store=True, readonly=False)
     model_year = fields.Selection(selection='_get_year_selection', string='Model Year',
-        help='Year of the model', compute='_compute_model_fields', store=True, readonly=False)
+        help='Year of the model', compute='_compute_model_year', store=True, readonly=False)
     doors = fields.Integer('Number of Doors', help='Number of doors of the vehicle',
-        compute='_compute_model_fields', store=True, readonly=False)
+        compute='_compute_doors', store=True, readonly=False)
     tag_ids = fields.Many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id', 'tag_id', 'Tags', copy=False)
     odometer = fields.Float(compute='_get_odometer', inverse='_set_odometer', string='Last Odometer',
         help='Odometer measure of the vehicle at the moment of this log')
@@ -96,24 +96,24 @@ class FleetVehicle(models.Model):
         ], 'Odometer Unit', default='kilometers', required=True)
     transmission = fields.Selection(
         [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission',
-        compute='_compute_model_fields', store=True, readonly=False)
-    fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', compute='_compute_model_fields', store=True, readonly=False)
+        compute='_compute_transmission', store=True, readonly=False)
+    fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', compute='_compute_fuel_type', store=True, readonly=False)
     power_unit = fields.Selection([
         ('power', 'kW'),
         ('horsepower', 'Horsepower')
         ], 'Power Unit', default='power', required=True)
-    horsepower = fields.Float(compute='_compute_model_fields', store=True, readonly=False)
-    horsepower_tax = fields.Float('Horsepower Taxation', compute='_compute_model_fields', store=True, readonly=False)
+    horsepower = fields.Float(compute='_compute_horsepower', store=True, readonly=False)
+    horsepower_tax = fields.Float('Horsepower Taxation', compute='_compute_horsepower_tax', store=True, readonly=False)
     power = fields.Float('Power', help='Power in kW of the vehicle',
-        compute='_compute_model_fields', store=True, readonly=False)
-    co2 = fields.Float('CO₂ Emissions', help='CO2 emissions of the vehicle', compute='_compute_model_fields',
+        compute='_compute_power', store=True, readonly=False)
+    co2 = fields.Float('CO₂ Emissions', help='CO2 emissions of the vehicle', compute='_compute_co2',
         store=True, readonly=False, tracking=True, aggregator=None)
     co2_emission_unit = fields.Selection([('g/km', 'g/km'), ('g/mi', 'g/mi')], compute='_compute_co2_emission_unit',
         store=True, default="g/km", required=True)
-    co2_standard = fields.Char('Emission Standard', compute='_compute_model_fields', store=True, readonly=False,
+    co2_standard = fields.Char('Emission Standard', compute='_compute_co2_standard', store=True, readonly=False,
         help="Emission Standard specifies the regulatory test procedure \
             or guideline under which a vehicle's emissions are measured.")
-    category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', compute='_compute_model_fields', store=True, readonly=False)
+    category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', compute='_compute_category', store=True, readonly=False)
     image_128 = fields.Image(related='model_id.image_128', readonly=True)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
         string='Has Contracts to renew')
@@ -132,7 +132,7 @@ class FleetVehicle(models.Model):
     plan_to_change_bike = fields.Boolean()
     vehicle_type = fields.Selection(related='model_id.vehicle_type')
     frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], string="Bike Frame Type")
-    electric_assistance = fields.Boolean(compute='_compute_model_fields', store=True, readonly=False)
+    electric_assistance = fields.Boolean(compute='_compute_electric_assistance', store=True, readonly=False)
     frame_size = fields.Float()
     service_activity = fields.Selection([
         ('none', 'None'),
@@ -142,7 +142,7 @@ class FleetVehicle(models.Model):
     vehicle_properties = fields.Properties('Properties', definition='model_id.vehicle_properties_definition', copy=True)
     vehicle_range = fields.Integer(string="Range")
     range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')],
-        compute='_compute_model_fields', store=True, readonly=False, default="km", required=True)
+        compute='_compute_range_unit', store=True, readonly=False, default="km", required=True)
 
     @api.depends('log_services')
     def _compute_service_activity(self):
@@ -150,21 +150,87 @@ class FleetVehicle(models.Model):
             activities_state = set(state for state in vehicle.log_services.mapped('activity_state') if state and state != 'planned')
             vehicle.service_activity = sorted(activities_state)[0] if activities_state else 'none'
 
-    @api.depends('model_id')
-    def _compute_model_fields(self):
+    def _load_fields_from_model(self, fields_to_load):
         '''
-        Copies all the related fields from the model to the vehicle
+        Copies the desired fields from the models to the vehicles
         '''
         model_values = dict()
         for vehicle in self.filtered('model_id'):
             if vehicle.model_id.id in model_values:
                 write_vals = model_values[vehicle.model_id.id]
             else:
-                # copy if value is truthy
-                write_vals = {MODEL_FIELDS_TO_VEHICLE[key]: vehicle.model_id[key] for key in MODEL_FIELDS_TO_VEHICLE\
-                    if vehicle.model_id[key]}
+                # Update only the desired fields from the model, only when the model has a truthy value.
+                write_vals = \
+                    {
+                        vehicle_field: vehicle.model_id[model_field] for model_field, vehicle_field in MODEL_FIELDS_TO_VEHICLE.items()
+                        if vehicle_field in fields_to_load and vehicle.model_id[model_field]
+                    }
                 model_values[vehicle.model_id.id] = write_vals
             vehicle.update(write_vals)
+
+    @api.depends('model_id')
+    def _compute_category(self):
+        self._load_fields_from_model(['category_id'])
+
+    @api.depends('model_id')
+    def _compute_range_unit(self):
+        self._load_fields_from_model(['range_unit'])
+
+    @api.depends('model_id')
+    def _compute_trailer_hook(self):
+        self._load_fields_from_model(['trailer_hook'])
+
+    @api.depends('model_id')
+    def _compute_vehicle_range(self):
+        self._load_fields_from_model(['vehicle_range'])
+
+    @api.depends('model_id')
+    def _compute_electric_assistance(self):
+        self._load_fields_from_model(['electric_assistance'])
+
+    @api.depends('model_id')
+    def _compute_co2_standard(self):
+        self._load_fields_from_model(['co2_standard'])
+
+    @api.depends('model_id')
+    def _compute_co2(self):
+        self._load_fields_from_model(['co2'])
+
+    @api.depends('model_id')
+    def _compute_power(self):
+        self._load_fields_from_model(['power'])
+
+    @api.depends('model_id')
+    def _compute_horsepower(self):
+        self._load_fields_from_model(['horsepower'])
+
+    @api.depends('model_id')
+    def _compute_horsepower_tax(self):
+        self._load_fields_from_model(['horsepower_tax'])
+
+    @api.depends('model_id')
+    def _compute_fuel_type(self):
+        self._load_fields_from_model(['fuel_type'])
+
+    @api.depends('model_id')
+    def _compute_transmission(self):
+        self._load_fields_from_model(['transmission'])
+
+    @api.depends('model_id')
+    def _compute_doors(self):
+        self._load_fields_from_model(['doors'])
+
+    @api.depends('model_id')
+    def _compute_model_year(self):
+        self._load_fields_from_model(['model_year'])
+
+    @api.depends('model_id')
+    def _compute_seats(self):
+        self._load_fields_from_model(['seats'])
+
+    @api.depends('model_id')
+    def _compute_color(self):
+        self._load_fields_from_model(['color'])
 
     @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
