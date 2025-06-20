@@ -714,7 +714,10 @@ class SaleOrder(models.Model):
 
     def _remove_delivery_line(self):
         super()._remove_delivery_line()
+        had_pickup_location_data = self.pickup_location_data
         self.pickup_location_data = {}  # Reset the pickup location data.
+        if had_pickup_location_data:
+            self._force_update_fiscal_position_and_taxes()
 
     def _get_preferred_delivery_method(self, available_delivery_methods):
         """ Get the preferred delivery method based on available delivery methods for the order.

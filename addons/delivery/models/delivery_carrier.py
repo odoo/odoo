@@ -499,3 +499,33 @@ class DeliveryCarrier(models.Model):
             raise UserError(_("Not available for current order"))
 
         return price
+
+    def format_countries_selector(self, countries):
+        """ Format the countries to be compatible with the country selector
+
+        :rtype: list[dict]
+        """
+        return [
+            {
+                'value': {
+                    'name': c.name,
+                    'code': c.code,
+                    'image_url': c.image_url,
+                    'fields': c.get_address_fields(),
+                },
+                'label': c.name,
+            } for c in countries
+        ]
+
+    def _get_carrier_countries(self):
+        """ Get the formatted countries of the delivery carrier
+
+        :rtype: list[dict]
+        """
+        self.ensure_one()
+        countries = self.country_ids
+        if not countries:
+            countries = self.env['res.country'].search_fetch(
+                [], ['id', 'name', 'code', 'image_url']
+            )
+        return self.format_countries_selector(countries)

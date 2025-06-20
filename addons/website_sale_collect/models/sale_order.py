@@ -4,7 +4,6 @@ import json
 
 from odoo import models
 from odoo.exceptions import ValidationError
-from odoo.http import request
 
 
 class SaleOrder(models.Model):
@@ -22,18 +21,12 @@ class SaleOrder(models.Model):
         for order in in_store_orders_with_pickup_data:
             order.warehouse_id = order.pickup_location_data['id']
 
-    def _compute_fiscal_position_id(self):
-        """Override of `sale` to set the fiscal position matching the selected pickup location
-        for pickup in-store orders."""
-        in_store_orders = self.filtered(
-            lambda so: so.carrier_id.delivery_type == 'in_store' and so.pickup_location_data
-        )
-        AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
-        for order in in_store_orders:
-            order.fiscal_position_id = AccountFiscalPosition._get_fiscal_position(
-                order.partner_id, delivery=order.warehouse_id.partner_id
-            )
-        super(SaleOrder, self - in_store_orders)._compute_fiscal_position_id()
+    def _get_delivery_pickup_location(self):
+        """Override of `delivery` to get the warehouse address"""
+        self.ensure_one()
+        if self.carrier_id.delivery_type == 'in_store':
+            return self.warehouse_id.partner_id
+        return super()._get_delivery_pickup_location()
 
     def set_delivery_line(self, carrier, amount):
         """ Override of `website_sale` to recompute warehouse and fiscal position when a new
@@ -45,7 +38,7 @@ class SaleOrder(models.Model):
         )
         res = super().set_delivery_line(carrier, amount)
         in_store_orders._compute_warehouse_id()
-        in_store_orders._compute_fiscal_position_id()
+        in_store_orders._force_update_fiscal_position_and_taxes()
         return res
 
     def _set_pickup_location(self, pickup_location_data):
@@ -60,27 +53,9 @@ class SaleOrder(models.Model):
         self.pickup_location_data = json.loads(pickup_location_data)
         if self.pickup_location_data:
             self.warehouse_id = self.pickup_location_data['id']
-            self._compute_fiscal_position_id()
+            self._force_update_fiscal_position_and_taxes()
         else:
             self._compute_warehouse_id()
-
-    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
-        """ Override of `website_sale` to ensure that a country is provided when there is a zip
-        code.
-
-        If the country cannot be found (e.g., the GeoIP request fails), the zip code is cleared to
-        prevent the parent method's assertion to fail.
-        """
-        if zip_code and not country:
-            country_code = None
-            if self.pickup_location_data:
-                country_code = self.pickup_location_data['country_code']
-            elif request.geoip.country_code:
-                country_code = request.geoip.country_code
-            country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
-            if not country:
-                zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
-        return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
 
     def _get_shop_warehouse_id(self):
         """Override of `website_sale_stock` to consider the chosen warehouse."""
