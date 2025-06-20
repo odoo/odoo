@@ -1,20 +1,17 @@
-import {
-    createDocumentFragmentFromContent,
-    htmlJoin,
-    htmlReplace,
-    htmlReplaceAll,
-    htmlTrim,
-} from "@mail/utils/common/html";
-
 import { markup } from "@odoo/owl";
 
 import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
 import { normalize } from "@web/core/l10n/utils";
 import {
+    createDocumentFragmentFromContent,
     createElementWithContent,
     htmlEscape,
     htmlFormatList,
+    htmlJoin,
+    htmlReplace,
+    htmlReplaceAll,
+    htmlTrim,
     setElementContent,
 } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
