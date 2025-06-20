@@ -38,10 +38,11 @@ class HrDepartureWizard(models.TransientModel):
     )
 
     def action_register_departure(self):
+        employee_ids = self.employee_ids
         for employee in self.employee_ids.filtered(lambda emp: emp.active):
             if self.env.context.get('employee_termination', False):
                 employee.with_context(no_wizard=True).action_archive()
-        self.employee_ids.write({
+        employee_ids.write({
             'departure_reason_id': self.departure_reason_id,
             'departure_description': self.departure_description,
             'departure_date': self.departure_date,
