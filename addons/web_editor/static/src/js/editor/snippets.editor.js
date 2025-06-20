@@ -4407,11 +4407,15 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetClick() {
         const $els = this.getEditableArea().find('.oe_structure.oe_empty').addBack('.oe_structure.oe_empty');
+        this.options.wysiwyg.odooEditor.observerUnactive();
         for (const el of $els) {
             if (!el.children.length) {
                 $(el).odooBounce('o_we_snippet_area_animation');
             }
         }
+        setTimeout(() => {
+            this.options.wysiwyg.odooEditor.observerActive();
+        }, 500);
     },
     /**
      * @private
