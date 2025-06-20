@@ -58,9 +58,9 @@ class TestBIR2307Generation(TestPhCommon):
         # 2: Build the expected values
         expected_values = {
             # Header
-            0: ['Reporting_Month', 'Vendor_TIN', 'branchCode', 'companyName', 'surName', 'firstName', 'middleName', 'address', 'nature', 'ATC', 'income_payment', 'ewt_rate', 'tax_amount'],
+            0: ['Reporting_Month', 'Vendor_TIN', 'branchCode', 'companyName', 'surName', 'firstName', 'middleName', 'address', 'zip_code', 'nature', 'ATC', 'income_payment', 'ewt_rate', 'tax_amount'],
             # Row
-            1: ['01/15/2020', '789456123', '789', 'Test Partner', '', '', '', '9 Super Street, Super City, Philippines', 'Test line', 'WC640', 100.0, 1.0, 1.0],
+            1: ['01/15/2020', '789456123', '789', 'Test Partner', '', '', '', '9 Super Street, Super City, Philippines', '8888', '1% WC640 - Supplier of goods', 'WC640', 100.0, 1.0, 1.0],
         }
 
         report_file = io.BytesIO(bir_2307)
@@ -112,7 +112,7 @@ class TestBIR2307Generation(TestPhCommon):
         for row in range(1, sheet.nrows):
             result.append(sheet.row_values(row))
         self.assertEqual(result, [
-            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', 'test line', 'WI010', 1000.0, 10.0, 100.0]
+            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '', 'WI010', 1000.0, 10.0, 100.0]
         ])
 
     def test_03_atc_affected_by_vat(self):
@@ -137,7 +137,7 @@ class TestBIR2307Generation(TestPhCommon):
         for row in range(1, sheet.nrows):
             result.append(sheet.row_values(row))
         self.assertEqual(result, [
-            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', 'test line', 'WI010', 1150.0, 10.0, 115.0]
+            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '', 'WI010', 1150.0, 10.0, 115.0]
         ])
 
     def test_04_multi_currency(self):
@@ -163,7 +163,7 @@ class TestBIR2307Generation(TestPhCommon):
             result.append(sheet.row_values(row))
         # We expect the values in company currency in the file.
         self.assertEqual(result, [
-            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', 'test line', 'WI010', 1000.0, 10.0, 100.0]
+            ['01/01/2025', '123456789', '001', 'Jose Mangahas Cuyegkeng', 'Cuyegkeng', 'Jose', 'Mangahas', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', '', 'WI010', 1000.0, 10.0, 100.0]
         ])
 
     @classmethod
