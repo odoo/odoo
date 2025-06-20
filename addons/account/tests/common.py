@@ -392,6 +392,12 @@ class AccountTestInvoicingCommon(ProductCommon):
             }),
             'default_tax_sale': company.account_sale_tax_id,
             'default_tax_purchase': company.account_purchase_tax_id,
+            'default_tax_return_journal': cls.env['account.journal'].create({
+                'name': 'Tax Return Journal',
+                'type': 'general',
+                'code': 'TXRET',
+                'company_id': company.id,
+            }),
         }
 
     @classmethod
