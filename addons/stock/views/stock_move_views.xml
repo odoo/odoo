@@ -324,6 +324,30 @@
             </field>
         </record>
 
+        <record id="view_scrap_move_form" model="ir.ui.view">
+            <field name="name">stock.scrap.move.form</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <form string="Scrap Products">
+                    <group>
+                        <group>
+                            <field name="product_id" domain="[('id', 'in', context.get('product_ids'))]"/>
+                            <label for="product_uom_qty"/>
+                            <div class="o_row">
+                                <field name="product_uom_qty" string="Quantity"/>
+                                <field name="product_uom" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                            </div>
+                            <field name="scrap_reason_tag_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="location_id" options="{'no_create': True}"/>
+                            <field name="location_dest_id" string="Scrap Location" domain="[('scrap_location', '=', True)]" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="view_move_search" model="ir.ui.view">
             <field name="name">stock.move.search</field>
             <field name="model">stock.move</field>
@@ -343,6 +367,7 @@
                     <filter string="Incoming" name="incoming" domain="[('location_id.usage', 'not in', ('internal', 'transit')), ('location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
                     <filter string="Outgoing" name="outgoing" domain="[('location_id.usage', 'in', ('internal', 'transit')), ('location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>
                     <filter string="Inventory" name="inventory" domain="[('is_inventory', '=', True)]"/>
+                    <filter string="Scrapped" name="scrapped" domain="[('scrapped', '=', True)]"/>
                     <separator/>
                     <filter string="Date" name="today" date="date" help="Scheduled or processing date"/>
                     <group expand="0" string="Group By">

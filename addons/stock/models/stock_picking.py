@@ -624,7 +624,7 @@ class StockPicking(models.Model):
         check_company=True, required=True)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
     move_ids_without_package = fields.One2many(
-        'stock.move', 'picking_id', string="Stock move", domain=['|', ('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
+        'stock.move', 'picking_id', string="Stock move", domain=['|', ('package_level_id', '=', False), ('picking_type_entire_packs', '=', False), ('scrapped', '=', False)])
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
@@ -1886,28 +1886,39 @@ class StockPicking(models.Model):
 
     def button_scrap(self):
         self.ensure_one()
-        view = self.env.ref('stock.stock_scrap_form_view2')
+        view = self.env.ref('stock.product_scrap_form_view')
         products = self.env['product.product']
         for move in self.move_ids:
             if move.state not in ('draft', 'cancel') and move.product_id.type == 'consu':
                 products |= move.product_id
+        default_scrap_location = self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', '=', self.company_id.id)], limit=1)
         return {
             'name': _('Scrap Products'),
             'view_mode': 'form',
-            'res_model': 'stock.scrap',
+            'res_model': 'product.scrap',
             'view_id': view.id,
             'views': [(view.id, 'form')],
             'type': 'ir.actions.act_window',
-            'context': {'default_picking_id': self.id, 'product_ids': products.ids, 'default_company_id': self.company_id.id},
+            'context': {
+                'default_picking_id': self.id,
+                'product_ids': products.ids,
+                'default_company_id': self.company_id.id,
+                'default_location_dest_id': default_scrap_location.id,
+                'default_origin': self.name,
+            },
             'target': 'new',
         }
 
     def action_see_move_scrap(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
-        scraps = self.env['stock.scrap'].search([('picking_id', '=', self.id)])
-        action['domain'] = [('id', 'in', scraps.ids)]
-        action['context'] = dict(self._context, create=False)
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': 'Scrap Orders',
+            'res_model': 'stock.move',
+            'view_mode': 'list,kanban,form',
+            'domain': [('picking_id', '=', self.id), ('scrapped', '=', True)],
+            'context': dict(self._context, create=False),
+        }
         return action
 
     def action_see_packages(self):

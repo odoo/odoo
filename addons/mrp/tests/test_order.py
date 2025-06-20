@@ -1540,12 +1540,12 @@ class TestMrpOrder(TestMrpCommon):
         ub = ub_form.save()
         ub.action_unbuild()
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'product_id': product.id,
-            'product_uom_id': product.uom_id.id,
+            'product_uom': product.uom_id.id,
             'lot_id': sn.id,
         })
-        scrap.do_scrap()
+        scrap._action_done()
 
         unscrap_picking = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_int.id,
@@ -2258,9 +2258,9 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
 
         # scrap linked to MO but with wrong SN location
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'product_id': p_final.id,
-            'product_uom_id': self.uom_unit.id,
+            'product_uom': self.uom_unit.id,
             'production_id': mo.id,
             'location_id': self.shelf_1.id,
             'lot_id': sn2.id
