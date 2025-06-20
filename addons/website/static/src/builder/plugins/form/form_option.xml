@@ -92,7 +92,7 @@
         <BuilderSelect t-if="!domState.elClassList.includes('s_website_form_model_required')"
             id="'type_opt'" preview="false"
         >
-            <div class="we_bg_darker">Custom Field</div>
+            <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Custom Field</div>
             <BuilderContext action="'customField'">
                 <BuilderSelectItem actionValue="'char'">Text</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'text'">Long Text</BuilderSelectItem>
@@ -110,7 +110,7 @@
                 <BuilderSelectItem actionValue="'binary'">File Upload</BuilderSelectItem>
             </BuilderContext>
             <t t-if="state.availableFields.length">
-                <div class="we_bg_darker">Existing fields</div>
+                <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Existing fields</div>
                 <t t-foreach="state.availableFields" t-as="field" t-key="field.name">
                     <BuilderSelectItem action="'existingField'" actionValue="field.name" t-out="field.string"/>
                 </t>
@@ -307,7 +307,7 @@
                 <BuilderSelectItem t-foreach="state.conditionValueList" t-as="record" t-key="record.value"
                     dataAttributeActionValue="record.value"
                     t-out="record.textContent"
-                />   
+                />
             </BuilderSelect>
             <BuilderSelect t-if="state.conditionValueList and domStateDependency.isRecordField"
                 id="'hidden_condition_record_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
@@ -316,7 +316,7 @@
                 <BuilderSelectItem t-foreach="state.conditionValueList" t-as="record" t-key="record.value"
                     dataAttributeActionValue="record.value"
                     t-out="record.textContent"
-                />   
+                />
             </BuilderSelect>
             <BuilderTextInput t-if="isTextConditionValueVisible"
                 id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
