@@ -52,7 +52,7 @@
         'static/description/theme_screenshot.png'
     ],
     'installable': True,
-    'application': False,
+    'application': True,
     'auto_install': False,
     'post_init_hook': '_setup_module',
     'uninstall_hook': '_uninstall_cleanup',

@@ -44,6 +44,10 @@ class ProductExtension(models.Model):
         default=0
     )
 
+    def import_csv(self):
+        print("HOLA")
+        pass
+
     @api.model
     def action_import_csv(self):
         return {

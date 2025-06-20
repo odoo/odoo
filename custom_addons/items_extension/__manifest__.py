@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "items_extension",
+    'name': "Items Extension",
 
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
@@ -8,22 +8,13 @@
 Long description of module's purpose
     """,
 
-    'author': "My Company",
-    'website': "https://www.yourcompany.com",
-
-    'category': 'Uncategorized',
-    'version': '0.1',
-
-    'depends': ['product', 'global_utilities'],
-
+    'depends': ['base','stock', 'global_utilities', 'product'],
     'data': [
         'views/product_template_extension.xml',
         'views/product_template_hide_fields.xml',
         'views/product_list_extension.xml',
     ],
-
-    'demo': [
-        'demo/demo.xml',
-    ],
+    'installable': True,
+    'application':True,
 }
 

@@ -15,10 +15,11 @@
                 <xpath expr="//button[@name='action_update_quantity_on_hand']" position="before">
                     <button string="Guardar" type="object" name="action_save_product" class="btn-primary"/>
                 </xpath>
-                <xpath expr="//button[@name='424']" position="after">
-                    <button string="Import from CSV" type="object" name="action_import_csv" class="btn-secondary"/>
-                </xpath>
+                <xpath expr="//button[@name='action_update_quantity_on_hand']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>      
             </field>
+            
         </record>
     </data>
 </odoo>

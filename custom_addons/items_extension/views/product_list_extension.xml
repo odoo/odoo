@@ -68,5 +68,25 @@
                 </xpath>
             </field>
         </record>
+        <!-- <record id="product_kanban_inherit_extension" model="ir.ui.view">
+            <field name="name">product.template.kanban_extension</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="inside">
+                    <button string="asdas" name="import_csv" />
+                </xpath>
+            </field>
+        </record> -->
+        <record id="action_import_csv" model="ir.actions.server">
+            <field name="name">Importar CSV</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="state">code</field>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="code">
+                action = model.import_csv()
+            </field>
+        </record>
     </data>
 </odoo>
