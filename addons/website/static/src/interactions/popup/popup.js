@@ -22,6 +22,9 @@ export class Popup extends Interaction {
         "_window": {
             "t-on-hashchange": this.onHashChange,
         },
+        ".modal, _document": {
+            "t-on-click": this.dismissPopupOnClickOutside,
+        },
     };
 
     setup() {
@@ -30,6 +33,22 @@ export class Popup extends Interaction {
         /** @type {import("bootstrap").Modal} */
         this.bsModal = window.Modal.getOrCreateInstance(this.modalEl);
         this.registerCleanup(() => { this.bsModal.dispose() });
+
+        const selectedUrls = JSON.parse(this.modalEl.dataset.selectedUrls);
+        if (selectedUrls && selectedUrls.length) {
+            // If the popup is only shown on specific URLs, we check if the current URL matches
+            // one of the selected URLs.
+            const currentUrl = browser.location.pathname;
+            const existInSelectedUrls = selectedUrls.find(item => item.id === currentUrl);
+            if (existInSelectedUrls === undefined) {
+                const whereEl = document.querySelector('#o_shared_blocks')
+                const popupEl = this.el;
+                if (whereEl && popupEl && whereEl.contains(popupEl)) {
+                    popupEl.remove();
+                    this.modalEl.remove();
+                }
+            }
+        }
 
         this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
         if (this.modalShownOnClickEl) {
@@ -214,6 +233,25 @@ export class Popup extends Interaction {
             // TODO : it should not have been a hash at all for ecommerce, but a
             // query string parameter
             this.showPopupOnClick(new URL(ev.newURL).hash);
+        }
+    }
+
+    /**
+     * Handles clicks outside the popup/modal content to dismiss it.
+     *
+     * @param {MouseEvent} ev - The click event object.
+     */
+    dismissPopupOnClickOutside(ev) {
+        // If the builder is active, do not dismiss the popup.
+        if (document.body.classList.contains("o_builder_open")) {
+            return;
+        }
+
+        const modalContent = this.el.querySelector(".modal-content");
+        const isClickOutside = (ev.target === this.modalEl) ||
+            (modalContent && !modalContent.contains(ev.target));
+        if (isClickOutside) {
+            this.hidePopup();
         }
     }
 }
