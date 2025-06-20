@@ -1,4 +1,4 @@
-import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
+import { isTextNode, isParagraphRelatedElement, isIconElement } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
@@ -608,11 +608,11 @@ export class ClipboardPlugin extends Plugin {
      * @param {DragEvent} ev
      */
     onDragStart(ev) {
-        if (ev.target.nodeName === "IMG") {
-            this.dragImage = ev.target instanceof HTMLElement && ev.target;
+        if (ev.target.nodeName === "IMG" || isIconElement(ev.target)) {
+            this.dragMedia = ev.target instanceof HTMLElement && ev.target;
             ev.dataTransfer.setData(
                 "application/vnd.odoo.odoo-editor-node",
-                this.dragImage.outerHTML
+                this.dragMedia.outerHTML
             );
         }
     }
@@ -642,16 +642,12 @@ export class ClipboardPlugin extends Plugin {
         }
 
         const dataTransfer = (ev.originalEvent || ev).dataTransfer;
-        const imageNodeHTML = ev.dataTransfer.getData("application/vnd.odoo.odoo-editor-node");
-        const image =
-            imageNodeHTML &&
-            this.dragImage &&
-            imageNodeHTML === this.dragImage.outerHTML &&
-            this.dragImage;
+        const mediaNodeHTML = ev.dataTransfer.getData("application/vnd.odoo.odoo-editor-node");
+        const media = mediaNodeHTML && this.dragMedia && mediaNodeHTML === this.dragMedia.outerHTML;
 
         const fileTransferItems = getImageFiles(dataTransfer);
         const htmlTransferItem = [...dataTransfer.items].find((item) => item.type === "text/html");
-        if (image || fileTransferItems.length || htmlTransferItem) {
+        if (media || fileTransferItems.length || htmlTransferItem) {
             if (this.document.caretPositionFromPoint) {
                 const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
                 this.dependencies.delete.deleteSelection();
@@ -668,9 +664,9 @@ export class ClipboardPlugin extends Plugin {
                 });
             }
         }
-        if (image) {
+        if (media) {
             const fragment = this.document.createDocumentFragment();
-            fragment.append(image);
+            fragment.append(this.dragMedia);
             this.dependencies.dom.insert(fragment);
             this.dependencies.history.addStep();
         } else if (fileTransferItems.length) {
