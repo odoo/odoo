@@ -570,6 +570,12 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
             ProductScreen.clickOrderButton(),
             Dialog.bodyIs("Failed in printing Printer 1, Printer 2 changes of the order"),
             Dialog.confirm(),
+            // OrderWarningDialog should not be shown as order already send for preparation
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
 
