@@ -364,15 +364,13 @@ class AccountMove(models.Model):
         docs = self.edi_document_ids.filtered(lambda d: d.state in ('to_send', 'to_cancel') and d.blocking_level != 'error')
         docs._process_documents_web_services(with_commit=with_commit)
 
-    def _retry_edi_documents_error_hook(self):
-        ''' Hook called when edi_documents are retried. For example, when it's needed to clean a field.
-        TO OVERRIDE
+    def _retry_edi_documents_error(self):
+        '''Called when edi_documents need to be retried.
         '''
-        return
+        self.edi_document_ids.write({'error': False, 'blocking_level': False})
 
     def action_retry_edi_documents_error(self):
-        self._retry_edi_documents_error_hook()
-        self.edi_document_ids.write({'error': False, 'blocking_level': False})
+        self._retry_edi_documents_error()
         self.action_process_edi_web_services()
 
     ####################################################
