@@ -6,7 +6,6 @@ import {
     htmlToTextContentInline,
     prettifyMessageContent,
 } from "@mail/utils/common/format";
-import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
 import { browser } from "@web/core/browser/browser";
 import { stateToUrl } from "@web/core/browser/router";
@@ -14,7 +13,7 @@ import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { createElementWithContent } from "@web/core/utils/html";
+import { createDocumentFragmentFromContent, createElementWithContent } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;

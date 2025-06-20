@@ -1,12 +1,12 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { htmlJoin } from "@mail/utils/common/html";
 import { markup } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";;
+import { cookie } from "@web/core/browser/cookie";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { htmlJoin } from "@web/core/utils/html";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { scrollTo, closestScrollable } from "@web_editor/js/common/scrolling";

@@ -6,8 +6,18 @@ import { formatList } from "../l10n/utils";
 const Markup = markup().constructor;
 
 /**
+ * Safely creates a Document fragment from content. If content was flagged as safe HTML using
+ * `markup` it is parsed as HTML. Otherwise it is escaped and parsed as text.
+ *
+ * @param {string|ReturnType<markup>} content
+ */
+export function createDocumentFragmentFromContent(content) {
+    return new document.defaultView.DOMParser().parseFromString(htmlEscape(content), "text/html");
+}
+
+/**
  * Safely creates an element with the given content. If content was flagged as safe HTML using
- * `markup()` it is set as innerHTML. Otherwise it is set as text.
+ * `markup` it is set as innerHTML. Otherwise it is set as text.
  *
  * @param {string} elementName
  * @param {string|ReturnType<markup>} content
@@ -49,6 +59,77 @@ export function htmlFormatList(list, ...args) {
 }
 
 /**
+ * Applies string replace on content and returns a markup result built for HTML.
+ *
+ * @param {string|ReturnType<markup>} content
+ * @param {string | RegExp} search
+ * @param {string} replacement
+ * @returns {ReturnType<markup>}
+ */
+export function htmlReplace(content, search, replacement) {
+    if (search instanceof RegExp && !(replacement instanceof Function)) {
+        throw new Error("htmlReplace: replacement must be a function when search is a RegExp.");
+    }
+    content = htmlEscape(content);
+    if (typeof search === "string" || search instanceof String) {
+        search = htmlEscape(search);
+    }
+    const safeReplacement =
+        replacement instanceof Function
+            ? (...args) => htmlEscape(replacement(...args))
+            : htmlEscape(replacement);
+    // markup: content and replacement are escaped (or markup), replace is considered safe
+    return markup(content.replace(search, safeReplacement));
+}
+
+/**
+ * Applies string replaceAll on content and returns a markup result built for HTML.
+ *
+ * @param {string|ReturnType<markup>} content
+ * @param {string | RegExp} search
+ * @param {string|(match: string) => string|ReturnType<markup>} replacement
+ * @returns {ReturnType<markup>}
+ */
+export function htmlReplaceAll(content, search, replacement) {
+    if (search instanceof RegExp && !(replacement instanceof Function)) {
+        throw new Error("htmlReplaceAll: replacement must be a function when search is a RegExp.");
+    }
+    content = htmlEscape(content);
+    if (typeof search === "string" || search instanceof String) {
+        search = htmlEscape(search);
+    }
+    const safeReplacement =
+        replacement instanceof Function
+            ? (...args) => htmlEscape(replacement(...args))
+            : htmlEscape(replacement);
+    // markup: content and replacement are escaped (or markup), replaceAll is considered safe
+    return markup(content.replaceAll(search, safeReplacement));
+}
+
+/**
+ * Applies list join on content and returns a markup result built for HTML.
+ *
+ * @param {Array<string|ReturnType<markup>>} args
+ * @returns {ReturnType<markup>}
+ */
+export function htmlJoin(...args) {
+    // markup: args are escaped (or markup), join is considered safe
+    return markup(args.map((arg) => htmlEscape(arg)).join(""));
+}
+
+/**
+ * Applies string trim on content and returns a markup result built for HTML.
+ *
+ * @param {string|ReturnType<markup>} content
+ * @returns {string|ReturnType<markup>}
+ */
+export function htmlTrim(content) {
+    content = htmlEscape(content);
+    // markup: content is escaped (or markup), trim is considered safe
+    return markup(content.trim());
+}
+
+/**
  * Checks if a html content is empty. If there are only formatting tags
  * with style attributes or a void content. Famous use case is
  * '<p style="..." class=".."><br></p>' added by some web editor(s).
@@ -64,7 +145,7 @@ export function isHtmlEmpty(content = "") {
 }
 
 /**
- * Safely sets content on element. If content was flagged as safe HTML using `markup()` it is set as
+ * Safely sets content on element. If content was flagged as safe HTML using `markup` it is set as
  * innerHTML. Otherwise it is set as text.
  *
  * @param {Element} element
@@ -72,6 +153,7 @@ export function isHtmlEmpty(content = "") {
  */
 export function setElementContent(element, content) {
     if (content instanceof Markup) {
+        // innerHTML: content is markup
         element.innerHTML = content;
     } else {
         element.textContent = content;
