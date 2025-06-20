@@ -49,6 +49,7 @@ class HrEmployee(models.Model):
         string="Employee Record",
         compute='_compute_version_id',
         search='_search_version_id',
+        compute_sql='_compute_sql_version_id',
         ondelete='cascade',
         required=True,
         store=False,
@@ -588,11 +589,10 @@ class HrEmployee(models.Model):
         domain = Domain('id', operator, value)
         return Domain('id', 'in', self.env['hr.version']._search(domain).select('employee_id'))
 
-    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
-        """This is required to search for the related fields of version_id as version_id is not stored"""
-        if field_expr == 'version_id':
-            field_expr = 'current_version_id'
-        return super()._field_to_sql(alias, field_expr, query)
+    def _compute_sql_version_id(self, alias, query):
+        # HACK required to make inherits work on a computed field
+        # (could be a CASE WHEN with the version_id from the content for the current user)
+        return self._field_to_sql(alias, 'current_version_id', query)
 
     def _get_version(self, date=fields.Date.today()):
         """
