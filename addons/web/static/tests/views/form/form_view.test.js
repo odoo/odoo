@@ -12881,3 +12881,118 @@ test(`pager is up to date`, async () => {
     });
     expect(".o_pager_indicator").toHaveText("2 / 2");
 });
+
+test(`cached web_read`, async () => {
+    let def = null;
+    onRpc("web_read", async () => {
+        expect.step("web_read");
+        return def;
+    });
+
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+            cache: true, // true is the default !
+        },
+        {
+            id: 2,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 2,
+            views: [[false, "form"]],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    // Open and Cache the first action
+    await getService("action").doAction(1);
+    expect(`.o_field_char input`).toHaveValue("yop");
+    expect(`.o_last_breadcrumb_item`).toHaveText("first record");
+
+    // Change the record to the second record
+    await getService("action").doAction(2);
+    expect(`.o_field_char input`).toHaveValue("blip");
+    expect(`.o_last_breadcrumb_item`).toHaveText("second record");
+
+    def = new Deferred();
+
+    // Come back to the first action
+    getService("action").doAction(1);
+    await animationFrame();
+    // The record is shown even if the rpc is not finish (cached values)
+    expect(`.o_field_char input`).toHaveValue("yop");
+    expect(`.o_last_breadcrumb_item`).toHaveText("first record");
+
+    def.resolve([{ id: 1, foo: "new yop", display_name: "new first record" }]);
+    await animationFrame();
+    // The record is updated with the new values
+    expect(`.o_field_char input`).toHaveValue("new yop");
+    expect(`.o_last_breadcrumb_item`).toHaveText("new first record");
+    expect.verifySteps(["web_read", "web_read", "web_read"]);
+});
+
+test(`cached web_read: don't cache if action have cache:false`, async () => {
+    let def = null;
+    onRpc("web_read", async () => {
+        expect.step("web_read");
+        return def;
+    });
+
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+            cache: false, // true is the default !
+        },
+        {
+            id: 2,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 2,
+            views: [[false, "form"]],
+            cache: false, // true is the default !
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    // Open the first action
+    await getService("action").doAction(1);
+    expect(`.o_field_char input`).toHaveValue("yop");
+    expect(`.o_last_breadcrumb_item`).toHaveText("first record");
+
+    // Change the record (the second record)
+    await getService("action").doAction(2);
+    expect(`.o_field_char input`).toHaveValue("blip");
+    expect(`.o_last_breadcrumb_item`).toHaveText("second record");
+
+    def = new Deferred();
+
+    // Come back to the first action
+    getService("action").doAction(1);
+    await animationFrame();
+    // The second record is still shown, waiting to the RPC to be finish
+    expect(`.o_field_char input`).toHaveValue("blip");
+    expect(`.o_last_breadcrumb_item`).toHaveText("second record");
+
+    def.resolve([{ id: 1, foo: "new yop", display_name: "new first record" }]);
+    await animationFrame();
+    // Show the new values when the rpc is finish
+    expect(`.o_field_char input`).toHaveValue("new yop");
+    expect(`.o_last_breadcrumb_item`).toHaveText("new first record");
+    expect.verifySteps(["web_read", "web_read", "web_read"]);
+});

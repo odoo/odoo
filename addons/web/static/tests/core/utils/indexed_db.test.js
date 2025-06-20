@@ -73,6 +73,32 @@ test("one cache, invalidate", async () => {
     await ensureDbIsAbsent();
 });
 
+test("one cache, invalidate multi-tables", async () => {
+    onError(() => deleteCacheDB());
+    await ensureDbIsAbsent();
+
+    const indexedDB = new IndexedDB(CACHE_NAME, 1);
+
+    // populate the table
+    await indexedDB.write("mytable", "test", "value for 'test'");
+    await indexedDB.write("mytable", "test2", "value for 'test2'");
+    await indexedDB.write("mytable2", "test", "value for 'test'");
+    await indexedDB.write("mytable2", "test2", "value for 'test2'");
+    expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
+    expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
+    expect(await indexedDB.read("mytable2", "test")).toBe("value for 'test'");
+    expect(await indexedDB.read("mytable2", "test2")).toBe("value for 'test2'");
+
+    await indexedDB.invalidate(["mytable", "mytable2"]);
+    expect(await indexedDB.read("mytable", "test")).toBe(undefined);
+    expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
+    expect(await indexedDB.read("mytable2", "test")).toBe(undefined);
+    expect(await indexedDB.read("mytable2", "test2")).toBe(undefined);
+
+    await indexedDB.deleteDatabase();
+    await ensureDbIsAbsent();
+});
+
 test("one cache, invalidate all tables", async () => {
     onError(() => deleteCacheDB());
     await ensureDbIsAbsent();
@@ -125,6 +151,26 @@ test("invalidate non existing table", async () => {
     await indexedDB.execute((db) => {
         expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
     });
+
+    await indexedDB.deleteDatabase();
+    await ensureDbIsAbsent();
+});
+
+test("invalidate non existing and existing table", async () => {
+    onError(() => deleteCacheDB());
+    await ensureDbIsAbsent();
+
+    const indexedDB = new IndexedDB(CACHE_NAME, 1);
+
+    // populate the table
+    await indexedDB.write("mytable", "test", "value for 'test'");
+    await indexedDB.write("mytable", "test2", "value for 'test2'");
+    expect(await indexedDB.read("mytable", "test")).toBe("value for 'test'");
+    expect(await indexedDB.read("mytable", "test2")).toBe("value for 'test2'");
+
+    await indexedDB.invalidate(["nonExistingTable", "mytable"]);
+    expect(await indexedDB.read("mytable", "test")).toBe(undefined);
+    expect(await indexedDB.read("mytable", "test2")).toBe(undefined);
 
     await indexedDB.deleteDatabase();
     await ensureDbIsAbsent();

@@ -24,7 +24,11 @@ export async function startWebClient(Webclient) {
     };
     odoo.isReady = false;
 
-    rpc.setCache(new PersistentCache("rpc", session.registry_hash));
+    if (window.isSecureContext && session.browser_cache_secret) {
+        rpc.setCache(
+            new PersistentCache("rpc", session.registry_hash, session.browser_cache_secret)
+        );
+    }
 
     await whenReady();
     const app = await mountComponent(Webclient, document.body, { name: "Odoo Web Client" });

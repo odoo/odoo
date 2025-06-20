@@ -760,6 +760,10 @@ test.tags("desktop");
 test("there is no flickering when switching between views", async () => {
     let def;
     onRpc(() => def);
+    Partner._views.list = `<list>
+                                <field name="display_name"/>
+                                <field name="foo"/>
+                            </list>`;
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -781,7 +785,8 @@ test("there is no flickering when switching between views", async () => {
     await switchView("list");
     expect(".o_kanban_view").toHaveCount(0, { message: "shouldn't display the kanban anymore" });
     expect(".o_list_view").toHaveCount(1, { message: "should display an empty list view" });
-    expect(".o_list_view table").toHaveCount(0);
+    expect(".o_list_view table").toHaveCount(1);
+    expect(".o_list_view table .o_data_row").toHaveCount(5); // Cached values
 
     def.resolve();
     await animationFrame();
@@ -812,7 +817,8 @@ test("there is no flickering when switching between views", async () => {
     await contains(".o_control_panel .breadcrumb a").click();
     expect(".o_form_view").toHaveCount(0, { message: "shouldn't display the form anymore" });
     expect(".o_list_view").toHaveCount(1, { message: "should display an empty list" });
-    expect(".o_list_view table").toHaveCount(0);
+    expect(".o_list_view table").toHaveCount(1);
+    expect(".o_list_view table .o_data_row").toHaveCount(5); // Cached values
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
 
     def.resolve();

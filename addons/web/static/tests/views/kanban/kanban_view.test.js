@@ -3360,12 +3360,10 @@ test("quick create several records in a row", async () => {
     });
 });
 
-test("quick create is disabled until record is created and onchange is done", async () => {
+test("quick create is re-enabled directly after the validation", async () => {
     let webSaveDef;
-    let onchangeDef;
     let webReadDef;
     onRpc("web_save", () => webSaveDef);
-    onRpc("onchange", () => onchangeDef);
     onRpc("web_read", () => webReadDef);
 
     await mountView({
@@ -3393,28 +3391,17 @@ test("quick create is disabled until record is created and onchange is done", as
 
     await editKanbanRecordQuickCreateInput("display_name", "new partner 1");
     webSaveDef = new Deferred();
-    onchangeDef = new Deferred();
     webReadDef = new Deferred();
     await validateKanbanRecord();
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
         message: "first column should still contain one record",
     });
-    expect(".o_kanban_quick_create.o_disabled").toHaveCount(1, {
-        message: "quick create should be disabled",
+    expect(".o_kanban_quick_create.o_disabled").toHaveCount(0, {
+        message: "quick create should be enabled",
     });
 
     webSaveDef.resolve();
-    await animationFrame();
-
-    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
-        message: "first column should still contain one record",
-    });
-    expect(".o_kanban_quick_create.o_disabled").toHaveCount(1, {
-        message: "quick create should be disabled",
-    });
-
-    onchangeDef.resolve();
     await animationFrame();
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {

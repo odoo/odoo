@@ -18492,3 +18492,76 @@ test(`list with custom cog action that has a confirmation target="new" action`, 
         "web_read",
     ]);
 });
+
+test(`cache web_search_read`, async () => {
+    let searchReadDef;
+    onRpc("web_search_read", () => searchReadDef);
+
+    Foo._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "form,false": `<form><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "foo",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`tbody tr`).toHaveCount(4, { message: "should have 4 rows" });
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
+
+    await contains(`.o_data_row .o_data_cell`).click(); // Open the first record
+
+    searchReadDef = new Deferred();
+    await contains(`.breadcrumb-item a, .o_back_button`).click();
+
+    // Cached values !
+    expect(`tbody tr`).toHaveCount(4, { message: "should have 4 rows" });
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
+
+    // record 1 (yop) is removed
+    // record 3 (gnap) is updated to gnap11
+    // record 5 (plop) and record 6 (plop2) are added
+    searchReadDef.resolve({
+        length: 5,
+        records: [
+            {
+                id: 2,
+                foo: "blip",
+            },
+            {
+                id: 3,
+                foo: "gnap11",
+            },
+            {
+                id: 4,
+                foo: "blip",
+            },
+            {
+                id: 5,
+                foo: "plop",
+            },
+            {
+                id: 6,
+                foo: "plop2",
+            },
+        ],
+    });
+
+    await animationFrame();
+    // Updated values !
+    expect(`tbody tr`).toHaveCount(5);
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "gnap11", "blip", "plop", "plop2"]);
+});
