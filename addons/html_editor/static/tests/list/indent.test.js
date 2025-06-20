@@ -691,6 +691,28 @@ describe("with selection collapsed", () => {
             contentAfter: '<ul><li class="nav-item">a[]</li></ul>',
         });
     });
+    test("should adjust list padding on tab", async () => {
+        await testEditor({
+            styleContent: ":root { font: 14px Roboto }",
+            contentBefore: unformat(`
+                <ol style="padding-inline-start: 58px;">
+                    <li style="font-size: 56px;">abc</li>
+                    <li style="font-size: 56px;">def[]</li>
+                </ol>
+            `),
+            stepFunction: keydownTab,
+            contentAfter: unformat(`
+                <ol style="padding-inline-start: 58px;">
+                    <li style="font-size: 56px;">abc</li>
+                    <li class="oe-nested">
+                        <ol style="padding-inline-start: 59px;">
+                            <li style="font-size: 56px;">def[]</li>
+                        </ol>
+                    </li>
+                </ol>
+            `),
+        });
+    });
 });
 
 describe("with selection", () => {
