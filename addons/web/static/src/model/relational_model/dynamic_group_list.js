@@ -152,6 +152,8 @@ export class DynamicGroupList extends DynamicList {
             throw e;
         }
 
+        this.model.hooks.onRecordMovedGroup(record, sourceGroup, targetGroup);
+
         const proms = [];
         if (mustReloadSourceList) {
             const { offset, limit, orderBy, domain } = sourceGroup.list;

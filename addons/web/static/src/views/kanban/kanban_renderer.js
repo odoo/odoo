@@ -459,7 +459,7 @@ export class KanbanRenderer extends Component {
         if (mode === "edit") {
             await this.props.openRecord(record);
         } else {
-            this.props.progressBarState?.updateCounts(group);
+            this.props.progressBarState?.updateCounts([group]);
         }
         this.props.quickCreateState.groupId = mode === "add" ? group.id : false;
     }
