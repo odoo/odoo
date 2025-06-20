@@ -15,6 +15,7 @@ import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { renderToElement } from "@web/core/utils/render";
 import { delay } from "@odoo/hoot-dom";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
@@ -395,12 +396,16 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
+            ProductScreen.clickControlButton("Guests"),
+            NumberPopup.enterValue("5"),
+            NumberPopup.isShown("5"),
+            Dialog.confirm(),
             ProductScreen.clickDisplayedProduct("Product Test"),
             Chrome.freezeDateTime(1739370000000),
             Dialog.confirm("Add"),
             ProductScreen.totalAmountIs("10"),
             {
-                content: "Check if order preparation contains always Variant",
+                content: "Check the content of the preparation receipt",
                 trigger: "body",
                 run: async () => {
                     const order = posmodel.getOrder();
@@ -433,6 +438,11 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                     }
                     if (rendered.innerHTML.includes("DUPLICATA!")) {
                         throw new Error("DUPLICATA! should not be present in printed receipt");
+                    }
+
+                    const guestInfo = rendered.querySelector(".pos-customer-info");
+                    if (!guestInfo || !guestInfo.innerHTML.includes("Guest: 5")) {
+                        throw new Error("Guest info not found in printed receipt");
                     }
                 },
             },
