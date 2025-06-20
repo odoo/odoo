@@ -9,12 +9,12 @@ class StockRequestCount(models.TransientModel):
     _description = 'Stock Request an Inventory Count'
 
     inventory_date = fields.Date(
-        'Inventory Date', required=True,
+        'Scheduled at', required=True,
         help="Choose a date to get the inventory at that date",
         default=fields.Datetime.now)
-    user_id = fields.Many2one('res.users', string="User", domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)])
+    user_id = fields.Many2one('res.users', string="Assign to", domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)])
     quant_ids = fields.Many2many('stock.quant')
-    set_count = fields.Selection([('empty', 'Leave Empty'), ('set', 'Set Current Value')], default='empty', string='Count')
+    set_count = fields.Selection([('empty', 'Start from 0'), ('set', 'Set Current Value')], default='empty', string='Inventory Method')
 
     def action_request_count(self):
         for count_request in self:

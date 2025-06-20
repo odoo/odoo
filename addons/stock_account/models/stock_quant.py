@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.misc import groupby
 
 
 class StockQuant(models.Model):
@@ -9,11 +8,6 @@ class StockQuant(models.Model):
 
     value = fields.Monetary('Value', compute='_compute_value', groups='stock.group_stock_manager')
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', groups='stock.group_stock_manager')
-    accounting_date = fields.Date(
-        'Accounting Date',
-        help="Date at which the accounting entries will be created"
-             " in case of automated inventory valuation."
-             " If empty, the inventory date will be used.")
     cost_method = fields.Selection(
         string="Cost Method",
         selection=[
@@ -78,15 +72,6 @@ class StockQuant(models.Model):
             column = super()._read_group_postprocess_aggregate('id:recordset', raw_values)
             return (sum(records.mapped('value')) for records in column)
         return super()._read_group_postprocess_aggregate(aggregate_spec, raw_values)
-
-    def _apply_inventory(self):
-        for accounting_date, inventory_ids in groupby(self, key=lambda q: q.accounting_date):
-            inventories = self.env['stock.quant'].concat(*inventory_ids)
-            if accounting_date:
-                super(StockQuant, inventories.with_context(force_period_date=accounting_date))._apply_inventory()
-                inventories.accounting_date = False
-            else:
-                super(StockQuant, inventories)._apply_inventory()
 
     def _get_inventory_move_values(self, qty, location_id, location_dest_id, package_id=False, package_dest_id=False):
         res_move = super()._get_inventory_move_values(qty, location_id, location_dest_id, package_id, package_dest_id)
