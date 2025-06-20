@@ -26,7 +26,7 @@ class MockVisitor(common.BaseCase):
             yield
 
 
-@tagged('-at_install', 'post_install', 'website_visitor')
+@tagged('-at_install', 'post_install', 'website_visitor', 'is_query_count')
 class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
 
     def setUp(self):

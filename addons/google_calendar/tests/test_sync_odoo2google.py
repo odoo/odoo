@@ -13,7 +13,8 @@ from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo import tools
 
-@tagged('odoo2google')
+
+@tagged('odoo2google', 'is_query_count')
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
 class TestSyncOdoo2Google(TestSyncGoogle):
 

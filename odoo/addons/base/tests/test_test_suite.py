@@ -29,6 +29,9 @@ if sys.version_info >= (3, 8):
         def test_test_suite(self):
             """ Check that OdooSuite handles unittest.TestCase correctly. """
 
+        def get_method_additional_tags(self, method):
+            return []
+
 
 class TestRunnerLoggingCommon(TransactionCase):
     """
