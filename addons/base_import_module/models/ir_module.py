@@ -439,6 +439,12 @@ class IrModuleModule(models.Model):
         except requests.exceptions.ConnectionError:
             return []
 
+    def button_upgrade(self):
+        res = super().button_upgrade()
+        # revert states for imported modules since they cannot be upgraded
+        self.search([('imported', '=', True), ('state', '=', 'to upgrade')]).state = 'installed'
+        return res
+
     def button_immediate_install_app(self):
         if not self.env.is_admin():
             raise AccessDenied()
