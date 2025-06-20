@@ -545,7 +545,7 @@ class TestCommon(HttpCase):
         for k, v in dict1.items():
             self.assertEqual(v, dict2.get(k), f"'{k}' mismatch")
 
-    def call_post_commit_hooks(self):
+    def call_post_commit_hooks(self, skip_notify=False):
         """
         manually calls postcommit hooks defined with the decorator @after_commit
         """
@@ -555,4 +555,6 @@ class TestCommon(HttpCase):
         funcs = self.env.cr.postcommit._funcs.copy()
         while funcs:
             func = funcs.popleft()
+            if skip_notify and func.__name__ == "notify":
+                continue
             func()

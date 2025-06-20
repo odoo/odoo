@@ -4,6 +4,7 @@ import { Thread } from "@mail/core/common/thread";
 import {
     Component,
     onMounted,
+    onWillDestroy,
     onWillUpdateProps,
     useChildSubEnv,
     useRef,
@@ -53,6 +54,9 @@ export class Chatter extends Component {
                 this.load(this.state.thread, this.requestList);
             }
         });
+        onWillDestroy(() => {
+            this.cleanDisplayed();
+        });
     }
 
     get afterPostRequestList() {
@@ -71,7 +75,14 @@ export class Chatter extends Component {
         return [];
     }
 
+    cleanDisplayed() {
+        if (this.state.thread) {
+            this.state.thread.chatterDisplayed = false;
+        }
+    }
+
     changeThread(threadModel, threadId) {
+        this.cleanDisplayed();
         this.state.thread = this.store.Thread.insert({ model: threadModel, id: threadId });
         if (threadId === false) {
             if (this.state.thread.messages.length === 0) {
@@ -87,6 +98,7 @@ export class Chatter extends Component {
                 });
             }
         }
+        this.state.thread.chatterDisplayed = true;
     }
 
     /**
@@ -117,8 +129,6 @@ export class Chatter extends Component {
 
     onPostCallback() {
         this.state.jumpThreadPresent++;
-        // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
-        this.load(this.state.thread, this.afterPostRequestList);
     }
 
     onScroll() {

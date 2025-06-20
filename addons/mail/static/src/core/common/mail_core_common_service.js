@@ -40,14 +40,49 @@ export class MailCoreCommon {
                 this.store.settings.update(payload);
             }
         });
+        this.busService.subscribe("mail.message/new", async (payload, metadata) => {
+            const { data } = payload;
+            this.store.insert(data);
+            this._handleNotificationNewMessage(payload, metadata);
+        });
         this.busService.subscribe("mail.record/insert", (payload) => {
-            this.store.insert(payload);
+            const { ignore_user_ids, ...message } = payload;
+            if (!ignore_user_ids || !ignore_user_ids.includes(this.store.self.userId)) {
+
+                this.store.insert(message);
+            }
         });
     }
 
     _handleNotificationToggleStar(payload, metadata) {
         const { message_ids: messageIds, starred } = payload;
         this.store["mail.message"].insert(messageIds.map((id) => ({ id, starred })));
+    }
+
+    async _handleNotificationNewMessage(payload, { id: notifId }) {
+        const { data, id: threadId, temporary_id } = payload;
+        const model = data["mail.thread"][0].model;
+        const thread = await this.store.Thread.getOrFetch({
+            model,
+            id: threadId,
+        });
+        if (!thread) {
+            return;
+        }
+        const message = this.store["mail.message"].get(data["mail.message"][0]);
+        if (!message) {
+            return;
+        }
+        if (message.notIn(thread.messages)) {
+            if (!thread.loadNewer) {
+                thread.addOrReplaceMessage(message, this.store["mail.message"].get(temporary_id));
+            } else if (thread.status === "loading") {
+                thread.pendingNewMessages.push(message);
+            }
+            if (message.isSelfAuthored) {
+                thread.onNewSelfMessage(message);
+            }
+        }
     }
 }
 

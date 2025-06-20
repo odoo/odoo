@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 # core models (required for mixins)
 from . import mail_alias
 from . import mail_alias_domain

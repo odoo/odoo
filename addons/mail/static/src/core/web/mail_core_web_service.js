@@ -30,6 +30,31 @@ export class MailCoreWeb {
                 this.store.starred.counter--;
             }
         });
+        this.busService.subscribe("mail.record/update_activity", async (payload) => {
+            this.store.insert(payload.data)
+            const activity_id = payload.data["mail.activity"][0].id;
+            const thread = await this.store.Thread.getOrFetch({
+                model: payload.res_model,
+                id: payload.res_id,
+            })
+            if (!thread){
+                return;
+            }
+            const activity = this.store["mail.activity"].get(activity_id);
+            thread.activities.push(activity);
+
+        });
+        this.busService.subscribe("mail.record/delete_activity", async (payload) => {
+            const thread = await this.store.Thread.getOrFetch({
+                model: payload.res_model,
+                id: payload.res_id,
+            })
+            const activity = this.store["mail.activity"].get(payload.data["mail.activity"][0].id);
+            if (thread && thread.activities) {
+                thread.activities.delete(activity);
+            }
+            this.store.insert(payload.data);
+        });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {
             const { "mail.message": messages = [] } = this.store.insert(payload);
             /** @type {import("models").Message} */

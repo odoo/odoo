@@ -6,9 +6,10 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 from odoo import models
-from odoo.fields import Domain
 from odoo.addons.mail.tools.discuss import add_guest_to_context
+from odoo.fields import Domain
 from odoo.tools.misc import verify_limited_field_access_token
+from ..models.mail_thread import MailThread
 
 PRESENCE_CHANNEL_PREFIX = "odoo-presence-"
 PRESENCE_CHANNEL_REGEX = re.compile(
@@ -95,6 +96,17 @@ class IrWebsocket(models.AbstractModel):
         # sudo: mail.presence: access to presence was validated with access token.
         data["missed_presences"] = self.env["mail.presence"].sudo().search(presence_domain)
         return data
+
+    @add_guest_to_context
+    def _build_bus_channel_list(self, channels):
+        channels = super()._build_bus_channel_list(channels)
+        for channel in channels:
+            if isinstance(channel, MailThread):
+                channels.append((channel, "thread"))
+                if self.env.user._is_internal():
+                    channels.append((channel, "thread-internal"))
+
+        return channels
 
     def _after_subscribe_data(self, data):
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()

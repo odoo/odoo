@@ -258,7 +258,11 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         """Test mentioning a partner with no common company."""
         test_records_mc_c2 = self.test_records_mc[1]
         self._reset_bus()
-        with self.assertBus([(self.cr.dbname, "res.partner", self.user_employee_c3.partner_id.id)]):
+        with self.assertBus([
+            (self.cr.dbname, "mail.test.multi.company", test_records_mc_c2.id, "thread-internal"),  # update followers in thread
+            (self.cr.dbname, "mail.test.multi.company", test_records_mc_c2.id, "thread"),  # add message to thread
+            (self.cr.dbname, "res.partner", self.user_employee_c3.partner_id.id)  # add message to inbox per user
+        ]):
             test_records_mc_c2.with_user(self.user_employee_c2).with_context(
                 allowed_company_ids=self.company_2.ids
             ).message_post(

@@ -75,7 +75,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=101):  # tmf: 98
+        with self.assertQueryCount(employee=108):
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
@@ -400,25 +400,25 @@ class TestRatingPerformance(FullBaseMailPerformance):
     @users('employee')
     @warmup
     def test_rating_last_value_perfs(self):
-        with self.assertQueryCount(employee=254):  # tmf: 254
+        with self.assertQueryCount(employee=294):  # tmf: 233
             self.create_ratings('mail.test.rating.thread')
 
-        with self.assertQueryCount(employee=283):  # tmf: 283
+        with self.assertQueryCount(employee=323):  # tmf: 263
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=242):  # tmf: 242
+        with self.assertQueryCount(employee=282):  # tmf: 222
             self.apply_ratings(5)
 
     @users('employee')
     @warmup
     def test_rating_last_value_perfs_with_rating_mixin(self):
-        with self.assertQueryCount(employee=277):  # tmf: 277
+        with self.assertQueryCount(employee=317):  # tmf: 256
             self.create_ratings('mail.test.rating')
 
-        with self.assertQueryCount(employee=305):  # tmf: 305
+        with self.assertQueryCount(employee=345):  # tmf: 285
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=284):  # tmf: 284
+        with self.assertQueryCount(employee=324):  # tmf: 264
             self.apply_ratings(5)
 
         with self.assertQueryCount(employee=1):

@@ -386,7 +386,7 @@ class MailActivityMixin(models.AbstractModel):
 
         return self.env['mail.activity'].search(domain)
 
-    def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', **act_values):
+    def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', to_be_done=False, **act_values):
         """ Schedule an activity on each record of the current record set.
         This method allow to provide as parameter act_type_xmlid. This is an
         xml_id of activity type instead of directly giving an activity_type_id.
@@ -432,7 +432,10 @@ class MailActivityMixin(models.AbstractModel):
             if not create_vals.get('user_id') and activity_type.default_user_id:
                 create_vals['user_id'] = activity_type.default_user_id.id
             create_vals_list.append(create_vals)
-        return self.env['mail.activity'].create(create_vals_list)
+        activities = self.env['mail.activity'].create(create_vals_list)
+        if not to_be_done:
+            activities._notify_activity_thread(unlink=False)
+        return activities
 
     def _activity_schedule_with_view(self, act_type_xmlid='', date_deadline=None, summary='', views_or_xmlid='', render_context=None, **act_values):
         """ Helper method: Schedule an activity on each record of the current record set.

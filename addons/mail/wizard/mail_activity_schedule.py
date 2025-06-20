@@ -382,9 +382,9 @@ class MailActivitySchedule(models.TransientModel):
         self._action_schedule_activities()
 
     def action_schedule_activities_done(self):
-        self._action_schedule_activities().action_done()
+        self._action_schedule_activities(to_be_done=True).action_done()
 
-    def _action_schedule_activities(self):
+    def _action_schedule_activities(self, to_be_done=False):
         if not self.res_model:
             return self._action_schedule_activities_personal()
         return self._get_applied_on_records().activity_schedule(
@@ -393,7 +393,8 @@ class MailActivitySchedule(models.TransientModel):
             summary=self.summary,
             note=self.note,
             user_id=self.activity_user_id.id,
-            date_deadline=self.date_deadline
+            date_deadline=self.date_deadline,
+            to_be_done=to_be_done,
         )
 
     def _action_schedule_activities_personal(self):
