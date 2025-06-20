@@ -32,6 +32,7 @@ export class BuilderNumberInput extends Component {
     static defaultProps = {
         composable: false,
         applyWithUnit: true,
+        default: 0,
     };
 
     setup() {
