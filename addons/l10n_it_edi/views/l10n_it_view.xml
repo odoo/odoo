@@ -83,7 +83,7 @@
         <field name="arch" type="xml">
             <field name="status_in_payment" position="before">
                 <field name="l10n_it_edi_transaction" optional="hide"/>
-                <field name="l10n_it_edi_attachment_id" optional="hide"/>
+                <field name="l10n_it_edi_attachment_name" optional="hide"/>
                 <field name="l10n_it_edi_state" optional="hide"/>
             </field>
         </field>
@@ -96,7 +96,7 @@
         <field name="arch" type="xml">
             <xpath expr="//search/field[@name='journal_id']" position="after">
                 <field name="l10n_it_edi_transaction" groups="base.group_no_one"/>
-                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one"/>
+                <field name="l10n_it_edi_attachment_name" groups="base.group_no_one"/>
                 <field name="l10n_it_edi_state" groups="base.group_no_one"/>
             </xpath>
         </field>
@@ -118,7 +118,6 @@
                 </xpath>
                 <xpath expr="//sheet" position="before">
                     <field name="l10n_it_edi_is_self_invoice" invisible="1"/>
-                    <field name="l10n_it_edi_attachment_id" invisible="1"/>
                     <div class="alert alert-warning" role="alert"
                         invisible="not l10n_it_edi_header 
                                    or state == 'draft'
@@ -147,8 +146,9 @@
                         invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or country_code != 'IT'">
                         <group>
                             <group>
+                                <field name="l10n_it_edi_attachment_name" invisible="1"/>
                                 <field name="l10n_it_edi_transaction" groups="base.group_no_one" readonly="1"/>
-                                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one" readonly="1"/>
+                                <field name="l10n_it_edi_attachment_file" widget="binary" filename="l10n_it_edi_attachment_name" groups="base.group_no_one" readonly="1"/>
                                 <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
                                 <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
                                 <field name="l10n_it_document_type"
