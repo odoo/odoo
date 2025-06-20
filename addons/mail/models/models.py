@@ -20,12 +20,44 @@ class Base(models.AbstractModel):
     _inherit = 'base'
     _mail_defaults_to_email = False
 
+    # ------------------------------------------------------------
+    # ORM
+    # ------------------------------------------------------------
+
     def _valid_field_parameter(self, field, name):
         # allow tracking on abstract models; see also 'mail.thread'
         return (
             name == 'tracking' and self._abstract
             or super()._valid_field_parameter(field, name)
         )
+
+    # ------------------------------------------------------------
+    # CHECK ACCESS
+    # ------------------------------------------------------------
+
+    def _group_mail_message_access(self, message_access):
+        """ mail.message check permission rules based on related document. This
+        is used when no other checks already granted permission (e.g. being
+        notified, being author, ...). """
+        create_allow = getattr(self, '_mail_post_access', 'write')
+
+        if message_access in ['write', 'unlink']:
+            check_access = 'write'
+        elif message_access == 'create' and create_allow in ['create', 'read', 'write', 'unlink']:
+            check_access = create_allow
+        elif message_access == 'create':
+            check_access = 'write'
+        else:
+            check_access = message_access
+        return {check_access: self.ids}
+
+    def _get_mail_message_access(self, message_access):
+        """ For a single record, return the access to check based on requested
+        mail.message access. """
+        self.ensure_one()
+        operations = self._group_mail_message_access(message_access)
+        # id may not be in, if somehow no access is granted at all
+        return next((key for key, res_ids in operations.items() if self.id in res_ids), False)
 
     # ------------------------------------------------------------
     # FIELDS HELPERS

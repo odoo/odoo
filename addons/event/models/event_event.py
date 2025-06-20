@@ -672,18 +672,13 @@ class EventEvent(models.Model):
         vals_list = super().copy_data(default=default)
         return [dict(vals, name=self.env._("%s (copy)", event.name)) for event, vals in zip(self, vals_list)]
 
-    @api.model
-    def _get_mail_message_access(self, res_ids, operation, model_name=None):
-        if (
-            operation == 'create'
-            and self.env.user.has_group('event.group_event_registration_desk')
-            and (not model_name or model_name == 'event.event')
-        ):
+    def _group_mail_message_access(self, message_access):
+        if (message_access == 'create' and self.env.user.has_group('event.group_event_registration_desk')):
             # allow the registration desk users to post messages on Event
             # can not be done with "_mail_post_access" otherwise public user will be
             # able to post on published Event (see website_event)
-            return 'read'
-        return super(EventEvent, self)._get_mail_message_access(res_ids, operation, model_name)
+            return {'read': self.ids}
+        return super()._group_mail_message_access(message_access)
 
     def _set_tz_context(self):
         self.ensure_one()

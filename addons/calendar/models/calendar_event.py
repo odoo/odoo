@@ -906,13 +906,13 @@ class CalendarEvent(models.Model):
                 'views': [(False, 'form')],
             }
 
-    @api.model
-    def _get_mail_message_access(self, res_ids, operation, model_name=None):
-        if operation == 'read' and (not model_name or model_name == 'event.event'):
-            for event in self.browse(res_ids):
-                if event.privacy == "private" and self.env.user.partner_id not in event.attendee_ids.partner_id:
-                    return 'write'
-        return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
+    def _group_mail_message_access(self, message_access):
+        private = self.filtered(
+            lambda event: event.privacy == "private" and self.env.user.partner_id not in event.attendee_ids.partner_id
+        )
+        access_res_ids = super(CalendarEvent, self - private)._group_mail_message_access(message_access)
+        access_res_ids.setdefault('write', []).extend(private.ids)
+        return access_res_ids
 
     def _attendees_values(self, partner_commands):
         """
