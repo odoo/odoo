@@ -14,12 +14,16 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
+    #   1: search res_partner (odooot ref exists)
     #   1: search res_groups (internalUserGroupId ref exists)
-    #   5: odoobot format:
-    #       - search res_partner (ref exists)
+    #   8: odoobot format:
     #       - fetch res_partner (_read_format)
     #       - search res_users (_compute_im_status)
+    #       - search presence (_compute_im_status)
+    #       - fetch presence (_compute_im_status)
     #       - _get_on_leave_ids (_compute_im_status hr_holidays override)
+    #       - search employee (_compute_im_status hr_homeworking override)
+    #       - fetch employee (_compute_im_status hr_homeworking override)
     #       - fetch res_users (_read_format)
     #   5: settings:
     #       - search res_users_settings (_find_or_create_for_user)
@@ -27,11 +31,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search res_users_settings_volumes (_format_settings)
     #       - search res_lang_res_users_settings_rel (_format_settings)
     #       - search im_livechat_expertise_res_users_settings_rel (_format_settings)
-    #   1: fetch res_partner (self_partner _read_format)
     #   2: hasCannedResponses
     #       - fetch res_groups_users_rel
     #       - search mail_canned_response
-    _query_count_init_store = 14
+    _query_count_init_store = 17
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
@@ -395,6 +398,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "active": True,
                     "avatar_128_access_token": partner_0._get_avatar_128_access_token(),
                     "id": self.users[0].partner_id.id,
+                    "im_status": 'online',
+                    "im_status_access_token": self.users[0].partner_id._get_im_status_access_token(),
                     "main_user_id": self.users[0].id,
                     "name": "Ernest Employee",
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),

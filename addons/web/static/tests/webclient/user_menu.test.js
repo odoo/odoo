@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, queryAllAttributes, queryAllProperties, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import {
     clearRegistry,
     contains,
@@ -162,4 +163,19 @@ test("click on odoo account item", async () => {
     expect(".o-dropdown--menu .dropdown-item").toHaveText("My Odoo.com Account");
     await contains(".o-dropdown--menu .dropdown-item").click();
     expect.verifySteps(["/web/session/account", "open https://account-url.com"]);
+});
+
+test("can use component as registry item", async () => {
+    class ExampleComponent extends Component {
+        static template = xml`<span class='component-class'>Example Component</span>`;
+        static props = ["*"];
+    }
+    userMenuRegistry.add("component-item", () => ({
+        type: "component",
+        contentComponent: ExampleComponent,
+        sequence: 10,
+    }));
+    await mountWithCleanup(UserMenu);
+    await contains("button.dropdown-toggle").click();
+    expect(".o-dropdown--menu span.component-class").toHaveText("Example Component");
 });
