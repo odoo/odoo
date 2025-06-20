@@ -60,7 +60,7 @@ registerWebsitePreviewTour("add_and_remove_main_product_image_no_variant", {
     },
     {
         content: "Check that the snippet editor of the clicked image has been loaded",
-        trigger: "we-customizeblock-options:has(we-title:contains('Re-order'))",
+        trigger: ".o_customize_tab [data-container-title='Image']",
     },
     ...removeImg,
 ]);

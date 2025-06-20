@@ -8,8 +8,6 @@ from PIL import Image
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
-import unittest
-
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
@@ -388,8 +386,6 @@ class TestWebsiteSaleRemoveImage(HttpCase):
             'image_1920': blue_image,
         })
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_sale_add_and_remove_main_product_image_no_variant(self):
         self.product = self.env['product.product'].create({
             'product_tmpl_id': self.template.id,
