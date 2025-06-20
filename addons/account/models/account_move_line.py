@@ -444,6 +444,8 @@ class AccountMoveLine(models.Model):
     payment_date = fields.Date(
         string='Next Payment Date',
         compute='_compute_payment_date',
+        compute_sql='_compute_sql_payment_date',
+        compute_sudo=True,
         search='_search_payment_date',
     )
 
@@ -1154,6 +1156,17 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.payment_date = line.discount_date if line.discount_date and date.today() <= line.discount_date else line.date_maturity
 
+    def _compute_sql_payment_date(self, alias, query):
+        return SQL("""
+            CASE
+                WHEN %(discount_date)s IS NOT NULL AND %(today)s <= %(discount_date)s THEN %(discount_date)s
+                ELSE %(date_maturity)s
+            END""",
+            today=fields.Date.context_today(self),
+            discount_date=self._field_to_sql(alias, "discount_date", query),
+            date_maturity=self._field_to_sql(alias, "date_maturity", query),
+        )
+
     @api.depends('matched_debit_ids', 'matched_credit_ids')
     def _compute_reconciled_lines_ids(self):
         for line in self:
@@ -1203,6 +1216,7 @@ class AccountMoveLine(models.Model):
                 move.no_followup = aml.no_followup
 
     def _search_payment_date(self, operator, value):
+        # FIXME this is not in line with the compute method! (it could be removed)
         if operator == 'in':
             # recursive call with operator '='
             return Domain.OR(self._search_payment_date('=', v) for v in value)
@@ -1901,23 +1915,6 @@ class AccountMoveLine(models.Model):
             if self.env.context.get('include_business_fields'):
                 line._copy_data_extend_business_fields(vals)
         return vals_list
-
-    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
-        fname, property_name = fields.parse_field_expr(field_expr)
-        if fname != 'payment_date':
-            return super()._field_to_sql(alias, field_expr, query)
-        sql = SQL("""
-            CASE
-                 WHEN %(discount_date)s >= %(today)s THEN %(discount_date)s
-                 ELSE %(date_maturity)s
-            END""",
-            today=fields.Date.context_today(self),
-            discount_date=super()._field_to_sql(alias, "discount_date", query),
-            date_maturity=super()._field_to_sql(alias, "date_maturity", query),
-        )
-        if property_name:
-            sql = self._field[fname].property_to_sql(sql, property_name, self, alias, query)
-        return sql
 
     def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
         if field_name != 'account_root_id' or set_count:
