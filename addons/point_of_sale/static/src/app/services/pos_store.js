@@ -35,7 +35,6 @@ import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popu
 import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
 import { user } from "@web/core/user";
 import { unaccent } from "@web/core/utils/strings";
-import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -43,7 +42,7 @@ import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
 
 const { DateTime } = luxon;
 
-export class PosStore extends WithLazyGetterTrap {
+export class PosStore {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
 
@@ -62,8 +61,7 @@ export class PosStore extends WithLazyGetterTrap {
         "alert",
         "mail.sound_effects",
     ];
-    constructor({ traps, env, deps }) {
-        super({ traps });
+    constructor({ env, deps }) {
         const reactiveSelf = reactive(this);
         reactiveSelf.ready = reactiveSelf.setup(env, deps).then(() => reactiveSelf);
         return reactiveSelf;
@@ -615,14 +613,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    get productListViewMode() {
-        const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
-        if (viewMode === "grid") {
-            return "d-grid gap-1 gap-lg-2";
-        } else {
-            return "";
-        }
-    }
     get productViewMode() {
         const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
         if (viewMode === "grid") {
@@ -2434,7 +2424,7 @@ export function register_payment_method(use_payment_terminal, ImplementedPayment
 export const posService = {
     dependencies: PosStore.serviceDependencies,
     async start(env, deps) {
-        return new PosStore({ traps: {}, env, deps }).ready;
+        return new PosStore({ env, deps }).ready;
     },
 };
 
