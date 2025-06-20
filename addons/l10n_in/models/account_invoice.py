@@ -9,7 +9,7 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.tools.float_utils import json_float_round
 from odoo.tools.image import image_data_uri
-from odoo.tools import float_compare, SQL
+from odoo.tools import float_compare, float_is_zero, SQL
 from odoo.tools.date_utils import get_month
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 
@@ -533,6 +533,82 @@ class AccountMove(models.Model):
     def l10n_in_verify_partner_gstin_status(self):
         self.ensure_one()
         return self.with_company(self.company_id).partner_id.action_l10n_in_verify_gstin_status()
+
+    @api.model
+    def _create_credit_note_for_early_payment_discount(self, batch_result, group_payment, open_balance, payment_vals):
+        invoice_ids = [aml_value.move_id.id for aml_value in batch_result['lines']]
+        invoices = self.env['account.move'].browse(invoice_ids)
+        move_type = 'out_refund' if any(invoice.is_sale_document() for invoice in invoices) else 'in_refund'
+
+        for invoice in invoices:
+            payment_term = invoice.invoice_payment_term_id
+
+            if not payment_term.early_pay_credit_note:
+                continue
+
+            # Exclude the discounted amount entry from journal entry
+            payment_vals['write_off_line_vals'] = []
+
+            discount_percentage = payment_term.discount_percentage
+            total_amount = (
+                invoice.amount_total
+                if payment_term.early_pay_discount_computation == "included"
+                else invoice.amount_untaxed
+            )
+
+            if group_payment:
+                open_balance = round(total_amount * (discount_percentage / 100), 2)
+
+            discount_factor = open_balance / total_amount
+            cash_discount_account = (
+                invoice.company_id.account_journal_early_pay_discount_loss_account_id
+                if invoice.is_inbound(include_receipts=True)
+                else invoice.company_id.account_journal_early_pay_discount_gain_account_id
+            )
+
+            invoice_line_ids = [
+                (0, 0, {
+                    'name': f"Early Discount: {line.name}",
+                    'account_id': cash_discount_account.id,
+                    'quantity': 1,
+                    'product_uom_id': line.product_uom_id.id,
+                    'l10n_in_hsn_code': line.l10n_in_hsn_code,
+                    'price_unit': line.price_subtotal * discount_factor,
+                    'tax_ids': [(6, 0, line.tax_ids.ids)] if payment_term.early_pay_discount_computation == 'included' else [],
+                })
+                for line in invoice.invoice_line_ids
+                if not float_is_zero(line.price_subtotal * discount_factor, precision_rounding=line.currency_id.rounding)
+            ]
+
+            if not invoice_line_ids:
+                continue
+
+            credit_note_vals = {
+                'move_type': move_type,
+                'partner_id': invoice.partner_id.id,
+                'journal_id': invoice.journal_id.id,
+                'invoice_origin': invoice.name,
+                'reversed_entry_id': invoice.id,
+                'invoice_line_ids': invoice_line_ids,
+            }
+
+            credit_note = self.env['account.move'].create(credit_note_vals)
+            bodies = {}
+            message_content = _('This entry has been reversed from %s', invoice._get_html_link())
+            bodies[credit_note.id] = message_content
+            credit_note._message_log_batch(bodies=bodies)
+
+            # Handle rounding adjustments
+            remaining_unpaid_amount = round(open_balance - credit_note.amount_total, 2)
+            if abs(remaining_unpaid_amount) == 0.01:
+                credit_note.write({
+                    'invoice_line_ids': [(0, 0, {
+                        'name': "Settlement Amount",
+                        'account_id': cash_discount_account.id,
+                        'quantity': 1,
+                        'price_unit': remaining_unpaid_amount,
+                    })]
+                })
 
     def _get_name_invoice_report(self):
         self.ensure_one()
