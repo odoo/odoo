@@ -568,7 +568,7 @@ export class FormatPlugin extends Plugin {
      */
     mergeAdjacentInlines(root, { preserveSelection = true } = {}) {
         let selectionToRestore = null;
-        for (const node of descendants(root)) {
+        for (const node of [root, ...descendants(root)]) {
             if (this.shouldBeMergedWithPreviousSibling(node)) {
                 if (preserveSelection) {
                     selectionToRestore ??= this.dependencies.selection.preserveSelection();
