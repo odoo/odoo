@@ -70,11 +70,9 @@ odoo_dev() {
   write_mode
   pwd=\$(pwd)
   cd /home/pi/odoo
-  sudo git config --global --add safe.directory /home/pi/odoo
-  sudo git remote add dev https://github.com/odoo-dev/odoo.git
-  sudo git fetch dev \$1 --depth=1 --prune
-  sudo git reset --hard FETCH_HEAD
-  sudo chown -R odoo:odoo /home/pi/odoo
+  sudo -u odoo git remote add dev https://github.com/odoo-dev/odoo.git
+  sudo -u odoo git fetch dev \$1 --depth=1 --prune
+  sudo -u odoo git reset --hard FETCH_HEAD
   cd \$pwd
 }
 
@@ -86,11 +84,9 @@ odoo_origin() {
   write_mode
   pwd=\$(pwd)
   cd /home/pi/odoo
-  sudo git config --global --add safe.directory /home/pi/odoo
-  sudo git remote set-url origin https://github.com/odoo/odoo.git  # ensure odoo repository
-  sudo git fetch origin \$1 --depth=1 --prune
-  sudo git reset --hard FETCH_HEAD
-  sudo chown -R odoo:odoo /home/pi/odoo
+  sudo -u odoo git remote set-url origin https://github.com/odoo/odoo.git  # ensure odoo repository
+  sudo -u odoo git fetch origin \$1 --depth=1 --prune
+  sudo -u odoo git reset --hard FETCH_HEAD
   cd \$pwd
 }
 
@@ -126,9 +122,9 @@ devtools() {
             value=\"\${3:-*}\" # Default to '*' if no action name is provided
             devtools enable \"\$2\" # Remove action/general from conf to avoid duplicate keys
             write_mode
-            sudo -u odoo sed -i \"/^\[devtools\]/a\\\\\$2 = \$value\" /home/pi/odoo.conf
+            sudo sed -i \"/^\[devtools\]/a\\\\\$2 = \$value\" /home/pi/odoo.conf
           elif [ \"\$1\" == \"enable\" ]; then
-            sudo -u odoo sed -i \"/\[devtools\]/,/\[/{/\$2 =/d}\" /home/pi/odoo.conf
+            sudo sed -i \"/\[devtools\]/,/\[/{/\$2 =/d}\" /home/pi/odoo.conf
           fi
           read_mode
           ;;
@@ -276,9 +272,6 @@ adduser --disabled-password --gecos "" --shell /usr/sbin/nologin odoo
 # Replace pi user with odoo user in sudoers file: odoo user doesn't need to type its password to run sudo commands
 mv /etc/sudoers.d/010_pi-nopasswd /etc/sudoers.d/010_odoo-nopasswd
 sed -i 's/pi/odoo/g' /etc/sudoers.d/010_odoo-nopasswd
-
-# Allow "sudo" git commands even if Odoo directory is owned by odoo user
-git config --global --add safe.directory /home/pi/odoo
 
 # copy the odoo.conf file to the overwrite directory
 mv -v "/home/pi/odoo/addons/iot_box_image/configuration/odoo.conf" "/home/pi/"
