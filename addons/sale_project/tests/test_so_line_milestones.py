@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged
@@ -266,3 +267,28 @@ class TestSoLineMilestones(TestSaleCommon):
 
         project = sale_order.project_ids
         self.assertEqual(len(project.milestone_ids), 5, "The project should have 5 milestones")
+
+    def test_subtask_milestone_sol(self):
+        """ A subtask should keep its sale line according to its milestone is changed. """
+        # Create a sale order with two milestone lines
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_delivery_milestones3.id,
+                    'product_uom_qty': 1,
+                    'name': name,
+                }) for name in ['m1', 'm2']
+            ]
+        })
+        sale_order.action_confirm()
+        project = sale_order.project_id
+        # Create a subtask from the second task (m2)
+        subtask = self.env['project.task'].create({
+            'name': 'Subtask of m2',
+            'project_id': project.id,
+            'parent_id': project.task_ids[1].id,
+        })
+        subtask.write({'milestone_id': False, 'sale_line_id': False})
+        subtask.write({'milestone_id': project.task_ids[0].milestone_id.id})
+        self.assertEqual(subtask.sale_line_id, project.task_ids[0].sale_line_id)
