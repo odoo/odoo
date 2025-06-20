@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_job_matching_report_view_pivot" model="ir.ui.view">
+        <field name="model">hr.employee.job.matching.report</field>
+        <field name="arch" type="xml">
+            <pivot disable_linking="True" js_class="skills_pivot_view">
+                <field name="job_id" type="col"/>
+                <field name="skill_type_id" type="row"/>
+                <field name="level_progress" type="measure" widget="percentage"/>
+                <field name="target_level" type="measure" widget="percentage"/>
+                <field name="job_matching" type="measure" widget="percentage"/>
+            </pivot>
+        </field>
+    </record>
+
+
+    <record id="hr_employee_job_matching_report_view_search" model="ir.ui.view">
+        <field name="model">hr.employee.job.matching.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="job_id"/>
+                <field name="skill_id"/>
+                <field name="skill_type_id"/>
+                <separator/>
+                <filter string="Skill Type" name="skill_type" context="{'group_by': 'skill_type_id'}"/>
+                <filter string="Skill" name="skill" context="{'group_by': 'skill_id'}"/>
+                <separator/>
+                <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_employee_job_matching_report_view_action" model="ir.actions.act_window">
+        <field name="name">Job Matching</field>
+        <field name="res_model">hr.employee.job.matching.report</field>
+        <field name="search_view_id" ref="hr_employee_job_matching_report_view_search"/>
+        <field name="view_mode">pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="hr_employee_job_matching_report_menu"
+        name="Job Matching"
+        action="hr_employee_job_matching_report_view_action"
+        parent="hr_skills.hr_employee_skill_report_menu"
+        sequence="20"/>
+</odoo>
