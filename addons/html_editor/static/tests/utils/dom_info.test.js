@@ -1,4 +1,5 @@
 import {
+    areSimilarElements,
     getDeepestPosition,
     isEmptyBlock,
     isShrunkBlock,
@@ -443,5 +444,15 @@ describe("isShrunkBlock", () => {
         const [canvas] = insertTestHtml("<canvas></canvas>");
         const result = isShrunkBlock(canvas);
         expect(result).toBe(false);
+    });
+});
+
+describe("areSimilarElements", () => {
+    test("should consider elements with same classes and styles in different orders as similar", () => {
+        const [span1, span2] = insertTestHtml(
+            "<span class='first second' style='color: red; color2: blue'>hello</span><span class='second first' style='color2: blue; color: red'>world</span>"
+        );
+        const result = areSimilarElements(span1, span2);
+        expect(result).toBe(true);
     });
 });
