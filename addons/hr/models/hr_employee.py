@@ -336,7 +336,7 @@ class HrEmployee(models.Model):
                 version = employee.current_version_id
             employee.version_id = version
 
-    @api.depends('version_ids.date_version', 'version_ids.active')
+    @api.depends('version_ids.date_version', 'version_ids.active', 'active')
     def _compute_current_version_id(self):
         for employee in self:
             version = self.env['hr.version'].search(
@@ -350,6 +350,9 @@ class HrEmployee(models.Model):
                 employee.current_version_id = employee.version_ids[0]
             else:
                 employee.current_version_id = False
+
+    def _cron_update_current_version_id(self):
+        self.search([])._compute_current_version_id()
 
     def _search_version_id(self, operator, value):
         if operator == 'any':
