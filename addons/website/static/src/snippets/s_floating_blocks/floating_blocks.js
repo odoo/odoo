@@ -175,9 +175,3 @@ export class FloatingBlocks extends Interaction {
 registry
     .category("public.interactions")
     .add("website.floating_blocks", FloatingBlocks);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.floating_blocks", {
-        Interaction: FloatingBlocks,
-    });
