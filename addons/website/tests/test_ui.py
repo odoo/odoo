@@ -576,10 +576,9 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_update_column_count(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_update_column_count', login="admin")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_text_highlights(self):
-        self.start_tour("/", 'text_highlights', login='admin')
+        # TODO: remove watch
+        self.start_tour("/", 'text_highlights', login='admin', watch=True)
 
     def test_website_extra_items_no_dirty_page(self):
         """
