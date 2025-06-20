@@ -204,6 +204,22 @@ test("use the sort option", async () => {
     ]);
 });
 
+test("use the filter option with resModel attribute", async () => {
+    await mountWithCleanup(ModelFieldSelector, {
+        props: {
+            readonly: false,
+            path: "",
+            resModel: "partner",
+            filter: (field, path, resModel) => {
+                expect(resModel).toBe("partner");
+                return field.type === "many2one" && field.searchable;
+            },
+        },
+    });
+    await openModelFieldSelectorPopover();
+    expect(getDisplayedFieldNames()).toEqual(["Product"]);
+});
+
 test("default `showSearchInput` option", async () => {
     await mountWithCleanup(ModelFieldSelector, {
         props: {

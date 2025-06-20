@@ -36,10 +36,11 @@ export class ModelSelector extends Component {
                     technical: record.model,
                 },
                 label: record.display_name,
-                onSelect: () => this.props.onModelSelected({
-                    label: record.display_name,
-                    technical: record.model,
-                }),
+                onSelect: () =>
+                    this.props.onModelSelected({
+                        label: record.display_name,
+                        technical: record.model,
+                    }),
             }));
         });
     }
