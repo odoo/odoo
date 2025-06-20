@@ -2486,6 +2486,18 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             active_parent + child_of_active + child_of_inactive,
         )
 
+    def test_54_id_query(self):
+        Model = self.env['test_orm.model_active_field'].with_context(active_test=False)
+
+        with self.assertQueries(["""
+            SELECT "test_orm_model_active_field"."id"
+            FROM "test_orm_model_active_field"
+            WHERE "test_orm_model_active_field"."id" NOT IN %s
+            ORDER BY "test_orm_model_active_field"."id"
+        """]):
+            Model.search([('id', '!=', 1)])
+            Model.search([('id', '=', False)])
+
     def test_53_boolean_query(self):
         Model = self.env['test_orm.model_active_field']
 

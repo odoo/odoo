@@ -1289,7 +1289,7 @@ class Field(typing.Generic[T]):
             return SQL("%s%s%s", sql_field, SQL_OPERATORS[operator], value)
 
         # nullability
-        can_be_null = self not in model.env.registry.not_null_fields
+        can_be_null = self.name != 'id' and self not in model.env.registry.not_null_fields
 
         # operator: in (equality)
         if operator in ('in', 'not in'):
