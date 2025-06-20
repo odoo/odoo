@@ -2,8 +2,9 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { DynamicSnippetCarouselOption } from "@website/builder/plugins/options/dynamic_snippet_carousel_option";
 import { useDynamicSnippetOption } from "@website/builder/plugins/options/dynamic_snippet_hook";
 import { onWillStart, useState } from "@odoo/owl";
+import { ProductsDesignOverlayMixin } from "@website_sale/website_builder/products_design_overlay_mixin";
 
-export class DynamicSnippetProductsOption extends BaseOptionComponent {
+export class DynamicSnippetProductsOption extends ProductsDesignOverlayMixin(BaseOptionComponent) {
     static template = "website_sale.DynamicSnippetProductsOption";
     static props = {
         ...DynamicSnippetCarouselOption.props,

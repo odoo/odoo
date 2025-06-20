@@ -3,6 +3,26 @@
 
 <t t-name="website_sale.DynamicSnippetProductsOption" t-inherit="website.DynamicSnippetCarouselOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
+
+        <t t-call="website_sale.ProductsDesignSelector">
+            <t t-set="level" t-value="1"/>
+            <t t-set="showCatalogs" t-value="isActiveItem('grid_view_opt')"/>
+            <t t-set="showLists" t-value="!isActiveItem('grid_view_opt')"/>
+            <t t-set="showImgs" t-value="false"/>
+
+            <button class="btn o-hb-btn btn-primary flex-grow-0" t-on-click="openDesignOverlay">
+                <i class="fa fa-cog" role="presentation"/>
+            </button>
+        </t>
+
+        <ProductsDesignOverlay isVisible="state.overlayVisible">
+            <t t-call="website_sale.ProductsDesignOverlayContent">
+                <t t-set="showCatalogs" t-value="isActiveItem('grid_view_opt')"/>
+                <t t-set="showLists" t-value="!isActiveItem('grid_view_opt')"/>
+                <t t-set="showImgs" t-value="true"/>
+            </t>
+        </ProductsDesignOverlay>
+
         <BuilderRow label.translate="Category" t-if="!this.domState.isAlternative">
             <BuilderSelect dataAttributeAction="'productCategoryId'" preview="false" id="'product_category_opt'">
                 <BuilderSelectItem dataAttributeActionValue="'all'">All Products</BuilderSelectItem>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductsDesignOverlay">
+    <div
+        t-if="props.isVisible"
+        class="o_wsale_editor_overlay position-absolute top-0 start-0 w-100 h-100"
+        t-on-click="onBackdropClick"
+        tabindex="-1"
+        aria-label="Products Design">
+
+        <div class="o_wsale_design_panel pb-3">
+            <div class="options-container-header d-flex align-items-center justify-content-between">
+                <div class="options-container-label d-flex flex-grow-1 p-2">
+                    <!-- <button type="button"
+                            class="btn btn- btn-lg  p-1 me-2"
+                            t-on-click="hide"
+                            aria-label="Close">
+                        <i class="oi oi-chevron-left"/>
+                    </button> -->
+                    Products Design
+                    <button type="button"
+                            class="btn-close btn-close-white ms-auto"
+                            t-on-click="hide"
+                            aria-label="Close">
+                    </button>
+                </div>
+            </div>
+
+            <t t-slot="default"/>
+        </div>
+    </div>
+</t>
+
+</templates>

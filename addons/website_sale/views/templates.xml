@@ -208,118 +208,6 @@
         </t>
     </template>
 
-    <template id="products_item" name="Products item">
-        <form
-            class="oe_product_cart h-100 d-flex"
-            t-att-data-publish="product.website_published and 'on' or 'off'"
-        >
-            <t
-                t-set="product_path"
-                t-value="'%s/%s/%s' % (shop_path, slug(category), slug(product)) if category else '%s/%s' % (shop_path, slug(product))"
-            />
-            <t
-                t-set="product_href"
-                t-value="product_path + (product_query_string and '?' + product_query_string) + selected_attributes_hash"
-            />
-            <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
-
-            <div class="oe_product_image position-relative flex-grow-0 overflow-hidden">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
-                <a
-                    t-att-href="product_href"
-                    class="oe_product_image_link d-block position-relative"
-                    contenteditable="false"
-                >
-                    <t t-set="image_holder" t-value="product._get_image_holder()"/>
-                    <span t-field="image_holder.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'h-100 w-100 position-absolute'}"
-                        class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"/>
-
-                    <t t-set="bg_color" t-value="td_product['ribbon'].bg_color"/>
-                    <t t-set="text_color" t-value="td_product['ribbon'].text_color"/>
-                    <t t-set="bg_class" t-value="td_product['ribbon']._get_position_class()"/>
-                    <span
-                        t-attf-class="o_ribbon o_not_editable #{bg_class}"
-                        t-attf-style="#{text_color and ('color: %s;' % text_color)} #{bg_color and 'background-color:' + bg_color}"
-                        t-out="td_product['ribbon'].name or ''"
-                    />
-                </a>
-            </div>
-            <div class="o_wsale_product_information position-relative d-flex flex-grow-1 flex-shrink-1">
-                <div class="o_wsale_product_information_text">
-                    <h6 class="o_wsale_products_item_title mb-2 text-break">
-                        <a
-                            class="text-decoration-none"
-                            t-att-href="product_href"
-                            t-att-content="product.name"
-                            t-field="product.name"
-                        />
-                        <a
-                            t-if="not product.website_published"
-                            role="button"
-                            t-att-href="product_href"
-                            class="btn btn-sm btn-danger"
-                            title="This product is unpublished."
-                        >
-                            Unpublished
-                        </a>
-                    </h6>
-                </div>
-                <div class="o_wsale_product_sub d-flex justify-content-between gap-2">
-                    <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
-                    <div class="o_wsale_product_btn d-flex gap-2"/>
-                    <div class="product_price">
-                        <span class="h6 mb-0"
-                              t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
-                              t-out="template_price_vals['price_reduce']"
-                              t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                        <t
-                            t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)"
-                            name="product_base_price"
-                        >
-                            <del t-attf-class="text-muted me-1 h6 mb-0" style="white-space: nowrap;">
-                                <em class="small" t-esc="template_price_vals['base_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
-                            </del>
-                        </t>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </template>
-
-    <template id="products_description" inherit_id="website_sale.products_item" active="False" name="Product Description">
-         <xpath expr="//form" position="attributes">
-            <attribute name="class" add="oe_product_cart_has_description" separator=" "/>
-        </xpath>
-        <xpath expr="//*[hasclass('o_wsale_products_item_title')]" position="after">
-            <div class="oe_subdescription mb-2 text-muted small" contenteditable="false">
-                <div t-field="product.description_sale"/>
-            </div>
-        </xpath>
-    </template>
-
-    <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" name="Add to Cart">
-        <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
-            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
-            <input name="product_template_id" t-att-value="product.id" type="hidden"/>
-            <input name="product_type" t-att-value="product.type" type="hidden"/>
-            <t t-if="product_variant_id and template_price_vals['price_reduce'] or not website.prevent_zero_price_sale">
-                <a
-                    t-if="product._website_show_quick_add()"
-                    href="#"
-                    role="button"
-                    class="btn btn-light a-submit"
-                    aria-label="Shopping cart"
-                    title="Shopping cart"
-                    t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
-                >
-                    <span class="fa fa-shopping-cart"/>
-                </a>
-            </t>
-        </xpath>
-    </template>
-
     <template id="pricelist_list" name="Pricelists Dropdown">
         <t t-set="website_sale_pricelists" t-value="website_sale_pricelists or website.get_pricelist_available(show_visible=True)" />
         <t t-set="hasPricelistDropdown" t-value="hasPricelistDropdown or (website_sale_pricelists and len(website_sale_pricelists)&gt;1)"/>
@@ -394,7 +282,7 @@
             <t t-set="opt_wsale_attributes" t-value="is_view_active('website_sale.products_attributes')"/>
             <t t-set="opt_wsale_filter_price" t-value="is_view_active('website_sale.filter_products_price')"/>
             <t t-set="opt_wsale_filter_tags" t-value="is_view_active('website_sale.filter_products_tags')"/>
-            <t t-set="opt_wsale_design_grid" t-value="is_view_active('website_sale.products_design_grid')"/>
+            <t t-set="opt_wsale_design_grid" t-value="'o_wsale_design_grid' in website.shop_opt_products_design_class"/>
 
             <t t-set="opt_wsale_categories_top" t-value="is_view_active('website_sale.products_categories_top')"/>
             <t t-set="opt_wsale_attributes_top" t-value="is_view_active('website_sale.products_attributes_top')"/>
@@ -428,7 +316,13 @@
                         {{opt_wsale_categories_top and 'o_wsale_has_filmstrip'}}
                         {{opt_wsale_floating_bar and 'o_wsale_has_floating_bar'}}
                         {{hasLeftColumn and 'o_wsale_has_sidebar'}}
-                        {{editionPreviews and 'o_wsale_edit_preview_enabled'}}"
+                        {{editionPreviews and 'o_wsale_edit_preview_enabled'}}
+                        {{website.shop_opt_products_design_class or 'o_wsale_design_thumbs'}}
+                        {{website.shop_opt_products_hover_effect_class}}
+                        {{website.shop_opt_products_text_align_class}}
+                        {{website.shop_opt_products_img_secondary_class}}
+                        {{website.shop_opt_products_img_hover_class}}
+                        {{website.shop_opt_products_name_color_class}}"
                     t-attf-style="--o-wsale-products-grid-gap: {{gap}};"
                     t-att-data-ppg="ppg"
                     t-att-data-ppr="ppr"
@@ -656,6 +550,7 @@
                                                 >
                                                     <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
                                                         <t t-call="website_sale.products_item">
+                                                            <t t-set="context" t-value="'shop'"/>
                                                             <t t-set="product"
                                                                t-value="td_product['product']"/>
                                                         </t>
@@ -750,20 +645,35 @@
         </xpath>
     </template>
 
-    <!-- (Option) Products: Enable "Card" or "Thumbnails" designs -->
-    <template id="products_design_card" name="Card Design" inherit_id="website_sale.products" active="False">
-        <xpath expr="//div[@id='o_wsale_container']" position="attributes">
-            <attribute name="t-attf-class" add="o_wsale_design_cards" separator=" "/>
+
+    <!-- (Option) Products: Content -->
+    <!-- CTA -->
+    <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" name="Add to Cart">
+        <xpath expr="//div[hasclass('o_wsale_product_btn_cta')]" position="attributes">
+            <attribute name="groups" remove="website.group_website_designer" separator=" "/>
         </xpath>
     </template>
-    <template id="products_design_thumbs" name="Thumbnails Design" inherit_id="website_sale.products" active="False">
+    <template id="products_add_to_cart_class" inherit_id="website_sale.products" active="False" name="Add to Cart Class">
         <xpath expr="//div[@id='o_wsale_container']" position="attributes">
-            <attribute name="t-attf-class" add="o_wsale_design_thumbs" separator=" "/>
+            <attribute name="t-attf-class" add="o_wsale_products_opt_has_cta" separator=" "/>
         </xpath>
     </template>
-    <template id="products_design_grid" name="Grid Design" inherit_id="website_sale.products" active="False">
+
+    <!-- Description -->
+    <template id="products_description" inherit_id="website_sale.products_item" active="False" name="Product Description">
+        <xpath expr="//div[hasclass('oe_subdescription_wrapper')]" position="attributes">
+            <attribute name="groups" remove="website.group_website_designer" separator=" "/>
+        </xpath>
+    </template>
+    <template id="products_description_class" inherit_id="website_sale.products" active="False" name="Product Description Class">
         <xpath expr="//div[@id='o_wsale_container']" position="attributes">
-            <attribute name="t-attf-class" add="o_wsale_design_grid" separator=" "/>
+            <attribute name="t-attf-class" add="o_wsale_products_opt_has_description" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="products_opt_actions_hover" name="Product Actions On Hover" inherit_id="website_sale.products" active="True">
+        <xpath expr="//div[@id='o_wsale_container']" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_products_opt_actions_onhover" separator=" "/>
         </xpath>
     </template>
 

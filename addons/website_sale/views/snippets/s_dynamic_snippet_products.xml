@@ -8,7 +8,7 @@
                 is a temporary solution to load the tracking utilities and will be removed once
                 tracking utilities will be fully integrated into a service.
             -->
-            <t t-set="snippet_classes" t-value="'oe_website_sale'"/>
+            <t t-set="snippet_classes" t-value="'oe_website_sale o_wsale_design_thumbs'"/>
             <t t-set="main_page_url" t-value="'/shop'"/>
             <t t-call="website_sale.s_dynamic_snippet_products_preview_data"/>
         </t>
@@ -45,6 +45,28 @@
                     placeholder="e.g. lamp,bin" title="Comma-separated list of parts of product names, barcodes or internal reference"/>
             </t>
         </xpath>
+    </template>
+
+    <template id="dynamic_filter_template_product_product_borderless_1" name="Borderless Product n°1">
+        <t t-foreach="records" t-as="data" data-number-of-elements="4" data-number-of-elements-sm="1" data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_1.svg">
+            <t t-set="record" t-value="data['_record']"/>
+
+            <t t-call="website_sale.products_item">
+                <t t-set="product" t-value="record"/>
+                <t t-set="product_href" t-value="record.website_url"/>
+                <t t-set="product_image_href" t-value="data['image_512']"/>
+                <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
+        <t t-if="not data.get('prevent_zero_price_sale') and not data.get('is_sample')">
+            <t t-set="product_price" t-value="data['price']"/>
+            <t name="discounted_price_condition" t-if="data.get('has_discounted_price')">
+                <t t-set="product_price_discounted" t-value="data['list_price']"/>
+            </t>
+        </t>
     </template>
 
 </odoo>
