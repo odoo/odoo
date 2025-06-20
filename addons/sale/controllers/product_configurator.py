@@ -358,6 +358,7 @@ class SaleProductConfiguratorController(Controller):
                 'description_sale': str|False,
                 'display_name': str,
                 'price': float,
+                'website_published': bool,
             }
         """
         basic_information = dict(
@@ -384,6 +385,7 @@ class SaleProductConfiguratorController(Controller):
             **basic_information,
             price=price,
             pricelist_rule_id=pricelist_rule_id,
+            website_published=product_or_template.website_published,
             **request.env['product.template']._get_additional_configurator_data(
                 product_or_template, pricelist=pricelist, **kwargs
             ),
