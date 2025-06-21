@@ -10,6 +10,8 @@ class PopupVisibilityPlugin extends Plugin {
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        savable_mutation_record_predicates: (record) => !record.target.matches?.(".s_popup .modal"),
+        reveal_target_handlers: this.invisibleWithoutTarget.bind(this),
     };
 
     setup() {
@@ -48,6 +50,16 @@ class PopupVisibilityPlugin extends Plugin {
             modalEl.classList.remove("show");
             this.window.Modal.getOrCreateInstance(modalEl)._hideModal();
             this.window.Modal.getInstance(modalEl).dispose();
+        }
+    }
+
+    invisibleWithoutTarget({ oldTarget, newTarget }) {
+        if (newTarget && oldTarget) {
+            const popupEl = oldTarget.closest(".s_popup:not([data-invisible])");
+            if (popupEl && !popupEl.contains(newTarget)) {
+                this.onTargetHide(popupEl);
+                this.dependencies.visibility.onOptionVisibilityUpdate(popupEl, false);
+            }
         }
     }
 }
