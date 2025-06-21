@@ -654,7 +654,7 @@ var SnippetEditor = publicWidget.Widget.extend({
      * @param {boolean} [show=false]
      */
     toggleOverlayVisibility: function (show) {
-        if (this.$el && !this.scrollingTimeout) {
+        if (this.$el && !this.scrollingTimeout && !this.dragAndDropResolve) {
             this.$el.toggleClass('o_overlay_hidden', (!show || this.$target[0].matches('.o_animating:not(.o_animate_on_scroll)')) && this.isShown());
         }
     },
@@ -1079,6 +1079,13 @@ var SnippetEditor = publicWidget.Widget.extend({
      * @private
      */
     _onDragAndDropStart({ helper, addStyle }) {
+        if (this.dragAndDropResolve) {
+            // A drag is already in progress.
+            return;
+        }
+        this.toggleOverlayVisibility(false);
+        const prom = new Promise(resolve => this.dragAndDropResolve = () => resolve());
+        this.trigger_up('snippet_edition_suspend', {exec: () => prom});
         this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
         this.trigger_up('drag_and_drop_start');
         this.options.wysiwyg.odooEditor.automaticStepUnactive();
@@ -1411,6 +1418,7 @@ var SnippetEditor = publicWidget.Widget.extend({
         this.options.wysiwyg.odooEditor.automaticStepActive();
         this.options.wysiwyg.odooEditor.automaticStepSkipStack();
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
+        this.trigger_up('snippet_edition_block_until_completed');
 
         const rowEl = this.$target[0].parentNode;
         if (rowEl && rowEl.classList.contains('o_grid_mode')) {
@@ -1525,6 +1533,7 @@ var SnippetEditor = publicWidget.Widget.extend({
         $clone.remove();
 
         this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
+        const moves = [];
         if (this.dropped) {
             if (prev) {
                 this.$target.insertAfter(prev);
@@ -1535,7 +1544,7 @@ var SnippetEditor = publicWidget.Widget.extend({
             }
 
             for (var i in this.styles) {
-                this.styles[i].onMove();
+                moves.push(this.styles[i].onMove());
             }
 
             // If the target has a mobile order class, and if it was dropped in
@@ -1544,26 +1553,32 @@ var SnippetEditor = publicWidget.Widget.extend({
                 && this.$target[0].parentNode !== this.dragState.startingParent) {
                 ColumnLayoutMixin._fillRemovedItemGap(this.dragState.startingParent, this.dragState.mobileOrder);
             }
-
-            this.$target.trigger('content_changed');
-            $from.trigger('content_changed');
         }
+        Promise.allSettled(moves).then(() => {
+            if (this.dropped) {
+                this.$target.trigger('content_changed');
+                $from.trigger('content_changed');
+            }
+            this.trigger_up('drag_and_drop_stop', {
+                $snippet: this.$target,
+            });
+            const samePositionAsStart = this.$target[0].classList.contains('o_grid_item')
+                ? (this.$target[0].parentNode === this.dragState.startingGrid
+                    && this.$target[0].style.gridArea === this.dragState.prevGridArea)
+                : this._dropSiblings.prev === this.$target.prev()[0] && this._dropSiblings.next === this.$target.next()[0];
+            if (!samePositionAsStart) {
+                this.options.wysiwyg.odooEditor.historyStep();
+            }
 
-        this.trigger_up('drag_and_drop_stop', {
-            $snippet: this.$target,
+            this.dragState.restore();
+
+            delete this.$dropZones;
+            delete this.dragState;
+
+            this.dragAndDropResolve();
+            delete this.dragAndDropResolve;
+            this.toggleOverlayVisibility(true);
         });
-        const samePositionAsStart = this.$target[0].classList.contains('o_grid_item')
-            ? (this.$target[0].parentNode === this.dragState.startingGrid
-                && this.$target[0].style.gridArea === this.dragState.prevGridArea)
-            : this._dropSiblings.prev === this.$target.prev()[0] && this._dropSiblings.next === this.$target.next()[0];
-        if (!samePositionAsStart) {
-            this.options.wysiwyg.odooEditor.historyStep();
-        }
-
-        this.dragState.restore();
-
-        delete this.$dropZones;
-        delete this.dragState;
     },
     /**
      * @private
@@ -1840,7 +1855,9 @@ class SnippetsMenu extends Component {
         'find_snippet_template': '_onFindSnippetTemplate',
         'is_element_selected': '_onIsElementSelected',
         'remove_snippet': '_onRemoveSnippet',
+        'snippet_edition_block_until_completed': '_onSnippetEditionBlockUntilCompleted',
         'snippet_edition_request': '_onSnippetEditionRequest',
+        'snippet_edition_suspend': '_onSnippetEditionSuspend',
         'snippet_editor_destroyed': '_onSnippetEditorDestroyed',
         'snippet_removed': '_onSnippetRemoved',
         'snippet_cloned': '_onSnippetCloned',
@@ -3965,6 +3982,20 @@ class SnippetsMenu extends Component {
             };
         }
         const mutexExecResult = this._mutex.exec(action);
+        this._withLoadingEffect(contentLoading, delay);
+        return mutexExecResult;
+    }
+    /**
+     * Sets a loading effect over the editor to appear if the action takes too
+     * much time.
+     * As soon as the mutex is unlocked, the loading effect will be removed.
+     *
+     * @private
+     * @param {boolean} [contentLoading=true]
+     * @param {number} [delay=500]
+     * @returns {Promise}
+     */
+    _withLoadingEffect(contentLoading = true, delay = 500) {
         if (!this.loadingTimers[contentLoading]) {
             const addLoader = () => {
                 if (this._loadingEffectDisabled || this.loadingElements[contentLoading]) {
@@ -3999,7 +4030,6 @@ class SnippetsMenu extends Component {
                 }
             });
         }
-        return mutexExecResult;
     }
     /**
      * Update the options pannel as being empty.
@@ -4603,6 +4633,30 @@ class SnippetsMenu extends Component {
      */
     _onSnippetEditionRequest(ev) {
         this._execWithLoadingEffect(ev.data.exec, ev.data.optionsLoader ? "both" : true);
+    }
+    /**
+     * Execs within mutex but without loading effect - e.g. for intra-page
+     * drag'n'drop.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data
+     * @param {function} ev.data.exec
+     */
+    _onSnippetEditionSuspend(ev) {
+        this._mutex.exec(ev.data.exec);
+    }
+    /**
+     * Blocks the UI with a loading effect until the current mutexed operation
+     * completes. This is to be used after a call to _onSnippetEditionSuspend
+     * if the UI needs to be blocked after all.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetEditionBlockUntilCompleted(ev) {
+        this._withLoadingEffect(false);
+        this._withLoadingEffect(true);
     }
     /**
      * @private
