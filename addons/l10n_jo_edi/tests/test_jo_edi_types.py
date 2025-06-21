@@ -236,3 +236,71 @@ class TestJoEdiTypes(JoEdiCommon):
             self.get_xml_tree_from_string(generated_file),
             self.get_xml_tree_from_string(expected_file)
         )
+
+    def test_credit_notes_lines_matching(self):
+        self.company.l10n_jo_edi_taxpayer_type = 'income'
+        self.company.l10n_jo_edi_sequence_income_source = '4419618'
+
+        invoice_vals = {
+            'name': 'EIN00017',
+            'invoice_line_ids': [
+                Command.create({  # id = 1
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'quantity': 10,
+                    'discount': 10,
+                }),
+                Command.create({  # id = 2
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'quantity': 10,
+                    'discount': 20,
+                }),
+                Command.create({  # id = 3
+                    'product_id': self.product_b.id,
+                    'price_unit': 10,
+                    'quantity': 10,
+                }),
+                Command.create({  # id = 4
+                    'product_id': self.product_b.id,
+                    'price_unit': 20,
+                    'quantity': 10,
+                }),
+            ],
+        }
+        refund_vals = {
+            'name': 'EIN998833',
+            'invoice_date': '2022-09-27',
+            'narration': 'ملاحظات 2',
+            'invoice_line_ids': [
+                Command.create({  # id should be 4
+                    'product_id': self.product_b.id,
+                    'price_unit': 20,
+                    'quantity': 3,
+                }),
+                Command.create({  # id should be 1
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'quantity': 10,
+                    'discount': 10,
+                }),
+                Command.create({  # id should be 2
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'quantity': 1,
+                    'discount': 20,
+                }),
+                Command.create({  # id should be > 4
+                    'product_id': self.product_b.id,
+                    'price_unit': 30,
+                    'quantity': 10,
+                }),
+            ],
+        }
+        refund = self._l10n_jo_create_refund(invoice_vals, 'change price', refund_vals)
+        xml_string = self.env['account.edi.xml.ubl_21.jo']._export_invoice(refund)[0]
+        xml_tree = self.get_xml_tree_from_string(xml_string)
+        for xml_line, expected_line_id in zip(xml_tree.findall('./{*}InvoiceLine'), [4, 1, 2]):
+            self.assertEqual(int(xml_line.findtext('{*}ID')), expected_line_id)
+
+        self.assertGreater(int(xml_tree.findall('./{*}InvoiceLine')[-1].findtext('{*}ID')), 4)
