@@ -140,6 +140,14 @@ export class PosData extends Reactive {
             await this.indexedDB.delete(model, remove);
             await this.indexedDB.create(model, put);
             data[model] = put;
+
+            if (remove.length) {
+                await this.indexedDB.delete(model, remove);
+            }
+
+            if (put.length) {
+                await this.indexedDB.create(model, put);
+            }
         }
 
         return data;
