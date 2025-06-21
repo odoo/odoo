@@ -89,7 +89,7 @@ export function getEditorInfoForOptionsWithSelect(name, params) {
             update: (value) => update(fromSelectValue(value)),
             options,
             addBlankOption: params.addBlankOption,
-            placeholder: displayPlaceholder && _t(`Select one or several criteria`),
+            placeholder: displayPlaceholder && _t(`Select at least one criterion`),
         }),
         defaultValue: getCurrent(UNITS[name]),
         isSupported: (value) => typeof value !== "string" && getOption(value),

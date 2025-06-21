@@ -232,7 +232,7 @@ test("edit a favorite with a groupby", async () => {
     await editValue("abcde");
     await contains(`.modal footer button`).click();
     expect(`.modal`).toHaveCount(0);
-    expect(getFacetTexts()).toEqual(["Foo contains abcde", "Bar"]);
+    expect(getFacetTexts()).toEqual(["Foo contains abc or abcde", "Bar"]);
 
     await toggleSearchBarMenu();
     expect(`.o_group_by_menu .o_menu_item:not(.o_add_custom_group_menu)`).toHaveCount(0);

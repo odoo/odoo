@@ -52,7 +52,7 @@ export class MultiRecordSelector extends Component {
      * a tag, the input is still empty.
      */
     get placeholder() {
-        return this.getIds().length ? "" : this.props.placeholder;
+        return this.getTags(this.props, {}).length ? "" : this.props.placeholder;
     }
 
     getIds(props = this.props) {

@@ -71,13 +71,13 @@ function genericDeserializeDate(type, value) {
 
 function placeholderForSelect(displayPlaceholder) {
     if (displayPlaceholder) {
-        return _t(`Select one or several criteria`);
+        return _t(`Select at least one criterion`);
     }
 }
 
 function placeholderForInput(displayPlaceholder) {
     if (displayPlaceholder) {
-        return _t(`Press "Enter" to add criterion`);
+        return _t(`Enter at least one criterion`);
     }
 }
 
@@ -157,6 +157,8 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     value === false || (fieldDef.type === "boolean" && value === true),
                 defaultValue: () => false,
             };
+        case "starts_with":
+        case "ends_with":
         case "=like":
         case "=ilike":
         case "like":
@@ -164,6 +166,33 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "ilike":
         case "not ilike":
             return STRING_EDITOR;
+        case "multi starts_with":
+        case "multi ends_with":
+        case "multi ilike":
+        case "multi not ilike": {
+            const editorInfo = getValueEditorInfo(fieldDef, "ilike", {
+                ...params,
+                addBlankOption: true,
+                startEmpty: true,
+            });
+            return {
+                component: List,
+                extractProps: ({ value, update }) => {
+                    if (!disambiguate(value)) {
+                        const { stringify } = editorInfo;
+                        editorInfo.stringify = (val) => stringify(val, false);
+                    }
+                    return {
+                        value,
+                        update,
+                        editorInfo,
+                    };
+                },
+                isSupported: (value) => Array.isArray(value),
+                defaultValue: () => [],
+                shouldResetValue: (value) => !value.every(editorInfo.isSupported),
+            };
+        }
         case "not_between":
         case "between": {
             const editorInfo = getValueEditorInfo(fieldDef, "=", params);
