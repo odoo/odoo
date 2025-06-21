@@ -9,6 +9,7 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
+import { useDebounced } from "@web/core/utils/timing";
 import { getTabableElements } from "@web/core/utils/ui";
 import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relational_model/utils";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
@@ -140,6 +141,11 @@ export class ListRenderer extends Component {
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
         useExternalListener(document, "click", this.onGlobalClick.bind(this));
         this.tableRef = useRef("table");
+        this.debouncedOnDeleteRecord = useDebounced(
+            this.onDeleteRecord.bind(this),
+            300,
+            { immediate: true }
+        );
 
         this.longTouchTimer = null;
         this.touchStartMs = 0;
@@ -1206,20 +1212,6 @@ export class ListRenderer extends Component {
         } else if (!this.props.archInfo.noOpen) {
             this.props.openRecord(record, { newWindow });
         }
-    }
-
-    /**
-     * @param {RelationalRecord} record
-     * @param {PointerEvent} ev
-     */
-    onRemoveCellClicked(record, ev) {
-        const element = ev.target.closest(".o_list_record_remove");
-        if (element.dataset.clicked) {
-            return;
-        }
-        element.dataset.clicked = true;
-
-        this.onDeleteRecord(record, ev);
     }
 
     /**
