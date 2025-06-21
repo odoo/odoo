@@ -313,6 +313,10 @@ body {
     }
 }
 
+.o_navlink_no_background .navbar-light {
+    --NavLinkWithBackground-bg-color: transparent;
+}
+
 .navbar {
 
     .navbar-collapse {
@@ -396,8 +400,14 @@ body {
 .o_navlink_background {
     background: var(--NavLinkWithBackground-bg-color, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .05));
 
-    &:hover {
+    &:hover, .o_navlink_trigger_hover:hover & {
         background: var(--NavLinkWithBackground-bg-color--hover, rgba(var(--#{$variable-prefix}emphasis-color-rgb), .1));
+    }
+}
+
+.o_navlink_background, .o_navlink_trigger_hover {
+    &:focus-visible {
+        --#{$prefix}btn-focus-box-shadow: #{$nav-link-focus-box-shadow};
     }
 }
 
