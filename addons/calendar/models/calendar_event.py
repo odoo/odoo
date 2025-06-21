@@ -577,6 +577,16 @@ class Meeting(models.Model):
                 values['activity_ids'] = [(0, 0, activity_vals)]
         self._set_videocall_location(vals_list)
 
+        # Set the resource_ids field from the booking_line_ids
+        for vals in vals_list:
+            resource_ids = [
+                cmd[2]['appointment_resource_id']
+                for cmd in vals.get('booking_line_ids', [])
+                if cmd[0] == 0 and 'appointment_resource_id' in cmd[2]
+            ]
+            if resource_ids:
+                vals['resource_ids'] = [(6, 0, resource_ids)]
+
         # Add commands to create attendees from partners (if present) if no attendee command
         # is already given (coming from Google event for example).
         # Automatically add the current partner when creating an event if there is none (happens when we quickcreate an event)
