@@ -122,7 +122,7 @@ export class Chatbot extends Record {
             this.currentStep.message = this.store["mail.message"].insert({
                 id: this.store.getNextTemporaryId(),
                 author_id: this.script.operator_partner_id,
-                body: this.currentStep.scriptStep.message,
+                body: this.currentStep.scriptStep.html_message,
                 thread: this.thread,
             });
         }

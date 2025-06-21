@@ -7,7 +7,7 @@ export class ChatbotScriptStep extends Record {
     /** @type {number} */
     id;
     /** @type {string} */
-    message;
+    html_message;
     /** @type {"free_input_multi"|"free_input_single"|"question_email"|"question_phone"|"question_selection"|"text"|"forward_operator"} */
     step_type;
     isLast = false;

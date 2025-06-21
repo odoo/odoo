@@ -17,6 +17,11 @@ class ChatbotScriptStep(models.Model):
     _rec_name = 'message'
 
     message = fields.Text(string='Message', translate=True)
+    html_message = fields.Html(
+        compute="_compute_html_message",
+        string="HTML Message",
+        help="HTML version of the message.",
+    )
     sequence = fields.Integer(string='Sequence')
     chatbot_script_id = fields.Many2one(
         'chatbot.script', string='Chatbot', required=True, index=True, ondelete='cascade')
@@ -46,6 +51,14 @@ class ChatbotScriptStep(models.Model):
         string="Operator Expertise",
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
+
+    @api.depends('message')
+    def _compute_html_message(self):
+        for step in self:
+            if step.message:
+                step.html_message = plaintext2html(step.message)
+            else:
+                step.html_message = False
 
     @api.depends('sequence')
     def _compute_triggering_answer_ids(self):
@@ -338,7 +351,7 @@ class ChatbotScriptStep(models.Model):
         self.ensure_one()
         if self.step_type == 'forward_operator':
             return self._process_step_forward_operator(discuss_channel)
-        return discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
+        return discuss_channel._chatbot_post_message(self.chatbot_script_id, self.html_message)
 
     def _process_step_forward_operator(self, discuss_channel, users=None):
         """ Special type of step that will add a human operator to the conversation when reached,
@@ -370,7 +383,7 @@ class ChatbotScriptStep(models.Model):
         if human_operator and human_operator != self.env.user:
             if self.message:
                 # first post the message of the step (if we have one)
-                posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
+                posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, self.html_message)
 
             # next, add the human_operator to the channel and post a "Operator invited to the channel" notification
             discuss_channel.sudo()._add_members(
@@ -435,6 +448,5 @@ class ChatbotScriptStep(models.Model):
         return [
             Store.Many("answer_ids"),
             Store.Attr("is_last", lambda step: step._is_last_step()),
-            Store.Attr("message", lambda s: plaintext2html(s.message) if s.message else False),
             "step_type",
         ]
