@@ -1282,7 +1282,7 @@ test("bold the searchValue on the commands", async () => {
     await runAllTimers();
     expect(".o_command").toHaveCount(5);
     expect(
-        [...queryAll(".o_command")].map((command) => {
+        queryAll(".o_command").map((command) => {
             return queryAllTexts(".o_command_name b", { root: command });
         })
     ).toEqual([["Test"], ["test"], ["test"], ["Test"], ["TeSt", "Test", "TEST"]]);

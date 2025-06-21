@@ -27,11 +27,18 @@ import { getViewPortHeight, getViewPortWidth } from "../mock/window";
 // Global
 //-----------------------------------------------------------------------------
 
-const { customElements, document, getSelection, HTMLElement, WeakSet } = globalThis;
+const { customElements, document, getSelection, HTMLElement, Promise, WeakSet } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+/**
+ * @param {HTMLIFrameElement} iframe
+ */
+function waitForIframe(iframe) {
+    return new Promise((resolve) => iframe.addEventListener("load", resolve));
+}
 
 const destroyed = new WeakSet();
 let allowFixture = false;
@@ -59,41 +66,50 @@ export function destroy(target) {
  * @param {import("./runner").Runner} runner
  */
 export function makeFixtureManager(runner) {
-    const cleanupFixture = () => {
+    function cleanup() {
         allowFixture = false;
 
         if (currentFixture) {
             shouldPrepareNextFixture = true;
             currentFixture.remove();
+            currentFixture = null;
         }
-    };
+    }
 
-    const getFixture = () => {
+    function getFixture() {
         if (!allowFixture) {
             throw new HootError(`Cannot access fixture outside of a test.`);
         }
         if (!currentFixture) {
             // Prepare fixture once to not force layouts/reflows
-            /** @type {HootFixtureElement} */
-            const fixture = document.createElement(HootFixtureElement.TAG_NAME);
+            currentFixture = document.createElement(HootFixtureElement.TAG_NAME);
             if (runner.debug || runner.config.headless) {
-                fixture.show();
+                currentFixture.show();
             }
 
             const { width, height } = getCurrentDimensions();
             if (width !== getViewPortWidth()) {
-                fixture.style.width = `${width}px`;
+                currentFixture.style.width = `${width}px`;
             }
             if (height !== getViewPortHeight()) {
-                fixture.style.height = `${height}px`;
+                currentFixture.style.height = `${height}px`;
             }
 
-            document.body.appendChild(fixture);
+            document.body.appendChild(currentFixture);
         }
         return currentFixture;
-    };
+    }
 
-    const setupFixture = () => {
+    function globalCleanup() {
+        HootFixtureElement.styleElement.remove();
+    }
+
+    function globalSetup() {
+        defineRootNode(getFixture);
+        document.head.appendChild(HootFixtureElement.styleElement);
+    }
+
+    function setup() {
         allowFixture = true;
 
         if (shouldPrepareNextFixture) {
@@ -103,18 +119,13 @@ export function makeFixtureManager(runner) {
             getActiveElement().blur();
             getSelection().removeAllRanges();
         }
-    };
-
-    runner.beforeAll(() => {
-        defineRootNode(getFixture);
-    });
-    runner.afterAll(() => {
-        defineRootNode(null);
-    });
+    }
 
     return {
-        cleanup: cleanupFixture,
-        setup: setupFixture,
+        cleanup,
+        globalCleanup,
+        globalSetup,
+        setup,
         get: getFixture,
     };
 }
@@ -169,8 +180,6 @@ export class HootFixtureElement extends HTMLElement {
     _iframes = new Map();
 
     connectedCallback() {
-        currentFixture = this;
-
         setupEventActions(this);
         subscribeToTransitionChange((allowTransitions) =>
             this.classList.toggle(this.constructor.CLASSES.transitions, allowTransitions)
@@ -181,8 +190,6 @@ export class HootFixtureElement extends HTMLElement {
     }
 
     disconnectedCallback() {
-        currentFixture = null;
-
         this._iframes.clear();
         this._observer.disconnect();
     }
@@ -208,10 +215,7 @@ export class HootFixtureElement extends HTMLElement {
             if (toRemove.delete(iframe)) {
                 continue;
             }
-            this._iframes.set(
-                iframe,
-                new Promise((resolve) => iframe.addEventListener("load", resolve))
-            );
+            this._iframes.set(iframe, waitForIframe(iframe));
             setupEventActions(iframe.contentWindow);
         }
         for (const iframe of toRemove) {

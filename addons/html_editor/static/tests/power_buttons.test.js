@@ -112,18 +112,16 @@ describe("buttons", () => {
     });
 
     test("should open image selector using power buttons", async () => {
-        onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-            return [
-                {
-                    id: 1,
-                    name: "logo",
-                    mimetype: "image/png",
-                    image_src: "/web/static/img/logo2.png",
-                    access_token: false,
-                    public: true,
-                },
-            ];
-        });
+        onRpc("ir.attachment", "search_read", () => [
+            {
+                id: 1,
+                name: "logo",
+                mimetype: "image/png",
+                image_src: "/web/static/img/logo2.png",
+                access_token: false,
+                public: true,
+            },
+        ]);
         await setupEditor("<p>[]<br></p>");
         click(".o_we_power_buttons .power_button.fa-file-image-o");
         await animationFrame();

@@ -808,7 +808,19 @@ describe("link preview", () => {
             description: markup("Test description"),
             link_preview_name: "Task name | Project name",
         }));
+<<<<<<< 1978124798cd3b2f51565363d5c252d4df52b6ae
         onRpc("/odoo/project/1/tasks/8", () => new Response("", { status: 200 }));
+||||||| 3dee077d0a884809ea5e2af201bb2bacda9ca9d8
+        onRpc("/html_editor/link_preview_internal", () => {
+            return {
+                description: markup("Test description"),
+                link_preview_name: "Task name | Project name",
+            };
+        });
+        onRpc("/odoo/project/1/tasks/8", () => new Response("", { status: 200 }));
+=======
+        onRpc("/odoo/project/1/tasks/8", () => "", { pure: true });
+>>>>>>> f9a235e39c72df01c0001f42a1012d789a53925a
         const { editor, el } = await setupEditor(`<p>[]</p>`);
         await insertText(editor, "/link");
         await animationFrame();
@@ -858,7 +870,7 @@ describe("link preview", () => {
                 link_preview_name: "Task name | Project name",
             };
         });
-        onRpc("/odoo/cachetest/8", () => new Response("", { status: 200 }));
+        onRpc("/odoo/cachetest/8", () => "", { pure: true });
         const { editor } = await setupEditor(`<p>abc[]</p>`);
         await insertText(editor, "/link");
         await animationFrame();
@@ -899,11 +911,15 @@ describe("link preview", () => {
         });
 
         const currentProtocol = window.location.protocol;
-        onRpc("/odoo/cachetest/8", (mockRequest) => {
-            const urlProtocol = new URL(mockRequest.url).protocol;
-            expect(urlProtocol).toBe(currentProtocol);
-            return new Response("", { status: 200 });
-        });
+        onRpc(
+            "/odoo/cachetest/8",
+            (request) => {
+                const urlProtocol = new URL(request.url).protocol;
+                expect(urlProtocol).toBe(currentProtocol);
+                return "";
+            },
+            { pure: true }
+        );
 
         const { editor } = await setupEditor(`<p>abc[]</p>`);
         await insertText(editor, "/link");
@@ -1174,9 +1190,17 @@ describe("upload file via link popover", () => {
     });
 
     test("popover in preview mode should display the file's mimetype as favicon", async () => {
+<<<<<<< 1978124798cd3b2f51565363d5c252d4df52b6ae
         onRpc("/web/dataset/call_kw/ir.attachment/read", () => [
             { name: "file.txt", mimetype: "text/plain" },
         ]);
+||||||| 3dee077d0a884809ea5e2af201bb2bacda9ca9d8
+        onRpc("/web/dataset/call_kw/ir.attachment/read", () => {
+            return [{ name: "file.txt", mimetype: "text/plain" }];
+        });
+=======
+        onRpc("ir.attachment", "read", () => [{ name: "file.txt", mimetype: "text/plain" }]);
+>>>>>>> f9a235e39c72df01c0001f42a1012d789a53925a
         await setupEditor(
             '<p><a href="/web/content/1?download=true&unique=123">file.txt[]</a></p>'
         );
