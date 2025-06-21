@@ -99,6 +99,13 @@ export class PivotRenderer extends Component {
         if (formatter.extractOptions) {
             Object.assign(formatOptions, formatter.extractOptions(fieldInfo));
         }
+        if (formatType === "monetary") {
+            if (cell.value.currencyId === false) {
+                return false;
+            }
+            formatOptions.currencyId = cell.value.currencyId;
+            return formatter(cell.value.value, formatOptions);
+        }
         return formatter(cell.value, formatOptions);
     }
     /**
@@ -149,6 +156,10 @@ export class PivotRenderer extends Component {
      */
     get hideCustomGroupBy() {
         return this.env.searchModel.hideCustomGroupBy || false;
+    }
+
+    get invalidValueTooltip() {
+        return _t("Different currencies cannot be aggregated");
     }
 
     /**

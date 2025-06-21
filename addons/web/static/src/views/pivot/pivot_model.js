@@ -1042,12 +1042,23 @@ export class PivotModel extends Model {
         const { metaData } = config;
         return this._getMeasureSpecs(config).reduce((measurements, measureName) => {
             var measurement = group[measureName];
-            const fieldName = measureName.split(":")[0];
-            if (metaData.measures[fieldName].type === "boolean" && measurement instanceof Boolean) {
+            const [fieldName, aggregator] = measureName.split(":");
+            if (aggregator === "array_agg_distinct") {
+                return measurements;
+            }
+            const measureField = metaData.measures[fieldName];
+            if (measureField.type === "boolean" && measurement instanceof Boolean) {
                 measurement = measurement ? 1 : 0;
             }
             if (metaData.origins.length > 1 && !measurement) {
                 measurement = 0;
+            }
+            if (measureField.type === "monetary" && measureField.currency_field) {
+                const currencyIds = group[measureField.currency_field + ":array_agg_distinct"];
+                measurement = {
+                    value: measurement,
+                    currencyId: currencyIds?.length === 1 ? currencyIds[0] : false,
+                };
             }
             measurements[fieldName] = measurement;
             return measurements;
@@ -1110,6 +1121,9 @@ export class PivotModel extends Model {
                 throw new Error(
                     "No aggregate function has been provided for the measure '" + measure + "'"
                 );
+            }
+            if (field.currency_field) {
+                acc.push(field.currency_field + ":array_agg_distinct");
             }
             acc.push(measure + ":" + field.aggregator);
             return acc;

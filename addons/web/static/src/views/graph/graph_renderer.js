@@ -7,8 +7,9 @@ import {
     lightenColor,
     darkenColor,
 } from "@web/core/colors/colors";
+import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
-import { formatFloat } from "@web/views/fields/formatters";
+import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
 import { loadBundle } from "@web/core/assets";
@@ -22,6 +23,8 @@ import { cookie } from "@web/core/browser/cookie";
 import { createElementWithContent } from "@web/core/utils/html";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 import { Widget } from "@web/views/widgets/widget";
+import { getCurrency } from "@web/core/currency";
+import { rpc } from "@web/core/network/rpc";
 
 const NO_DATA = _t("No data");
 const formatters = registry.category("formatters");
@@ -605,6 +608,33 @@ export class GraphRenderer extends Component {
         return { x: xAxe, y: yAxe };
     }
 
+    getCurrency(currency) {
+        return getCurrency(currency).name;
+    }
+
+    async filterCurrency(currency) {
+        let domainString = `[("${this.model.currencyState.currencyField}", "=", ${currency})]`;
+        let isValid = await rpc("/web/domain/validate", {
+            model: this.model.metaData.resModel,
+            domain: new Domain(domainString).toList(),
+        });
+        if (!isValid) {
+            domainString = `[("company_id.currency_id", "=", ${currency})]`;
+            isValid = await rpc("/web/domain/validate", {
+                model: this.model.metaData.resModel,
+                domain: new Domain(domainString).toList(),
+            });
+            if (!isValid) {
+                return;
+            }
+        }
+        this.env.searchModel.splitAndAddDomain(domainString);
+    }
+
+    loadAll() {
+        return this.model.forceLoadAll();
+    }
+
     /**
      * This function extracts the information from the data points in
      * tooltipModel.dataPoints (corresponding to datapoints over a given
@@ -626,7 +656,11 @@ export class GraphRenderer extends Component {
             let label = dataset.trueLabels[index];
             let value = dataset.data[index];
             const measureWidget = metaData.fieldAttrs[measure]?.widget;
-            value = this.formatValue(value, allIntegers, measureWidget);
+            if (dataset.currencyIds?.[index]) {
+                value = formatMonetary(value, { currencyId: dataset.currencyIds[index] });
+            } else {
+                value = this.formatValue(value, allIntegers, measureWidget);
+            }
             let boxColor;
             let percentage;
             if (mode === "pie") {
