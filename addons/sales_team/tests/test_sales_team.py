@@ -3,6 +3,8 @@
 
 from odoo import exceptions
 from odoo.tests import tagged, users
+from odoo import Command
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 from odoo.addons.sales_team.tests.common import SalesTeamCommon, TestSalesCommon, TestSalesMC
 
@@ -164,7 +166,7 @@ class TestMultiCompany(TestSalesMC):
         team_c2.write({'member_ids': [(4, self.env.user.id)]})
         self.assertEqual(team_c2.member_ids, self.env.user)
 
-        # cannot add someone from another company
+        # cannot add someone from another company (when user allowed only in c1 and team is in c2)
         with self.assertRaises(exceptions.UserError):
             team_c2.write({'member_ids': [(4, self.user_sales_salesman.id)]})
 
@@ -174,7 +176,7 @@ class TestMultiCompany(TestSalesMC):
         team_c2.write({'member_ids': [(4, self.user_sales_salesman.id)]})
         self.assertEqual(team_c2.member_ids, self.user_sales_salesman)
 
-        # cannot change company as it breaks memberships mc check
+        # cannot change team company if it's users aren't allowed in the new company
         with self.assertRaises(exceptions.UserError):
             team_c2.write({'company_id': self.company_2.id})
 
@@ -203,6 +205,18 @@ class TestMultiCompany(TestSalesMC):
         # cannot change company as it breaks memberships mc check
         with self.assertRaises(exceptions.UserError):
             team_c2.write({'company_id': self.company_2.id})
+
+    def test_user_allowed_to_join_team_in_company_ids(self):
+        """User should be allowed in a team if the team's company is in their allowed companies"""
+        c1, c2 = self.company_main, self.company_2
+        user_c1_c2 = mail_new_test_user(
+            self.env,
+            login=f"Test_user_default_to_c{c1.id}_allowed_{'c'.join(map(str, [c1.id, c2.id]))}",
+            company_id=c1.id,
+            company_ids=[Command.set([c1.id, c2.id])],
+        )
+        self.team_c2.write({'member_ids': [Command.link(user_c1_c2.id)]})
+        self.assertIn(user_c1_c2, self.team_c2.member_ids)
 
 
 @tagged('post_install', '-at_install')
