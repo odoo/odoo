@@ -23,7 +23,12 @@ export class MailComposerAttachmentSelector extends Component {
 
     /** @param {Object} data */
     async onFileUploaded({ data, name, type }) {
-        const resIds = JSON.parse(this.props.record.data.res_ids);
+        let resIds;
+        if (this.props.record.resModel === "mail.scheduled.message") {
+            resIds = [this.props.record.data.res_id.resId];
+        } else {
+            resIds = JSON.parse(this.props.record.data.res_ids);
+        }
         const thread = await this.mailStore.Thread.insert({
             model: this.props.record.data.model,
             id: resIds[0],
