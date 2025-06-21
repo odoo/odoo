@@ -170,6 +170,7 @@ patch(PosStore.prototype, {
             this.addPendingOrder([order.id]);
             if (!this.get_order().uiState.booked) {
                 this.get_order().setBooked(true);
+                await this.syncAllOrders({ orders: [order] });
             }
         }
         return super.addLineToCurrentOrder(vals, opts, configure);
@@ -195,6 +196,12 @@ patch(PosStore.prototype, {
         }
         return super.getDefaultSearchDetails();
     },
+    async pay() {
+        if (this.config.module_pos_restaurant) {
+            this.syncAllOrders({ orders: [this.get_order()] });
+        }
+        return super.pay(...arguments);
+    },
     async setTable(table, orderUuid = null) {
         this.deviceSync.readDataFromServer();
         this.selectedTable = table;
@@ -214,7 +221,9 @@ patch(PosStore.prototype, {
                 currentOrder.update({ table_id: table });
                 this.selectedOrderUuid = currentOrder.uuid;
             } else {
-                this.add_new_order();
+                const order = this.add_new_order();
+                order.setBooked(true);
+                this.syncAllOrders({ orders: [order] });
             }
         }
     },

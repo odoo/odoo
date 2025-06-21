@@ -110,6 +110,9 @@ export class PaymentScreen extends Component {
         return this.currentOrder.get_selected_paymentline();
     }
     async addNewPaymentLine(paymentMethod) {
+        if (!this.pos.assert_order_editable(this.currentOrder)) {
+            return;
+        }
         if (
             paymentMethod.type === "pay_later" &&
             (!this.currentOrder.to_invoice ||
@@ -155,6 +158,9 @@ export class PaymentScreen extends Component {
         }
     }
     updateSelectedPaymentline(amount = false) {
+        if (!this.pos.assert_order_editable(this.currentOrder)) {
+            return;
+        }
         if (this.paymentLines.every((line) => line.paid)) {
             this.currentOrder.add_paymentline(this.payment_methods_from_config[0]);
         }
@@ -197,6 +203,9 @@ export class PaymentScreen extends Component {
         }
     }
     toggleIsToInvoice() {
+        if (!this.pos.assert_order_editable(this.currentOrder)) {
+            return;
+        }
         this.currentOrder.set_to_invoice(!this.currentOrder.is_to_invoice());
     }
     openCashbox() {
@@ -230,6 +239,9 @@ export class PaymentScreen extends Component {
         }
     }
     deletePaymentLine(uuid) {
+        if (!this.pos.assert_order_editable(this.currentOrder)) {
+            return;
+        }
         const line = this.paymentLines.find((line) => line.uuid === uuid);
         if (line.payment_method_id.payment_method_type === "qr_code") {
             this.currentOrder.remove_paymentline(line);
@@ -261,6 +273,9 @@ export class PaymentScreen extends Component {
         this.numberBuffer.reset();
     }
     async validateOrder(isForceValidate) {
+        if (!this.pos.assert_order_editable(this.currentOrder)) {
+            return;
+        }
         this.numberBuffer.capture();
         if (!this.check_cash_rounding_has_been_well_applied()) {
             return;
