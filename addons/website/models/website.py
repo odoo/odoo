@@ -485,7 +485,7 @@ class Website(models.Model):
 
             return pages_views
 
-        def configure_page(page_code, snippet_list, pages_views, cta_data):
+        def configure_page(page_code, snippet_list, pages_views, cta_data, image_processings_to_do, done_image_processings):
             if page_code == 'homepage':
                 page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
             else:
@@ -502,6 +502,18 @@ class Website(models.Model):
                         # Add the data-snippet attribute to identify the snippet
                         # for compatibility code
                         el.attrib['data-snippet'] = snippet
+
+                        # Identify processed images
+                        for img_index, img_el in enumerate(el.xpath("//img[not(@src)][@data-original-src]")):
+                            img_id = '%s/%s' % (snippet, img_index)
+                            if done_image_processings:
+                                update_image = done_image_processings.get(img_id)
+                                for attr, value in update_image.items():
+                                    img_el.set(attr, value)
+                            else:
+                                image_processings_to_do[img_id] = img_el.attrib
+                        if image_processings_to_do:
+                            continue
 
                         # Tweak the shape of the first snippet to connect it
                         # properly with the header color in some themes
@@ -520,6 +532,8 @@ class Website(models.Model):
                         rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
                     logger.warning(e)
+            if image_processings_to_do:
+                return
             page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
                               xpath="(//div[hasclass('oe_structure')])[last()]")
 
@@ -559,6 +573,7 @@ class Website(models.Model):
         theme_name = kwargs['theme_name']
         theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
         url = theme.button_choose_theme()
+        done_image_processings = kwargs.get('image_processings')
 
         # Force to refresh env after install of module
         assert self.env.registry is registry()
@@ -652,20 +667,32 @@ class Website(models.Model):
                 # want the xpath error to break the configurator feature
                 logger.warning(e)
 
-        # Load suggestion from iap for selected pages
-        custom_resources = self._website_api_rpc(
-            '/api/website/2/configurator/custom_resources/%s' % kwargs['industry_id'],
-            {'theme': theme_name, }
-        )
-
         # Update pages
+        image_processings_to_do = {}
         requested_pages = list(pages_views.keys()) + ['homepage']
         snippet_lists = website.get_theme_snippet_lists(theme_name)
         for page_code in requested_pages:
-            configure_page(page_code, snippet_lists.get(page_code, []), pages_views, cta_data)
+            configure_page(page_code, snippet_lists.get(page_code, []), pages_views, cta_data, image_processings_to_do, done_image_processings)
 
-        images = custom_resources.get('images', {})
-        set_images(images)
+        if not done_image_processings:
+            # If image processing needed:
+            # - another call to configurator_apply will happen later => website must not be created yet
+            # - but images must have been obtained before being processed
+            if image_processings_to_do:
+                self.env.cr.rollback()
+
+            # Load suggestion from iap for selected pages
+            custom_resources = self._website_api_rpc(
+                '/api/website/2/configurator/custom_resources/%s' % kwargs['industry_id'],
+                {'theme': theme_name, }
+            )
+            images = custom_resources.get('images', {})
+            set_images(images)
+
+            if image_processings_to_do:
+                return {
+                    'imageProcessings': image_processings_to_do,
+                }
         return {'url': url, 'website_id': website.id}
 
     # ----------------------------------------------------------
