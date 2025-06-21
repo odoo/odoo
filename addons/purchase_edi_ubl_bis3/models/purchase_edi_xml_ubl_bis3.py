@@ -1,4 +1,9 @@
+from lxml import etree
+
 from odoo import models, Command, _
+from odoo.tools import html2plaintext
+from odoo.addons.account_edi_ubl_cii.tools import Order
+from odoo.addons.account.tools import dict_to_xml
 
 
 class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
@@ -7,55 +12,182 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
     _description = "Purchase UBL BIS Ordering 3.5"
 
     # -------------------------------------------------------------------------
-    # Order EDI Export
+    # Purchase Order EDI Export
     # -------------------------------------------------------------------------
 
-    def _get_line_allowance_charge_vals(self, currency, net_price, discount):
-        allowance_charge_vals = super()._get_line_allowance_charge_vals(currency, net_price, discount)
-        allowance_charge_vals['allowance_charge_reason'] = _('Discount')
-        return allowance_charge_vals
+    def _export_order(self, purchase_order):
+        vals = {'purchase_order': purchase_order}
+        document_node = self._get_purchase_order_node(vals)
+        xml_content = dict_to_xml(document_node, template=Order, nsmap=self._get_document_nsmap(vals))
+        return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8')
 
-    def _get_order_line_vals(self, order_lines, customer, supplier):
-        filtered_order_lines = order_lines.filtered(lambda l: l.display_type not in ['line_note', 'line_section'])
-        order_lines_to_process = []
-        for line_id, line in enumerate(filtered_order_lines, 1):
-            order_lines_to_process.append({
-                'id': line_id,
-                'quantity': line.product_qty,
-                'quantity_unit_code': self._get_uom_unece_code(line.product_uom_id),
-                'line_extension_amount': line.price_subtotal,
-                'currency': line.currency_id,
-                'currency_dp': self._get_currency_decimal_places(line.currency_id),
-                'allowance_charge_vals': self._get_line_allowance_charge_vals(line.currency_id, line.price_subtotal, line.discount),
-                'price_vals': self._get_order_line_item_price_vals(line.price_unit, line.discount, line.currency_id, line.product_uom_id),
-                'item': self._get_line_item_vals(line.product_id, line.name, customer, supplier, line.tax_ids),
-            })
-        return order_lines_to_process
+    def _get_purchase_order_node(self, vals):
+        self._add_purchase_order_config_vals(vals)
+        self._add_purchase_order_base_lines_vals(vals)
+        self._add_purchase_order_currency_vals(vals)
+        self._add_purchase_order_tax_grouping_function_vals(vals)
+        self._add_purchase_order_monetary_totals_vals(vals)
 
-    def _export_order_vals(self, purchase_order):
-        vals = super()._export_order_vals(purchase_order)
+        document_node = {}
+        self._add_purchase_order_header_nodes(document_node, vals)
+        self._add_purchase_order_buyer_customer_party_nodes(document_node, vals)
+        self._add_purchase_order_seller_supplier_party_nodes(document_node, vals)
+        self._add_purchase_order_delivery_nodes(document_node, vals)
+        self._add_purchase_order_payment_terms_nodes(document_node, vals)
+        self._add_purchase_order_allowance_charge_nodes(document_node, vals)
+        self._add_purchase_order_tax_total_nodes(document_node, vals)
+        self._add_purchase_order_monetary_total_nodes(document_node, vals)
+        self._add_purchase_order_line_nodes(document_node, vals)
+        return document_node
 
-        customer = purchase_order.company_id.partner_id
+    def _add_purchase_order_config_vals(self, vals):
+        purchase_order = vals['purchase_order']
         supplier = purchase_order.partner_id
-        customer_delivery_address = customer.child_ids.filtered(lambda child: child.type == 'delivery')
-        delivery = (purchase_order.dest_address_id
-                    or (customer_delivery_address and customer_delivery_address[0])
-                    or customer)
-        order_line_vals = self._get_order_line_vals(purchase_order.order_line, customer, supplier)
+        customer = purchase_order.company_id.partner_id.commercial_partner_id
 
-        vals['vals'].update({
-            'order_type_code': 105,
-            'quotation_document_reference': purchase_order.partner_ref,
-            'customer_party_vals': self._get_partner_party_vals(customer, role='customer'),
-            'supplier_party_vals': self._get_partner_party_vals(supplier, role='supplier'),
-            'delivery_party_vals': self._get_partner_party_vals(delivery, role='delivery'),
-            'anticipated_monetary_total_vals': self._get_anticipated_monetary_total_vals(order_line_vals, purchase_order.currency_id, purchase_order.amount_total),
-            'order_lines': order_line_vals,
+        customer_delivery_address = customer.child_ids.filtered(lambda child: child.type == 'delivery')
+        partner_shipping = (
+            purchase_order.dest_address_id
+            or (customer_delivery_address and customer_delivery_address[0])
+            or customer
+        )
+
+        vals.update({
+            'document_type': 'order',
+
+            'supplier': supplier,
+            'customer': customer,
+            'partner_shipping': partner_shipping,
+
+            'currency_id': purchase_order.currency_id,
+            'company_currency_id': purchase_order.company_id.currency_id,
+
+            'use_company_currency': False,  # If true, use the company currency for the amounts instead of the order currency
+            'fixed_taxes_as_allowance_charges': True,  # If true, include fixed taxes as AllowanceCharges on lines instead of as taxes
         })
-        return vals
+
+    def _add_purchase_order_base_lines_vals(self, vals):
+        purchase_order = vals['purchase_order']
+        AccountTax = self.env['account.tax']
+
+        base_lines = [line._prepare_base_line_for_taxes_computation() for line in purchase_order.order_line]
+        AccountTax._add_tax_details_in_base_lines(base_lines, purchase_order.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines, purchase_order.company_id)
+
+        vals['base_lines'] = base_lines
+
+    def _add_purchase_order_currency_vals(self, vals):
+        self._add_document_currency_vals(vals)
+
+    def _add_purchase_order_tax_grouping_function_vals(self, vals):
+        self._add_document_tax_grouping_function_vals(vals)
+
+    def _add_purchase_order_monetary_totals_vals(self, vals):
+        self._add_document_monetary_total_vals(vals)
+
+    def _add_purchase_order_header_nodes(self, document_node, vals):
+        purchase_order = vals['purchase_order']
+        document_node.update({
+            'cbc:CustomizationID': {'_text': 'urn:fdc:peppol.eu:poacc:trns:order:3'},
+            'cbc:ProfileID': {'_text': 'urn:fdc:peppol.eu:poacc:bis:ordering:3'},
+            'cbc:ID': {'_text': purchase_order.name},
+            'cbc:IssueDate': {'_text': purchase_order.create_date.date()},
+            'cbc:OrderTypeCode': {'_text': '105'},
+            'cbc:Note': {'_text': html2plaintext(purchase_order.note)} if purchase_order.note else None,
+            'cbc:DocumentCurrencyCode': {'_text': vals['currency_name']},
+            'cac:QuotationDocumentReference': {
+                'cbc:ID': {'_text': purchase_order.partner_ref}
+            },
+        })
+
+    def _add_purchase_order_buyer_customer_party_nodes(self, document_node, vals):
+        document_node['cac:BuyerCustomerParty'] = {
+            'cac:Party': self._get_party_node({**vals, 'partner': vals['customer'], 'role': 'customer'})
+        }
+
+    def _add_purchase_order_seller_supplier_party_nodes(self, document_node, vals):
+        document_node['cac:SellerSupplierParty'] = {
+            'cac:Party': self._get_party_node({**vals, 'partner': vals['supplier'], 'role': 'supplier'})
+        }
+
+    def _add_purchase_order_delivery_nodes(self, document_node, vals):
+        document_node['cac:Delivery'] = {
+            'cac:DeliveryParty': self._get_party_node({**vals, 'partner': vals['partner_shipping'], 'role': 'delivery'})
+        }
+
+    def _add_purchase_order_payment_terms_nodes(self, document_node, vals):
+        purchase_order = vals['purchase_order']
+        if purchase_order.payment_term_id:
+            document_node['cac:PaymentTerms'] = {
+                'cbc:Note': {'_text': purchase_order.payment_term_id.name}
+            }
+
+    def _add_purchase_order_allowance_charge_nodes(self, document_node, vals):
+        self._add_document_allowance_charge_nodes(document_node, vals)
+
+    def _add_purchase_order_tax_total_nodes(self, document_node, vals):
+        self._add_document_tax_total_nodes(document_node, vals)
+
+    def _add_purchase_order_monetary_total_nodes(self, document_node, vals):
+        self._add_document_monetary_total_nodes(document_node, vals)
+
+    def _add_purchase_order_line_nodes(self, document_node, vals):
+        line_tag = self._get_tags_for_document_type(vals)['document_line']
+        document_node[line_tag] = order_line_nodes = []
+
+        line_idx = 1
+        for base_line in vals['base_lines']:
+            line_vals = {
+                **vals,
+                'line_idx': line_idx,
+                'base_line': base_line,
+            }
+            self._add_purchase_order_line_vals(line_vals)
+
+            line_node = {}
+            self._add_purchase_order_line_id_nodes(line_node, line_vals)
+            self._add_purchase_order_line_amount_nodes(line_node, line_vals)
+            self._add_purchase_order_line_allowance_charge_nodes(line_node, line_vals)
+            self._add_purchase_order_line_tax_total_nodes(line_node, line_vals)
+            self._add_purchase_order_line_item_nodes(line_node, line_vals)
+            self._add_purchase_order_line_tax_category_nodes(line_node, line_vals)
+            self._add_purchase_order_line_price_nodes(line_node, line_vals)
+
+            order_line_nodes.append({
+                'cac:LineItem': line_node,
+            })
+            line_idx += 1
+
+    def _add_purchase_order_line_vals(self, vals):
+        self._add_document_line_vals(vals)
+
+    def _add_purchase_order_line_id_nodes(self, line_node, vals):
+        self._add_document_line_id_nodes(line_node, vals)
+
+    def _add_purchase_order_line_amount_nodes(self, line_node, vals):
+        self._add_document_line_amount_nodes(line_node, vals)
+
+    def _add_purchase_order_line_allowance_charge_nodes(self, line_node, vals):
+        self._add_document_line_allowance_charge_nodes(line_node, vals)
+
+    def _add_purchase_order_line_tax_total_nodes(self, line_node, vals):
+        self._add_document_line_tax_total_nodes(line_node, vals)
+
+    def _add_purchase_order_line_tax_category_nodes(self, line_node, vals):
+        self._add_document_line_tax_category_nodes(line_node, vals)
+
+    def _add_purchase_order_line_item_nodes(self, line_node, vals):
+        self._add_document_line_item_nodes(line_node, vals)
+
+        line = vals['base_line']['record']
+        if line_name := line.name and line.name.replace('\n', ' '):
+            line_node['cac:Item']['cbc:Description'] = {'_text': line_name}
+
+    def _add_purchase_order_line_price_nodes(self, line_node, vals):
+        self._add_document_line_price_nodes(line_node, vals)
 
     # -------------------------------------------------------------------------
-    # Order EDI Import
+    # Purchase Order EDI Import
     # -------------------------------------------------------------------------
 
     def _retrieve_order_vals(self, order, tree):

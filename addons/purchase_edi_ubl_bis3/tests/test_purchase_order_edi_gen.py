@@ -10,16 +10,20 @@ from datetime import datetime
 @tagged('post_install', '-at_install')
 class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
     def test_purchase_order_download_edi(self):
-        self.user.company_id.partner_id.vat = 'US12345674'
+        self.env.company.vat = 'BE0477472701'
+        self.partner_a.vat = 'NL123456782B90'
+
         po = self.env['purchase.order'].create({
             'name': 'My PO',
             'partner_id': self.partner_a.id,
+            'partner_ref': 'SO/1234',
             'order_line': [
                 (0, 0, {
                     'product_id': self.product_a.id,
                     'name': 'Product A description',
                     'product_qty': 10.0,
                     'price_unit': 50.0,
+                    'discount': 10.0,
                 }),
                 (0, 0, {
                     'product_id': self.product_a.id,

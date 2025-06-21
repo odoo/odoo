@@ -1,6 +1,6 @@
 from odoo import Command
 from odoo.tests import tagged
-from odoo.tools.float_utils import float_compare
+from odoo.tools import float_compare, float_round
 from odoo.addons.l10n_jo_edi.tests.jo_edi_common import JoEdiCommon
 from odoo.addons.l10n_jo_edi.models.account_edi_xml_ubl_21_jo import JO_MAX_DP
 
@@ -44,8 +44,11 @@ class TestJoEdiPrecision(JoEdiCommon):
 
         return defaults
 
+    def _round_max_dp(self, value):
+        return float_round(value, JO_MAX_DP)
+
     def _sum_max_dp(self, iterable):
-        return self.env['account.edi.xml.ubl_21.jo']._sum_max_dp(iterable)
+        return sum(self._round_max_dp(element) for element in iterable)
 
     def _validate_jo_edi_numbers(self, xml_string, invoice):
         """
@@ -75,13 +78,13 @@ class TestJoEdiPrecision(JoEdiCommon):
         root = self.get_xml_tree_from_string(xml_string)
         error_message = ""
 
-        total_discount = float(root.findtext('./{*}AllowanceCharge/{*}Amount'))
+        total_discount = float(root.findtext('./{*}AllowanceCharge/{*}Amount') or 0.0)
         total_tax = float(root.findtext('./{*}TaxTotal/{*}TaxAmount', default=0))
 
         tax_exclusive_amount = float(root.findtext('./{*}LegalMonetaryTotal/{*}TaxExclusiveAmount'))
         tax_inclusive_amount = float(root.findtext('./{*}LegalMonetaryTotal/{*}TaxInclusiveAmount'))
         self.assertEqual(float_compare(tax_inclusive_amount, invoice.amount_total, 2), 0, f'{tax_inclusive_amount} != {invoice.amount_total}')
-        monetary_values_discount = float(root.findtext('./{*}LegalMonetaryTotal/{*}AllowanceTotalAmount'))
+        monetary_values_discount = float(root.findtext('./{*}LegalMonetaryTotal/{*}AllowanceTotalAmount') or 0.0)
         payable_amount = float(root.findtext('./{*}LegalMonetaryTotal/{*}PayableAmount'))
 
         error_message += self._equality_check({  # They have to be exactly the same, no decimal difference is tolerated
@@ -113,7 +116,7 @@ class TestJoEdiPrecision(JoEdiCommon):
                         'total_tax_amount': 0,
                     }),
                 'price_unit': float(xml_line.findtext('{*}Price/{*}PriceAmount')),
-                'discount': float(xml_line.findtext('{*}Price/{*}AllowanceCharge/{*}Amount')),
+                'discount': float(xml_line.findtext('{*}Price/{*}AllowanceCharge/{*}Amount') or 0.0),
             }
             lines.append(line)
             line_errors = self._equality_check({

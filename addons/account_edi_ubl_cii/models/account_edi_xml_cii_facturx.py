@@ -116,6 +116,8 @@ class AccountEdiXmlCii(models.AbstractModel):
         }
 
     def _export_invoice_vals(self, invoice):
+        customer = invoice.partner_id
+        supplier = invoice.company_id.partner_id.commercial_partner_id
 
         def format_date(dt):
             # Format the date in the Factur-x standard.
@@ -128,10 +130,9 @@ class AccountEdiXmlCii(models.AbstractModel):
 
         def grouping_key_generator(base_line, tax_data):
             tax = tax_data['tax']
-            customer = invoice.commercial_partner_id
-            supplier = invoice.company_id.partner_id.commercial_partner_id
             grouping_key = {
-                **self._get_tax_unece_codes(customer, supplier, tax),
+                'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
+                **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
                 'amount': tax.amount,
                 'amount_type': tax.amount_type,
             }

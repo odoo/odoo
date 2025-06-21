@@ -66,13 +66,15 @@ TAX_EXEMPTION_MAPPING = {
 class AccountEdiCommon(models.AbstractModel):
     _inherit = "account.edi.common"
 
-    def _get_tax_unece_codes(self, customer, supplier, tax):
-        if tax.ubl_cii_tax_category_code:
-            reason_code = tax.ubl_cii_tax_exemption_reason_code
-            tax_exemption_reason = TAX_EXEMPTION_MAPPING.get(reason_code)
+    def _get_tax_category_code(self, customer, supplier, tax):
+        if tax and tax.ubl_cii_tax_category_code:
+            return tax.ubl_cii_tax_category_code
+        return super()._get_tax_category_code(customer, supplier, tax)
+
+    def _get_tax_exemption_reason(self, customer, supplier, tax):
+        if tax and (code := tax.ubl_cii_tax_exemption_reason_code):
             return {
-                'tax_category_code': tax.ubl_cii_tax_category_code,
-                'tax_exemption_reason_code': reason_code,
-                'tax_exemption_reason': tax_exemption_reason,
+                'tax_exemption_reason_code': code,
+                'tax_exemption_reason': TAX_EXEMPTION_MAPPING.get(code),
             }
-        return super()._get_tax_unece_codes(customer, supplier, tax)
+        return super()._get_tax_exemption_reason(customer, supplier, tax)
