@@ -204,4 +204,12 @@ register("test_systray_not_reditor_not_tester", () => [
     {
         trigger: ":iframe main:contains(test model)",
     },
+    {
+        content: "Wait for livechat to be ready - if it tried to start",
+        trigger: "body",
+        run: async () => {
+            const iframeDocument = document.querySelector("iframe").contentDocument.defaultView;
+            await iframeDocument.odoo.__WOWL_DEBUG__.root.env.services["im_livechat.initialized"]?.ready;
+        },
+    },
 ]);
