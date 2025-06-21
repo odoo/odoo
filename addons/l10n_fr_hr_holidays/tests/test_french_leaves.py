@@ -2,11 +2,12 @@
 
 import logging
 import time
-
 from datetime import date
+
 from odoo.tests.common import TransactionCase, tagged
 
 _logger = logging.getLogger(__name__)
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'french_leaves')
 class TestFrenchLeaves(TransactionCase):
@@ -133,12 +134,13 @@ class TestFrenchLeaves(TransactionCase):
             'employee_id': self.employee.id,
             'request_date_from': '2021-09-10',
             'request_date_to': '2021-09-10',
-            'request_unit_half': True,
             'request_date_from_period': 'am',
+            'request_date_to_period': 'am',
         })
         # Since the employee works on the afternoon, the date_to is not post-poned
         self.assertEqual(leave.number_of_days, 0.5, 'The number of days should be equal to 0.5.')
         leave.request_date_from_period = 'pm'
+        leave.request_date_to_period = 'pm'
         # This however should push the date_to
         self.assertEqual(leave.number_of_days, 2.5, 'The number of days should be equal to 2.5.')
 
@@ -353,13 +355,14 @@ class TestFrenchLeaves(TransactionCase):
             'employee_id': self.employee.id,
             'request_date_from': '2024-07-29',
             'request_date_to': '2024-07-29',
-            'request_unit_half': True,
             'request_date_from_period': 'am',
+            'request_date_to_period': 'am',
         })
         self.assertEqual(leave.number_of_days, 0.5, 'The duration should be 0.5 day.')
         self.assertEqual(leave.date_from.date(), date(2024, 7, 29))
         self.assertEqual(leave.date_to.date(), date(2024, 7, 29))
 
+        leave.request_date_to_period = 'pm'
         leave.request_date_from_period = 'pm'
         self.assertEqual(leave.number_of_days, 0.5, 'The duration should be 0.5 day.')
         self.assertEqual(leave.date_from.date(), date(2024, 7, 29))
@@ -378,7 +381,7 @@ class TestFrenchLeaves(TransactionCase):
                 (0, 0, {'name': f'Day {i} of second week', 'week_type': '1', 'dayofweek': str(i), 'hour_from': 7, 'hour_to': 11, 'day_period': 'morning'}),
                 (0, 0, {'name': f'Day {i} of second week', 'week_type': '1', 'dayofweek': str(i), 'hour_from': 11, 'hour_to': 12, 'day_period': 'lunch'}),
                 (0, 0, {'name': f'Day {i} of second week', 'week_type': '1', 'dayofweek': str(i), 'hour_from': 12, 'hour_to': 16, 'day_period': 'afternoon'})]
-            ]
+            ],
         })
         self.employee.resource_calendar_id = self.env['resource.calendar'].create({
             'name': 'Employee Calendar',
