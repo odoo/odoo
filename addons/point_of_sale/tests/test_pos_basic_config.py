@@ -889,6 +889,24 @@ class TestPoSBasicConfig(TestPoSCommon):
         open_and_check(pos01_data)
         open_and_check(pos02_data)
 
+    def test_pos_session_name_sequencing(self):
+        """ This test check if the session name is correctly set according to the sequence """
+
+        sequence = self.env['ir.sequence'].search([('code', '=', 'pos.session')])
+        sequence.prefix = '/'
+        sequence.write({'number_next_actual': 1000})
+        name = self.config.name
+
+        self.open_new_session(0)
+        self.assertEqual(self.pos_session.name, name + '/01000')
+
+        self.pos_session.close_session_from_ui()
+
+        sequence.prefix = 'TEST/'
+
+        self.open_new_session(0)
+        self.assertEqual(self.pos_session.name, 'TEST/01001')
+
     def test_load_data_should_not_fail(self):
         """load_data shouldn't fail
 
