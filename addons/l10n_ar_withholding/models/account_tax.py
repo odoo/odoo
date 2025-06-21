@@ -33,7 +33,7 @@ class AccountTax(models.Model):
     l10n_ar_withholding_sequence_id = fields.Many2one(
         'ir.sequence',
         string='WTH Sequence',
-        copy=False, check_company=True,
+        check_company=True,
         help='If no sequence provided then it will be required for you to enter withholding number when registering one.')
     l10n_ar_code = fields.Char('AFIP Code')
     l10n_ar_non_taxable_amount = fields.Float(
