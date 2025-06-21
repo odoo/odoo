@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-22 15:24+0000\n"
-"PO-Revision-Date: 2024-08-22 15:24+0000\n"
+"POT-Creation-Date: 2025-06-19 12:02+0000\n"
+"PO-Revision-Date: 2025-06-19 12:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,31 +27,42 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid ""
-"- Finish the Onboarding procees for journal %s by requesting the CSIDs and "
-"completing the checks."
+msgid "- %(missing_fields)s"
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "- Invoice lines should have at least one Tax applied."
+msgid "- Invoice cannot be posted as the Supplier and Buyer are the same."
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid ""
-"- No Private Key was generated for company %s. A Private Key is mandatory in"
-" order to generate Certificate Signing Requests (CSR)."
+msgid "- Invoice lines need at least one tax. Please input it and try again."
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
-"- No Serial Number was assigned for journal %s. A Serial Number is mandatory"
-" in order to generate Certificate Signing Requests (CSR)."
+"- Please set the Invoice Date to be either less than or equal to today."
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
+msgid ""
+"- Please set the VAT Number on the Company to be 15 digits, with first and "
+"last digits being 3."
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
+msgid ""
+"- Please set the following fields on the %(company_name)s: "
+"%(missing_fields)s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -65,49 +76,38 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid ""
-"- Please, make sure the invoice date is set to either the same as or before "
-"Today."
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "- Please, set the following fields on the Customer: %(missing_fields)s"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "- Please, set the following fields on the Supplier: %(missing_fields)s"
+msgid "- Something went wrong. Please onboard the journal again."
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
-"- The company VAT identification must contain 15 digits, with the first and "
-"last digits being '3' as per the BR-KSA-39 and BR-KSA-40 of ZATCA KSA "
-"business rule."
+"- The Journal (%s) is not onboarded yet. Please onboard it and try again."
 msgstr ""
 
 #. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "- You cannot post invoices where the Seller is the Buyer"
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
+msgid "1. There are three modes available:"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__700
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
+msgid ""
+"2. After selecting the mode, please go to <span "
+"class=\"o_form_label\">Journals &gt; Sales Type &gt; ZATCA Tab &gt; "
+"Onboard.</span>"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
+msgid ""
+"3. Once the Journal is onboarded, you can begin using the selected mode."
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__700
 msgid "700 Number"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid ""
-"<b>\n"
-"                                In order to be able to submit Invoices to ZATCA, the following steps need to be completed:\n"
-"                            </b>"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -117,22 +117,60 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
-msgid "<strong>Exchange Rate</strong>"
+msgid "<span class=\"fw-bold\">Exchange Rate</span>"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
-msgid "<strong>Subtotal (SAR)</strong>"
+msgid "<span class=\"fw-bold\">Subtotal</span>"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
-msgid "<strong>Total (SAR)</strong>"
+msgid "<span class=\"fw-bold\">Total</span>"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
-msgid "<strong>VAT Amount (SAR)</strong>"
+msgid "<span class=\"fw-bold\">VAT Amount</span>"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Production</span> - Live environment"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Sandbox</span> - Common pre-configured testing "
+"environment"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Simulation</span> - Unique testing environment"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
+msgid "<strong>الإجمالي الفرعي بالريال السعودي</strong>"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
+msgid "<strong>الإجمالي بالريال السعودي</strong>"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
+msgid "<strong>سعر الصرف</strong>"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.arabic_english_invoice
+msgid "<strong>مبلغ ضريبة القيمة المضافة بالريال السعودي</strong>"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -146,49 +184,32 @@ msgid "Account Move Reversal"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model,name:l10n_sa_edi.model_account_move_send
+msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model,name:l10n_sa_edi.model_account_debit_note
 msgid "Add Debit Note wizard"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,help:l10n_sa_edi.field_res_company__l10n_sa_additional_identification_number
-#: model:ir.model.fields,help:l10n_sa_edi.field_res_partner__l10n_sa_additional_identification_number
-#: model:ir.model.fields,help:l10n_sa_edi.field_res_users__l10n_sa_additional_identification_number
-msgid "Additional Identification Number for Seller/Buyer"
+#: model:ir.model.fields,help:l10n_sa_edi.field_res_company__l10n_sa_edi_additional_identification_number
+#: model:ir.model.fields,help:l10n_sa_edi.field_res_partner__l10n_sa_edi_additional_identification_number
+#: model:ir.model.fields,help:l10n_sa_edi.field_res_users__l10n_sa_edi_additional_identification_number
+msgid "Additional Identification Number for the Seller/Buyer"
 msgstr ""
 
 #. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "Additional Identification Number is required for commercial partners"
+#: model:ir.model.fields,help:l10n_sa_edi.field_res_company__l10n_sa_edi_additional_identification_scheme
+#: model:ir.model.fields,help:l10n_sa_edi.field_res_partner__l10n_sa_edi_additional_identification_scheme
+#: model:ir.model.fields,help:l10n_sa_edi.field_res_users__l10n_sa_edi_additional_identification_scheme
+msgid "Additional Identification Scheme for the Seller/Buyer"
 msgstr ""
 
 #. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid ""
-"Additional Identification Scheme is required for the Buyer if tax exemption "
-"reason is either VATEX-SA-HEA or VATEX-SA-EDU, and its value must be NAT"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid ""
-"Additional Identification Scheme is required for the Seller, and must be one"
-" of CRN, MOM, MLS, SAG or OTH"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields,help:l10n_sa_edi.field_res_company__l10n_sa_additional_identification_scheme
-#: model:ir.model.fields,help:l10n_sa_edi.field_res_partner__l10n_sa_additional_identification_scheme
-#: model:ir.model.fields,help:l10n_sa_edi.field_res_users__l10n_sa_additional_identification_scheme
-msgid "Additional Identification scheme for Seller/Buyer"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid "Are you sure you wish to re-onboard the Journal?"
+#: model:ir.model,name:l10n_sa_edi.model_ir_attachment
+msgid "Attachment"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -200,14 +221,13 @@ msgid "Building Number"
 msgstr ""
 
 #. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "Building Number for the Buyer is required on Standard Invoices"
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_compliance_csid_json
+msgid "CCSID JSON"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_compliance_csid_json
-msgid "CCSID JSON"
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_compliance_csid_certificate_id
+msgid "CCSID certificate"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -216,44 +236,31 @@ msgid "Cancel"
 msgstr ""
 
 #. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid ""
-"Cannot request a Production CSID before completing the Compliance Checks"
+#: model:ir.model,name:l10n_sa_edi.model_certificate_certificate
+msgid "Certificate"
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid "Cannot request a Production CSID before requesting a CCSID first"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_tax.py:0
-msgid "Cannot set a tax to Retention if the amount is greater than or equal 0"
-msgstr ""
-
-#. module: l10n_sa_edi
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
 msgid "City"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__crn
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_journal.py:0
+msgid "Clearance and reporting seem to have been mixed up. "
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__crn
 msgid "Commercial Registration Number"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model,name:l10n_sa_edi.model_res_company
 msgid "Companies"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid ""
-"Complete the Compliance Checks\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_compliance_checks_passed\"/>"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -269,14 +276,13 @@ msgid "Compliance Checks Done"
 msgstr ""
 
 #. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid "Compliance checks can only be run for companies operating from KSA"
+#: model:ir.model,name:l10n_sa_edi.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model,name:l10n_sa_edi.model_res_config_settings
-msgid "Config Settings"
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.l10n_sa_edi_otp_wizard_view_form
+msgid "Confirm"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -286,42 +292,8 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid "Could not complete Compliance Checks for the following file:"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid "Could not generate Invoice UBL content: %s"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid ""
-"Could not generate PCSID values:\n"
-"%(error)s"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid ""
-"Could not generate signed XML values:\n"
-"%(error)s"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid "Could not obtain Compliance CSID: %s"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid "Could not obtain Production CSID: %s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -345,14 +317,32 @@ msgid "Determines whether or not a tax counts as a Withholding Tax"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_debit_note__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_edi_format__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_edi_xml_ubl_21_zatca__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_certificate_certificate__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
+msgid "Do you really want to re-onboard this Journal with ZATCA?"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_uuid
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__l10n_sa_uuid
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_payment__l10n_sa_uuid
 msgid "Document UUID (SA)"
 msgstr ""
 
@@ -362,14 +352,29 @@ msgid "EDI format"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.actions.act_window,name:l10n_sa_edi.l10n_sa_edi_otp_wizard_act_window
+msgid "Enter the OTP"
+msgstr ""
+
+#. module: l10n_sa_edi
 #. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid "Errors:"
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+msgid "Error: Invoice rejected by ZATCA"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
+msgid "Error: Journal is not onboarded"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__l10n_sa_exemption_reason_code
 msgid "Exemption Reason Code"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_production_csid_validity
+msgid "Expiration date"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -386,7 +391,7 @@ msgid "For debit notes issued in Saudi Arabia, you need to specify a Reason"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__gcc
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__gcc
 msgid "GCC ID"
 msgstr ""
 
@@ -405,28 +410,41 @@ msgid "ICV"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_debit_note__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_edi_format__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_edi_xml_ubl_21_zatca__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_line__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_certificate_certificate__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_ir_attachment__id
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__id
 msgid "ID"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_additional_identification_number
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_additional_identification_number
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_additional_identification_number
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_partner_form
+msgid "Identification Number"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_additional_identification_number
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_additional_identification_number
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_edi_additional_identification_number
 msgid "Identification Number (SA)"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_additional_identification_scheme
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_additional_identification_scheme
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_additional_identification_scheme
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_additional_identification_scheme
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_additional_identification_scheme
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_edi_additional_identification_scheme
 msgid "Identification Scheme"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_move.py:0
-msgid "Invoice Successfully Submitted to ZATCA"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -448,7 +466,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_chain_index
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_move__l10n_sa_chain_index
-#: model:ir.model.fields,help:l10n_sa_edi.field_account_payment__l10n_sa_chain_index
 msgid ""
 "Invoice index in chain, set if and only if an in-chain XML was submitted and"
 " did not error"
@@ -461,20 +478,13 @@ msgid "Invoice submission to ZATCA returned errors"
 msgstr ""
 
 #. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_move.py:0
-msgid "Invoice was Accepted by ZATCA (with Warnings)"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_move.py:0
-msgid "Invoice was rejected by ZATCA"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__iqa
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__iqa
 msgid "Iqama Number"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_is_production
+msgid "Is Production"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -511,10 +521,15 @@ msgid "Journal could not be onboarded"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid ""
-"Journal could not be onboarded. Please make sure the Company "
-"VAT/Identification Number are correct."
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_journal.py:0
+msgid "Journal onboarded with ZATCA successfully"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_journal.py:0
+msgid "Journal re-onboarded with ZATCA successfully"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -554,12 +569,12 @@ msgid "Latest Submission Hash"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__mls
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__mls
 msgid "MLSD License"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__mom
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__mom
 msgid "Momra License"
 msgstr ""
 
@@ -571,25 +586,13 @@ msgid "N/A"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__nat
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__nat
 msgid "National ID"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
 msgid "Neighborhood..."
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "Neighborhood for the Buyer is required on Standard Invoices"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "Neighborhood for the Seller is required on Standard Invoices"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -606,12 +609,12 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid "Onboard Journal"
+msgid "Onboard"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid "Onboard the Journal by completing each step"
+msgid "Onboard this Journal"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -622,19 +625,27 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid ""
-"Once you change the submission mode to <strong>Production</strong>, you cannot change it anymore.\n"
-"                            Be very careful, as any invoice submitted to ZATCA in Production mode will be accounted for\n"
-"                            and might lead to <strong>Fines &amp; Penalties</strong>."
+"Once the mode is set to <strong>Production</strong> and an Invoice has been submitted to ZATCA,\n"
+"                            then the API mode cannot be changed. Any invoice submitted in the Production mode will be officially\n"
+"                            recorded with ZATCA and considered in the calculation of the VAT Liability."
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__oth
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_journal.py:0
+msgid ""
+"Oops! The journal is stuck. Please submit the pending invoices to ZATCA and "
+"try again."
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__oth
 msgid "Other ID"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_production_csid_validity
-msgid "PCSID Expiration"
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_production_csid_certificate_id
+msgid "PCSID Certificate"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -655,43 +666,60 @@ msgid "PIH"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__pas
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__pas
 msgid "Passport ID"
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid "Please, generate a CSR before requesting a CCSID"
+msgid "Please change the (%s)'s country to Saudi Arabia and try again."
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid ""
-"Please, make a request to obtain the Compliance CSID and Production CSID "
-"before sending documents to ZATCA"
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+msgid "Please check the details below and retry after addressing them:"
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid ""
-"Please, make sure all the following fields have been correctly set on the "
-"Company:%(fields)s"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid "Please, set a valid OTP to be used for Onboarding"
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+msgid "Please check the details below:"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.l10n_sa_edi_otp_wizard_view_form
+msgid "Please input the OTP generated from the Fatoora Portal."
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/wizard/l10n_sa_edi_otp_wizard.py:0
+msgid "Please provide an OTP to complete the onboarding process"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
-"Please, set the OTP you received from ZATCA in the input below then "
-"validate."
+"Please set the Identification Scheme as National ID and Identification "
+"Number as the respective number on the Customer, as the Tax Exemption Reason"
+" is set either as VATEX-SA-HEA or VATEX-SA-EDU"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
+msgid ""
+"Please set the VAT Number as the Identification Scheme is Tax Identification"
+" Number"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_journal.py:0
+msgid "Please set the following on %(company_name)s: %(fields)s"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -715,18 +743,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_production_csid_validity
-msgid "Production CSID expiration date"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid ""
-"Production certificate has expired, please renew the PCSID before proceeding"
-msgstr ""
-
-#. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
@@ -745,12 +761,7 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid "Renew Production CSID"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.l10n_sa_edi_otp_wizard_view_form
-msgid "Request"
+msgid "Renew"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -759,26 +770,7 @@ msgid "Request ZATCA OTP"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.actions.act_window,name:l10n_sa_edi.l10n_sa_edi_otp_wizard_act_window
-msgid "Request a CSID"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid ""
-"Request a Compliance Certificate (CCSID)\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_compliance_csid_json\" groups=\"base.group_system\"/>"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid ""
-"Request a Production Certificate (PCSID)\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_production_csid_json\" groups=\"base.group_system\"/>"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__sag
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__sag
 msgid "Sagia License"
 msgstr ""
 
@@ -788,9 +780,8 @@ msgid "Sandbox"
 msgstr ""
 
 #. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_move_send.py:0
-msgid "Send to Zatca"
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
+msgid "Saudi Arabia Electronic Invoicing"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -802,13 +793,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 msgid "Server returned an unexpected error: %(error)s"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid ""
-"Set a Serial Number for your device\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_serial_number\"/>"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -827,6 +811,13 @@ msgid "Simulation (Pre-Production)"
 msgstr ""
 
 #. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
+#: code:addons/l10n_sa_edi/models/account_journal.py:0
+msgid "Something went wrong. Please onboard the journal again."
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_compliance_checks_passed
 msgid "Specifies if the Compliance Checks have been completed successfully"
 msgstr ""
@@ -840,12 +831,13 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "State / Country subdivision"
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
+msgid "State"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
-msgid "State"
+msgid "Street 2..."
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -854,8 +846,14 @@ msgid "Street..."
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
-msgid "Street 2..."
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+msgid "Success: Invoice accepted by ZATCA"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
+msgid "Success: Journal is onboarded and valid until"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -869,7 +867,7 @@ msgid "Tax Exemption Reason Code (ZATCA)"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_additional_identification_scheme__tin
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__tin
 msgid "Tax Identification Number"
 msgstr ""
 
@@ -887,38 +885,48 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid ""
-"The Production CSID is still valid. You can only renew it once it has "
-"expired."
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid "The Production certificate is valid until"
+msgid "The Journal is not valid anymore. Please Renew it."
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
-#: code:addons/l10n_sa_edi/models/account_move.py:0
-msgid ""
-"The invoice was accepted by ZATCA, but returned warnings. Please, check the "
-"response below:"
+#: code:addons/l10n_sa_edi/models/account_journal.py:0
+msgid "The Journal is valid until (%s) and can only be renewed upon expiry."
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
-#: code:addons/l10n_sa_edi/models/account_move.py:0
-msgid "The invoice was rejected by ZATCA. Please, check the response below:"
+#: code:addons/l10n_sa_edi/models/account_journal.py:0
+msgid "The OTP is invalid. Please try again."
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,help:l10n_sa_edi.field_res_company__l10n_sa_private_key
+#: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_production_csid_validity
+msgid "The date on which the certificate expires"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields,help:l10n_sa_edi.field_res_company__l10n_sa_private_key_id
 msgid "The private key used to generate the CSR and obtain certificates"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_serial_number
 msgid "The serial number of the Taxpayer solution unit. Provided by ZATCA"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_tax.py:0
+msgid ""
+"The tax is unable to be set as Retention as the Amount is greater than or "
+"equal to 0."
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move_send.py:0
+msgid "To ZATCA"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -929,14 +937,12 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_uuid
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_move__l10n_sa_uuid
-#: model:ir.model.fields,help:l10n_sa_edi.field_account_payment__l10n_sa_uuid
 msgid "Universally unique identifier of the Invoice"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_invoice_signature
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__l10n_sa_invoice_signature
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_payment__l10n_sa_invoice_signature
 msgid "Unsigned XML Signature"
 msgstr ""
 
@@ -949,14 +955,6 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__l10n_sa_renewal
 msgid ""
 "Used to decide whether we should call the PCSID renewal API or the CCSID API"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid ""
-"VAT is required when Identification Scheme is set to Tax Identification "
-"Number"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -1045,35 +1043,27 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+msgid "Warning: Invoice accepted by ZATCA with warnings"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 msgid "Warnings:"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
+msgid "Yes"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/ir_attachment.py:0
 msgid ""
-"You can select the API used for submissions down below. There are three modes available: Sandbox, Pre-Production and Production.\n"
-"                            Once you have selected the correct API, you can start the Onboarding process by going to the Journals and checking the options under the ZATCA tab."
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/res_company.py:0
-msgid ""
-"You cannot change the ZATCA Submission Mode once it has been set to "
-"Production"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/wizard/l10n_sa_edi_otp_wizard.py:0
-msgid "You need to provide an OTP to be able to request a CCSID"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_journal.py:0
-msgid "You need to request the CCSID first before you can proceed"
+"You can't unlink an attachment being an EDI document refused by the "
+"government."
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -1082,12 +1072,20 @@ msgid "ZATCA"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
-msgid "ZATCA E-Invoicing Settings"
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/res_company.py:0
+msgid ""
+"ZATCA API Mode cannot be changed after an invoice has been successfully "
+"submitted under the Production Mode."
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_private_key
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
+msgid "ZATCA API Modes"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_private_key_id
 msgid "ZATCA Private key"
 msgstr ""
 
@@ -1099,13 +1097,7 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_chain_index
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__l10n_sa_chain_index
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_payment__l10n_sa_chain_index
 msgid "ZATCA chain index"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
-msgid "ZATCA specific settings for Saudi eInvoicing"
 msgstr ""
 
 #. module: l10n_sa_edi
