@@ -15,7 +15,7 @@ class ScrollButtonOptionPlugin extends Plugin {
                 OptionComponent: ScrollButtonOption,
                 selector: "section",
                 exclude:
-                    "[data-snippet] :not(.oe_structure) > [data-snippet],.s_instagram_page,.o_mega_menu > section,.s_appointments .s_dynamic_snippet_content",
+                    "[data-snippet] :not(.oe_structure) > [data-snippet],.s_instagram_page,.o_mega_menu > section,.s_appointments .s_dynamic_snippet_content, .s_bento_banner section[data-name='Card']",
             }),
         ],
         builder_actions: {
