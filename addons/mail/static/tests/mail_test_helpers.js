@@ -618,6 +618,7 @@ export function observeRenders() {
  */
 export async function isInViewportOf(childSelector, parentSelector) {
     await contains(parentSelector);
+    await contains(childSelector);
     const inViewportDeferred = new Deferred();
     const failTimeout = setTimeout(() => check({ crashOnFail: true }), 3000);
     const check = ({ crashOnFail = false } = {}) => {
