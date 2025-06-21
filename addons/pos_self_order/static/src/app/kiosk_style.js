@@ -43,9 +43,23 @@ function generateKioskCSS(companyPrimaryColor) {
             --btn-disabled-border-color: ${bgPrimary};
         }
 
+<<<<<<< d2113d610097b999d7b3d5e565d44d68746530c3
         .text-primary {
             --color: rgba(${hexToRgb(primaryTextBorder)}, var(--text-opacity, 1));
         }
+||||||| 6831ac478c49b1b1ad0441fd69afb2016c5cae86
+.text-primary {
+  --color: rgba(${primaryRGB}, var(--text-opacity, 1));
+}
+=======
+.bg-primary {
+    --background-color: ${primaryBg};
+}
+
+.text-primary {
+  --color: rgba(${primaryRGB}, var(--text-opacity, 1));
+}
+>>>>>>> c3056d5bac2ad64aba279f69a40941fbf0527ac5
 
         .border-primary {
             border-color: ${primaryTextBorder} !important;
