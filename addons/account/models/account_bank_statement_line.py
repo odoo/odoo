@@ -819,7 +819,8 @@ class AccountBankStatementLine(models.Model):
         for st_line in self.with_context(skip_account_move_synchronization=True):
             liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
             journal = st_line.journal_id
-            company_currency = journal.company_id.currency_id
+            # bypassing access rights restrictions for branch-specific users in a branch company environment.
+            company_currency = journal.company_id.sudo().currency_id
             journal_currency = journal.currency_id if journal.currency_id != company_currency else False
 
             line_vals_list = st_line._prepare_move_line_default_vals()

@@ -33,7 +33,9 @@ export class CalendarModel extends Model {
         this.data = {
             filters: {},
             filterSections: {},
-            hasCreateRight: null,
+            // Just keep hasCreateRight in stable for compatibility,
+            // Set it to its correct value though.
+            hasCreateRight: this.canCreate,
             range: null,
             records: {},
             unusualDays: [],
@@ -66,7 +68,7 @@ export class CalendarModel extends Model {
         return this.meta.date;
     }
     get canCreate() {
-        return this.meta.canCreate && this.data.hasCreateRight;
+        return this.meta.canCreate;
     }
     get canDelete() {
         return this.meta.canDelete;
@@ -320,9 +322,6 @@ export class CalendarModel extends Model {
      * @protected
      */
     async updateData(data) {
-        if (data.hasCreateRight === null) {
-            data.hasCreateRight = await user.checkAccessRight(this.meta.resModel, "create");
-        }
         data.range = this.computeRange();
         if (this.meta.showUnusualDays) {
             data.unusualDays = await this.loadUnusualDays(data);

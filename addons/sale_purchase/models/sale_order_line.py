@@ -141,7 +141,7 @@ class SaleOrderLine(models.Model):
         }
 
     def _purchase_service_get_price_unit_and_taxes(self, supplierinfo, purchase_order):
-        supplier_taxes = self.product_id.supplier_taxes_id.filtered(lambda t: t.company_id == purchase_order.company_id)
+        supplier_taxes = self.product_id.supplier_taxes_id.filtered(lambda t: t.company_id in purchase_order.company_id.parent_ids)
         taxes = purchase_order.fiscal_position_id.map_tax(supplier_taxes)
         if supplierinfo:
             price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(supplierinfo.price, supplier_taxes, taxes, purchase_order.company_id)

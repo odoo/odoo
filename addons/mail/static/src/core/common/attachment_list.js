@@ -18,7 +18,7 @@ class ImageActions extends Component {
     setup() {
         super.setup();
         this.actionsMenuState = useDropdownState();
-        this.isMobileOS = isMobileOS;
+        this.isMobileOS = isMobileOS();
     }
 }
 
@@ -43,7 +43,7 @@ export class AttachmentList extends Component {
         this.dialog = useService("dialog");
         this.fileViewer = useFileViewer();
         this.actionsMenuState = useDropdownState();
-        this.isMobileOS = isMobileOS;
+        this.isMobileOS = isMobileOS();
     }
 
     /**

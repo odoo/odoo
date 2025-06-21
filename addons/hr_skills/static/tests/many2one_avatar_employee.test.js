@@ -28,7 +28,7 @@ test("many2one_avatar_employee widget in kanban view with skills on avatar card"
     pyEnv["m2o.avatar.employee"].create([{ employee_id: pierreEid }]);
     await start();
 
-    onRpc("resource.resource", "get_avatar_card_data", (params) => {
+    onRpc("hr.employee", "get_avatar_card_data", (params) => {
         const resourceIdArray = params.args[0];
         const resourceId = resourceIdArray[0];
         const resources = pyEnv['hr.employee.public'].read([resourceId]);

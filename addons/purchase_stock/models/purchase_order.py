@@ -111,7 +111,7 @@ class PurchaseOrder(models.Model):
         # Replaces the product's kanban view by the purchase specific one.
         action = super().action_add_from_catalog()
         kanban_view_id = self.env.ref('purchase_stock.product_view_kanban_catalog_purchase_only').id
-        action['views'][0] = (kanban_view_id, 'kanban')
+        action['views'] = [(kanban_view_id, view_type) if view_type == 'kanban' else (view_id, view_type) for (view_id, view_type) in action['views']]
         return action
 
     def button_approve(self, force=False):
@@ -253,9 +253,8 @@ class PurchaseOrder(models.Model):
         picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
         if not picking_type:
             picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
-        company_warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
-        if not company_warehouse:
-            self.env['stock.warehouse']._warehouse_redirect_warning()
+        if not picking_type:
+            picking_type = self.env['stock.picking.type'].with_context(active_test=False).search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
         return picking_type[:1]
 
     def _prepare_group_vals(self):

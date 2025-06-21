@@ -564,6 +564,22 @@ registry.category("web_tour.tours").add("test_draft_orders_not_syncing", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_one_attribute_value_scan_barcode", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            scan_barcode("1234567"),
+            ProductScreen.selectedOrderlineHas("Product Test (Red)", "1.0"),
+
+            scan_barcode("1234568"),
+            ProductScreen.selectedOrderlineHas("Product Test (Blue)", "1.0"),
+
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("FiscalPositionTaxLabels", {
     steps: () =>
         [

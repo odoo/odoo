@@ -15,6 +15,10 @@ class FleetVehicleSendMail(models.TransientModel):
         'ir.attachment', 'fleet_vehicle_mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', string='Attachments')
 
+    @api.depends('subject')
+    def _compute_render_model(self):
+        self.render_model = 'fleet.vehicle'
+
     @api.onchange('template_id')
     def _onchange_template_id(self):
         self.attachment_ids = self.template_id.attachment_ids

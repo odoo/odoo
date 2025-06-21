@@ -264,6 +264,30 @@ class Ewaybill(models.Model):
             'state': 'challan',
         })
 
+    def action_print(self):
+        self.ensure_one()
+        if self.state in ['pending', 'cancel']:
+            raise UserError(_("Please generate the E-Waybill or mark the document as a Challan to print it."))
+
+        doc_label = _("Challan") if self.state == 'challan' else _("E-Waybill")
+        body = _("%s has been generated", doc_label)
+        filename = "%s - %s.pdf" % (doc_label, self.document_number)
+        pdf_content = self.env['ir.actions.report']._render_qweb_pdf(
+            'l10n_in_ewaybill_stock.action_report_ewaybill', res_ids=[self.id])[0]
+        attachment = self.env['ir.attachment'].create({
+            'name': filename,
+            'type': 'binary',
+            'datas': base64.b64encode(pdf_content),
+            'res_model': 'l10n.in.ewaybill',
+            'res_id': self.id,
+            'mimetype': 'application/pdf',
+        })
+        self.message_post(body=body, attachment_ids=[attachment.id])
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/{attachment.id}?download=true',
+        }
+
     def _is_overseas(self):
         self.ensure_one()
         return self._get_gst_treatment()[1] in ('overseas', 'special_economic_zone')

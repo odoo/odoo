@@ -443,7 +443,7 @@ patch(PosOrder.prototype, {
             return false;
         });
         for (const line of this.get_orderlines()) {
-            if (line.is_reward_line && line.coupon_id.id === coupon_id) {
+            if (line.is_reward_line && line.coupon_id?.id === coupon_id) {
                 points -= line.points_cost;
             }
         }

@@ -43,6 +43,7 @@ export {
     queryAllRects,
     queryAllTexts,
     queryAllValues,
+    queryAny,
     queryAttribute,
     queryFirst,
     queryOne,
@@ -100,3 +101,6 @@ export const setInputFiles = interactor("interaction", events.setInputFiles);
 export const setInputRange = interactor("interaction", events.setInputRange);
 export const uncheck = interactor("interaction", events.uncheck);
 export const unload = interactor("interaction", events.unload);
+
+// Debug
+export { exposeHelpers } from "./hoot_dom_utils";

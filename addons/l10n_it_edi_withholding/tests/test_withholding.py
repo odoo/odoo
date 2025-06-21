@@ -21,12 +21,14 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             return cls.env['account.chart.template'].with_company(cls.company).ref(ref_name)
 
         cls.withholding_sale_tax = find_tax_by_ref('20vwc')
+        cls.withholding_purchase_tax = find_tax_by_ref('20awc')
         cls.withholding_sale_tax_23 = find_tax_by_ref('23vwo')
         cls.pension_fund_sale_tax = find_tax_by_ref('4vcp')
         cls.enasarco_sale_tax = find_tax_by_ref('enasarcov')
         cls.withholding_purchase_tax_23 = find_tax_by_ref('23awo')
         cls.enasarco_purchase_tax = find_tax_by_ref('enasarcoa')
         cls.inps_tax = find_tax_by_ref('4vinps')
+        cls.inps_purchase_tax = find_tax_by_ref('4ainps')
 
         cls.zero_tax = cls.env['account.tax'].with_company(cls.company).create({
             'name': 'ZeroTax',
@@ -235,7 +237,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
         """
         self._assert_export_invoice(self.pension_fund_tax_invoice, 'pension_fund_tax_invoice.xml')
 
-    def test_pension_fund_taxes_import(self):
+    def test_pension_fund_taxes_import_assosoftware_tag(self):
         invoice = self._assert_import_invoice('IT00470550013_pfund.xml', [{
             'invoice_date': fields.Date.from_string('2022-03-24'),
             'amount_untaxed': 750.0,
@@ -246,13 +248,29 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 'price_unit': price_unit,
             } for name, price_unit in self.get_real_client_invoice_data().lines]
         }])
+        for line in invoice.line_ids.filtered(lambda x: x.display_type == 'product'):
+            self.assertEqual(line.tax_ids, (
+                self.inps_purchase_tax
+                | self.withholding_purchase_tax
+                | self.company.account_purchase_tax_id
+            ))
 
+    def test_pension_fund_taxes_import(self):
         invoice_data = self.get_real_client_invoice_data()
-        for line in invoice.line_ids.filtered(lambda x: x.name in [data[0] for data in invoice_data.lines]):
-            withholding_taxes = line.tax_ids.filtered(lambda x: x.l10n_it_withholding_type)
-            pension_fund_taxes = line.tax_ids.filtered(lambda x: x.l10n_it_pension_fund_type)
-            vat_taxes = line.tax_ids - withholding_taxes - pension_fund_taxes
-            self.assertEqual([1, 1, 1], [len(x) for x in (vat_taxes, withholding_taxes, pension_fund_taxes)])
+        invoice = self._assert_import_invoice('IT00470550013_pfun2.xml', [{
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price,
+            } for name, price in invoice_data.lines]
+        }])
+        for line in invoice.line_ids.filtered(lambda x: x.display_type == 'product'):
+            self.assertEqual(line.tax_ids, (
+                self.inps_purchase_tax
+                | self.withholding_purchase_tax
+                | self.company.account_purchase_tax_id
+            ))
 
     ####################################################
     # ENASARCO TAX

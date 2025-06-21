@@ -966,6 +966,16 @@ describe("In-editor manipulations", () => {
         const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
         expect(getContent(node)).toBe(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`);
     });
+
+    test("Don't remove empty inline-block data-embedded elements during initElementForEdition, but wrap them in div instead", async () => {
+        const { el } = await setupEditor(
+            `<div data-embedded="counter" style="display:inline-block;"></div>`,
+            { config: getConfig([embedding("counter", Counter)]) }
+        );
+        expect(getContent(el, { sortAttrs: true })).toBe(
+            `<div><div contenteditable="false" data-embedded="counter" data-oe-protected="true" style="display:inline-block;"><span class="counter">Counter:0</span></div></div>`
+        );
+    });
 });
 
 describe("editable descendants", () => {

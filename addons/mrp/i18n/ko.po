@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 13:22+0000\n"
+"POT-Creation-Date: 2025-05-14 20:46+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -33,11 +33,11 @@ msgid ""
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
 " * 미결: 제조 주문이 아직 확정되지 않았습니다.\n"
-" * 확정: 제조 주문이 확정되면, 재고 규칙 및 부품 재주문이 트리거됩니다.\n"
-" * 진행 중: 제조주문서 또는 제조지시서를 바탕으로 생산이 시작됩니다.\n"
-" * 마감: 생산이 완료되면 제조 주문은 마감됩니다.\n"
+" * 확정: 제조 주문이 확정되면 재고 규칙 및 부품 재주문이 자동으로 진행됩니다.\n"
+" * 진행 중: 제조주문서 또는 제조지시서에 따라 생산이 시작됩니다.\n"
+" * 마감: 생산이 완료되면 제조 주문이 마감됩니다.\n"
 " * 완료: 제조 주문이 마감되고 재고 이동이 게시됩니다. \n"
-" * 취소: 제조 주문이 취소되고, 더이상 승인이 되지 않습니다."
+" * 취소: 제조 주문이 취소되고, 더 이상 승인되지 않습니다."
 
 #. module: mrp
 #. odoo-python
@@ -1842,10 +1842,10 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "품목의 현재 수량입니다.\n"
-"단일 재고 공간의 경우, 해당 위치 또는 그 하위 공간에 보관된 품목을 포함합니다.\n"
-"단일 창고의 경우, 해당 창고의 재고 위치 또는 그 하위 창고에 저장된 품목을 포함합니다.\n"
-"이 상점의 창고 재고 위치 또는 그 하위 창고에 보관된 품목을 포함합니다.\n"
-"기타의 경우, '내부' 유형의 모든 재고 공간에 보관된 품목을 포함합니다."
+"재고 위치가 하나 뿐인 경우, 해당 위치 또는 하위 위치에 보관된 품목이 모두 포함됩니다.\n"
+"창고가 하나 뿐인 경우에는, 해당 창고의 재고 위치 또는 하위 재고 위치에 보관된 품목이 모두 포함됩니다.\n"
+"상점의 창고 재고 위치 또는 그 하위의 재고 위치에 모두 보관됩니다.\n"
+"그 외에는 '내부' 유형인 모든 보관 위치에 보관되어 있는 품목이 모두 포함됩니다."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
@@ -2019,6 +2019,7 @@ msgid "Disassembly Order"
 msgstr "분해 지시"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
@@ -6871,23 +6872,3 @@ msgstr "분할"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
 msgstr "작업지시"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
-msgid "{{ foldButtonTitle }}"
-msgstr "{{ foldButtonTitle }}"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
-#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
-msgid "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
-msgstr "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
-#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
-msgid "{{ state.isFolded ? 'Unfold' : 'Fold' }}"
-msgstr "{{ state.isFolded ? 'Unfold' : 'Fold' }}"

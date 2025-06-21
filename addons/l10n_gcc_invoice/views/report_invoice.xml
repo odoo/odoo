@@ -75,7 +75,9 @@
                     </div>
                 </h3>
 
-                <div id="informations" class="pb-3">
+                <div
+                    id="informations" class="pb-3"
+                    t-if="o.invoice_date or (o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted') or o.invoice_origin or o.partner_id.ref or o.ref">
                     <div class="row" t-if="o.invoice_date" name="invoice_date">
                         <div class="col-2 offset-6">
                             <strong style="white-space:nowrap">Invoice Date:

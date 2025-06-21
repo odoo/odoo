@@ -34,6 +34,7 @@ import {
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { rpc } from "@web/core/network/rpc";
+import { runAllTimers } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -583,7 +584,7 @@ test("sidebar: basic channel rendering", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
+    await contains(".o-mail-DiscussSidebarChannel img[alt='Thread Image']");
     await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands.d-none");
     await contains(
         ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
@@ -2020,6 +2021,7 @@ test("Message shows up even if channel data is incomplete", async () => {
         channel_type: "chat",
     });
     getService("bus_service").forceUpdateChannels();
+    await runAllTimers();
     await waitUntilSubscribe();
     await withUser(correspondentUserId, () =>
         rpc("/discuss/channel/notify_typing", {

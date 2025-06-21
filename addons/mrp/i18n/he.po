@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 13:22+0000\n"
+"POT-Creation-Date: 2025-05-14 20:46+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -2048,6 +2048,7 @@ msgid "Disassembly Order"
 msgstr "הוראת פירוק"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
@@ -3805,7 +3806,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Only manufacturing orders with a Bill of Materials can be %s."
-msgstr ""
+msgstr "רק הזמנות ייצור עם עץ מוצר יכולות להיות%s."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -3896,7 +3897,7 @@ msgstr "פעולות מתוכננות"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 msgid "Operations Search Filters"
-msgstr ""
+msgstr "מסנני חיפוש פעולות"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
@@ -4134,19 +4135,19 @@ msgstr "הזן כמות חיובית."
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Please set the first Serial Number or a default sequence"
-msgstr ""
+msgstr "אנא הגדר את המספר הסידורי הראשון או רצף ברירת מחדל"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_batch_produce.py:0
 msgid "Please specify the first serial number you would like to use."
-msgstr ""
+msgstr "אנא ציין את המספר הסידורי הראשון שתרצה להשתמש."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_batch_produce.py:0
 msgid "Please specify the serial number you would like to use."
-msgstr ""
+msgstr "אנא ציין את המספר הסידורי שתרצה להשתמש ."
 
 #. module: mrp
 #. odoo-python
@@ -4967,7 +4968,7 @@ msgstr "ימי ביטחון עבור כל פעולת ייצור."
 #. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 msgid "Select Operations to Copy"
-msgstr ""
+msgstr "בחר פעולה להעתקה"
 
 #. module: mrp
 #. odoo-python
@@ -5399,7 +5400,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
 msgid "Technical field to check when we can reserve quantities"
-msgstr ""
+msgstr "שדה טכני לבדיקה האם ניתן לשמור כמויות"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__unreserve_visible
@@ -5562,13 +5563,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_tag_tag_name_unique
 msgid "The tag name must be unique."
-msgstr ""
+msgstr "שם התווית חייב להיות ייחודי."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "The total cost share for a BoM's by-products cannot exceed 100."
-msgstr ""
+msgstr "סך חלקי העלות של תוצרי הלוואי בעץ מוצר לא יכול לעלות על 100%."
 
 #. module: mrp
 #. odoo-python
@@ -5663,7 +5664,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "This production has been merge in %s"
-msgstr ""
+msgstr "ייצור זה עבר ייחוד ב- %s"
 
 #. module: mrp
 #. odoo-python
@@ -5684,6 +5685,8 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
 msgstr ""
+"זו צריכה להיות הכמות הקטנה ביותר שניתן לייצר ממוצר זה. אם העץ מוצר כולל "
+"פעולות, ודא שהקיבולת של תחנת העבודה מתאימה."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5867,7 +5870,7 @@ msgstr "סה\"כ הוראות רצות"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_operations_raw
 msgid "Total To Consume"
-msgstr ""
+msgstr "סה\"כ לשימוש"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -6326,7 +6329,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split
 msgid "Wizard to Split a Production"
-msgstr ""
+msgstr "אשף לפיצול ייצור"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder
@@ -6596,6 +6599,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"לא ניתן ליצור עץ מוצר מסוג ערכה (Kit) עבור מוצרים שיש להם לפחות כלל הזמנה "
+"חוזרת אחד."
 
 #. module: mrp
 #. odoo-python
@@ -6723,7 +6728,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You need at least two production orders to merge them."
-msgstr ""
+msgstr "צריך לפחות שתי הזמנות ייצור על מנת לבצע פעולת מיזוג."
 
 #. module: mrp
 #. odoo-python
@@ -6789,7 +6794,7 @@ msgstr "אתה צריך לספק מספר אצווה עבור המוצר המו�
 msgid ""
 "You should update the components quantity instead of directly updating the "
 "quantity of the kit product."
-msgstr ""
+msgstr "עליך לעדכן את כמות הרכיבים במקום לעדכן ישירות את הכמות של מוצר בערכה."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
@@ -6896,23 +6901,3 @@ msgstr "פצל"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
 msgstr "הוראות העבודה האחרונות"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
-msgid "{{ foldButtonTitle }}"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
-#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
-msgid "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
-#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
-msgid "{{ state.isFolded ? 'Unfold' : 'Fold' }}"
-msgstr ""

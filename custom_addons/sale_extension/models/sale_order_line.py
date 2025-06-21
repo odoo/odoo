@@ -1,8 +1,11 @@
 from odoo import api, fields, models
+from odoo.tools import config
 from datetime import timedelta
 
 class SaleOrderLine(models.Model):
     #custom fields
+
+    files_folder = config.get('sales_folder')
 
     _inherit='sale.order.line'
 

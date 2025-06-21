@@ -23,7 +23,7 @@ import {
 } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
 import { getParentFrame } from "@web/../lib/hoot-dom/helpers/dom";
-import { mountForTest, parseUrl, waitForIframes } from "../local_helpers";
+import { mountForTest, parseUrl } from "../local_helpers";
 
 /**
  * @param {...string} queryAllSelectors
@@ -173,8 +173,6 @@ describe(parseUrl(import.meta.url), () => {
     test("getActiveElement", async () => {
         await mountForTest(/* xml */ `<iframe srcdoc="&lt;input &gt;"></iframe>`);
 
-        await waitForIframes();
-
         expect(":iframe input").not.toBeFocused();
 
         const input = queryOne(":iframe input");
@@ -281,7 +279,6 @@ describe(parseUrl(import.meta.url), () => {
 
     test("isInDom", async () => {
         await mountForTest(FULL_HTML_TEMPLATE);
-        await waitForIframes();
 
         expect(isInDOM(document)).toBe(true);
         expect(isInDOM(document.body)).toBe(true);
@@ -376,7 +373,7 @@ describe(parseUrl(import.meta.url), () => {
 
     test("waitFor: rejects", async () => {
         await expect(waitFor("never", { timeout: 1 })).rejects.toThrow(
-            `Could not find elements matching "never" within 1 milliseconds`
+            `expected at least 1 element after 1ms and found 0 elements: 0 matching "never"`
         );
     });
 
@@ -455,8 +452,6 @@ describe(parseUrl(import.meta.url), () => {
 
         test("custom pseudo-classes", async () => {
             await mountForTest(FULL_HTML_TEMPLATE);
-
-            await waitForIframes();
 
             // :first, :last, :only & :eq
             expectSelector(".title:first").toEqualNodes(".title", { index: 0 });
@@ -704,8 +699,6 @@ describe(parseUrl(import.meta.url), () => {
                 <iframe srcdoc="&lt;p&gt;Iframe text content&lt;/p&gt;"></iframe>
             `);
 
-            await waitForIframes();
-
             expectSelector(`:iframe html`).toEqualNodes("html", { root: "iframe" });
             expectSelector(`:iframe body`).toEqualNodes("body", { root: "iframe" });
             expectSelector(`:iframe head`).toEqualNodes("head", { root: "iframe" });
@@ -890,6 +883,28 @@ describe(parseUrl(import.meta.url), () => {
 
             expect("div").toHaveRect({ width: 50, height: 70 }); // with padding
             expect("div").toHaveRect({ width: 40, height: 60 }, { trimPadding: true });
+        });
+
+        test("not found messages", async () => {
+            await mountForTest(/* xml */ `
+                <div class="tralalero">
+                    Tralala
+                </div>
+            `);
+
+            expect(() => queryOne(".tralalero:contains(Tralala):visible:scrollable:first")).toThrow(
+                `found 0 elements instead of 1: 0 matching ".tralalero:contains(Tralala):visible:scrollable:first" (1 element with text "Tralala" > 1 visible element > 0 scrollable elements > 0 first elements)`
+            );
+            expect(() =>
+                queryOne(".tralalero", {
+                    contains: "Tralala",
+                    visible: true,
+                    scrollable: true,
+                    first: true,
+                })
+            ).toThrow(
+                `found 0 elements instead of 1: 1 matching ".tralalero", including 1 element with text "Tralala", including 1 visible element, including 0 scrollable elements, including 0 first elements`
+            );
         });
     });
 });

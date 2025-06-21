@@ -1238,3 +1238,23 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         self.assertNotIn(product.id, [p['id'] for p in data['product.product']['data']])
         self.assertTrue(data['product.product']['data'])
+
+    def test_double_syncing_same_order(self):
+        """ Test that double syncing the same order doesn't create duplicates records
+        """
+        self.open_new_session()
+
+        # Create an order
+        order_data = self.create_ui_order_data([(self.product1, 1)], payments=[(self.cash_pm1, 10)], customer=self.customer, is_invoiced=True)
+        order_data['access_token'] = '0123456789'
+        res = self.env['pos.order'].sync_from_ui([order_data])
+        order_id = res['pos.order'][0]['id']
+
+        # Sync the same order again
+        res = self.env['pos.order'].sync_from_ui([order_data])
+        self.assertEqual(res['pos.order'][0]['id'], order_id, 'Syncing the same order should not create a new one')
+
+        order = self.env['pos.order'].browse(order_id)
+        self.assertEqual(order.picking_count, 1, 'Order should have one picking')
+        self.assertEqual(len(order.payment_ids), 1, 'Order should have one payment')
+        self.assertEqual(self.env['account.move'].search_count([('ref', '=', order.name)]), 1, 'Order should have one invoice')

@@ -165,6 +165,26 @@ class TestPDFQuoteBuilder(BaseUsersCommon, SaleManagementCommon):
         self.assertEqual('Header', dialog_param['headers']['files'][0]['name'])
         self.assertEqual('Product > Test Product', dialog_param['lines'][0]['name'])
 
+    def test_quotation_document_is_removed_on_template_change(self):
+        so_tmpl = self.env['sale.order.template'].create({
+            'name': "test1",
+            'quotation_document_ids': [Command.link(self.header.id)],
+        })
+        so_tmpl_2 = self.env['sale.order.template'].create({'name': "test2"})
+
+        self.sale_order.write({
+            'sale_order_template_id': so_tmpl.id,
+            'quotation_document_ids': [Command.link(self.header.id)],
+        })
+
+        self.assertEqual(self.sale_order.quotation_document_ids, self.header)
+
+        so_form = Form(self.sale_order)
+        so_form.sale_order_template_id = so_tmpl_2
+        so_form.save()
+
+        self.assertNotEqual(self.sale_order.quotation_document_ids, self.header)
+
     def test_onchange_product_removes_previously_selected_documents(self):
         """ Check that changing a line that has a selected document unselect said document. """
 

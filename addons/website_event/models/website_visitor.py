@@ -63,7 +63,7 @@ class WebsiteVisitor(models.Model):
         'in', [1, 2])] should return visitors having a registration on events 1, 2 as
         well as their children for notification purpose. """
         if operator == "not in":
-            raise NotImplementedError("Unsupported 'Not In' operation on visitors registrations")
+            raise NotImplementedError(self.env._("Unsupported 'Not In' operation on visitors registrations"))
 
         all_registrations = self.env['event.registration'].sudo().search([
             ('event_id', operator, operand)

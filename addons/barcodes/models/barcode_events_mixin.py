@@ -22,4 +22,4 @@ class BarcodeEventsMixin(models.AbstractModel):
             return self.on_barcode_scanned(barcode)
 
     def on_barcode_scanned(self, barcode):
-        raise NotImplementedError("In order to use barcodes.barcode_events_mixin, method on_barcode_scanned must be implemented")
+        raise NotImplementedError(self.env._("In order to use barcodes.barcode_events_mixin, method on_barcode_scanned must be implemented"))

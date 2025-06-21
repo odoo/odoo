@@ -12569,7 +12569,7 @@ test("drag & drop: content scrolls when reaching the edges", async () => {
     expect(content.scrollLeft).toBe(0);
 
     // Cancel drag: click outside
-    await contains(".o_kanban_renderer").focus();
+    await contains(".o_kanban_renderer").click();
 
     expect(".o_kanban_record.o_dragged").toHaveCount(0);
 });
@@ -13519,7 +13519,8 @@ test("group by numeric field (with aggregator)", async () => {
     expect.verifySteps(["web_read_group"]);
 });
 
-test.tags("desktop")("drag and drop records and quickly open a record", async () => {
+test.tags("desktop");
+test("drag and drop records and quickly open a record", async () => {
     Partner._views["kanban,false"] = `
         <kanban>
             <templates>

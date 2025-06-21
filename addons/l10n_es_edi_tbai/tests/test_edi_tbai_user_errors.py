@@ -46,7 +46,7 @@ class TestTbaiUserErrors(TestEsEdiTbaiCommonGipuzkoa):
     def test_no_tax_on_line(self):
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
-            'invoice_date': '2022-01-01',
+            'invoice_date': '2025-01-01',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [
                 Command.create({

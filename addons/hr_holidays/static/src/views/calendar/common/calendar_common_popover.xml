@@ -12,5 +12,11 @@
                 t-if="isManager and state !== 'refuse'"
                 name="action_refuse" t-on-click="onClickButton" data-hotkey="z">Refuse</button>
         </xpath>
+        <xpath expr="//a[contains(@class, 'o_cw_popover_delete')]" position="replace">
+            <a href="#" class="btn btn-secondary o_cw_popover_delete" t-on-click="onDeleteEvent">
+                <t t-if="canCancel">Cancel</t>
+                <t t-else="">Delete</t>
+            </a>
+        </xpath>
     </t>
 </templates>

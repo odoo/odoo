@@ -331,7 +331,6 @@ class TestAccountAccount(TestAccountMergeCommon):
 
         # Set the account as reconcile and partially reconcile something.
         account.reconcile = True
-        self.env.invalidate_all()
 
         move.line_ids.filtered(lambda line: line.account_id == account).reconcile()
 

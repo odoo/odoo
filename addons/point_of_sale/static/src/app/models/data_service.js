@@ -301,7 +301,9 @@ export class PosData extends Reactive {
             order.lines.some((line) => line.is_reward_line && !line.coupon_id)
         );
         for (const order of order_to_delete) {
-            order.lines.forEach((line) => line.delete());
+            for (let i = order.lines.length - 1; i >= 0; i--) {
+                order.lines[i].delete();
+            }
         }
     }
 

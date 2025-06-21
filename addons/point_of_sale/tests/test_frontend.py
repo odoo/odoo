@@ -809,6 +809,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderPaidInCash', login="pos_user")
 
+    def test_customer_note_is_present_after_refresh(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CustomerNoteIsPresentAfterRefresh', login="pos_user")
+
     def test_fiscal_position_no_tax(self):
         #create a tax of 15% with price included
         tax = self.env['account.tax'].create({
@@ -1486,6 +1490,29 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductComboChangeFP', login="pos_user")
 
+    def test_product_combo_change_pricelist(self):
+        """
+        Verify than when we change the pricelist, the combo price is updated
+        """
+        setup_product_combo_items(self)
+
+        sale_10_pl = self.env['product.pricelist'].create({
+            'name': 'sale 10%',
+        })
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': sale_10_pl.id,
+            'base': 'pricelist',
+            'compute_price': 'percentage',
+            'applied_on': '3_global',
+            'percent_price': 10,
+        })
+
+        self.main_pos_config.write({
+            'available_pricelist_ids': [(4, sale_10_pl.id)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductComboChangePricelist', login="pos_user")
+
     def test_cash_rounding_payment(self):
         """Verify than an error popup is shown if the payment value is more precise than the rounding method"""
         rounding_method = self.env['account.cash.rounding'].create({
@@ -1814,6 +1841,53 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_limited_categories', login="pos_user")
+
+    def test_one_attribute_value_scan_barcode(self):
+        product = self.env['product.template'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'barcode': '1234567',
+        })
+
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size never',
+            'create_variant': 'no_variant',
+            'value_ids': [(0, 0, {
+                'name': 'Large',
+            })],
+        })
+
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product.id,
+            'attribute_id': size_attribute.id,
+            'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+        })
+
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color always',
+            'create_variant': 'always',
+            'value_ids': [(0, 0, {
+                'name': 'Red',
+                'sequence': 1,
+            }), (0, 0, {
+                'name': 'Blue',
+                'sequence': 2,
+            })],
+        })
+
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
+        })
+
+        product.product_variant_ids[0].barcode = '1234567'
+        product.product_variant_ids[1].barcode = '1234568'
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_one_attribute_value_scan_barcode', login="pos_user")
 
     def test_draft_orders_not_syncing(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()

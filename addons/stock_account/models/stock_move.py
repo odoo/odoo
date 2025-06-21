@@ -241,9 +241,7 @@ class StockMove(models.Model):
                 quantities[forced_quantity[0]] += forced_quantity[1]
             else:
                 for line in lines:
-                    quantities[line.lot_id] += line.product_uom_id._compute_quantity(
-                        line.quantity, move.product_id.uom_id
-                    )
+                    quantities[line.lot_id] += line.quantity_product_uom
             if float_is_zero(sum(quantities.values()), precision_rounding=move.product_id.uom_id.rounding):
                 continue
 
@@ -287,9 +285,7 @@ class StockMove(models.Model):
                 quantities[forced_quantity[0]] += forced_quantity[1]
             elif move.product_id.lot_valuated:
                 for line in lines:
-                    quantities[line.lot_id] += line.product_uom_id._compute_quantity(
-                        line.quantity, move.product_id.uom_id
-                    )
+                    quantities[line.lot_id] += line.quantity_product_uom
             else:
                 quantities[self.env['stock.lot']] += move.product_qty
 
@@ -424,7 +420,7 @@ class StockMove(models.Model):
                 quantity_by_lot[forced_qty[0]] += forced_qty[1]
             else:
                 for valued_move_line in valued_move_lines:
-                    quantity_by_lot[valued_move_line.lot_id] += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
+                    quantity_by_lot[valued_move_line.lot_id] += valued_move_line.quantity_product_uom
 
             qty = sum(quantity_by_lot.values())
             move_cost = move._get_price_unit()
@@ -512,9 +508,7 @@ class StockMove(models.Model):
                 quantities[forced_quantity[0]] += forced_quantity[1]
             else:
                 for line in lines:
-                    quantities[line.lot_id] += line.product_uom_id._compute_quantity(
-                        line.quantity, move.product_id.uom_id
-                    )
+                    quantities[line.lot_id] += line.quantity_product_uom
             if move.product_id.lot_valuated:
                 unit_cost = {lot: lot.standard_price for lot in move.lot_ids}
             else:

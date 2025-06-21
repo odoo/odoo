@@ -19,7 +19,13 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
     def website_sale_combo_configurator_get_data(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
         request.update_context(display_default_code=False)  # Hide internal product reference
-        return super().sale_combo_configurator_get_data(*args, **kwargs)
+        res = super().sale_combo_configurator_get_data(*args, **kwargs)
+        res.update({
+            'show_quantity': (
+                bool(request.website.is_view_active('website_sale.product_quantity'))
+            ),
+        })
+        return res
 
     @route(
         route='/website_sale/combo_configurator/get_price',

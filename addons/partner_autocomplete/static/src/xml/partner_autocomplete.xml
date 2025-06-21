@@ -40,7 +40,7 @@
 
     <t t-name="partner_autocomplete.PartnerAutoCompleteMany2XField" t-inherit="web.Many2XAutocomplete" t-inherit-mode="primary">
         <xpath expr="//AutoComplete" position="replace">
-            <PartnerAutoComplete
+            <PartnerAutoComplete t-else=""
                 value="this.props.value || ''"
                 autoSelect="true"
                 sources="sources"
@@ -48,6 +48,7 @@
                 onChange.bind="onChange"
                 input="inputRef"
                 placeholder="placeholder || ''"
+                id="this.props.id"
             />
         </xpath>
     </t>

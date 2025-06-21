@@ -10,6 +10,7 @@
 # Manuela Silva <mmsrs@sky.com>, 2025
 # Wil Odoo, 2025
 # Vasco Rodrigues, 2025
+# Daniel Reis, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,19 +18,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Vasco Rodrigues, 2025\n"
+"Last-Translator: Daniel Reis, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
-msgid ", Guests:"
-msgstr "Pessoas:"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -395,7 +390,7 @@ msgstr "Nome a Exibir"
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.drinks
 msgid "Drinks"
-msgstr ""
+msgstr "Bebidas"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -453,7 +448,7 @@ msgstr ""
 #: model:product.attribute,name:pos_restaurant.product_extra_pasta
 #: model:product.attribute,name:pos_restaurant.product_extra_pizza
 msgid "Extras"
-msgstr ""
+msgstr "Extras"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.fanta_product_template
@@ -608,7 +603,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
 msgid "Jump"
-msgstr ""
+msgstr "Ir para"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -810,7 +805,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/product_screen.xml:0
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/receipt_screen.xml:0
 msgid "Pay"
-msgstr ""
+msgstr "Pagar"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1144,12 +1139,23 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
-#: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 #: code:addons/pos_restaurant/static/src/overrides/components/ticket_screen/ticket_screen.js:0
 #: code:addons/pos_restaurant/static/src/overrides/components/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 msgid "Table"
 msgstr "Mesa"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/receipt_header_patch.js:0
+msgid "Table %(number)s"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/receipt_header_patch.js:0
+msgid "Table %(number)s, Guests: %(count)s"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__module_pos_restaurant_appointment

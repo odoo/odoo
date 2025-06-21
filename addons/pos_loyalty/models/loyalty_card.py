@@ -16,7 +16,7 @@ class LoyaltyCard(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['partner_id', 'code', 'points', 'program_id', 'expiration_date']
+        return ['partner_id', 'code', 'points', 'program_id', 'expiration_date', 'write_date']
 
     def _has_source_order(self):
         return super()._has_source_order() or bool(self.source_pos_order_id)

@@ -47,8 +47,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
             trigger: '.o_sale_product_configurator_table_optional span:contains("Aluminium")',
             run: "click",
         },
-        configuratorTourUtils.addOptionalProduct("Conference Chair"),
-        configuratorTourUtils.addOptionalProduct("Chair floor protection"),
+        configuratorTourUtils.addOptionalProduct("Conference Chair (TEST)"),
+        configuratorTourUtils.addOptionalProduct("Chair floor protection (TEST)"),
         ...configuratorTourUtils.saveConfigurator(),
         // check that 3 products were added to the SO
         {

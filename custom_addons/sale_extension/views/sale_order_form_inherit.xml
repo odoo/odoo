@@ -1,6 +1,5 @@
 <odoo>
-    <data>
-        
+    <data> 
         <record id="view_order_form_inherit_item" model="ir.ui.view">
             <field name="name">sale.view_order_form.inherit.item_delivery_time</field>
             <field name="model">sale.order</field>
@@ -28,14 +27,71 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_quotation_send']" position="after">
+            <xpath expr="//button[@name='action_cancel']" position="after">
                 <button name="print_quotation_report"
                         string="Imprimir PDF"
                         type="object"
                         class="btn btn-secondary"
                         icon="fa-print"/>
+
+                <!-- <button name="action_import_csv" string="Import from CSV"/> todo?: mover pq no es el boton de imprimir -->
             </xpath>
             </field>
+        </record>
+
+
+        <record id="view_order_form_inherit_hide_fields" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.hide.fields</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='other_information']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='customer_signature']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='delivery_date']" position="after">
+                    <div class="o_td_label">
+                        <label for="delivery_method" string="Lugar de entrega"/>
+                    </div>
+                    <field name="delivery_method" nolabel="1" on_change="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <div class="o_td_label">
+                        <label for="discount" string="Descuento"/>
+                    </div>
+                    <field name="discount" readonly="1" nolabel="1" on_change="1"/>
+                </xpath>
+                <xpath expr="//button[@name='action_preview_sale_order']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_form_inherit_hide_optional_products" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.hide.optional_products</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sale_order_template_id']" position="replace">
+                </xpath>
+                <xpath expr="//page[@name='optional_products']" position="replace">
+                    <page name="optional_products" string="Optional Products" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sale_pdf_quote_builder.sale_order_form_inherit_sale_pdf_quote_builder" model="ir.ui.view">
+            <field name="active" eval="False"/>
         </record>
 
         <!--templates-->
@@ -48,6 +104,5 @@
                 </div>
             </xpath>
         </template>
-
     </data>
 </odoo>

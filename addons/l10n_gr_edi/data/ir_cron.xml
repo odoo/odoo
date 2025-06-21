@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="ir_cron_mydata_fetch_third_party_invoices" model="ir.cron">
+        <field name="name">MyDATA: Fetch third-party issued invoice and create draft Vendor Bills</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">env['res.company']._cron_l10n_gr_edi_fetch_invoices()</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 22:00:00')"/>
+    </record>
+
+</odoo>

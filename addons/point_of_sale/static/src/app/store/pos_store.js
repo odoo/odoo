@@ -155,6 +155,11 @@ export class PosStore extends Reactive {
         }
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
+
+        window.addEventListener("online", () => {
+            // Sync should be done before websocket connection when going online
+            this.syncAllOrdersDebounced();
+        });
     }
 
     get firstScreen() {
@@ -272,7 +277,9 @@ export class PosStore extends Reactive {
                 ),
             });
         } finally {
-            const orders = this.models["pos.order"].filter((o) => typeof o.id !== "number");
+            // All orders saved on the server should be cancelled by the device that closes
+            // the session. If some orders are not cancelled, we need to cancel them here.
+            const orders = this.models["pos.order"].filter((o) => typeof o.id === "number");
             for (const order of orders) {
                 if (!order.finalized) {
                     order.state = "cancel";
@@ -560,11 +567,16 @@ export class PosStore extends Reactive {
             return formattedUnitPrice;
         }
     }
-    async openConfigurator(product) {
+    async openConfigurator(product, opts = {}) {
         const attrById = this.models["product.attribute"].getAllBy("id");
-        const attributeLines = product.attribute_line_ids.filter(
+        let attributeLines = product.attribute_line_ids.filter(
             (attr) => attr.attribute_id?.id in attrById
         );
+        if (opts.code) {
+            attributeLines = attributeLines.filter(
+                (attr) => attr.attribute_id.create_variant === "no_variant"
+            );
+        }
         const attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
@@ -678,7 +690,7 @@ export class PosStore extends Reactive {
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         if (values.product_id.isConfigurable() && configure) {
-            const payload = await this.openConfigurator(values.product_id);
+            const payload = await this.openConfigurator(values.product_id, opts);
 
             if (payload) {
                 const productFound = this.models["product.product"]
@@ -761,6 +773,7 @@ export class PosStore extends Reactive {
                     ]),
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
+                    price_type: "automatic",
                     order_id: order,
                     qty: 1,
                     attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
@@ -827,6 +840,8 @@ export class PosStore extends Reactive {
                 const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen);
                 if (weight) {
                     values.qty = weight;
+                } else if (weight !== null) {
+                    return;
                 }
             } else {
                 await values.product_id._onScaleNotAvailable();
@@ -1095,15 +1110,15 @@ export class PosStore extends Reactive {
     }
 
     getPendingOrder() {
-        const orderToCreate = this.models["pos.order"].filter(
-            (order) => this.pendingOrder.create.has(order.id) && order.hasItemsOrPayLater
-        );
-        const orderToUpdate = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.write)
-        );
-        const orderToDelele = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.delete)
-        );
+        const orderToCreate = this.models["pos.order"]
+            .filter((order) => this.pendingOrder.create.has(order.id) && order.hasItemsOrPayLater)
+            .filter(Boolean);
+        const orderToUpdate = this.models["pos.order"]
+            .readMany(Array.from(this.pendingOrder.write))
+            .filter(Boolean);
+        const orderToDelele = this.models["pos.order"]
+            .readMany(Array.from(this.pendingOrder.delete))
+            .filter(Boolean);
 
         return {
             orderToDelele,
@@ -1173,9 +1188,7 @@ export class PosStore extends Reactive {
                 order.recomputeOrderData();
             }
 
-            const serializedOrder = orders.map((order) =>
-                order.serialize({ orm: true, clear: true })
-            );
+            const serializedOrder = orders.map((order) => order.serialize({ orm: true }));
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
                 context,
             });
@@ -1212,13 +1225,20 @@ export class PosStore extends Reactive {
 
             // Remove only synced orders from the pending orders
             orders.forEach((o) => this.removePendingOrder(o));
+            orders.map((order) => order.clearCommands());
             return newData["pos.order"];
         } catch (error) {
             if (options.throw) {
                 throw error;
             }
 
-            console.warn("Offline mode active, order will be synced later");
+            // After an error on the sync, verify order state by asking the server
+            if (error instanceof ConnectionLostError) {
+                console.warn("Offline mode active, order will be synced later");
+            } else {
+                this.deviceSync.readDataFromServer();
+            }
+
             return error;
         } finally {
             orders.forEach((order) => this.syncingOrders.delete(order.id));
@@ -2129,7 +2149,7 @@ export class PosStore extends Reactive {
             {},
             QRPopup
         ).then((result) => {
-            payment.qrPaymentData = undefined;
+            payment.qrPaymentData = null;
             return result;
         });
     }
@@ -2193,6 +2213,11 @@ export class PosStore extends Reactive {
 
     get showSaveOrderButton() {
         return this.isOpenOrderShareable();
+    }
+
+    async isSessionDeleted() {
+        const session = await this.data.read("pos.session", [this.session.id]);
+        return session[0] === undefined;
     }
 }
 

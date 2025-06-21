@@ -6,6 +6,7 @@
         <field name="country_id" ref="base.au"/>
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
+        <field name="integer_rounding">DOWN</field>
         <field name="column_ids">
             <record id="tax_report_balance" model="account.report.column">
                 <field name="name">Balance</field>

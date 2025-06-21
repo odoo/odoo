@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 13:24+0000\n"
+"POT-Creation-Date: 2025-05-23 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -868,7 +868,7 @@ msgstr "カスタムグループ追加"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 msgid "Add New Rule"
-msgstr "新しい規則を追加"
+msgstr "新しいルールを追加"
 
 #. module: web
 #. odoo-javascript
@@ -1009,6 +1009,12 @@ msgstr "終日"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 msgid "All users"
 msgstr "全ユーザ"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/domain/domain_field.js:0
+msgid "Allow expressions"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2161,7 +2167,7 @@ msgstr "データベース"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.neutralize_banner
 msgid "Database neutralized for testing: no emails sent, etc."
-msgstr "テスト用にデータベースを無効化：電子メールの送信などを行わない"
+msgstr "テスト用にデータベースが安全化されました: メール送信などは無効です。"
 
 #. module: web
 #. odoo-javascript
@@ -2707,6 +2713,12 @@ msgstr "企業版"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Entry Count"
+msgstr "エントリ数"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
 msgid "Error"
 msgstr "エラー"
@@ -3174,31 +3186,31 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.xml:0
 msgid "Hide in kanban"
-msgstr "かんばんで隠す"
+msgstr "かんばんで非表示"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/state_selection/state_selection_field.js:0
 msgid "Hide label"
-msgstr "ラベルを隠す"
+msgstr "ラベルを非表示"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/reference/reference_field.js:0
 msgid "Hide model"
-msgstr "モデルを隠す"
+msgstr "モデルを非表示"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/monetary/monetary_field.js:0
 msgid "Hide symbol"
-msgstr "シンボルを隠す"
+msgstr "シンボルを非表示"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 msgid "Hide technical details"
-msgstr "技術詳細を隠す"
+msgstr "技術詳細を非表示"
 
 #. module: web
 #. odoo-javascript
@@ -3326,6 +3338,12 @@ msgid ""
 "If checked, users won't be able to create records through the autocomplete "
 "dropdown at all."
 msgstr "チェックした場合、ユーザはオートコンプリートのドロップダウンからレコードを作成することができなくなります。"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/domain/domain_field.js:0
+msgid "If true, non-literals are accepted"
+msgstr "true の場合、非リテラルが許可されます"
 
 #. module: web
 #. odoo-javascript
@@ -4243,7 +4261,7 @@ msgstr "月曜日"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/monetary/monetary_field.js:0
 msgid "Monetary"
-msgstr "金銭"
+msgstr "金額"
 
 #. module: web
 #. odoo-javascript
@@ -4420,7 +4438,7 @@ msgstr "新しいプロパティ"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 msgid "New Rule"
-msgstr "新しい規則"
+msgstr "新しいルール"
 
 #. module: web
 #. odoo-javascript
@@ -4636,6 +4654,7 @@ msgstr "いいえ、そのままにして下さい。"
 #: code:addons/web/static/src/views/kanban/kanban_header.js:0
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "None"
 msgstr "なし"
 
@@ -6505,6 +6524,18 @@ msgstr "このセルの内容はXLSXファイルには長すぎます。（%s文
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/domain/domain_field.js:0
+msgid "The domain involves non-literals. Their evaluation might fail."
+msgstr "このドメインには非リテラルが含まれています。それらの評価は失敗する可能性があります。"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/domain/domain_field.js:0
+msgid "The domain should not involve non-literals"
+msgstr "ドメインに非リテラルを含めてはいけません"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/public/error_notifications.js:0
 msgid ""
@@ -7760,7 +7791,6 @@ msgstr "エイリアンモンスター"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 msgid "all"
 msgstr "全て"
@@ -8323,7 +8353,7 @@ msgstr "プリン"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "bakery"
-msgstr "製パン店"
+msgstr "ベーカリー"
 
 #. module: web
 #. odoo-javascript
@@ -10711,7 +10741,7 @@ msgstr "建設作業員"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "contains"
-msgstr "が次を含む"
+msgstr "次を含む"
 
 #. module: web
 #. odoo-javascript
@@ -18232,12 +18262,6 @@ msgstr "新規タブ"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-msgid "new_template"
-msgstr "new_template"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "news"
 msgstr "新聞"
@@ -21744,12 +21768,6 @@ msgstr "選択済"
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 msgid "selected records,"
 msgstr "選択されたレコード、"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
-msgid "self"
-msgstr "セルフ"
 
 #. module: web
 #. odoo-javascript
@@ -26336,18 +26354,6 @@ msgstr "星座"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "zombie"
 msgstr "ゾンビ"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_components/column_progress.xml:0
-msgid "{{ bar.count }} {{ bar.string }}"
-msgstr "{{ bar.count }} {{ bar.string }}"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
-msgid "{{ relatedFieldName }}..."
-msgstr "{{ relatedFieldName }}..."
 
 #. module: web
 #. odoo-javascript

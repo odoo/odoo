@@ -248,3 +248,57 @@ class TestJoEdiTypes(JoEdiCommon):
             self.get_xml_tree_from_string(generated_file),
             self.get_xml_tree_from_string(expected_file)
         )
+
+    def test_jo_no_vat_customer(self):
+        self.company.l10n_jo_edi_taxpayer_type = 'income'
+        self.company.l10n_jo_edi_sequence_income_source = '4419618'
+        self.partner_jo.vat = False
+
+        invoice = self._l10n_jo_create_invoice({
+            'name': 'EIN/998833/0',
+            'invoice_date': '2022-09-27',
+            'narration': 'ملاحظات 2',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 3,
+                    'quantity': 44,
+                    'discount': 1,
+                    'tax_ids': [Command.clear()],
+                }),
+            ],
+        })
+
+        expected_file = self._read_xml_test_file('type_7')
+        generated_file = self.env['account.edi.xml.ubl_21.jo']._export_invoice(invoice)[0]
+        self.assertXmlTreeEqual(
+            self.get_xml_tree_from_string(generated_file),
+            self.get_xml_tree_from_string(expected_file)
+        )
+
+    def test_jo_no_country_customer(self):
+        self.company.l10n_jo_edi_taxpayer_type = 'income'
+        self.company.l10n_jo_edi_sequence_income_source = '4419618'
+        self.partner_jo.country_id = False
+
+        invoice = self._l10n_jo_create_invoice({
+            'name': 'EIN/998833/0',
+            'invoice_date': '2022-09-27',
+            'narration': 'ملاحظات 2',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 3,
+                    'quantity': 44,
+                    'discount': 1,
+                    'tax_ids': [Command.clear()],
+                }),
+            ],
+        })
+
+        expected_file = self._read_xml_test_file('type_8')
+        generated_file = self.env['account.edi.xml.ubl_21.jo']._export_invoice(invoice)[0]
+        self.assertXmlTreeEqual(
+            self.get_xml_tree_from_string(generated_file),
+            self.get_xml_tree_from_string(expected_file)
+        )

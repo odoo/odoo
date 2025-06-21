@@ -25,6 +25,7 @@ QUnit.test("disconnect during bus gc should ask for reload", async () => {
             }
         },
     });
+    env.services.multi_tab.setSharedValue("last_notification_id", 1);
     env.services.bus_service.start();
     await waitForBusEvent(env, "connect");
     pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
@@ -47,6 +48,7 @@ QUnit.test("reconnect after going offline after bus gc should ask for reload", a
             }
         },
     });
+    env.services.multi_tab.setSharedValue("last_notification_id", 1);
     env.services.bus_service.start();
     await waitForBusEvent(env, "connect");
     browser.dispatchEvent(new Event("offline"));

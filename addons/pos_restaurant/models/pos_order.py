@@ -16,7 +16,7 @@ class PosOrder(models.Model):
 
         domain = []
         if order.get('table_id', False) and order.get('state') == 'draft':
-            domain += ['|', ('uuid', '=', order.get('uuid')), ('table_id', '=', order.get('table_id')), ('state', '=', 'draft')]
+            domain += ['|', ('uuid', '=', order.get('uuid')), '&', ('table_id', '=', order.get('table_id')), ('state', '=', 'draft')]
         else:
             domain += [('uuid', '=', order.get('uuid'))]
         return self.env["pos.order"].search(domain, limit=1)

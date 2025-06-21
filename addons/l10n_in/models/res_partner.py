@@ -57,22 +57,6 @@ class ResPartner(models.Model):
         for partner in self:
             partner.display_pan_warning = partner.vat and partner.l10n_in_pan and partner.l10n_in_pan != partner.vat[2:12]
 
-    @api.onchange('company_type')
-    def onchange_company_type(self):
-        res = super().onchange_company_type()
-        if self.country_id and self.country_id.code == 'IN':
-            self.l10n_in_gst_treatment = (self.company_type == 'company') and 'regular' or 'consumer'
-        return res
-
-    @api.onchange('country_id')
-    def _onchange_country_id(self):
-        res = super()._onchange_country_id()
-        if self.country_id and self.country_id.code != 'IN':
-            self.l10n_in_gst_treatment = 'overseas'
-        elif self.country_id and self.country_id.code == 'IN':
-            self.l10n_in_gst_treatment = (self.company_type == 'company') and 'regular' or 'consumer'
-        return res
-
     @api.onchange('vat')
     def onchange_vat(self):
         if self.vat and self.check_vat_in(self.vat):
@@ -100,7 +84,7 @@ class ResPartner(models.Model):
     @api.model
     def _l10n_in_get_partner_vals_by_vat(self, vat):
         partner_data = self.enrich_by_gst(vat)
-        for fname in partner_data:
+        for fname in list(partner_data.keys()):
             if fname not in self.env['res.partner']._fields:
                 partner_data.pop(fname, None)
         partner_data.update({

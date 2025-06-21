@@ -60,7 +60,8 @@ class WebsiteForm(form.WebsiteForm):
                 data['record']['email_cc'] = values['email_from']
                 if values.get('partner_phone'):
                     data['record']['partner_phone'] = values['partner_phone']
-                data['record']['partner_name'] = values['partner_name']
+                if values.get('partner_name'):
+                    data['record']['partner_name'] = values['partner_name']
                 if values.get('partner_company_name'):
                     data['record']['partner_company_name'] = values['partner_company_name']
         return data

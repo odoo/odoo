@@ -53,7 +53,7 @@
                             <field name="name"/>
                             <field name="unit_amount" string="Time Spent" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                         </list>
-                        <kanban class="o_kanban_mobile">
+                        <kanban class="o_kanban_mobile" action="action_open_timesheet_view_portal" type="object">
                             <templates>
                                 <t t-name="card" class="row g-0">
                                     <field name="employee_id" class="col-6 fw-bold"/>

@@ -2,6 +2,7 @@
 
 import * as BillScreen from "@pos_restaurant/../tests/tours/utils/bill_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
+import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 import * as ChromePos from "@point_of_sale/../tests/tours/utils/chrome_util";
@@ -15,7 +16,6 @@ import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
-import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import { delay } from "@odoo/hoot-dom";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
@@ -687,5 +687,48 @@ registry.category("web_tour.tours").add("FinishResidualOrder", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            {
+                trigger: ".actionpad .submit-order.highlight.btn-primary",
+            },
+            {
+                content: "Check if order preparation has product correctly ordered",
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.get_order();
+                    const data = posmodel.getOrderChanges();
+                    const changes = Object.values(data.orderlines);
+                    const printed = await posmodel.getRenderedReceipt(order, "New", changes);
+                    const comboItemLines = [...printed.querySelectorAll(".orderline.mx-5")].map(
+                        (el) => el.innerText
+                    );
+                    const expectedComboItemLines = [
+                        "1 Combo Product 2",
+                        "1 Combo Product 4",
+                        "1 Combo Product 6",
+                    ];
+                    if (
+                        comboItemLines.length !== expectedComboItemLines.length ||
+                        !comboItemLines.every((line, index) =>
+                            line.includes(expectedComboItemLines[index])
+                        )
+                    ) {
+                        throw new Error("Order line mismatch");
+                    }
+                },
+            },
         ].flat(),
 });

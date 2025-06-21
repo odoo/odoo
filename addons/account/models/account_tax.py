@@ -67,6 +67,31 @@ class AccountTaxGroup(models.Model):
         for group in self:
             group.country_id = group.company_id.account_fiscal_country_id or group.company_id.country_id
 
+    @api.constrains('tax_payable_account_id', 'tax_receivable_account_id')
+    def _check_accounts_configuration(self):
+        account_fields = self.env['account.account']._fields
+        account_type_selection_values = dict(account_fields['account_type']._description_selection(self.env))
+        reconcile_field_name = account_fields['reconcile'].get_description(self.env)['string']
+        non_trade_field_name = account_fields['non_trade'].get_description(self.env)['string']
+
+        for group in self:
+            for field_name in ('tax_payable_account_id', 'tax_receivable_account_id'):
+                if group[field_name] and not (
+                    group[field_name].account_type in ('asset_receivable', 'liability_payable')
+                    and group[field_name].non_trade
+                ):
+                    raise ValidationError(
+                        self.env._(
+                            '%(tax_account)s (%(account_name)s) should be an account of type "%(receivable)s" or "%(payable)s" with both options "%(allow_reconciliation)s" and "%(non_trade)s" enabled.',
+                            tax_account=self._fields[field_name].get_description(self.env)['string'],
+                            account_name=group[field_name].display_name,
+                            receivable=account_type_selection_values['asset_receivable'],
+                            payable=account_type_selection_values['liability_payable'],
+                            allow_reconciliation=reconcile_field_name,
+                            non_trade=non_trade_field_name,
+                        ),
+                    )
+
     @api.model
     def _check_misconfigured_tax_groups(self, company, countries):
         """ Searches the tax groups used on the taxes from company in countries that don't have
@@ -1882,10 +1907,12 @@ class AccountTax(models.Model):
         # Tags on the base line.
         taxes_data = base_line['tax_details']['taxes_data']
         base_line['tax_tag_ids'] = self.env['account.account.tag']
+        product_tags = self.env['account.account.tag']
         if product:
             countries = {tax_data['tax'].country_id for tax_data in taxes_data}
             countries.add(False)
-            base_line['tax_tag_ids'] |= product.sudo().account_tag_ids
+            product_tags = product.sudo().account_tag_ids
+            base_line['tax_tag_ids'] |= product_tags
 
         for tax_data in taxes_data:
             tax = tax_data['tax']
@@ -1958,9 +1985,9 @@ class AccountTax(models.Model):
 
                 # Compute subsequent taxes/tags.
                 tax_rep_data['taxes'] = self.env['account.tax']
-                tax_rep_data['tax_tags'] = self.env['account.account.tag']
+                tax_rep_data['tax_tags'] = product_tags
                 if include_caba_tags or tax.tax_exigibility == 'on_invoice':
-                    tax_rep_data['tax_tags'] = tax_rep.tag_ids
+                    tax_rep_data['tax_tags'] |= tax_rep.tag_ids
                 if tax.include_base_amount:
                     tax_rep_data['taxes'] |= subsequent_taxes
                     for other_tax, tags in subsequent_tags_per_tax.items():
@@ -2361,7 +2388,7 @@ class AccountTax(models.Model):
                         max_tax_group['tax_amount_currency'] += cash_rounding_base_amount_currency
                         max_tax_group['tax_amount'] += cash_rounding_base_amount
                         max_subtotal['tax_amount_currency'] += cash_rounding_base_amount_currency
-                        max_subtotal['tax_amount'] += cash_rounding_base_amount 
+                        max_subtotal['tax_amount'] += cash_rounding_base_amount
                         tax_totals_summary['tax_amount_currency'] += cash_rounding_base_amount_currency
                         tax_totals_summary['tax_amount'] += cash_rounding_base_amount
                     else:

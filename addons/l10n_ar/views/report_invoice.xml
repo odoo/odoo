@@ -4,9 +4,9 @@
     <!-- this header can be used on any Argentinean report, to be useful some variables should be passed -->
     <template id="custom_header">
         <div class="mb-3">
-            <div class="row">
+            <div class="row mb-2">
                 <div name="left-upper-side" class="col-5" t-if="not pre_printed_report">
-                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
+                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 65px;" alt="Logo"/>
                 </div>
                 <div name="center-upper" class="col-2 text-center" t-att-style="'color: %s;' % o.company_id.primary_color">
                     <span style="display: inline-block; text-align: center; line-height: 8px;">

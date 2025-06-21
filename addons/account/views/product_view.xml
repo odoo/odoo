@@ -49,6 +49,12 @@
             <field name="priority">5</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
+                <div name="options" position='inside'>
+                    <span class="d-inline-flex" invisible="type == 'combo'">
+                        <field name="purchase_ok"/>
+                        <label for="purchase_ok"/>
+                    </span>
+                </div>
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="fiscal_country_codes" invisible="1"/>
                 </xpath>

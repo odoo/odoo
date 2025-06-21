@@ -27,14 +27,15 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Ediz Duman <neps1192@gmail.com>, 2024
 # Halil, 2024
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-05-23 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Halil, 2024\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,7 +148,7 @@ msgstr "10% siparişinde"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "1000"
-msgstr ""
+msgstr "1000"
 
 #. module: loyalty
 #. odoo-python
@@ -268,6 +269,12 @@ msgid ""
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">Gift Cards</span>\n"
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">eWallets</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"program_type not in ('coupons', 'next_order_coupons')\">Kuponlar</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'loyalty'\">Sadakat Kartları</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">Promosyonlar</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'promo_code'\">İndirim</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">Hediye Kartları</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">eCüzdanlar</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -443,7 +450,7 @@ msgstr "Etkin"
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
 #: model:ir.model.fields,field_description:loyalty.field_res_users__loyalty_card_count
 msgid "Active loyalty cards"
-msgstr ""
+msgstr "Aktif sadakat kartları"
 
 #. module: loyalty
 #. odoo-javascript
@@ -1118,12 +1125,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
 msgstr "e-Cüzdan oluşturun"
-
-#. module: loyalty
-#. odoo-javascript
-#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
-msgid "Generate {{props.context.program_item_name}}"
-msgstr ""
 
 #. module: loyalty
 #. odoo-python
@@ -1974,6 +1975,12 @@ msgstr "Tetikleyici"
 
 #. module: loyalty
 #. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+msgid "Unsupported search operator"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 msgid "Update Balance"
@@ -2271,9 +2278,3 @@ msgstr "Kullanım"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "your order"
 msgstr "siparişiniz"
-
-#. module: loyalty
-#. odoo-javascript
-#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
-msgid "{{loyalty_el_title}}"
-msgstr ""

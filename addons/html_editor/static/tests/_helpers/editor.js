@@ -181,6 +181,9 @@ export async function testEditor(config) {
         expect("iframe").toHaveCount(iframeCount);
     }
 
+    // Wait for selectionchange handlers to react before any actual testing.
+    await Promise.resolve();
+
     if (contentBeforeEdit) {
         // we should do something before (sanitize)
         compareFunction(getContent(el), contentBeforeEdit, "Editor content, before edit");

@@ -1,0 +1,72 @@
+<odoo>
+    <data>
+        <record id="product_list_inherit_hide_fields" model="ir.ui.view">
+            <field name="name">product.template.product.list.hide_fields</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='default_code']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_tag_ids']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='uom_id']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='standard_price']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='barcode']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='categ_id']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='type']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="product_list_inherit_extension" model="ir.ui.view">
+            <field name="name">product.template.product.list.extension</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="item_brand" optional="show"/>
+                    <field name="item_model" optional="show"/>
+                    <field name="item_stock" optional="show"/>
+                    <field name="item_amount" optional="show"/>
+                    <field name="item_delivery_lead" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="product_list_inherit_hide_stock_fields" model="ir.ui.view">
+            <field name="name">product.template.product.list.hide_stock_fields</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_stock_product_template_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='qty_available']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='virtual_available']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

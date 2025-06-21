@@ -198,3 +198,22 @@ class TestPricelist(ProductCommon):
 
         with Form(partner) as partner_form:
             self.assertEqual(partner_form.property_product_pricelist, self.sale_pricelist_id)
+
+    def test_pricelist_change_to_formula_and_back(self):
+        pricelist_2 = self.env['product.pricelist'].create({
+            'name': 'Sale pricelist 2',
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'percentage',
+                    'percent_price': 20,
+                    'base': 'pricelist',
+                    'base_pricelist_id': self.sale_pricelist_id.id,
+                    'applied_on': '3_global',
+                }),
+            ],
+        })
+        with Form(pricelist_2.item_ids) as item_form:
+            item_form.compute_price = 'formula'
+            item_form.compute_price = 'percentage'
+            item_form.percent_price = 20
+        self.assertFalse(pricelist_2.item_ids.base_pricelist_id.id)

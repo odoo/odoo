@@ -38,7 +38,7 @@
                         <field name="analytic_account_active" invisible="1"/>
                     </t>
                     <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user">
-                    <field name="timesheet_ids" mode="list,kanban" readonly="not analytic_account_active" context="{'default_project_id': project_id, 'default_name': ''}">
+                    <field name="timesheet_ids" mode="list,kanban" readonly="not analytic_account_active" context="{'default_project_id': project_id, 'default_name': '', 'form_view_ref': 'hr_timesheet.timesheet_view_form_user'}">
                         <list editable="bottom" string="Timesheet Activities" default_order="date" decoration-muted="readonly_timesheet == True">
                             <field name="readonly_timesheet" column_invisible="True"/>
                             <field name="date" readonly="readonly_timesheet"/>
@@ -64,7 +64,7 @@
                                         <field name="date" class="col-6 text-end fw-bold"/>
                                     </div>
                                     <div class="row">
-                                        <field name="name" class="col-6 text-muted"/>
+                                        <field name="name" class="col-6 text-muted" required="0" readonly="readonly_timesheet"/>
                                         <field name="unit_amount" widget="float_time" class="col-6 text-end"/>
                                     </div>
                                 </t>

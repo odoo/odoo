@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -1377,6 +1377,11 @@ msgstr "<span>Ostrzeżenie: Ten dokument może być duplikatem</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">Wartość</strong>"
 
@@ -1442,11 +1447,6 @@ msgstr "<strong>Odnośnik</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Shipping Address</strong>"
-msgstr "<strong>Adres dostawy</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source</strong>"
 msgstr "<strong>Źródło</strong>"
 
@@ -1480,6 +1480,13 @@ msgstr "<strong>Suma</strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_account_kanban
 msgid "<strong>Type: </strong>"
 msgstr "<strong>Typ: </strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
+"disabled again if there are any existing journal items."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1517,6 +1524,14 @@ msgstr ""
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "A bank account can belong to only one journal."
 msgstr "Konto bankowe może przynależeć tylko do jednego konta księgowego."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/res_partner_bank.py:0
+msgid ""
+"A bank account with Account Number %(number)s already exists for Partner "
+"%(partner)s, but is archived. Please unarchive it instead."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3506,8 +3521,8 @@ msgstr "Konto bankowe"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
-msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr "Konto bankowe %(link)s z numerem %(number)s zostało usunięte"
+msgid "Bank Account %(link)s with number %(number)s archived"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -4103,6 +4118,12 @@ msgid ""
 msgstr ""
 "Nie można uzyskać szczegółów agregacji z linii, która nie używa silnika "
 "\"agregacja\"."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Cannot identify the invoices in the generated PDF: %s"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -9333,7 +9354,7 @@ msgstr "Jest dopasowany do wyciągu z banku"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_move_sent
 #: model:ir.model.fields,field_description:account.field_account_move__is_move_sent
 msgid "Is Move Sent"
-msgstr "Czy wysłano ruch"
+msgstr "Wysłano"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_reconciled
@@ -18006,6 +18027,11 @@ msgstr "Odpis na rachunku wymiany"
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
 msgstr "Nieprawidłowa wartość kredytowa lub debetowa w wpisie księgowym!"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "XML format"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly

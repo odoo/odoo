@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Marianna Ciofani, 2024
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -353,8 +353,22 @@ msgstr "La data di inizio validità del certificato (UTC)"
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
+msgid "The key size should be at least 512 bytes."
+msgstr "La dimensione della chiave deve essere di almeno 512 byte."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
 msgid "The private key could not be loaded."
 msgstr "Non è stato possibile caricare la chiave privata."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public exponent should be 65537 (or 3 for legacy purposes)."
+msgstr ""
+"L'esponente pubblico dovrebbe essere 65537 (oppure 3 nei sistemi più "
+"vecchi)."
 
 #. module: certificate
 #. odoo-python

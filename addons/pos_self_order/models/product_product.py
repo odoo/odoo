@@ -45,7 +45,7 @@ class ProductProduct(models.Model):
     @api.model
     def _load_pos_self_data_fields(self, config_id):
         params = super()._load_pos_self_data_fields(config_id)
-        params += ['public_description']
+        params += ['public_description', 'list_price']
         return params
     
     @api.model
@@ -54,7 +54,7 @@ class ProductProduct(models.Model):
         return AND([domain, [('self_order_available', '=', True)]])
 
     def _load_pos_self_data(self, data):
-        domain = self._load_pos_data_domain(data)
+        domain = self._load_pos_self_data_domain(data)
         config_id = data['pos.config']['data'][0]['id']
 
         # Add custom fields for 'formula' taxes.
