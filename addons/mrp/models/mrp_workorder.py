@@ -122,6 +122,9 @@ class MrpWorkorder(models.Model):
         string='Cost per hour',
         default=0.0, aggregator="avg")
         # Technical field to store the hourly cost of workcenter at time of work order completion (i.e. to keep a consistent cost).',
+    cost_mode = fields.Selection([('actual', 'Actual'), ('estimated', 'Estimated')], default='actual')
+    # Technical field to store the cost_mode of a workorder in case it is changed on the operation_id later on.
+    # This field should only be changed once at MO confirmation and should reflect the cost_mode of the operation_id.
 
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
@@ -618,11 +621,13 @@ class MrpWorkorder(models.Model):
         """
         total = 0
         for wo in self:
-            if date:
+            if wo._should_estimate_cost():
+                duration = wo.duration_expected
+            elif date:
                 duration = sum(wo.time_ids.filtered(lambda t: t.date_end and t.date_end <= date).mapped('duration'))
             else:
                 duration = sum(wo.time_ids.mapped('duration'))
-            total += (duration / 60.0) * wo.workcenter_id.costs_hour
+            total += (duration / 60.0) * (wo.costs_hour or wo.workcenter_id.costs_hour)
         return total
 
     def button_start(self, raise_on_invalid_state=False):
@@ -740,17 +745,6 @@ class MrpWorkorder(models.Model):
         for production in self.production_id:
             production._plan_workorders(replan=True)
         return True
-
-    def button_done(self):
-        if any(x.state in ('done', 'cancel') for x in self):
-            raise UserError(_('A Manufacturing Order is already done or cancelled.'))
-        self.end_all()
-        end_date = datetime.now()
-        return self.write({
-            'state': 'done',
-            'date_finished': end_date,
-            'costs_hour': self.workcenter_id.costs_hour
-        })
 
     def button_scrap(self):
         self.ensure_one()
@@ -912,6 +906,10 @@ class MrpWorkorder(models.Model):
     def _should_start_timer(self):
         return True
 
+    def _should_estimate_cost(self):
+        self.ensure_one()
+        return self.state in ('progress', 'done') and self.duration_expected and self.cost_mode == 'estimated'
+
     def _update_qty_producing(self, quantity):
         self.ensure_one()
         if self.qty_producing:
@@ -946,3 +944,8 @@ class MrpWorkorder(models.Model):
 
     def _get_current_theorical_operation_cost(self, without_employee_cost=False):
         return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
+
+    def _set_cost_mode(self):
+        """ This should only be called once when the MO is confirmed. """
+        for workorder in self:
+            workorder.cost_mode = workorder.operation_id.cost_mode or 'actual'

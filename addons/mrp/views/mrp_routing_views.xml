@@ -96,6 +96,7 @@
                                 <field name="workcenter_id" context="{'default_company_id': company_id}"/>
                                 <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
                                 <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                                <field name="cost_mode" widget="radio"/>
                                 <field name="allow_operation_dependencies" invisible="1"/>
                                 <field name="blocked_by_operation_ids" widget="many2many_tags" context="{'default_bom_id':bom_id}" invisible="not allow_operation_dependencies"/>
                             </group><group name="workorder">
