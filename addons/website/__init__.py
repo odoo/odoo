@@ -9,6 +9,49 @@ from odoo import api, SUPERUSER_ID
 from odoo.http import request
 from functools import partial
 
+def pre_init_hook(cr):
+    """
+    Pre-init hook for the Odoo website module.
+
+    Ensures the public user and partner records exist. If not, creates them.
+    The public user is linked to the public partner and assigned to the
+    public group.
+
+    Args:
+        cr (Cursor): Database cursor for SQL queries.
+
+    Raises:
+        ValidationError: If public user or partner creation fails.
+    """
+    env = api.Environment(cr, SUPERUSER_ID, {})
+
+    # Ensure the public user exists
+    public_user = env.ref("base.public_user", raise_if_not_found=False)
+    if not public_user:
+        partner = env.ref("base.public_partner", raise_if_not_found=False)
+        if not partner:
+            partner = env["res.partner"].sudo().create({
+                "name": "Public user",
+                "active": False,
+            })
+            env["ir.model.data"]._update_xmlids([{
+                "xml_id": "base.public_partner",
+                "record": partner,
+                "noupdate": True,
+            }])
+        public_user = env["res.users"].sudo().create({
+            "name": "Public User",
+            "login": "public",
+            "partner_id": partner.id,
+            "groups_id": [(6, 0, [env.ref("base.group_public").id])],
+            "active": False,
+        })
+        # Update the XML ID of the public user
+        env["ir.model.data"]._update_xmlids([{
+            "xml_id": "base.public_user",
+            "record": public_user,
+            "noupdate": True,
+        }])
 
 def uninstall_hook(cr, registry):
     # Force remove ondelete='cascade' elements,
