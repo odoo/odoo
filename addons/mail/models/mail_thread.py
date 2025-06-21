@@ -346,13 +346,12 @@ class MailThread(models.AbstractModel):
         return result
 
     def unlink(self):
-        """ Override unlink to delete (scheduled) messages and followers. This cannot be
+        """ Override unlink to delete scheduled messages and followers. This cannot be
         cascaded, because link is done through (res_model, res_id). """
         if not self:
             return True
         # discard pending tracking
         self._track_discard()
-        self.env['mail.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         res = super(MailThread, self).unlink()
         self.env['mail.followers'].sudo().search(
             [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
