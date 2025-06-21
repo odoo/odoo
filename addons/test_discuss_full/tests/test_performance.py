@@ -76,9 +76,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search ir_attachment (_compute_avatar_128)
     #           - count discuss_channel_member (member_count)
     #           - _compute_message_needaction
+    #           - _compute_is_channel_owner_admin
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
-    _query_count_init_messaging = 34
+    _query_count_init_messaging = 35
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _get_channels_as_member)
@@ -121,6 +122,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_message_needaction
     #       - search discuss_channel_res_groups_rel (group_ids)
     #       - fetch res_groups (group_ids)
+    #       - _compute_is_channel_owner_admin
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
     #   - _get_last_messages
@@ -145,7 +147,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_call_history
     #       - search mail_tracking_value
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 58
+    _query_count_discuss_channels = 59
 
     def setUp(self):
         super().setUp()
@@ -636,6 +638,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": False,
                 "last_interest_dt": last_interest_dt,
                 "livechat_channel_id": False,
                 "livechat_operator_id": False,
@@ -666,6 +670,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": True,
                 "last_interest_dt": last_interest_dt,
                 "livechat_channel_id": False,
                 "livechat_operator_id": False,
@@ -696,6 +702,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": True,
                 "last_interest_dt": last_interest_dt,
                 "livechat_channel_id": False,
                 "livechat_operator_id": False,
@@ -726,6 +734,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", [member_0.id]]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": True,
                 "last_interest_dt": last_interest_dt,
                 "livechat_channel_id": False,
                 "livechat_operator_id": False,
@@ -759,6 +769,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": True,
                 "last_interest_dt": last_interest_dt,
                 "livechat_channel_id": False,
                 "livechat_operator_id": False,
@@ -789,6 +801,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": True,
                 "last_interest_dt": last_interest_dt,
                 "livechat_channel_id": False,
                 "livechat_operator_id": False,
@@ -819,6 +833,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": False,
                 "last_interest_dt": last_interest_dt,
                 "livechat_channel_id": False,
                 "livechat_operator_id": False,
@@ -849,6 +865,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": False,
                 "last_interest_dt": last_interest_dt,
                 "livechat_channel_id": False,
                 "livechat_operator_id": False,
@@ -879,6 +897,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": False,
                 "last_interest_dt": last_interest_dt,
                 "livechat_channel_id": False,
                 "livechat_operator_id": False,
@@ -909,6 +929,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": False,
                 "last_interest_dt": last_interest_dt,
                 "livechat_channel_id": False,
                 "livechat_operator_id": False,
@@ -939,6 +961,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": False,
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
                 "livechat_channel_id": self.im_livechat_channel.id,
@@ -971,6 +995,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invited_member_ids": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
+                "is_self_channel_admin": False,
+                "is_self_channel_owner": False,
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
                 "livechat_channel_id": self.im_livechat_channel.id,
@@ -1017,6 +1043,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "custom_channel_name": False,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "channel_role": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 1,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1032,6 +1059,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "custom_channel_name": False,
                 "fetched_message_id": last_message.id,
                 "id": member_0.id,
+                "channel_role": "owner",
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1047,6 +1075,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "custom_channel_name": False,
                 "fetched_message_id": last_message.id,
                 "id": member_0.id,
+                "channel_role": "owner",
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1062,6 +1091,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "custom_channel_name": False,
                 "fetched_message_id": last_message_of_partner_0.id,
                 "id": member_0.id,
+                "channel_role": "owner",
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1083,6 +1113,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "custom_channel_name": False,
                 "fetched_message_id": last_message.id,
                 "id": member_0.id,
+                "channel_role": "owner",
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1098,6 +1129,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "custom_channel_name": False,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "channel_role": "owner",
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1114,6 +1146,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": False,
                 "id": member_12.id,
                 "partner_id": {"id": self.users[12].partner_id.id, "type": "partner"},
+                "channel_role": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1123,6 +1156,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "custom_channel_name": False,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "channel_role": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1139,6 +1173,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": False,
                 "id": member_14.id,
                 "partner_id": {"id": self.users[14].partner_id.id, "type": "partner"},
+                "channel_role": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1148,6 +1183,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "custom_channel_name": False,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "channel_role": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1164,6 +1200,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": False,
                 "id": member_15.id,
                 "partner_id": {"id": self.users[15].partner_id.id, "type": "partner"},
+                "channel_role": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1173,6 +1210,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "custom_channel_name": False,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "channel_role": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1189,6 +1227,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": False,
                 "id": member_2.id,
                 "partner_id": {"id": self.users[2].partner_id.id, "type": "partner"},
+                "channel_role": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1198,6 +1237,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "custom_channel_name": False,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "channel_role": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1214,6 +1254,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": False,
                 "id": member_3.id,
                 "partner_id": {"id": self.users[3].partner_id.id, "type": "partner"},
+                "channel_role": False,
                 "seen_message_id": False,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
             }
@@ -1224,6 +1265,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "livechat_member_type": "agent",
+                "channel_role": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1240,6 +1282,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": last_message.id,
                 "id": member_1.id,
                 "livechat_member_type": "visitor",
+                "channel_role": False,
                 "partner_id": {"id": self.users[1].partner_id.id, "type": "partner"},
                 "seen_message_id": last_message.id,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
@@ -1251,6 +1294,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "livechat_member_type": "agent",
+                "channel_role": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 1,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1267,6 +1311,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": last_message.id,
                 "id": member_g.id,
                 "livechat_member_type": "visitor",
+                "channel_role": False,
                 "guest_id": {"id": guest.id, "type": "guest"},
                 "seen_message_id": last_message.id,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},

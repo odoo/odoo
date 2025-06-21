@@ -2,6 +2,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onWillUpdateProps, onWillStart } from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
@@ -14,6 +15,7 @@ export class ChannelMemberList extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.dialog = useService("dialog");
         onWillStart(() => {
             if (this.props.thread.fetchMembersState === "not_fetched") {
                 this.props.thread.fetchChannelMembers();
@@ -53,5 +55,13 @@ export class ChannelMemberList extends Component {
             return;
         }
         this.store.openChat({ partnerId: member.persona.id });
+    }
+
+    onClickRemove(ev, member) {
+        this.dialog.add(ConfirmationDialog, {
+            body: _t('Do you want to remove "%s" from this channel?', member.persona.name),
+            cancel: () => {},
+            confirm: () => member.removeFromChannel(),
+        });
     }
 }

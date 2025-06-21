@@ -18,3 +18,11 @@ class DiscussThreadController(ThreadController):
         domain = [("channel_id", "=", thread.id), ("partner_id", "in", partners.ids)]
         # sudo: discuss.channel.member - filtering partners that are members is acceptable
         return self.env["discuss.channel.member"].sudo().search(domain).partner_id
+
+    @classmethod
+    def _can_edit_message(cls, message, **kwargs):
+        if message.model == 'discuss.channel' and message.res_id:
+            channel = message.env['discuss.channel'].browse(message.res_id)
+            if channel and (channel.is_self_channel_owner or channel.is_self_channel_admin):
+                return True
+        return super()._can_edit_message(message, **kwargs)

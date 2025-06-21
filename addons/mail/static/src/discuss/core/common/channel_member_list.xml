@@ -43,13 +43,21 @@
             <div t-ref="displayName" class="d-flex overflow-hidden flex-column">
                 <span class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name" t-att-title="member.name"/>
             </div>
+            <i t-if="member.channel_role === 'owner'" class="ms-2 fa fa-star text-warning" title="Channel Owner" aria-label="Channel Owner"/>
+            <i t-if="member.channel_role === 'admin'" class="ms-2 fa fa-star text-primary" title="Channel Admin" aria-label="Channel Admin"/>
             <span class="ms-auto">
                 <span t-if="member.in(props.thread.invited_member_ids)" class="p-1 fa fa-user-plus opacity-75"/>
                 <span t-if="member.rtcSession?.is_muted and !member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash opacity-75"/>
                 <span t-elif="member.rtcSession?.is_deaf" class="p-1 fa fa-deaf opacity-75"/>
                 <span t-if="member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>
             </span>
-
+            <div t-if="props.thread.is_self_channel_owner or props.thread.is_self_channel_admin" class="o-discuss-ChannelMember-commands mx-1">
+                <div class="btn-group btn-group-sm o-gap-0_5">
+                    <button class="btn o-opacity-35 opacity-100-hover btn-light bg-transparent rounded-3 p-0 border-transparent" t-on-click.stop="(ev) => this.onClickRemove(ev, member)">
+                        <i class="fa fa-times"/>
+                    </button>
+                </div>
+            </div>
         </div>
     </t>
 
