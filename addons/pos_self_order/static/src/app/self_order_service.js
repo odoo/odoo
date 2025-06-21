@@ -630,6 +630,7 @@ export class SelfOrder extends Reactive {
         }
 
         try {
+            const uuid = this.currentOrder.uuid;
             this.currentOrder.recomputeOrderData();
             const data = await rpc(
                 `/pos-self-order/process-order-args/${this.config.self_ordering_mode}`,
@@ -655,7 +656,10 @@ export class SelfOrder extends Reactive {
             }
 
             this.currentOrder.recomputeChanges();
-            return this.currentOrder;
+            const originalOrder = this.models["pos.order"].getBy("uuid", uuid);
+            return this.config.self_ordering_mode === "mobile" && originalOrder?.amount_total === 0
+                ? originalOrder
+                : this.currentOrder;
         } catch (error) {
             const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
             this.handleErrorNotification(error, [order.access_token]);
