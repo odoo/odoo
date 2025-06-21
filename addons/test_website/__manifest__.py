@@ -44,6 +44,9 @@ models which only purpose is to run tests.""",
         'web.assets_tests': [
             'test_website/static/tests/tours/*',
         ],
+        'website.assets_wysiwyg': [
+            'test_website/static/src/js/editor/snippets.options.js'
+        ]
     },
     'license': 'LGPL-3',
 }
