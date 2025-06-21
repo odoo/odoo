@@ -4,7 +4,6 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round
 
 
 class ProductTemplate(models.Model):
@@ -55,6 +54,34 @@ class ProductTemplate(models.Model):
              "whenever the customer hits *Add to Cart* (cross-sell strategy, "
              "e.g. for computers: warranty, software, etc.).",
         check_company=True)
+    last_invoice_since = fields.Char(compute="_compute_last_invoice_since")
+
+    @api.depends_context('formatted_display_name', 'partner_id', 'prioritize_for')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+
+        # Add last invoiced date beside the product's name.
+        if self.env.context.get('formatted_display_name') and\
+            self._must_prioritize_invoiced_product() and\
+            self.env.context.get('prioritize_for') == 'sale':
+            for product in self:
+                if product.last_invoice_date:
+                    product.display_name = f'`{product.last_invoice_since}` **{product.display_name}**'
+
+    @api.depends('last_invoice_date')
+    def _compute_last_invoice_since(self):
+        self.last_invoice_since = False
+        today = fields.Date.today()
+        for product in self:
+            if product.last_invoice_date:
+                days_count = (today - product.last_invoice_date).days
+                if days_count > 365:
+                    day_value_str = self.env._('%(years_count)sy', years_count=(days_count // 365))
+                elif days_count > 30:
+                    day_value_str = self.env._('%(months_count)smo', months_count=(days_count // 30))
+                else:
+                    day_value_str = self.env._('%(days_count)sd', days_count=days_count)
+                product.last_invoice_since = day_value_str
 
     @api.depends('invoice_policy', 'sale_ok', 'service_tracking')
     def _compute_product_tooltip(self):
