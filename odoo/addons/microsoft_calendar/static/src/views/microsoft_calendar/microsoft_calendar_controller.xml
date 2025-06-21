@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="microsoft_calendar.MicrosoftCalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension">
+        <FilterPanel position="after">
+            <div id="microsoft_calendar_sync" class="o_calendar_sync" t-if="model.microsoftCredentialsSet">
+                <button t-if="!model.state.microsoftIsSync and model.state.microsoftIsPaused" type="button" id="microsoft_sync_paused" class="o_google_sync_button o_microsoft_sync_paused btn btn-warning" t-on-click="onMicrosoftSyncUnpause">
+                    <b>
+                        <i id="microsoft_paused" class='fa fa-pause'/>
+                        <span class="mx-1">Outlook</span>
+                    </b>
+                </button>
+                <button t-elif="!model.state.microsoftIsSync" type="button" id="microsoft_sync_pending" class="o_microsoft_sync_button o_microsoft_sync_pending btn btn-secondary text-nowrap" t-on-click="onMicrosoftSyncCalendar">
+                    <b><i class='fa fa-refresh'/> Outlook</b>
+                </button>
+                <!-- class change on hover -->
+                <button t-else="" type="button" id="microsoft_sync_configured" class="me-1 o_microsoft_sync_button o_microsoft_sync_button_configured btn btn-outline-primary" t-on-click="onStopMicrosoftSynchronization"
+                    t-on-mouseenter="(ev) => {ev.target.classList.remove('btn-outline-primary');ev.target.classList.add('text-bg-danger');}"
+                    t-on-mouseleave="(ev) => {ev.target.classList.remove('text-bg-danger');ev.target.classList.add('btn-outline-primary');}">
+                    <b>
+                        <i id="microsoft_check" class='fa fa-check fa-fw'/>
+                        <i id="microsoft_stop" class='fa fa-times fa-fw'/>
+                        <span class="mx-1">Outlook</span>
+                    </b>
+                </button>
+            </div>
+        </FilterPanel>
+    </t>
+</templates>

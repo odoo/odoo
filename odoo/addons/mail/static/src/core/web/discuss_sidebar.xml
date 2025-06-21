@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebar">
+        <div class="o-mail-DiscussSidebar d-flex flex-column overflow-auto flex-shrink-0 h-100 pt-3 border-end bg-view">
+            <t t-foreach="discussSidebarItems" t-as="item" t-key="item_index" t-component="item"/>
+        </div>
+    </t>
+</templates>

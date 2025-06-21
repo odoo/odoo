@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_tax_form_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n_hu_edi</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="l10n_hu_tax_type" invisible="country_code != 'HU'"/>
+                <field name="l10n_hu_tax_reason"
+                       invisible="country_code != 'HU' or l10n_hu_tax_type == 'VAT'"
+                       required="country_code == 'HU' and l10n_hu_tax_type not in [False, 'VAT']"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form_razorpay" model="ir.ui.view">
+        <field name="name">Razorpay Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group name="razorpay_credentials"
+                       invisible="code != 'razorpay'">
+                    <field name="razorpay_key_id"
+                           string="Key Id"
+                           required="code == 'razorpay' and state != 'disabled'"/>
+                    <field name="razorpay_key_secret"
+                           string="Key Secret"
+                           required="code == 'razorpay' and state != 'disabled'"
+                           password="True"/>
+                    <field name="razorpay_webhook_secret"
+                           string="Webhook Secret"
+                           required="code == 'razorpay' and state != 'disabled'"
+                           password="True"/>
+                </group>
+            </group>
+            <field name="allow_tokenization" position="after">
+                <div invisible="code != 'razorpay' or not allow_tokenization" colspan="2">
+                    <a href="https://www.odoo.com/documentation/17.0/applications/finance/payment_providers/razorpay.html#payment-providers-razorpay-recurring-payments"
+                       class="btn btn-link"
+                       role="button"
+                       target="new"
+                    >
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Enable recurring payments on Razorpay
+                    </a>
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>

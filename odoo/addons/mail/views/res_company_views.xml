@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_company_view_form" model="ir.ui.view">
+        <field name="name">res.company.view.form.inherit.mail</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <field name="sequence" position="after">
+                <field name="alias_domain_id"/>
+                <field name="bounce_formatted" groups="base.group_no_one"/>
+                <field name="catchall_formatted" groups="base.group_no_one"/>
+                <field name="default_from_email" groups="base.group_no_one"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,540 @@
+/**********************************************************
+  Remove website backend redirection button : Should be
+  done in website survey but we won't do a bridge module
+  only for this.
+  TODO: SmartPeople Fixme - cleaner solution? be my guest!
+ **********************************************************/
+div.o_frontend_to_backend_nav {
+    display: none !important;
+}
+
+/**********************************************************
+                        Common Style
+ **********************************************************/
+// dynamic color is used to ensure enough contrast between the text and the background color
+$dynamic-text-color: if(lightness($body-bg) > 50%, $gray-900, $gray-100);
+
+// the survey background image takes all the page background, with a translucent white overlay (box-shadow)
+// When changing the background from one section to another, the overlay will become opaque to simulate a fade out of
+// the background image. This ensure a smooth transition from one background to another, likewise the question
+// transition.
+.o_survey_background {
+    height: 100%;
+    overflow: auto;
+    transition: box-shadow 0.3s ease-in-out;
+    background: no-repeat fixed center;
+    background-size: cover;
+    color: $dynamic-text-color !important;
+    .text-muted {
+        opacity: 0.7;
+        color: $dynamic-text-color !important;
+    }
+    &.o_survey_background_shadow {
+        box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7);
+        color: $gray-900 !important;
+        .text-muted {
+            color: $gray-900 !important;
+        }
+    }
+    &.o_survey_background_transition {
+        box-shadow: inset 0 0 0 10000px rgba(255,255,255,1);
+    }
+}
+
+.o_survey_wrap {
+    min-height: 100%;
+}
+
+// Safari(v 7.1+) specific fix (min-height given above doesn't work with safari)
+// see https://stackoverflow.com/a/25975282 for info on safari specific css
+_::-webkit-full-page-media, _:future, :root .o_survey_wrap {
+    min-height: 90vh;
+}
+
+.o_survey_progress_wrapper {
+    min-width: 7rem;
+    max-width: 11rem;
+
+    .o_survey_progress {
+        height:0.5em;
+    }
+}
+
+.o_survey_navigation_wrapper .o_survey_navigation_submit {
+    cursor: pointer;
+
+    &:disabled {
+        cursor: default;
+        opacity: 1;
+        i {
+            opacity: .3;
+        }
+    }
+}
+
+.o_survey_timer {
+    min-height: 1.2rem;
+}
+
+.o_survey_brand_message {
+    background-color: rgba(255,255,255,0.7);
+}
+
+.o_survey_form, .o_survey_print, .o_survey_session_manage, .o_survey_quick_access {
+    .o_survey_question_error {
+        height: 0px;
+        transition: height .5s ease;
+        line-height: 4rem;
+        &.slide_in {
+            height: 4rem;
+        }
+    }
+
+    fieldset[disabled] {
+        .o_survey_question_text_box,
+        .o_survey_question_date,
+        .o_survey_question_datetime,
+        .o_survey_question_numerical_box {
+            padding-left: 0px;
+        }
+    }
+
+    .o_survey_question_text_box,
+    .o_survey_question_date,
+    .o_survey_question_datetime,
+    .o_survey_question_numerical_box {
+        border: 0px;
+        border-bottom: 1px solid $primary;
+        &:disabled {
+            color: black !important;
+            border-color: $gray-600;
+            border-bottom: 1px solid $gray-600;
+        }
+        &:focus {
+            box-shadow: none;
+        }
+        .o_survey_background_shadow & {
+            color: $gray-900 !important;
+        }
+    }
+
+    div.bg-danger, div.bg-success, div.o_survey_question_skipped {
+        .o_survey_question_char_box,
+        .o_survey_question_date,
+        .o_survey_question_datetime,
+        .o_survey_question_numerical_box,
+        .o_survey_question_text_box {
+            border: 0;
+            color: $white !important;
+            font-weight: $font-weight-bold;
+            height: 2rem;
+        }
+    }
+
+    .o_survey_choice_btn {
+        transition: background-color 0.3s ease;
+        flex: 1 0 300px;
+        color: $primary;
+
+        span {
+            line-height: 25px;
+        }
+        i {
+            top: 0px;
+            font-size: large;
+        }
+
+        &.o_survey_selected i.fa-circle-thin,
+        &.o_survey_selected i.fa-square-o,
+        &:not(.o_survey_selected) i.fa-check-circle,
+        &:not(.o_survey_selected) i.fa-check-square {
+            display: none;
+        }
+    }
+
+    input::placeholder, textarea::placeholder {
+        font-weight: 300;
+    }
+
+    .o_survey_question_matrix {
+        td {
+            min-width: 100px;
+            i {
+                font-size: 22px;
+                display: none;
+                &.o_survey_matrix_empty_checkbox {
+                    display: inline;
+                }
+            }
+            .o_survey_choice_key {
+                left: 10px;
+                right: auto;
+                top: 12px;
+                > span > span {
+                    top: 0px;
+                }
+            }
+
+            &.o_survey_selected {
+                i {
+                    display: inline;
+                    &.o_survey_matrix_empty_checkbox {
+                        display: none;
+                    }
+                }
+            }
+        }
+        thead {
+            th:first-child {
+                border-top-left-radius: .25rem;
+            }
+            th:last-child {
+                border-top-right-radius: .25rem;
+            }
+        }
+        tbody tr:last-child {
+            th {
+                border-bottom-left-radius: .25rem;
+            }
+            td:last-child {
+                border-bottom-right-radius: .25rem;
+            }
+        }
+    }
+}
+
+.o_survey_quick_access {
+    .o_survey_error {
+        min-height: 2rem;
+    }
+    #session_code {
+        font-size: 4rem;
+    }
+}
+
+.o_survey_form, .o_survey_session_manage {
+    .o_survey_question_matrix {
+        th {
+            background-color: $primary;
+        }
+        td {
+            background-color: rgba($primary, 0.2);
+        }
+    }
+}
+
+/**********************************************************
+                    Form Specific Style
+ **********************************************************/
+
+.o_survey_form {
+    min-height: 25rem;
+
+    .o_survey_choice_btn {
+        cursor: pointer;
+        background-color: rgba($primary, 0.1);
+        box-shadow: $primary 0px 0px 0px 1px;
+
+        &.o_survey_selected {
+            box-shadow: $primary 0px 0px 0px 2px;
+        }
+
+        &:hover {
+            background-color: rgba($primary, 0.3);
+            .o_survey_choice_key span.o_survey_key {
+                opacity: 1;
+            }
+        }
+    }
+
+    .o_survey_choice_img img {
+        max-width: 95%;
+        max-height: 60vh;
+        cursor: zoom-in;
+        &:hover {
+            box-sizing: border-box;
+            box-shadow: 0 0 5px 2px grey;
+        }
+    }
+
+    .o_survey_choice_key {
+        width: 25px;
+        height: 25px;
+        border: 1px solid $primary;
+        span {
+            font-size: smaller;
+            top: -1px;
+            &.o_survey_key {
+                right: 21px;
+                border: 1px solid $primary;
+                border-right: 0px;
+                height: 25px;
+                transition: opacity 0.4s ease;
+                white-space: nowrap;
+                opacity: 0;
+                span {
+                    top: -2px;
+                }
+            }
+        }
+    }
+
+    .o_survey_question_matrix td:hover {
+        background-color: rgba($primary, 0.5);
+        cursor: pointer;
+        .o_survey_choice_key span.o_survey_key {
+            opacity: 1;
+        }
+    }
+}
+
+/**********************************************************
+                Survey Session Specific Style
+ **********************************************************/
+
+.o_survey_session_manage {
+    h1 {
+        font-size: 3rem;
+    }
+
+    h2 {
+        font-size: 2.5rem;
+    }
+
+    .o_survey_session_navigation {
+        position: fixed;
+        padding: 1rem;
+        top: calc(50% - 0.5rem);
+        cursor: pointer;
+        max-width: 10%;
+
+        &.o_survey_session_navigation_next {
+            right: 1rem;
+            border: 2px solid #35979c;
+            border-radius: 5px;
+
+            &:hover {
+                border-color: #2a797c;
+            }
+        }
+
+        &.o_survey_session_navigation_previous {
+            left: 1rem;
+        }
+    }
+
+    .o_survey_manage_fontsize_14 {
+        font-size: 1.4rem;
+    }
+
+    .o_survey_question_header {
+        top: 1em;
+        > div {
+            width: 400px;
+        }
+        .progress {
+            height: 2rem;
+            border-radius: 0.6rem;
+            font-size: 1.2rem;
+            background-color: #cfcfcf;
+            .progress-bar {
+                width: 0%;
+                transition: width 1s ease;
+            }
+        }
+    }
+
+    .o_survey_session_manage_container {
+        .o_survey_choice_key {
+            display: none;
+        }
+
+        &.pt-6 {
+            padding-top: 5rem !important;
+        }
+
+        .o_survey_session_results {
+            display: flex; // here and not d-flex because we need to be able to fade-out
+
+            .mb-6 {
+                margin-bottom: 6rem;
+            }
+
+            .o_survey_session_text_answer {
+                .o_survey_session_text_answer_container {
+                    border: solid 1.6px;
+                    border-radius: 0.6rem;
+                    font-size: 1.4rem;
+                    width: 2rem;
+                    opacity: .1;
+                    transition: width .4s ease, opacity .4s ease;
+                    overflow: hidden;
+                }
+
+                span {
+                    white-space: nowrap;
+                }
+            }
+        }
+
+        .o_survey_session_leaderboard {
+            display: flex; // here and not d-flex because we need to be able to fade-out
+            .o_survey_leaderboard_buttons {
+                line-height: 4rem;
+                font-variant: small-caps;
+            }
+        }
+    }
+
+    .o_survey_session_copy {
+        cursor: pointer;
+    }
+}
+
+.o_survey_session_leaderboard {
+    font-size: 1.4rem;
+
+    .o_survey_session_leaderboard_container {
+        height: calc(2.8rem * 15);
+    }
+
+    .o_survey_session_leaderboard_item {
+        line-height: 2.4rem;
+        width: 100%;
+        transition: top ease-in-out .3s;
+
+        .o_survey_session_leaderboard_score {
+            width: 6.5rem;
+            padding-top: .2rem;
+            height: 2.8rem;
+        }
+
+        .o_survey_session_leaderboard_bar, .o_survey_session_leaderboard_bar_question {
+            height: 2.8rem;
+        }
+
+        .o_survey_session_leaderboard_bar {
+            min-width: 3rem;
+            background-color: #007A77;
+            z-index: 2;
+        }
+
+        .o_survey_session_leaderboard_bar_question_score {
+            top: .2rem;
+            right: .5rem;
+            width: 20rem;
+            z-index: 1;
+        }
+
+        .o_survey_session_leaderboard_name {
+            padding-top: .2rem;
+            width: 7.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
+
+/**********************************************************
+                   Print Specific Style
+ **********************************************************/
+
+.o_survey_print {
+    .o_survey_choice_btn {
+        background-color: $gray-500;
+        border-color: transparent;
+        cursor: default;
+        color: white; // not bootstrap to customize for survey_print only
+        font-weight: bold; // not bootstrap to customize for survey_print only
+
+        &.bg-success, &.bg-danger {
+            opacity: 0.6;
+        }
+
+        &.o_survey_selected {
+            background-color: $gray-600;
+            opacity: 1;
+        }
+        i.fa-circle-thin, i.fa-square-o {
+            display: none;
+        }
+    }
+
+    .o_survey_question_matrix {
+        th {
+            /* important needed to force override bg-primary set on th in the template */
+            background-color: $gray-600 !important;
+        }
+        td {
+            background-color: $gray-200;
+            &:hover {
+                cursor: default;
+            }
+        }
+        i.fa-check-square, i.fa-check-circle, i.o_survey_matrix_empty_checkbox {
+            color: $gray-600;
+        }
+    }
+
+    .o_survey_question_skipped {
+        background-color: darken($warning, 10%);
+    }
+
+    .o_survey_choice_question_skipped {
+        color: darken($warning, 10%);
+    }
+
+    .o_survey_choice_img img {
+        cursor: default;
+        &:hover {
+            box-shadow: none;
+        }
+    }
+}
+
+/**********************************************************
+    Zoomer Specific Style (SurveyImageZoomer widget)
+    When the width is small (mobile), let space above and below
+    to indicate that the user can close it by clicking out.
+ **********************************************************/
+
+.o_survey_img_zoom_modal {
+    cursor: pointer;
+    .o_survey_img_zoom_dialog {
+        background-color: rgba(0,0,0,0.65);
+        @include media-breakpoint-down(sm) {
+            height: 80% !important;
+        }
+        .o_survey_img_zoom_body {
+            font-size: 1.5rem;
+            img {
+                max-width: 90%;
+                min-width: clamp(250px, 60%, 450px);
+                max-height: 90%;
+                object-fit: contain;
+            }
+            .o_survey_img_zoom_close_btn {
+                right: 12px;
+                top: 12px;
+                z-index: 1;
+            }
+            .o_survey_img_zoom_controls_wrapper {
+                bottom: 5%;
+                .o_survey_img_zoom_in_btn, .o_survey_img_zoom_out_btn {
+                    background-color: rgba(0,0,0,0.65);
+                    &:hover .fa {
+                        color: grey;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Avoid shifting (due to scroll bar) when opening the image zoom widget
+.modal-open {
+    .o_survey_background {
+        overflow: auto !important;
+    }
+ }

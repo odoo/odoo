@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="warning_tax" position="after">
+                <div class="alert alert-warning" role="alert" invisible="not l10n_ec_vat_validation">
+                    <field name="l10n_ec_vat_validation"/>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

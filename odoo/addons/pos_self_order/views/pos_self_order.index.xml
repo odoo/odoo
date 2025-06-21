@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pos_self_order.index" name="POS Self Order">&lt;!DOCTYPE html&gt;
+        <html t-att-lang="lang and lang.replace('_', '-')">
+            <head>
+                <title>Odoo Self Order</title>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                <meta http-equiv="content-type" content="text/html, charset=utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+                <meta name="mobile-web-app-capable" content="yes"/>
+                <script type="text/javascript">
+                    var odoo = {
+                        csrf_token: "<t t-nocache="The csrf token must always be up to date." t-esc="request.csrf_token(None)"/>",
+                        debug: "<t t-esc="debug"/>",
+                        __session_info__: <t t-esc="json.dumps(session_info)"/>,
+                    };
+                </script>
+                <t t-call-assets="pos_self_order.assets" />
+                <t t-if="'tests' in debug or test_mode_enabled" t-call-assets="pos_self_order.assets_tests" />
+            </head>
+            <body>
+            </body>
+        </html>
+    </template>
+</odoo>

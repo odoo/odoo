@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.OverlayContainer" t-inherit-mode="extension">
+        <xpath expr="//t[@t-component='overlay.component']" position="attributes">
+            <attribute name="t-if">isVisible(overlay)</attribute>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_sk_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <li t-if="company.company_registry and company.account_fiscal_country_id.code == 'SK'">
+                ID: <span t-field="company.company_registry"/>
+            </li>
+            <li t-if="company.income_tax_id and company.account_fiscal_country_id.code == 'SK'">
+                Tax ID: <span t-field="company.income_tax_id"/>
+            </li>
+            <li t-if="company.vat and company.account_fiscal_country_id.code == 'SK'">
+                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                <span t-esc="company.vat"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="l10n_sk_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <li t-if="company.company_registry and company.account_fiscal_country_id.code == 'SK'">
+                ID: <span t-field="company.company_registry"/>
+            </li>
+            <li t-if="company.income_tax_id and company.account_fiscal_country_id.code == 'SK'">
+                Tax ID: <span t-field="company.income_tax_id"/>
+            </li>
+            <li t-if="company.vat and company.account_fiscal_country_id.code == 'SK'">
+                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                <span t-esc="company.vat"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="l10n_sk_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <li t-if="company.company_registry and company.account_fiscal_country_id.code == 'SK'">
+                ID: <span t-field="company.company_registry"/>
+            </li>
+            <li t-if="company.income_tax_id and company.account_fiscal_country_id.code == 'SK'">
+                Tax ID: <span t-field="company.income_tax_id"/>
+            </li>
+            <li t-if="company.vat and company.account_fiscal_country_id.code == 'SK'">
+                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                <span t-esc="company.vat"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="l10n_sk_external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <li t-if="company.company_registry and company.account_fiscal_country_id.code == 'SK'">
+                ID: <span t-field="company.company_registry"/>
+            </li>
+            <li t-if="company.income_tax_id and company.account_fiscal_country_id.code == 'SK'">
+                Tax ID: <span t-field="company.income_tax_id"/>
+            </li>
+            <li t-if="company.vat and company.account_fiscal_country_id.code == 'SK'">
+                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                <span t-esc="company.vat"/>
+            </li>
+        </xpath>
+    </template>
+</odoo>

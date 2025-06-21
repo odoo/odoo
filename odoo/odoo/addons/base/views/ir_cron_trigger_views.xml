@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_trigger_view_form" model="ir.ui.view">
+        <field name="name">ir.cron.trigger.view.form</field>
+        <field name="model">ir.cron.trigger</field>
+        <field name="arch" type="xml">
+            <form string="Cron Trigger">
+                <sheet>
+                    <group>
+                        <field name="cron_id"/>
+                        <field name="call_at"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_cron_trigger_view_tree" model="ir.ui.view">
+        <field name="name">ir.cron.trigger.view.tree</field>
+        <field name="model">ir.cron.trigger</field>
+        <field name="arch" type="xml">
+            <tree string="Cron Triggers">
+                <field name="cron_id"/>
+                <field name="call_at"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_cron_trigger_view_search" model="ir.ui.view">
+        <field name="name">ir.cron.trigger.view.search</field>
+        <field name="model">ir.cron.trigger</field>
+        <field name="arch" type="xml">
+            <search string="Cron Triggers">
+                <field name="cron_id"/>
+                <field name="call_at"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="ir_cron_trigger_action" model="ir.actions.act_window">
+        <field name="name">Scheduled Actions Triggers</field>
+        <field name="res_model">ir.cron.trigger</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="ir_cron_trigger_menu"
+        action="ir_cron_trigger_action"
+        parent="base.menu_automation"
+        sequence="3"/>
+
+</odoo>

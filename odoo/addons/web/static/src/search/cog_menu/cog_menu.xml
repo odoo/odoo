@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CogMenu">
+        <div t-if="hasItems" class="o_cp_action_menus d-flex align-items-center pe-2 gap-1">
+            <Dropdown class="'lh-1'" togglerClass="'d-print-none btn p-0 ms-1 lh-sm border-0'" menuClass="'lh-base'">
+                <t t-set-slot="toggler">
+                    <i class="fa fa-cog" data-hotkey="u" data-tooltip="Actions"/>
+                </t>
+
+                <t t-if="printItems.length">
+                    <Dropdown t-if="printItems.length > 1">
+                        <t t-set-slot="toggler">
+                            <i class="fa fa-print me-1"/> Print
+                        </t>
+                        <DropdownItem
+                            t-foreach="printItems"
+                            t-as="item"
+                            t-key="item.key"
+                            class="'text-truncate o_menu_item'"
+                            title="item.description"
+                            onSelected="() => this.onItemSelected(item)"
+                            >
+                            <t t-esc="item.description"/>
+                        </DropdownItem>
+                    </Dropdown>
+
+                    <DropdownItem t-else="" class="'text-truncate o_menu_item'" title="printItems[0].description" onSelected="() => this.onItemSelected(printItems[0])">
+                        <i class="fa fa-print me-1"/> <t t-out="printItems[0].description"/>
+                    </DropdownItem>
+                </t>
+
+                <t t-foreach="cogItems" t-as="item" t-key="item.key">
+                    <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                        <div role="separator" class="dropdown-divider"/>
+                    </t>
+
+                    <t t-if="item.Component" t-component="item.Component" t-props="item.props"/>
+
+                    <DropdownItem t-else="" class="'text-truncate o_menu_item'" title="item.description" onSelected="() => this.onItemSelected(item)">
+                        <i t-if="item.icon" t-att-class="item.icon" class="fa-fw oi-fw me-1"/>
+                        <t t-esc="item.description"/>
+                    </DropdownItem>
+
+                    <t t-set="currentGroup" t-value="item.groupNumber"/>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+
+</templates>

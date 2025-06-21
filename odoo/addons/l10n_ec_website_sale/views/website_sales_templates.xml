@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="partner_info" name="Ecuadorian partner">
+
+        <!-- show identification type -->
+        <div t-attf-class="mb-3 #{error.get('l10n_latam_identification_type_id') and 'o_has_error' or ''} col-xl-6">
+            <label class="col-form-label" for="l10n_latam_identification_type_id">Identification Type</label>
+            <t t-if="partner.can_edit_vat()">
+                <select name="l10n_latam_identification_type_id" t-attf-class="form-select #{error.get('l10n_latam_identification_type_id') and 'is-invalid' or ''}">
+                    <option value="">Identification Type...</option>
+                    <t t-foreach="identification_types or []" t-as="id_type">
+                        <option t-att-value="id_type.id" t-att-selected="id_type.id == int(identification) if identification else id_type.id == partner.l10n_latam_identification_type_id.id">
+                            <t t-esc="id_type.name"/>
+                        </option>
+                    </t>
+                </select>
+            </t>
+            <t t-else="">
+                <p class="form-control" t-esc="partner.l10n_latam_identification_type_id.name" readonly="1" title="Changing Identification type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
+                <input name="l10n_latam_identification_type_id" class="form-control" t-att-value="partner.l10n_latam_identification_type_id.id" type='hidden'/>
+            </t>
+        </div>
+
+    </template>
+
+    <template id="address" inherit_id="website_sale.address">
+        <xpath expr="//input[@name='vat']/.." position="before">
+            <t t-if="mode[1] == 'billing'">
+                <t t-if="res_company.country_id.code == 'EC'">
+                    <div class="clearfix"/> <!-- Break the line to put Identifaction Type and Identifaction Number (vat) on the same line -->
+                    <t t-set="partner" t-value="website_sale_order.partner_id"/>
+                    <t t-call="l10n_ec_website_sale.partner_info"/>
+                </t>
+            </t>
+        </xpath>
+
+        <label for="vat" position="replace">
+            <t t-if="res_company.country_id.code != 'EC'">$0</t>
+            <t t-else="">
+                <label class="col-form-label label-optional" for="vat">
+                    Identification Number
+                </label>
+            </t>
+        </label>
+    </template>
+
+    <template id="portal_my_details_fields" name="portal_my_details_fields" inherit_id="portal.portal_my_details_fields">
+        <xpath expr="//input[@name='vat']/.." position="before">
+            <t t-if="res_company.country_code == 'EC'">
+                <div class="clearfix"/>
+                <t t-call="l10n_ec_website_sale.partner_info"/>
+            </t>
+        </xpath>
+
+        <label for="vat" position="replace">
+            <t t-if="res_company.country_id.code != 'EC'">$0</t>
+            <t t-else="">
+                <label class="col-form-label label-optional" for="vat">
+                    Identification Number
+                </label>
+            </t>
+        </label>
+    </template>
+
+</odoo>

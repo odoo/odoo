@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="partner_info" name="Peruvian partner">
+
+        <!-- show identification type -->
+        <div t-attf-class="mb-3 #{error.get('l10n_latam_identification_type_id') and 'o_has_error' or ''} col-xl-6">
+            <label class="col-form-label" for="l10n_latam_identification_type_id">Identification Type</label>
+            <t t-if="can_edit_vat">
+                <select
+                    name="l10n_latam_identification_type_id"
+                    t-attf-class="form-select #{error.get('l10n_latam_identification_type_id') and 'is-invalid' or ''}">
+                    <option value="">Identification Type...</option>
+                    <t t-foreach="identification_types or []" t-as="id_type">
+                        <option
+                            t-att-value="id_type.id"
+                            t-att-selected="id_type.id == int(identification) if identification else id_type.id == partner.l10n_latam_identification_type_id.id">
+                            <t t-out="id_type.name" />
+                        </option>
+                    </t>
+                </select>
+            </t>
+            <t t-else="">
+                <p class="form-control"
+                    t-out="partner.l10n_latam_identification_type_id.name"
+                    readonly="1"
+                    title="Changing Identification type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."/>
+                <input name="l10n_latam_identification_type_id"
+                    class="form-control"
+                    t-att-value="partner.l10n_latam_identification_type_id.id"
+                    type='hidden'/>
+            </t>
+        </div>
+
+    </template>
+
+    <template id="partner_address_info" name="Peruvian partner address">
+
+        <!-- show city -->
+        <div t-attf-class="mb-3 #{error.get('city_id') and 'o_has_error' or ''} col-lg-6 div_city_id"
+            t-attf-style="#{(country and country.code != 'PE') and 'd-none' or ''}">
+            <label class="col-form-label" for="city_id">City</label>
+            <select id="city_id"
+                name="city_id"
+                t-attf-class="form-select #{error.get('city_id') and 'is-invalid' or ''}"
+                data-init="1">
+                <t t-foreach="state_cities" t-as="city">
+                    <option t-att-value="city.id"
+                        t-att-selected="city.id == ('city_id' in checkout and checkout['city_id'] != '' and int(checkout['city_id']))">
+                        <t t-out="city.name" />
+                    </option>
+                </t>
+            </select>
+        </div>
+
+        <!-- show district -->
+        <div t-attf-class="mb-3 #{error.get('l10n_pe_district') and 'o_has_error' or ''} col-lg-6 div_district"
+            t-att-style="not city and 'd-none'">
+            <label class="col-form-label" for="l10n_pe_district">District</label>
+            <select id="l10n_pe_district"
+                name="l10n_pe_district"
+                t-attf-class="form-select #{error.get('l10n_pe_district') and 'is-invalid' or ''}"
+                data-init="1">
+                <t t-foreach="city_districts" t-as="district">
+                    <option t-att-value="district.id"
+                        t-att-selected="district.id == ('l10n_pe_district' in checkout and checkout['l10n_pe_district'] != '' and int(checkout['l10n_pe_district']))">
+                        <t t-out="district.name" />
+                    </option>
+                </t>
+            </select>
+        </div>
+
+    </template>
+
+    <template id="address" inherit_id="website_sale.address">
+        <xpath expr="//input[@name='vat']/.." position="before">
+            <t t-if="mode[1] == 'billing'" position="inside">
+                <t t-if="res_company.country_id.code == 'PE'">
+                    <t t-set="partner" t-value="website_sale_order.partner_id" />
+                    <div class="w-100" />
+                    <t t-call="l10n_pe_website_sale.partner_info" />
+                </t>
+            </t>
+        </xpath>
+        <label for="vat" position="replace">
+            <t t-if="res_company.country_id.code != 'PE'">$0</t>
+            <t t-else="">
+                <label class="col-form-label label-optional" for="vat">
+                    Identification Number
+                </label>
+            </t>
+        </label>
+        <xpath expr="//select[@name='country_id']" position="attributes">
+            <attribute name="t-att-data-company_country_code">res_company.country_id.code</attribute>
+        </xpath>
+        <xpath expr="//select[@name='state_id']/.." position="after">
+            <t t-if="res_company.country_id.code == 'PE'">
+                <t t-call="l10n_pe_website_sale.partner_address_info" />
+            </t>
+        </xpath>
+        <!-- Sets the country code for every country option -->
+        <xpath expr="//t[@t-foreach='countries']//option" position="attributes">
+            <attribute name="t-att-code">c.code</attribute>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="res_users_settings_view_tree" model="ir.ui.view">
+        <field name="name">res.users.settings.tree</field>
+        <field name="model">res.users.settings</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="User Settings">
+                <field name="id"/>
+                <field name="user_id"/>
+                <field name="use_push_to_talk"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_users_settings_view_form" model="ir.ui.view">
+        <field name="name">res.users.settings.form</field>
+        <field name="model">res.users.settings</field>
+        <field name="arch" type="xml">
+            <form string="User Settings">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="user_id" readonly="id != False"/></h1>
+                    </div>
+                    <group name="discuss_user_settings">
+                        <group string="Discuss sidebar">
+                            <field name="is_discuss_sidebar_category_channel_open"/>
+                            <field name="is_discuss_sidebar_category_chat_open"/>
+                        </group>
+                        <group string="Voice">
+                            <field name="use_push_to_talk"/>
+                            <field name="push_to_talk_key" placeholder="e.g. true.true..f" invisible="not use_push_to_talk"/>
+                            <field name="voice_active_duration" invisible="use_push_to_talk"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Volume per partner" name="page_volume_per_partner">
+                            <field name="volume_settings_ids">
+                                <tree editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="volume"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_users_settings_action" model="ir.actions.act_window">
+        <field name="name">User Settings</field>
+        <field name="res_model">res.users.settings</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

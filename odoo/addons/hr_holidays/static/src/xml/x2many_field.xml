@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.AccrualLevelsX2ManyField" t-inherit="web.X2ManyField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_x2m_control_panel')]/.." position="before">
+            <xpath expr="//ListRenderer" position="move"/>
+            <xpath expr="//KanbanRenderer" position="move"/>
+        </xpath>
+    </t>
+</templates>
