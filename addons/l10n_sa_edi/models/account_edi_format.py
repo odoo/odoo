@@ -443,9 +443,11 @@ class AccountEdiFormat(models.Model):
             )
         if invoice.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
             errors.append(_("- Please, make sure the invoice date is set to either the same as or before Today."))
-        if invoice.move_type in ('in_refund', 'out_refund') and not invoice._l10n_sa_check_refund_reason():
-            errors.append(
-                _("- Please, make sure either the Reversed Entry or the Reversal Reason are specified when confirming a Credit/Debit note"))
+
+        if invoice.l10n_sa_show_reason and not invoice.l10n_sa_reason:
+            errors.append(_("- Please make sure the 'ZATCA Reason' for the issuance of the Credit/Debit Note is specified."))
+        if invoice.l10n_sa_show_reason and not invoice._l10n_sa_check_billing_reference():
+            errors.append(_("- Please make sure the 'Customer Reference' contains the sequential number of the original invoice(s) that the Credit/Debit Note is related to."))
         return errors
 
     def _needs_web_services(self):
