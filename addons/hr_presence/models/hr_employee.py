@@ -87,7 +87,7 @@ class Employee(models.AbstractModel):
             email_employees.write({'email_sent': True})
             employees = employees - email_employees
 
-        company.sudo().hr_presence_last_compute_date = Datetime.now()
+        company.sudo().with_context(skip_clear_ormcache=True).hr_presence_last_compute_date = Datetime.now()
 
         for employee in all_employees:
             employee.hr_presence_state_display = employee.hr_presence_state

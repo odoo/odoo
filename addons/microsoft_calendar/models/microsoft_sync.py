@@ -9,8 +9,6 @@ from dateutil.parser import parse
 from datetime import timedelta
 
 from odoo import api, fields, models, registry
-from odoo.tools import ormcache_context
-from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.sql_db import BaseCursor
 
@@ -59,7 +57,7 @@ class MicrosoftSync(models.AbstractModel):
     _name = 'microsoft.calendar.sync'
     _description = "Synchronize a record with Microsoft Calendar"
 
-    microsoft_id = fields.Char('Microsoft Calendar Id', copy=False)
+    microsoft_id = fields.Char('Microsoft Calendar Id', index='btree_not_null', copy=False)
 
     ms_organizer_event_id = fields.Char(
         'Organizer event Id',
@@ -79,9 +77,6 @@ class MicrosoftSync(models.AbstractModel):
     active = fields.Boolean(default=True)
 
     def write(self, vals):
-        if 'ms_universal_event_id' in vals:
-            self._from_uids.clear_cache(self)
-
         fields_to_sync = [x for x in vals.keys() if x in self._get_microsoft_synced_fields()]
         if fields_to_sync and 'need_sync_m' not in vals and not self.env.user.microsoft_synchronization_stopped:
             vals['need_sync_m'] = True
@@ -176,13 +171,6 @@ class MicrosoftSync(models.AbstractModel):
     @api.model
     def _create_from_microsoft(self, microsoft_event, vals_list):
         return self.with_context(dont_notify=True).create(vals_list)
-
-    @api.model
-    @ormcache_context('uids', keys=('active_test',))
-    def _from_uids(self, uids):
-        if not uids:
-            return self.browse()
-        return self.search([('ms_universal_event_id', 'in', uids)])
 
     def _sync_odoo2microsoft(self):
         if not self:

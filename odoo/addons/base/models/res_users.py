@@ -724,6 +724,7 @@ class Users(models.Model):
             # DLE P139: Calling invalidate_cache on a new, well you lost everything as you wont be able to take it back from the cache
             # `test_00_equipment_multicompany_user`
             self.env['ir.model.access'].call_cache_clearing_methods()
+            return res
 
         # per-method / per-model caches have been removed so the various
         # clear_cache/clear_caches methods pretty much just end up calling

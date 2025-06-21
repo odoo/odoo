@@ -56,7 +56,7 @@ class AutomaticEntryWizard(models.TransientModel):
             record.expense_accrual_account = record.company_id.expense_accrual_account_id
 
     def _inverse_expense_accrual_account(self):
-        for record in self:
+        for record in self.with_context(skip_clear_ormcache=True):
             record.company_id.sudo().expense_accrual_account_id = record.expense_accrual_account
 
     @api.depends('company_id')
@@ -65,7 +65,7 @@ class AutomaticEntryWizard(models.TransientModel):
             record.revenue_accrual_account = record.company_id.revenue_accrual_account_id
 
     def _inverse_revenue_accrual_account(self):
-        for record in self:
+        for record in self.with_context(skip_clear_ormcache=True):
             record.company_id.sudo().revenue_accrual_account_id = record.revenue_accrual_account
 
     @api.depends('company_id')
@@ -74,7 +74,7 @@ class AutomaticEntryWizard(models.TransientModel):
             record.journal_id = record.company_id.automatic_entry_default_journal_id
 
     def _inverse_journal_id(self):
-        for record in self:
+        for record in self.with_context(skip_clear_ormcache=True):
             record.company_id.sudo().automatic_entry_default_journal_id = record.journal_id
 
     @api.constrains('percentage', 'action')
