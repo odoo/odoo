@@ -21,6 +21,7 @@ FormEditorRegistry.add('create_mailing_contact', {
     }, {
         name: 'list_ids',
         relation: 'mailing.list',
+        domain: [['is_public', '=', true]],
         modelRequired: true,
         string: _lt('Subscribe to'),
         type: 'many2many',
