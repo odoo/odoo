@@ -243,17 +243,31 @@ class AccountMoveLine(models.Model):
     )
 
     # === Reconciliation fields === #
+    # Technical field used by the search filter to include partial reconciliations up to a date.
+    reconcile_until = fields.Date(
+        store=False,
+        search='_search_reconcile_until',
+    )
     amount_residual = fields.Monetary(
         string='Residual Amount',
         compute='_compute_amount_residual', store=True,
         currency_field='company_currency_id',
         help="The residual amount on a journal item expressed in the company currency.",
     )
+    amount_residual_at_date = fields.Monetary(
+        compute='_compute_amount_residual_at_date',
+        currency_field='company_currency_id',
+        help="The residual amount at a specific date expressed in the company currency."
+    )
     amount_residual_currency = fields.Monetary(
         string='Residual Amount in Currency',
         compute='_compute_amount_residual', store=True,
         help="The residual amount on a journal item expressed in its currency (possibly not the "
              "company currency).",
+    )
+    amount_residual_currency_at_date = fields.Monetary(
+        compute='_compute_amount_residual_at_date',
+        help="The residual amount at a specific date expressed in its currency.",
     )
     reconciled = fields.Boolean(compute='_compute_amount_residual', store=True)
     full_reconcile_id = fields.Many2one(
@@ -713,9 +727,22 @@ class AccountMoveLine(models.Model):
         for record in self:
             record.cumulated_balance = result[record.id]
 
+    def _search_reconcile_until(self, operator, value):
+        if operator not in ('<', '<=', '='):
+            raise NotImplementedError
+        return []
+
     @api.depends('debit', 'credit', 'amount_currency', 'account_id', 'currency_id', 'company_id',
                  'matched_debit_ids', 'matched_credit_ids')
     def _compute_amount_residual(self):
+        self._compute_residual()
+
+    @api.depends_context('search_default_reconcile_until')
+    def _compute_amount_residual_at_date(self):
+        reconcile_until = self.env.context.get('search_default_reconcile_until', [fields.Date.context_today(self)])[0]  # default to avoid unset computed field
+        self._compute_residual(reconcile_until)
+
+    def _compute_residual(self, reconcile_until=False):
         """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconcilable account, the original line amount
             for unreconciled lines, and something in-between for partially reconciled lines.
@@ -731,7 +758,10 @@ class AccountMoveLine(models.Model):
             self.env['res.currency'].flush_model(['decimal_places'])
 
             aml_ids = tuple(stored_lines.ids)
-            self._cr.execute('''
+            date_clause = SQL("AND part.max_date <= %(reconcile_until)s", reconcile_until=reconcile_until) if reconcile_until else SQL('')
+
+            query = SQL(
+                '''
                 SELECT
                     part.debit_move_id AS line_id,
                     'debit' AS flag,
@@ -739,7 +769,8 @@ class AccountMoveLine(models.Model):
                     ROUND(SUM(part.debit_amount_currency), curr.decimal_places) AS amount_currency
                 FROM account_partial_reconcile part
                 JOIN res_currency curr ON curr.id = part.debit_currency_id
-                WHERE part.debit_move_id IN %s
+                WHERE part.debit_move_id IN %(aml_ids)s
+                %(date_clause)s
                 GROUP BY part.debit_move_id, curr.decimal_places
                 UNION ALL
                 SELECT
@@ -749,9 +780,14 @@ class AccountMoveLine(models.Model):
                     ROUND(SUM(part.credit_amount_currency), curr.decimal_places) AS amount_currency
                 FROM account_partial_reconcile part
                 JOIN res_currency curr ON curr.id = part.credit_currency_id
-                WHERE part.credit_move_id IN %s
+                WHERE part.credit_move_id IN %(aml_ids)s
+                %(date_clause)s
                 GROUP BY part.credit_move_id, curr.decimal_places
-            ''', [aml_ids, aml_ids])
+                ''',
+                aml_ids=aml_ids,
+                date_clause=date_clause,
+            )
+            self._cr.execute(query)
             amounts_map = {
                 (line_id, flag): (amount, amount_currency)
                 for line_id, flag, amount, amount_currency in self.env.cr.fetchall()
@@ -764,6 +800,8 @@ class AccountMoveLine(models.Model):
             line.amount_residual = 0.0
             line.amount_residual_currency = 0.0
             line.reconciled = False
+            line.amount_residual_at_date = 0.0
+            line.amount_residual_currency_at_date = 0.0
 
         for line in need_residual_lines:
             # Since this part could be call on 'new' records, 'company_currency_id'/'currency_id' could be not set.
@@ -775,12 +813,19 @@ class AccountMoveLine(models.Model):
             credit_amount, credit_amount_currency = amounts_map.get((line._origin.id, 'credit'), (0.0, 0.0))
 
             # Subtract the values from the account.partial.reconcile to compute the residual amounts.
-            line.amount_residual = comp_curr.round(line.balance - debit_amount + credit_amount)
-            line.amount_residual_currency = foreign_curr.round(line.amount_currency - debit_amount_currency + credit_amount_currency)
-            line.reconciled = (
-                comp_curr.is_zero(line.amount_residual)
-                and foreign_curr.is_zero(line.amount_residual_currency)
-            )
+            residual = comp_curr.round(line.balance - debit_amount + credit_amount)
+            residual_currency = foreign_curr.round(line.amount_currency - debit_amount_currency + credit_amount_currency)
+
+            if reconcile_until:
+                line.amount_residual_at_date = residual
+                line.amount_residual_currency_at_date = residual_currency
+            else:
+                line.amount_residual = residual
+                line.amount_residual_currency = residual_currency
+                line.reconciled = (
+                    comp_curr.is_zero(line.amount_residual)
+                    and foreign_curr.is_zero(line.amount_residual_currency)
+                )
 
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
     def _compute_allowed_uom_ids(self):
