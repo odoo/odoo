@@ -1,6 +1,6 @@
 import { Thread } from "@mail/core/common/thread";
 
-import { useEffect, toRaw } from "@odoo/owl";
+import { useEffect, toRaw, useExternalListener } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -25,6 +25,17 @@ const threadPatch = {
                 }
             },
             () => [this.props.thread.loadNewer, this.state.mountedAndLoaded, this.state.scrollTop]
+        );
+        useExternalListener(window, "keydown", (ev) => {
+                if (
+                    (ev.key === "End" || ev.altKey && ev.key === "ArrowDown") &&
+                    this.props.thread.isFocused &&
+                    this.props.thread.model == 'discuss.channel'
+                ) {
+                    this.jumpToPresent();
+                }
+            },
+            { capture: true }
         );
     },
     /** @override */
