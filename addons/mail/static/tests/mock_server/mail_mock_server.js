@@ -1,4 +1,3 @@
-import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 import { markup } from "@odoo/owl";
 import {
     authenticate,
@@ -15,6 +14,7 @@ import { Domain } from "@web/core/domain";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
+import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 
 const mockRpcRegistry = registry.category("mock_rpc");
 export const DISCUSS_ACTION_ID = 104;

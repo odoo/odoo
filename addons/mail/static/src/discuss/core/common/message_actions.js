@@ -1,10 +1,10 @@
 import { messageActionsRegistry } from "@mail/core/common/message_actions";
-import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
 import { toRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
 
 messageActionsRegistry.add("set-new-message-separator", {

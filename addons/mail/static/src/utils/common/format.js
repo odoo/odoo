@@ -1,20 +1,16 @@
-import {
-    createDocumentFragmentFromContent,
-    htmlJoin,
-    htmlReplace,
-    htmlReplaceAll,
-    htmlTrim,
-} from "@mail/utils/common/html";
-
-import { markup } from "@odoo/owl";
+import { htmlEscape, markup } from "@odoo/owl";
 
 import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
 import { normalize } from "@web/core/l10n/utils";
 import {
+    createDocumentFragmentFromContent,
     createElementWithContent,
-    htmlEscape,
     htmlFormatList,
+    htmlJoin,
+    htmlReplace,
+    htmlReplaceAll,
+    htmlTrim,
     setElementContent,
 } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -22,25 +18,6 @@ import { setAttributes } from "@web/core/utils/xml";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
-
-/**
- * Escape < > & as html entities
- *
- * @param {string}
- * @return {string}
- */
-const _escapeEntities = (function () {
-    const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;" };
-    const escaper = function (match) {
-        return map[match];
-    };
-    const testRegexp = RegExp("(?:&|<|>)");
-    const replaceRegexp = RegExp("(?:&|<|>)", "g");
-    return function (string) {
-        string = string == null ? "" : "" + string;
-        return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
-    };
-})();
 
 /**
  * @param {string|ReturnType<markup>} rawBody
@@ -102,7 +79,7 @@ function _parseAndTransform(nodes, transformFunction) {
         return;
     }
     return htmlJoin(
-        ...Object.values(nodes).map((node) =>
+        Object.values(nodes).map((node) =>
             transformFunction(node, function () {
                 return _parseAndTransform(node.childNodes, transformFunction);
             })
@@ -119,21 +96,14 @@ function linkify(text) {
     let result = "";
     let match;
     while ((match = urlRegexp.exec(text)) !== null) {
-        result = htmlJoin(result, text.slice(curIndex, match.index));
+        result = htmlJoin([result, text.slice(curIndex, match.index)]);
         // Decode the url first, in case it's already an encoded url
         const url = decodeURI(match[0]);
         const href = encodeURI(!/^https?:\/\//i.test(url) ? "http://" + url : url);
-        result = htmlJoin(
-            result,
-            markup(
-                `<a target="_blank" rel="noreferrer noopener" href="${href}">${_escapeEntities(
-                    url
-                )}</a>`
-            )
-        );
+        result = markup`${result}<a target="_blank" rel="noreferrer noopener" href="${href}">${url}</a>`;
         curIndex = match.index + match[0].length;
     }
-    return htmlJoin(result, text.slice(curIndex));
+    return htmlJoin([result, text.slice(curIndex)]);
 }
 
 /**

@@ -1,7 +1,7 @@
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
-import { Component } from "@odoo/owl";
+import { Component, htmlEscape } from "@odoo/owl";
 
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";

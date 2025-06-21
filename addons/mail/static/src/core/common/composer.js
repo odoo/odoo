@@ -6,7 +6,6 @@ import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { htmlJoin } from "@mail/utils/common/html";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
@@ -635,9 +634,9 @@ export class Composer extends Component {
      */
     formatDefaultBodyForFullComposer(defaultBody, signature = "") {
         if (signature) {
-            defaultBody = htmlJoin(defaultBody, markup("<br>"), signature);
+            defaultBody = markup`${defaultBody}<br>${signature}`;
         }
-        return htmlJoin(markup("<div>"), defaultBody, markup("</div>")); // as to not wrap in <p> by html_sanitize
+        return markup`<div>${defaultBody}</div>`; // as to not wrap in <p> by html_sanitize
     }
 
     clear() {
