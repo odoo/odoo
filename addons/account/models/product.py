@@ -123,8 +123,12 @@ class ProductTemplate(models.Model):
 
     def _force_default_sale_tax(self, companies):
         default_customer_taxes = companies.filtered('account_sale_tax_id').account_sale_tax_id
-        for product_grouped_by_tax in self.grouped('taxes_id').values():
-            product_grouped_by_tax.taxes_id += default_customer_taxes
+        query = f'''
+        INSERT INTO product_taxes_rel(tax_id, prod_id)
+        SELECT t.id, p.id FROM product_template p
+        CROSS JOIN UNNEST(ARRAY{default_customer_taxes.ids}) AS t(id)
+        ON CONFLICT DO NOTHING;'''
+        self.env.cr.execute(query)
         self.invalidate_recordset(['taxes_id'])
 
     def _force_default_purchase_tax(self, companies):
