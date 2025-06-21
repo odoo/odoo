@@ -12,15 +12,14 @@ export class AvatarCardPopover extends Component {
 
     setup() {
         this.actionService = useService("action");
-        this.orm = useService("orm");
+        this.store = useService("mail.store");
         this.openChat = useOpenChat("res.users");
         onWillStart(async () => {
-            [this.user] = await this.orm.read("res.users", [this.props.id], this.fieldNames);
+            await this.store.fetchStoreData("avatar_card", {
+                user_id: this.props.id,
+            });
+            this.user = this.store["res.users"].get(this.props.id);
         });
-    }
-
-    get fieldNames() {
-        return ["name", "email", "phone", "im_status", "share", "partner_id"];
     }
 
     get email() {
@@ -41,7 +40,7 @@ export class AvatarCardPopover extends Component {
 
     async getProfileAction() {
         return {
-            res_id: this.user.partner_id[0],
+            res_id: this.user.partner_id,
             res_model: "res.partner",
             type: "ir.actions.act_window",
             views: [[false, "form"]],

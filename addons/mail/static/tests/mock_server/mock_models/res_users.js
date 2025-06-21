@@ -196,6 +196,10 @@ export class ResUsers extends webModels.ResUsers {
         return Object.values(userActivitiesByModelName);
     }
 
+    _get_store_avatar_card_fields() {
+        return ["name", "email", "phone", "im_status", "share", "partner_id"];
+    }
+
     /**
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}

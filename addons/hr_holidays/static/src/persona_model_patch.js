@@ -8,7 +8,7 @@ const { DateTime } = luxon;
 /** @param {string} datetime */
 export function getOutOfOfficeDateEndText(datetime) {
     const foptions = { ...DateTime.DATE_MED };
-    const dt = deserializeDateTime(datetime);
+    const dt = typeof datetime == "string" ? deserializeDateTime(datetime) : datetime;
     if (dt.year === DateTime.now().year) {
         foptions.year = undefined;
     }
