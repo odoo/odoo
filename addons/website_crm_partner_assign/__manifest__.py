@@ -52,6 +52,7 @@ The automatic assignment is figured from the weight of partner levels and the ge
         ],
         'html_builder.assets': [
             'website_crm_partner_assign/static/src/website_builder/**/*',
+            ('remove', 'website_crm_partner_assign/static/src/website_builder/**/*.inside.scss'),
         ],
         'web.assets_tests': [
             'website_crm_partner_assign/static/tests/tours/*',

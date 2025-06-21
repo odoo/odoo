@@ -25,6 +25,7 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
         ],
         'html_builder.assets': [
             'website_sale_wishlist/static/src/website_builder/**/*',
+            ('remove', 'website_sale_wishlist/static/src/website_builder/**/*.inside.scss'),
         ],
     },
     'author': 'Odoo S.A.',

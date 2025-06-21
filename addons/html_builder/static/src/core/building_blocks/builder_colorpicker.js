@@ -72,6 +72,7 @@ export function useColorPickerBuilderComponent() {
         }
         preventNextPreview = true;
         callOperation(applyOperation.preview, {
+            preview: true,
             userInputValue: getColor(colorValue),
             operationParams: {
                 cancellable: true,
@@ -79,7 +80,7 @@ export function useColorPickerBuilderComponent() {
             },
         });
     };
-    const hasPreview = useHasPreview(getAllActions);
+    const hasPreview = useHasPreview();
     if (!hasPreview) {
         onPreview = () => {};
     }

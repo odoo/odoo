@@ -90,6 +90,7 @@ Ask questions, get answers, no distractions
         ],
         'html_builder.assets': [
             'website_forum/static/src/website_builder/**/*',
+            ('remove', 'website_forum/static/src/website_builder/**/*.inside.scss'),
         ],
     },
     'author': 'Odoo S.A.',

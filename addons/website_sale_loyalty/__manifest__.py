@@ -37,6 +37,7 @@ Coupon & promotion programs can be edited in the Catalog menu of the Website app
         ],
         'html_builder.assets': [
             'website_sale_loyalty/static/src/website_builder/**/*',
+            ('remove', 'website_sale_loyalty/static/src/website_builder/**/*.inside.scss'),
         ],
     },
     'author': 'Odoo S.A.',

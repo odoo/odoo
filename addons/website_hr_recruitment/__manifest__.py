@@ -38,6 +38,7 @@
         'html_builder.assets': [
             'website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js',
             'website_hr_recruitment/static/src/website_builder/**/*',
+            ('remove', 'website_hr_recruitment/static/src/website_builder/**/*.inside.scss'),
         ],
         'website.assets_editor': [
             'website_hr_recruitment/static/src/js/systray_items/new_content.js',

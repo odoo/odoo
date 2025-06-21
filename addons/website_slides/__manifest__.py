@@ -191,6 +191,7 @@ Featuring
         ],
         'html_builder.assets': [
             'website_slides/static/src/website_builder/**/*',
+            ('remove', 'website_slides/static/src/website_builder/**/*.inside.scss'),
         ],
         'portal.assets_chatter': [
             'website_slides/static/src/chatter/frontend/**/*',
