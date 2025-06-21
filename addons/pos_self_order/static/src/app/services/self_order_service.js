@@ -609,12 +609,20 @@ export class SelfOrder extends Reactive {
                 this.currentOrder.delete();
                 uuid = result["pos.order"][0].uuid;
             }
+<<<<<<< da6a48fac521743a746513f58d6d1775b5b2bcc0
             this.data.synchronizeLocalDataInIndexedDB();
 
             if (this.config.self_ordering_pay_after === "each") {
                 this.selectedOrderUuid = null;
             }
 
+||||||| 8eaef759bde13f134d8c3da6d24cf0a22604dbd9
+
+            this.data.synchronizeLocalDataInIndexedDB();
+=======
+
+            this.data.debouncedSynchronizeLocalDataInIndexedDB();
+>>>>>>> e8a8ae09a975c8e84663bb17b4e3385f2bc32a7c
             this.currentOrder.recomputeChanges();
             return this.models["pos.order"].getBy("uuid", uuid);
         } catch (error) {
