@@ -158,8 +158,10 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
                     continue;
                 }
                 let transformedValue;
+                // TODO rename currentValue to filterValue
                 const currentValue = this.getters.getGlobalFilterValue(filter.id);
                 switch (filter.type) {
+                    // TODO add boolean type
                     case "date":
                         if (time) {
                             if (value === "false") {
@@ -188,13 +190,13 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
                         if (value === false) {
                             break;
                         }
-                        if (JSON.stringify(currentValue) !== `[${value}]`) {
-                            transformedValue = [value];
+                        if (JSON.stringify(currentValue?.ids) !== `[${value}]`) {
+                            transformedValue = { operator: "in", ids: [value] };
                         }
                         break;
                     case "text":
-                        if (currentValue !== value) {
-                            transformedValue = value;
+                        if (JSON.stringify(currentValue?.texts) !== `[${value}]`) {
+                            transformedValue = { operator: "ilike", texts: [value] };
                         }
                         break;
                 }

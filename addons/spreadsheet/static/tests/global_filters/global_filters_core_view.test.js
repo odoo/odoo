@@ -22,7 +22,7 @@ test("Value of text filter", () => {
 
     let result = setGlobalFilterValueWithoutReload(model, {
         id: "1",
-        value: "test",
+        value: { operator: "ilike", texts: "test" },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
@@ -31,7 +31,7 @@ test("Value of text filter", () => {
         id: "2",
         type: "text",
         label: "Default value is an array",
-        defaultValue: ["default value"],
+        defaultValue: { operator: "ilike", texts: ["default value"] },
     });
     expect(result.isSuccessful).toBe(true);
 
@@ -42,14 +42,14 @@ test("Value of text filter", () => {
 
     result = setGlobalFilterValueWithoutReload(model, {
         id: "1",
-        value: 5,
+        value: { operator: "ilike", texts: 5 },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
 
     result = setGlobalFilterValueWithoutReload(model, {
         id: "1",
-        value: false,
+        value: { operator: "ilike", texts: false },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
@@ -174,14 +174,14 @@ test("Value of relation filter", () => {
 
     let result = setGlobalFilterValueWithoutReload(model, {
         id: "1",
-        value: "test",
+        value: { operator: "in", ids: "test" },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
 
     result = setGlobalFilterValueWithoutReload(model, {
         id: "1",
-        value: [1, 2, 3],
+        value: { operator: "in", ids: [1, 2, 3] },
     });
     expect(result.isSuccessful).toBe(true);
 
@@ -192,7 +192,7 @@ test("Value of relation filter", () => {
 
     result = setGlobalFilterValueWithoutReload(model, {
         id: "1",
-        value: 5,
+        value: { operator: "in", ids: 5 },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
@@ -201,21 +201,21 @@ test("Value of relation filter", () => {
         id: "5",
         type: "relation",
         label: "Default value cannot be a boolean",
-        defaultValue: false,
+        defaultValue: { operator: "in", ids: false },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
 
     result = setGlobalFilterValueWithoutReload(model, {
         id: "1",
-        value: "current_user",
+        value: { operator: "in", ids: "current_user" }, // TODO check this
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
 
     result = setGlobalFilterValueWithoutReload(model, {
         id: "1",
-        value: ["1"],
+        value: { operator: "in", ids: ["1"] },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);

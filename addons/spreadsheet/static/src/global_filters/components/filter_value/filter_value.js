@@ -91,7 +91,7 @@ export class FilterValue extends Component {
     }
 
     onTextInput(id, value) {
-        this.props.setGlobalFilterValue(id, value);
+        this.props.setGlobalFilterValue(id, { operator: "ilike", texts: value });
     }
 
     onBooleanInput(id, value) {
@@ -107,7 +107,11 @@ export class FilterValue extends Component {
                 this.filter.modelName,
                 resIds
             );
-            this.props.setGlobalFilterValue(id, resIds, Object.values(displayNames));
+            this.props.setGlobalFilterValue(
+                id,
+                { operator: "in", ids: resIds },
+                Object.values(displayNames)
+            );
         }
     }
 

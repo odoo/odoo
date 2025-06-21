@@ -560,7 +560,7 @@ test("Relational filter including children", async function () {
             type: "relation",
             label: "Relation Filter",
             modelName: "product",
-            includeChildren: true,
+            defaultValue: { operator: "child_of", ids: [] },
         },
         {
             pivot: {
@@ -574,7 +574,7 @@ test("Relational filter including children", async function () {
     const [filter] = model.getters.getGlobalFilters();
     await setGlobalFilterValue(model, {
         id: filter.id,
-        value: [42],
+        value: { operator: "child_of", ids: [42] },
     });
     expect(model.getters.getPivotComputedDomain("PIVOT#1")).toEqual([
         ["product_id", "child_of", [42]],
@@ -588,10 +588,10 @@ test("Relational filter default to current user", async function () {
         type: "relation",
         label: "User Filter",
         modelName: "res.users",
-        defaultValue: "current_user",
+        defaultValue: { operator: "in", ids: "current_user" },
     });
     const [filter] = model.getters.getGlobalFilters();
-    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual([7]);
+    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual({ operator: "in", ids: [7] });
 
     model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: filter.id });
     expect(model.getters.getGlobalFilterValue(filter.id)).toBe(undefined, {
@@ -619,7 +619,7 @@ test("Get active filters with multiple filters", async function () {
     expect(model.getters.getActiveFilterCount()).toBe(0);
     await setGlobalFilterValue(model, {
         id: text.id,
-        value: ["Hello"],
+        value: { operator: "ilike", texts: ["Hello"] },
     });
     expect(model.getters.getActiveFilterCount()).toBe(1);
 });
@@ -635,7 +635,7 @@ test("Get active filters with text filter enabled", async function () {
     expect(model.getters.getActiveFilterCount()).toBe(0);
     await setGlobalFilterValue(model, {
         id: filter.id,
-        value: ["Hello"],
+        value: { operator: "ilike", texts: ["Hello"] },
     });
     expect(model.getters.getActiveFilterCount()).toBe(1);
 });
@@ -657,12 +657,12 @@ test("domain generated with text filter", async function () {
     expect(model.getters.getPivotComputedDomain("PIVOT#1")).toEqual([]);
     await setGlobalFilterValue(model, {
         id: filter.id,
-        value: ["Hello"],
+        value: { operator: "ilike", texts: ["Hello"] },
     });
     expect(model.getters.getPivotComputedDomain("PIVOT#1")).toEqual([["name", "ilike", "Hello"]]);
     await setGlobalFilterValue(model, {
         id: filter.id,
-        value: ["Hello", "World"],
+        value: { operator: "ilike", texts: ["Hello", "World"] },
     });
     expect(model.getters.getPivotComputedDomain("PIVOT#1")).toEqual([
         "|",
@@ -752,7 +752,7 @@ test("default value appears in text filter with range", async function () {
         type: "text",
         label: "Text Filter",
         rangesOfAllowedValues: [toRangeData(sheetId, "A1")],
-        defaultValue: ["World"],
+        defaultValue: { operator: "ilike", texts: ["World"] },
     });
 
     expect(model.getters.getTextFilterOptions("42")).toEqual([
@@ -774,7 +774,7 @@ test("current value appears in text filter with range", async function () {
     });
     await setGlobalFilterValue(model, {
         id: "42",
-        value: ["World"], // set the value to one of the allowed values
+        value: { operator: "ilike", texts: ["World"] }, // set the value to one of the allowed values
     });
 
     setCellContent(model, "A2", "Bob"); // change the value of the cell
@@ -794,7 +794,7 @@ test("default value appears once if the same value is in the text filter range",
         type: "text",
         label: "Text Filter",
         rangesOfAllowedValues: [toRangeData(sheetId, "A1")],
-        defaultValue: ["Hello"], // same value as in A1
+        defaultValue: { operator: "ilike", texts: ["Hello"] }, // same value as in A1
     });
     expect(model.getters.getTextFilterOptions("42")).toEqual([
         { value: "Hello", formattedValue: "Hello" },
@@ -811,11 +811,11 @@ test("formatted default value appears once if the same value is in the text filt
         type: "text",
         label: "Text Filter",
         rangesOfAllowedValues: [toRangeData(sheetId, "A1")],
-        defaultValue: ["0.3"],
+        defaultValue: { operator: "ilike", texts: ["0.3"] },
     });
     await setGlobalFilterValue(model, {
         id: "42",
-        value: ["0.3"],
+        value: { operator: "ilike", texts: ["0.3"] },
     });
     expect(model.getters.getTextFilterOptions("42")).toEqual([
         { value: "0.3", formattedValue: "30.00%" },
@@ -833,7 +833,7 @@ test("errors and empty cells if the same value is in the text filter range", asy
         type: "text",
         label: "Text Filter",
         rangesOfAllowedValues: [toRangeData(sheetId, "A1:A3")],
-        defaultValue: ["Hello"], // same value as in A1
+        defaultValue: { operator: "ilike", texts: ["Hello"] }, // same value as in A1
     });
     expect(model.getters.getTextFilterOptions("42")).toEqual([
         { value: "Hello", formattedValue: "Hello" },
@@ -901,7 +901,7 @@ test("Get active filters with relation filter enabled", async function () {
     expect(model.getters.getActiveFilterCount()).toBe(0);
     await setGlobalFilterValue(model, {
         id: filter.id,
-        value: [1],
+        value: { operator: "in", ids: [1] },
     });
     expect(model.getters.getActiveFilterCount()).toBe(1);
 });
@@ -959,13 +959,13 @@ test("ODOO.FILTER.VALUE text filter", async function () {
     const [filter] = model.getters.getGlobalFilters();
     await setGlobalFilterValue(model, {
         id: filter.id,
-        value: ["Hello"],
+        value: { operator: "ilike", texts: ["Hello"] },
     });
     await animationFrame();
     expect(getCellValue(model, "A10")).toBe("Hello");
     await setGlobalFilterValue(model, {
         id: filter.id,
-        value: ["Hello", "World"],
+        value: { operator: "ilike", texts: ["Hello", "World"] },
     });
     expect(getCellValue(model, "A10")).toBe("Hello, World");
 });
@@ -1121,7 +1121,6 @@ test("ODOO.FILTER.VALUE relation filter", async function () {
         type: "relation",
         label: "Relation Filter",
         modelName: "partner",
-        defaultValue: [],
     });
     await animationFrame();
     const [filter] = model.getters.getGlobalFilters();
@@ -1129,7 +1128,7 @@ test("ODOO.FILTER.VALUE relation filter", async function () {
     // One record; displayNames not defined => rpc
     await setGlobalFilterValue(model, {
         id: filter.id,
-        value: [1],
+        value: { operator: "in", ids: [1] },
     });
     await animationFrame();
     expect(getCellValue(model, "A10")).toBe("Jean-Jacques");
@@ -1137,7 +1136,7 @@ test("ODOO.FILTER.VALUE relation filter", async function () {
     // Two records; displayNames defined => no rpc
     await setGlobalFilterValue(model, {
         id: filter.id,
-        value: [1, 2],
+        value: { operator: "in", ids: [1, 2] },
         displayNames: ["Jean-Jacques", "Raoul Grosbedon"],
     });
     await animationFrame();
@@ -1146,7 +1145,7 @@ test("ODOO.FILTER.VALUE relation filter", async function () {
     // another record; displayNames not defined => rpc
     await setGlobalFilterValue(model, {
         id: filter.id,
-        value: [2],
+        value: { operator: "in", ids: [2] },
     });
     await animationFrame();
     expect(getCellValue(model, "A10")).toBe("Raoul Grosbedon");
@@ -1159,7 +1158,7 @@ test("ODOO.FILTER.VALUE with escaped quotes in the filter label", async function
         id: "42",
         type: "text",
         label: 'my "special" filter',
-        defaultValue: ["Jean-Jacques"],
+        defaultValue: { operator: "ilike", texts: ["Jean-Jacques"] },
     });
     setCellContent(model, "A1", '=ODOO.FILTER.VALUE("my \\"special\\" filter")');
     expect(getCellValue(model, "A1")).toBe("Jean-Jacques");
@@ -1198,12 +1197,12 @@ test("Exporting data does not remove value from model", async function () {
     });
     await setGlobalFilterValue(model, {
         id: "42",
-        value: ["Hello export bug"],
+        value: { operator: "ilike", texts: ["Hello export bug"] },
     });
     const [filter] = model.getters.getGlobalFilters();
-    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual(["Hello export bug"]);
+    expect(model.getters.getGlobalFilterValue(filter.id).texts).toEqual(["Hello export bug"]);
     model.exportData();
-    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual(["Hello export bug"]);
+    expect(model.getters.getGlobalFilterValue(filter.id).texts).toEqual(["Hello export bug"]);
 });
 
 test("Can undo-redo a ADD_GLOBAL_FILTER", async function () {
@@ -1303,7 +1302,7 @@ test("pivot headers won't change when adding a filter ", async function () {
             type: "relation",
             label: "Relation Filter",
             modelName: "product",
-            defaultValue: [41],
+            defaultValue: { operator: "in", ids: [41] },
         },
         { pivot: { "PIVOT#1": { chain: "product_id", type: "many2one" } } }
     );
@@ -1543,7 +1542,7 @@ test("don't load data if a filter is activated but the data is not needed", asyn
 test("Default value defines value", async function () {
     const { model } = await createSpreadsheetWithPivot();
     const label = "This year";
-    const defaultValue = ["value"];
+    const defaultValue = { operator: "ilike", texts: ["value"] };
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -1556,7 +1555,7 @@ test("Default value defines value", async function () {
 
 test("Default value defines value at model loading", async function () {
     const label = "This year";
-    const defaultValue = ["value"];
+    const defaultValue = { operator: "ilike", texts: ["value"] };
     const model = new Model({
         globalFilters: [{ type: "text", label, defaultValue, fields: {}, id: "1" }],
     });
@@ -2198,9 +2197,9 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
         }
     );
     const relationalFilters1 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"product_id",37)');
-    expect(relationalFilters1).toEqual([{ filterId: "42", value: [37] }]);
+    expect(relationalFilters1).toEqual([{ filterId: "42", value: { operator: "in", ids: [37] } }]);
     const relationalFilters2 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"product_id","41")');
-    expect(relationalFilters2).toEqual([{ filterId: "42", value: [41] }]);
+    expect(relationalFilters2).toEqual([{ filterId: "42", value: { operator: "in", ids: [41] } }]);
     const relationalFiltersWithNoneValue = getFiltersMatchingPivot(
         model,
         '=PIVOT.HEADER(1,"#product_id",1)'
@@ -2260,7 +2259,7 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
         model,
         '=PIVOT.HEADER(1,"date:month","08/2016","product_id","41")'
     );
-    expect(filters).toEqual([{ filterId: "42", value: [41] }]);
+    expect(filters).toEqual([{ filterId: "42", value: { operator: "in", ids: [41] } }]);
 });
 
 test("getFiltersMatchingPivot return correctly matching filter according to cell formula with __count and positional argument", async function () {
@@ -2277,7 +2276,6 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
         {
             id: "42",
             type: "relation",
-            defaultValue: [],
         },
         { pivot: { "PIVOT#1": { chain: "product_id", type: "many2one" } } }
     );
@@ -2285,7 +2283,7 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
     expect(filters).toEqual([
         {
             filterId: "42",
-            value: [37],
+            value: { operator: "in", ids: [37] },
         },
     ]);
 });
@@ -2304,7 +2302,6 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
         {
             id: "42",
             type: "relation",
-            defaultValue: [],
         },
         { pivot: { "PIVOT#1": { chain: "product_id", type: "many2one" } } }
     );
@@ -2312,7 +2309,7 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
     expect(filters).toEqual([
         {
             filterId: "42",
-            value: [37],
+            value: { operator: "in", ids: [37] },
         },
     ]);
 });
@@ -2328,7 +2325,6 @@ test("getFiltersMatchingPivot return correctly matching filter when there is a f
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
-        defaultValue: [],
     });
     const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B3"));
     expect(filters).toEqual([]);
@@ -2348,7 +2344,6 @@ test("getFiltersMatchingPivot return empty filter for cell formula without any a
         {
             id: "42",
             type: "relation",
-            defaultValue: [],
         },
         { pivot: { "PIVOT#1": { chain: "product_id", type: "many2one" } } }
     );
@@ -2368,7 +2363,7 @@ test("getFiltersMatchingPivot return empty filter when no records is related to 
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
-        defaultValue: [1],
+        defaultValue: { operator: "in", ids: [1] },
         pivotFields: { 1: { field: "product_id", type: "many2one" } },
     });
     const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B3"));
@@ -2460,7 +2455,6 @@ test("getFiltersMatchingPivot return correctly matching filter with the 'measure
         id: "42",
         label: "fake",
         type: "relation",
-        defaultValue: [],
     });
     const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B2"));
     expect(filters).toEqual([]);
@@ -2727,7 +2721,6 @@ test("Can add a boolean filter", async () => {
         id: "42",
         label: "test",
         type: "boolean",
-        defaultValue: [],
     };
     model.dispatch("ADD_GLOBAL_FILTER", { filter });
     model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true] });
@@ -2752,7 +2745,6 @@ test("Can set a boolean filter with both true and false", async () => {
         id: "42",
         label: "test",
         type: "boolean",
-        defaultValue: [],
     };
     model.dispatch("ADD_GLOBAL_FILTER", { filter });
     model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true, false] });
@@ -2765,7 +2757,6 @@ test("Check boolean filter domain", async () => {
         id: "42",
         label: "test",
         type: "boolean",
-        defaultValue: [],
     };
     model.dispatch("ADD_GLOBAL_FILTER", { filter });
     model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [] });
@@ -2832,7 +2823,7 @@ test("Default value of text filter", () => {
         id: "1",
         type: "text",
         label: "Default value cannot be a string, should be an array",
-        defaultValue: "default value",
+        defaultValue: { operator: "ilike", texts: "default value" },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
@@ -2841,7 +2832,7 @@ test("Default value of text filter", () => {
         id: "2",
         type: "text",
         label: "Default value is an array",
-        defaultValue: ["default value"],
+        defaultValue: { operator: "ilike", texts: ["default value"] },
     });
     expect(result.isSuccessful).toBe(true);
 
@@ -2856,7 +2847,7 @@ test("Default value of text filter", () => {
         id: "4",
         type: "text",
         label: "Default value cannot be a number",
-        defaultValue: 5,
+        defaultValue: { operator: "ilike", texts: 5 },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
@@ -2865,7 +2856,7 @@ test("Default value of text filter", () => {
         id: "5",
         type: "text",
         label: "Default value cannot be a boolean",
-        defaultValue: false,
+        defaultValue: { operator: "ilike", texts: false },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
@@ -2929,7 +2920,7 @@ test("Default value of relation filter", () => {
         id: "1",
         type: "relation",
         label: "Default value cannot be a string expect 'current_user', should be an array",
-        defaultValue: "default value",
+        defaultValue: { operator: "in", ids: "default value" },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
@@ -2938,7 +2929,7 @@ test("Default value of relation filter", () => {
         id: "2",
         type: "relation",
         label: "Default value is an array",
-        defaultValue: [1, 2, 3],
+        defaultValue: { operator: "in", ids: [1, 2, 3] },
     });
     expect(result.isSuccessful).toBe(true);
 
@@ -2953,7 +2944,7 @@ test("Default value of relation filter", () => {
         id: "4",
         type: "relation",
         label: "Default value cannot be a number",
-        defaultValue: 5,
+        defaultValue: { operator: "in", ids: 5 },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
@@ -2962,7 +2953,7 @@ test("Default value of relation filter", () => {
         id: "5",
         type: "relation",
         label: "Default value cannot be a boolean",
-        defaultValue: false,
+        defaultValue: { operator: "in", ids: false },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
@@ -2971,7 +2962,7 @@ test("Default value of relation filter", () => {
         id: "6",
         type: "relation",
         label: "Default value can be current_user",
-        defaultValue: "current_user",
+        defaultValue: { operator: "in", ids: "current_user" },
     });
     expect(result.isSuccessful).toBe(true);
 
@@ -2979,7 +2970,7 @@ test("Default value of relation filter", () => {
         id: "7",
         type: "relation",
         label: "Default value cannot be an array with a string",
-        defaultValue: ["1"],
+        defaultValue: { operator: "in", ids: ["1"] },
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
