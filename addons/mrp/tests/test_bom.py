@@ -2747,3 +2747,36 @@ class TestTourBoM(HttpCase):
         self.env['stock.quant']._update_available_quantity(comp, location, 3.0)
         # With 3 components on hand, 1.5 products could be created, rounded down to 1.0 due to the integer uom
         self.assertEqual(prod.qty_available, 1.0)
+
+    def test_mrp_lot_generation_quantity_check(self):
+        """ Check that fallback to product_uom_qty works when quantity is missing during lot generation. """
+        # Create product for the BoM
+        product = self.env['product.product'].create({'name': 'Main Product', 'is_storable': True})
+        # Create BoM by creating a component product with tracking lot
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'type': 'normal',
+            'product_qty': 50,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.env['product.product'].create({'name': 'Tracked by Lots', 'tracking': 'lot'}).id,
+                    'product_qty': 10,
+                }),
+            ]
+        })
+        # Add a routing operation and link it to BoM
+        operation = self.env['mrp.routing.workcenter'].create({
+            'name': 'Test operation',
+            'workcenter_id': self.env['mrp.workcenter'].create({'name': 'Test Workcenter'}).id,
+            'bom_id': bom.id,
+            'time_mode': 'manual',
+        })
+        bom.bom_line_ids.operation_id = operation.id
+        # Create and confirm the manufacturing order
+        production = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'bom_id': bom.id,
+        })
+        production.action_confirm()
+        self.start_tour("/odoo/shop-floor", "test_mrp_lot_generation_quantity_check", login="admin")
+        self.assertEqual(production.move_raw_ids.quantity, 10.0)
