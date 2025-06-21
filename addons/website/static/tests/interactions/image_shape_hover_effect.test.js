@@ -24,7 +24,7 @@ test("image_shape_hover_effect changes image on enter & leave", async () => {
             <img class="img img-fluid mx-auto o_we_image_cropped o_animate_on_hover rounded-circle rounded"
                 src="/web/image/384-8a55a748/s_banner_3.svg" alt=""
                 data-mimetype="image/svg+xml" data-original-id="276"
-                data-original-src="/website/static/src/img/snippets_demo/s_banner_3.jpg"
+                data-original-src="/website/static/src/img/snippets_demo/s_banner_3.webp"
                 data-mimetype-before-conversion="image/jpeg"
                 data-shape="web_editor/geometric/geo_door" data-file-name="s_banner_3.svg"
                 data-shape-colors=";;;;" data-original-mimetype="image/jpeg"
