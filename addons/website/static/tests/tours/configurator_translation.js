@@ -54,8 +54,8 @@ registry.category("web_tour.tours").add('configurator_translation', {
     },
     // Features screen
     {
-        content: "select confidentialité",
-        trigger: '.card:contains(Parseltongue_privacy)',
+        content: "select About us",
+        trigger: '.card:contains(Parseltongue_aboutus)',
         run: "click",
     }, {
         id: "build_website",
