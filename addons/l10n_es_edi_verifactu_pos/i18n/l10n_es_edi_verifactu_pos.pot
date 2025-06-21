@@ -1,0 +1,205 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_es_edi_verifactu_pos
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-25 08:04+0000\n"
+"PO-Revision-Date: 2025-04-25 08:04+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,help:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_state
+msgid ""
+"- Rejected: Successfully sent to the AEAT, but it was rejected during validation\n"
+"                - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent document\n"
+"                - Accepted: Registered by the AEAT without errors\n"
+"                - Cancelled: Registered by the AEAT as cancelled"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,help:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_error_level
+msgid ""
+"- Rejected: Successfully sent to the AEAT, but it was rejected during validation\n"
+"                - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record\n"
+"                - Accepted: Registered by the AEAT without errors"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu_pos.selection__pos_order__l10n_es_edi_verifactu_state__accepted
+msgid "Accepted"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu_pos.selection__pos_order__l10n_es_edi_verifactu_state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_last_erroneous_document_id
+msgid "Last Erroneous Veri*Factu Document"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu_pos/models/pos_order.py:0
+#, python-format
+msgid "Please create an invoice for an amount over %s."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu_pos/models/pos_order.py:0
+#, python-format
+msgid "Please invoice the refund as the linked order has been invoiced."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model,name:l10n_es_edi_verifactu_pos.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model,name:l10n_es_edi_verifactu_pos.model_pos_order
+msgid "Point of Sale Orders"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-javascript
+#: code:addons/l10n_es_edi_verifactu_pos/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "QR tributario:"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu_pos.selection__pos_order__l10n_es_edi_verifactu_state__registered_with_errors
+msgid "Registered with Errors"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields.selection,name:l10n_es_edi_verifactu_pos.selection__pos_order__l10n_es_edi_verifactu_state__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.view_pos_order_form_inherit_l10n_es_pos_verifactu
+msgid "Request Veri*Factu Cancellation"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.view_pos_order_form_inherit_l10n_es_pos_verifactu
+msgid "Send Veri*Factu"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_show_cancel_button
+msgid "Show Veri*Factu Cancel Button"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu_pos/models/pos_order.py:0
+#, python-format
+msgid ""
+"The order can not be invoiced. It is waiting to send a Veri*Factu record to "
+"the AEAT already."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu_pos/models/pos_order.py:0
+#, python-format
+msgid "The order is waiting to send a Veri*Factu record to the AEAT already."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,help:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_last_erroneous_document_id
+#: model:ir.model.fields,help:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_qr_code
+msgid "This QR code is mandatory for Veri*Factu invoices."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-javascript
+#: code:addons/l10n_es_edi_verifactu_pos/static/src/overrides/components/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "VERI*FACTU"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.view_pos_order_form_inherit_l10n_es_pos_verifactu
+msgid "Veri*Factu"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_document_ids
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.view_pos_order_form_inherit_l10n_es_pos_verifactu
+msgid "Veri*Factu Documents"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_error_level
+msgid "Veri*Factu Error Level"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_errors
+msgid "Veri*Factu Errors"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_qr_code
+msgid "Veri*Factu QR Code"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_config__l10n_es_edi_verifactu_required
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_required
+msgid "Veri*Factu Required"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu_pos.view_pos_order_filter
+msgid "Veri*Factu State"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu_pos.field_pos_order__l10n_es_edi_verifactu_state
+msgid "Veri*Factu Status"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu_pos/models/pos_order.py:0
+#, python-format
+msgid ""
+"Veri*Factu documents can only be generated for paid Point of Sale Orders."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu_pos/models/pos_order.py:0
+#, python-format
+msgid "We are waiting to send a Veri*Factu record to the AEAT already."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu_pos/models/pos_order.py:0
+#: code:addons/l10n_es_edi_verifactu_pos/models/pos_order.py:0
+#, python-format
+msgid "You can only refund products from the same order."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu_pos
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu_pos/models/pos_order.py:0
+#, python-format
+msgid "You cannot invoice a refund whose linked order hasn't been invoiced."
+msgstr ""
