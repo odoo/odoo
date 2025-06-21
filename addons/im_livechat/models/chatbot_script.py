@@ -35,6 +35,12 @@ class ChatbotScript(models.Model):
             if step.step_type == "question_selection" and not step.answer_ids:
                 raise ValidationError(self.env._("Step of type 'Question' must have answers."))
 
+    @api.onchange("script_step_ids")
+    def _onchange_script_step_ids(self):
+        for step in self.script_step_ids:
+            if step.step_type != "question_selection" and step.answer_ids:
+                step.answer_ids = [(5, 0, 0)]
+
     def _compute_livechat_channel_count(self):
         channels_data = self.env['im_livechat.channel.rule']._read_group(
             [('chatbot_script_id', 'in', self.ids)], ['chatbot_script_id'], ['channel_id:count_distinct'])
