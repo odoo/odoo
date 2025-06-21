@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='mail.discuss_badge']" position="before">
+            <t t-call="im_livechat.LivechatStatusLabel">
+                <t t-set="livechatThread" t-value="props.thread"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="im_livechat.LivechatStatusLabel">
+        <span t-if="livechatThread.channel_type === 'livechat' and ['waiting', 'need_help'].includes(livechatThread.livechat_status)" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
+            'me-2': env.inDiscussApp,
+            'me-1': env.inChatWindow,
+        }">
+            <i class="fa fa-circle" t-att-class="{
+                'o-warning': livechatThread.livechat_status === 'waiting',
+                'o-info': livechatThread.livechat_status === 'need_help',
+            }"/>
+        </span>
+    </t>
+
+</templates>

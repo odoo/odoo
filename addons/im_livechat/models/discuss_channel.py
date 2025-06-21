@@ -87,6 +87,17 @@ class DiscussChannel(models.Model):
         groups="base.group_user",
         help="Note about the session, visible to all internal users having access to the session.",
     )
+    livechat_status = fields.Selection(
+        selection=[
+            ("in_progress", "In progress"),
+            ("waiting", "Waiting for customer"),
+            ("need_help", "Looking for help"),
+        ],
+        compute="_compute_livechat_status",
+        groups="base.group_user",
+        readonly=False,
+        store=True,
+    )
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
@@ -105,7 +116,10 @@ class DiscussChannel(models.Model):
         "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
         'Livechat Operator ID is required for a channel of type livechat.',
     )
-
+    _livechat_end_dt_status_constraint = models.Constraint(
+        "CHECK(livechat_end_dt IS NULL or livechat_status IS NULL)",
+        "Closed Live Chat session should not have a status.",
+    )
     _livechat_end_dt_idx = models.Index("(livechat_end_dt) WHERE livechat_end_dt IS NULL")
     _livechat_failure_idx = models.Index(
         "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')"
@@ -125,6 +139,11 @@ class DiscussChannel(models.Model):
         for record in self:
             end = last.date if (last := last_msg_by_channel_id.get(record.id)) else fields.Datetime.now()
             record.duration = (end - record.create_date).total_seconds() / 3600
+
+    @api.depends("livechat_end_dt")
+    def _compute_livechat_status(self):
+        for channel in self.filtered(lambda c: c.livechat_end_dt):
+            channel.livechat_status = False
 
     @api.depends("livechat_agent_history_ids")
     def _compute_livechat_is_escalated(self):
@@ -239,9 +258,10 @@ class DiscussChannel(models.Model):
                 self.env["discuss.channel"]._store_livechat_operator_id_fields(),
             ),
         )
-        field_names["internal_users"].append(
-            Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat")
-        )
+        field_names["internal_users"].extend([
+            Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat"),
+            Store.Attr("livechat_status", predicate=lambda c: c.channel_type == "livechat"),
+        ])
         return field_names
 
     def _store_livechat_operator_id_fields(self):
@@ -263,9 +283,10 @@ class DiscussChannel(models.Model):
         ]
         if for_current_user and self.env.user._is_internal():
             fields.append(Store.One("livechat_channel_id", ["name"], sudo=True))
-            fields.append(
-                Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat")
-            )
+            fields.extend([
+                Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat"),
+                Store.Attr("livechat_status", predicate=lambda c: c.channel_type == "livechat"),
+            ])
         return super()._to_store_defaults(for_current_user=for_current_user) + fields
 
     def _to_store(self, store: Store, fields):
@@ -490,14 +511,22 @@ class DiscussChannel(models.Model):
                 }
             )
 
-        if (
-            # sudo: discuss.channel - visitor can access channel member history
-            not self.livechat_end_dt and self.sudo().livechat_channel_member_history_ids.filtered(
-                lambda h: h.partner_id == message.author_id and h.livechat_member_type == "agent"
-            )
-        ):
+        # sudo: discuss.channel - accessing history for checking if author is an agent is acceptable
+        author_is_agent = bool(
+            self.sudo().livechat_channel_member_history_ids.filtered(
+                lambda h: h.partner_id == message.author_id and h.livechat_member_type == "agent",
+            ),
+        )
+        if not self.livechat_end_dt and author_is_agent:
             self.livechat_failure = "no_failure"
-
+        # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
+        if (
+            not self.livechat_end_dt
+            and self.sudo().livechat_status == "waiting"
+            and not author_is_agent
+        ):
+            # sudo: discuss.channel - writing livechat_status when a message is posted is acceptable
+            self.sudo().livechat_status = "in_progress"
         return super()._message_post_after_hook(message, msg_vals)
 
     def _chatbot_restart(self, chatbot_script):

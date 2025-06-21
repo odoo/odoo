@@ -212,6 +212,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "livechat_channel_id": self.livechat_channel.id,
                         "livechat_end_dt": False,
                         "livechat_note": False,
+                        "livechat_status": "in_progress",
                         "livechat_operator_id": {
                             "id": self.operator.partner_id.id,
                             "type": "partner",
