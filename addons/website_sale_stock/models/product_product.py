@@ -35,14 +35,23 @@ class ProductProduct(models.Model):
         return (self.allow_out_of_stock_order or not self._is_sold_out()) and super()._website_show_quick_add()
 
     def _send_availability_email(self):
+        current_website = self.env['website'].get_current_website()
         for product in self.search([('stock_notification_partner_ids', '!=', False)]):
             if product._is_sold_out():
                 continue
             for partner in product.stock_notification_partner_ids:
-                self_ctxt = self.with_context(lang=partner.lang)
+                website = partner.website_id or product.website_id or current_website
+                self_ctxt = self.with_context(lang=partner.lang, website_id=website.id)
                 product_ctxt = product.with_context(lang=partner.lang)
+                product_taxes = product.taxes_id._filter_taxes_by_company(self.env.company)
+                taxes = website.fiscal_position_id.map_tax(product_taxes)
+                website_price = self_ctxt.env['product.template']._apply_taxes_to_price(
+                    product.list_price, product.currency_id, product_taxes, taxes, product,
+                )
                 body_html = self_ctxt.env['ir.qweb']._render(
-                    'website_sale_stock.availability_email_body', {'product': product_ctxt})
+                    'website_sale_stock.availability_email_body',
+                    {'product': product_ctxt, 'website_price': website_price},
+                )
                 msg = self_ctxt.env['mail.message'].sudo().new(dict(body=body_html, record_name=product_ctxt.name))
                 full_mail = self_ctxt.env['mail.render.mixin']._render_encapsulate(
                     "mail.mail_notification_light",
