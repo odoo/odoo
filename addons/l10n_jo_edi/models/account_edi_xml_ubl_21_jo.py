@@ -26,9 +26,26 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     def _round_max_dp(self, value):
         return float_round(value, JO_MAX_DP)
 
+    def _get_line_raw_price_subtotal(self, line):
+        line_discount_price_unit = line.price_unit * (1 - (line.discount / 100.0))
+        subtotal = line.quantity * line_discount_price_unit
+
+        if line.tax_ids:
+            taxes_res = line.tax_ids.with_context({'round_base': False}).compute_all(
+                line_discount_price_unit,
+                quantity=line.quantity,
+                currency=line.currency_id,
+                product=line.product_id,
+                partner=line.partner_id,
+                is_refund=line.is_refund,
+            )
+            return taxes_res['total_excluded']
+        else:
+            return subtotal
+
     def _get_line_amount_before_discount_jod(self, line):
         if line.discount < 100:
-            amount_after_discount = line.price_subtotal
+            amount_after_discount = self._get_line_raw_price_subtotal(line)
             return (amount_after_discount / (1 - line.discount / 100))
         else:
             # reported numbers won't matter if discount is 100%
