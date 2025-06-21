@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.ReportPivotRenderer" t-inherit="web.PivotRenderer">
+        <xpath expr="//td[hasclass('o_pivot_cell_value')]" position="attributes">
+            <attribute name="t-custom-click.synthetic">
+                (ev, isMiddleClick) =&gt;
+                    this.onOpenView(
+                        cell,
+                        isMiddleClick,
+                        row.subGroupMeasurements.find(m =&gt; m.measure === '__count').value
+                    )
+            </attribute>
+        </xpath>
+    </t>
+</templates>
