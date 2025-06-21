@@ -39,7 +39,7 @@ registry
                 TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
 
-                TicketScreen.selectOrder("0001"),
+                TicketScreen.selectOrder("001"),
                 TicketScreen.confirmRefund(),
 
                 ProductScreen.checkTaxAmount("-2.05"),
@@ -97,7 +97,7 @@ registry
                     Chrome.clickOrders(),
                     TicketScreen.selectFilter("Active"),
                     TicketScreen.selectFilter("Paid"),
-                    TicketScreen.selectOrder("0001"),
+                    TicketScreen.selectOrder("001"),
                     TicketScreen.confirmRefund(),
 
                     ProductScreen.checkTaxAmount("-2.05"),
@@ -159,7 +159,7 @@ registry
                 TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
 
-                TicketScreen.selectOrder("0001"),
+                TicketScreen.selectOrder("001"),
                 TicketScreen.confirmRefund(),
 
                 ProductScreen.checkTaxAmount("-2.05"),
@@ -221,7 +221,7 @@ registry
                     Chrome.clickOrders(),
                     TicketScreen.selectFilter("Active"),
                     TicketScreen.selectFilter("Paid"),
-                    TicketScreen.selectOrder("0001"),
+                    TicketScreen.selectOrder("001"),
                     TicketScreen.confirmRefund(),
 
                     ProductScreen.checkTaxAmount("-2.05"),
@@ -282,7 +282,7 @@ registry
                 Chrome.clickOrders(),
                 TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
-                TicketScreen.selectOrder("0001"),
+                TicketScreen.selectOrder("001"),
                 TicketScreen.confirmRefund(),
 
                 ProductScreen.checkTaxAmount("-2.05"),
@@ -339,7 +339,7 @@ registry
                 Chrome.clickOrders(),
                 TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
-                TicketScreen.selectOrder("0001"),
+                TicketScreen.selectOrder("001"),
                 TicketScreen.confirmRefund(),
 
                 ProductScreen.checkTaxAmount("-2.05"),
@@ -397,7 +397,7 @@ registry
                 Chrome.clickOrders(),
                 TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
-                TicketScreen.selectOrder("0001"),
+                TicketScreen.selectOrder("001"),
                 TicketScreen.confirmRefund(),
 
                 ProductScreen.checkTaxAmount("-2.05"),
@@ -454,7 +454,7 @@ registry
                 Chrome.clickOrders(),
                 TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
-                TicketScreen.selectOrder("0001"),
+                TicketScreen.selectOrder("001"),
                 TicketScreen.confirmRefund(),
 
                 ProductScreen.checkTaxAmount("-2.03"),
@@ -511,7 +511,7 @@ registry
                 Chrome.clickOrders(),
                 TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
-                TicketScreen.selectOrder("0001"),
+                TicketScreen.selectOrder("001"),
                 TicketScreen.confirmRefund(),
 
                 ProductScreen.checkTaxAmount("-2.03"),
@@ -569,7 +569,7 @@ registry
                 Chrome.clickOrders(),
                 TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
-                TicketScreen.selectOrder("0001"),
+                TicketScreen.selectOrder("001"),
                 TicketScreen.confirmRefund(),
 
                 ProductScreen.checkTaxAmount("-2.05"),
@@ -627,7 +627,7 @@ registry
                 Chrome.clickOrders(),
                 TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
-                TicketScreen.selectOrder("0001"),
+                TicketScreen.selectOrder("001"),
                 TicketScreen.confirmRefund(),
 
                 ProductScreen.checkTaxAmount("-2.05"),
