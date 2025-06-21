@@ -42,6 +42,9 @@ const FormEditor = options.Class.extend({
                 display_name: el[1],
             }));
         } else if (field.relation && field.relation !== 'ir.attachment') {
+            if (field.relation === "mailing.list"){
+                field.fieldName = "name";
+            }
             field.records = await this._rpc({
                 model: field.relation,
                 method: 'search_read',
