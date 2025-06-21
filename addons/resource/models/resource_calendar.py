@@ -679,6 +679,9 @@ class ResourceCalendar(models.Model):
         domain = []
         if company_id:
             domain = [('company_id', 'in', (company_id.id, False))]
+        if self.flexible_hours:
+            works = {d[0].date() for d in self._leave_intervals_batch(start_dt, end_dt, domain=domain)[False]}
+            return {fields.Date.to_string(day.date()): (day.date() in works) for day in rrule(DAILY, start_dt, until=end_dt)}
         works = {d[0].date() for d in self._work_intervals_batch(start_dt, end_dt, domain=domain)[False]}
         return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, start_dt, until=end_dt)}
 
