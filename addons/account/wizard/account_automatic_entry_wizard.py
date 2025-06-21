@@ -144,7 +144,7 @@ class AutomaticEntryWizard(models.TransientModel):
             raise UserError(_('You can only change the period/account for items that are not yet reconciled.'))
         if any(line.company_id.root_id != move_line_ids[0].company_id.root_id for line in move_line_ids):
             raise UserError(_('You cannot use this wizard on journal entries belonging to different companies.'))
-        res['company_id'] = move_line_ids[0].company_id.root_id.id
+        res['company_id'] = move_line_ids[0].company_id._accessible_branches()[:1].id
 
         allowed_actions = set(dict(self._fields['action'].selection))
         if self.env.context.get('default_action'):
