@@ -614,14 +614,13 @@ export class AnalyticDistribution extends Component {
             - there is no popover (click is not in search modal's search bar menu)
             - click is not targeting document dom element (drag and drop search more modal)
         */
-
         const selectors = [
             ".o_popover",
             ".modal:not(.o_inactive_modal):not(:has(.o_act_window))",
         ];
         if (this.isDropdownOpen
             && !this.widgetRef.el.contains(ev.target)
-            && !ev.target.closest(selectors.join(","))
+            && (!ev.target.closest(selectors.join(",")) || document.querySelector(".modal").contains(this.widgetRef.el))
             && !ev.target.isSameNode(document.documentElement)
            ) {
             this.forceCloseEditor();
