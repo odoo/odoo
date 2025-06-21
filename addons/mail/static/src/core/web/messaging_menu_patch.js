@@ -1,5 +1,5 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { onExternalClick, useVisible } from "@mail/utils/common/hooks";
 import { useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -18,7 +18,6 @@ patch(MessagingMenu.prototype, {
         Object.assign(this.state, {
             searchOpen: false,
         });
-
         onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
         useEffect(
             () => {
@@ -36,14 +35,32 @@ patch(MessagingMenu.prototype, {
             },
             () => [this.store.discuss.searchTerm]
         );
+        this.state.tabState = {
+            main: [0, false],
+            chat: [0, false],
+            channel: [0, false],
+            inbox: [0, false],
+        };
         useEffect(
             () => {
                 if (!this.dropdown.isOpen) {
                     this.state.activeIndex = null;
+                } else {
+                    this.state.tabState = {
+                        main: [0, false],
+                        chat: [0, false],
+                        channel: [0, false],
+                        inbox: [0, false],
+                    };
                 }
             },
             () => [this.dropdown.isOpen]
         );
+        useVisible("loadMoreSentinel", (isVisible) => {
+            if (isVisible) {
+                this.loadMoreMessagingMenuData();
+            }
+        });
     },
     beforeOpen() {
         this.state.searchOpen = false;
@@ -105,6 +122,15 @@ patch(MessagingMenu.prototype, {
                 label: this.env.inDiscussApp ? _t("Mailboxes") : _t("All"),
             },
             ...super.tabs,
+            ...(this.store.self.main_user_id?.notification_type === "inbox"
+                ? [
+                      {
+                          icon: "fa fa-inbox",
+                          id: "inbox",
+                          label: _t("Inbox"),
+                      },
+                  ]
+                : []),
         ];
     },
     /** @param {import("models").Failure} failure */
@@ -188,5 +214,33 @@ patch(MessagingMenu.prototype, {
             return _t("Email Failure: %(modelName)s", { modelName: failure.modelName });
         }
         return _t("Failure: %(modelName)s", { modelName: failure.modelName });
+    },
+    get notificationItems() {
+        return Array.from(super.notificationItems).filter((el) =>
+            el.classList.contains("o-mail-NotificationItem")
+        );
+    },
+    async loadMoreMessagingMenuData() {
+        const tab = this.store.discuss.activeTab;
+        if (!this.state.tabState[tab]) {
+            this.state.tabState[tab] = [0, false];
+        }
+        let [offset, fetchedAll] = this.state.tabState[tab];
+        const { count } = await this.store.fetchStoreData(
+            "load_messaging_menu_data",
+            {
+                offset,
+                limit: this.store.FETCH_LIMIT,
+                tab,
+            },
+            { requestData: true }
+        );
+        offset += count;
+        fetchedAll = count < this.store.FETCH_LIMIT;
+        this.state.tabState[tab] = [offset, fetchedAll];
+        const currentState = this.state.tabState;
+        if (currentState["main"][1] || (currentState["channel"][1] && currentState["chat"][1])) {
+            this.store.channels.status = "fetched";
+        }
     },
 });
