@@ -1,5 +1,5 @@
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 from odoo.tests import TransactionCase
 
 
@@ -379,6 +379,58 @@ class TestSubqueries(TransactionCase):
                     ('tags.name', 'like', 'z'),
             ])
 
+    def test_hierarchy(self):
+        Head = self.env['test_orm.hierarchy.head']
+        Node = self.env['test_orm.hierarchy.node']
+
+        parent_node = Node.create({})
+        nodes = Node.create([{'parent_id': parent_node.id} for _ in range(3)])
+        Head.create({'node_id': parent_node.id})
+
+        with self.assertQueries(["""
+            SELECT "test_orm_hierarchy_node"."id"
+            FROM "test_orm_hierarchy_node"
+            WHERE "test_orm_hierarchy_node"."parent_id" IN %s
+        """, """
+            SELECT "test_orm_hierarchy_node"."id"
+            FROM "test_orm_hierarchy_node"
+            WHERE "test_orm_hierarchy_node"."parent_id" IN %s
+        """, """
+            SELECT "test_orm_hierarchy_head"."id"
+            FROM "test_orm_hierarchy_head"
+            WHERE "test_orm_hierarchy_head"."node_id" IN %s
+            ORDER BY "test_orm_hierarchy_head"."id"
+        """]):
+            # 2 queries to resolve the hierarchy, 1 for the search
+            Head.search([('node_id', 'child_of', parent_node.ids)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_hierarchy_head"."id"
+            FROM "test_orm_hierarchy_head"
+            WHERE "test_orm_hierarchy_head"."node_id" IN %s
+            ORDER BY "test_orm_hierarchy_head"."id"
+        """]):
+            Head.search([('node_id', 'parent_of', nodes.ids)])
+
+
+class TestSearchRelated(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.rule'].create([{
+            'name': 'related',
+            'model_id': cls.env['ir.model']._get('test_orm.related').id,
+            'domain_force': "[('id', '<', 1000)]",
+        }, {
+            'name': 'related_foo',
+            'model_id': cls.env['ir.model']._get('test_orm.related_foo').id,
+            'domain_force': "[('id', '<', 1000)]",
+        }, {
+            'name': 'related_bar',
+            'model_id': cls.env['ir.model']._get('test_orm.related_bar').id,
+            'domain_force': "[('id', '<', 1000)]",
+        }])
+
     def test_related_simple(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
         self.env['ir.rule'].create({
@@ -394,11 +446,10 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
             FROM "test_orm_related"
-            WHERE "test_orm_related"."foo_id" IN (
-                SELECT "test_orm_related_foo"."id"
-                FROM "test_orm_related_foo"
-                WHERE "test_orm_related_foo"."name" IN %s
-            )
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related__foo_id"."name" IN %s)
+            AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_name_sudo', '=', 'a')])
@@ -412,29 +463,33 @@ class TestSubqueries(TransactionCase):
                 WHERE "test_orm_related_foo"."name" IN %s
                 AND "test_orm_related_foo"."id" < %s
             )
+            AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_name', '=', 'a')])
 
-    def test_related_multi(self):
+    def test_related_many2one(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].create({
-            'name': 'related_foo',
-            'model_id': self.env['ir.model']._get('test_orm.related_foo').id,
-            'domain_force': "[('id', '<', 1000)]",
-        })
-        self.env['ir.rule'].create({
-            'name': 'related_bar',
-            'model_id': self.env['ir.model']._get('test_orm.related_bar').id,
-            'domain_force': "[('id', '<', 1000)]",
-        })
 
         # warmup
-        model.search([('foo_bar_name', '=', 'a')])
-        model.search([('foo_bar_name_sudo', '=', 'a')])
-        model.search([('foo_id_bar_name', '=', 'a')])
-        model.search([('foo_bar_id_name', '=', 'a')])
-        model.search([('foo_bar_sudo_id_name', '=', 'a')])
+        model.search([('foo_bar_id', '=', 42)])
+        model.search([('foo_bar_id.name', '=', 'a')])
+        model.search([('foo_bar_sudo_id', '=', 42)])
+        model.search([('foo_bar_sudo_id.name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE "test_orm_related_foo"."bar_id" IN %s
+                AND "test_orm_related_foo"."id" < %s
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_bar_id', '=', 42)])
 
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
@@ -446,8 +501,309 @@ class TestSubqueries(TransactionCase):
                     SELECT "test_orm_related_bar"."id"
                     FROM "test_orm_related_bar"
                     WHERE "test_orm_related_bar"."name" IN %s
+                    AND "test_orm_related_bar"."id" < %s
+                )
+                AND "test_orm_related_foo"."id" < %s
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_bar_id.name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."bar_id" IN %s
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_bar_sudo_id', '=', 42)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."bar_id" IN (
+                    SELECT "test_orm_related_bar"."id"
+                    FROM "test_orm_related_bar"
+                    WHERE "test_orm_related_bar"."name" IN %s
+                    AND "test_orm_related_bar"."id" < %s
                 )
             )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_bar_sudo_id.name', '=', 'a')])
+
+    def test_related_many2many(self):
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search([('foo_bar_ids', '=', 42)])
+        model.search([('foo_bar_ids.name', '=', 'a')])
+        model.search([('foo_bar_sudo_ids', '=', 42)])
+        model.search([('foo_bar_sudo_ids.name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE EXISTS (
+                    SELECT 1
+                    FROM "test_orm_related_bar_test_orm_related_foo_rel" AS "test_orm_related_foo__bar_ids"
+                    WHERE "test_orm_related_foo__bar_ids"."test_orm_related_foo_id" = "test_orm_related_foo"."id"
+                    AND "test_orm_related_foo__bar_ids"."test_orm_related_bar_id" IN %s
+                )
+                AND "test_orm_related_foo"."id" < %s
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_bar_ids', '=', 42)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE EXISTS (
+                    SELECT 1
+                    FROM "test_orm_related_bar_test_orm_related_foo_rel" AS "test_orm_related_foo__bar_ids"
+                    WHERE "test_orm_related_foo__bar_ids"."test_orm_related_foo_id" = "test_orm_related_foo"."id"
+                    AND "test_orm_related_foo__bar_ids"."test_orm_related_bar_id" IN (
+                        SELECT "test_orm_related_bar"."id"
+                        FROM "test_orm_related_bar"
+                        WHERE ("test_orm_related_bar"."active" IS TRUE AND "test_orm_related_bar"."name" IN %s)
+                        AND "test_orm_related_bar"."id" < %s
+                    )
+                )
+                AND "test_orm_related_foo"."id" < %s
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_bar_ids.name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND EXISTS (
+                SELECT 1
+                FROM "test_orm_related_bar_test_orm_related_foo_rel" AS "test_orm_related__foo_id__bar_ids"
+                WHERE "test_orm_related__foo_id__bar_ids"."test_orm_related_foo_id" = "test_orm_related__foo_id"."id"
+                AND "test_orm_related__foo_id__bar_ids"."test_orm_related_bar_id" IN %s
+            ))
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_bar_sudo_ids', '=', 42)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND EXISTS (
+                SELECT 1
+                FROM "test_orm_related_bar_test_orm_related_foo_rel" AS "test_orm_related__foo_id__bar_ids"
+                WHERE "test_orm_related__foo_id__bar_ids"."test_orm_related_foo_id" = "test_orm_related__foo_id"."id"
+                AND "test_orm_related__foo_id__bar_ids"."test_orm_related_bar_id" IN (
+                    SELECT "test_orm_related_bar"."id"
+                    FROM "test_orm_related_bar"
+                    WHERE ("test_orm_related_bar"."active" IS TRUE AND "test_orm_related_bar"."name" IN %s)
+                    AND "test_orm_related_bar"."id" < %s
+                )
+            ))
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_bar_sudo_ids.name', '=', 'a')])
+
+    def test_related_one2many(self):
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search([('foo_foo_ids', '=', 42)])
+        model.search([('foo_foo_ids.name', '=', 'a')])
+        model.search([('foo_foo_sudo_ids', '=', 42)])
+        model.search([('foo_foo_sudo_ids.name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE "test_orm_related_foo"."id" IN (
+                    SELECT "test_orm_related"."foo_id"
+                    FROM "test_orm_related"
+                    WHERE "test_orm_related"."id" IN %s
+                    AND "test_orm_related"."foo_id" IS NOT NULL
+                )
+                AND "test_orm_related_foo"."id" < %s
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_foo_ids', '=', 42)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE "test_orm_related_foo"."id" IN (
+                    SELECT "test_orm_related"."foo_id"
+                    FROM "test_orm_related"
+                    WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related"."name" IN %s)
+                    AND "test_orm_related"."id" < %s
+                )
+                AND "test_orm_related_foo"."id" < %s
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_foo_ids.name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related__foo_id"."id" IN (
+                SELECT "test_orm_related"."foo_id"
+                FROM "test_orm_related"
+                WHERE "test_orm_related"."id" IN %s
+                AND "test_orm_related"."foo_id" IS NOT NULL
+            ))
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_foo_sudo_ids', '=', 42)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related__foo_id"."id" IN (
+                SELECT "test_orm_related"."foo_id"
+                FROM "test_orm_related"
+                WHERE (
+                     "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."name" IN %s
+                )
+                AND "test_orm_related"."id" < %s
+            ))
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_foo_sudo_ids.name', '=', 'a')])
+
+    def test_related_binary(self):
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search([('foo_binary_att', '!=', False)])
+        model.search([('foo_binary_bin', '!=', False)])
+        model.search([('foo_binary_att_sudo', '!=', False)])
+        model.search([('foo_binary_bin_sudo', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE "test_orm_related_foo"."id" IN (
+                    SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                )
+                AND "test_orm_related_foo"."id" < %s
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_binary_att', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE "test_orm_related_foo"."binary_bin" IS NOT NULL
+                AND "test_orm_related_foo"."id" < %s
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_binary_bin', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."id" IN (
+                    SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                )
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_binary_att_sudo', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."binary_bin" IS NOT NULL
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_binary_bin_sudo', '!=', False)])
+
+    def test_related_multi(self):
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search([('foo_bar_name', '=', 'a')])
+        model.search([('foo_bar_name_sudo', '=', 'a')])
+        model.search([('foo_id_bar_name', '=', 'a')])
+        model.search([('foo_bar_id_name', '=', 'a')])
+        model.search([('foo_bar_sudo_id_name', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            LEFT JOIN "test_orm_related_bar" AS "test_orm_related__foo_id__bar_id"
+                ON ("test_orm_related__foo_id"."bar_id" = "test_orm_related__foo_id__bar_id"."id")
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND (
+                "test_orm_related__foo_id"."bar_id" IS NOT NULL
+                AND "test_orm_related__foo_id__bar_id"."name" IN %s
+            ))
+            AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_bar_name_sudo', '=', 'a')])
@@ -466,6 +822,7 @@ class TestSubqueries(TransactionCase):
                 )
                 AND "test_orm_related_foo"."id" < %s
             )
+            AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_bar_name', '=', 'a')])
@@ -484,6 +841,7 @@ class TestSubqueries(TransactionCase):
                 )
                 AND "test_orm_related_foo"."id" < %s
             )
+            AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_id_bar_name', '=', 'a')])
@@ -502,27 +860,108 @@ class TestSubqueries(TransactionCase):
                 )
                 AND "test_orm_related_foo"."id" < %s
             )
+            AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_bar_id_name', '=', 'a')])
 
-        # bypass security for foo_id.bar_id, but not for name
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
             FROM "test_orm_related"
-            WHERE "test_orm_related"."foo_id" IN (
-                SELECT "test_orm_related_foo"."id"
-                FROM "test_orm_related_foo"
-                WHERE "test_orm_related_foo"."bar_id" IN (
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."bar_id" IN (
                     SELECT "test_orm_related_bar"."id"
                     FROM "test_orm_related_bar"
                     WHERE "test_orm_related_bar"."name" IN %s
                     AND "test_orm_related_bar"."id" < %s
                 )
             )
+            AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_bar_sudo_id_name', '=', 'a')])
+
+    def test_related_through_one2many(self):
+        model = self.env['test_orm.related_foo'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search([('foo_names', '=', 'a')])
+        model.search([('foo_names_sudo', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE "test_orm_related_foo"."id" IN (
+                SELECT "test_orm_related"."foo_id"
+                FROM "test_orm_related"
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."name" IN %s
+                ) AND "test_orm_related"."id" < %s
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search([('foo_names', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE "test_orm_related_foo"."id" IN (
+                SELECT "test_orm_related"."foo_id"
+                FROM "test_orm_related"
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."name" IN %s
+                )
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search([('foo_names_sudo', '=', 'a')])
+
+    def test_related_through_many2many(self):
+        model = self.env['test_orm.related_foo'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search([('bar_names', '=', 'a')])
+        model.search([('bar_names_sudo', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE EXISTS (
+                SELECT 1
+                FROM "test_orm_related_bar_test_orm_related_foo_rel" AS "test_orm_related_foo__bar_ids"
+                WHERE "test_orm_related_foo__bar_ids"."test_orm_related_foo_id" = "test_orm_related_foo"."id"
+                AND "test_orm_related_foo__bar_ids"."test_orm_related_bar_id" IN (
+                    SELECT "test_orm_related_bar"."id"
+                    FROM "test_orm_related_bar"
+                    WHERE ("test_orm_related_bar"."active" IS TRUE AND "test_orm_related_bar"."name" IN %s)
+                    AND "test_orm_related_bar"."id" < %s
+                )
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search([('bar_names', '=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE EXISTS (
+                SELECT 1
+                FROM "test_orm_related_bar_test_orm_related_foo_rel" AS "test_orm_related_foo__bar_ids"
+                WHERE "test_orm_related_foo__bar_ids"."test_orm_related_foo_id" = "test_orm_related_foo"."id"
+                AND "test_orm_related_foo__bar_ids"."test_orm_related_bar_id" IN (
+                    SELECT "test_orm_related_bar"."id"
+                    FROM "test_orm_related_bar"
+                    WHERE ("test_orm_related_bar"."active" IS TRUE AND "test_orm_related_bar"."name" IN %s)
+                )
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search([('bar_names_sudo', '=', 'a')])
 
     def test_related_null(self):
         model = self.env['test_orm.related']
@@ -536,8 +975,12 @@ class TestSubqueries(TransactionCase):
         model.search([('foo_name', 'not in', ['a', 'b'])])
         model.search([('foo_name', 'in', ['a', False])])
         model.search([('foo_name', 'not in', ['a', False])])
+        model.search([('foo_name_sudo', '!=', 'a')])
+        model.search([('foo_name_sudo', '=', False)])
         model.search([('foo_bar_name', '=', False)])
         model.search([('foo_bar_name', '!=', False)])
+        model.search([('foo_bar_name_sudo', '=', False)])
+        model.search([('foo_bar_name_sudo', '!=', False)])
 
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
@@ -651,6 +1094,34 @@ class TestSubqueries(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
             FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NULL
+                OR ("test_orm_related__foo_id"."name" IN %s) IS NOT TRUE
+            )
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_name_sudo', '!=', 'a')])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE ("test_orm_related"."foo_id" IS NULL OR (
+                "test_orm_related"."foo_id" IS NOT NULL AND (
+                    "test_orm_related__foo_id"."name" IN %s
+                    OR "test_orm_related__foo_id"."name" IS NULL
+                )
+            ))
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_name_sudo', '=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
             WHERE (
                 "test_orm_related"."foo_id" IS NULL
                 OR "test_orm_related"."foo_id" IN (
@@ -686,23 +1157,43 @@ class TestSubqueries(TransactionCase):
         """]):
             model.search([('foo_bar_name', '!=', False)])
 
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            LEFT JOIN "test_orm_related_bar" AS "test_orm_related__foo_id__bar_id"
+                ON ("test_orm_related__foo_id"."bar_id" = "test_orm_related__foo_id__bar_id"."id")
+            WHERE ("test_orm_related"."foo_id" IS NULL OR (
+                "test_orm_related"."foo_id" IS NOT NULL AND (
+                    "test_orm_related__foo_id"."bar_id" IS NULL
+                    OR ("test_orm_related__foo_id"."bar_id" IS NOT NULL AND (
+                        "test_orm_related__foo_id__bar_id"."name" IN %s
+                        OR "test_orm_related__foo_id__bar_id"."name" IS NULL
+                    ))
+                )
+            ))
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_bar_name_sudo', '=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            LEFT JOIN "test_orm_related_bar" AS "test_orm_related__foo_id__bar_id"
+                ON ("test_orm_related__foo_id"."bar_id" = "test_orm_related__foo_id__bar_id"."id")
+            WHERE ("test_orm_related"."foo_id" IS NOT NULL AND (
+                "test_orm_related__foo_id"."bar_id" IS NOT NULL
+                AND "test_orm_related__foo_id__bar_id"."name" NOT IN %s
+            ))
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_bar_name_sudo', '!=', False)])
+
     def test_related_inherited(self):
         model = self.env['test_orm.related_inherits'].with_user(self.env.ref('base.user_admin'))
-        self.env['ir.rule'].create({
-            'name': 'related',
-            'model_id': self.env['ir.model']._get('test_orm.related').id,
-            'domain_force': "[('id', '<', 1000)]",
-        })
-        self.env['ir.rule'].create({
-            'name': 'related_foo',
-            'model_id': self.env['ir.model']._get('test_orm.related_foo').id,
-            'domain_force': "[('id', '<', 1000)]",
-        })
-        self.env['ir.rule'].create({
-            'name': 'related_bar',
-            'model_id': self.env['ir.model']._get('test_orm.related_bar').id,
-            'domain_force': "[('id', '<', 1000)]",
-        })
 
         # warmup
         model.search([('name', '=', 'a')])
@@ -729,10 +1220,11 @@ class TestSubqueries(TransactionCase):
             FROM "test_orm_related_inherits"
             LEFT JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
                 ON ("test_orm_related_inherits"."base_id" = "test_orm_related_inherits__base_id"."id")
-            WHERE "test_orm_related_inherits__base_id"."foo_id" IN (
-                SELECT "test_orm_related_foo"."id"
-                FROM "test_orm_related_foo"
-                WHERE "test_orm_related_foo"."name" IN %s
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related_inherits__base_id__foo_id"
+                ON ("test_orm_related_inherits__base_id"."foo_id" = "test_orm_related_inherits__base_id__foo_id"."id")
+            WHERE (
+                "test_orm_related_inherits__base_id"."foo_id" IS NOT NULL
+                AND "test_orm_related_inherits__base_id__foo_id"."name" IN %s
             )
             AND "test_orm_related_inherits__base_id"."id" < %s
             ORDER BY "test_orm_related_inherits"."id"
@@ -760,13 +1252,14 @@ class TestSubqueries(TransactionCase):
             FROM "test_orm_related_inherits"
             LEFT JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
                 ON ("test_orm_related_inherits"."base_id" = "test_orm_related_inherits__base_id"."id")
-            WHERE "test_orm_related_inherits__base_id"."foo_id" IN (
-                SELECT "test_orm_related_foo"."id"
-                FROM "test_orm_related_foo"
-                WHERE "test_orm_related_foo"."bar_id" IN (
-                    SELECT "test_orm_related_bar"."id"
-                    FROM "test_orm_related_bar"
-                    WHERE "test_orm_related_bar"."name" IN %s
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related_inherits__base_id__foo_id"
+                ON ("test_orm_related_inherits__base_id"."foo_id" = "test_orm_related_inherits__base_id__foo_id"."id")
+            LEFT JOIN "test_orm_related_bar" AS "test_orm_related_inherits__base_id__foo_id__bar_id"
+                ON ("test_orm_related_inherits__base_id__foo_id"."bar_id" = "test_orm_related_inherits__base_id__foo_id__bar_id"."id")
+            WHERE (
+                "test_orm_related_inherits__base_id"."foo_id" IS NOT NULL AND (
+                    "test_orm_related_inherits__base_id__foo_id"."bar_id" IS NOT NULL
+                    AND "test_orm_related_inherits__base_id__foo_id__bar_id"."name" IN %s
                 )
             )
             AND "test_orm_related_inherits__base_id"."id" < %s
@@ -795,38 +1288,214 @@ class TestSubqueries(TransactionCase):
         """]):
             model.search([('foo_bar_name', '=', 'a')])
 
-    def test_hierarchy(self):
-        Head = self.env['test_orm.hierarchy.head']
-        Node = self.env['test_orm.hierarchy.node']
 
-        parent_node = Node.create({})
-        nodes = Node.create([{'parent_id': parent_node.id} for _ in range(3)])
-        Head.create({'node_id': parent_node.id})
+class TestSearchAny(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.rule'].create([{
+            'name': 'related',
+            'model_id': cls.env['ir.model']._get('test_orm.related').id,
+            'domain_force': "[('id', '<', 1000)]",
+        }, {
+            'name': 'related_foo',
+            'model_id': cls.env['ir.model']._get('test_orm.related_foo').id,
+            'domain_force': "[('id', '<', 1000)]",
+        }, {
+            'name': 'related_bar',
+            'model_id': cls.env['ir.model']._get('test_orm.related_bar').id,
+            'domain_force': "[('id', '<', 1000)]",
+        }])
+
+    def test_many2one_any(self):
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search(Domain('foo_id', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
+        model.search(Domain('foo_id', 'any*', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
 
         with self.assertQueries(["""
-            SELECT "test_orm_hierarchy_node"."id"
-            FROM "test_orm_hierarchy_node"
-            WHERE "test_orm_hierarchy_node"."parent_id" IN %s
-        """, """
-            SELECT "test_orm_hierarchy_node"."id"
-            FROM "test_orm_hierarchy_node"
-            WHERE "test_orm_hierarchy_node"."parent_id" IN %s
-        """, """
-            SELECT "test_orm_hierarchy_head"."id"
-            FROM "test_orm_hierarchy_head"
-            WHERE "test_orm_hierarchy_head"."node_id" IN %s
-            ORDER BY "test_orm_hierarchy_head"."id"
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE "test_orm_related_foo"."name" IN %s
+                AND "test_orm_related_foo"."id" < %s
+            ) AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
         """]):
-            # 2 queries to resolve the hierarchy, 1 for the search
-            Head.search([('node_id', 'child_of', parent_node.ids)])
+            model.search(Domain('foo_id', 'any', Domain('name', '=', 'a')))
 
         with self.assertQueries(["""
-            SELECT "test_orm_hierarchy_head"."id"
-            FROM "test_orm_hierarchy_head"
-            WHERE "test_orm_hierarchy_head"."node_id" IN %s
-            ORDER BY "test_orm_hierarchy_head"."id"
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE "test_orm_related_foo"."bar_id" IN (
+                    SELECT "test_orm_related_bar"."id"
+                    FROM "test_orm_related_bar"
+                    WHERE "test_orm_related_bar"."name" IN %s
+                    AND "test_orm_related_bar"."id" < %s
+                ) AND "test_orm_related_foo"."id" < %s
+            ) AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
         """]):
-            Head.search([('node_id', 'parent_of', nodes.ids)])
+            model.search(Domain('foo_id', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."name" IN %s
+            ) AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search(Domain('foo_id', 'any*', Domain('name', '=', 'a')))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."bar_id" IN (
+                    SELECT "test_orm_related_bar"."id"
+                    FROM "test_orm_related_bar"
+                    WHERE "test_orm_related_bar"."name" IN %s
+                    AND "test_orm_related_bar"."id" < %s
+                )
+            ) AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search(Domain('foo_id', 'any*', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
+
+    def test_one2many_any(self):
+        model = self.env['test_orm.related_foo'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search(Domain('foo_ids', 'any', Domain('foo_id', 'any', Domain('name', '=', 'a'))))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE "test_orm_related_foo"."id" IN (
+                SELECT "test_orm_related"."foo_id"
+                FROM "test_orm_related"
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."name" IN %s
+                ) AND "test_orm_related"."id" < %s
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any', Domain('name', '=', 'a')))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE "test_orm_related_foo"."id" IN (
+                SELECT "test_orm_related"."foo_id"
+                FROM "test_orm_related"
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."foo_id" IN (
+                        SELECT "test_orm_related_foo"."id"
+                        FROM "test_orm_related_foo"
+                        WHERE "test_orm_related_foo"."name" IN %s
+                        AND "test_orm_related_foo"."id" < %s
+                    )
+                ) AND "test_orm_related"."id" < %s
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any', Domain('foo_id', 'any', Domain('name', '=', 'a'))))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE "test_orm_related_foo"."id" IN (
+                SELECT "test_orm_related"."foo_id"
+                FROM "test_orm_related"
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."name" IN %s
+                )
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any*', Domain('name', '=', 'a')))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE "test_orm_related_foo"."id" IN (
+                SELECT "test_orm_related"."foo_id"
+                FROM "test_orm_related"
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."foo_id" IN (
+                        SELECT "test_orm_related_foo"."id"
+                        FROM "test_orm_related_foo"
+                        WHERE "test_orm_related_foo"."name" IN %s
+                        AND "test_orm_related_foo"."id" < %s
+                    )
+                )
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any*', Domain('foo_id', 'any', Domain('name', '=', 'a'))))
+
+    def test_many2many_any(self):
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search(Domain('foo_ids', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE EXISTS (
+                SELECT 1
+                FROM "test_orm_related_test_orm_related_foo_rel" AS "test_orm_related__foo_ids"
+                WHERE "test_orm_related__foo_ids"."test_orm_related_id" = "test_orm_related"."id"
+                AND "test_orm_related__foo_ids"."test_orm_related_foo_id" IN (
+                    SELECT "test_orm_related_foo"."id"
+                    FROM "test_orm_related_foo"
+                    WHERE "test_orm_related_foo"."name" IN %s
+                    AND "test_orm_related_foo"."id" < %s
+                )
+            ) AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any', Domain('name', '=', 'a')))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE EXISTS (
+                SELECT 1
+                FROM "test_orm_related_test_orm_related_foo_rel" AS "test_orm_related__foo_ids"
+                WHERE "test_orm_related__foo_ids"."test_orm_related_id" = "test_orm_related"."id"
+                AND "test_orm_related__foo_ids"."test_orm_related_foo_id" IN (
+                    SELECT "test_orm_related_foo"."id"
+                    FROM "test_orm_related_foo"
+                    WHERE "test_orm_related_foo"."bar_id" IN (
+                        SELECT "test_orm_related_bar"."id"
+                        FROM "test_orm_related_bar"
+                        WHERE "test_orm_related_bar"."name" IN %s
+                        AND "test_orm_related_bar"."id" < %s
+                    ) AND "test_orm_related_foo"."id" < %s
+                )
+            ) AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
 
 
 class TestFlushSearch(TransactionCase):
