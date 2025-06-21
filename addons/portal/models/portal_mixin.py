@@ -132,3 +132,17 @@ class PortalMixin(models.AbstractModel):
             '#%s' % anchor if anchor else ''
         )
         return url
+
+    def _get_portal_data_from_context(self):
+        """Returns the current portal partner and its associated thread records from the context,
+        if applicable."""
+        portal_data = self.env.get("portal_data", {})
+        portal_partner = portal_data.get("portal_partner")
+        portal_thread = portal_data.get("portal_thread")
+        if isinstance(portal_partner, self.pool["res.partner"]) and isinstance(
+            portal_thread, self.pool["mail.thread"]
+        ):
+            return portal_partner.sudo(False).with_context(
+                portal_data=portal_data
+            ), portal_thread.sudo(False).with_context(portal_data=portal_data)
+        return self.env["res.partner"], self.env["mail.thread"]

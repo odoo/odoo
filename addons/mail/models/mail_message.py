@@ -940,10 +940,15 @@ class MailMessage(models.Model):
             ]
         return [field_name]
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, for_current_user=False):
         field_names = [
             # sudo: mail.message - reading attachments on accessible message is allowed
-            Store.Many("attachment_ids", sort="id", sudo=True),
+            Store.Many(
+                "attachment_ids",
+                sort="id",
+                dynamic_fields=lambda m: m._get_store_attachment_fields(for_current_user),
+                sudo=True,
+            ),
             # sudo: mail.message: access to author_guest_id is allowed
             Store.One("author_guest_id", ["avatar_128", "name"], sudo=True),
             # sudo: mail.message: access to author_id is allowed
@@ -1120,6 +1125,12 @@ class MailMessage(models.Model):
     def _get_store_partner_name_fields(self):
         self.ensure_one()
         return ["name"]
+
+    def _get_store_attachment_fields(self, for_current_user=False):
+        self.ensure_one()
+        if for_current_user and self.is_current_user_or_guest_author:
+            return self.env["ir.attachment"]._get_store_as_author_access_token_fields()
+        return []
 
     def _extras_to_store(self, store: Store, format_reply):
         pass

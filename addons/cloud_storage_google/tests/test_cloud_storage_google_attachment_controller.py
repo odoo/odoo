@@ -41,7 +41,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                     "data": {
                         "ir.attachment": [
                             {
-                                "access_token": False,
+                                "as_author_access_token": attachment._attachment_ownership_access_token(),
                                 "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
                                 "create_date": odoo.fields.Datetime.to_string(
                                     attachment.create_date
