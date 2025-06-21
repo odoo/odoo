@@ -222,3 +222,24 @@ class TestLoyalty(TransactionCase):
             "Free Product - [Test Product, Test Product 2]",
             "Reward description for reward with tag should be 'Free Product - [Test Product, Test Product 2]'"
         )
+
+    def test_archive_pricelist_unlink_pricelist_ids(self):
+        demo_pricelist = self.env['product.pricelist'].create({
+            'name': 'Demo',
+        })
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Demo Program',
+            'program_type': 'promo_code',
+            'pricelist_ids': [Command.set(demo_pricelist.ids)],
+            'reward_ids': [
+                Command.create({
+                    'reward_type': 'discount',
+                    'discount': 10,
+                    'discount_mode': 'percent',
+                    'discount_applicability': 'order',
+                }),
+            ]
+        })
+        demo_pricelist.action_archive()
+
+        self.assertEqual(loyalty_program.with_context(active_test=False).pricelist_ids.ids, [], "Expected no pricelist_ids")
