@@ -56,6 +56,7 @@ const CAMERA_CONFIG = {
     width: 1280,
 };
 const IS_CLIENT_RTC_COMPATIBLE = Boolean(window.RTCPeerConnection && window.MediaStream);
+<<<<<<< eb5296b3031c4a73ae2ae2ddb34b4a90e4b01e37
 const DEFAULT_ICE_SERVERS = [
     { urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
 ];
@@ -71,6 +72,15 @@ export const CROSS_TAB_CLIENT_MESSAGE = {
     UPDATE_VOLUME: "UPDATE_VOLUME", // sent by a tab to signal a volume change
 };
 const PING_INTERVAL = 30_000;
+||||||| 1fccefb53966568bbb7d9172176c9b1c772b463c
+const DEFAULT_ICE_SERVERS = [
+    { urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
+];
+=======
+function GET_DEFAULT_ICE_SERVERS() {
+    return [{ urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] }];
+}
+>>>>>>> e8b8c4c0a7d24a8a8f84a1bfa57fd138a9219402
 
 /**
  * @param {Array<RTCIceServer>} iceServers
@@ -228,7 +238,7 @@ export class Rtc extends Record {
     /** @type {{urls: string[]}[]} */
     iceServers = Record.attr(undefined, {
         compute() {
-            return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
+            return this.iceServers ? this.iceServers : GET_DEFAULT_ICE_SERVERS();
         },
     });
     /**
