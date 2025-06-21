@@ -8,7 +8,7 @@
 }
 
 .dropdown-toggle .o_select_item_only {
-    display: none; 
+    display: none;
 }
 
 .o-hb-select-wrapper {
@@ -24,6 +24,12 @@
         padding-right: 0.75rem;
         transition: none;
 
+        &.show {
+            color: var(--btn-hover-color);
+            background-color: var(--btn-hover-bg);
+            border-color: var(--o-hb-btn-active-color, $o-we-color-accent);
+        }
+
         > img {
             max-width: 100%;
         }
@@ -38,6 +44,53 @@
     &:first-child:last-child {
         .o-hb-select-toggle {
             --btn-padding-x: #{map-get($spacers , 2)};
+        }
+    }
+}
+
+// These styles are common between BuilderSelect and Many2X builder components.
+// TODO: review the SelectMenu template to allow both light/dark backgrounds and
+// remove most '!important' needed here to override Bootstrap classes. See
+// implementations of Many2X builder components for examples.
+.o-hb-select-dropdown {
+    --select-bg: #{$o-we-item-clickable-bg};
+    --select-color: #{$o-we-fg-light};
+    --select-hover-bg: #{$o-we-bg-lighter};
+    --select-hover-color: #{$o-we-fg-lighter};
+    --border-color: #{$o-we-bg-darker};
+
+    font-family: $o-we-font-family;
+    font-size: $o-we-font-size;
+    border-color: var(--border-color);
+    background-color: var(--select-bg) !important;
+    padding: 0;
+
+    .dropdown-item {
+        color: var(--select-color, $white);
+        background-color: transparent !important;
+        line-height: 2rem;
+        padding-block: 0 !important;
+        border-bottom: $o-we-border-width solid var(--border-color);
+
+        &:hover, &:focus-visible {
+            background-color: var(--select-hover-bg) !important;
+            color: var(--select-hover-color);
+        }
+
+        &::before {
+            color: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg) !important;
+        }
+    }
+
+    .text-muted {
+        color: var(--select-color, $white) !important;
+    }
+}
+
+.o_builder_open {
+    &:has(.o-snippets-tabs [data-name='theme'].active) {
+        .o-hb-select-dropdown {
+            --o-hb-select-item-active-color: #{$o-we-color-global};
         }
     }
 }
