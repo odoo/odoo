@@ -146,6 +146,7 @@ class PageProperties(models.TransientModel):
     is_new_page_template = fields.Boolean(related='target_model_id.is_new_page_template', readonly=False)
 
     old_url = fields.Char()
+    show_redirect_old_url = fields.Boolean(default=False, store=False)
     redirect_old_url = fields.Boolean(default=False, store=False)
     redirect_type = fields.Selection(
         [
