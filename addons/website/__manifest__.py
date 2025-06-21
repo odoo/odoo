@@ -31,6 +31,7 @@
     'installable': True,
     'data': [
         # security.xml first, data.xml need the group to exist (checking it)
+        'views/website_technical_views.xml',
         'security/website_security.xml',
         'security/ir.model.access.csv',
         'data/image_library.xml',

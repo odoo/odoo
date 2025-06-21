@@ -41,7 +41,7 @@ class WebsiteEventController(http.Controller):
             'country': post.get('country'),
         }
 
-    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>', '/event/tags/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=sitemap_event)
+    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>', '/event/tags/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=sitemap_event, list_as_editable_page=True)
     def events(self, page=1, slug_tags=None, **searches):
         if (slug_tags or searches.get('tags', '[]').count(',') > 0) and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
