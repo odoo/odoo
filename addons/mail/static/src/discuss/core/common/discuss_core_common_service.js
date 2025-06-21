@@ -111,9 +111,14 @@ export class DiscussCoreCommon {
                         .filter(({ type }) => type === "discuss.channel/leave")
                         .map(({ payload }) => payload.id)
                 );
+                const deletedMessagesIds = notifications
+                    .filter(({ type }) => type === "mail.message/delete")
+                    .flatMap(({ payload }) => payload.message_ids);
                 for (const notif of notifications.filter(
                     ({ payload, type }) =>
-                        type === "discuss.channel/new_message" && !channelsLeft.has(payload.id)
+                        type === "discuss.channel/new_message" &&
+                        !channelsLeft.has(payload.id) &&
+                        !deletedMessagesIds.includes(payload.message.id)
                 )) {
                     this._handleNotificationNewMessage(notif);
                 }
