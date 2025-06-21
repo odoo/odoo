@@ -186,6 +186,7 @@ class ProjectTask(models.Model):
     allocated_hours = fields.Float("Allocated Time", tracking=True)
     subtask_allocated_hours = fields.Float("Sub-tasks Allocated Time", compute='_compute_subtask_allocated_hours', export_string_translation=False,
         help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
+    role_ids = fields.Many2many('project.role', string='Project Roles')
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
         string='Assignees', context={'active_test': False}, tracking=True, default=_default_user_ids, domain="[('share', '=', False), ('active', '=', True)]", falsy_value_label=_lt("👤 Unassigned"))
@@ -1938,6 +1939,7 @@ class ProjectTask(models.Model):
     def action_undo_convert_to_template(self):
         self.ensure_one()
         self.is_template = False
+        self.role_ids = False
         self.message_post(body=_("Template converted back to regular task"))
         return {
             'type': 'ir.actions.client',

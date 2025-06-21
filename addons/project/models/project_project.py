@@ -473,22 +473,20 @@ class ProjectProject(models.Model):
         return True
 
     def copy_data(self, default=None):
+        default = dict(default or {})
         vals_list = super().copy_data(default=default)
-        if default and 'name' in default:
-            return vals_list
         copy_from_template = self.env.context.get('copy_from_template')
         for project, vals in zip(self, vals_list):
             if project.is_template and not copy_from_template:
                 vals['is_template'] = True
             if copy_from_template:
-                # We can make last_update_status as None because it is a required field
-                vals.pop("last_update_status", None)
-                for field in set(self._get_template_field_blacklist()) & set(vals.keys()):
-                    del vals[field]
-                vals["name"] = project.name
+                for field in self._get_template_field_blacklist():
+                    if field in vals and field not in default:
+                        del vals[field]
+            if copy_from_template or (not project.is_template and vals.get('is_template')):
+                vals['name'] = default.get('name', project.name)
             else:
-                if project.is_template or not vals.get("is_template"):
-                    vals["name"] = self.env._("%s (copy)", project.name)
+                vals['name'] = default.get('name', self.env._('%s (copy)', project.name))
         return vals_list
 
     def copy(self, default=None):
@@ -1266,6 +1264,8 @@ class ProjectProject(models.Model):
         self.ensure_one()
         self.is_template = is_template
         self.task_ids.write({"is_template": is_template})
+        if not is_template:
+            self.task_ids.role_ids = False
 
     @api.model
     def _get_template_default_context_whitelist(self):
@@ -1283,17 +1283,22 @@ class ProjectProject(models.Model):
             "partner_id",
         ]
 
-    def action_create_from_template(self, values=None):
+    def action_create_from_template(self, values=None, role_to_users_mapping=None):
         self.ensure_one()
         values = values or {}
         default = {
             key.removeprefix('default_'): value
             for key, value in self.env.context.items()
             if key.startswith('default_') and key.removeprefix('default_') in self._get_template_default_context_whitelist()
-        } | values | {
-            field: False
-            for field in self._get_template_field_blacklist()
-        }
+        } | values
         project = self.with_context(copy_from_template=True).copy(default=default)
         project.message_post(body=self.env._("Project created from template %(name)s.", name=self.name))
+
+        # Tasks dispatching using project roles
+        project.task_ids.role_ids = False
+        if role_to_users_mapping and (mapping := role_to_users_mapping.filtered(lambda entry: entry.user_ids)):
+            for template_task, new_task in zip(self.task_ids, project.task_ids):
+                for entry in mapping:
+                    if entry.role_id in template_task.role_ids:
+                        new_task.user_ids |= entry.user_ids
         return project
