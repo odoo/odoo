@@ -26,7 +26,10 @@ export const callPipService = {
             state.active = false;
             pipWindow?.close();
         }
-        async function openPip() {
+        /**
+         * @param {Object} [options] native pip options
+         */
+        async function openPip(options) {
             const rtc = env.services["discuss.rtc"];
             if (!rtc?.channel) {
                 return;
@@ -38,6 +41,7 @@ export const callPipService = {
             }
             pipWindow = await popout.pip(Call, {
                 props: { isPip: true, thread: rtc.channel },
+                options,
             });
             pipWindow.addEventListener("keydown", (ev) => {
                 rtc.onKeyDown(ev);

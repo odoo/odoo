@@ -18,8 +18,10 @@ export const mailPopoutService = {
          * - Reset the external window header from main window (for appropriate title and other meta data)
          * - clear the external window's document body
          * - destroy the current app mounted on the window
+         * @param {any} id - The ID of the popout instance to reset
+         * @param {ShadowRoot} [shadowRoot] - The shadow root to copy additional style from
          */
-        function reset(id) {
+        function reset(id, shadowRoot) {
             const popout = popouts.get(id);
             if (!popout) {
                 return;
@@ -33,6 +35,24 @@ export const mailPopoutService = {
             if (popout.app) {
                 popout.app.destroy();
                 popout.app = null;
+            }
+            if (shadowRoot instanceof ShadowRoot) {
+                doc.body.style.display = "block";
+                [...shadowRoot.styleSheets].forEach((styleSheet) => {
+                    try {
+                        const cssRules = [...styleSheet.cssRules]
+                            .map((rule) => rule.cssText)
+                            .join("");
+                        const style = document.createElement("style");
+                        style.textContent = cssRules;
+                        doc.head.appendChild(style);
+                    } catch {
+                        const link = document.createElement("link");
+                        link.rel = "stylesheet";
+                        link.href = styleSheet.href;
+                        doc.head.appendChild(link);
+                    }
+                });
             }
         }
 
@@ -68,10 +88,11 @@ export const mailPopoutService = {
         async function pip(
             id,
             component,
-            { props, options: { width, height, aspectRatio = 16 / 9 } = {} } = {}
+            { props, options: { width, height, aspectRatio = 16 / 9, context } = {} } = {}
         ) {
             const popout = popouts.get(id);
             let externalWindow = popout.externalWindow;
+            const rootNode = context?.root?.el?.getRootNode();
             if (!externalWindow || externalWindow.closed) {
                 const hooks = popout.hooks;
                 hooks?.beforePopout?.();
@@ -85,7 +106,7 @@ export const mailPopoutService = {
                 popout.externalWindow = externalWindow;
                 pollClosedWindow(id);
             }
-            reset(id);
+            reset(id, rootNode);
             popout.app = new App(component, {
                 name: "Popout",
                 env: Object.assign(env, {
