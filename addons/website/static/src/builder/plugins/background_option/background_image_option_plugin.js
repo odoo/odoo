@@ -24,6 +24,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
             ReplaceBgImageAction,
             DynamicColorAction,
         },
+        force_not_editable_selector: ".o_we_bg_filter",
     };
     /**
      * Transfers the background-image and the dataset information relative to
