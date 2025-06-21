@@ -19,7 +19,7 @@ class IrRule(models.Model):
     _MODES = ['read', 'write', 'create', 'unlink']
     _allow_sudo_commands = False
 
-    name = fields.Char(index=True)
+    name = fields.Char()
     active = fields.Boolean(default=True, help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).")
     model_id = fields.Many2one('ir.model', string='Model', index=True, required=True, ondelete="cascade")
     groups = fields.Many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', ondelete='restrict')
