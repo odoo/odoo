@@ -151,6 +151,7 @@ class StockPickingType(models.Model):
         ('direct', 'As soon as possible'), ('one', 'When all products are ready')],
         'Shipping Policy', default='direct', required=True,
         help="It specifies goods to be transferred partially or all at once")
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
 
     @api.model_create_multi
     def create(self, vals_list):

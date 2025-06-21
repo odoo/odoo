@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_type_form_inherit_l10n_ar_stock" model="ir.ui.view">
+        <field name="name">stock.picking.type.inherit.l10n_ar_stock</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <field name="sequence_code" position="after">
+                <field name="l10n_ar_document_type_id"
+                       invisible="country_code != 'AR' or code != 'outgoing'"/>
+                <field name="l10n_ar_cai_authorization_code"
+                       invisible="not l10n_ar_document_type_id"
+                       required="l10n_ar_document_type_id"/>
+                <field name="l10n_ar_cai_expiration_date"
+                       invisible="not l10n_ar_document_type_id"
+                       required="l10n_ar_document_type_id"/>
+                <field name="l10n_ar_delivery_sequence_prefix"
+                       invisible="not l10n_ar_document_type_id"
+                       required="l10n_ar_document_type_id"/>
+                <field name="l10n_ar_next_delivery_number"
+                       invisible="not l10n_ar_document_type_id"
+                       required="l10n_ar_document_type_id"/>
+                <field name="l10n_ar_sequence_number_start"
+                       placeholder="00000001"
+                       invisible="not l10n_ar_document_type_id"
+                       required="l10n_ar_document_type_id"/>
+                <field name="l10n_ar_sequence_number_end"
+                       placeholder="00000999"
+                       invisible="not l10n_ar_document_type_id"
+                       required="l10n_ar_document_type_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>
