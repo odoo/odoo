@@ -683,6 +683,12 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(len(invoice_attachments), 1)
 
     def test_compute_value_of_send_invoice_batch_wizard(self):
+        tmpl = self.env.ref("account.email_template_edi_invoice")
+        tmpl.write({
+            "email_cc": "example@ex.net,other@ex.net",
+            "use_default_to": False,
+        })
+
         invoices = (
             self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True) +
             self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
