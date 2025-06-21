@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-dom";
+import { animationFrame, click, Deferred, waitFor } from "@odoo/hoot-dom";
 import { useState, xml } from "@odoo/owl";
+import { Plugin } from "@html_editor/plugin";
+import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
 import {
@@ -36,6 +38,51 @@ describe("website tests", () => {
         });
         await setupWebsiteBuilder(`<h1> Homepage </h1>`);
         expect(websiteBuilder.initialUrl).toBe("/website/force/1?path=%2F");
+    });
+
+    test("getRecordInfo retrieves the info from the #wrap element", async () => {
+        class TestPlugin extends Plugin {
+            static id = "test";
+            resources = {
+                user_commands: [
+                    {
+                        id: "test_cmd",
+                        title: "Text Cmd",
+                        description: "Text Cmd",
+                        run: () => {
+                            const {resModel, field} = this.config.getRecordInfo();
+                            expect(resModel).toBe("ir.ui.view");
+                            expect(field).toBe("arch");
+                        },
+                    },
+                ],
+                toolbar_groups: { id: "test_group" },
+                toolbar_items: [
+                    {
+                        id: "test_btn",
+                        groupId: "test_group",
+                        commandId: "test_cmd",
+                        description: "Test Button",
+                        icon: "fa-square",
+                    },
+                ],
+            };
+        }
+        addPlugin(TestPlugin);
+
+        const { getEditor } = await setupWebsiteBuilder(`<p>plop</p>`);
+        const editor = getEditor();
+        const p = editor.editable.querySelector("p");
+        editor.shared.selection.setSelection({
+            anchorNode: p.firstChild,
+            anchorOffset: 0,
+            focusNode:p.firstChild,
+            focusOffset: 4 
+        });
+
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+        await click(".o-we-toolbar .btn[name=test_btn]");
     });
 });
 
