@@ -57,7 +57,7 @@ patch(PosStore.prototype, {
         super.setCashier(employee);
 
         if (this.config.module_pos_hr) {
-            if (navigator.onLine) {
+            if (!this.data.network.offline) {
                 this.data.write("pos.session", [this.config.current_session_id.id], {
                     employee_id: employee.id,
                 });
