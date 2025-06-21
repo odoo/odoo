@@ -11,6 +11,8 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_ACTION, PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.tools import SQL
+
 from ...tools import jwt, discuss
 
 _logger = logging.getLogger(__name__)
@@ -110,11 +112,27 @@ class DiscussChannelMember(models.Model):
     def _search_is_pinned(self, operator, operand):
         if operator != 'in':
             return NotImplemented
-        return Domain.OR([
-            [("unpin_dt", "=", False)],
-            [("last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
-            [("channel_id.last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
-        ])
+
+        def custom_pinned(model: models.BaseModel, alias, query):
+            channel_model = model.env[model._fields["channel_id"].comodel_name]
+            return SQL(
+                """(%(unpin)s IS NULL
+                    OR %(last_interest)s >= %(unpin)s
+                    OR EXISTS(
+                        SELECT FROM %(channel_table)s
+                        WHERE %(channel_id)s = %(member_channel_id)s
+                        AND %(channel_interest)s >= %(unpin)s
+                    )
+                )""",
+                unpin=model._field_to_sql(alias, "unpin_dt", query),
+                last_interest=model._field_to_sql(alias, "last_interest_dt", query),
+                member_channel_id=model._field_to_sql(alias, "channel_id", query),
+                channel_table=SQL.identifier(channel_model._table),
+                channel_id=channel_model._field_to_sql(channel_model._table, "id", query),
+                channel_interest=channel_model._field_to_sql(channel_model._table, "last_interest_dt", query),
+            )
+
+        return Domain.custom(to_sql=custom_pinned)
 
     @api.depends("channel_id.message_ids", "new_message_separator")
     def _compute_message_unread(self):

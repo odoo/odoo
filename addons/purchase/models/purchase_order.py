@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
@@ -10,8 +9,8 @@ from ast import literal_eval
 from markupsafe import escape, Markup
 from werkzeug.urls import url_encode
 
-from odoo import api, Command, fields, models, _
-from odoo.osv import expression
+from odoo import api, fields, models, _
+from odoo.fields import Command, Domain
 from odoo.tools import format_amount, format_date, formatLang, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr
 from odoo.exceptions import UserError, ValidationError
@@ -354,8 +353,15 @@ class PurchaseOrder(models.Model):
     def _search_is_late(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        purchase_domain = [('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())]
-        return [('order_line', 'any', [('order_id', 'any', purchase_domain), ('qty_received', '<', SQL('product_qty'))])]
+        purchase_domain = Domain('state', '=', 'purchase') & Domain('date_planned', '<=', fields.Datetime.now())
+        line_domain = Domain('order_id', 'any', purchase_domain) & Domain.custom(
+            to_sql=lambda model, alias, query: SQL(
+                "%s < %s",
+                model._field_to_sql(alias, 'qty_received', query),
+                model._field_to_sql(alias, 'product_qty', query),
+            )
+        )
+        return Domain('order_line', 'any', line_domain)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1119,7 +1125,7 @@ class PurchaseOrder(models.Model):
         }
 
     def _get_product_catalog_domain(self):
-        return expression.AND([super()._get_product_catalog_domain(), [('purchase_ok', '=', True)]])
+        return Domain.AND([super()._get_product_catalog_domain(), [('purchase_ok', '=', True)]])
 
     def _get_product_catalog_order_data(self, products, **kwargs):
         res = super()._get_product_catalog_order_data(products, **kwargs)

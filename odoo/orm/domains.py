@@ -262,6 +262,20 @@ class Domain:
         return operator in NEGATIVE_CONDITION_OPERATORS
 
     @staticmethod
+    def custom(
+        *,
+        to_sql: Callable[[BaseModel, str, Query], SQL],
+        predicate: Callable[[BaseModel], bool] | None = None,
+    ) -> DomainCustom:
+        """Create a custom domain.
+
+        :param to_sql: callable(model, alias, query) that returns the SQL
+        :param predicate: callable(record) that checks whether a record is kept
+                          when filtering
+        """
+        return DomainCustom(to_sql, predicate)
+
+    @staticmethod
     def AND(items: Iterable) -> Domain:
         """Build the conjuction of domains: (item1 AND item2 AND ...)"""
         return DomainAnd.apply(Domain(item) for item in items)
@@ -693,6 +707,52 @@ class DomainOr(DomainNary):
         return or_predicate
 
 
+class DomainCustom(Domain):
+    """Domain condition that generates directly SQL and possibly a ``filtered`` predicate."""
+    __slots__ = ('_filtered', '_sql')
+
+    def __new__(
+        cls,
+        sql: Callable[[BaseModel, str, Query], SQL],
+        filtered: Callable[[BaseModel], bool] | None = None,
+    ):
+        """Create a new domain.
+
+        :param to_sql: callable(model, alias, query) that implements ``_to_sql``
+                       which is used to generate the query for searching
+        :param predicate: callable(record) that checks whether a record is kept
+                          when filtering (``Model.filtered``)
+        """
+        self = object.__new__(cls)
+        self._sql = sql
+        self._filtered = filtered
+        self._opt_level = OptimizationLevel.FULL
+        return self
+
+    def _as_predicate(self, records):
+        if self._filtered is not None:
+            return self._filtered
+        # by default, run the SQL query
+        query = records._search(DomainCondition('id', 'in', records.ids) & self, order='id')
+        return DomainCondition('id', 'any', query)._as_predicate(records)
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, DomainCustom)
+            and self._sql == other._sql
+            and self._filtered == other._filtered
+        )
+
+    def __hash__(self):
+        return hash(self._sql)
+
+    def __iter__(self):
+        yield self
+
+    def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
+        return self._sql(model, alias, query)
+
+
 class DomainCondition(Domain):
     """Domain condition on field: (field, operator, value)
 
@@ -746,10 +806,8 @@ class DomainCondition(Domain):
         elif isinstance(value, BaseModel):
             _logger.warning("The domain condition %r should not have a value which is a model", (self.field_expr, self.operator, self.value))
             value = value.ids
-        elif isinstance(value, (Domain, Query)) and operator not in ('any', 'not any', 'in', 'not in'):
-            # accept SQL object in the right part for simple operators
+        elif isinstance(value, (Domain, Query, SQL)) and operator not in ('any', 'not any', 'in', 'not in'):
             # use case: compare 2 fields
-            # TODO we should remove support for SQL for these other operators, add DomainSQLCondition
             _logger.warning("The domain condition %r should use the 'any' or 'not any' operator.", (self.field_expr, self.operator, self.value))
         if value is not self.value:
             return DomainCondition(self.field_expr, operator, value)
@@ -991,7 +1049,12 @@ class DomainCondition(Domain):
         return func if positive_operator == operator else lambda rec: not func(rec)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
-        return model._condition_to_sql(alias, self.field_expr, self.operator, self.value, query)
+        field_expr, operator, value = self.field_expr, self.operator, self.value
+        assert operator in STANDARD_CONDITION_OPERATORS, \
+            f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
+
+        field = model._fields[parse_field_expr(field_expr)[0]]
+        return field.condition_to_sql(field_expr, operator, value, model, alias, query)
 
 
 # --------------------------------------------------
@@ -1059,10 +1122,11 @@ def _optimize_nary_sort_key(domain: Domain) -> tuple[str, str, str]:
         else:
             order = positive_op
         return domain.field_expr, order, operator
-    else:
+    elif hasattr(domain, 'OPERATOR') and isinstance(domain.OPERATOR, str):
         # in python; '~' > any letter
-        assert hasattr(domain, 'OPERATOR') and isinstance(domain.OPERATOR, str)
         return '~', '', domain.OPERATOR
+    else:
+        return '~', '~', domain.__class__.__name__
 
 
 def nary_optimization(optimization: MergeOptimization):
@@ -1258,8 +1322,10 @@ def _optimize_like_str(condition, model):
         if condition._field(model).relational or '=' in condition.operator:
             return DomainCondition(condition.field_expr, '!=' if result else '=', False)
         return Domain(result)
-    if isinstance(value, (str, SQL)):
-        # accept both str and SQL
+    if isinstance(value, str):
+        return condition
+    if isinstance(value, SQL):
+        warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
         return condition
     if '=' in condition.operator:
         condition._raise("The pattern to match must be a string", error=TypeError)
@@ -1346,7 +1412,7 @@ def _value_to_date(value):
     # check datetime first, because it's a subclass of date
     if isinstance(value, datetime):
         return value.date()
-    if isinstance(value, (SQL, date)) or value is False:
+    if isinstance(value, date) or value is False:
         return value
     if isinstance(value, str):
         if len(value) <= 10:
@@ -1354,6 +1420,9 @@ def _value_to_date(value):
         return datetime.fromisoformat(value).date()
     if isinstance(value, COLLECTION_TYPES):
         return OrderedSet(_value_to_date(v) for v in value)
+    if isinstance(value, SQL):
+        warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
+        return value
     raise ValueError(f'Failed to cast {value!r} into a date')
 
 
@@ -1394,6 +1463,7 @@ def _value_to_datetime(value):
         value, is_date = zip(*(_value_to_datetime(v) for v in value))
         return OrderedSet(value), all(is_date)
     if isinstance(value, SQL):
+        warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
         return value, False
     raise ValueError(f'Failed to cast {value!r} into a datetime')
 
