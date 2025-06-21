@@ -238,3 +238,33 @@ class WebsiteSaleCart(TransactionCaseWithUserPortal):
             self.assertRecordValues(order.order_line, [{
                 "display_type": "line_note",
             }])
+
+    def test_add_product_with_never_attribute(self):
+        user = self.public_user
+        website = self.website.with_user(user)
+
+        product_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'value_ids': [Command.create({'name': 'Blue'})],
+            'create_variant': 'no_variant',
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'sale_ok': True,
+            'website_published': True,
+        })
+
+        product.attribute_line_ids = [Command.create({
+            'attribute_id': product_attribute.id,
+            'value_ids': product_attribute.value_ids.ids,
+        })]
+
+        with MockRequest(product.with_user(user).env, website=website):
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+            order = website.sale_get_order()
+            self.assertRecordValues(order.order_line, [{
+                'product_id': product.id,
+                'product_uom_qty': 2,
+            }])
