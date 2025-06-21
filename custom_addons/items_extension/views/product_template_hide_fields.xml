@@ -13,10 +13,10 @@
                     <attribute name="invisible">1</attribute>
                     <attribute name="required">0</attribute>
                 </xpath>
-                <!-- <xpath expr="//field[@name='invoice_policy']" position="attributes">
+                <xpath expr="//group[@name='group_general']//field[@name='invoice_policy']" position="attributes">
                     <attribute name="invisible">1</attribute>
                     <attribute name="required">0</attribute>
-                </xpath> -->
+                </xpath>
                 <xpath expr="//field[@name='product_tooltip']" position="attributes">
                     <attribute name="invisible">1</attribute>
                     <attribute name="required">0</attribute>
@@ -66,6 +66,9 @@
                 </xpath>
                 <xpath expr="//group[@name='internal_notes']" position="attributes">
                     <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='purchase_ok']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
                 </xpath>
 
                 <!-- pone invisible los campos is_storable y tracking -->

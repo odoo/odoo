@@ -44,6 +44,13 @@ class ProductExtension(models.Model):
         default=0
     )
 
+    item_description = fields.Text(
+        string='Descripción',
+        readOnly=False,
+        store=True,
+        help='Descripción del producto'
+    )
+
     def import_csv(self):
         print("HOLA")
         pass
