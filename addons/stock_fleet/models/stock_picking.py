@@ -3,6 +3,15 @@
 from odoo import fields, models
 
 
+class StockPickingType(models.Model):
+    _inherit = "stock.picking.type"
+
+    dispatch_management = fields.Boolean(
+        'Dispatch Management',
+        help="Enable this option to display dispatch management related details in the batch/wave form view and operations kanban overview."
+    )
+
+
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 

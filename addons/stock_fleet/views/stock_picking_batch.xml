@@ -27,7 +27,7 @@
         <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@id='batch_delivery_data']" position="after">
-                <group>
+                <group invisible="not has_dispatch_management">
                     <field name="dock_id" groups="stock.group_stock_multi_locations"/>
                     <field name="vehicle_id" placeholder="Third Party Provider"/>
                     <field name="vehicle_category_id" placeholder="semi-truck"/>

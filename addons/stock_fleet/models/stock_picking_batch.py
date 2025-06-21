@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import fields, models, api
 
 
@@ -24,9 +26,16 @@ class StockPickingBatch(models.Model):
         string="Weight %", compute='_compute_capacity_percentage')
     used_volume_percentage = fields.Float(
         string="Volume %", compute='_compute_capacity_percentage')
-    end_date = fields.Datetime('End Date', default=fields.Datetime.now)
+    end_date = fields.Datetime('End Date', compute='_compute_end_date', store=True)
+    has_dispatch_management = fields.Boolean(string="Dispatch Management", related='picking_type_id.dispatch_management')
 
     # Compute
+    @api.depends('scheduled_date')
+    def _compute_end_date(self):
+        for batch in self:
+            if not batch.end_date or (batch.scheduled_date and batch.end_date < batch.scheduled_date):
+                batch.end_date = batch.scheduled_date + timedelta(hours=1) if batch.scheduled_date else False
+
     @api.depends('vehicle_id')
     def _compute_vehicle_category_id(self):
         for rec in self:
