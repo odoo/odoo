@@ -18,6 +18,10 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
         ...FieldMany2ManyTagsBanks.components,
         TagsList: FieldMany2ManyTagsBanksTagsList,
     };
+    static props = {
+        ...Many2ManyTagsFieldColorEditable.props,
+        noSearchMore: { type: Boolean, optional: true },
+    };
 
     setup() {
         super.setup();
@@ -80,7 +84,10 @@ export const fieldMany2ManyTagsBanks = {
     extractProps({ attrs, options, string }, dynamicInfo) {
         const noSearchMore = Boolean(options.no_search_more);
         return {
-            ...many2ManyTagsFieldColorEditable.extractProps({ attrs, options, string }, dynamicInfo),
+            ...many2ManyTagsFieldColorEditable.extractProps(
+                { attrs, options, string },
+                dynamicInfo
+            ),
             noSearchMore,
         };
     },
