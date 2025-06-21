@@ -7,7 +7,8 @@ class TestSparseFields(common.TransactionCase):
 
     def test_sparse(self):
         """ test sparse fields. """
-        record = self.env['sparse_fields.test'].create({})
+        SparseFieldTest = self.env['sparse_fields.test']
+        record = SparseFieldTest.create({})
         self.assertFalse(record.data)
 
         partner = self.env.ref('base.main_partner')
@@ -23,9 +24,18 @@ class TestSparseFields(common.TransactionCase):
             record.write({key: val})
             self.assertEqual(record.data, dict(values[:n+1]))
 
+        # Flush records so they can be searched
+        self.env.flush_all()
+        self.env.cr.flush()
+
         for key, val in values[:-1]:
             self.assertEqual(record[key], val)
         self.assertEqual(record.partner, partner)
+
+        for n, (key, val) in enumerate(values):
+            with self.subTest(field_value=key):
+                self.assertEqual(record, SparseFieldTest.search([(key, '=', val)]))
+                self.assertNotEqual(record, SparseFieldTest.search([(key, '!=', val)]))
 
         for n, (key, _val) in enumerate(values):
             record.write({key: False})
