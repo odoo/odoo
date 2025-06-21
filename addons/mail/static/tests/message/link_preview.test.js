@@ -451,3 +451,27 @@ test("youtube and gdrive videos URL are embed", async () => {
         parent: [".o-mail-LinkPreviewVideo[data-provider=youtube]"],
     });
 });
+
+test("Internal user can't delete others preview", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        og_description: "Description",
+        og_title: "Article title",
+        og_type: "article",
+        source_url: "https://www.odoo.com/",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Test User" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+        author_id: partnerId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
+    });
+    await start({ authenticateAs: false });
+    await openDiscuss(channelId);
+    await contains(".o-mail-LinkPreviewCard");
+    await contains(".o-mail-LinkPreviewCard button[aria-label='Remove']", { count: 0 });
+});
