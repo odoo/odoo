@@ -150,6 +150,7 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
         move2 = self._make_in_move(self.product1, 10, unit_cost=20)
         lc = self._make_lc(move1, 100)
+        self.assertEqual(self.product1.standard_price, 15, 'Adding landed cost to FIFO should update standard price')
         move3 = self._make_out_move(self.product1, 1)
 
         self.assertEqual(self.product1.value_svl, 380)
