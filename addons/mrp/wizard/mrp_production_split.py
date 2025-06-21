@@ -26,21 +26,24 @@ class MrpProductionSplit(models.TransientModel):
         'mrp.production.split.line', 'mrp_production_split_id',
         'Split Details', compute="_compute_details", store=True, readonly=False)
     valid_details = fields.Boolean("Valid", compute="_compute_valid_details")
-    max_batch_size = fields.Float("Max Batch Size", compute="_compute_max_batch_size", readonly=False)
+    max_batch_size = fields.Float("Max Batch Size", compute="_compute_max_batch_size", digits='Product Unit', readonly=False)
     num_splits = fields.Integer("# Splits", compute="_compute_num_splits", readonly=True)
 
     @api.depends('production_id')
     def _compute_max_batch_size(self):
         for wizard in self:
-            wizard.max_batch_size = wizard.product_qty
+            bom_id = wizard.production_id.bom_id
+            wizard.max_batch_size = bom_id.batch_size if bom_id.enable_batch_size else wizard.product_qty
 
     @api.depends('max_batch_size')
     def _compute_num_splits(self):
+        self.num_splits = 0
         for wizard in self:
-            wizard.num_splits = float_round(
-                wizard.product_qty / wizard.max_batch_size,
-                precision_digits=0,
-                rounding_method='UP')
+            if wizard.product_uom_id.compare(self.max_batch_size, 0) > 0:
+                wizard.num_splits = float_round(
+                    wizard.product_qty / wizard.max_batch_size,
+                    precision_digits=0,
+                    rounding_method='UP')
 
     @api.depends('num_splits')
     def _compute_details(self):
