@@ -64,7 +64,10 @@ class IrUiView(models.Model):
         Model = self.env[el.get('data-oe-model')]
         field = el.get('data-oe-field')
 
-        model = 'ir.qweb.field.' + el.get('data-oe-type')
+        data_oe_type = el.get('data-oe-type')
+        if not data_oe_type:
+            raise ValidationError(_("Missing 'data-oe-type' attribute in embedded field."))
+        model = 'ir.qweb.field.' + data_oe_type
         converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
 
         try:
