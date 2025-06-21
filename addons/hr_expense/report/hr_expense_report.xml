@@ -72,16 +72,16 @@
                                     <tbody>
                                         <tr>
                                             <td>Untaxed Amount</td>
-                                            <td class="text-end"><span t-field="o.untaxed_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$500.00</span></td>
+                                            <td class="text-end"><span t-field="o.untaxed_amount" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>$500.00</span></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td class="text-end"><span t-field="o.tax_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$100.00</span></td>
+                                            <td class="text-end"><span t-field="o.tax_amount" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>$100.00</span></td>
                                         </tr>
                                         <tr class="fw-bold">
                                             <td>Total</td>
                                             <td class="text-end">
-                                                <span t-field="o.total_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>$600.00</span>
+                                                <span t-field="o.total_amount" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>$600.00</span>
                                             </td>
                                         </tr>
                                     </tbody>
