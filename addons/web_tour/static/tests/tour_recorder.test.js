@@ -279,9 +279,8 @@ test("Edit input", async () => {
 });
 
 test("Save custom tour", async () => {
-    onRpc("/web/dataset/call_kw/web_tour.tour/create", async (request) => {
-        const { params } = await request.json();
-        const tour = params.args[0][0];
+    onRpc("web_tour.tour", "create", ({ args }) => {
+        const tour = args[0][0];
         expect.step(tour.name);
         expect.step(tour.url);
         expect.step(tour.step_ids.length);

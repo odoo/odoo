@@ -366,8 +366,9 @@ msgstr "自動承認済"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "Automatically Check-Out Employees based on their working schedule with an "
-"additional tolerance."
-msgstr "勤務スケジュールと追加の猶予時間に基づいて、従業員を自動的に退勤させます。"
+"additional tolerance. Does not apply to employees with a flexible working "
+"schedule."
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -926,7 +927,8 @@ msgstr "手動で選択"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "If checked, days not covered by an attendance will be visible in the Report."
-msgstr "チェックすると勤怠でカバーされていない日付がレポートに表示されます。"
+" Does not apply to employees with a flexible working schedule."
+msgstr "チェックした場合、出勤日数以外の日数がレポートに表示されます。フレックスタイム制の社員には適用されません。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
@@ -1311,11 +1313,6 @@ msgstr "リーダ付RFIDトークン"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "RFID Token with reader on tablet"
 msgstr "リーダ付FRIDトークン(タブレット)"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__rating_ids
-msgid "Ratings"
-msgstr "評価"
 
 #. module: hr_attendance
 #. odoo-javascript

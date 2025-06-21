@@ -128,6 +128,31 @@ test("Datetime field - interaction with the datepicker", async () => {
     expect("input[data-field=datetime_end]").toHaveValue("02/09/2017 05:30:00");
 });
 
+test("Datetime field - interaction with the datepicker (same initial dates)", async () => {
+    Partner._records[0].datetime_end = "2017-02-08 15:00:00";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
+            </form>`,
+    });
+    expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:30:00");
+    expect("input[data-field=datetime_end]").toHaveValue("02/08/2017 20:30:00");
+    await contains("input[data-field=datetime]").click();
+    expect(".o_date_item_cell.o_select_start").toHaveText("8");
+    expect(".o_date_item_cell.o_select_end").toHaveText("8");
+    expect("input[data-field=datetime]").toBeFocused();
+    await contains(getPickerCell("8").at(0)).click();
+    expect("input[data-field=datetime_end]").toBeFocused();
+    await contains(getPickerCell("10").at(0)).click();
+    expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:30:00");
+    expect("input[data-field=datetime_end]").toHaveValue("02/10/2017 20:30:00");
+});
+
 test.tags("desktop");
 test("Date field - interaction with the datepicker", async () => {
     Partner._fields.date_end = fields.Date({ string: "Date end" });

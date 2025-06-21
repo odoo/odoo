@@ -330,7 +330,7 @@ test("code editor can take an initial cursor position", async () => {
     expect(document.activeElement).toBe(editor.textInput.getElement());
     expect(editor.getCursorPosition()).toEqual({ row: 3, column: 2 });
 
-    expect([...queryAll(".ace_gutter-cell")].map((el) => el.textContent)).toEqual(["3", "4", "5"]);
+    expect(queryAllTexts(".ace_gutter-cell")).toEqual(["3", "4", "5"]);
     expect.verifySteps([]);
     await contains(".ace_editor textarea", { displayed: true, visible: false }).edit("new\nvalue", {
         instantly: true,

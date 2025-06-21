@@ -5129,7 +5129,7 @@ test(`check if active fields are fetched in addition to field names in record da
 
     onRpc("event", "search_read", ({ kwargs }) => {
         expect.step("event.search_read");
-        expect(kwargs.fields.includes("delay")).toBe(true);
+        expect(kwargs.fields).toInclude("delay");
     });
 
     await mountView({

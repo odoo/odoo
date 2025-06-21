@@ -255,7 +255,7 @@ test("formviewdialog is not closed when button handlers return a rejected promis
         </form>
     `;
     let reject;
-    onRpc("web_save", async () => {
+    onRpc("web_save", () => {
         if (reject) {
             return Promise.reject("rejected");
         }
@@ -390,7 +390,7 @@ test("Save a FormViewDialog when a required field is empty don't close the dialo
 test("new record has an expand button", async () => {
     Partner._views["form"] = /* xml */ `<form><field name="foo"/></form>`;
     Partner._records = [];
-    onRpc("web_save", async () => {
+    onRpc("web_save", () => {
         expect.step("save");
     });
     mockService("action", {
@@ -418,7 +418,7 @@ test("new record has an expand button", async () => {
 
 test("existing record has an expand button", async () => {
     Partner._views["form"] = /* xml */ `<form><field name="foo"/></form>`;
-    onRpc("web_save", async () => {
+    onRpc("web_save", () => {
         expect.step("save");
     });
     mockService("action", {
@@ -448,7 +448,7 @@ test("existing record has an expand button", async () => {
 test("expand button with save and new", async () => {
     Instrument._views["form"] = /* xml */ `<form><field name="name"/></form>`;
     Instrument._records = [{ id: 1, name: "Violon" }];
-    onRpc("web_save", async () => {
+    onRpc("web_save", () => {
         expect.step("save");
     });
     mockService("action", {

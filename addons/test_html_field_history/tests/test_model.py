@@ -33,6 +33,7 @@ class TestModel(TransactionCase):
         )
         self.assertEqual(len(rec1.html_field_history["versioned_field_1"]), 1)
         self.assertEqual(len(rec1.html_field_history_metadata["versioned_field_1"]), 1)
+        self.assertEqual(rec1.versioned_field_1, "<p>mock content 2</p>")
         self.assertFalse(rec1.html_field_history["versioned_field_2"])
         self.assertFalse(rec1.html_field_history_metadata["versioned_field_2"])
 
@@ -73,6 +74,42 @@ class TestModel(TransactionCase):
                 }
             )
 
+        rec2.unlink()
+
+    def test_html_field_history_batch_write(self):
+        rec1 = self.env["html.field.history.test"].create(
+            {
+                "versioned_field_1": 'rec1 initial content',
+                "versioned_field_2": 'text',
+            }
+        )
+        rec2 = self.env["html.field.history.test"].create(
+            {
+                "versioned_field_1": 'rec2 initial value',
+            }
+        )
+
+        rec_writes = (rec1 + rec2).write(
+            {
+                "versioned_field_1": "field has been batch overwritten",
+            }
+        )
+
+        self.assertTrue(rec_writes, "Batch write should return True")
+
+        self.assertEqual(len(rec1.html_field_history["versioned_field_1"]), 1)
+        self.assertEqual(rec1.html_field_history["versioned_field_1"][0]["patch"], 'R@1:<p>rec1 initial content')
+        self.assertEqual(len(rec1.html_field_history_metadata["versioned_field_1"]), 1)
+        self.assertEqual(rec1.versioned_field_1, '<p>field has been batch overwritten</p>')
+        self.assertEqual(rec1.versioned_field_2, 'text')
+
+        self.assertEqual(len(rec2.html_field_history["versioned_field_1"]), 1)
+        self.assertEqual(rec2.html_field_history["versioned_field_1"][0]["patch"], 'R@1:<p>rec2 initial value')
+        self.assertEqual(len(rec2.html_field_history_metadata["versioned_field_1"]), 1)
+        self.assertEqual(rec2.versioned_field_1, '<p>field has been batch overwritten</p>')
+        self.assertFalse(rec2.versioned_field_2)
+
+        rec1.unlink()
         rec2.unlink()
 
     def test_html_field_history_revision_are_sanitized(self):

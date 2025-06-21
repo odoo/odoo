@@ -94,9 +94,8 @@ msgid ""
 "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
 "emails sent or received are saved in the history here</i>"
 msgstr ""
-"<div><b>Başvuru sahibine bir e-posta göndermeyi deneyin</b> "
-".</div><div><i>İpuçları: Gönderilen veya alınan tüm e-postalar buradaki "
-"geçmişe kaydedilir</i></div>"
+"<div>Başvuru sahibine<b>e-posta göndermeyi deneyin</b>.</div><div><i>İpucu: "
+"Gönderilen veya alınan tüm e-postalar bu alanda; geçmişte kaydedilir</i>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -631,8 +630,6 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Bir Python sözlüğü, bu rumuz için yeni kayıtlar oluştururken varsayılan "
-"değerleri sağlamak için değerlendirilir."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -960,6 +957,8 @@ msgid ""
 "At least one applicant doesn't have a email; you can't use send email "
 "option."
 msgstr ""
+"Başvuru sahiplerinden en az biri için e-posta adresi mevcut değil; e-posta "
+"gönderme seçeneğini kullanamazsınız."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -1334,9 +1333,6 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
-"Bu iş pozisyonu için belirli bir iletişim adresi tanımlayın. Boş "
-"bırakırsanız insan kaynakları ayarlarındaki varsayılan e-posta adresi "
-"kullanılır"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -1866,8 +1862,6 @@ msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
 msgstr ""
-"Eğer ayarlanırsa, şablonu kullanan adaya, ilgili aşamaya gelince bir mesaj "
-"gönderilir."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_bounced_content
@@ -1885,8 +1879,6 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Etkin alan Yanlış olarak ayarlıysa, kaynak kaydını silmeden gizlemenizi "
-"sağlayacaktır."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__active
@@ -1894,8 +1886,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr ""
-"Etkin alanda yanlış olarak ayarlayarak silinmeden gizlenmesini "
-"sağlayabilirsiniz."
+"Etkin alan 'yanlış' olarak ayarlanırsa, kullanım senaryosunu kaldırmadan "
+"gizlemenize izin verir."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__is_blacklisted
@@ -1903,8 +1895,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Eğer e-posta adresi kara listede ise, bağlantı, toplu e-posta gönderiminde, "
-"herhangi bir listeden mail almayacaktır"
+"E-posta adresi kara listedeyse, kişi artık hiçbir listeden toplu e-posta "
+"almayacaktır"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__phone_sanitized_blacklisted
@@ -1912,8 +1904,6 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Temizlenen telefon numarası kara listedeyse, kişi artık herhangi bir "
-"listeden toplu e-posta sms almaz"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1939,6 +1929,9 @@ msgid ""
 "Incoming emails create applications automatically. Use it for direct "
 "applications or when posting job offers on LinkedIn, Monster, etc."
 msgstr ""
+"Gelen e-postalar, otomatik olarak başvurular oluşturur. Bunları doğrudan "
+"başvurular için veya LinkedIn, Monster vb. platformlarda iş ilanları "
+"yayımlarken kullanabilirsiniz."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__mobile_blacklisted
@@ -1947,10 +1940,6 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Kara listeye alınmış, temizlenmiş bir telefon numarasının bir cep telefonu "
-"numarası olup olmadığını gösterir. Bir modelde hem cep telefonu hem de "
-"telefon alanı olduğunda hangi numaranın kara listeye alındığını ayırt etmeye"
-" yardımcı olur."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__phone_blacklisted
@@ -1959,10 +1948,6 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Kara listeye alınmış, temizlenmiş bir telefon numarasının bir telefon "
-"numarası olup olmadığını gösterir. Bir modelde hem cep telefonu hem de "
-"telefon alanı olduğunda hangi numaranın kara listeye alındığını ayırt etmeye"
-" yardımcı olur."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__industry_id
@@ -2220,9 +2205,6 @@ msgid ""
 "Let's create the position. An email will be setup for applications, and a "
 "public job description, if you use the Website app."
 msgstr ""
-"Hadi pozisyonu oluşturalım. Eğer websitesi uygulamasını kullanırsanız, "
-"başvuranlar için bir e-posta ve herkesin görebileceği iş tanımı "
-"oluşturulacak."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2663,9 +2645,6 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Rumuzun bulunduğu üst model. Rumuz referansın bulunduğu model zorunlu olarak"
-" alias_model_id tarafından verilen model değildir.  (örnek: project "
-"(parent_model) ve görev (model))"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
@@ -3253,10 +3232,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Aktivitelere göre durum \n"
-"Gecikmiş\\: Son tarih geçmiş\n"
-"Bugün\\: Aktivite tarihi bugün\n"
-"Planlanmış\\: Gelecek Aktiviteler."
+"Faaliyetlere dayalı durum\n"
+"Gecikmiş: Son tarih geçmiş\n"
+"Bugün: Etkinlik tarihi bugün\n"
+"Planlanan: Gelecekteki faaliyetler."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__duration_tracking
@@ -3403,8 +3382,6 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
-"Birincil e-posta alanı kesinlikle bir e-posta adresinden fazlasını "
-"içerebileceğinden, bu alan e-posta adresinde arama yapmak için kullanılır."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
@@ -3439,8 +3416,6 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Bu aşamada gösterilecek kayıt kalmadığında kanban görünümünde katlanmış "
-"aşamadır."
 
 #. module: hr_recruitment
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
@@ -3550,9 +3525,6 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on the Survey app."
 msgstr ""
-"İşe alım sürecindeki her bir iş pozisyonu için özelleştirilmiş aday "
-"değerlendirme formlarını kullanın. İş pozisyonu ayrıntısı formunda "
-"kullanılacak formu seçin. Bu Anket uygulamasına bağlıdır."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_users
@@ -3632,6 +3604,8 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                            of the default labels."
 msgstr ""
+"Burada, varsayılan etiketler yerine kanban durumu için \n"
+"                            görüntülenecek etiketleri tanımlayabilirsiniz."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -3662,8 +3636,6 @@ msgid ""
 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
-"Bu UTM Kaynaklarını, İşe Alım'da aşağıdaki işe alım kaynaklarına bağlı oldukları için silemezsiniz:\n"
-"%(recruitment_sources)s"
 
 #. module: hr_recruitment
 #. odoo-python

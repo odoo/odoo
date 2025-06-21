@@ -165,7 +165,7 @@ class PosOrder(models.Model):
             'delivery_date': None,
             **self._l10n_es_tbai_get_attachment_values(),
             **self._l10n_es_tbai_get_credit_note_values(),
-            'invoice_origin': False,
+            'origin': 'manual',
             'taxes': self.lines.tax_ids,
             'rate': self.currency_rate,
             'base_lines': base_lines,

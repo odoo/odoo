@@ -344,7 +344,7 @@ test("don't show noContentHelper if no search is done", async () => {
                 </app>
             </form>`,
     });
-    expect(".o_nocontent_help").not.toBeVisible({ message: "record not found message shown" });
+    expect(".o_nocontent_help").not.toHaveCount();
 });
 
 test("unhighlight section not matching anymore", async () => {

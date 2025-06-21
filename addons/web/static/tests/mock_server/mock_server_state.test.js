@@ -9,7 +9,7 @@ describe.current.tags("headless");
 test("default state", () => {
     expect(odoo.debug).toBe("");
     const s = { ...serverState };
-    expect("view_info" in s).toBe(true);
+    expect(s).toInclude("view_info");
     delete s.view_info;
     expect(s).toEqual({
         companies: [{ id: 1, name: "Hermit" }],

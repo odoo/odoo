@@ -248,7 +248,7 @@ test("char field translatable", async () => {
             ];
         }
     });
-    onRpc("res.partner", "update_field_translations", async function ({ args, kwargs }) {
+    onRpc("res.partner", "update_field_translations", function ({ args, kwargs }) {
         expect(args[2]).toEqual(
             { en_US: "bar", es_ES: false },
             {

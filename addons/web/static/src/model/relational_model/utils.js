@@ -58,6 +58,9 @@ export function addFieldDependencies(activeFields, fields, fieldDependencies = [
             patchActiveFields(activeFields[field.name], makeActiveField(field));
         } else {
             activeFields[field.name] = makeActiveField(field);
+            if (["one2many", "many2many"].includes(field.type)) {
+                activeFields[field.name].related = { activeFields: {}, fields: {} };
+            }
         }
         if (!fields[field.name]) {
             const newField = omit(field, [

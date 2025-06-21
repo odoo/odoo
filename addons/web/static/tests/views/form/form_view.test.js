@@ -4,14 +4,13 @@ import {
     click,
     hover,
     press,
-    queryAll,
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
 } from "@odoo/hoot-dom";
 import {
-    Deferred,
     animationFrame,
+    Deferred,
     mockTimeZone,
     mockTouch,
     runAllTimers,
@@ -656,6 +655,40 @@ test(`form with o2m having a selection field with fieldDependencies`, async () =
 
     await contains(`.o_field_widget[name=o2m] .o_field_x2many_list_row_add a`).click();
     expect(`.modal .o_form_view .o_field_widget[name=display_name]`).toHaveCount(1);
+});
+
+test(`form view: widget having a o2m field as fieldDependencies`, async () => {
+    class MyWidget extends Component {
+        static template = xml`<span>My custom widget</span>`;
+        static props = ["*"];
+    }
+    widgetsRegistry.add("my_widget", {
+        component: MyWidget,
+        fieldDependencies: [{ name: "child_ids", type: "one2many" }],
+    });
+
+    await mountView({
+        resModel: "res.users",
+        type: "form",
+        arch: `
+            <form>
+                <field name="partner_ids" >
+                    <list>
+                        <field name="name"/>
+                        <widget name="my_widget" />
+                    </list>
+                    <form>
+                        <field name="name"/>
+                        <widget name="my_widget" />
+                    </form>
+                </field>
+            </form>
+        `,
+        resId: 17,
+    });
+
+    await contains(`.o_list_view .o_field_cell[name="name"]`).click();
+    expect(`.modal .o_form_view .o_widget_my_widget`).toHaveCount(1);
 });
 
 test(`fieldDependencies are readonly by default`, async () => {
@@ -10380,7 +10413,7 @@ test(`form view with inline list view with optional fields and local storage moc
     ]);
     expect(`.o_list_table th`).toHaveCount(2);
     expect(`th[data-name="foo"]`).toBeVisible();
-    expect(`th[data-name="bar"]`).not.toBeVisible();
+    expect(`th[data-name="bar"]`).not.toHaveCount();
 
     // optional fields
     await contains(`.o_optional_columns_dropdown .dropdown-toggle`).click();
@@ -10444,7 +10477,7 @@ test(`form view with list_view_ref with optional fields and local storage mock`,
         `getItem debug_open_view,${localStorageKey}`,
     ]);
     expect(`.o_list_table th`).toHaveCount(2);
-    expect(`th[data-name="foo"]`).not.toBeVisible();
+    expect(`th[data-name="foo"]`).not.toHaveCount();
     expect(`th[data-name="bar"]`).toBeVisible();
 
     // optional fields
@@ -10566,20 +10599,19 @@ test("resequence list lines when previous resequencing crashed", async () => {
     await contains(".o_form_button_save").click();
     await animationFrame();
 
-    const getNames = () => [...queryAll(".o_list_char")].map((el) => el.textContent);
-    expect(getNames()).toEqual(["first line", "second line"]);
+    expect(queryAllTexts(".o_list_char")).toEqual(["first line", "second line"]);
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
         "tbody.ui-sortable tr:nth-child(2)"
     );
     await animationFrame();
     expect.verifyErrors(["RPC_ERROR"]);
-    expect(getNames()).toEqual(["first line", "second line"]);
+    expect(queryAllTexts(".o_list_char")).toEqual(["first line", "second line"]);
 
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
         "tbody.ui-sortable tr:nth-child(2)"
     );
     await animationFrame();
-    expect(getNames()).toEqual(["second line", "first line"]);
+    expect(queryAllTexts(".o_list_char")).toEqual(["second line", "first line"]);
     expect.verifySteps(["resequence onChange crash", "resequence onChange ok"]);
 });
 

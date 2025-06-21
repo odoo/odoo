@@ -221,6 +221,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) 항목의 계정 유형은  \"%(receivable)s\" 또는 "
+"\"%(payable)s\" 유형이어야 하며 \"%(allow_reconciliation)s\" 및 \"%(non_trade)s\" "
+"항목이 모두 활성화되어 있어야 합니다."
 
 #. module: account
 #. odoo-python
@@ -1475,6 +1478,8 @@ msgid ""
 "<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
 "disabled again if there are any existing journal items."
 msgstr ""
+"<strong>주의:</strong> 감사 추적 기능을 활성화된 이후에는, 기존에 전표 항목이 있는 경우 다시 비활성화를 할 수 "
+"없습니다."
 
 #. module: account
 #. odoo-python
@@ -5256,7 +5261,7 @@ msgstr "신용 한도"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_move_id
 msgid "Credit Move"
-msgstr "대변 작업"
+msgstr "대변 이동"
 
 #. module: account
 #. odoo-python
@@ -5266,23 +5271,23 @@ msgstr "대변 작업"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Credit Note"
-msgstr "대변전표"
+msgstr "신용 전표"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Credit Note Created"
-msgstr "대변전표가 생성되었습니다."
+msgstr "신용 전표가 생성되었습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
 msgid "Credit Note Currency"
-msgstr "대변전표 통화"
+msgstr "신용 전표 통화"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit Note: Sending"
-msgstr "대변전표 전송 양식"
+msgstr "신용 전표: 전송 중"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -5292,7 +5297,7 @@ msgstr "대변전표 전송 양식"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Credit Notes"
-msgstr "대변전표"
+msgstr "신용 전표"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_credit_statement_tree
@@ -15030,7 +15035,7 @@ msgstr "전표에 대해 참조 모델과 참조 유형을 조합시키도록 �
 #: code:addons/account/models/partner.py:0
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
-msgstr ""
+msgstr "비즈니스 파트너 정보가 관련 회계 내역 전체에 반영이 완료되었습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18078,7 +18083,7 @@ msgstr "이 계정에 외화를 설정할 수 없습니다. 이미 다른 외화
 msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
-msgstr ""
+msgstr "다른 %(vat_label) 항목이 적용되는 경우에는, 해당 파트너를 다른 파트너의 청구서 주소로 설정할 수 없습니다."
 
 #. module: account
 #. odoo-python

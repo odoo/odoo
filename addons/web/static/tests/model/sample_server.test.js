@@ -343,8 +343,8 @@ describe("RPC calls", () => {
             fields: [],
             groupBy: ["profession", "age"],
         });
-        expect("profession" in result[0]).toBe(true);
-        expect("age" in result[0]).toBe(false);
+        expect(result[0]).toInclude("profession");
+        expect(result[0]).not.toInclude("age");
     });
 
     test("'read_group': multiple groupBys and not lazy", async () => {
@@ -356,8 +356,8 @@ describe("RPC calls", () => {
             groupBy: ["profession", "age"],
             lazy: false,
         });
-        expect("profession" in result[0]).toBe(true);
-        expect("age" in result[0]).toBe(true);
+        expect(result[0]).toInclude("profession");
+        expect(result[0]).toInclude("age");
     });
 
     test("'read_group': multiple groupBys among which a many2many", async () => {

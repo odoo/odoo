@@ -416,9 +416,9 @@ test("many2one show_address in edit", async () => {
         2: "second record\nSecond\nRecord",
         4: "aaa\nAAA\nRecord",
     };
-    onRpc("web_read", async ({ kwargs, parent }) => {
+    onRpc("web_read", ({ kwargs, parent }) => {
         if (kwargs.specification.trululu.context.show_address) {
-            const result = await parent();
+            const result = parent();
             result[0].trululu = {
                 id: result[0].trululu.id,
                 display_name: namegets[result[0].trululu.id],
@@ -426,8 +426,8 @@ test("many2one show_address in edit", async () => {
             return result;
         }
     });
-    onRpc("name_search", async ({ parent }) => {
-        const result = await parent();
+    onRpc("name_search", ({ parent }) => {
+        const result = parent();
         return result.map(([id]) => [id, namegets[id]]);
     });
 
@@ -1040,7 +1040,7 @@ test("many2one in edit mode", async () => {
 
     // change the value of the m2o with a suggestion of the dropdown
     await selectFieldDropdownItem("trululu", "first record");
-    expect(".o_field_many2one[name='trululu'] .dropdown-menu").not.toBeVisible();
+    expect(".o_field_many2one[name='trululu'] .dropdown-menu").not.toHaveCount();
     expect(".o_field_many2one input").toHaveValue("first record");
 
     // change the value of the m2o with a record in the 'Search More' modal
@@ -1063,7 +1063,7 @@ test("many2one in edit mode", async () => {
     // choose a record
     await contains(".modal .o_data_cell[data-tooltip='Partner 20']").click();
     expect(".modal").toHaveCount(0);
-    expect(".o_field_many2one[name='trululu'] .dropdown-menu").not.toBeVisible();
+    expect(".o_field_many2one[name='trululu'] .dropdown-menu").not.toHaveCount();
     expect(".o_field_many2one input").toHaveValue("Partner 20");
 
     // save
@@ -1193,9 +1193,9 @@ test("many2one search with server returning multiple lines", async () => {
         4: "aaa\nAAA\nRecord",
     };
 
-    onRpc("web_read", async ({ parent }) => {
-        expect.step("web_read");
-        const result = await parent();
+    onRpc("web_read", ({ method, parent }) => {
+        expect.step(method);
+        const result = parent();
         result[0].trululu = {
             id: result[0].trululu.id,
             display_name: namegets[result[0].trululu.id],
@@ -1300,8 +1300,8 @@ test("many2one search with trailing and leading spaces", async () => {
 
 // Should be removed ?
 test("many2one field with option always_reload (edit)", async () => {
-    onRpc("web_read", async ({ parent }) => {
-        const result = await parent();
+    onRpc("web_read", ({ parent }) => {
+        const result = parent();
         result[0].trululu = {
             ...result[0].trululu,
             display_name: "first record\nand some address",
@@ -2326,8 +2326,8 @@ test("creating record with many2one with option always_reload", async () => {
         },
     });
 
-    onRpc("onchange", async ({ parent }) => {
-        const result = await parent();
+    onRpc("onchange", ({ parent }) => {
+        const result = parent();
         result.value.trululu = {
             ...result.value.trululu,
             display_name: "hello world\nso much noise",

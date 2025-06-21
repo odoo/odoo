@@ -9892,7 +9892,7 @@ test("one2many with many2many_tags in list and list in form with a limit", async
 
     expect(".modal .o_form_view").toHaveCount(1);
     expect(".modal .o_field_widget[name=turtles] .o_data_row").toHaveCount(3);
-    expect(".modal .o_field_x2many_list .o_pager").not.toBeVisible();
+    expect(".modal .o_field_x2many_list .o_pager").not.toHaveCount();
 });
 
 test("one2many with many2many_tags in list and list in form, and onchange", async () => {

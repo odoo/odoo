@@ -223,6 +223,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) powinno być kontem typu "
+"\"%(receivable)s\" lub \"%(payable)s\" z aktywowanymi obiema możliwościami "
+"\"%(allow_reconciliation)s\" oraz \"%(non_trade)s\"."
 
 #. module: account
 #. odoo-python
@@ -1387,7 +1390,7 @@ msgstr "<span>Ostrzeżenie: Ten dokument może być duplikatem</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Adres dostawy</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1496,6 +1499,9 @@ msgid ""
 "<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
 "disabled again if there are any existing journal items."
 msgstr ""
+"<strong>Uwaga:</strong> Jak tylko ścieżka audytu zostanie aktywowana, nie "
+"może zostać dezaktywowana ponownie, jeśli istnieją jakiekolwiek pozycje "
+"zapisu."
 
 #. module: account
 #. odoo-python
@@ -1541,6 +1547,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Konto bankowe o numerze konta %(number)s już istnieje dla Partnera "
+"%(partner)s, ale jest zarchiwizowane. Odarchiwizuj je."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3531,7 +3539,7 @@ msgstr "Konto bankowe"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr ""
+msgstr "Konto bankowe %(link)s z numerem %(number)s zostało zarchiwizowane"
 
 #. module: account
 #. odoo-python

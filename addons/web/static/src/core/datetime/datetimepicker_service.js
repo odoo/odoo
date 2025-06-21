@@ -356,7 +356,7 @@ export const datetimePickerService = {
                     const previousValue = pickerProps.value;
                     pickerProps.value = value;
 
-                    if (areDatesEqual(previousValue, pickerProps.value)) {
+                    if (source === "input" && areDatesEqual(previousValue, pickerProps.value)) {
                         return;
                     }
 
