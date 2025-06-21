@@ -177,6 +177,17 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("CashClosingDecimals", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.enterOpeningAmount("558.49"),
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.checkSecondCashClosingDetailsLineAmount("1.91", "-"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
     test: true,
     url: "/pos/ui",
