@@ -950,12 +950,12 @@ class TestReorderingRule(TransactionCase):
             with form.order_line.edit(0) as line:
                 line.product_qty = 4
         purchase.button_confirm()
-        moves = self.env['stock.move'].search([('id', '!=', out_move.id), ('product_id', '=', self.product_01.id)], order='id desc')
+        moves = self.env['stock.move'].search([('id', '!=', out_move.id), ('product_id', '=', self.product_01.id), ('is_inventory', '=', False)], order='id desc')
         self.assertRecordValues(moves, [
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 4},
         ])
         moves.picking_id.button_validate()
-        moves = self.env['stock.move'].search([('id', '!=', out_move.id), ('product_id', '=', self.product_01.id)], order='id desc')
+        moves = self.env['stock.move'].search([('id', '!=', out_move.id), ('product_id', '=', self.product_01.id), ('is_inventory', '=', False)], order='id desc')
         self.assertRecordValues(moves, [
             {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 4},
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 4},
@@ -992,7 +992,7 @@ class TestReorderingRule(TransactionCase):
                 line.product_qty = 10
         purchase.button_confirm()
 
-        moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id)], order='id desc')
+        moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id), ('is_inventory', '=', False)], order='id desc')
         self.assertRecordValues(moves, [
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 10},
         ])
@@ -1001,7 +1001,7 @@ class TestReorderingRule(TransactionCase):
             with form.order_line.edit(0) as line:
                 line.product_qty = 1
 
-        moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id)], order='id desc')
+        moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id), ('is_inventory', '=', False)], order='id desc')
         self.assertRecordValues(moves, [
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
         ])
