@@ -23,6 +23,11 @@
         'website_livechat',
         'website_slides',
     ],
+    "assets": {
+        "web.assets_tests": [
+            "test_discuss_full/static/tests/tours/*",
+        ],
+    },
     'installable': True,
     'license': 'LGPL-3',
 }
