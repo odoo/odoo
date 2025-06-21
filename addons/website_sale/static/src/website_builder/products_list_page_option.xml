@@ -173,18 +173,77 @@
         >Top</BuilderButton>
     </BuilderRow>
 
+    <BuilderRow label.translate="Style" level="1">
+        <BuilderSelect action="'websiteConfig'" t-if="this.isActiveItem('categories_opt_top')">
+            <BuilderSelectItem actionParam="{views: []}" title.translate="Default">
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/default.svg'"
+                    style="'width:150px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_bordered']}"
+                title.translate="Bordered"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/bordered.svg'"
+                    style="'width:150px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_tabs']}"
+                title.translate="Tabs"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/tabs.svg'"
+                    style="'width:150px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_pills']}"
+                title.translate="Pills"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/pills.svg'"
+                    style="'width:150px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_images']}"
+                title.translate="Images"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/images.svg'"
+                    style="'width:150px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_grid']}"
+                title.translate="Grid"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/grid.svg'"
+                    style="'width:150px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_large_images']}"
+                title.translate="Large Images"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/large_images.svg'"
+                    style="'width:150px;'"
+                />
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
     <BuilderRow t-if="this.isActiveItem('categories_opt')" label.translate="Collapse Category Recursive" level="1">
         <BuilderCheckbox
                 id="'collapse_category_recursive'"
                 action="'websiteConfig'"
                 actionParam="{views: ['website_sale.option_collapse_products_categories']}"
         />
-    </BuilderRow>
-
-    <BuilderRow t-if="isActiveItem('categories_opt_top')" label.translate="Style" level="1">
-        <BuilderSelect action="'websiteConfig'">
-            <BuilderSelectItem classAction="''" actionParam="{views: []}">Filmstrip - default</BuilderSelectItem>
-        </BuilderSelect>
     </BuilderRow>
 
     <BuilderRow label.translate="Filters">

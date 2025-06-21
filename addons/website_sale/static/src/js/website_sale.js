@@ -18,11 +18,11 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
-        'mousedown .o_wsale_filmstip_wrapper': '_onMouseDown',
-        'mouseleave .o_wsale_filmstip_wrapper': '_onMouseLeave',
-        'mouseup .o_wsale_filmstip_wrapper': '_onMouseUp',
-        'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
-        'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
+        'mousedown .o_wsale_filmstrip_wrapper': '_onMouseDown',
+        'mouseleave .o_wsale_filmstrip_wrapper': '_onMouseLeave',
+        'mouseup .o_wsale_filmstrip_wrapper': '_onMouseUp',
+        'mousemove .o_wsale_filmstrip_wrapper': '_onMouseMove',
+        'click .o_wsale_filmstrip_wrapper' : '_onClickHandler',
         'submit': '_onClickConfirmOrder',
         'input .o_wsale_attribute_search_bar': '_searchAttributeValues',
         'click .o_wsale_variant_pills_shop': '_onClickPillsAttribute',
@@ -61,15 +61,14 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         });
 
         // This allows conditional styling for the filmstrip
-        const filmstripContainer = this.el.querySelector('.o_wsale_filmstip_container');
-        const filmstripContainerWidth = filmstripContainer
-            ? filmstripContainer.getBoundingClientRect().width : 0;
-        const filmstripWrapper = this.el.querySelector('.o_wsale_filmstip_wrapper');
-        const filmstripWrapperWidth = filmstripWrapper
-            ? filmstripWrapper.getBoundingClientRect().width : 0;
-        const isFilmstripScrollable = filmstripWrapperWidth < filmstripContainerWidth
-        if (isBrowserFirefox() || hasTouch() || isFilmstripScrollable) {
-            filmstripContainer?.classList.add('o_wsale_filmstip_fancy_disabled');
+        const filmstripContainer = this.el.querySelector('#o_wsale_categories_filmstrip');
+        const filmstripWrapper = this.el.querySelector('.o_wsale_filmstrip_wrapper');
+        const isFilmstripScrollable = filmstripWrapper
+            ? filmstripWrapper.scrollWidth > filmstripWrapper.clientWidth
+            : false;
+
+        if (isBrowserFirefox() || hasTouch() || !isFilmstripScrollable) {
+            filmstripContainer?.classList.add('o_wsale_filmstrip_fancy_disabled');
         }
 
         return def;

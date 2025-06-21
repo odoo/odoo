@@ -635,11 +635,8 @@
                                     </span>
                                     <t t-elif="category" t-esc="category.name"/>
                                 </h1>
-                                <h1
-                                    t-if="not category and not search"
-                                    class="position-absolute start-100 w-0 h-0 overflow-hidden visually-hidden"
-                                    >
-                                    <t t-out="res_company.name"/> - All products
+                                <h1 class="h4-fs" t-if="not category and not search">
+                                    All products
                                 </h1>
                                 <t t-if="category">
                                     <t t-set='editor_msg'>
@@ -1339,19 +1336,30 @@
         </t>
         <t t-set="entries" t-value="request.env.user._is_internal() and entries or entries.filtered('has_published_products')"/>
 
-        <div t-if="entries" class="o_wsale_filmstip_container d-flex align-items-stretch overflow-hidden">
-            <div class="o_wsale_filmstip_wrapper pb-1 overflow-auto">
-                <ul class="o_wsale_filmstip d-flex align-items-stretch mb-0 list-unstyled overflow-visible">
+        <div
+            t-if="entries"
+            id="o_wsale_categories_filmstrip"
+            class="o_wsale_filmstrip_container o_wsale_filmstrip_default d-flex align-items-stretch w-100 overflow-hidden"
+            role="navigation"
+        >
+            <div class="o_wsale_filmstrip_wrapper w-100 overflow-auto">
+                <ul
+                    class="o_wsale_filmstrip d-flex align-items-stretch mb-0 w-100 list-unstyled overflow-visible"
+                    role="menu"
+                    aria-label="Categories"
+                >
                     <li
                         t-foreach="entries"
                         t-as="c"
-                        t-attf-class="d-flex {{'pe-3' if not c_last else ''}}"
                         t-att-data-publish="c.has_published_products and 'on' or 'off'"
+                        role="presentation"
                     >
                         <a
                             t-att-href="keep('%s/category/%s' % (shop_path, slug(c)))"
-                            class="text-decoration-none"
+                            class="o_wsale_filmstrip_link d-block w-100 h-100 text-decoration-none"
                             draggable="false"
+                            role="menuitem"
+                            t-att-aria-label="c.name"
                         >
                             <input
                                 type="radio"
@@ -1359,26 +1367,106 @@
                                 class="btn-check pe-none"
                                 t-att-id="c.id"
                                 t-att-value="c.id"
-                                t-att-checked="'true' if c.id == category.id else None"/>
+                                t-att-checked="'true' if c.id == category.id else None"
+                                tabindex="-1"
+                            />
                             <div
-                                t-att-class="'d-flex align-items-center h-100 btn btn-'
-                                    + navClass
-                                    + (c.image_128 and ' ps-2 pe-3' or ' px-4')
-                                    + (c.id == category.id and ' border-primary' or '')"
+                                t-att-class="'o_wsale_filmstrip_item position-relative d-flex w-100 h-100'
+                                    + (c.id == category.id and ' active' or '')"
                             >
                                 <div
                                     t-if="c.image_128"
-                                    t-attf-style="background-image:url('data:image/png;base64,
-                                        #{c.image_128}')"
-                                    class="o_image_40_cover oe_img_bg o_bg_img_center
-                                        flex-shrink-0 rounded-3 me-3"
-                                    t-att-alt="c.name "/>
-                                <span class="text-nowrap" t-field="c.name"/>
+                                    name="o_wsale_filmstrip_image"
+                                    class="o_wsale_filmstrip_image oe_img_bg o_bg_img_center rounded"
+                                    t-attf-style="background-image:url('data:image/png;base64, #{c.image_128}')"
+                                    t-att-alt="c.name"
+                                    role="img"
+                                    aria-label="Category image"
+                                />
+                                <div
+                                    t-else=""
+                                    name="o_wsale_filmstrip_placeholder"
+                                    class="o_wsale_filmstrip_image o_wsale_filmstrip_placeholder oe_img_bg o_bg_img_center rounded"
+                                    role="img"
+                                    aria-label="Category image"
+                                />
+                                <span class="lh-1" t-field="c.name"/>
                             </div>
                         </a>
                     </li>
                 </ul>
             </div>
+        </div>
+    </template>
+
+    <!-- Categories Variations -->
+    <template
+        id="website_sale.filmstrip_categories_bordered"
+        inherit_id="website_sale.filmstrip_categories"
+        name="Categories Filmstrip Bordered"
+        active="False"
+    >
+        <div id="o_wsale_categories_filmstrip" position="attributes">
+            <attribute name="class" add="o_wsale_filmstrip_bordered" remove="o_wsale_filmstrip_default" separator=" "/>
+        </div>
+    </template>
+    <template
+        id="website_sale.filmstrip_categories_tabs"
+        inherit_id="website_sale.filmstrip_categories"
+        name="Categories Filmstrip Tabs"
+        active="False"
+    >
+        <div id="o_wsale_categories_filmstrip" position="attributes">
+            <attribute name="class" add="o_wsale_filmstrip_tabs" remove="o_wsale_filmstrip_default" separator=" "/>
+        </div>
+    </template>
+    <template
+        id="website_sale.filmstrip_categories_pills"
+        inherit_id="website_sale.filmstrip_categories"
+        name="Categories Filmstrip Tabs"
+        active="False"
+    >
+        <div id="o_wsale_categories_filmstrip" position="attributes">
+            <attribute name="class" add="o_wsale_filmstrip_pills" remove="o_wsale_filmstrip_default" separator=" "/>
+        </div>
+    </template>
+    <template
+        id="website_sale.filmstrip_categories_images"
+        inherit_id="website_sale.filmstrip_categories"
+        name="Categories Filmstrip Basic"
+        active="False"
+    >
+        <div id="o_wsale_categories_filmstrip" position="attributes">
+            <attribute name="class" add="o_wsale_filmstrip_images" remove="o_wsale_filmstrip_default" separator=" "/>
+        </div>
+        <div name="o_wsale_filmstrip_placeholder" position="attributes">
+            <attribute name="t-if">not c.has_published_products</attribute>
+        </div>
+    </template>
+    <template
+        id="website_sale.filmstrip_categories_grid"
+        inherit_id="website_sale.filmstrip_categories"
+        name="Categories Filmstrip Grid"
+        active="False"
+    >
+        <div id="o_wsale_categories_filmstrip" position="attributes">
+            <attribute name="class" add="o_wsale_filmstrip_grid" remove="o_wsale_filmstrip_default" separator=" "/>
+        </div>
+    </template>
+    <template
+        id="website_sale.filmstrip_categories_large_images"
+        inherit_id="website_sale.filmstrip_categories"
+        name="Categories Filmstrip Cover"
+        active="False"
+    >
+        <div id="o_wsale_categories_filmstrip" position="attributes">
+            <attribute name="class" add="o_wsale_filmstrip_large_images" remove="o_wsale_filmstrip_default" separator=" "/>
+        </div>
+        <div name="o_wsale_filmstrip_placeholder" position="attributes">
+            <attribute name="class" remove="o_wsale_filmstrip_placeholder" add="o_wsale_filmstrip_no_image" separator=" "/>
+        </div>
+        <div name="o_wsale_filmstrip_image" position="attributes">
+            <attribute name="t-attf-style">background-image:url('data:image/png;base64, #{c.image_512 if c.image_512 else c.image_128}')</attribute>
         </div>
     </template>
 
