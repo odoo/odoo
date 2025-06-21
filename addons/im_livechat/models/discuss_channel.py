@@ -489,7 +489,7 @@ class DiscussChannel(models.Model):
                     "script_step_id": self.chatbot_current_step_id.id,
                 }
             )
-
+        # sudo: discuss.channel - visitor can access channel member history
         if (
             # sudo: discuss.channel - visitor can access channel member history
             not self.livechat_end_dt and self.sudo().livechat_channel_member_history_ids.filtered(
@@ -497,6 +497,17 @@ class DiscussChannel(models.Model):
             )
         ):
             self.livechat_failure = "no_failure"
+        if author_history := self.sudo().livechat_channel_member_history_ids.filtered(
+            lambda h: h.partner_id == message.author_id
+            if message.author_id
+            else h.guest_id == message.author_guest_id
+        ):
+            if message.message_type not in ("notification", "user_notification"):
+                author_history.message_count += 1
+            if author_history.livechat_member_type == "agent" and not author_history.response_time_hour:
+                author_history.response_time_hour = (
+                    fields.Datetime.now() - author_history.create_date
+                ).total_seconds() / 3600
 
         return super()._message_post_after_hook(message, msg_vals)
 
