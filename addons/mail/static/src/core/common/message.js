@@ -231,7 +231,7 @@ export class Message extends Component {
             "px-1": this.props.isInChatWindow,
             "opacity-50": this.props.thread?.composer.replyToMessage?.notEq(this.props.message),
             "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
-            "o-editing": this.isEditing,
+            "o-editing": this.isEditing && !this.props.message.isEmpty,
         };
     }
 
