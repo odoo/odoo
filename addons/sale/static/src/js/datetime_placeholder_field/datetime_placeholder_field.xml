@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-name="sale.DatetimePlaceholderField" t-inherit="web.DateTimeField" t-inherit-mode="primary">
+    <xpath expr="//t[@t-if='props.readonly']/span" position="replace">
+      <span t-attf-class="{{ getFormattedValue(0) ? '' : 'opacity-50' }}">
+        <t t-out="placeholder"/>
+      </span>
+    </xpath>
+  </t>
+</templates>

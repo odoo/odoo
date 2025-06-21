@@ -10,6 +10,7 @@
     'assets': {
         'point_of_sale._assets_pos': [
             'pos_repair/static/src/**/*',
+            'sale/static/src/js/datetime_placeholder_field/**/*',
         ],
           'web.assets_tests': [
             'pos_repair/static/tests/tours/**/*',
