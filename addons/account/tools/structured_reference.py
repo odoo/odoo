@@ -4,6 +4,14 @@ from itertools import zip_longest
 from stdnum import iso11649, luhn
 from stdnum.iso7064 import mod_97_10
 
+GREEK_TO_LATIN = {
+    'α': 'a', 'β': 'b', 'γ': 'g', 'δ': 'd', 'ε': 'e',
+    'ζ': 'z', 'η': 'h', 'θ': 'th', 'ι': 'i', 'κ': 'k',
+    'λ': 'l', 'μ': 'm', 'ν': 'n', 'ξ': 'x', 'ο': 'o',
+    'π': 'p', 'ρ': 'r', 'σ': 's', 'ς': 's', 'τ': 't',
+    'υ': 'y', 'φ': 'f', 'χ': 'ch', 'ψ': 'ps', 'ω': 'w'
+}
+
 
 def sanitize_structured_reference(reference):
     """Removes whitespace and specific characters from Belgian structured references:
@@ -23,7 +31,14 @@ def format_structured_reference_iso(number):
     The Creditor Reference is an international standard (ISO 11649).
     Example: `123456789` -> `RF18 1234 5678 9`
     """
-    check_digits = mod_97_10.calc_check_digits('{}RF'.format(number))
+    latinized = ''
+    for ch in number:
+        if ch.lower() in GREEK_TO_LATIN:
+            latin_equiv = GREEK_TO_LATIN[ch.lower()]
+            latinized += latin_equiv
+        else:
+            latinized += ch
+    check_digits = mod_97_10.calc_check_digits(f"{latinized}RF")
     return 'RF{} {}'.format(
         check_digits,
         ' '.join(''.join(x) for x in zip_longest(*[iter(str(number))]*4, fillvalue=''))
