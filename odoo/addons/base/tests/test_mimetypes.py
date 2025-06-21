@@ -135,6 +135,7 @@ class test_guess_mimetype(BaseCase):
         self.assertEqual(get_extension('filename.Abc'), '.abc')
         self.assertEqual(get_extension('filename.scss'), '.scss')
         self.assertEqual(get_extension('filename.torrent'), '.torrent')
+        self.assertEqual(get_extension('filename.ab_c'), '.ab_c')
         self.assertEqual(get_extension('.htaccess'), '')
         # enough to suppose that extension is present and don't suffix the filename
         self.assertEqual(get_extension('filename.tar.gz'), '.gz')

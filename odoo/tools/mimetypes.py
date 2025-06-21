@@ -209,12 +209,14 @@ def neuter_mimetype(mimetype, user):
         return 'text/plain'
     return mimetype
 
+
+_extension_pattern = re.compile(r'\w+')
 def get_extension(filename):
     # A file has no extension if it has no dot (ignoring the leading one
     # of hidden files) or that what follow the last dot is not a single
     # word, e.g. "Mr. Doe"
     _stem, dot, ext = filename.lstrip('.').rpartition('.')
-    if not dot or not ext.isalnum():
+    if not dot or not _extension_pattern.fullmatch(ext):
         return ''
 
     # Assume all 4-chars extensions to be valid extensions even if it is
