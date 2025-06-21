@@ -309,11 +309,9 @@ class AccountMove(models.Model):
     )
     hide_post_button = fields.Boolean(compute='_compute_hide_post_button', readonly=True)
     checked = fields.Boolean(
-        string='Checked',
-        tracking=True,
-        help="If this checkbox is not ticked, it means that the user was not sure of all the related "
-             "information at the time of the creation of the move and that the move needs to be "
-             "checked again.",
+        string='Reviewed',
+        compute='_compute_checked',
+        store=True, readonly=False, tracking=True, copy=False,
     )
     posted_before = fields.Boolean(copy=False)
     suitable_journal_ids = fields.Many2many(
@@ -2173,6 +2171,11 @@ class AccountMove(models.Model):
             return NotImplemented
         return [('line_ids', 'any', [('reconciled', '=', False), ('payment_date', operator, value)])]
 
+    @api.depends('state', 'journal_id.type')
+    def _compute_checked(self):
+        for move in self:
+            move.checked = move.state == 'posted' and (move.journal_id.type == 'general' or move._is_user_able_to_review())
+
     # -------------------------------------------------------------------------
     # SEARCH METHODS
     # -------------------------------------------------------------------------
@@ -3452,6 +3455,13 @@ class AccountMove(models.Model):
         self._sanitize_vals(vals)
 
         for move in self:
+            if not move.statement_line_id and (vals.get('state') == 'draft' or vals.get('checked') is not None):
+                if not move._is_user_able_to_review():
+                    if move.checked:
+                        raise ValidationError(_("Validated entries can only be changed by your accountant."))
+                    if vals.get('checked'):
+                        raise AccessError(_("You don't have the access rights to perform this action."))
+
             violated_fields = set(vals).intersection(move._get_integrity_hash_fields() + ['inalterable_hash'])
             if move.inalterable_hash and violated_fields:
                 raise UserError(_(
@@ -5054,16 +5064,6 @@ class AccountMove(models.Model):
             if move.line_ids.account_id.filtered(lambda account: not account.active) and not self._context.get('skip_account_deprecation_check'):
                 validation_msgs.add(_("A line of this move is using a archived account, you cannot post it."))
 
-            # If the field autocheck_on_post is set, we want the checked field on the move to be checked
-            if move.journal_id.autocheck_on_post:
-                move.checked = move.journal_id.autocheck_on_post
-            else:
-                move.sudo().activity_schedule(
-                    activity_type_id=self.env.ref('mail.mail_activity_data_todo').id,
-                    summary=_('To check'),
-                    user_id=move.invoice_user_id.name,
-                )
-
         if validation_msgs:
             msg = "\n".join([line for line in validation_msgs])
             raise UserError(msg)
@@ -5462,9 +5462,15 @@ class AccountMove(models.Model):
         partial = self.env['account.partial.reconcile'].browse(partial_id)
         return partial.unlink()
 
-    def button_set_checked(self):
-        for move in self:
-            move.checked = True
+    def button_set_checked(self, to_check=True):
+        self.set_moves_checked(to_check)
+
+    def check_selected_moves(self):
+        self.env['account.move'].browse(self.env.context.get('active_ids', [])).set_moves_checked()
+
+    def set_moves_checked(self, is_checked=True):
+        for move in self.filtered(lambda m: m.state == 'posted'):
+            move.checked = is_checked
 
     def button_draft(self):
         if any(move.state not in ('cancel', 'posted') for move in self):
@@ -5621,7 +5627,6 @@ class AccountMove(models.Model):
             ('state', '=', 'draft'),
             ('date', '<=', fields.Date.context_today(self)),
             ('auto_post', '!=', 'no'),
-            '|', ('checked', '=', True), ('journal_id.autocheck_on_post', '=', True)
         ]
         moves = self.search(domain, limit=batch_size)
         remaining = len(moves) if len(moves) < batch_size else self.search_count(domain)
@@ -5643,7 +5648,6 @@ class AccountMove(models.Model):
                 self.env['ir.cron']._commit_progress(1)
             except UserError as e:
                 self.env.cr.rollback()
-                move.checked = False
                 msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
                 move.message_post(body=msg, message_type='comment')
                 self.env['ir.cron']._commit_progress()
@@ -6160,6 +6164,11 @@ class AccountMove(models.Model):
             raise UserError(_("There is no template that applies to invoices."))
 
         return available_reports
+
+    def _is_user_able_to_review(self):
+        if self.write_uid not in (self.env.user, self.env.ref('base.user_root')) or self.env.user != self.write_uid:
+            return self.env.user.has_group('account.group_account_user')
+        return self.write_uid.has_group('account.group_account_user')
 
     # -------------------------------------------------------------------------
     # TOOLING
