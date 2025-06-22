@@ -79,6 +79,12 @@ class Im_LivechatChannel(models.Model):
     channel_ids = fields.One2many('discuss.channel', 'livechat_channel_id', 'Sessions')
     chatbot_script_count = fields.Integer(string='Number of Chatbot', compute='_compute_chatbot_script_count')
     rule_ids = fields.One2many('im_livechat.channel.rule', 'channel_id', 'Rules')
+    ongoing_session_count = fields.Integer(
+        "Number of Ongoing Sessions", compute="_compute_ongoing_sessions_count"
+    )
+    remaining_session_capacity = fields.Integer(
+        "Remaining Session Capacity", compute="_compute_remaining_session_capacity"
+    )
 
     _max_sessions_mode_greater_than_zero = models.Constraint(
         "CHECK(max_sessions > 0)", "Concurrent session number should be greater than zero."
@@ -87,6 +93,36 @@ class Im_LivechatChannel(models.Model):
     def _are_you_inside(self):
         for channel in self:
             channel.are_you_inside = self.env.user in channel.user_ids
+
+    @api.depends("channel_ids.livechat_end_dt")
+    def _compute_ongoing_sessions_count(self):
+        count_by_channel = self.env["discuss.channel"]._read_group(
+            [
+                ("channel_type", "=", "livechat"),
+                ("livechat_end_dt", "=", False),
+                ("livechat_channel_id", "in", self.ids),
+            ],
+            ["livechat_channel_id"],
+            ["__count"],
+        )
+        for channel in self:
+            channel.ongoing_session_count = count_by_channel.get(channel, 0)
+
+    @api.depends(
+        "block_assignment_during_call",
+        "max_sessions",
+        "user_ids.livechat_is_in_call",
+        "user_ids.livechat_ongoing_session_count",
+    )
+    def _compute_remaining_session_capacity(self):
+        for channel in self:
+            total_capacity = channel.max_sessions * len(channel.user_ids)
+            capacity = total_capacity - sum(channel.user_ids.mapped("livechat_ongoing_session_count"))
+            if channel.block_assignment_during_call:
+                users_in_call = channel.user_ids.filtered(lambda u: u.livechat_is_in_call)
+                for user in users_in_call:
+                    capacity -= channel.max_sessions - user.livechat_ongoing_session_count
+            channel.remaining_session_capacity = max(capacity, 0)
 
     @api.depends(
         "user_ids.channel_ids.last_interest_dt",
