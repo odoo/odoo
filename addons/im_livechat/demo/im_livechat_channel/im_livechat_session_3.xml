@@ -8,13 +8,15 @@
             <field name="livechat_operator_id" ref="base.partner_admin"/>
             <field name="name">Joel Willis, Mitchell Admin</field>
             <field name="anonymous_name">Joel Willis</field>
-            <field name="create_date" eval="DateTime.today() + relativedelta(months=-1, days=-2)"/>
+            <field name="create_date" eval="DateTime.today() + relativedelta(months=-1, days=-2, minutes=12)"/>
         </record>
         <record id="im_livechat.livechat_channel_session_3_history_member_admin" model="im_livechat.channel.member.history">
             <field name="channel_id" ref="livechat_channel_session_3"/>
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="livechat_member_type">agent</field>
             <field name="create_date" eval="DateTime.today() + relativedelta(months=-1, days=-2)"/>
+            <field name="response_time_hour" eval="1/60"/>
+            <field name="message_count">1</field>
         </record>
         <record id="im_livechat.livechat_channel_session_3_member_admin" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_admin"/>
@@ -35,16 +37,6 @@
             <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_3_history_member_portal'))]"/>
         </record>
 
-        <record id="livechat_channel_session_3_message_1" model="mail.message">
-            <field name="model">discuss.channel</field>
-            <field name="res_id" ref="im_livechat.livechat_channel_session_3"/>
-            <field name="author_id" ref="base.partner_admin"/>
-            <field name="body">Hello, how may I help you?</field>
-            <field name="message_type">comment</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-2, minutes=11)" name="date"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-2, minutes=11)" name="create_date"/>
-        </record>
         <record id="livechat_channel_session_3_message_2" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_3"/>

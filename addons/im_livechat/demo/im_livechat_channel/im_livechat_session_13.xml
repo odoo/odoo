@@ -25,6 +25,11 @@
             <field name="last_interest_dt" eval="DateTime.today() + relativedelta(months=-1)"/>
             <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_13_history_member_admin'))]"/>
         </record>
+        <function model="im_livechat.channel.member.history" name="write">
+            <value model="im_livechat.channel.member.history"
+                eval="obj().search([('partner_id', '=', ref('base.partner_admin')), ('channel_id', '=', ref('im_livechat.livechat_channel_session_13'))]).ids"/>
+            <value eval="{'create_date': datetime.now() - timedelta(days=1)}"/>
+        </function>
         <record id="im_livechat.livechat_channel_session_13_guest" model="mail.guest">
             <field name="name">Visiteur</field>
         </record>

@@ -34,6 +34,45 @@ class ImLivechatChannelMemberHistory(models.Model):
     )
     avatar_128 = fields.Binary(compute="_compute_avatar_128")
 
+    # REPORTING FIELDS
+
+    session_country_id = fields.Many2one("res.country", related="channel_id.country_id")
+    session_livechat_channel_id = fields.Many2one(
+        "im_livechat.channel", "Live chat channel", related="channel_id.livechat_channel_id"
+    )
+    session_outcome = fields.Selection(related="channel_id.livechat_outcome")
+    session_start_hour = fields.Float(related="channel_id.livechat_start_hour")
+    session_week_day = fields.Selection(related="channel_id.livechat_week_day")
+    session_duration_hour = fields.Float(
+        "Session Duration",
+        help="Time spent by the persona in the session in hours",
+        compute="_compute_session_duration_hour",
+        aggregator="avg",
+        store=True,
+    )
+    rating_id = fields.Many2one("rating.rating", compute="_compute_rating_id", store=True)
+    rating = fields.Float(related="rating_id.rating")
+    rating_text = fields.Selection(string="Rating text", related="rating_id.rating_text")
+    call_history_ids = fields.Many2many("discuss.call.history")
+    has_call = fields.Float(compute="_compute_has_call", store=True)
+    call_count = fields.Float("# of Sessions with Calls", related="has_call", aggregator="sum")
+    call_percentage = fields.Float("Session with Calls (%)", related="has_call", aggregator="avg")
+    call_duration_hour = fields.Float(
+        "Call Duration", compute="_compute_call_duration_hour", aggregator="sum", store=True
+    )
+    message_count = fields.Integer("# of Messages per Session", aggregator="avg")
+    help_status = fields.Selection(
+        selection=[
+            ("requested", "Help Requested"),
+            ("provided", "Help Provided"),
+            ("none", "No Help"),
+        ],
+        compute="_compute_help_status",
+        search="_search_help_status",
+        store=True,
+    )
+    response_time_hour = fields.Float("Response Time", aggregator="avg")
+
     _member_id_unique = models.Constraint(
         "UNIQUE(member_id)", "Members can only be linked to one history"
     )
@@ -90,3 +129,62 @@ class ImLivechatChannelMemberHistory(models.Model):
     def _compute_avatar_128(self):
         for history in self:
             history.avatar_128 = history.partner_id.avatar_128 or history.guest_id.avatar_128
+
+    # ===================================================================
+    # REPORTING
+    # ===================================================================
+
+    @api.depends("call_history_ids")
+    def _compute_has_call(self):
+        for history in self:
+            history.has_call = 1 if history.call_history_ids else 0
+
+    @api.depends("call_history_ids.duration_hour")
+    def _compute_call_duration_hour(self):
+        for history in self:
+            history.call_duration_hour = sum(history.call_history_ids.mapped("duration_hour"))
+
+    @api.depends(
+        "channel_id.livechat_agent_requesting_help_history.partner_id",
+        "channel_id.livechat_agent_providing_help_history.partner_id",
+    )
+    def _compute_help_status(self):
+        agent_histories = self.filtered(lambda h: h.livechat_member_type == "agent")
+        (self - agent_histories).help_status = "none"
+        for history in agent_histories:
+            if (
+                history.channel_id.livechat_agent_requesting_help_history.partner_id
+                == history.partner_id
+            ):
+                history.help_status = "requested"
+            elif (
+                history.channel_id.livechat_agent_providing_help_history.partner_id
+                == history.partner_id
+            ):
+                history.help_status = "provided"
+
+    @api.depends("channel_id.rating_ids")
+    def _compute_rating_id(self):
+        agent_histories = self.filtered(lambda h: h.livechat_member_type in ("agent", "bot"))
+        (self - agent_histories).rating_id = None
+        for history in agent_histories:
+            history.rating_id = history.channel_id.rating_ids.filtered(
+                lambda r: r.rated_partner_id == history.partner_id
+            )[:1]  # Live chats only allow one rating.
+
+    @api.depends("create_date", "channel_id.livechat_end_dt")
+    def _compute_session_duration_hour(self):
+        for history in self:
+            end = history.channel_id.livechat_end_dt or fields.Datetime.now()
+            history.session_duration_hour = (end - history.create_date).total_seconds() / 3600
+
+    @api.model
+    def action_open_discuss_channel_list_view(self, domain=()):
+        discuss_channels = self.search_fetch(domain, ["channel_id"]).channel_id
+        action = self.env["ir.actions.act_window"]._for_xml_id("im_livechat.discuss_channel_action")
+        action["context"] = {}
+        action["domain"] = [("id", "in", discuss_channels.ids)]
+        action["mobile_view_mode"] = "list"
+        action["view_mode"] = "list"
+        action["views"] = [view for view in action["views"] if view[1] in ("list", "form")]
+        return action

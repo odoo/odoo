@@ -17,6 +17,8 @@
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="livechat_member_type">agent</field>
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
+            <field name="response_time_hour" eval="15/3600"/>
+            <field name="message_count">1</field>
         </record>
         <record id="im_livechat.livechat_channel_session_10_member_admin" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_admin"/>
@@ -95,6 +97,11 @@
                 eval="DateTime.today() + relativedelta(days=-1, minutes=25)" />
             <field name="start_call_message_id" ref="livechat_channel_session_10_message_call_notification" />
         </record>
+        <function model="im_livechat.channel.member.history" name="write">
+            <value model="im_livechat.channel.member.history"
+                eval="obj().search([('partner_id', '=', ref('base.partner_admin')), ('channel_id', '=', ref('livechat_channel_session_10'))]).ids"/>
+            <value eval="{'call_history_ids': [ref('livechat_channel_session_10_call_1')]}"/>
+        </function>
         <record id="livechat_channel_session_10_rating_message" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_10"/>
