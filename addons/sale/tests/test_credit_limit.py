@@ -364,3 +364,43 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
                 order_form.partner_credit_warning,
                 "Credit warning should be displayed",
             )
+
+    def test_commercial_partner_credit(self):
+        """Ensure that credit to invoice gets computed on partners' companies."""
+        company_a = self.env['res.partner'].create({
+            'name': "Company A",
+            'is_company': True,
+            'credit_limit': 10000.0,
+            'child_ids': [
+                Command.link(self.partner_a.id),
+                Command.create({
+                    'name': "Company A Invoice",
+                    'type': 'invoice',
+                }),
+            ],
+        })
+        invoice_partner = company_a.child_ids.filtered(lambda p: p.type == 'invoice')
+
+        order = self.empty_order
+        order.write({
+            'order_line': [Command.create({
+                'product_id': self.company_data['product_order_no'].id,
+                'price_unit': 600.0,
+                'tax_id': False,
+            })],
+        })
+        orders = order + order.copy({'partner_invoice_id': invoice_partner.id})
+        orders.action_confirm()
+
+        self.assertFalse(
+            self.partner_a.credit_to_invoice,
+            "Credit should only apply to the commercial entity",
+        )
+        self.assertFalse(company_a.credit)
+        self.assertEqual(company_a.credit_to_invoice, 1200.0)
+
+        invoices = orders._create_invoices()
+        invoices.action_post()
+        company_a.invalidate_recordset()
+        self.assertFalse(company_a.credit_to_invoice)
+        self.assertEqual(company_a.credit, 1200.0)

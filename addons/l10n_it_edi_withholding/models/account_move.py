@@ -2,10 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import re
 from collections import namedtuple
+
 from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.addons.l10n_it_edi.models.account_move import get_float
+from odoo.tools import float_compare
 
 _logger = logging.getLogger(__name__)
 
@@ -171,7 +175,7 @@ class AccountMove(models.Model):
         extra_info["withholding_taxes"] = withholding_taxes
 
         pension_fund_elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiCassaPrevidenziale')
-        pension_fund_taxes = []
+        pension_fund_taxes = {}
         for pension_fund in (pension_fund_elements or []):
             pension_fund_type = pension_fund.find("TipoCassa")
             tax_factor_percent = pension_fund.find("AlCassa")
@@ -186,7 +190,7 @@ class AccountMove(models.Model):
                  + type_tax_use_domain),
                 vat_only=False)
             if pension_fund_tax:
-                pension_fund_taxes.append(pension_fund_tax)
+                pension_fund_taxes[vat_tax_factor_percent] = pension_fund_tax
             else:
                 message_to_log.append(Markup("%s<br/>%s") % (
                     _("Pension Fund tax not found"),
@@ -194,13 +198,62 @@ class AccountMove(models.Model):
                 ))
         extra_info["pension_fund_taxes"] = pension_fund_taxes
 
+        # If the AssoSoftware specs are used on the invoice, then only apply
+        # the Pension Fund tax to the lines that show an AswCassPre
+        # additional tag (AltriDatiGestionali)
+        selector = ".//AltriDatiGestionali/TipoDato[contains(text(), 'AswCassPre')]"
+        if self.get_tag(body_tree, selector) is not None:
+            extra_info["pension_fund_assosoftware_tags"] = True
+
         return extra_info, message_to_log
 
+    def get_tag(self, element, selector):
+        if element is None:
+            return None
+        sub = element.xpath(selector)
+        if sub is None or len(sub) == 0:
+            return None
+        return sub[0]
+
+    def _get_pension_fund_tax_for_line(self, element, extra_info):
+        """ Apply the pension fund on all lines that have the related AliquotaIVA
+            If there are AssoSoftware specific AltriDatiGestionale 'AswCassPre'
+            tags that specify which lines have pension funds, only apply to them.
+        """
+        pension_fund_map = extra_info.get('pension_fund_taxes', {})
+        tax_rate_tag = self.get_tag(element, './/AliquotaIVA')
+        if tax_rate_tag is None:
+            return None
+
+        tax_rate = float(tax_rate_tag.text)
+        pension_fund_tax = pension_fund_map.get(tax_rate)
+        if not pension_fund_tax:
+            return None
+
+        if not extra_info.get('pension_fund_assosoftware_tags'):
+            return pension_fund_tax
+
+        selector = ".//AltriDatiGestionali[TipoDato[contains(text(),'AswCassPre')]]/RiferimentoTesto"
+        reference_tag = self.get_tag(element, selector)
+        if reference_tag is None:
+            return None
+
+        if match := re.match(r"(?P<kind>TC\d{2}) \((?P<tax_rate>\d+)%\)", reference_tag.text):
+            rate = float(match.group("tax_rate"))
+            match_kind = (match.group("kind") == pension_fund_tax.l10n_it_pension_fund_type)
+            match_rate = (float_compare(rate, pension_fund_tax.amount, precision_digits=2) == 0)
+            if match_kind and match_rate:
+                return pension_fund_tax
+
+        return None
+
     def _l10n_it_edi_import_line(self, element, move_line_form, extra_info=None):
+        extra_info = extra_info or {}
         messages_to_log = super()._l10n_it_edi_import_line(element, move_line_form, extra_info)
 
         type_tax_use_domain = extra_info['type_tax_use_domain']
 
+        # Eventually apply withholding
         for withholding_tax in extra_info.get('withholding_taxes', []):
             withholding_tags = element.xpath("Ritenuta")
             if withholding_tags and withholding_tags[0].text == 'SI':
@@ -212,7 +265,11 @@ class AccountMove(models.Model):
         price_subtotal = move_line_form.price_unit
         company = move_line_form.company_id
 
-        # Pension Funds applied on line level and ENASARCO Pension Fund tax (works as a withholding)
+        # Eventually apply pension_fund
+        if pension_fund_tax := self._get_pension_fund_tax_for_line(element, extra_info):
+            move_line_form.tax_ids |= pension_fund_tax
+
+        # Eventually apply ENASARCO
         for other_data_element in element.xpath('.//AltriDatiGestionali'):
             data_kind_element = other_data_element.xpath("./TipoDato")
             text_element = other_data_element.xpath("./RiferimentoTesto")
@@ -233,10 +290,6 @@ class AccountMove(models.Model):
                         _("Enasarco tax not found for line with description '%s'", move_line_form.name),
                         self.env['account.move']._compose_info_message(other_data_element, '.'),
                     ))
-            elif data_kind == 'aswcasspre' and 'tc' in data_text:
-                for pension_fund_tax in extra_info.get('pension_fund_taxes', []):
-                    if pension_fund_tax.l10n_it_pension_fund_type.lower() in data_text:
-                        move_line_form.tax_ids |= pension_fund_tax
 
         return messages_to_log
 

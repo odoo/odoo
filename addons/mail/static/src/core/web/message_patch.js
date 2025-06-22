@@ -87,7 +87,7 @@ patch(Message.prototype, {
                 return formatDateTime(value);
             }
             case "float":
-                return formatFloat(trackingValue.value);
+                return formatFloat(trackingValue.value, { digits: trackingValue.floatPrecision });
             case "integer":
                 return formatInteger(trackingValue.value);
             case "text":

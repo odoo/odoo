@@ -3,15 +3,15 @@
 # 	* pos_self_order
 # 
 # Translators:
-# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Wil Odoo, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -150,7 +150,7 @@ msgstr "本当にこのオーダを取消しますか？"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 #, python-format
 msgid "Available"
-msgstr "処理可能"
+msgstr "利用可能"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_available_language_ids
@@ -188,6 +188,7 @@ msgstr "戻る"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "取消"
@@ -203,6 +204,7 @@ msgstr "オーダを取消"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 #, python-format
 msgid "Cancel order"
@@ -473,7 +475,7 @@ msgstr "汎用"
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 #, python-format
 msgid "Get a tracker and enter its number here"
-msgstr "トラッカーを入手し、その番号をここに入力します"
+msgstr "トラッカーを手に取り、その番号をここに入力してください"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_http
@@ -1290,6 +1292,13 @@ msgid "Yes"
 msgstr "はい"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "You are not authorized to remove this order"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #, python-format
@@ -1317,6 +1326,13 @@ msgstr "自分のオーダ"
 #, python-format
 msgid "Your Selection"
 msgstr "選択"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "Your order does not exist or has been removed"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1350,13 +1366,6 @@ msgstr "オーダのステータスが変わりました"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "empty = all points of sale"
 msgstr "空 = 全てのPOS"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
-#, python-format
-msgid "floor"
-msgstr "フロア"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree

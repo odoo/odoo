@@ -1783,7 +1783,7 @@ class BaseModel(metaclass=MetaModel):
                     continue
                 try:
                     domains.append([(field_name, operator, field.convert_to_write(name, self))])
-                except ValueError:
+                except (ValueError, TypeError):
                     pass  # ignore that case if the value doesn't match the field type
             domain += aggregator(domains)
 
@@ -3358,7 +3358,7 @@ class BaseModel(metaclass=MetaModel):
                 # field is translated to avoid converting its column to varchar
                 # and losing data
                 translate = next((
-                    field.args['translate'] for field in reversed(fields_) if 'translate' in field.args
+                    field._args__['translate'] for field in reversed(fields_) if 'translate' in field._args__
                 ), False)
                 if not translate:
                     # patch the field definition by adding an override
@@ -3368,7 +3368,7 @@ class BaseModel(metaclass=MetaModel):
                 cls._fields[name] = fields_[0]
             else:
                 Field = type(fields_[-1])
-                self._add_field(name, Field(_base_fields=fields_))
+                self._add_field(name, Field(_base_fields=tuple(fields_)))
 
         # 2. add manual fields
         if self.pool._init_modules:

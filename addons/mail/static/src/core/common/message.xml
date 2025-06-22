@@ -116,7 +116,7 @@
                                     unlinkAttachment.bind="onClickAttachmentUnlink"
                                     imagesHeight="message.attachments.length === 1 ? 300 : 75"
                                     messageSearch="props.messageSearch"/>
-                                <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
+                                <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="message.isSelfAuthored or store.user?.isAdmin"/>
                             </div>
                             <t t-if="!message.hasTextContent or env.inChatWindow" t-call="mail.Message.actions"/>
                         </div>

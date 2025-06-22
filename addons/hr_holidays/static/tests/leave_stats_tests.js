@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { selectDropdownItem, editInput } from "@web/../tests/helpers/utils";
+import { clickSave, selectDropdownItem, editInput } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -176,4 +176,31 @@ QUnit.test("leave stats reload when employee/department changes", async (assert)
     await selectDropdownItem(document.body, "employee_id", "Jesus");
     // Set department => should load department's data
     await selectDropdownItem(document.body, "department_id", "R&D");
+});
+
+QUnit.test("leave stats renders after multi-employee", async (assert) => {
+    await makeView({
+        serverData,
+        type: "form",
+        resModel: "hr.leave",
+        arch: `
+            <form string="Leave">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="date_from"/>
+                <widget name="hr_leave_stats"/>
+            </form>`,
+        resId: 12,
+    });
+    
+    await selectDropdownItem(document.body, "employee_id", "Jesus");
+    await clickSave(document.body);
+
+    const $leaveTypeBody = $(".o_leave_stats #o_leave_stats_employee");
+    const $leavesDepartmentBody = $(".o_leave_stats #o_leave_stats_department");
+    assert.containsOnce($leaveTypeBody, "span:contains(Legal Leave)");
+    assert.containsOnce($leaveTypeBody, "span:contains(13)");
+    assert.containsN($leavesDepartmentBody, "span:contains(Jesus)", 2);
+    assert.containsOnce($leavesDepartmentBody, "span:contains(Richard)");
+    assert.containsOnce($leavesDepartmentBody, "div.o_horizontal_separator:contains(R&D)");
 });

@@ -9,7 +9,8 @@ import {
     triggerHotkey,
     makeDeferred,
 } from "@web/../tests/helpers/utils";
-import { makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
+import { contains } from "@web/../tests/utils";
+import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
@@ -453,4 +454,56 @@ QUnit.module("ViewDialogs", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "display a dialog if onchange result is a warning from within a dialog",
+        async function (assert) {
+            serverData.views = {
+                "instrument,false,form": `<form><field name="name" /></form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `<form><field name="instrument"/></form>`,
+                resId: 2,
+                mockRPC(route, args) {
+                    if (args.method === "onchange" && args.model === "instrument") {
+                        assert.step("onchange warning");
+                        return Promise.resolve({
+                            value: {
+                                name: false,
+                            },
+                            warning: {
+                                title: "Warning",
+                                message: "You must first select a partner",
+                                type: "dialog",
+                            },
+                        });
+                    }
+                },
+            });
+
+            await editInput(target, ".o_field_widget[name=instrument] input", "tralala");
+            await contains(".o_m2o_dropdown_option_create_edit a");
+
+            await click(target.querySelector(".o_m2o_dropdown_option_create_edit a"));
+            await contains(".modal.o_inactive_modal");
+            assert.containsN(document.body, ".modal", 2);
+            assert.strictEqual(
+                document.body.querySelector(".modal:not(.o_inactive_modal) .modal-body")
+                    .textContent,
+                "You must first select a partner"
+            );
+
+            await click(document.body.querySelector(".modal:not(.o_inactive_modal) button"));
+            assert.containsOnce(target, ".modal");
+            assert.strictEqual(
+                document.body.querySelector(".modal:not(.o_inactive_modal) .modal-title")
+                    .textContent,
+                "Create Instruments"
+            );
+
+            assert.verifySteps(["onchange warning"]);
+        }
+    );
 });

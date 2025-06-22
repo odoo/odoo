@@ -487,7 +487,7 @@ const emojisData1 = `{
     ],
     "name": "` + _t("face with tongue") + `",
     "shortcodes": [
-        ":stuck_out_ltongue:"
+        ":stuck_out_tongue:"
     ]
 },
 {
@@ -507,7 +507,7 @@ const emojisData1 = `{
     ],
     "name": "` + _t("winking face with tongue") + `",
     "shortcodes": [
-        ":stuck_out_ltongue_winking_eye:"
+        ":stuck_out_tongue_winking_eye:"
     ]
 },
 {
@@ -543,7 +543,7 @@ const emojisData1 = `{
     ],
     "name": "` + _t("squinting face with tongue") + `",
     "shortcodes": [
-        ":stuck_out_ltongue_closed_eyes:"
+        ":stuck_out_tongue_closed_eyes:"
     ]
 },
 {
@@ -878,7 +878,7 @@ const emojisData1 = `{
     ],
     "name": "` + _t("face with thermometer") + `",
     "shortcodes": [
-        ":face_with_lthermometer:"
+        ":face_with_thermometer:"
     ]
 },
 {
@@ -1793,7 +1793,7 @@ const emojisData1 = `{
     ],
     "name": "` + _t("cat with tears of joy") + `",
     "shortcodes": [
-        ":cat_with_ltears_of_joy:"
+        ":cat_with_tears_of_joy:"
     ]
 },
 {
@@ -2617,7 +2617,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("sign of the horns") + `",
     "shortcodes": [
-        ":sign_of_lthe_horns:"
+        ":sign_of_the_horns:"
     ]
 },
 {
@@ -2892,7 +2892,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("palms up together") + `",
     "shortcodes": [
-        ":palms_up_ltogether:"
+        ":palms_up_together:"
     ]
 },
 {
@@ -3690,7 +3690,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("person tipping hand") + `",
     "shortcodes": [
-        ":person_ltipping_hand:"
+        ":person_tipping_hand:"
     ]
 },
 {
@@ -3705,7 +3705,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("man tipping hand") + `",
     "shortcodes": [
-        ":man_ltipping_hand:"
+        ":man_tipping_hand:"
     ]
 },
 {
@@ -3720,7 +3720,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("woman tipping hand") + `",
     "shortcodes": [
-        ":woman_ltipping_hand:"
+        ":woman_tipping_hand:"
     ]
 },
 {
@@ -4036,7 +4036,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("man teacher") + `",
     "shortcodes": [
-        ":man_lteacher:"
+        ":man_teacher:"
     ]
 },
 {
@@ -4051,7 +4051,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("woman teacher") + `",
     "shortcodes": [
-        ":woman_lteacher:"
+        ":woman_teacher:"
     ]
 },
 {
@@ -4294,7 +4294,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("man technologist") + `",
     "shortcodes": [
-        ":man_ltechnologist:"
+        ":man_technologist:"
     ]
 },
 {
@@ -4311,7 +4311,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("woman technologist") + `",
     "shortcodes": [
-        ":woman_ltechnologist:"
+        ":woman_technologist:"
     ]
 },
 {
@@ -4672,7 +4672,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("person wearing turban") + `",
     "shortcodes": [
-        ":person_wearing_lturban:"
+        ":person_wearing_turban:"
     ]
 },
 {
@@ -4686,7 +4686,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("man wearing turban") + `",
     "shortcodes": [
-        ":man_wearing_lturban:"
+        ":man_wearing_turban:"
     ]
 },
 {
@@ -4700,7 +4700,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("woman wearing turban") + `",
     "shortcodes": [
-        ":woman_wearing_lturban:"
+        ":woman_wearing_turban:"
     ]
 },
 {
@@ -4749,7 +4749,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("person in tuxedo") + `",
     "shortcodes": [
-        ":person_in_ltuxedo:"
+        ":person_in_tuxedo:"
     ]
 },
 {
@@ -6436,7 +6436,7 @@ const emojisData2 = `{
     ],
     "name": "` + _t("person taking bath") + `",
     "shortcodes": [
-        ":person_ltaking_bath:"
+        ":person_taking_bath:"
     ]
 },
 {
@@ -8689,7 +8689,7 @@ const emojisData3 = `{
     ],
     "name": "` + _t("evergreen tree") + `",
     "shortcodes": [
-        ":evergreen_ltree:"
+        ":evergreen_tree:"
     ]
 },
 {
@@ -8703,7 +8703,7 @@ const emojisData3 = `{
     ],
     "name": "` + _t("deciduous tree") + `",
     "shortcodes": [
-        ":deciduous_ltree:"
+        ":deciduous_tree:"
     ]
 },
 {
@@ -8716,7 +8716,7 @@ const emojisData3 = `{
     ],
     "name": "` + _t("palm tree") + `",
     "shortcodes": [
-        ":palm_ltree:"
+        ":palm_tree:"
     ]
 },
 {
@@ -11229,7 +11229,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("Tokyo tower") + `",
     "shortcodes": [
-        ":Tokyo_ltower:"
+        ":Tokyo_tower:"
     ]
 },
 {
@@ -11290,7 +11290,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("hindu temple") + `",
     "shortcodes": [
-        ":hindu_ltemple:"
+        ":hindu_temple:"
     ]
 },
 {
@@ -11566,7 +11566,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("circus tent") + `",
     "shortcodes": [
-        ":circus_ltent:"
+        ":circus_tent:"
     ]
 },
 {
@@ -11618,7 +11618,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("high-speed train") + `",
     "shortcodes": [
-        ":high-speed_ltrain:"
+        ":high-speed_train:"
     ]
 },
 {
@@ -11635,7 +11635,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("bullet train") + `",
     "shortcodes": [
-        ":bullet_ltrain:"
+        ":bullet_train:"
     ]
 },
 {
@@ -11890,7 +11890,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("oncoming taxi") + `",
     "shortcodes": [
-        ":oncoming_ltaxi:"
+        ":oncoming_taxi:"
     ]
 },
 {
@@ -11949,7 +11949,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("delivery truck") + `",
     "shortcodes": [
-        ":delivery_ltruck:"
+        ":delivery_truck:"
     ]
 },
 {
@@ -12144,7 +12144,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("railway track") + `",
     "shortcodes": [
-        ":railway_ltrack:"
+        ":railway_track:"
     ]
 },
 {
@@ -12208,7 +12208,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("horizontal traffic light") + `",
     "shortcodes": [
-        ":horizontal_ltraffic_light:"
+        ":horizontal_traffic_light:"
     ]
 },
 {
@@ -12225,7 +12225,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("vertical traffic light") + `",
     "shortcodes": [
-        ":vertical_ltraffic_light:"
+        ":vertical_traffic_light:"
     ]
 },
 {
@@ -12512,7 +12512,7 @@ const emojisData5 = `{
     ],
     "name": "` + _t("aerial tramway") + `",
     "shortcodes": [
-        ":aerial_ltramway:"
+        ":aerial_tramway:"
     ]
 },
 {
@@ -13832,7 +13832,7 @@ const emojisData6 = `{
     ],
     "name": "` + _t("Christmas tree") + `",
     "shortcodes": [
-        ":Christmas_ltree:"
+        ":Christmas_tree:"
     ]
 },
 {
@@ -13952,7 +13952,7 @@ const emojisData6 = `{
     ],
     "name": "` + _t("tanabata tree") + `",
     "shortcodes": [
-        ":tanabata_ltree:"
+        ":tanabata_tree:"
     ]
 },
 {
@@ -14108,7 +14108,7 @@ const emojisData6 = `{
     ],
     "name": "` + _t("admission tickets") + `",
     "shortcodes": [
-        ":admission_ltickets:"
+        ":admission_tickets:"
     ]
 },
 {
@@ -16468,7 +16468,7 @@ const emojisData7 = `{
     ],
     "name": "` + _t("magnifying glass tilted left") + `",
     "shortcodes": [
-        ":magnifying_glass_ltilted_left:"
+        ":magnifying_glass_tilted_left:"
     ]
 },
 {
@@ -16484,7 +16484,7 @@ const emojisData7 = `{
     ],
     "name": "` + _t("magnifying glass tilted right") + `",
     "shortcodes": [
-        ":magnifying_glass_ltilted_right:"
+        ":magnifying_glass_tilted_right:"
     ]
 },
 {
@@ -16766,7 +16766,7 @@ const emojisData7 = `{
     ],
     "name": "` + _t("bookmark tabs") + `",
     "shortcodes": [
-        ":bookmark_ltabs:"
+        ":bookmark_tabs:"
     ]
 },
 {
@@ -17022,7 +17022,7 @@ const emojisData7 = `{
     ],
     "name": "` + _t("outbox tray") + `",
     "shortcodes": [
-        ":outbox_ltray:"
+        ":outbox_tray:"
     ]
 },
 {
@@ -17040,7 +17040,7 @@ const emojisData7 = `{
     ],
     "name": "` + _t("inbox tray") + `",
     "shortcodes": [
-        ":inbox_ltray:"
+        ":inbox_tray:"
     ]
 },
 {
@@ -18006,7 +18006,7 @@ const emojisData7 = `{
     ],
     "name": "` + _t("test tube") + `",
     "shortcodes": [
-        ":test_ltube:"
+        ":test_tube:"
     ]
 },
 {
@@ -19596,7 +19596,7 @@ const emojisData8 = `{
     ],
     "name": "` + _t("shuffle tracks button") + `",
     "shortcodes": [
-        ":shuffle_ltracks_button:"
+        ":shuffle_tracks_button:"
     ]
 },
 {
@@ -19675,7 +19675,7 @@ const emojisData8 = `{
     ],
     "name": "` + _t("next track button") + `",
     "shortcodes": [
-        ":next_ltrack_button:"
+        ":next_track_button:"
     ]
 },
 {
@@ -19739,7 +19739,7 @@ const emojisData8 = `{
     ],
     "name": "` + _t("last track button") + `",
     "shortcodes": [
-        ":last_ltrack_button:"
+        ":last_track_button:"
     ]
 },
 {
@@ -20782,7 +20782,7 @@ const emojisData8 = `{
     ],
     "name": "` + _t("A button (blood type)") + `",
     "shortcodes": [
-        ":A_button_(blood_ltype):"
+        ":A_button_(blood_type):"
     ]
 },
 {
@@ -20796,7 +20796,7 @@ const emojisData8 = `{
     ],
     "name": "` + _t("AB button (blood type)") + `",
     "shortcodes": [
-        ":AB_button_(blood_ltype):"
+        ":AB_button_(blood_type):"
     ]
 },
 {
@@ -20810,7 +20810,7 @@ const emojisData8 = `{
     ],
     "name": "` + _t("B button (blood type)") + `",
     "shortcodes": [
-        ":B_button_(blood_ltype):"
+        ":B_button_(blood_type):"
     ]
 },
 {
@@ -20930,7 +20930,7 @@ const emojisData8 = `{
     ],
     "name": "` + _t("O button (blood type)") + `",
     "shortcodes": [
-        ":O_button_(blood_ltype):"
+        ":O_button_(blood_type):"
     ]
 },
 {
@@ -21670,7 +21670,7 @@ const emojisData8 = `{
     ],
     "name": "` + _t("red triangle pointed up") + `",
     "shortcodes": [
-        ":red_ltriangle_pointed_up:"
+        ":red_triangle_pointed_up:"
     ]
 },
 {
@@ -21685,7 +21685,7 @@ const emojisData8 = `{
     ],
     "name": "` + _t("red triangle pointed down") + `",
     "shortcodes": [
-        ":red_ltriangle_pointed_down:"
+        ":red_triangle_pointed_down:"
     ]
 },
 {

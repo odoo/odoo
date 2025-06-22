@@ -604,6 +604,9 @@ msgid ""
 "            Egypt Tax Authority Invoice Integration\n"
 "        "
 msgstr ""
+"\n"
+"            エジプト税務当局のインボイス連携\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ke_edi_oscu
@@ -4479,6 +4482,8 @@ msgid ""
 "\n"
 "E-invoice implementation for Saudi Arabia; Integration with ZATCA\n"
 msgstr ""
+"\n"
+"サウジアラビアにおける電子請求書の導入、ZATCA との連携\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_edi_pos
@@ -6689,18 +6694,20 @@ msgstr ""
 "従業員経費の管理\n"
 "================\n"
 "\n"
-"このアプリケーションでは、従業員の1日の経費を管理できます。 それはあなたの従業員の手数料ノートにアクセスし、あなたのノートを完了し、検証または拒否する権利を与える与えます。 検証後、従業員の請求書が作成されます。\n"
-"従業員は、独自の経費をコード化することができ、検証フローによって、マネジャーによる検証後に自動的に会計処理に反映されます。\n"
+"このアプリケーションでは、従業員の日々の経費を管理できます。\n"
+"従業員の経費明細にアクセスでき、それらを確認・承認または却下する権限が与えられます。\n"
+"承認後は、従業員に対して請求書が自動で作成されます。。\n"
+"従業員は自分自身の経費を入力することができ、承認フローによって、マネジャーの承認後に自動的に会計処理に反映されます。\n"
 "\n"
 "\n"
-"全体の流れは次のように実装されます：\n"
+"フロー全体は以下のように実装されています:\n"
 "---------------------------------\n"
-"*ドラフト経費\n"
-"*従業員がマネジャーに提出する\n"
-"*当該従業員のマネジャーの承認\n"
-"*経理担当者と経理記入項目の作成による検証\n"
+"*経費の下書き作成\n"
+"*従業員がマネジャーに提出\n"
+"*マネジャーによる承認\n"
+"*会計担当者による承認および仕訳の作成\n"
 "\n"
-"このモジュールは分析会計も使用し、タイムシートモジュールの請求書と互換性があるため、プロジェクトごとに作業する場合に顧客の経費を自動的に再請求することができます。\n"
+"このモジュールは、分析会計も使用しており、タイムシート請求モジュールとも互換性があります。そのため、プロジェクト単位で業務を行っている場合には、顧客の経費を自動的に再請求することも可能です。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_management
@@ -18802,12 +18809,12 @@ msgstr "従業員の計画に基づき、勤怠から勤務エントリを作成
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract_attendance
 msgid "Create work entries from the employee's attendances"
-msgstr "従業員の出勤からワークエントリを作成"
+msgstr "従業員の出勤から勤務記録を作成"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract_planning
 msgid "Create work entries from the employee's planning"
-msgstr "従業員の計画からワークエントリを作成"
+msgstr "従業員の計画から勤務記録を作成"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -19299,8 +19306,8 @@ msgstr "D - 電気、ガス、蒸気、空調の供給"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Express Shipping"
-msgstr "DHLエクスプレス配送"
+msgid "DHL Express Shipping (Legacy)"
+msgstr "DHL Express配送 (旧版)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008
@@ -19833,13 +19840,13 @@ msgstr "デスクメーカー"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
 msgid "Destination Contact"
-msgstr "行き先の連絡先"
+msgstr "マージ先連絡先"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__res_model
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__res_model
 msgid "Destination Model"
-msgstr "宛先モデル"
+msgstr "対象モデル"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -20870,7 +20877,7 @@ msgstr "企業版ウェブサイトビルダー"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_R
 msgid "Entertainment"
-msgstr "娯楽"
+msgstr "エンターテイメント"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__entry_count
@@ -21280,7 +21287,7 @@ msgstr "エキスポートタイプ"
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_sd_worx
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_sd_worx
 msgid "Export Work Entries to SD Worx"
-msgstr "ワークエントリをSD Worxにエクスポート"
+msgstr "勤務記録をSD Worxにエクスポート"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_au_aba
@@ -21436,7 +21443,7 @@ msgstr "請求書スキャンからデータを抽出して、自動的に入力
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_U
 msgid "Extraterritorial"
-msgstr "治外法権"
+msgstr "国際機関"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_F
@@ -22278,7 +22285,7 @@ msgstr "フランス-POSのVAT不正防止認証(CGI 286 I-3 bis)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_work_entry_holidays
 msgid "France - Work Entries Time Off"
-msgstr "フランス - ワークエントリ休暇"
+msgstr "フランス - 勤務記録休暇"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -22573,7 +22580,7 @@ msgstr "グルジア"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_intrastat
 msgid "German Intrastat Declaration"
-msgstr "ドイツ国内統計申告書"
+msgstr "ドイツイントラスタット申告"
 
 #. module: base
 #: model:res.country,name:base.de
@@ -25566,13 +25573,13 @@ msgstr "ラトビア - 会計"
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Launch"
-msgstr "起動"
+msgstr "開始"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Launch Configuration Wizard"
-msgstr "起動設定ウィザード"
+msgstr "設定ウィザードを開始"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background
@@ -25924,7 +25931,7 @@ msgstr "ログ管理"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Logging details"
-msgstr "ロギングの詳細"
+msgstr "ログ詳細"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login
@@ -26417,7 +26424,7 @@ msgstr "フリートと資産を管理"
 #: model:ir.module.module,description:base.module_account_disallowed_expenses
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses
 msgid "Manage disallowed expenses"
-msgstr "損金否認費用を管理する"
+msgstr "損金不算入費用を管理する"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses_fleet
@@ -26509,7 +26516,7 @@ msgstr "応募者に送信する署名の管理"
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract
 #: model:ir.module.module,summary:base.module_hr_work_entry_contract_enterprise
 msgid "Manage work entries"
-msgstr "ワークエントリを管理する"
+msgstr "勤務記録を管理する"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_facebook
@@ -27765,7 +27772,7 @@ msgstr "オランダ - SBRステータス情報サービス"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
 msgid "Netherlands Intrastat Declaration"
-msgstr "オランダの州内宣言"
+msgstr "オランダイントラスタット申告"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -31103,7 +31110,7 @@ msgstr "取引先"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr "連絡先情報自動提案"
+msgstr "取引先自動入力"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
@@ -31371,7 +31378,7 @@ msgstr "決済プロバイダー"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment_term
 msgid "Payment Term - Days end of month on the"
-msgstr "支払条件 - 月末の日数"
+msgstr "支払条件 - 月末後指定日"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -32760,19 +32767,19 @@ msgstr "Razorpay OAuth 統合"
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_read
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Read"
-msgstr "読む"
+msgstr "読み取り"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_read
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Read Access"
-msgstr "読出権限"
+msgstr "読み取りアクセス"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
-msgstr "読出のみ"
+msgstr "読み取り専用"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
@@ -34358,8 +34365,13 @@ msgstr "shiprocketで小包を送り、オンラインで追跡します"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
-msgid "Send your shippings through DHL and track them online"
-msgstr "DHLを通して発送し、オンラインで追跡します"
+msgid ""
+"This is the legacy integration with DHL Express that is no longer supported."
+" Please install the new \"DHL Express Shipping\" module and uninstall this "
+"one as soon as possible."
+msgstr ""
+"こちらは旧バージョンの DHL Express 連携モジュールであり、現在はサポートされていません。新しいDHL "
+"Express配送モジュールをインストールし、本モジュールはできるだけ早くアンインストールしてください。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex_rest
@@ -38005,7 +38017,7 @@ msgstr "Transifexの連携機能"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__trans_implied_ids
 msgid "Transitively inherits"
-msgstr "推移的継承"
+msgstr "間接継承する"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__translate
@@ -38033,7 +38045,7 @@ msgstr "モデル翻訳されたフィールドの翻訳は、偽の値とstr値
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
 msgid "Transportation/Logistics"
-msgstr "運輸/物流"
+msgstr "交通/物流"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__tree
@@ -38095,14 +38107,14 @@ msgstr "タークス・カイコス諸島"
 msgid ""
 "Turn emails received in your mailbox into leads and log their content as "
 "internal notes."
-msgstr "メールボックスに届いたメールをリードに変換し、その内容を社内メモとして記録します。"
+msgstr "メールボックスに届いたメールをリードに変換し、その内容を内部メモとして記録します。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_mail_plugin
 msgid ""
 "Turn emails received in your mailbox into tasks and log their content as "
 "internal notes."
-msgstr "メールボックスに届いたメールをタスクに変換し、その内容を社内メモとして記録します。"
+msgstr "メールボックスに届いたメールをタスクに変換し、その内容を内部メモとして記録します。"
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -39936,27 +39948,27 @@ msgstr "ウッドコーナーは、顧客が木、花、菌類を扱うのを助
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
 msgid "Work Entries"
-msgstr "作業エントリ"
+msgstr "勤務記録"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_attendance
 msgid "Work Entries - Attendance"
-msgstr "ワークエントリ - 勤怠"
+msgstr "勤務記録 - 勤怠"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
 msgid "Work Entries - Contract"
-msgstr "ワークエントリ-契約"
+msgstr "勤務記録-契約"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_enterprise
 msgid "Work Entries - Contract Enterprise"
-msgstr "ワークエントリ - 契約 企業版"
+msgstr "勤務記録 - 契約 企業版"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_planning
 msgid "Work Entries - Planning"
-msgstr "ワークエントリ - 計画"
+msgstr "勤務記録 - 計画"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
@@ -40000,13 +40012,13 @@ msgstr "書く"
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Write Access"
-msgstr "更新権限"
+msgstr "書き込みアクセス"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
 msgid "Write Date"
-msgstr "日付を書く"
+msgstr "更新日時"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__code
@@ -41024,7 +41036,7 @@ msgstr "properties_definition"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "read"
-msgstr "読む"
+msgstr "読み取り"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__resource_ref

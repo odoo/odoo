@@ -204,19 +204,21 @@ def check_image():
     return {'major': version[0], 'minor': version[1]}
 
 
-def save_conf_server(url, token, db_uuid, enterprise_code):
+def save_conf_server(url, token, db_uuid, enterprise_code, db_name=None):
     """
     Save server configurations in odoo.conf
     :param url: The URL of the server
     :param token: The token to authenticate the server
     :param db_uuid: The database UUID
     :param enterprise_code: The enterprise code
+    :param db_name: The database name
     """
     update_conf({
         'remote_server': url,
         'token': token,
         'db_uuid': db_uuid,
         'enterprise_code': enterprise_code,
+        'db_name': db_name,
     })
 
 
@@ -374,10 +376,16 @@ def load_certificate():
     if response.status != 200:
         return "ERR_IOT_HTTPS_LOAD_REQUEST_STATUS %s\n\n%s" % (response.status, response.reason)
 
-    result = json.loads(response.data.decode()).get('result', {})
-    error = result.get('error')
-    if error:
-        _logger.error("An error received from odoo.com while trying to get the certificate: %s", error)
+    response_body = json.loads(response.data.decode())
+    server_error = response_body.get('error')
+    if server_error:
+        _logger.error("A server error received from odoo.com while trying to get the certificate: %s", server_error)
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
+    result = response_body.get('result', {})
+    certificate_error = result.get('error')
+    if certificate_error:
+        _logger.error("An error received from odoo.com while trying to get the certificate: %s", certificate_error)
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
     update_conf({'subject': result['subject_cn']})
@@ -600,6 +608,10 @@ def disconnect_from_server():
         'remote_server': '',
         'token': '',
         'db_uuid': '',
+        'db_name': '',
+        'screen_orientation': '',
+        'browser_url': '',
+        'iot_handlers_etag': '',
     })
 
 

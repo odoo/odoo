@@ -263,6 +263,30 @@ class Ewaybill(models.Model):
             'state': 'challan',
         })
 
+    def action_print(self):
+        self.ensure_one()
+        if self.state in ['pending', 'cancel']:
+            raise UserError(_("Please generate the E-Waybill or mark the document as a Challan to print it."))
+
+        doc_label = _("Challan") if self.state == 'challan' else _("E-Waybill")
+        body = _("%s has been generated", doc_label)
+        filename = "%s - %s.pdf" % (doc_label, self.document_number)
+        pdf_content = self.env['ir.actions.report']._render_qweb_pdf(
+            'l10n_in_ewaybill_stock.action_report_ewaybill', res_ids=[self.id])[0]
+        attachment = self.env['ir.attachment'].create({
+            'name': filename,
+            'type': 'binary',
+            'datas': base64.b64encode(pdf_content),
+            'res_model': 'l10n.in.ewaybill',
+            'res_id': self.id,
+            'mimetype': 'application/pdf',
+        })
+        self.message_post(body=body, attachment_ids=[attachment.id])
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/{attachment.id}?download=true',
+        }
+
     def _is_overseas(self):
         self.ensure_one()
         return self._get_gst_treatment()[1] in ('overseas', 'special_economic_zone')
@@ -282,7 +306,7 @@ class Ewaybill(models.Model):
 
     def _check_transporter(self):
         error_message = []
-        if self.transporter_id and not self.transporter_id.vat:
+        if self.transporter_id and not self.transporter_id.vat and (self.mode != "1" or not self.vehicle_no):
             error_message.append(_("- Transporter %s does not have a GST Number", self.transporter_id.name))
         if self.mode == "4" and self.vehicle_no and self.vehicle_type == "R":
             error_message.append(_("- Vehicle type can not be regular when the transportation mode is ship"))

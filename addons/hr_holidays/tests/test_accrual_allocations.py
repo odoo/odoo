@@ -1397,7 +1397,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
             'carryover_date': 'other',
-            'carryover_day': 20,
+            'carryover_day': 31,
             'carryover_month': 'apr',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
@@ -1411,7 +1411,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'postpone_max_days': 69,
             })],
         })
-        with freeze_time("2023-04-20"):
+        with freeze_time("2023-04-30"):
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
@@ -1419,13 +1419,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
-                'date_from': '2023-04-20',
+                'date_from': '2023-04-30',
             })
             allocation.action_validate()
 
-        with freeze_time("2024-04-20"):
+        with freeze_time("2024-04-30"):
             allocation._update_accrual()
-        self.assertEqual(allocation.number_of_days, 76, "Carryover at other date, level's maximum leave is 69 + Partial for 4/20 to 5/11 (Accrued gain time is 'start').")
+        self.assertAlmostEqual(allocation.number_of_days, 72.667, places=3, msg="Carryover at other date, level's maximum leave is 69 + Partial for 4/20 to 5/11 (Accrued gain time is 'start').")
 
     def test_accrual_carrover_other_period_end_multi_level(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
@@ -2751,3 +2751,42 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             leave.action_validate()
             allocation_data = leave_type_day.get_allocation_data(self.employee_emp)
             self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 1)
+
+    def test_archived_employee_update_accrual(self):
+        """
+        Check updating accruals works even for archived employees, since it is possible to archive an employee
+        without archiving its allocations.
+        """
+        with freeze_time("2020-01-01"):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Test accrual plan',
+                'level_ids': [Command.create({
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'day',
+                    'frequency': 'hourly',
+                    'cap_accrued_time': True,
+                    'maximum_leave': 10000
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_validate()
+
+            # Archive employee but not the allocation
+            self.env["hr.departure.wizard"].create({
+                'employee_id': self.employee_emp.id,
+                'archive_allocation': False,
+            }).with_context(toggle_active=True).action_register_departure()
+            self.assertFalse(self.employee_emp.active, "Check employee has been archived")
+
+            with freeze_time(datetime.date.today() + relativedelta(days=2)):
+                allocation._update_accrual()
+                self.assertEqual(allocation.number_of_days, 8)

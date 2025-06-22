@@ -327,9 +327,8 @@ div.media_iframe_video {
     iframe {
         width: 100%;
         height: 100%;
-        @include o-position-absolute($top: 0);
+        @include o-position-absolute($top: 0, $left: 0, $right: 0);
         margin: 0 auto;
-        margin-left: -50%;
     }
     &.padding-small iframe {
         padding: 4px;
@@ -572,7 +571,12 @@ blockquote {
     font-style: italic;
 }
 
-pre {
+pre {    
+    padding: map-get($spacers, 2) map-get($spacers, 3);
+    border: $border-width solid $border-color;
+    border-radius: $border-radius;
+    background-color: $gray-100;
+    color: $gray-900;
     white-space: pre-wrap;
 
     p {

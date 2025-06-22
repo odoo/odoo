@@ -197,6 +197,7 @@
             'project/static/src/components/project_task_state_selection/*',
             'project/static/src/components/project_many2one_field/*',
             'project/static/src/views/project_task_form/*.scss',
+            'project/static/src/views/project_task_kanban/*.scss',
 
             'project/static/src/project_sharing/search/favorite_menu/custom_favorite_item.xml',
             'project/static/src/project_sharing/**/*',

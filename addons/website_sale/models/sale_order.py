@@ -57,7 +57,11 @@ class SaleOrder(models.Model):
         super(SaleOrder, self - website_orders)._compute_user_id()
         for order in website_orders:
             if not order.user_id:
-                order.user_id = order.website_id.salesperson_id or order.partner_id.parent_id.user_id.id or order.partner_id.user_id.id
+                order.user_id = (
+                    order.website_id.salesperson_id
+                    or order.partner_id.user_id.id
+                    or order.partner_id.parent_id.user_id.id
+                )
 
     @api.model
     def _get_note_url(self):

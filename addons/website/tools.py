@@ -53,6 +53,7 @@ def MockRequest(
             geoip={'country_code': country_code},
             sale_order_id=sale_order_id,
             website_sale_current_pl=website_sale_current_pl,
+            force_website_id=website and website.id,
             context={'lang': ''},
         ),
         geoip=odoo.http.GeoIP('127.0.0.1'),

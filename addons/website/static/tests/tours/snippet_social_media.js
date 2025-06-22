@@ -172,14 +172,13 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     },
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditMode(),
-    wTourUtils.clickOnSnippet({
-        id: 's_social_media',
-        name: 'Social Media',
-    }),
     {
         content: "Check if we can still change custom icons",
         trigger: 'iframe .s_social_media a[href="https://whatever.it/1EdSw9X"] i.fa-pencil',
-        run: 'dblclick',
+    },
+    {
+        content: "Click on replace media",
+        trigger: "[data-replace-media='true']",
     },
     {
         content: "Select a new icon",

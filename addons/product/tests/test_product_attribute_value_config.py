@@ -31,6 +31,7 @@ class TestProductAttributeValueCommon(TransactionCase):
             cls.ram_attribute,
             cls.hdd_attribute,
             cls.size_attribute,
+            cls.extras_attribute,
         ) = cls.env['product.attribute'].create([{
             'name': 'Memory',
             'sequence': 1,
@@ -95,12 +96,28 @@ class TestProductAttributeValueCommon(TransactionCase):
                     'sequence': 3,
                 }),
             ],
+        }, {
+            'name': "Extras",
+            'sequence': 5,
+            'display_type': 'multi',
+            'create_variant': 'no_variant',
+            'value_ids': [
+                Command.create({
+                    'name': "CPU overclock",
+                    'sequence': 1,
+                }),
+                Command.create({
+                    'name': "RAM overclock",
+                    'sequence': 2,
+                }),
+            ],
         }])
 
         cls.ssd_256, cls.ssd_512 = cls.ssd_attribute.value_ids
         cls.ram_8, cls.ram_16, cls.ram_32 = cls.ram_attribute.value_ids
         cls.hdd_1, cls.hdd_2, cls.hdd_4 = cls.hdd_attribute.value_ids
         cls.size_m, cls.size_l, cls.size_xl = cls.size_attribute.value_ids
+        cls.extra_cpu, cls.extra_ram = cls.extras_attribute.value_ids
 
         cls.COMPUTER_SSD_PTAL_VALUES = {
             'product_tmpl_id': cls.computer.id,
@@ -116,6 +133,11 @@ class TestProductAttributeValueCommon(TransactionCase):
             'product_tmpl_id': cls.computer.id,
             'attribute_id': cls.hdd_attribute.id,
             'value_ids': [Command.set([cls.hdd_1.id, cls.hdd_2.id, cls.hdd_4.id])],
+        }
+        cls.COMPUTER_EXTRAS_PTAL_VALUES = {
+            'product_tmpl_id': cls.computer.id,
+            'attribute_id': cls.extras_attribute.id,
+            'value_ids': [Command.set([cls.extra_cpu.id, cls.extra_ram.id])],
         }
 
         cls._add_computer_attribute_lines()
@@ -137,10 +159,12 @@ class TestProductAttributeValueCommon(TransactionCase):
             cls.computer_ssd_attribute_lines,
             cls.computer_ram_attribute_lines,
             cls.computer_hdd_attribute_lines,
+            cls.computer_extras_attribute_lines,
         ) = cls.env['product.template.attribute.line'].create([
             cls.COMPUTER_SSD_PTAL_VALUES,
             cls.COMPUTER_RAM_PTAL_VALUES,
             cls.COMPUTER_HDD_PTAL_VALUES,
+            cls.COMPUTER_EXTRAS_PTAL_VALUES,
         ])
 
         # Setup extra prices

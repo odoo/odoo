@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-09 09:10+0000\n"
-"PO-Revision-Date: 2023-08-09 09:10+0000\n"
+"POT-Creation-Date: 2025-05-20 18:55+0000\n"
+"PO-Revision-Date: 2025-05-20 18:55+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,7 @@ msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner_recibidas
 msgid "1.0"
 msgstr ""
 
@@ -27,14 +28,8 @@ msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner_recibidas
 msgid "240"
-msgstr ""
-
-#. module: l10n_es_edi_tbai
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">Registro de Libros connection "
-"SII/TicketBAI</span>"
 msgstr ""
 
 #. module: l10n_es_edi_tbai
@@ -246,11 +241,6 @@ msgid "R5: Factura rectificativa en facturas simplificadas"
 msgstr ""
 
 #. module: l10n_es_edi_tbai
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_invoice_desglose
-msgid "RL"
-msgstr ""
-
-#. module: l10n_es_edi_tbai
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/account_edi_format.py:0
 #, python-format
@@ -272,8 +262,13 @@ msgid "Refund reason must be specified (TicketBAI)"
 msgstr ""
 
 #. module: l10n_es_edi_tbai
-#: model:ir.model,name:l10n_es_edi_tbai.model_ir_actions_report
-msgid "Report Action"
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.res_config_settings_view_form
+msgid "Registro de Libros connection SII/TicketBAI"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
+#: model:ir.model,name:l10n_es_edi_tbai.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
 msgstr ""
 
 #. module: l10n_es_edi_tbai
@@ -378,9 +373,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/account_edi_format.py:0
 #, python-format
+msgid "TicketBAI: Cannot post a refund without source documents"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
+#. odoo-python
+#: code:addons/l10n_es_edi_tbai/models/account_edi_format.py:0
+#, python-format
 msgid ""
-"TicketBAI: Cannot post a reversal move while the source document (%s) has "
-"not been posted"
+"TicketBAI: Cannot post a reversal move if its source documents (%s) have not"
+" been posted"
 msgstr ""
 
 #. module: l10n_es_edi_tbai
@@ -409,4 +411,13 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot reset to draft an entry that has been posted to TicketBAI's chain"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
+#. odoo-python
+#: code:addons/l10n_es_edi_tbai/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"You need to fill in the Reference field as the invoice number from your "
+"vendor."
 msgstr ""

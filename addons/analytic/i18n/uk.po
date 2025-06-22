@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Bohdan Lisnenko, 2025
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Bohdan Lisnenko, 2025\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -484,6 +484,12 @@ msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Аналітичний рахунок розподілу"
+
+#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Distribution to apply"
 msgstr "Розповсюдження для застосування"
@@ -823,7 +829,7 @@ msgstr "Пошук аналітичних рядків"
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid "See them"
-msgstr ""
+msgstr "Переглянути їх"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
@@ -915,9 +921,11 @@ msgstr "Перегляд"
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
-"Whoa there! Moving this account would wipe out your current data. Let's "
-"avoid that, shall we?"
+"Whoa there! Making this change would wipe out your current data. Let's avoid"
+" that, shall we?"
 msgstr ""
+"Ого! Внесення цієї зміни призведе до знищення ваших поточних даних. Давайте "
+"уникнемо цього, чи не так?"
 
 #. module: analytic
 #. odoo-python

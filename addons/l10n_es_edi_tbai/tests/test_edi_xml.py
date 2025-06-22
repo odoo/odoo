@@ -122,7 +122,6 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
                         <BaseImponible>984.00</BaseImponible>
                         <TipoImpositivo>21.00</TipoImpositivo>
                         <CuotaImpuesto>206.64</CuotaImpuesto>
-                        <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
                       </DetalleIVA>
                     </DesgloseIVA>
                 </xpath>
@@ -214,7 +213,7 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
 
     def test_xml_tree_cancel(self):
         self.out_invoice.l10n_es_tbai_post_xml = b64encode(b"""<TicketBAI>
-<CabeceraFactura><FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura></CabeceraFactura>
+<CabeceraFactura><FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura></CabeceraFactura>
 <ds:SignatureValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">TEXT</ds:SignatureValue>
 </TicketBAI>""")  # hack to set out_invoice's registration date
         xml_doc = self.edi_format._get_l10n_es_tbai_invoice_xml(self.out_invoice, cancel=True)[self.out_invoice]['xml_file']

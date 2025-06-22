@@ -451,7 +451,13 @@ export const editorCommands = {
     // Change tags
     setTag(editor, tagName, extraClass = "") {
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
-        const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
+        const selectedBlocks = [
+            ...new Set(
+                getTraversedNodes(editor.editable, range)
+                    .map(closestBlock)
+                    .filter((block) => block.isContentEditable)
+            ),
+        ];
         const deepestSelectedBlocks = selectedBlocks.filter(block => (
             !descendants(block).some(descendant => selectedBlocks.includes(descendant)) &&
             block.isContentEditable
@@ -572,7 +578,7 @@ export const editorCommands = {
             element.style.removeProperty('color');
             element.style.removeProperty('background');
             element.style.removeProperty('-webkit-text-fill-color');
-            if (hasAnyFontSizeClass(element)) {
+            if (!hasFontSizeClass && closestElement(node, hasAnyFontSizeClass)) {
                 hasFontSizeClass = true;
             }
         }
@@ -778,12 +784,12 @@ export const editorCommands = {
                 if (
                     font &&
                     (font.nodeName === "FONT" || (font.nodeName === "SPAN" && font.style[mode])) &&
-                    (isColorGradient(color) || !hasInlineGradient)
+                    (isColorGradient(color) || color === "" || !hasInlineGradient)
                 ) {
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter(child => selectedNodes.includes(child));
                     if (selectedChildren.length) {
-                        const closestGradientEl = closestElement(node, '[style*="background-image"]');
+                        const closestGradientEl = closestElement(node, 'font[style*="background-image"], span[style*="background-image"]');
                         const isGradientBeingUpdated = closestGradientEl && isColorGradient(color);
                         const splitnode = isGradientBeingUpdated ? closestGradientEl : font;
                         font = splitAroundUntil(selectedChildren, splitnode);

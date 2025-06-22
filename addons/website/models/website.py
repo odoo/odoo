@@ -11,6 +11,7 @@ import re
 import requests
 import threading
 
+from datetime import datetime
 from lxml import etree, html
 from psycopg2 import sql
 from werkzeug import urls
@@ -326,6 +327,9 @@ class Website(models.Model):
         configurator_action_todo = self.env.ref('website.website_configurator_todo')
         return configurator_action_todo.action_launch()
 
+    def _idna_url(self, url):
+        return get_base_domain(url.lower(), True).encode('idna').decode('ascii')
+
     def _is_indexable_url(self, url):
         """
         Returns True if the given url has to be indexed by search engines.
@@ -338,7 +342,7 @@ class Website(models.Model):
         :param url: the url to check
         :return: True if the url has to be indexed, False otherwise
         """
-        return get_base_domain(url.lower(), True) == get_base_domain(self.domain.lower(), True)
+        return self._idna_url(url) == self._idna_url(self.domain)
 
     # ----------------------------------------------------------
     # Configurator
@@ -381,7 +385,9 @@ class Website(models.Model):
     @api.model
     def configurator_init(self):
         r = dict()
-        company = self.get_current_website().company_id
+        theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
+        current_website = self.get_current_website()
+        company = current_website.company_id
         configurator_features = self.env['website.configurator.feature'].search([])
         r['features'] = [{
             'id': feature.id,
@@ -395,6 +401,8 @@ class Website(models.Model):
         r['logo'] = False
         if not company.uses_default_logo:
             r['logo'] = company.logo.decode('utf-8')
+        if current_website.configurator_done:
+            r['redirect_url'] = theme.button_choose_theme()
         try:
             result = self._website_api_rpc('/api/website/1/configurator/industries', {'lang': self.env.context.get('lang')})
             r['industries'] = result['industries']
@@ -1317,8 +1325,12 @@ class Website(models.Model):
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id and page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
-            if page['write_date']:
-                record['lastmod'] = page['write_date'].date()
+            last_updated_date = max(
+                [d for d in (page.write_date, page.view_id.write_date) if isinstance(d, datetime)],
+                default=None,
+            )
+            if last_updated_date:
+                record['lastmod'] = last_updated_date.date()
             yield record
 
         # ==== CONTROLLERS ====

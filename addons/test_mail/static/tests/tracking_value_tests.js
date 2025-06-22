@@ -8,10 +8,12 @@ import {
     editSelect,
     selectDropdownItem,
     patchTimeZone,
+    patchWithCleanup,
     getFixture,
 } from "@web/../tests/helpers/utils";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { click, contains, insertText } from "@web/../tests/utils";
+import { currencies } from "@web/core/currency";
 
 let target;
 
@@ -26,6 +28,7 @@ QUnit.module("tracking value", {
                         <field name="date_field"/>
                         <field name="datetime_field"/>
                         <field name="float_field"/>
+                        <field name="float_field_with_digits"/>
                         <field name="integer_field"/>
                         <field name="monetary_field"/>
                         <field name="many2one_field_id"/>
@@ -82,11 +85,24 @@ QUnit.test("rendering of tracked field of type float: from 0 to non-0", async fu
     const pyEnv = await startServer();
     const mailTestTrackAllId1 = pyEnv["mail.test.track.all"].create({
         float_field: 0,
+        float_field_with_digits: 0,
     });
     await this.start({ res_id: mailTestTrackAllId1 });
-    await insertText("div[name=float_field] input", "1", { replace: true });
+    await insertText("div[name=float_field] input", "1.01", { replace: true });
+    await insertText("div[name=float_field_with_digits] input", "1.0001", { replace: true });
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking", { text: "0.001.00(Float)" });
+    await contains(".o-mail-Message-tracking", { count: 2 });
+    const [defaultPrecisionLine, increasedPrecisionLine] =
+        target.getElementsByClassName("o-mail-Message-tracking");
+    const expectedText = [
+        [defaultPrecisionLine, ["0.00", "1.01", "(Float)"]],
+        [increasedPrecisionLine, ["0.00000000", "1.00010000", "(Float)"]],
+    ];
+    for (const [targetLine, [oldText, newText, fieldName]] of expectedText) {
+        await contains(".o-mail-Message-trackingOld", { target: targetLine, text: oldText });
+        await contains(".o-mail-Message-trackingNew", { target: targetLine, text: newText });
+        await contains(".o-mail-Message-trackingField", { target: targetLine, text: fieldName });
+    }
 });
 
 QUnit.test("rendering of tracked field of type integer: from non-0 to 0", async function () {
@@ -113,13 +129,21 @@ QUnit.test("rendering of tracked field of type integer: from 0 to non-0", async 
 
 QUnit.test("rendering of tracked field of type monetary: from non-0 to 0", async function () {
     const pyEnv = await startServer();
+
+    const testCurrencyId = pyEnv["res.currency"].create({ name: "ECU", symbol: "§" });
+    // need to patch currencies as they're passed via cookies, not through the orm
+    patchWithCleanup(currencies, {
+        [testCurrencyId]: { digits: [69, 2], position: "after", symbol: "§" },
+    });
+
     const mailTestTrackAllId1 = pyEnv["mail.test.track.all"].create({
+        currency_id: testCurrencyId,
         monetary_field: 1,
     });
     await this.start({ res_id: mailTestTrackAllId1 });
     await insertText("div[name=monetary_field] input", "0", { replace: true });
     await click(".o_form_button_save");
-    await contains(".o-mail-Message-tracking", { text: "1.000.00(Monetary)" });
+    await contains(".o-mail-Message-tracking", { text: "1.00 §0.00 §(Monetary)" });
 });
 
 QUnit.test("rendering of tracked field of type monetary: from 0 to non-0", async function () {

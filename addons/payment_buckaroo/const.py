@@ -13,21 +13,32 @@ DEFAULT_PAYMENT_METHODS_CODES = [
 ]
 
 # Mapping of payment method codes to Buckaroo codes.
+# https://docs.buckaroo.io/docs/payment-methods
+# For each payment method check "Requests" tab and get "Services.ServiceList.Name"
+# in "Example request"
 PAYMENT_METHODS_MAPPING = {
     'alipay': 'Alipay',
     'apple_pay': 'applepay',
     'bancontact': 'bancontactmrcash',
+    'belfius': 'belfius',
     'billink': 'Billink',
+    'card': 'mastercard',
+    'cartes_bancaires': 'CarteBancaire',
+    'eps': 'eps',
+    'giropay': 'GiroPay',
     'in3': 'Capayable',
+    'ideal': 'ideal',
     'kbc': 'KBCPaymentButton',
     'bank_reference': 'PayByBank',
     'p24': 'Przelewy24',
+    'paypal': 'paypal',
+    'poste_pay': 'PostePay',
     'sepa_direct_debit': 'SepaDirectDebit',
     'sofort': 'sofortueberweisung',
     'tinka': 'Tinka',
     'trustly': 'Trustly',
     'wechat_pay': 'WeChatPay',
-    'klarna': 'klarnakp',
+    'klarna': 'klarna',
     'afterpay_riverty': 'afterpay',
 }
 

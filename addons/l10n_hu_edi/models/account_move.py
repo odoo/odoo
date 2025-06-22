@@ -343,8 +343,8 @@ class AccountMove(models.Model):
                 'action_text': _('View Company/ies'),
             },
             'company_not_huf': {
-                'records': self.company_id.filtered(lambda c: c.currency_id.name != 'HUF'),
-                'message': _('Please use HUF as company currency!'),
+                'records': self.company_id.filtered(lambda c: c.currency_id.name not in ['HUF', 'EUR']),
+                'message': _('Please use HUF or EUR as your company currency.'),
                 'action_text': _('View Company/ies'),
             },
             'partner_bank_account_invalid': {
@@ -510,10 +510,19 @@ class AccountMove(models.Model):
         for i, invoice in enumerate(self, start=1):
             invoice.l10n_hu_edi_batch_upload_index = i
 
+        def get_operation_type(invoice):
+            operation_type = 'MODIFY'
+            base_invoice = invoice._l10n_hu_get_chain_base()
+            if invoice == base_invoice:
+                operation_type = 'CREATE'
+            elif base_invoice.amount_residual == 0:
+                operation_type = 'STORNO'
+            return operation_type
+
         invoice_operations = [
             {
                 'index': invoice.l10n_hu_edi_batch_upload_index,
-                'operation': 'CREATE' if invoice._l10n_hu_get_chain_base() == invoice else 'MODIFY',
+                'operation': get_operation_type(invoice),
                 'invoice_data': base64.b64decode(invoice.l10n_hu_edi_attachment),
             }
             for invoice in self

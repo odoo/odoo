@@ -487,3 +487,38 @@ class TestAccountPayment(AccountPaymentCommon):
                 ],
             }
         )
+
+    def test_payment_invoice_same_receivable(self):
+        """
+        Test that when creating a payment transaction, the payment uses the same account_id as the related invoice
+        and not the partner accound_id
+        """
+        invoice = self._create_invoice_with_early_discount(
+            invoice_line_ids=[
+                Command.create({
+                    'name': 'test line',
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
+                }),
+                Command.create({
+                    'name': 'test line 2',
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
+                }),
+            ],
+        )
+        self.partner.property_account_receivable_id = self.env['account.account'].search([('name', '=', 'Account Payable')], limit=1)
+        payment = self._create_transaction(
+            reference='payment_3',
+            flow='direct',
+            state='done',
+            amount=invoice.invoice_payment_term_id._get_amount_due_after_discount(
+                total_amount=invoice.amount_residual,
+                untaxed_amount=invoice.amount_tax,
+            ),
+            invoice_ids=[invoice.id],
+            partner_id=self.partner.id,
+        )._create_payment()
+
+        self.assertNotEqual(self.partner.property_account_receivable_id, payment.payment_id.destination_account_id)
+        self.assertEqual(payment.payment_id.destination_account_id, invoice.line_ids[-1].account_id)

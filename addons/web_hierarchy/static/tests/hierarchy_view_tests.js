@@ -270,6 +270,19 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("prohibit `hierarchy_search_parent_node` button from appearing on a node where you're your own manager", async function (assert) {
+        serverData.models["hr.employee"].records.push(
+            {id: 5, name: "Lisa", parent_id: 5, child_ids: []}
+        );
+        await makeView({
+            type: "hierarchy",
+            resModel: "hr.employee",
+            serverData,
+            domain: [["id", "=", 5]],
+        })
+        assert.containsNone(target, ".o_hierarchy_node_container button[name=hierarchy_search_parent_node]");
+    });
+    
     QUnit.test("search record in hierarchy view with child field name defined in the arch", async function (assert) {
         await makeView({
             type: "hierarchy",

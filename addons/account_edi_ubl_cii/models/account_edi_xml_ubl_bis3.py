@@ -78,9 +78,13 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         for vals in vals_list:
             vals.pop('registration_address_vals', None)
             if partner.country_code == 'NL':
+                # For NL, VAT can be used as a Peppol endpoint, but KVK/OIN has to be used as PartyLegalEntity/CompanyID
+                # To implement a workaround on stable, company_registry field is used without recording whether
+                # the number is a KVK or OIN, and the length of the number (8 = KVK, 9 = OIN) is used to determine the type
+                nl_id = partner.company_registry if partner.peppol_eas not in ('0106', '0190') else partner.peppol_endpoint
                 vals.update({
-                    'company_id': partner.peppol_endpoint,
-                    'company_id_attrs': {'schemeID': partner.peppol_eas},
+                    'company_id': nl_id,
+                    'company_id_attrs': {'schemeID': '0190' if nl_id and len(nl_id) == 9 else '0106'},
                 })
             if partner.country_id.code == "LU":
                 if 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
@@ -389,9 +393,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 # [NL-R-003] For suppliers in the Netherlands, the legal entity identifier MUST be either a
                 # KVK or OIN number (schemeID 0106 or 0190)
                 'nl_r_003': _(
-                    "%s should have a KVK or OIN number: the Peppol e-address (EAS) should be '0106' or '0190'.",
+                    "%s should have a KVK or OIN number set in Company ID field or as Peppol e-address (EAS code 0106 or 0190).",
                     vals['supplier'].display_name
-                ) if vals['supplier'].peppol_eas not in ('0106', '0190') else '',
+                ) if (
+                    not vals['supplier'].peppol_eas in ('0106', '0190') and
+                    (not vals['supplier'].company_registry or len(vals['supplier'].company_registry) not in (8, 9))
+                ) else '',
 
                 # [NL-R-007] For suppliers in the Netherlands, the supplier MUST provide a means of payment
                 # (cac:PaymentMeans) if the payment is from customer to supplier
@@ -410,9 +417,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     # [NL-R-005] For suppliers in the Netherlands, if the customer is in the Netherlands,
                     # the customer’s legal entity identifier MUST be either a KVK or OIN number (schemeID 0106 or 0190)
                     'nl_r_005': _(
-                        "%s should have a KVK or OIN number: the Peppol e-address (EAS) should be '0106' or '0190'.",
+                        "%s should have a KVK or OIN number set in Company ID field or as Peppol e-address (EAS code 0106 or 0190).",
                         vals['customer'].display_name
-                    ) if vals['customer'].commercial_partner_id.peppol_eas not in ('0106', '0190') else '',
+                    ) if (
+                        not vals['customer'].commercial_partner_id.peppol_eas in ('0106', '0190') and
+                        (not vals['customer'].commercial_partner_id.company_registry or len(vals['customer'].commercial_partner_id.company_registry) not in (8, 9))
+                    ) else '',
                 })
 
         if vals['supplier'].country_id.code == 'NO':

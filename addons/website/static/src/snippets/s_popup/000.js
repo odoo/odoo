@@ -218,6 +218,7 @@ const PopupWidget = publicWidget.Widget.extend({
         const previouslyFocusedEl = document.activeElement || document.body;
         if (tabableEls.length) {
             tabableEls[0].focus();
+            this.el.querySelector(".modal").scrollTop = 0;
         } else {
             this.el.focus();
         }

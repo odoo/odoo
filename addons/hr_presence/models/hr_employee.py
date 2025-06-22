@@ -153,7 +153,7 @@ Do not hesitate to contact your manager or the human resource department.""")
             "res_model": "sms.composer",
             "view_mode": 'form',
             "context": context,
-            "name": "Send SMS Text Message",
+            "name": _("Send SMS Text Message"),
             "target": "new",
         }
 

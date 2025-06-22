@@ -6,6 +6,7 @@
 # Martin Trigaux, 2023
 # Tomaž Jug <tomaz@editor.si>, 2023
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2023\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 #, python-format
 msgid "A bank account is required for EMV QR Code generation."
-msgstr ""
+msgstr "Za generiranje QR kode EMV je potreben bančni račun."
 
 #. module: account_qr_code_emv
 #: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
@@ -43,59 +44,59 @@ msgstr "Koda države"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_qr_setting
 msgid "Display Qr Setting"
-msgstr ""
+msgstr "Nastavitev prikaza QR"
 
 #. module: account_qr_code_emv
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 #, python-format
 msgid "EMV Merchant-Presented QR-code"
-msgstr ""
+msgstr "QR koda, ki jo predstavi trgovec EMV"
 
 #. module: account_qr_code_emv
 #: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
 msgid "EMV QR Configuration"
-msgstr ""
+msgstr "EMV QR Konfiguracija"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__include_reference
 msgid "Include Reference"
-msgstr ""
+msgstr "Vključi referenco"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
 #: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__include_reference
 msgid "Include the reference in the QR code."
-msgstr ""
+msgstr "Vključite referenco v QR kodo ."
 
 #. module: account_qr_code_emv
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 #, python-format
 msgid "Missing Merchant Account Information."
-msgstr ""
+msgstr "Manjkajoči podatki o trgovskem računu."
 
 #. module: account_qr_code_emv
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 #, python-format
 msgid "Missing Merchant City."
-msgstr ""
+msgstr "Manjkajoče trgovsko mesto."
 
 #. module: account_qr_code_emv
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 #, python-format
 msgid "Missing Proxy Type."
-msgstr ""
+msgstr "Manjka vrsta posredniškega (proxy) strežnika."
 
 #. module: account_qr_code_emv
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 #, python-format
 msgid "Missing Proxy Value."
-msgstr ""
+msgstr "Manjka posredniška vrednost (proxy)."
 
 #. module: account_qr_code_emv
 #. odoo-python
@@ -105,6 +106,8 @@ msgid ""
 "No EMV QR Code is available for the country of the account "
 "%(account_number)s."
 msgstr ""
+"Za državo računa ni na voljo kode EMV QR.\n"
+"%(account_number)s."
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields.selection,name:account_qr_code_emv.selection__res_partner_bank__proxy_type__none
@@ -115,13 +118,13 @@ msgstr "Brez"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
 msgid "Proxy Type"
-msgstr ""
+msgstr "Vrsta posrednika (Proxy-ja)"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
 msgid "Proxy Value"
-msgstr ""
+msgstr "Proxy Vrednost"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__country_code

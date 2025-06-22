@@ -347,7 +347,7 @@
                                     <t t-set="_classes" t-valuef="d-none me-auto d-lg-inline-block"/>
                                 </t>
 
-                                <div t-if="category" class="d-flex align-items-center d-lg-none me-auto">
+                                <div t-if="category" class="d-flex align-items-center d-lg-none me-auto o_not_editable">
                                     <t t-if="not category.parent_id" t-set="backUrl" t-valuef="/shop"/>
                                     <t t-else="" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
 

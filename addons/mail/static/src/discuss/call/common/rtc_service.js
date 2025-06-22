@@ -32,12 +32,7 @@ const SCREEN_CONFIG = {
     },
 };
 const CAMERA_CONFIG = {
-    width: { max: 1280 },
-    height: { max: 720 },
-    aspectRatio: 16 / 9,
-    frameRate: {
-        max: 30,
-    },
+    width: 1280,
 };
 const INVALID_ICE_CONNECTION_STATES = new Set(["disconnected", "failed", "closed"]);
 const IS_CLIENT_RTC_COMPATIBLE = Boolean(window.RTCPeerConnection && window.MediaStream);

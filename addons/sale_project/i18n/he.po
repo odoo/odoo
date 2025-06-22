@@ -8,7 +8,6 @@
 # Netta Waizer, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # Roy Sayag, 2023
-# Ha Ketem <haketem@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2023
 # NoaFarkash, 2023
@@ -20,14 +19,16 @@
 # Hed Shefer <hed@laylinetech.com>, 2024
 # Yoram Lavi, 2024
 # or balmas, 2025
+# Ha Ketem <haketem@gmail.com>, 2025
+# Eyal arkush, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-06-06 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: or balmas, 2025\n"
+"Last-Translator: Eyal arkush, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +55,7 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "%(name)sשל פריט ההזמנה"
 
 #. module: sale_project
 #. odoo-python
@@ -143,6 +144,20 @@ msgstr "בוטל"
 #: model:ir.model,name:sale_project.model_res_config_settings
 msgid "Config Settings"
 msgstr "הגדר הגדרות"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Cost of Goods Sold"
+msgstr "מחיר של טובין שנמכרו"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Cost of Goods Sold Items"
+msgstr ""
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -241,7 +256,7 @@ msgstr "כמות חשבוניות"
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "חשב כמויות מוזמנות מיד עם מכירת שירות זה."
 
 #. module: sale_project
 #. odoo-python
@@ -430,7 +445,7 @@ msgstr "אבני דרך"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "פריט הזמנה חדש"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
@@ -469,13 +484,6 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/sale_order.py:0
-#, python-format
-msgid "Operation not supported"
-msgstr "הפעולה אינה נתמכת"
-
-#. module: sale_project
-#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Services"
@@ -486,6 +494,13 @@ msgstr "שירותים אחרים"
 msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Portal Sale Order"
 msgstr ""
 
 #. module: sale_project

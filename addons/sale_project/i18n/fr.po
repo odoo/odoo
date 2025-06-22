@@ -3,15 +3,15 @@
 # 	* sale_project
 # 
 # Translators:
-# Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Wil Odoo, 2025
 # Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-06-06 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -116,7 +116,7 @@ msgid ""
 msgstr ""
 "Selon la confirmation du produit, la quantité livrée peut être calculée automatiquement par mécanisme :\n"
 " - Manuel : la quantité est définie manuellement sur la ligne\n"
-"- Analytique à partir des notes de frais : la quantité est la somme des notes de frais comptabilisées\n"
+"- Analytique à partir des dépenses : la quantité est la somme des dépenses comptabilisées\n"
 "- Feuille de temps : la quantité est la somme des heures enregistrées sur les tâches liées à cette commande\n"
 "- Mouvements de stock : la quantité provient des transferts confirmés\n"
 
@@ -152,6 +152,20 @@ msgstr "Annulé"
 #: model:ir.model,name:sale_project.model_res_config_settings
 msgid "Config Settings"
 msgstr "Paramètres de configuration"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Cost of Goods Sold"
+msgstr "Coûts des marchandises vendues"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Cost of Goods Sold Items"
+msgstr "Coût des marchandises vendues"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -505,13 +519,6 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
-#: code:addons/sale_project/models/sale_order.py:0
-#, python-format
-msgid "Operation not supported"
-msgstr "Opération non prise en charge"
-
-#. module: sale_project
-#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Services"
@@ -525,6 +532,13 @@ msgid ""
 msgstr ""
 "Pourcentage de la quantité commandée qui sera automatiquement livré lorsque "
 "le jalon sera atteint."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "Portal Sale Order"
+msgstr "Commande client portail"
 
 #. module: sale_project
 #. odoo-python
@@ -918,4 +932,4 @@ msgid ""
 "because it is a re-invoiced expense."
 msgstr ""
 "Vous ne pouvez pas lier la ligne de la commande %(order_id)s - "
-"%(product_id)s à cette tâche car il s'agit d'une note de frais refacturée."
+"%(product_id)s à cette tâche car il s'agit d'une dépense refacturée."

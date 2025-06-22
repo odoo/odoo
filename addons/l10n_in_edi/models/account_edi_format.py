@@ -270,6 +270,11 @@ class AccountEdiFormat(models.Model):
             message.append(_("- City required min 3 and max 100 characters"))
         if partner.country_id.code == "IN" and not re.match("^.{3,50}$", partner.state_id.name or ""):
             message.append(_("- State required min 3 and max 50 characters"))
+        if (
+            partner.country_id.code == "IN"
+            and not re.match(r"^(?!0+$)([0-9]{2})$", partner.state_id.l10n_in_tin or "")
+        ):
+            message.append(_("- State TIN Number must be exactly 2 digits."))
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
             message.append(_("- Zip code required 6 digits"))
         if partner.phone and not re.match("^[0-9]{10,12}$",

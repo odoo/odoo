@@ -13,20 +13,20 @@
 # Henning Fyllingsnes, 2024
 # Jens Nymoen <jens@nettimport.no>, 2024
 # Aleksander, 2024
-# Marius Stedjan <marius@stedjan.com>, 2024
 # Martin Trigaux, 2024
 # cecilieflyt, 2024
 # Jorunn D. Newth, 2025
 # Wil Odoo, 2025
 # Rune Restad, 2025
+# Marius Stedjan <marius@stedjan.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 11:26+0000\n"
+"POT-Creation-Date: 2025-03-03 11:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rune Restad, 2025\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9463,7 +9463,7 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
 msgstr ""
-"En kontakt med den samme <span><span class=\"o_vat_label\">Skatt ID "
+"En kontakt med den samme <span><span class=\"o_vat_label\">Mva reg "
 "</span></span> finnes allerede ("
 
 #. module: base
@@ -13472,6 +13472,8 @@ msgid ""
 "Company tagline, which is included in a printed document's header or footer "
 "(depending on the selected layout)."
 msgstr ""
+"Firmaslagord, som blir printet i topp- eller bunntekst på dokumenter "
+"(avhengig av valgt oppsett)."
 
 #. module: base
 #. odoo-python
@@ -14675,7 +14677,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Express Shipping"
+msgid "DHL Express Shipping (Legacy)"
 msgstr ""
 
 #. module: base
@@ -28468,7 +28470,10 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
-msgid "Send your shippings through DHL and track them online"
+msgid ""
+"This is the legacy integration with DHL Express that is no longer supported."
+" Please install the new \"DHL Express Shipping\" module and uninstall this "
+"one as soon as possible."
 msgstr ""
 
 #. module: base
@@ -30079,7 +30084,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "Skatt ID"
+msgstr "Mva reg"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii_tax_extension
@@ -31402,6 +31407,13 @@ msgid ""
 "This module allows Accounting Firms to connect to CodaBox\n"
 "and automatically import CODA and SODA statements for their clients in Odoo.\n"
 "The connection must be done by the Accounting Firm.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_online_payment
+msgid ""
+"This module allows customers to pay their invoices online using various "
+"payment methods."
 msgstr ""
 
 #. module: base

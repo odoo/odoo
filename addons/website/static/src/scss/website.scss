@@ -17,12 +17,14 @@ $-seen-urls: ();
     }
 }
 
+$real-body-bg: $body-bg;
 :root {
     // The color behind the boxed layout is forced by Odoo. The box background
     // color uses the `$body-bg` variable.
     // grep: BOXED_BODY_BG_ODOO
     @if o-website-value('layout') != 'full' {
         $-boxed-layout-body-bg: o-color('body');
+        $real-body-bg: $-boxed-layout-body-bg !global;
         --#{$variable-prefix}body-bg-rgb: #{to-rgb($-boxed-layout-body-bg)};
         --#{$variable-prefix}body-bg: #{$-boxed-layout-body-bg};
     }
@@ -175,6 +177,15 @@ $-seen-urls: ();
         $custom-colors: append($custom-colors, $key);
     }
     @include print-variable('custom-colors', $custom-colors);
+}
+
+body {
+    // Remove the transparency of the background color to prevent the fallback
+    // iframe used for navigation in the backend to be visible once the top
+    // iframe is loaded (see /website/iframefallback). Indeed, if the website
+    // <body> uses a transparent background color, the fallback iframe would be
+    // visible on some // browsers (e.g. Chrome).
+    background-color: mix(change-color($real-body-bg, $alpha: 1), white, percentage(alpha($real-body-bg)));
 }
 
 @mixin body-image-bg-style() {

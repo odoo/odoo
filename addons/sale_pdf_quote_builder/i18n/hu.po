@@ -8,7 +8,7 @@
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
-# Attila Eiler, 2025
+# Eiler Attila, 2025
 # gezza <geza.nagy@oregional.hu>, 2025
 # 
 msgid ""
@@ -90,6 +90,8 @@ msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
+"Nem sikerült feldolgozni a pdf-et az ajánlatban mert az vagy titkosított "
+"vagy nem támogatott formátumban kódolt."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -102,13 +104,15 @@ msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"Tegye vonzóbbá ajánlatait fejléc oldalak, termékleírások és lábléc oldalak "
+"használatával."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
-msgstr ""
+msgstr "Csak PDF dokumentumokat lehet csatolni az ajánlathoz."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -153,7 +157,7 @@ msgstr "Árajánlat / Rendelés"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
 msgid "Quotation Template"
-msgstr ""
+msgstr "Ajánlati sablon"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
@@ -198,3 +202,5 @@ msgstr ""
 #, python-format
 msgid "When attached inside a quote, the document must be a file, not a URL."
 msgstr ""
+"Ha ajánlaton belül kerül csatolásra, akkor a dokumentum csak fájl lehet, URL"
+" nem lehetséges."

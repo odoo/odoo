@@ -6,8 +6,8 @@
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Martin Trigaux, 2024
 # Daye Jeong, 2025
-# Sarah Park, 2025
 # Wil Odoo, 2025
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-03 11:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -606,6 +606,9 @@ msgid ""
 "            Egypt Tax Authority Invoice Integration\n"
 "        "
 msgstr ""
+"\n"
+"            이집트 국세청 청구서 통합\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ke_edi_oscu
@@ -4518,6 +4521,8 @@ msgid ""
 "\n"
 "E-invoice implementation for Saudi Arabia; Integration with ZATCA\n"
 msgstr ""
+"\n"
+"사우디아라비아 전자 청구서 구현; ZATCA 연동\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_edi_pos
@@ -11092,10 +11097,10 @@ msgid ""
 "The service is provided by the In App Purchase Odoo platform.\n"
 msgstr ""
 "\n"
-"이 모듈은 SMS 문자 메시지를 위한 프레임 워크를 제공합니다.\n"
+"이 모듈을 통해 SMS 문자 메시지 발송용 형식을 활용할 수 있습니다.\n"
 "----------------------------------------------------\n"
 "\n"
-"이 서비스는 인앱 구매 Odoo 플랫폼에서 제공합니다.\n"
+"이 서비스는 인앱 결제 Odoo 플랫폼에서 제공합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts
@@ -15357,7 +15362,7 @@ msgstr "재무 통합에 필요한 모든 것"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
 msgid "Allocate PTOs and follow leaves requests"
-msgstr "유급 휴가 할당 및 휴가 신청 조치"
+msgstr "휴가 배정부터 신청 처리 작업까지 한 번에"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
@@ -16614,7 +16619,7 @@ msgstr "품질에 대한 기본 기능"
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
 msgid "Basic models and helpers to support In-App purchases."
-msgstr "인앱 구매를 지원하는 기본 모델 및 도우미입니다."
+msgstr "인앱 결제를 지원하는 기본 모델 및 도우미입니다."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iot
@@ -18569,7 +18574,7 @@ msgstr "연락처에는 이름이 필요합니다."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Contains In-App Purchases"
-msgstr "인앱 구매 포함"
+msgstr "인앱 결제 포함"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__context
@@ -19433,8 +19438,8 @@ msgstr "D - 전기, 가스, 난방기 및 에어컨 공급업체"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Express Shipping"
-msgstr "DHL 익스프레스 선적"
+msgid "DHL Express Shipping (Legacy)"
+msgstr "DHL 익스프레스 선적 (레거시)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008
@@ -24224,7 +24229,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
 msgid "In-App Purchases"
-msgstr "인앱 구입"
+msgstr "인앱 결제"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -33322,7 +33327,7 @@ msgstr "제거"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
 msgid "Rental"
-msgstr "임대하기"
+msgstr "렌탈"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp_renting
@@ -34157,7 +34162,7 @@ msgstr "판매 내부 메커니즘"
 #: model:ir.model.fields,field_description:base.field_res_users__user_id
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Salesperson"
-msgstr "영업사원"
+msgstr "영업 담당자"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -34657,8 +34662,13 @@ msgstr "shiprocket를 통해 소포를 발송하고 온라인에서 배송 현�
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
-msgid "Send your shippings through DHL and track them online"
-msgstr "DHL을 통한 상품 운송 및 온라인 물류 정보 추적"
+msgid ""
+"This is the legacy integration with DHL Express that is no longer supported."
+" Please install the new \"DHL Express Shipping\" module and uninstall this "
+"one as soon as possible."
+msgstr ""
+"더 이상 지원되지 않는 DHL Express 통합 레거시 버전입니다. 새로운 'DHL Express 배송' 모듈을 설치 후 최대한 빠른 "
+"시일 내에 해당 모듈을 제거하시기 바랍니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex_rest

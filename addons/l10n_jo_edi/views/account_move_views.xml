@@ -16,7 +16,14 @@
                     </div>
                 </xpath>
                 <xpath expr="//group[@name='sale_info_group']" position="inside">
-                    <field name="l10n_jo_edi_state" invisible="not l10n_jo_edi_state"/>
+                    <field name="l10n_jo_edi_qr" invisible="1"/>
+                    <field name="l10n_jo_edi_state" invisible="country_code != 'JO'" readonly="l10n_jo_edi_qr"/>
+                    <field name="l10n_jo_edi_is_needed" invisible="1"/>
+                    <field name="reversed_entry_id"
+                        invisible="move_type != 'out_refund' or not l10n_jo_edi_is_needed"
+                        domain="[('move_type', '=', 'out_invoice')]"
+                        readonly="l10n_jo_edi_state == 'sent'"
+                        groups="base.group_no_one"/>
                 </xpath>
             </field>
         </record>

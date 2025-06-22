@@ -5,9 +5,10 @@ from freezegun import freeze_time
 from functools import partial
 
 from odoo import Command
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
+from odoo.tests import Form, tagged, users
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('post_install', '-at_install')
@@ -27,6 +28,18 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
 
         cls.root_company = cls.company_data['company']
         cls.branch_a, cls.branch_b = cls.root_company.child_ids
+
+        cls.branch_user = cls.env['res.users'].create({
+            'name': 'Branch user',
+            'login': 'branch_user',
+            'company_id': cls.branch_a.id,
+            'company_ids': [(6, 0, [cls.root_company.id,
+                                    cls.branch_a.id])],
+            'groups_id': [(6, 0, [
+                cls.env.ref('base.group_user').id,
+                cls.env.ref('account.group_account_invoice').id,
+            ])],
+        })
 
     def test_chart_template_loading(self):
         # Some company params have to be the same
@@ -235,3 +248,39 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         })
         self.env['account.chart.template'].try_loading('generic_coa', company=root_company.child_ids[0], install_demo=False)
         self.assertEqual(root_company.currency_id, root_company.child_ids[0].currency_id)
+
+    @users('branch_user')
+    def test_branch_user_can_assign_outstanding_credit_with_parent_access(self):
+        """Branch user (Billing) who can *see* both companies but keeps only
+        the branch active should still be able to reconcile an outstanding
+        credit without hitting AccessError."""
+
+        invoice = self.env['account.move'].with_context(allowed_company_ids=self.branch_a.ids).create({
+            'move_type':  'out_invoice',
+            'company_id': self.branch_a.id,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2025-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'Consulting service',
+                'price_unit': 100,
+                'tax_ids': False,
+            })],
+        })
+        invoice.action_post()
+
+        payment = self.env['account.payment'].with_context(allowed_company_ids=self.branch_a.ids).create({
+            'payment_type':   'inbound',
+            'partner_type':   'customer',
+            'partner_id':     self.partner_a.id,
+            'amount':         invoice.amount_total,
+            'journal_id':     self.company_data['default_journal_bank'].id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'company_id':     self.branch_a.id,
+        })
+        payment.action_post()
+
+        self.root_company.invalidate_recordset(['tax_exigibility'], flush=False)
+        (invoice + payment.move_id).line_ids\
+            .filtered(lambda line: line.account_type == 'asset_receivable')\
+            .reconcile()
+        self.assertIn(invoice.payment_state, ('paid', 'in_payment'), "Invoice not marked as paid after assigning credit.")

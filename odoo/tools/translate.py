@@ -157,10 +157,11 @@ TRANSLATED_ELEMENTS = {
 
 # Which attributes must be translated. This is a dict, where the value indicates
 # a condition for a node to have the attribute translatable.
+# ⚠ Note that it implicitly includes their t-attf-* equivalent.
 TRANSLATED_ATTRS = dict.fromkeys({
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip', 'data-editor-message', 'label',
+    'value_label', 'data-tooltip', 'data-editor-message', 'label', 'cancel-label', 'confirm-label',
 }, lambda e: True)
 
 def translate_attrib_value(node):
@@ -178,6 +179,19 @@ TRANSLATED_ATTRS.update(
     text=lambda e: (e.tag == 'field' and e.attrib.get('widget', '') == 'url'),
     **{f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()},
 )
+
+# This should match the list provided to OWL (see translatableAttributes).
+OWL_TRANSLATED_ATTRS = {
+    "alt",
+    "aria-label",
+    "aria-placeholder",
+    "aria-roledescription",
+    "aria-valuetext",
+    "data-tooltip",
+    "label",
+    "placeholder",
+    "title",
+}
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 space_pattern = re.compile(r"[\s\uFEFF]*")  # web_editor uses \uFEFF as ZWNBSP
@@ -947,7 +961,7 @@ def _extract_translatable_qweb_terms(element, callback):
             # component nodes
             is_component = el.tag[0].isupper() or "t-component" in el.attrib or "t-set-slot" in el.attrib
             for attr in el.attrib:
-                if (not is_component and attr in TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
+                if (not is_component and attr in OWL_TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
                     _push(callback, el.attrib[attr], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
@@ -1620,17 +1634,17 @@ def get_po_paths(module_name: str, lang: str):
 
 
 def get_po_paths_env(module_name: str, lang: str, env: odoo.api.Environment | None = None):
-    lang_base = lang.split('_')[0]
+    lang_base = lang.split('_', 1)[0]
     # Load the base as a fallback in case a translation is missing:
     po_names = [lang_base, lang]
     # Exception for Spanish locales: they have two bases, es and es_419:
     if lang_base == 'es' and lang not in ('es_ES', 'es_419'):
         po_names.insert(1, 'es_419')
-    po_paths = [
+    po_paths = (
         join(module_name, dir_, filename + '.po')
         for filename in po_names
         for dir_ in ('i18n', 'i18n_extra')
-    ]
+    )
     for path in po_paths:
         with suppress(FileNotFoundError):
             yield file_path(path, env=env)

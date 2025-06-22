@@ -672,9 +672,10 @@ class IrHttp(models.AbstractModel):
         router = http.root.get_db_router(request.db).bind('')
         endpoint = False
         try:
-            endpoint = router.match(path, method='POST', query_args=query_args)
-        except werkzeug.exceptions.MethodNotAllowed:
-            endpoint = router.match(path, method='GET', query_args=query_args)
+            try:
+                endpoint = router.match(path, method='POST', query_args=query_args)
+            except werkzeug.exceptions.MethodNotAllowed:
+                endpoint = router.match(path, method='GET', query_args=query_args)
         except werkzeug.routing.RequestRedirect as e:
             new_url = e.new_url.split('?')[0][7:]  # remove scheme
             _, endpoint = self.url_rewrite(new_url, query_args)

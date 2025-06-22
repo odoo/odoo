@@ -118,8 +118,6 @@ class L10nInWithholdWizard(models.TransientModel):
             precision = self.currency_id.decimal_places
             if wizard.related_move_id and float_compare(wizard.related_move_id.amount_untaxed, sum(line.base for line in wizard.withhold_line_ids), precision_digits=precision) < 0:
                 warning_message = _("Warning: The base amount of TDS lines is greater than the amount of the %s", wizard.type_name)
-            elif wizard.related_payment_id and float_compare(wizard.related_payment_id.amount, sum(line.base for line in wizard.withhold_line_ids), precision_digits=precision) < 0:
-                warning_message = _("Warning: The base amount of TDS lines is greater than the untaxed amount of the %s", wizard.type_name)
             wizard.warning_message = warning_message
 
     def _get_withhold_type(self):

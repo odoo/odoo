@@ -61,7 +61,9 @@ class AccountMove(models.Model):
     )
     l10n_my_edi_custom_form_reference = fields.Char(
         string="Customs Form Reference Number",
-        help="Reference Number of Customs Form No.1, 9, etc.",
+        help="""Reference Number of Customs Forms
+Customs form No. 2 for Customer Invoices
+Customs form No. 1, 9, etc for Vendor Bills""",
     )
     # False => Not sent yet.
     l10n_my_edi_state = fields.Selection(
@@ -650,7 +652,10 @@ class AccountMove(models.Model):
             'update_active_documents': _('You cannot update this invoice, has it has been referenced by a debit or credit note.\n'
                                          'If you still want to update it, you must first update the debit/credit note.'),
             'update_forbidden': _('You do not have the permission to update this invoice.'),
-            'search_date_invalid': _('The search params are invalid.'),  # Should never happen
+            'document_not_found': _('The document provided in the request does not exist.'),  # Should never happen
+            'search_date_invalid': _('The search params are invalid.'),  # Should also never happen
+            'submission_too_large': _('The submission is too large, try to send fewer invoices at once.'),
+            'action_forbidden': _('Permission to do this action has not been granted. Please ensure that Odoo has sufficient permissions on the MyInvois platform.'),
         }
 
         if error.get('target'):

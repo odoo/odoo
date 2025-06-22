@@ -32,4 +32,40 @@ if records:
         </field>
     </record>
 
+    <record id="view_account_move_filter_debit" model="ir.ui.view">
+        <field name="name">account.move.filter.debit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter" />
+        <field name="arch" type="xml">
+            <filter name="reversed" position="after">
+                <filter string="Debit Note" name="debit_note_filter"
+                    domain="[('debit_origin_id', '!=', False)]" />
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter_debit" model="ir.ui.view">
+        <field name="name">account.invoice.select.debit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter" />
+        <field name="arch" type="xml">
+            <filter name="to_check" position="before">
+                <filter string="Debit Note" name="debit_note_filter"
+                    domain="[('debit_origin_id', '!=', False)]" />
+                <separator />
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_account_move_line_filter_debit" model="ir.ui.view">
+        <field name="name">account.move.line.search.debit</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_account_move_line_filter" />
+        <field name="arch" type="xml">
+            <filter name="unreconciled" position="after">
+                <filter string="Debit Note" name="debit_note_filter"
+                    domain="[('move_id.debit_origin_id', '!=', False)]" />
+            </filter>
+        </field>
+    </record>
 </odoo>

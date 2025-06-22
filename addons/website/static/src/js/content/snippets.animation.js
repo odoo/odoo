@@ -1337,7 +1337,7 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
     async start() {
         this.$scrollingElement = $().getScrollingElement();
         this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
-        this.__hideBottomFixedElements = debounce(() => this._hideBottomFixedElements(), 100);
+        this.__hideBottomFixedElements = debounce(() => this._hideBottomFixedElements(), 100, { leading: true, trailing: true });
         this.$scrollingTarget.on('scroll.bottom_fixed_element', this.__hideBottomFixedElements);
         $(window).on('resize.bottom_fixed_element', this.__hideBottomFixedElements);
         return this._super(...arguments);
@@ -1401,7 +1401,7 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
                     x: elRect.x,
                     y: elRect.y,
                 });
-                if (hiddenButtonEl) {
+                if (hiddenButtonEl.length) {
                     if (el.classList.contains('o_bottom_fixed_element_move_up')) {
                         el.style.marginBottom = window.innerHeight - hiddenButtonEl.getBoundingClientRect().top + 5 + 'px';
                     } else {

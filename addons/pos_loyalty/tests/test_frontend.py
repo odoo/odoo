@@ -2476,3 +2476,68 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_loyalty_on_order_with_fixed_tax', login="pos_user")
+
+    def test_not_create_loyalty_card_expired_program(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['res.partner'].create({'name': 'Test Partner'})
+
+        LoyaltyProgram = self.env['loyalty.program']
+        loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+        loyalty_program.write({
+            'date_from': date.today() - timedelta(days=10),
+            'date_to': date.today() - timedelta(days=5),
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_not_create_loyalty_card_expired_program",
+            login="pos_user",
+        )
+
+        self.assertEqual(loyalty_program.coupon_count, 0)
+
+    def test_not_create_loyalty_card_max_usage_program(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'Test Partner 2'})
+
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'reward_point_amount': 1,
+                'reward_point_mode': 'money',
+                'minimum_qty': 1,
+                'mode': 'auto',
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.whiteboard_pen.id,
+                'reward_product_qty': 1,
+                'required_points': 5,
+            })],
+            'limit_usage': True,
+            'max_usage': 1,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosOrderClaimReward",
+            login="pos_user",
+        )
+
+        self.assertEqual(loyalty_program.coupon_count, 1)
+        self.assertEqual(loyalty_program.total_order_count, 1)
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosOrderNoPoints",
+            login="pos_user",
+        )
+
+        self.assertEqual(loyalty_program.coupon_count, 1)
+        self.assertEqual(loyalty_program.total_order_count, 1)

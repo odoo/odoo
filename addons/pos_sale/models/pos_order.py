@@ -4,7 +4,6 @@
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
 
-
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
@@ -38,7 +37,9 @@ class PosOrder(models.Model):
             else:
                 addr = self.partner_id.address_get(['delivery'])
                 invoice_vals['partner_shipping_id'] = addr['delivery']
-            if sale_orders[0].payment_term_id:
+            if sale_orders[0].payment_term_id and not sale_orders[0].payment_term_id.early_discount:
+                invoice_vals['invoice_payment_term_id'] = sale_orders[0].payment_term_id.id
+            else:
                 invoice_vals['invoice_payment_term_id'] = False
             if sale_orders[0].partner_invoice_id != sale_orders[0].partner_id:
                 invoice_vals['partner_id'] = sale_orders[0].partner_invoice_id.id
@@ -85,7 +86,16 @@ class PosOrder(models.Model):
                     picking = stock_move.picking_id
                     if picking.state not in ['waiting', 'confirmed', 'assigned']:
                         continue
-                    new_qty = so_line.product_uom_qty - so_line.qty_delivered
+
+                    def get_expected_qty_to_ship_later():
+                        pos_pickings = so_line.pos_order_line_ids.order_id.picking_ids
+                        if pos_pickings and all(pos_picking.state in ['confirmed', 'assigned'] for pos_picking in pos_pickings):
+                            return sum((so_line._convert_qty(so_line, pos_line.qty, 'p2s') for pos_line in
+                                        so_line.pos_order_line_ids if so_line.product_id.type != 'service'), 0)
+                        return 0
+
+                    qty_delivered = max(so_line.qty_delivered, get_expected_qty_to_ship_later())
+                    new_qty = so_line.product_uom_qty - qty_delivered
                     if float_compare(new_qty, 0, precision_rounding=stock_move.product_uom.rounding) <= 0:
                         new_qty = 0
                     stock_move.product_uom_qty = so_line.compute_uom_qty(new_qty, stock_move, False)

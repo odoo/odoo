@@ -71,6 +71,14 @@ class TestAnalyticAccount(TransactionCase):
             'analytic_distribution': {cls.analytic_account_2.id: 100}
         })
 
+        """ Removes access rights linked to timesheet and project as these add
+        record rules blocking analytic flows; account overrides it"""
+        if 'account.account' not in cls.env:
+            core_group_ids = cls.env.ref("hr_timesheet.group_hr_timesheet_user", raise_if_not_found=False) or cls.env['res.groups']
+            problematic_group_ids = cls.env.user.groups_id.filtered(lambda g: (g | g.trans_implied_ids) & core_group_ids)
+            if problematic_group_ids:
+                cls.env.user.groups_id -= problematic_group_ids
+
     def test_get_plans_without_options(self):
         """ Test that the plans with the good appliability are returned without if no options are given """
         kwargs = {}
@@ -310,7 +318,34 @@ class TestAnalyticAccount(TransactionCase):
         self.env['account.analytic.line'].create({
             'name': 'test',
             plan_1_col: self.analytic_account_1.id,
-            plan_2_col: self.analytic_account_2.id,
+            plan_2_col: self.analytic_account_3.id,
         })
         with self.assertRaisesRegex(RedirectWarning, "Making this change would wipe out"):
             self.analytic_plan_1.parent_id = self.analytic_plan_2
+
+    def test_change_parent_plan_with_intermediate(self):
+        """All the accounts are updated even if not direct members of the plan changed."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        intermediate_plan = self.env['account.analytic.plan'].create({
+            'name': 'Mid level',
+            'parent_id': self.analytic_plan_1.id,
+        })
+        self.analytic_account_1.plan_id = intermediate_plan
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+        })
+
+        # Setting a parent plan should lead to the line having analytic_account_1 under Plan 2
+        self.analytic_plan_1.parent_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_2_col: self.analytic_account_1.id,
+        }])
+
+        # Removing the parent plan should fully reverse the analytic line
+        self.analytic_plan_1.parent_id = False
+        self.assertRecordValues(line, [{
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: False,
+        }])

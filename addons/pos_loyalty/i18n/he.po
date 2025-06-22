@@ -15,6 +15,7 @@
 # yael terner, 2024
 # tomerlayline, 2024
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2024\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -465,7 +466,7 @@ msgstr ""
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Program: %(name)s, Rule Product: `%(rule_product)s`"
-msgstr ""
+msgstr "תוכנית:%(name)s,  כלל מוצר: `%(rule_product)s`"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -604,7 +605,7 @@ msgstr ""
 msgid ""
 "The report action to be executed when creating a coupon/gift card/loyalty "
 "card in the PoS."
-msgstr ""
+msgstr "פעולת הדיווח שתתבצע בעת יצירת קופון/כרטיס מתנה/כרטיס נאמנות בקופה."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -632,21 +633,21 @@ msgstr "לא ניתן היה להחיל את ההטבה"
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
 msgid "There are not enough points for the coupon: %s."
-msgstr ""
+msgstr "אין מספיק נקודות עבור הקופון:%s ."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "There are not enough points on the coupon to claim this reward."
-msgstr ""
+msgstr "אין מספיק נקודות בקופון כדי לקבל את התגמול הזה."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "There are not enough products in the basket to claim this reward."
-msgstr ""
+msgstr "אין מספיק מוצרים בסל כדי לקבל את התגמול הזה."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -656,6 +657,7 @@ msgid ""
 "There is no email template on the gift card program and your pos is set to "
 "print them."
 msgstr ""
+"תבנית המייל עבור תוכנית כרטיס המתנה אינה מוגדרת, והקופה מוגדרת להדפיס אותן."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -664,12 +666,12 @@ msgstr ""
 msgid ""
 "There is no print report on the gift card program and your pos is set to "
 "print them."
-msgstr ""
+msgstr "אין דוח הדפסה בתוכנית כרטיס המתנה, והקופה שלך מוגדרת להדפיס אותם."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
 msgid "These are the products that are valid for this rule."
-msgstr ""
+msgstr "אלה המוצרים התקפים עבור הכלל הזה."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -690,14 +692,14 @@ msgstr "  הקופון הנ\"ל לא תקף (%s)."
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is not available with the current pricelist."
-msgstr ""
+msgstr "הקופון הזה אינו זמין עם מחירון הנוכחי."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is not yet valid (%s)."
-msgstr ""
+msgstr "הקופון הזה עדיין לא בתוקף (%s)."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -714,6 +716,7 @@ msgid ""
 "This gift card is not linked to any order. Do you really want to apply its "
 "reward?"
 msgstr ""
+"כרטיס המתנה הזה לא קשור לשום הזמנה. האם אתה באמת רוצה להחיל את התגמול שלו?"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
@@ -726,7 +729,7 @@ msgstr "זה משמש להדפסת כרטיסי המתנה שנוצרו מהקו
 #, python-format
 msgid ""
 "To continue, make the following reward products available in Point of Sale."
-msgstr ""
+msgstr "כדי להמשיך, הפוך את מוצרי התגמול הבאים לזמינים בקופה."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
@@ -745,14 +748,14 @@ msgstr "קוד הנחה לא מזוהה"
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "Unpaid gift card"
-msgstr ""
+msgstr "כרטיס מתנה שלא שולם"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "Unpaid gift card rejected."
-msgstr ""
+msgstr "כרטיס מתנה שלא שולם – נדחה."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -804,7 +807,7 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
 #, python-format
 msgid "You cannot set negative quantity or price to gift card or ewallet."
-msgstr ""
+msgstr "לא ניתן להזין כמות או מחיר שליליים לכרטיס מתנה או ארנק דיגיטלי."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -812,21 +815,21 @@ msgstr ""
 #, python-format
 msgid ""
 "You either have not created an eWallet or all your eWallets have expired."
-msgstr ""
+msgstr "או שלא יצרת ארנק דיגיטלי, או שכל הארנקים הדיגיטליים שלך פגי תוקף."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "You must set '%s' before setting '%s'."
-msgstr ""
+msgstr "אתה חייב להגדיר '%s' לפני הגדרת '%s'."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "eWallet"
-msgstr ""
+msgstr "ארנק דיגיטלי"
 
 #. module: pos_loyalty
 #. odoo-javascript

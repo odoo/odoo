@@ -11,6 +11,7 @@
                     <button name="reset_to_pending" string="Reset to Pending" type="object" invisible="not state in ['cancel', 'challan']" data-hotkey="r"/>
                     <button name="action_set_to_challan" string="Use as Challan" type="object" invisible="state != 'pending'" data-hotkey="d"/>
                     <button name="action_export_json" string="Download JSON" class="oe_highlight" type="object" invisible="not error_message" groups="base.group_no_one"/>
+                    <button name="action_print" string="Print" class="oe_highlight" type="object" invisible="not state in ['challan', 'generated']" data-hotkey="f"/>
                     <field name="state" widget="statusbar" statusbar_visible="pending,generated" invisible="state == 'challan'"/>
                 </header>
                 <field name="blocking_level" invisible="1"/>
@@ -84,7 +85,7 @@
                                    readonly="state != 'pending'"/>
                             <field name="vehicle_no"
                                    invisible="mode not in ('1','4')"
-                                   required="mode == '1'"
+                                   required="mode == '1' and not transportation_doc_no"
                                    readonly="state != 'pending'"/>
                             <label for="distance" readonly="state != 'pending'"/>
                             <div class="o_row" name="distance">

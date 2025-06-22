@@ -497,7 +497,7 @@ class SaleOrder(models.Model):
         Returns all programs that give points on the current order.
         """
         self.ensure_one()
-        return self.coupon_point_ids.coupon_id.program_id
+        return self.coupon_point_ids.filtered('points').coupon_id.program_id
 
     def _get_reward_programs(self):
         """
@@ -511,7 +511,9 @@ class SaleOrder(models.Model):
         Returns all coupons that are a reward.
         """
         self.ensure_one()
-        return self.coupon_point_ids.coupon_id.filtered(lambda c: c.program_id.applies_on == 'future')
+        return self.coupon_point_ids.filtered('points').coupon_id.filtered(
+            lambda c: c.program_id.applies_on == 'future',
+        )
 
     def _get_applied_programs(self):
         """
@@ -599,6 +601,8 @@ class SaleOrder(models.Model):
         self.ensure_one()
         command_list = []
         for vals, line in zip(reward_vals, old_lines):
+            if vals['product_id'] == line.product_id.id:
+                vals['name'] = line.name  # Preserve custom description
             command_list.append((Command.UPDATE, line.id, vals))
         if len(reward_vals) > len(old_lines):
             command_list.extend((Command.CREATE, 0, vals) for vals in reward_vals[len(old_lines):])

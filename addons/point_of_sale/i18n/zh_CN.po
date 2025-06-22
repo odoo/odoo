@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 11:06+0000\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -2054,24 +2054,8 @@ msgstr "客户屏幕"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
-msgid "Customer Screen : {{message}}"
-msgstr "客户显示屏 : {{message}}"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
-#: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
-#, python-format
 msgid "Customer Screen Connected"
 msgstr "已连接的客户屏幕"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
-#: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
-#, python-format
-msgid "Customer Screen Not Found : {{message}}"
-msgstr "未找到客户屏幕： {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2079,14 +2063,6 @@ msgstr "未找到客户屏幕： {{message}}"
 #, python-format
 msgid "Customer Screen Unsupported. Please upgrade the IoT Box"
 msgstr "客户屏幕不支持。请升级IoT Box"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
-#: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
-#, python-format
-msgid "Customer Screen Warning : {{message}}"
-msgstr "客户屏幕警告：{{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2593,13 +2569,6 @@ msgstr "电子邮件"
 #, python-format
 msgid "Email sent."
 msgstr "发送电子邮件."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-#, python-format
-msgid "Email: {{currentOrder.getEmailItems().join(', ')}}"
-msgstr "电子邮件：{{currentOrder.getEmailItems().join(', ')}}"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4991,6 +4960,11 @@ msgstr "PoS产品类别"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
 msgstr "PoS产品类别"
+
+#. module: point_of_sale
+#: model:account.tax.group,name:point_of_sale.pos_taxe_group_0
+msgid "PoS Taxes"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -7483,16 +7457,17 @@ msgstr "这对于提供具有特定税金的上门服务和外卖服务的餐厅
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
-"This journal is associated with a payment method. You cannot archive it"
-msgstr "此日记账与付款方式相关联。无法存档"
+"This journal is associated with a payment method. You cannot modify its type"
+msgstr "该日记账与支付方式相关联。不能修改其类型"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
-"This journal is associated with a payment method. You cannot modify its type"
-msgstr "该日记账与支付方式相关联。不能修改其类型"
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr "此日记账已与付款方式 %s 相关联，该付款方式由订单 %s 所使用，相关的生效销售点操作时段：%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8211,6 +8186,15 @@ msgstr "您无法在营业点仍处于打开状态时删除营业点类别."
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr "您不能删除销售点配置中使用的四舍五入方法。"
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "You cannot invoice orders belonging to different companies."
@@ -8222,15 +8206,6 @@ msgstr "您不能为属于不同公司的订单开具发票。"
 #, python-format
 msgid "You cannot save an empty order"
 msgstr "无法保存空订单"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_cash_rounding.py:0
-#, python-format
-msgid ""
-"You cannot delete a rounding method that is used in a Point of Sale "
-"configuration."
-msgstr "您不能删除销售点配置中使用的四舍五入方法。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8584,35 +8559,3 @@ msgstr "使用中"
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "与当前订单重复"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
-#, python-format
-msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
-#, python-format
-msgid ""
-"{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
-"lot'}}"
-msgstr "{{ line.has_valid_product_lot() ? '产品批次有效' : '产品批次无效'}}"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
-#, python-format
-msgid "{{partnerDetailsFields[item]}}"
-msgstr "{{partnerDetailsFields[item]}}"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with payment method %s that is being used by "
-"order %s in the active pos session %s"
-msgstr "此日记账已与付款方式 %s 相关联，该付款方式由订单 %s 所使用，相关的生效销售点操作时段：%s"

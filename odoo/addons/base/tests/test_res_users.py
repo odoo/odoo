@@ -363,6 +363,14 @@ class TestUsers2(TransactionCase):
         user_form[group_field_name] = group_public.id
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
 
+    def test_update_user_groups_view(self):
+        """Test that the user groups view can still be built if all user type groups are share"""
+        self.env['res.groups'].search([
+            ("category_id", "=", self.env.ref("base.module_category_user_type").id)
+        ]).write({'share': True})
+
+        self.env['res.groups']._update_user_groups_view()
+
 
 @tagged('post_install', '-at_install', 'res_groups')
 class TestUsersGroupWarning(TransactionCase):

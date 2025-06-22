@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-06-13 00:53+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -1060,7 +1060,7 @@ msgid ""
 msgstr ""
 "Selon la confirmation du produit, la quantité livrée peut être calculée automatiquement par mécanisme :\n"
 " - Manuel : la quantité est définie manuellement sur la ligne\n"
-"- Analytique à partir des notes de frais : la quantité est la somme des notes de frais comptabilisées\n"
+"- Analytique à partir des dépenses : la quantité est la somme des dépenses comptabilisées\n"
 "- Feuille de temps : la quantité est la somme des heures enregistrées sur les tâches liées à cette commande\n"
 "- Mouvements de stock : la quantité provient des transferts confirmés\n"
 
@@ -1246,7 +1246,7 @@ msgstr "Recherche de répartition analytique"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr "Analytique des notes de frais"
+msgstr "Analytique des dépenses"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -1572,8 +1572,12 @@ msgstr "Complétez les données de votre entreprise"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Calculer les frais d'expédition et expédier avec DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculer les frais de livraison et expédier avec DHL<br/>\n"
+"                                    <strong>(allez dans Accueil > Applications pour l’installer)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1582,8 +1586,12 @@ msgstr "Calculer les frais d'expédition et expédier avec Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Calculer les frais d'expédition et expédier avec FedEx"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculer les frais de livraison et expédier avec FedEx<br/>\n"
+"                                    <strong>(allez dans Accueil > Applications pour l’installer)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1597,13 +1605,21 @@ msgstr "Calculer les frais d'expédition et expédier avec Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Calculer les frais d'expédition et expédier avec UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculer les frais de livraison et expédier avec UPS<br/>\n"
+"                                    <strong>(allez dans Accueil > Applications pour l’installer)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Calculer les frais d'expédition et expédier avec USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
+msgstr ""
+"Calculer les frais de livraison et expédier avec USPS<br/>\n"
+"                                    <strong>(allez dans Accueil > Applications pour l’installer)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1895,6 +1911,11 @@ msgid "Customize your quotes and orders."
 msgstr "Personnalisez vos devis et commandes."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr "Connecteur DHL"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
 msgstr "Connecteur DHL Express"
@@ -2137,6 +2158,11 @@ msgid "Display Type"
 msgstr "Type d'affichage"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Compte analytique de répartition"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Documentation"
@@ -2316,6 +2342,7 @@ msgstr "Ligne supplémentaire avec %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "Connecteur FedEx"
 
@@ -2783,14 +2810,14 @@ msgstr "Est un acompte"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
 msgid "Is expense"
-msgstr "Est une note de frais"
+msgstr "Est une dépense"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
-"Est vrai si la ligne de commande vient d'une note de frais ou d'une facture "
+"Est vrai si la ligne de commande vient d'une dépense ou d'une facture "
 "fournisseur"
 
 #. module: sale
@@ -4696,6 +4723,11 @@ msgid "Sum of Untaxed Total"
 msgstr "Somme des totaux hors taxes"
 
 #. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Paramètres système"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -4829,8 +4861,8 @@ msgid ""
 "cancelled. You cannot register an expense on a cancelled Sales Order."
 msgstr ""
 "La commande client %(order)s liée au compte analytique %(account)s est "
-"annulée. Vous ne pouvez pas enregistrer une note de frais sur une commande "
-"client annulée."
+"annulée. Vous ne pouvez pas enregistrer une dépense sur une commande client "
+"annulée."
 
 #. module: sale
 #. odoo-python
@@ -4842,9 +4874,9 @@ msgid ""
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
 "La commande client %(order)s liée au compte analytique %(account)s est "
-"verrouillée en ce moment. Vous ne pouvez pas enregistrer une note de frais "
-"sur une commande client verrouillée. Veuillez créer une nouvelle  commande "
-"client liée à ce compte analytique."
+"verrouillée en ce moment. Vous ne pouvez pas enregistrer une dépense sur une"
+" commande client verrouillée. Veuillez créer une nouvelle  commande client "
+"liée à ce compte analytique."
 
 #. module: sale
 #. odoo-python
@@ -4855,7 +4887,7 @@ msgid ""
 " validated before registering expenses."
 msgstr ""
 "La commande client %(order)s liée au compte analytique %(account)s doit être"
-" validée avant d'enregistrer des notes de frais."
+" validée avant d'enregistrer des dépenses."
 
 #. module: sale
 #. odoo-python
@@ -5309,11 +5341,13 @@ msgstr "Tapez pour trouver un produit..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "Connecteur UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "Connecteur USPS"
 
@@ -5437,8 +5471,8 @@ msgid ""
 "Validated expenses and vendor bills can be re-invoiced to a customer at its "
 "cost or sales price."
 msgstr ""
-"Les notes de frais et les factures fournisseurs validées peuvent être "
-"refacturées à un client à leur coût ou à leur prix de vente."
+"Les dépenses et les factures fournisseurs validées peuvent être refacturées "
+"à un client à leur coût ou à leur prix de vente."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5452,14 +5486,6 @@ msgstr "Voir les détails"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-#, python-format
-msgid "View Order"
-msgstr "Voir la commande"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
@@ -5617,6 +5643,13 @@ msgstr ""
 "invitons à supprimer cette ligne et à en créer une nouvelle."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+#, python-format
+msgid "You cannot modify the product of this order line."
+msgstr "Vous ne pouvez pas modifier le produit de cette ligne de commande."
+
+#. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
@@ -5729,7 +5762,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
-msgstr "unités"
+msgstr "unité(s)"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

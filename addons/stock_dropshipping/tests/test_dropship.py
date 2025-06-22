@@ -3,7 +3,7 @@
 
 from odoo import Command
 
-from odoo.tests import common, Form
+from odoo.tests import common, tagged, Form
 from odoo.tools import mute_logger
 
 
@@ -297,3 +297,44 @@ class TestDropship(common.TransactionCase):
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         self.assertTrue((purchase.date_planned - purchase.date_order).days == 10, "The first supplier has a delay of 10 days")
         self.assertTrue(purchase.amount_untaxed == 8, "The price should be 4 * 2")
+
+
+@tagged('post_install', '-at_install')
+class TestDropshipPostInstall(common.TransactionCase):
+
+    def test_dropshipping_tracked_product(self):
+        supplier, customer = self.env['res.partner'].create([
+            {'name': 'Vendor Man'},
+            {'name': 'Customer Man'},
+        ])
+        product_lot = self.env['product.product'].create({
+            'name': "Serial product",
+            'tracking': 'none',
+            'standard_price': 20,
+            'invoice_policy': 'delivery',
+            'seller_ids': [Command.create({
+                'partner_id': supplier.id,
+            })],
+            'route_ids': [Command.link(self.ref('stock_dropshipping.route_drop_shipping'))]
+        })
+        product_lot.categ_id.property_cost_method = 'standard'
+        sale_order = self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [Command.create({
+                'product_id': product_lot.id,
+                'product_uom_qty': 1,
+            })]
+        })
+        sale_order.action_confirm()
+        # Confirm PO
+        purchase = self.env['purchase.order'].search([('partner_id', '=', supplier.id)])
+        self.assertTrue(purchase, "an RFQ should have been created")
+        purchase.button_confirm()
+        dropship_picking = sale_order.picking_ids
+        dropship_picking.action_confirm()
+        with Form(dropship_picking) as picking_form:
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = product_lot
+                move.quantity = 1
+        dropship_picking.button_validate()
+        self.assertEqual(dropship_picking.state, 'done')
