@@ -97,16 +97,23 @@
             class="o_datetime_picker d-flex flex-column gap-2 user-select-none p-2"
             t-attf-style="--DateTimePicker__Day-template-columns: {{ props.showWeekNumbers ?? !props.range ? 8 : 7 }}"
         >
-            <nav class="o_datetime_picker_header btn-group">
+            <nav class="o_datetime_picker_header">
                 <button
-                    class="o_previous btn btn-light flex-grow-0"
+                    class="o_previous btn btn-light"
                     t-on-click="previous"
                     tabindex="-1"
                 >
                     <i class="oi oi-chevron-left" t-att-title="activePrecisionLevel.prevTitle" />
                 </button>
                 <button
-                    class="o_zoom_out o_datetime_button btn d-flex align-items-center px-0 text-truncate justify-content-around"
+                    class="o_next btn btn-light"
+                    t-on-click="next"
+                    tabindex="-1"
+                >
+                    <i class="oi oi-chevron-right" t-att-title="activePrecisionLevel.nextTitle" />
+                </button>
+                <button
+                    class="o_zoom_out o_datetime_button btn text-truncate"
                     tabindex="-1"
                     t-att-class="{ 'btn-light': !isLastPrecisionLevel }"
                     t-att-title="!isLastPrecisionLevel and activePrecisionLevel.mainTitle"
@@ -118,13 +125,6 @@
                             t-esc="title"
                         />
                     </t>
-                </button>
-                <button
-                    class="o_next btn btn-light flex-grow-0"
-                    t-on-click="next"
-                    tabindex="-1"
-                >
-                    <i class="oi oi-chevron-right" t-att-title="activePrecisionLevel.nextTitle" />
                 </button>
             </nav>
             <t t-if="state.precision === 'days'">
