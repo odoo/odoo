@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -18,6 +18,31 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_temaki
+msgid "1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna"
+msgstr "1 avokado - 1 lohi - 1 kananmuna - 1 tonnikala"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_chirashi
+msgid "2 Tempuras, Cabbages, Onions, Sesame Sauce"
+msgstr "2 Tempuraa, kaaleja, sipulia, seesamikastiketta"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_4formaggi
+msgid "4 Formaggi"
+msgstr "4 Formaggi"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_salmon
+msgid "4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon"
+msgstr "4 Sushi lohta - 6 Maki lohta - 4 Sashimi lohta"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_maki
+msgid "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
+msgstr "6 Maki lohi - 6 Maki tonnikala - 6 Maki katkarapu/avokado"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -294,6 +319,11 @@ msgid "Alert Name"
 msgstr "Hälytyksen nimi"
 
 #. module: lunch
+#: model:lunch.alert,name:lunch.alert_office_3
+msgid "Alert for Office 3"
+msgstr "Hälytys toimistolle 3"
+
+#. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
 msgid "Alert in app"
 msgstr "Hälytys sovelluksessa"
@@ -374,10 +404,40 @@ msgid "Available Toppings 3"
 msgstr "Saatavilla olevat täytteet 3"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_bacon
+#: model:lunch.product,name:lunch.product_bacon_0
+msgid "Bacon"
+msgstr "Pekoni"
+
+#. module: lunch
 #: model:res.groups,comment:lunch.group_lunch_manager
 msgid ""
 "Be able to create new products, cashmoves and to confirm or cancel orders."
 msgstr ""
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_bacon
+#: model_terms:lunch.product,description:lunch.product_bacon_0
+msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
+msgstr ""
+"Naudanlihaa, pekonia, salaattia, Cheddaria, paistettua sipulia, BBQ-"
+"kastiketta"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_burger_0
+#: model_terms:lunch.product,description:lunch.product_cheeseburger
+msgid "Beef, Cheddar, Salad, Fried Onions, BBQ Sauce"
+msgstr "Naudanlihaa, Cheddaria, salaattia, paistettua sipulia, BBQ-kastiketta"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_Bolognese
+msgid "Bolognese Pasta"
+msgstr "Bolognese-pasta"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_country
+msgid "Brie, Honey, Walnut Kernels"
+msgstr "Brie, hunaja, saksanpähkinän ytimet"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_burger
@@ -440,6 +500,32 @@ msgid "Chat notification"
 msgstr "Chat-ilmoitus"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_ham
+msgid "Cheese And Ham"
+msgstr "Juusto ja kinkku"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_burger_0
+#: model:lunch.product,name:lunch.product_cheeseburger
+msgid "Cheese Burger"
+msgstr "Juustohampurilainen"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_ham
+msgid "Cheese, Ham, Salad, Tomatoes, cucumbers, eggs"
+msgstr "Juusto, kinkku, salaatti, tomaatit, kurkut, kananmunat"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_chicken_curry
+msgid "Chicken Curry"
+msgstr "Kanacurry"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_chirashi
+msgid "Chirashi"
+msgstr "Chirashi"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "City"
@@ -455,6 +541,17 @@ msgstr ""
 "Klikkaa <span class=\"fa fa-phone text-success\" title=\"Order button\"></span> ilmoittaaksesi, että tilaus on tilattu.<br>\n"
 "            Klikkaa <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> ilmoittaaksesi, että tilaus on vastaanotettu.<br>\n"
 "            Klikkaa <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> punaista X:ää ilmoittaaksesi, että tilaus ei ole saatavilla."
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_club
+#: model:lunch.product,name:lunch.product_club_0
+msgid "Club"
+msgstr "Seura"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_coke_0
+msgid "Coca Cola"
+msgstr "Coca Cola"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_company
@@ -767,6 +864,11 @@ msgid "Formatted Email"
 msgstr "Muotoiltu sähköposti"
 
 #. module: lunch
+#: model_terms:lunch.product,description:lunch.product_italiana
+msgid "Fresh Tomatoes, Basil, Mozzarella"
+msgstr "Tuoreita tomaatteja, basilikaa, mozzarellaa"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__fri
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__fri
 msgid "Fri"
@@ -778,11 +880,22 @@ msgid "Friday"
 msgstr "Perjantai"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_gouda
+msgid "Gouda Cheese"
+msgstr "Gouda-juusto"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
 msgstr "Ryhmittely"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_club
+#: model_terms:lunch.product,description:lunch.product_club_0
+msgid "Ham, Cheese, Vegetables"
+msgstr "Kinkku, juusto, vihannekset"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
@@ -997,6 +1110,11 @@ msgid "Lunch Locations"
 msgstr "Lounaspaikat"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_maki
+msgid "Lunch Maki 18pc"
+msgstr "Lounas Maki 18kpl"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
 msgid "Lunch Minimum Threshold"
 msgstr "Lounas vähimmäiskynnys"
@@ -1027,9 +1145,19 @@ msgid "Lunch Product Category"
 msgstr "Lounas tuotekategoria"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_salmon
+msgid "Lunch Salmon 20pc"
+msgstr "Lounas Lohi 20kpl"
+
+#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
 msgid "Lunch Supplier"
 msgstr "Lounaan toimittaja"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_temaki
+msgid "Lunch Temaki mix 3pc"
+msgstr "Lounas Temaki mix 3kpl"
 
 #. module: lunch
 #. odoo-python
@@ -1063,9 +1191,34 @@ msgid "Lunch: Supplier Order"
 msgstr "Lounas: Toimittajan tilaus"
 
 #. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_232
+msgid "Lunch: alert chat notification (Alert for Office 3)"
+msgstr "Lounas: hälytys chat-ilmoitus (Toimistohälytys 3)"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_233
+msgid "Lunch: send automatic email to Coin gourmand"
+msgstr "Lounas: lähetä automaattinen sähköpostiviesti Coin gourmandille"
+
+#. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_228
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Lounas: lähetä automaattinen sähköpostiviesti lounaan toimittajalle"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_234
+msgid "Lunch: send automatic email to Pizza Inn"
+msgstr "Lounas: lähetä automaattinen sähköpostiviesti Pizza Innille"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+msgid "Lunch: send automatic email to Sushi Shop"
+msgstr "Lounas: lähetä automaattinen sähköpostiviesti Sushi Shopille"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_235
+msgid "Lunch: send automatic email to The Corner"
+msgstr "Lounas: lähetä automaattinen sähköpostiviesti The Cornerille"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_res_config_settings__currency_id
@@ -1119,6 +1272,16 @@ msgid "Monday"
 msgstr "Maanantai"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_mozzarella
+msgid "Mozzarella"
+msgstr "Mozzarella"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_mozzarella
+msgid "Mozzarella, Pesto, Tomatoes"
+msgstr "Mozzarella, Pesto, tomaatit"
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
 msgid "My Account"
 msgstr "Oma tili"
@@ -1160,6 +1323,11 @@ msgstr "Omat tilaukseni"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__name
 msgid "Name"
 msgstr "Nimi"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_Napoli
+msgid "Napoli Pasta"
+msgstr "Napolipasta"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban_order
@@ -1369,6 +1537,11 @@ msgid "PM"
 msgstr "PM"
 
 #. module: lunch
+#: model:lunch.product.category,name:lunch.categ_pasta
+msgid "Pasta"
+msgstr "Pasta"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 msgid "Payment"
 msgstr "Maksu"
@@ -1394,10 +1567,36 @@ msgid "Pizza"
 msgstr "Pizza"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_funghi
+msgid "Pizza Funghi"
+msgstr "Pizza Funghi"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_italiana
+msgid "Pizza Italiana"
+msgstr "Pizza Italiana"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_margherita
+#: model:lunch.product,name:lunch.product_pizza_0
+msgid "Pizza Margherita"
+msgstr "Pizza Margherita"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_vege
+msgid "Pizza Vegetarian"
+msgstr "Pizza kasvissyöjä"
+
+#. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 msgid "Please create a location to start ordering."
 msgstr "Luo sijainti aloittaaksesi tilaamisen."
+
+#. module: lunch
+#: model_terms:lunch.alert,message:lunch.alert_office_3
+msgid "Please order"
+msgstr "Tilaa"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
@@ -1538,6 +1737,11 @@ msgid "Responsible User"
 msgstr "Vastuuhenkilö"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_chirashi
+msgid "Salmon and Avocado"
+msgstr "Lohta ja avokadoa"
+
+#. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sandwich
 msgid "Sandwich"
 msgstr "Voileipä"
@@ -1617,6 +1821,11 @@ msgid "Show Until"
 msgstr "Näytä kunnes"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_spicy_tuna
+msgid "Spicy Tuna"
+msgstr "Mausteinen tonnikala"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__state_id
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "State"
@@ -1682,6 +1891,21 @@ msgstr "Sunnuntai"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
 msgid "Supplier"
 msgstr "Tavarantoimittaja"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_sushi
+msgid "Sushi"
+msgstr "Sushi"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_temaki
+msgid "Temaki"
+msgstr "Temaki"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_country
+msgid "The Country"
+msgstr "Maa"
 
 #. module: lunch
 #. odoo-python
@@ -1834,6 +2058,34 @@ msgid "Today's Orders"
 msgstr "Tämän päivän tilaukset"
 
 #. module: lunch
+#: model_terms:lunch.product,description:lunch.product_4formaggi
+msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
+msgstr ""
+"Tomaattikastike, Oliiviöljy, Tuoreet tomaatit, Sipulit, Vihannekset, "
+"Parmesaani"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_Napoli
+msgid "Tomatoes, Basil"
+msgstr "Tomaatit, basilika"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_margherita
+#: model_terms:lunch.product,description:lunch.product_pizza_0
+msgid "Tomatoes, Mozzarella"
+msgstr "Tomaatit, mozzarella"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_vege
+msgid "Tomatoes, Mozzarella, Mushrooms, Peppers, Olives"
+msgstr "Tomaatit, mozzarella, sienet, paprikat, oliivit"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_funghi
+msgid "Tomatoes, Mushrooms, Mozzarella"
+msgstr "Tomaatit, sienet, mozzarella"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
 msgstr "Täytteiden luokka"
@@ -1878,6 +2130,16 @@ msgstr "Ti"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Tuesday"
 msgstr "Tiistai"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_tuna
+msgid "Tuna"
+msgstr "Tonnikala"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_tuna
+msgid "Tuna, Mayonnaise"
+msgstr "Tonnikala, majoneesi"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -250,6 +250,7 @@ msgstr "發生錯誤。請重試。"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect_demo
 msgid "And tadaaaa here you go! 🌟"
 msgstr "完成!🌟"
 
@@ -499,6 +500,11 @@ msgid "Choose the live chat channel you want to display on your website."
 msgstr "選擇想在網站上顯示的即時聊天頻道。"
 
 #. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_chrome_demo
+msgid "Chrome"
+msgstr ""
+
+#. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -714,6 +720,17 @@ msgid "Digest"
 msgstr "摘要"
 
 #. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_demo
+#: model:im_livechat.expertise,name:im_livechat.chatbot_script_expertise_discuss_demo
+msgid "Discuss"
+msgstr "聊天"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_livechat_demo
+msgid "Discuss and Livechat"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__discuss_channel_id
 msgid "Discussion Channel"
@@ -826,6 +843,11 @@ msgstr "其他網站"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "FOR WEBSITES BUILT WITH ODOO"
 msgstr "使用 ODOO 製作的網站"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_firefox_demo
+msgid "Firefox"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script__first_step_warning__first_step_invalid
@@ -942,6 +964,7 @@ msgstr "可存取即時聊天"
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 #: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
+#: model:im_livechat.channel,button_text:im_livechat.support_bot_channel_demo
 msgid "Have a Question? Chat with us."
 msgstr "有問題？請與我們聯絡。"
 
@@ -967,6 +990,7 @@ msgstr "歷史"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_demo
 msgid ""
 "Hmmm, let me check if I can find someone that could help you with that..."
 msgstr "嗯，讓我看看有沒有人可以幫助你⋯"
@@ -984,26 +1008,31 @@ msgstr "對話視窗開始的小時數"
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: model:im_livechat.channel,default_message:im_livechat.support_bot_channel_demo
 msgid "How may I help you?"
 msgstr "請問有什麼可以幫到您？"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available_demo
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
 msgstr "哎唷，目前似乎沒有服務員有空 🙁"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking_demo
 msgid "I am just looking around"
 msgstr "我只是周圍看看"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation_demo
 msgid "I am looking for your documentation"
 msgstr "我正在尋找您的文檔"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing_demo
 msgid "I have a pricing question"
 msgstr "我有一個關於定價問題"
 
@@ -1055,6 +1084,7 @@ msgstr "若設限，操作員同一時間只可處理指定數目的對話時段
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit_demo
 msgid "If you need anything else, feel free to get back in touch"
 msgstr "如果您需要其他任何內容，請隨時與我們聯絡"
 
@@ -1237,6 +1267,11 @@ msgid "Leaving will end the livechat. Proceed leaving?"
 msgstr "離開會結束即時聊天。繼續離開？"
 
 #. module: im_livechat
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_module_info_expert_text_step_demo
+msgid "Let me check if I can connect you with the right expert..."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
 msgid "Limited"
 msgstr "受限制"
@@ -1281,6 +1316,8 @@ msgstr "實時聊天頻道搜尋"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_patch.js:0
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_livechat_demo
+#: model:im_livechat.expertise,name:im_livechat.chatbot_script_expertise_livechat_demo
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 msgid "Livechat"
 msgstr "線上客服"
@@ -1573,6 +1610,7 @@ msgid "Number of messages with delivery error"
 msgstr "有發送錯誤的郵件數量"
 
 #. module: im_livechat
+#: model:chatbot.script,title:im_livechat.chatbot_script_welcome_bot_demo
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Odoo"
 msgstr "Odoo"
@@ -1699,6 +1737,7 @@ msgstr "電話："
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking_demo
 msgid "Please do! If there is anything we can help with, let us know"
 msgstr "當然可以! 如果有什麼我們可以提供幫助的，請告訴我們"
 
@@ -1843,6 +1882,11 @@ msgid "SMS Delivery error"
 msgstr "簡訊發送錯誤"
 
 #. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_safari_demo
+msgid "Safari"
+msgstr "探野"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating_text
 msgid "Satisfaction Rate"
 msgstr "滿意率"
@@ -1971,6 +2015,11 @@ msgid "Sessions per Operator"
 msgstr "每名操作員的對話時段數目"
 
 #. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_setup_demo
+msgid "Setup"
+msgstr "設定"
+
+#. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
 msgid "Show"
 msgstr "顯示"
@@ -2037,6 +2086,11 @@ msgstr "成功"
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__0
 msgid "Sunday"
 msgstr "星期日"
+
+#. module: im_livechat
+#: model:chatbot.script,title:im_livechat.chatbot_script_support_bot_demo
+msgid "Support Bot"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2174,6 +2228,11 @@ msgid ""
 "Track and improve live chat performance with insights on session activity, "
 "response times, customer ratings, and call interactions."
 msgstr "透過了解對話時段的進行情況、回應時間、客戶評分及通話互動等，追蹤及改善線上客服的表現。"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_troubleshooting_demo
+msgid "Troubleshooting"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__2
@@ -2343,13 +2402,30 @@ msgstr "歡迎訊息"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome_demo
 msgid "Welcome to CompanyName! 👋"
 msgstr "歡迎來到 CompanyName！ 👋"
 
 #. module: im_livechat
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_initial_step_demo
+msgid "Welcome to the Support! How can I assist you today?"
+msgstr ""
+
+#. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch_demo
 msgid "What are you looking for?"
 msgstr "你在找什麼？"
+
+#. module: im_livechat
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_troubleshooting_step_browser_demo
+msgid "What browser are you using?"
+msgstr ""
+
+#. module: im_livechat
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_module_selection_demo
+msgid "What module are you interested in?"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__operator_expertise_ids
@@ -2372,6 +2448,7 @@ msgstr "小工具"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email_demo
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
 msgstr "介意留下你的電郵地址，以便我們回覆你嗎？"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -18,6 +18,31 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_temaki
+msgid "1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna"
+msgstr "1 อะโวคาโด - 1 แซลมอน - 1 ฟอง - 1 ทูน่า"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_chirashi
+msgid "2 Tempuras, Cabbages, Onions, Sesame Sauce"
+msgstr "2 เทมปุระ กะหล่ำปลี หัวหอม ซอสงา"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_4formaggi
+msgid "4 Formaggi"
+msgstr "4 โฟร์ชีส"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_salmon
+msgid "4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon"
+msgstr "4 ซูชิแซลมอน - 6 แซลมอนมากิ - 4 แซลมอนซาซิมิ"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_maki
+msgid "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
+msgstr "6 มากิแซลมอน - 6 มากิทูน่า - 6 กุ้งมากิ/อโวคาโด"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -294,6 +319,11 @@ msgid "Alert Name"
 msgstr "ชื่อการเตือน"
 
 #. module: lunch
+#: model:lunch.alert,name:lunch.alert_office_3
+msgid "Alert for Office 3"
+msgstr "การแจ้งเตือนสำหรับออฟฟิศ 3"
+
+#. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
 msgid "Alert in app"
 msgstr "การเตือนในแอป"
@@ -374,10 +404,38 @@ msgid "Available Toppings 3"
 msgstr "ท็อปปิ้งที่มีจำหน่าย 3"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_bacon
+#: model:lunch.product,name:lunch.product_bacon_0
+msgid "Bacon"
+msgstr "เบคอน"
+
+#. module: lunch
 #: model:res.groups,comment:lunch.group_lunch_manager
 msgid ""
 "Be able to create new products, cashmoves and to confirm or cancel orders."
 msgstr ""
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_bacon
+#: model_terms:lunch.product,description:lunch.product_bacon_0
+msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
+msgstr "เนื้อวัว เบคอน สลัด เชดดาร์ หัวหอมทอด ซอสบาร์บีคิว"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_burger_0
+#: model_terms:lunch.product,description:lunch.product_cheeseburger
+msgid "Beef, Cheddar, Salad, Fried Onions, BBQ Sauce"
+msgstr "เนื้อ เชดดาร์ สลัด หัวหอมทอด ซอสบาร์บีคิว"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_Bolognese
+msgid "Bolognese Pasta"
+msgstr "พาสต้าโบโลเนส"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_country
+msgid "Brie, Honey, Walnut Kernels"
+msgstr "เนยแข็งบรี น้ำผึ้ง เมล็ดวอลนัท"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_burger
@@ -440,6 +498,32 @@ msgid "Chat notification"
 msgstr "การแจ้งเตือนการแชท"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_ham
+msgid "Cheese And Ham"
+msgstr "ชีสและแฮม"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_burger_0
+#: model:lunch.product,name:lunch.product_cheeseburger
+msgid "Cheese Burger"
+msgstr "ชีสเบอร์เกอร์"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_ham
+msgid "Cheese, Ham, Salad, Tomatoes, cucumbers, eggs"
+msgstr "ชีส แฮม สลัด มะเขือเทศ แตงกวา ไข่"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_chicken_curry
+msgid "Chicken Curry"
+msgstr "แกงไก่"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_chirashi
+msgid "Chirashi"
+msgstr "จิราชิ"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "City"
@@ -455,6 +539,17 @@ msgstr ""
 "คลิกที่<span class=\"fa fa-phone text-success\" title=\"Order button\"></span> เพื่อแจ้งว่าได้รับคำสั่งแล้ว<br>\n"
 "            คลิกที่ <span class=\"fa fa-check text-success\" title=\"ปุ่มรับ\"></span>เพื่อประกาศว่าได้รับคำสั่งแล้ว<br>\n"
 "            คลิกที่ <span class=\"fa fa-times-circle text-danger\" title=\"ปุ่มยกเลิก\"></span> เครื่องหมาย X สีแดงเพื่อประกาศว่าไม่มีคำสั่งซื้อ"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_club
+#: model:lunch.product,name:lunch.product_club_0
+msgid "Club"
+msgstr "คลับ"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_coke_0
+msgid "Coca Cola"
+msgstr "โค้ก"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_company
@@ -767,6 +862,11 @@ msgid "Formatted Email"
 msgstr "รูปแบบอีเมล"
 
 #. module: lunch
+#: model_terms:lunch.product,description:lunch.product_italiana
+msgid "Fresh Tomatoes, Basil, Mozzarella"
+msgstr "มะเขือเทศสด โหระพา มอสซาเรลล่าชีส"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__fri
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__fri
 msgid "Fri"
@@ -778,11 +878,22 @@ msgid "Friday"
 msgstr "วันศุกร์"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_gouda
+msgid "Gouda Cheese"
+msgstr "เกาด้าชีส"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
 msgstr "กลุ่มโดย"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_club
+#: model_terms:lunch.product,description:lunch.product_club_0
+msgid "Ham, Cheese, Vegetables"
+msgstr "แฮม ชีส ผัก"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
@@ -997,6 +1108,11 @@ msgid "Lunch Locations"
 msgstr "ตำแหน่งอาหารกลางวัน"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_maki
+msgid "Lunch Maki 18pc"
+msgstr "มื้อกลางวัน มากิ 18 ชิ้น"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
 msgid "Lunch Minimum Threshold"
 msgstr "เกณฑ์ขั้นต่ำอาหารกลางวัน"
@@ -1027,9 +1143,19 @@ msgid "Lunch Product Category"
 msgstr "หมวดหมู่สินค้าอาหารกลางวัน"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_salmon
+msgid "Lunch Salmon 20pc"
+msgstr "มื้อกลางวัน แซลมอน 20 ชิ้น"
+
+#. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
 msgid "Lunch Supplier"
 msgstr "ผู้ผลิตอาหารกลางวัน"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_temaki
+msgid "Lunch Temaki mix 3pc"
+msgstr "มื้อกลางวัน เทมากิมิกซ์ 3 ชิ้น"
 
 #. module: lunch
 #. odoo-python
@@ -1063,9 +1189,34 @@ msgid "Lunch: Supplier Order"
 msgstr "อาหารกลางวัน: คำสั่งซื้อจากซัพพลายเออร์"
 
 #. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_232
+msgid "Lunch: alert chat notification (Alert for Office 3)"
+msgstr "อาหารกลางวัน: แจ้งเตือนแชทแจ้งเตือน (การเตือนสำหรับออฟฟิศ 3)"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_233
+msgid "Lunch: send automatic email to Coin gourmand"
+msgstr "อาหารกลางวัน: ส่งอีเมลอัตโนมัติไปที่ Coin gourmand"
+
+#. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_228
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "อาหารกลางวัน: ส่งอีเมลอัตโนมัติไปยังผู้ผลิตอาหารกลางวัน"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_234
+msgid "Lunch: send automatic email to Pizza Inn"
+msgstr "อาหารกลางวัน: ส่งอีเมลอัตโนมัติไปที่ Pizza Inn"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+msgid "Lunch: send automatic email to Sushi Shop"
+msgstr "อาหารกลางวัน: ส่งอีเมลอัตโนมัติไปที่ร้านซูชิ"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_235
+msgid "Lunch: send automatic email to The Corner"
+msgstr "อาหารกลางวัน: ส่งอีเมลอัตโนมัติไปที่ The Corner"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_res_config_settings__currency_id
@@ -1119,6 +1270,16 @@ msgid "Monday"
 msgstr "วันจันทร์"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_mozzarella
+msgid "Mozzarella"
+msgstr "ชีสมอสซาเรลล่า"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_mozzarella
+msgid "Mozzarella, Pesto, Tomatoes"
+msgstr "มอสซาเรลล่า เพสโต้ มะเขือเทศ"
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
 msgid "My Account"
 msgstr "บัญชีของฉัน"
@@ -1160,6 +1321,11 @@ msgstr "คำสั่งของฉัน"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__name
 msgid "Name"
 msgstr "ชื่อ"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_Napoli
+msgid "Napoli Pasta"
+msgstr "พาสต้านาโปลิ"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban_order
@@ -1369,6 +1535,11 @@ msgid "PM"
 msgstr "PM"
 
 #. module: lunch
+#: model:lunch.product.category,name:lunch.categ_pasta
+msgid "Pasta"
+msgstr "พาสต้า"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 msgid "Payment"
 msgstr "การชำระเงิน"
@@ -1394,10 +1565,36 @@ msgid "Pizza"
 msgstr "พิซซ่า"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_funghi
+msgid "Pizza Funghi"
+msgstr "พิซซ่าฟุงกิ"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_italiana
+msgid "Pizza Italiana"
+msgstr "พิซซ่าอิตาเลียน่า"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_margherita
+#: model:lunch.product,name:lunch.product_pizza_0
+msgid "Pizza Margherita"
+msgstr "พิซซ่ามาเกริต้า"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_vege
+msgid "Pizza Vegetarian"
+msgstr "พิซซ่ามังสวิรัติ"
+
+#. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 msgid "Please create a location to start ordering."
 msgstr "โปรดสร้างสถานที่เพื่อเริ่มสั่งซื้อ"
+
+#. module: lunch
+#: model_terms:lunch.alert,message:lunch.alert_office_3
+msgid "Please order"
+msgstr "กรุณาสั่ง"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
@@ -1538,6 +1735,11 @@ msgid "Responsible User"
 msgstr "ผู้ใช้ที่รับผิดชอบ"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_chirashi
+msgid "Salmon and Avocado"
+msgstr "แซลมอนและอะโวคาโด"
+
+#. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sandwich
 msgid "Sandwich"
 msgstr "แซนวิช"
@@ -1617,6 +1819,11 @@ msgid "Show Until"
 msgstr "แสดงจนถึง"
 
 #. module: lunch
+#: model:lunch.product,name:lunch.product_spicy_tuna
+msgid "Spicy Tuna"
+msgstr "ทูน่าสไปซี่"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__state_id
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "State"
@@ -1680,6 +1887,21 @@ msgstr "วันอาทิตย์"
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
 msgid "Supplier"
 msgstr "ซัพพลายเออร์"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_sushi
+msgid "Sushi"
+msgstr "ซูชิ"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_temaki
+msgid "Temaki"
+msgstr "เทมากิ"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_country
+msgid "The Country"
+msgstr "ประเทศ"
 
 #. module: lunch
 #. odoo-python
@@ -1833,6 +2055,32 @@ msgid "Today's Orders"
 msgstr "คำสั่งวันนี้"
 
 #. module: lunch
+#: model_terms:lunch.product,description:lunch.product_4formaggi
+msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
+msgstr "ซอสมะเขือเทศ น้ำมันมะกอก มะเขือเทศสด หัวหอม ผัก พาร์เมซาน"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_Napoli
+msgid "Tomatoes, Basil"
+msgstr "มะเขือเทศ โหระพา"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_margherita
+#: model_terms:lunch.product,description:lunch.product_pizza_0
+msgid "Tomatoes, Mozzarella"
+msgstr "มะเขือเทศ มอสซาเรลล่าชีส"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_vege
+msgid "Tomatoes, Mozzarella, Mushrooms, Peppers, Olives"
+msgstr "มะเขือเทศ มอสซาเรลล่าชีส เห็ด พริกหยวก มะกอก"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_funghi
+msgid "Tomatoes, Mushrooms, Mozzarella"
+msgstr "มะเขือเทศ เห็ด มอสซาเรลล่าชีส"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
 msgstr "หมวดหมู่ท็อปปิ้ง"
@@ -1877,6 +2125,16 @@ msgstr "อังคาร"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Tuesday"
 msgstr "วันอังคาร"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_tuna
+msgid "Tuna"
+msgstr "ทูน่า"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_tuna
+msgid "Tuna, Mayonnaise"
+msgstr "ทูน่า มายองเนส"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration

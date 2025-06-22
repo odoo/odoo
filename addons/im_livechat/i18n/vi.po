@@ -3,16 +3,16 @@
 # 	* im_livechat
 # 
 # Translators:
-# Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -262,6 +262,7 @@ msgstr "Đã xảy ra lỗi. Vui lòng thử lại."
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_redirect_demo
 msgid "And tadaaaa here you go! 🌟"
 msgstr "Và tadaaaa, đây rồi! 🌟"
 
@@ -518,6 +519,11 @@ msgstr ""
 "Chọn kênh trò chuyện trực tiếp mà bạn muốn hiển thị trên trang web của mình."
 
 #. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_chrome_demo
+msgid "Chrome"
+msgstr "Chrome"
+
+#. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -737,6 +743,17 @@ msgid "Digest"
 msgstr "Tóm tắt"
 
 #. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_demo
+#: model:im_livechat.expertise,name:im_livechat.chatbot_script_expertise_discuss_demo
+msgid "Discuss"
+msgstr "Thảo luận"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_livechat_demo
+msgid "Discuss and Livechat"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__discuss_channel_id
 msgid "Discussion Channel"
@@ -849,6 +866,11 @@ msgstr "ĐỐI VỚI CÁC TRANG WEB KHÁC"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "FOR WEBSITES BUILT WITH ODOO"
 msgstr "ĐỐI VỚI CÁC TRANG WEB ĐƯỢC TẠO BẰNG ODOO"
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_firefox_demo
+msgid "Firefox"
+msgstr "Firefox"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script__first_step_warning__first_step_invalid
@@ -968,6 +990,7 @@ msgstr "Có quyền truy cập Trò chuyện trực tiếp"
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 #: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
+#: model:im_livechat.channel,button_text:im_livechat.support_bot_channel_demo
 msgid "Have a Question? Chat with us."
 msgstr "Bạn có câu hỏi? Hãy trò chuyện với chúng tôi."
 
@@ -993,6 +1016,7 @@ msgstr "Lịch sử"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_demo
 msgid ""
 "Hmmm, let me check if I can find someone that could help you with that..."
 msgstr "Hmmm, để tôi kiểm tra xem liệu có ai đó có thể trợ giúp bạn không..."
@@ -1010,26 +1034,31 @@ msgstr "Giờ trong ngày bắt đầu phiên"
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: model:im_livechat.channel,default_message:im_livechat.support_bot_channel_demo
 msgid "How may I help you?"
 msgstr "Tôi có thể giúp gì cho bạn?"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available_demo
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
 msgstr "Ultr! Có vẻ như tất cả nhân viên hỗ trợ của chúng tôi đều đang bận. 🙁"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_just_looking_demo
 msgid "I am just looking around"
 msgstr "Tôi đang tìm kiếm"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation_demo
 msgid "I am looking for your documentation"
 msgstr "Tôi đang tìm tài liệu của bạn"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_welcome_step_dispatch_answer_pricing_demo
 msgid "I have a pricing question"
 msgstr "Tôi có câu hỏi về giá cả"
 
@@ -1085,6 +1114,7 @@ msgstr ""
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit_demo
 msgid "If you need anything else, feel free to get back in touch"
 msgstr "Nếu bạn cần bất cứ điều gì khác, đừng ngần ngại liên hệ lại"
 
@@ -1270,6 +1300,11 @@ msgstr ""
 "Nếu bạn rời đi, cuộc trò chuyện trực tiếp sẽ kết thúc. Tiếp tục rời đi?"
 
 #. module: im_livechat
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_module_info_expert_text_step_demo
+msgid "Let me check if I can connect you with the right expert..."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
 msgid "Limited"
 msgstr "Bị hạn chế"
@@ -1314,6 +1349,8 @@ msgstr "Tìm kiếm kênh trò chuyện trực tiếp"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_patch.js:0
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_livechat_demo
+#: model:im_livechat.expertise,name:im_livechat.chatbot_script_expertise_livechat_demo
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 msgid "Livechat"
 msgstr "Trò chuyện trực tiếp"
@@ -1610,6 +1647,7 @@ msgid "Number of messages with delivery error"
 msgstr "Số tin nhắn bị gửi lỗi"
 
 #. module: im_livechat
+#: model:chatbot.script,title:im_livechat.chatbot_script_welcome_bot_demo
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Odoo"
 msgstr "Odoo"
@@ -1740,6 +1778,7 @@ msgstr "Điện thoại:"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking_demo
 msgid "Please do! If there is anything we can help with, let us know"
 msgstr ""
 "Nếu có bất cứ điều gì chúng tôi có thể trợ giúp, vui lòng cho chúng tôi biết"
@@ -1885,6 +1924,11 @@ msgid "SMS Delivery error"
 msgstr "Lỗi gửi SMS"
 
 #. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_safari_demo
+msgid "Safari"
+msgstr "Safari"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating_text
 msgid "Satisfaction Rate"
 msgstr "Đánh giá mức độ hài lòng"
@@ -2013,6 +2057,11 @@ msgid "Sessions per Operator"
 msgstr "Phiên cho mỗi nhân viên hỗ trợ"
 
 #. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_setup_demo
+msgid "Setup"
+msgstr "Thiết lập"
+
+#. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
 msgid "Show"
 msgstr "Trình diễn"
@@ -2079,6 +2128,11 @@ msgstr "Thành công"
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__0
 msgid "Sunday"
 msgstr "Chủ nhật"
+
+#. module: im_livechat
+#: model:chatbot.script,title:im_livechat.chatbot_script_support_bot_demo
+msgid "Support Bot"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2231,6 +2285,11 @@ msgstr ""
 "Theo dõi và cải thiện hiệu suất trò chuyện trực tiếp với thông tin chi tiết "
 "về hoạt động phiên, thời gian phản hồi, đánh giá của khách hàng và tương tác"
 " cuộc gọi."
+
+#. module: im_livechat
+#: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_troubleshooting_demo
+msgid "Troubleshooting"
+msgstr "Khắc phục sự cố"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_report_channel__day_number__2
@@ -2404,13 +2463,30 @@ msgstr "Thông điệp Chào mừng"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome_demo
 msgid "Welcome to CompanyName! 👋"
 msgstr "Chào mừng đến với CompanyName! 👋"
 
 #. module: im_livechat
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_initial_step_demo
+msgid "Welcome to the Support! How can I assist you today?"
+msgstr ""
+
+#. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch_demo
 msgid "What are you looking for?"
 msgstr "Bạn đang tìm kiếm gì ạ?"
+
+#. module: im_livechat
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_troubleshooting_step_browser_demo
+msgid "What browser are you using?"
+msgstr ""
+
+#. module: im_livechat
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_module_selection_demo
+msgid "What module are you interested in?"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__operator_expertise_ids
@@ -2435,6 +2511,7 @@ msgstr "Tiện ích"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
+#: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email_demo
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
 msgstr ""

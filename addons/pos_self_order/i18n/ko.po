@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Daye Jeong, 2025
-# Wil Odoo, 2025
 # Sarah Park, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-06-20 18:39+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Sarah Park, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -172,7 +172,7 @@ msgstr "활성화"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Add"
 msgstr "추가"
 
@@ -189,22 +189,14 @@ msgstr "이미지 추가"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/product_info_popup/product_info_popup.xml:0
-msgid "Add to Cart"
-msgstr "장바구니에 담기"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_product_page/kiosk_product_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Add to cart"
 msgstr "장바구니에 담기"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_product_list_page/kiosk_product_list_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "All"
 msgstr "전체"
 
@@ -257,9 +249,8 @@ msgstr "지원되는 인터페이스 언어"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_category_list_page/kiosk_category_list_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
@@ -274,7 +265,6 @@ msgstr "배경"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_category_list_page/kiosk_category_list_page.xml:0
 msgid "Cancel"
 msgstr "취소"
 
@@ -287,11 +277,14 @@ msgstr "주문 취소"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_category_list_page/kiosk_category_list_page.js:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_product_list_page/kiosk_product_list_page.js:0
-#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 msgid "Cancel order"
 msgstr "주문 취소"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/category_list_popup/category_list_popup.xml:0
+msgid "Categories"
+msgstr "카테고리"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -319,16 +312,9 @@ msgstr "고객이 결제할 시기를 선택하세요"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Choose your"
 msgstr "선택하세요:"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
-msgid "Choose your eating location"
-msgstr "식사 장소를 선택하세요."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -344,7 +330,9 @@ msgstr "시/군/구"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/category_list_popup/category_list_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/out_of_paper_popup/out_of_paper_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/product_info_popup/product_info_propup.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Close"
 msgstr "닫기"
@@ -356,7 +344,7 @@ msgstr "세션 종료"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "Combo"
 msgstr "콤보"
@@ -496,8 +484,6 @@ msgstr "비활성화"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/language_popup/language_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_product_page/kiosk_product_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Discard"
 msgstr "취소"
@@ -516,6 +502,7 @@ msgstr "취소"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_session__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_tag__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_res_country__display_name
@@ -555,12 +542,6 @@ msgstr ""
 #: model:ir.model,name:pos_self_order.model_pos_preset
 msgid "Easily load a set of configuration options"
 msgstr "설정 옵션 세트를 간편하게 불러오세요."
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Edit"
-msgstr "편집"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -661,6 +642,7 @@ msgstr "사용 방법"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_session__id
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_tag__id
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__id
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__id
 #: model:ir.model.fields,field_description:pos_self_order.field_res_country__id
@@ -715,12 +697,6 @@ msgstr "비활성"
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__info
 msgid "Info"
 msgstr "정보"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
-msgid "Would you like to continue?"
-msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -821,6 +797,7 @@ msgstr "내 주문"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "My Orders"
 msgstr "내 주문"
 
@@ -851,7 +828,6 @@ msgstr "셀프 주문 화면에 표시할 이미지 이름"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
 msgid "Next"
 msgstr "다음"
 
@@ -862,19 +838,19 @@ msgstr "아니오"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/out_of_paper_popup/out_of_paper_popup.xml:0
+msgid "No more paper in the printer, please remember your order number:"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "No order found"
 msgstr "주문이 없습니다"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
-msgid "No products found"
-msgstr "품목을 찾을 수 없습니다."
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "No, thanks"
 msgstr "아니요, 감사합니다."
 
@@ -909,6 +885,7 @@ msgstr "키오스크 열기"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
 msgid "Order"
 msgstr "주문"
 
@@ -926,10 +903,8 @@ msgstr "서버에서 주문을 찾을 수 없습니다"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
-#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_product_list_page/kiosk_product_list_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "Out of stock"
 msgstr "품절"
 
@@ -937,7 +912,7 @@ msgstr "품절"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
 msgid "Pay"
 msgstr "지불"
 
@@ -1053,27 +1028,14 @@ msgid "Product"
 msgstr "품목"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
-#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
-msgid "Product Information"
-msgstr "제품 정보"
+#: model:ir.model,name:pos_self_order.model_product_tag
+msgid "Product Tag"
+msgstr "품목 태그"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_product
 msgid "Product Variant"
 msgstr "품목 세부선택"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
-#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
-msgid "Product image"
-msgstr "품목 이미지"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1115,10 +1077,7 @@ msgstr "QR 메뉴 + 주문"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/kiosk_quantity/quantity_widget.xml:0
-#: code:addons/pos_self_order/static/src/app/components/product_info_popup/product_info_popup.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#: code:addons/pos_self_order/static/src/app/components/quantity_widget/quantity_widget.xml:0
 msgid "Quantity select"
 msgstr "수량 선택"
 
@@ -1201,7 +1160,7 @@ msgstr "주소 선택"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_product_page/kiosk_product_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Selection"
 msgstr "선택"
 
@@ -1382,7 +1341,6 @@ msgstr "세금:"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_card_page/kiosk_cart_page.xml:0
 msgid "Taxes:"
 msgstr "세금 :"
 
@@ -1413,8 +1371,7 @@ msgstr "사용자는 POS 사용자여야 합니다."
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_product_page/kiosk_product_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "This combination does not exist."
 msgstr "이 조합은 존재하지 않습니다."
@@ -1428,7 +1385,6 @@ msgstr "총계"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_card_page/kiosk_cart_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "Total:"
 msgstr "합계 :"
@@ -1445,16 +1401,9 @@ msgstr "URL:"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_product_list_page/kiosk_product_list_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "Unavailable"
 msgstr "사용 불가"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
-msgid "Unavailable at this time of the day"
-msgstr "이 시간대에는 사용할 수 없습니다."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1464,15 +1413,9 @@ msgstr "미분류"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Validate your selection"
 msgstr "선택 항목 확인"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
-msgid "Want to add something ?"
-msgstr "내용을 추가할까요?"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
@@ -1522,6 +1465,12 @@ msgid "Where do you want to eat?"
 msgstr "식사 장소는 어디가 좋을까요?"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+msgid "Would you like to continue?"
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Yes"
 msgstr "예"
@@ -1535,12 +1484,6 @@ msgstr "키오스크 모드에서는 현금 결제 방식을 추가할 수 없�
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
-msgid "You cannot edit a posted orderline !"
-msgstr "주문 내역이 전달되면 수정할 수 없습니다!"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "You're not authorized to perform this action"
 msgstr "이 작업을 수행할 수 있는 권한이 없습니다."
@@ -1548,15 +1491,8 @@ msgstr "이 작업을 수행할 수 있는 권한이 없습니다."
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_card_page/kiosk_cart_page.xml:0
 msgid "Your Order"
 msgstr "주문 내역"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Your Selection"
-msgstr "내 선택"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1624,7 +1560,7 @@ msgstr "https://odoo.com"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "included"
 msgstr "포함 사항"
 
@@ -1632,9 +1568,3 @@ msgstr "포함 사항"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
-msgid "options"
-msgstr "옵션"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -211,6 +211,18 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"%(tax_account)s (%(account_name)s) should be an account of type "
+"\"%(receivable)s\" or \"%(payable)s\" with both options "
+"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+msgstr ""
+"%(tax_account)s (%(account_name)s) deve ser uma conta do tipo "
+"\"%(receivable)s\" ou \"%(payable)s\" com ambas as opções "
+"\"%(allow_reconciliation)s\" e \"%(non_trade)s\" habilitadas."
 
 #. module: account
 #. odoo-python
@@ -546,6 +558,11 @@ msgstr "3,00"
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr "30 dias"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% adiantado ao final do mês seguinte"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -4458,6 +4475,7 @@ msgstr "Passar para"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_57
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -4468,6 +4486,16 @@ msgstr "Dinheiro"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "Conta de caixa"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_54
+msgid "Cash Bakery"
+msgstr "Caixa - Padaria"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_56
+msgid "Cash Bar"
+msgstr "Bar (dinheiro)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -4504,6 +4532,11 @@ msgstr "Impostos em regime de caixa"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "Conta de transição em regime de caixa"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_53
+msgid "Cash Clothes Shop"
+msgstr "Caixa - Loja de roupas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4559,10 +4592,20 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Conta de perdas para dar baixa em desconto para pagamento à vista"
 
 #. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_52
+msgid "Cash Furn. Shop"
+msgstr "Caixa - Loja de móveis"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Caixas registradoras"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_55
+msgid "Cash Restaurant"
+msgstr "Restaurante (dinheiro)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -6405,6 +6448,26 @@ msgstr "Endereço de entrega"
 #: model:ir.model.fields,field_description:account.field_account_move__delivery_date
 msgid "Delivery Date"
 msgstr "Data de entrega"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "Conta demo de salário do CEO"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "Conta demo de capital"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "Conta demo de venda de propriedade"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "Conta demo de estoque"
 
 #. module: account
 #. odoo-python
@@ -9661,11 +9724,6 @@ msgid "Is Being Sent"
 msgstr "Está sendo enviado"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
-msgid "Is Between"
-msgstr "Está entre"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
@@ -9708,11 +9766,6 @@ msgid "Is Follower"
 msgstr "É um seguidor"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__greater
-msgid "Is Greater Than"
-msgstr "É maior que"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__green_on_positive
 msgid "Is Growth Good when Positive"
 msgstr "O crescimento é bom quando positivo"
@@ -9721,11 +9774,6 @@ msgstr "O crescimento é bom quando positivo"
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_imported
 msgid "Is Imported"
 msgstr "É importado"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
-msgid "Is Lower Than"
-msgstr "É menor que"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_manually_modified
@@ -9786,6 +9834,21 @@ msgstr "É estorno"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_valid
 msgid "Is Valid"
 msgstr "É válido"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
+msgid "Is between"
+msgstr "Está entre"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__greater
+msgid "Is greater than or equal to"
+msgstr "É maior que ou igual a"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
+msgid "Is lower than or equal to"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
@@ -10411,6 +10474,11 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid "Line \"%s\" defines itself as its parent."
 msgstr "A linha “%s” se definiu como sua própria linha primária."
+
+#. module: account
+#: model:account.reconcile.model,name:account.1_reconcile_from_label
+msgid "Line with Bank Fees"
+msgstr "Linha com tarifas bancárias"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
@@ -11584,6 +11652,11 @@ msgid "Off-Balance Sheet"
 msgstr "Fora do balanço"
 
 #. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "Móveis de escritório"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
 msgid "On early payment"
 msgstr "No pagamento antecipado"
@@ -12020,6 +12093,7 @@ msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_owner_current_account
+#: model:account.reconcile.model,name:account.1_owner_current_account_model
 msgid "Owner's Current Account"
 msgstr "Conta corrente do proprietário"
 
@@ -12488,6 +12562,11 @@ msgstr ""
 "dentro de 7 dias"
 
 #. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "Condição de pagamento: 30% adiantado no final do mês seguinte"
+
+#. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr "Condições de pagamento: 30% agora, restante em 60 dias"
@@ -12699,6 +12778,7 @@ msgstr "Lançar pagamentos"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
+#: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__posted
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -14277,8 +14357,10 @@ msgstr "Enviando faturas"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_sent_values
 #: model:ir.model.fields,field_description:account.field_account_move__move_sent_values
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__sent
+#: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__sent
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Sent"
 msgstr "Enviado"
 
@@ -14497,6 +14579,11 @@ msgid ""
 msgstr ""
 "Nome encurtado usado para exibição. Os lançamentos de diário deste diário "
 "também serão nomeados usando este prefixo por padrão."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_aba_routing
+msgid "Show Aba Routing"
+msgstr "Mostrar roteamento Aba"
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -18391,10 +18478,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "You can't create payments for entries belonging to different branches."
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
 msgstr ""
-"Não é possível criar pagamentos para lançamentos pertencentes a filiais "
-"diferentes."
 
 #. module: account
 #. odoo-python

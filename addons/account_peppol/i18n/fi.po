@@ -139,6 +139,66 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td valign=\"middle\">\n"
+"                                    <span style=\"font-size: 10px;\">Ilmoitus</span>\n"
+"                                    <br/>\n"
+"                                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                                        Tervetuloa Peppol:iin\n"
+"                                    </span>\n"
+"                                    <div style=\"margin-bottom: 5px; margin-top: 18px;\">\n"
+"                                        <a t-attf-href=\"/odoo/accounting/\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-color: {{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"                                            Lähetä laskuja\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td>\n"
+"                                <td valign=\"middle\" align=\"right\">\n"
+"                                    <t t-if=\"not object.uses_default_logo\">\n"
+"                                        <img t-att-src=\"'/logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    </t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                    <hr style=\"background-color:#CCCCCC; border:none; height:1px; margin:16px 0;\"/>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- BODY -->\n"
+"                <tr>\n"
+"                    <td align=\"center\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td style=\"font-size: 14px;\">\n"
+"                                    <p>Hyvä<t t-out=\"object.name or ''\">YourCompany</t>,</p>\n"
+"\n"
+"                                    <p>Olemme onnistuneesti lisänneet yrityksesi <strong>Peppol-verkkoon</strong>.</p>\n"
+"\n"
+"                                    <p>Voit nyt <strong>lähettää<t t-if=\"object.account_peppol_proxy_state == 'receiver'\"> ja vastaanottaa</t></strong> e-laskuja Odoossa — täysin ilmaiseksi.</p>\n"
+"\n"
+"                                    <p>Parhain terveisin,</p>\n"
+"\n"
+"                                    <p style=\"margin-bottom: 24px;\">Odoo-tiimi</p>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"            "
 
 #. module: account_peppol
 #. odoo-python
@@ -149,6 +209,9 @@ msgid ""
 "content (e.g. some part has not been acknowledged, or the digest associated "
 "does not match the signature digest, for NRR)."
 msgstr ""
+"Kuittaus on vastaanotettu aiemmin lähetetystä viestistä, mutta sisältö ei "
+"vastaa alkuperäistä viestiä (esim. jotakin osaa ei ole kuittattu tai "
+"tiiviste ei vastaa allekirjoituksen tiivistettä, kuten NRR-tapauksessa)."
 
 #. module: account_peppol
 #. odoo-python
@@ -157,6 +220,8 @@ msgid ""
 "A Receipt has not been received  for a message that was previously sent by "
 "the MSH generating this error."
 msgstr ""
+"Kuittausta ei ole vastaanotettu MSH:n aiemmin lähettämästä viestistä, joka "
+"aiheuttaa tämän virheen."
 
 #. module: account_peppol
 #. odoo-python
@@ -165,6 +230,8 @@ msgid ""
 "A fragment is received but a previously received fragment message had the "
 "same values for GroupId and FragmentNum"
 msgstr ""
+"Vastaanotettiin viestin osa, mutta aiemmin vastaanotetussa osassa oli samat "
+"GroupId- ja FragmentNum-arvot."
 
 #. module: account_peppol
 #. odoo-python
@@ -173,6 +240,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
 msgstr ""
+"Vastaanotettu osa, mutta useampi osaviesti samassa osien ryhmässä sisältää "
+"arvon pakkauselementille."
 
 #. module: account_peppol
 #. odoo-python
@@ -181,13 +250,15 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
 msgstr ""
+"Vastaanotettu osa, mutta useampi osaviesti samassa osien ryhmässä sisältää "
+"arvon tälle elementille."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "A fragment is received that relates to a group that was previously rejected."
-msgstr ""
+msgstr "Vastaanotettu osa kuuluu ryhmään, joka on aiemmin hylätty."
 
 #. module: account_peppol
 #. odoo-python
@@ -196,6 +267,8 @@ msgid ""
 "A message unit in a bundle was not processed because a related message unit "
 "in the bundle caused an error."
 msgstr ""
+"Paketissa olevaa viestiyksikköä ei käsitelty, koska toinen samassa paketissa"
+" oleva viestiyksikkö aiheutti virheen."
 
 #. module: account_peppol
 #. odoo-python
@@ -221,6 +294,8 @@ msgid ""
 "A responding MSH indicates that it applies the alternate MEP binding to the "
 "response message."
 msgstr ""
+"Vastaava MSH ilmoittaa käyttävänsä vaihtoehtoista MEP-sidontaa (Message "
+"Exchange Pattern) vastausviestissä."
 
 #. module: account_peppol
 #. odoo-python
@@ -229,6 +304,8 @@ msgid ""
 "A value is set for FragmentCount, but a previously received fragment had a "
 "greature value."
 msgstr ""
+"FragmentCount-arvo on asetettu, mutta aiemmin vastaanotetulla osalla oli "
+"suurempi arvo."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -311,6 +388,9 @@ msgid ""
 "element/attribute contains a value that could not be recognized and "
 "therefore could not be used by the MSH."
 msgstr ""
+"Vaikka viestidokumentti on rakenteeltaan oikeanlainen ja rakenteen mukainen,"
+" jokin elementti/attribuutti sisältää arvon, jota MSH ei tunnista eikä voi "
+"käyttää."
 
 #. module: account_peppol
 #. odoo-python
@@ -320,6 +400,9 @@ msgid ""
 "element/attribute value cannot be processed as expected because the related "
 "feature is not supported by the MSH."
 msgstr ""
+"Vaikka viestiasiakirja on rakenteeltaan oikeanlainen ja rakenteen mukainen, "
+"jotakin elementtiä/attribuuttia ei voida käsitellä odotetulla tavalla, koska"
+" MSH ei tue kyseistä ominaisuutta."
 
 #. module: account_peppol
 #. odoo-python
@@ -330,6 +413,10 @@ msgid ""
 "element/attribute, or with the processing mode of the MSH, or with the "
 "normative requirements of the ebMS specification."
 msgstr ""
+"Vaikka viestiasiakirja on muodoltaan oikeanlainen ja rakenteen mukainen, "
+"jokin elementti-/atribuuttiarvo on ristiriidassa joko toisen "
+"elementin/attribuutin sisällön kanssa, MSH:n toimintatavan kanssa tai ebMS-"
+"määrityksen vaatimusten kanssa."
 
 #. module: account_peppol
 #. odoo-python
@@ -339,6 +426,9 @@ msgid ""
 "or absence of some element/ attribute is not consistent with the capability "
 "of the MSH, with respect to supported features."
 msgstr ""
+"Vaikka asiakirja on rakenteeltaan oikeanlainen ja rakenteen mukainen, jonkin"
+" elementin/attribuutin läsnäolo tai sen puuttuminen ei vastaa MSH:n tukemia "
+"ominaisuuksia."
 
 #. module: account_peppol
 #. odoo-python
@@ -348,6 +438,9 @@ msgid ""
 "Reliability module could not get assurance that the message was properly "
 "delivered, in spite of resending efforts."
 msgstr ""
+"Vaikka viesti lähetettiin varmennetun toimituksen vaatimuksen mukaisesti, "
+"luotettavuusmoduuli ei saanut vahvistusta onnistuneesta toimituksesta, "
+"vaikka viesti yritettiin lähettää useaan kertaan."
 
 #. module: account_peppol
 #. odoo-python
@@ -356,6 +449,8 @@ msgid ""
 "An Intermediary MSH was unable to route an ebMS message and stopped "
 "processing the message."
 msgstr ""
+"Välittäjänä toimiva MSH ei pystynyt reitittämään ebMS-viestiä ja lopetti "
+"viestin käsittelyn."
 
 #. module: account_peppol
 #. odoo-python
@@ -364,6 +459,7 @@ msgid ""
 "An MSH has determined that the message is expired and will not attempt to "
 "forward or deliver it."
 msgstr ""
+"MSH on todennut viestin vanhentuneeksi eikä yritä enää toimittaa sitä."
 
 #. module: account_peppol
 #. odoo-python
@@ -373,18 +469,21 @@ msgid ""
 "MPC for pulling, but the intermediary MSH is unable to store the message "
 "with this MPC"
 msgstr ""
+"Reititystoiminnon kirjaus ohjasi viestin vastaanotettavaksi MPC:hen (Message"
+" Partition Channel), mutta välittävä MSH ei pystynyt tallentamaan viestiä "
+"kyseiseen MPC:hen. "
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred during the decompression."
-msgstr ""
+msgstr "Purkamisen aikana tapahtui virhe."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred while decompressing the reassembled message."
-msgstr ""
+msgstr "Uudelleen koottua viestiä purettaessa tapahtui virhe."
 
 #. module: account_peppol
 #. odoo-python
@@ -393,6 +492,8 @@ msgid ""
 "An incoming message fragment has a a value greater than the known "
 "FragmentCount."
 msgstr ""
+"Saapuvalla viestin osalla on arvo, joka on suurempi kuin tunnettu "
+"FragmentCount."
 
 #. module: account_peppol
 #. odoo-python
@@ -403,12 +504,15 @@ msgid ""
 "was prepared to wait for the message to be pulled, and that limit has been "
 "reached."
 msgstr ""
+"Välittävä MSH ohjasi viestin MPC:hen noudettavaksi ja tallensi sen "
+"onnistuneesti. Kuitenkin MSH asetti aikarajan viestin noutamiselle, ja tämä "
+"aikaraja on ylittynyt."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An internal error occurred"
-msgstr ""
+msgstr "Tapahtui sisäinen virhe."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -534,6 +638,8 @@ msgid ""
 "Could not find an XSD with which to validate the document with identifier "
 "\"%s\"."
 msgstr ""
+"Asiakirjan, jonka tunniste on \"%s\", tarkistamiseen tarvittavaa XSD:tä ei "
+"löytynyt."
 
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
@@ -764,6 +870,8 @@ msgid ""
 "Message properties were present in the fragment SOAP header that were not "
 "specified in %s"
 msgstr ""
+"Osan SOAP-otsikko sisälsi viestin ominaisuuksia, mutta niitä ei ollut "
+"määritelty kohteessa %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_migration_key
@@ -786,18 +894,20 @@ msgid ""
 "More time than %s has passed since the first fragment was received but not "
 "all other fragments are received."
 msgstr ""
+"Ensimmäisen osan vastaanottamisesta on kulunut yli %s, mutta kaikkia muita "
+"osia ei ole vastaanotettu."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No UBL document was provided to the Peppol Outbound Service."
-msgstr ""
+msgstr "Peppol-lähetyspalvelulle ei toimitettu UBL-asiakirjaa."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No valid AS4 participant endpoint were found."
-msgstr ""
+msgstr "Kelvollisia AS4-osallistujan päätepisteitä ei löytynyt."
 
 #. module: account_peppol
 #. odoo-python
@@ -806,6 +916,8 @@ msgid ""
 "Not enough disk space available to store all (expected) fragments of the "
 "group."
 msgstr ""
+"Levytilaa ei ole riittävästi kaikkien ryhmään kuuluvien (odotettujen) osien "
+"tallentamiseen."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
@@ -825,7 +937,7 @@ msgstr "Ei vahvistettu vielä"
 #. module: account_peppol
 #: model:mail.template,description:account_peppol.mail_template_peppol_registration
 msgid "Notification email for peppol registration state update"
-msgstr ""
+msgstr "Ilmoitussähköposti Peppol-rekisteröinnin tilapäivityksestä."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -903,7 +1015,7 @@ msgstr "PEPPOL: päivitä osallistujan tila"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_webhook_keepalive_ir_actions_server
 msgid "PEPPOL: webhook keep alive"
-msgstr ""
+msgstr "PEPPOL: webhook-yhteyden ylläpito."
 
 #. module: account_peppol
 #. odoo-python
@@ -925,7 +1037,7 @@ msgstr "Peppol-osoite on annettava."
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_can_send
 msgid "Peppol Can Send"
-msgstr ""
+msgstr "Peppol voi lähettää"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_peppol_config_wizard
@@ -947,6 +1059,8 @@ msgid ""
 "Peppol Error [code=%(error_code)s]: %(error_subject)s\n"
 "%(error_message)s"
 msgstr ""
+"Peppol-virhe [koodi=%(error_code)s]: %(error_subject)s\n"
+"%(error_message)s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_external_provider
@@ -1030,7 +1144,7 @@ msgstr "Peppol varoitukset"
 #. module: account_peppol
 #: model:mail.template,name:account_peppol.mail_template_peppol_registration
 msgid "Peppol: Registration update"
-msgstr ""
+msgstr "Peppol: rekisteröintipäivitys."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1067,6 +1181,8 @@ msgstr "Asenna puhelinnumeroiden kirjasto."
 msgid ""
 "Please set a journal for Peppol invoices on %s before receiving documents."
 msgstr ""
+"Aseta kirjanpidon päiväkirja Peppol-laskuille kohteessa %s ennen "
+"asiakirjojen vastaanottoa."
 
 #. module: account_peppol
 #. odoo-python
@@ -1102,6 +1218,8 @@ msgid ""
 "Proxy error, please contact Odoo (missing \"%s\" - please make sure that it "
 "was loaded from the configuration panel)"
 msgstr ""
+"Välityspalvelinvirhe, ota yhteyttä Odoohon (puuttuva \"%s\" – varmista, että"
+" se on ladattu kokoonpanoasetusten paneelista)."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -1208,6 +1326,8 @@ msgid ""
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
 msgstr ""
+"Jokin luotettavuustoiminto, jonka Luotettavuusmoduuli on implementoinut, ei "
+"ole toiminnassa tai viestisarjan luotettavuustila ei ole kelvollinen."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1222,7 +1342,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Something went wrong with your request"
-msgstr ""
+msgstr "Pyyntösi käsittelyssä tapahtui virhe."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1251,6 +1371,8 @@ msgid ""
 "The MSH is experiencing temporary or permanent failure in trying to open a "
 "transport connection with a remote MSH."
 msgstr ""
+"MSH kohtasi tilapäisen tai pysyvän virheen yrittäessään avata siirtoyhteyttä"
+" etä-MSH:n kanssa."
 
 #. module: account_peppol
 #. odoo-python
@@ -1260,6 +1382,8 @@ msgid ""
 " is not contained within the ebMS Message, as identified by a PartInfo/href "
 "URI)."
 msgstr ""
+"MSH ei pysty ratkaisemaan ulkoisen tiedon viittausta (esim. osa, joka ei "
+"sisälly ebMS-viestiin, kuten PartInfo/href-URI tunnisti)."
 
 #. module: account_peppol
 #. odoo-python
@@ -1268,18 +1392,20 @@ msgid ""
 "The Peppol Participant DNS lookup resulted in an URL address that does not "
 "belong to this server."
 msgstr ""
+"Peppol-osallistujan DNS-haku palautti URL-osoitteen, joka ei kuulu tälle "
+"palvelimelle."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The Peppol Participant cannot receive this document type."
-msgstr ""
+msgstr "Peppol-osallistuja ei voi vastaanottaa tämän tyyppistä asiakirjaa."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The Peppol Participant certificate is invalid."
-msgstr ""
+msgstr "Peppol-osallistujan varmenne on virheellinen."
 
 #. module: account_peppol
 #. odoo-python
@@ -1288,6 +1414,8 @@ msgid ""
 "The Peppol Participant service group found on his Service Metadata Provider "
 "is invalid."
 msgstr ""
+"Peppol-osallistujan palvelumetatietopalvelimelta löytynyt palveluryhmä on "
+"virheellinen."
 
 #. module: account_peppol
 #. odoo-python
@@ -1308,30 +1436,33 @@ msgid ""
 "The Service Metadata Publisher associated to this participant is not "
 "reachable. url: %s"
 msgstr ""
+"Tähän osallistujaan liittyvään palvelumetatietojulkaisijaan ei saada "
+"yhteyttä. URL: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The UBL document provided to the Peppol Outbound Service is malformed."
 msgstr ""
+"Peppol-lähetyspalvelulle toimitettu UBL-asiakirja on väärin muotoiltu."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document could not be canonicalized."
-msgstr ""
+msgstr "XML-asiakirjaa ei voitu standardisointi."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the XSD Schema."
-msgstr ""
+msgstr "XML-asiakirja ei ole kelvollinen XSD-rakenteen mukaan."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the schematron."
-msgstr ""
+msgstr "XML-asiakirja ei ole kelvollinen Schematron-rakenteiden mukaan."
 
 #. module: account_peppol
 #. odoo-python
@@ -1343,13 +1474,13 @@ msgstr "Asiakirjaa ei löytynyt"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be sent to the Peppol Participant."
-msgstr ""
+msgstr "Asiakirjaa ei voitu lähettää Peppol-osallistujalle."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be validated."
-msgstr ""
+msgstr "Asiakirjan vahvistus epäonnistui."
 
 #. module: account_peppol
 #. odoo-python
@@ -1370,6 +1501,8 @@ msgid ""
 "The eb3:Message header copied to the fragment header does not match the "
 "eb3:Message header in the reassembled source message."
 msgstr ""
+"eb3:Message-otsikko, joka kopioitiin osan otsikkoon, ei vastaa uudelleen "
+"kootun alkuperäisviestin eb3:Message-otsikkoa."
 
 #. module: account_peppol
 #. odoo-python
@@ -1378,6 +1511,8 @@ msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
 msgstr ""
+"ebMS-otsikko ei ole joko XML-rakenteeltaan oikea tai se ei noudata ebMS-"
+"pakkaussääntöjä."
 
 #. module: account_peppol
 #. odoo-python

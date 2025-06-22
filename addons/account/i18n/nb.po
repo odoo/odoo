@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
@@ -192,6 +192,15 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"%(tax_account)s (%(account_name)s) should be an account of type "
+"\"%(receivable)s\" or \"%(payable)s\" with both options "
+"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -526,6 +535,11 @@ msgstr "3.00"
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr "30 Dager"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% forskudd slutten av etterfølgende måned"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -4121,6 +4135,7 @@ msgstr "Overfør til"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_57
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -4131,6 +4146,16 @@ msgstr "Kontanter"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "Kontant-konto"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_54
+msgid "Cash Bakery"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_56
+msgid "Cash Bar"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -4167,6 +4192,11 @@ msgstr "Kontantmetode avgifter"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "Kontantbasis overgangskonto"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_53
+msgid "Cash Clothes Shop"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4222,10 +4252,20 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Tapkonto for avskrivning av kontantrabatt"
 
 #. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_52
+msgid "Cash Furn. Shop"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Kontantkasser"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_55
+msgid "Cash Restaurant"
+msgstr "Kontantrestaurant"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -6053,6 +6093,26 @@ msgstr "Leveringsadresse"
 #: model:ir.model.fields,field_description:account.field_account_move__delivery_date
 msgid "Delivery Date"
 msgstr "Leveringsdato"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "Demo CEO Wages Account"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "Demo Capital Account"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "Demo Sale of Land Account"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "Demo Stock Account"
 
 #. module: account
 #. odoo-python
@@ -9245,11 +9305,6 @@ msgid "Is Being Sent"
 msgstr "Er i sending"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
-msgid "Is Between"
-msgstr "Er mellom"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
@@ -9292,11 +9347,6 @@ msgid "Is Follower"
 msgstr "Er følger"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__greater
-msgid "Is Greater Than"
-msgstr "Er større enn"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__green_on_positive
 msgid "Is Growth Good when Positive"
 msgstr "Er vekst bra når den er positiv"
@@ -9305,11 +9355,6 @@ msgstr "Er vekst bra når den er positiv"
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_imported
 msgid "Is Imported"
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
-msgid "Is Lower Than"
-msgstr "Er  mindre enn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_manually_modified
@@ -9370,6 +9415,21 @@ msgstr "Er Storno"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_valid
 msgid "Is Valid"
 msgstr "Er gyldig"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
+msgid "Is between"
+msgstr "Er mellom"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__greater
+msgid "Is greater than or equal to"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
+msgid "Is lower than or equal to"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
@@ -9993,6 +10053,11 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid "Line \"%s\" defines itself as its parent."
 msgstr "Linje \"%s\" definerer seg selv som sin forelder."
+
+#. module: account
+#: model:account.reconcile.model,name:account.1_reconcile_from_label
+msgid "Line with Bank Fees"
+msgstr "Linje med bankgebyrer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
@@ -11159,6 +11224,11 @@ msgid "Off-Balance Sheet"
 msgstr "Ubalansert oppstilling"
 
 #. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "Kontormøbler"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
 msgid "On early payment"
 msgstr "På tidlig betaling"
@@ -11584,6 +11654,7 @@ msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_owner_current_account
+#: model:account.reconcile.model,name:account.1_owner_current_account_model
 msgid "Owner's Current Account"
 msgstr ""
 
@@ -12050,6 +12121,11 @@ msgstr ""
 "Betalingsbetingelser: 30 dager, 2 % tidlig betalingsrabatt innen 7 dager."
 
 #. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "Betalingsvilkår: 30% forskudd utgangen av påfølgende måned"
+
+#. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr "Betalingsbetingelser: 30 % nå, restbeløp innen 60 dager."
@@ -12256,6 +12332,7 @@ msgstr "Poster betalinger"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
+#: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__posted
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13826,8 +13903,10 @@ msgstr "Sender fakturaer"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_sent_values
 #: model:ir.model.fields,field_description:account.field_account_move__move_sent_values
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__sent
+#: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__sent
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Sent"
 msgstr "Sendt"
 
@@ -14039,6 +14118,11 @@ msgid ""
 msgstr ""
 "Kortere navn brukt for visning. Journaloppføringene til denne journalen vil "
 "også bli navngitt med dette prefikset som standard."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_aba_routing
+msgid "Show Aba Routing"
+msgstr ""
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -17814,10 +17898,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "You can't create payments for entries belonging to different branches."
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
 msgstr ""
-"Du kan ikke opprette betalinger for oppføringer som tilhører forskjellige "
-"filialer."
 
 #. module: account
 #. odoo-python

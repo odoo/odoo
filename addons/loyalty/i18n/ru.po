@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:36+0000\n"
+"POT-Creation-Date: 2025-06-20 18:39+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -96,6 +96,17 @@ msgstr "(без учета налогов)"
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "-> View History"
 msgstr ""
+
+#. module: loyalty
+#: model:loyalty.program,name:loyalty.10_percent_coupon
+msgid "10% Discount Coupons"
+msgstr "купоны на скидку 10%"
+
+#. module: loyalty
+#: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
+#: model:loyalty.reward,description:loyalty.10_percent_with_code_reward
+msgid "10% on your order"
+msgstr "10% on Ваш заказ"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -496,6 +507,11 @@ msgid "Buy 2 products and get a third one for free"
 msgstr "Купите 2 продукта и получите третий бесплатно"
 
 #. module: loyalty
+#: model:loyalty.program,name:loyalty.3_cabinets_plus_1_free
+msgid "Buy 3 large cabinets, get one for free"
+msgstr "Купите 3 больших шкафа, получите один в подарок"
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
@@ -549,6 +565,11 @@ msgstr "Очистить все промо-точки (точки)"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__code
 msgid "Code"
 msgstr "Код"
+
+#. module: loyalty
+#: model:loyalty.program,name:loyalty.10_percent_with_code
+msgid "Code for 10% on orders"
+msgstr "Код для заказов 10% on"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__communication_plan_ids
@@ -635,6 +656,11 @@ msgid "Coupon point(s)"
 msgstr "Купонный пункт(ы)"
 
 #. module: loyalty
+#: model:loyalty.program,portal_point_name:loyalty.10_percent_coupon
+msgid "Coupon points"
+msgstr "Купонные баллы"
+
+#. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Coupon value"
 msgstr "Купонная стоимость"
@@ -703,6 +729,7 @@ msgstr "Создано"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#: model:loyalty.program,portal_point_name:loyalty.3_cabinets_plus_1_free
 msgid "Credit(s)"
 msgstr "Кредит(ы)"
 
@@ -837,6 +864,7 @@ msgstr "Код скидки"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#: model:loyalty.program,portal_point_name:loyalty.10_percent_with_code
 msgid "Discount point(s)"
 msgstr "Пункт(ы) предоставления скидки"
 
@@ -987,6 +1015,11 @@ msgstr "Бесплатный товар"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "Free Product - %s"
 msgstr "Бесплатный Товар - %s"
+
+#. module: loyalty
+#: model:loyalty.reward,description:loyalty.3_cabinets_plus_1_free_reward
+msgid "Free Product - Large Cabinet"
+msgstr "Бесплатный продукт - большой шкаф"
 
 #. module: loyalty
 #. odoo-python

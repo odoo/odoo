@@ -3,16 +3,16 @@
 # 	* mrp
 # 
 # Translators:
-# Wil Odoo, 2025
 # Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Abe Manyo, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -244,6 +244,11 @@ msgstr "100"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "12345678901"
 msgstr "12345678901"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
+msgid "18″ x 2½″ Square Leg"
+msgstr "Kaki Kotak 18″ x 2½″"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1278,6 +1283,11 @@ msgid "BoM Type"
 msgstr "Jenis BoM"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
+msgid "Bolt"
+msgstr "Baut"
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
@@ -2172,6 +2182,21 @@ msgid "Draft"
 msgstr "Draft"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer Black"
+msgstr "Drawer Black"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_drawer_case_product_template
+msgid "Drawer Case Black"
+msgstr "Drawer Case Black"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer on casters for great usability."
+msgstr "Drawer pada caster untuk kegunaan yang bagus."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__duration
 #: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
@@ -3029,6 +3054,11 @@ msgid ""
 msgstr ""
 "Status ketersediaan komponen terkini untuk MO ini. Bila hijau, maka status "
 "kesiapan MO adalah siap, sesuai konfigurasi BOM."
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
+msgid "Layers that are stick together to assemble wood panels."
+msgstr "Lapisan yang ditempelkan bersama untuk merakit panel kayu."
 
 #. module: mrp
 #. odoo-javascript
@@ -4194,6 +4224,11 @@ msgid "Planning"
 msgstr "Perencanaan"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_plastic_laminate_product_template
+msgid "Plastic Laminate"
+msgstr "Laminasi Plastik"
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_move.py:0
 msgid "Please enter a positive quantity."
@@ -4228,6 +4263,16 @@ msgstr "Mohon batalkan blokir pusat kerja untuk memulai SPK."
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Please unblock the work center to validate the work order"
 msgstr "Mohon batalkan blokir pusat kerja untuk memvalidasi SPK"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_wood_ply_product_template
+msgid "Ply Layer"
+msgstr "Ply Layer"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_ply_veneer_product_template
+msgid "Ply Veneer"
+msgstr "Ply Veneer"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
@@ -4948,6 +4993,11 @@ msgid "Scraps"
 msgstr "Pembuangan"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
+msgid "Screw"
+msgstr "Baut"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Search"
 msgstr "Pencarian"
@@ -5115,6 +5165,16 @@ msgid "Slot into workcenter calendar once planned"
 msgstr "Masukkan ke kalender pusat kerja setelah direncanakan"
 
 #. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_head_product_template
+msgid "Solid wood is a durable natural material."
+msgstr "Kayu kokoh adalah bahan alami yang tahan lama."
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_product_template
+msgid "Solid wood table."
+msgstr "Meja kayu yang kokoh"
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 msgid ""
@@ -5213,6 +5273,16 @@ msgstr "Pisah produksi"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
 msgid "Split productions"
 msgstr "Pisah produksi-produksi"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template
+msgid "Stainless steel screw"
+msgstr "Baut baja stainless"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_bolt_product_template
+msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
+msgstr "Baut baja stainless penuh (dia - 5mm, Panjang - 10mm)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -5339,6 +5409,31 @@ msgstr "Sub BoM"
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
 msgstr "Subkontrak"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_product_template
+msgid "Table"
+msgstr "Meja"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_table_kit_product_template
+msgid "Table Kit"
+msgstr "Table Kit"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
+msgid "Table Leg"
+msgstr "Kaki Meja"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_head_product_template
+msgid "Table Top"
+msgstr "Table Top"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_table_kit_product_template
+msgid "Table kit"
+msgstr "Table kit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tag_ids
@@ -5798,6 +5893,11 @@ msgid "Tomorrow"
 msgstr "Besok"
 
 #. module: mrp
+#: model_terms:product.template,description:mrp.product_product_wood_wear_product_template
+msgid "Top layer of a wood panel."
+msgstr "Lapisan atas panel kayu."
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
@@ -6213,6 +6313,11 @@ msgid "Warnings"
 msgstr "Peringatan"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_wood_wear_product_template
+msgid "Wear Layer"
+msgstr "Wear Layer"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__website_message_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__website_message_ids
@@ -6314,6 +6419,11 @@ msgstr "Wizard untuk Memisah Produksi"
 #: model:ir.model,name:mrp.model_mrp_production_backorder
 msgid "Wizard to mark as done or create back order"
 msgstr "Wizard untuk menandai sebagai Selesai atau membuat backorder"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_wood_panel_product_template
+msgid "Wood Panel"
+msgstr "Panel Kayu"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter

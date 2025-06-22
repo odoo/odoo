@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -208,6 +208,15 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"%(tax_account)s (%(account_name)s) should be an account of type "
+"\"%(receivable)s\" or \"%(payable)s\" with both options "
+"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -543,6 +552,11 @@ msgstr "3.00"
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
 msgstr "30 วัน"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "ล่วงหน้า 30% เสร็จสิ้นเดือนถัดไป"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -4170,6 +4184,7 @@ msgstr "ยกไปที่"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_57
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -4180,6 +4195,16 @@ msgstr "เงินสด"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "บัญชีเงินสด"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_54
+msgid "Cash Bakery"
+msgstr "เงินสดของเบเกอรี่"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_56
+msgid "Cash Bar"
+msgstr "เงินสดของบาร์"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -4216,6 +4241,11 @@ msgstr "ภาษีเกณฑ์เงินสด"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "บัญชีการโอนเกณฑ์เงินสด"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_53
+msgid "Cash Clothes Shop"
+msgstr "เงินสดของร้านเสื้อผ้า"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4271,10 +4301,20 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "บัญชีขาดทุนเป็นสูญส่วนลดเงินสด"
 
 #. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_52
+msgid "Cash Furn. Shop"
+msgstr "เงินสดของร้านขายเฟอร์นิเจอร์"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "เครื่องบันทึกเงินสด"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_55
+msgid "Cash Restaurant"
+msgstr "ร้านอาหารที่รับเงินสดเท่านั้น"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -6098,6 +6138,26 @@ msgstr "ที่อยู่จัดส่ง"
 #: model:ir.model.fields,field_description:account.field_account_move__delivery_date
 msgid "Delivery Date"
 msgstr "วันที่จัดส่ง"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "บัญชีค่าจ้าง CEO สาธิต"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "บัญชีเงินทุนสาธิต"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "บัญชีการขายที่ดินสาธิต"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "บัญชีหุ้นสาธิต"
 
 #. module: account
 #. odoo-python
@@ -9295,11 +9355,6 @@ msgid "Is Being Sent"
 msgstr "กำลังถูกส่ง"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
-msgid "Is Between"
-msgstr "อยู่ระหว่าง"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
@@ -9342,11 +9397,6 @@ msgid "Is Follower"
 msgstr "เป็นผู้ติดตาม"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__greater
-msgid "Is Greater Than"
-msgstr "มากกว่า"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__green_on_positive
 msgid "Is Growth Good when Positive"
 msgstr "การเติบโตจะถือว่าอยู่ในเกณฑ์ที่ดี เมื่อมีค่าเป็นบวก"
@@ -9355,11 +9405,6 @@ msgstr "การเติบโตจะถือว่าอยู่ในเ
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_imported
 msgid "Is Imported"
 msgstr "ถูกนำเข้าแล้ว"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
-msgid "Is Lower Than"
-msgstr "ต่ำกว่า"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_manually_modified
@@ -9420,6 +9465,21 @@ msgstr "เป็น Storno"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_valid
 msgid "Is Valid"
 msgstr "ถูกต้อง"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
+msgid "Is between"
+msgstr "อยู่ระหว่าง"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__greater
+msgid "Is greater than or equal to"
+msgstr "มากกว่าหรือเท่ากับ"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
+msgid "Is lower than or equal to"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
@@ -10039,6 +10099,11 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid "Line \"%s\" defines itself as its parent."
 msgstr "บรรทัด \"%s\" กำหนดตัวเองเป็นตัวหลัก"
+
+#. module: account
+#: model:account.reconcile.model,name:account.1_reconcile_from_label
+msgid "Line with Bank Fees"
+msgstr "สอดคล้องกับค่าธรรมเนียมธนาคาร"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__line_ids
@@ -11205,6 +11270,11 @@ msgid "Off-Balance Sheet"
 msgstr "รายการนอกงบดุล"
 
 #. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "เฟอร์นิเจอร์สำนักงาน"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
 msgid "On early payment"
 msgstr "ในการชำระเงินก่อนกำหนด"
@@ -11630,6 +11700,7 @@ msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_owner_current_account
+#: model:account.reconcile.model,name:account.1_owner_current_account_model
 msgid "Owner's Current Account"
 msgstr ""
 
@@ -12095,6 +12166,11 @@ msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
 msgstr "เงื่อนไขการชำระเงิน: 30 วัน ส่วนลดการชำระเงินก่อนกำหนด 2% ภายใน 7 วัน"
 
 #. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "เงื่อนไขการชำระเงิน: ล่วงหน้า 30% สิ้นเดือนถัดไป"
+
+#. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
 msgstr "เงื่อนไขการชําระเงิน: 30% ตอนนี้, ชำระเต็มใน 60 วัน"
@@ -12298,6 +12374,7 @@ msgstr "ยืนยันการชำระเงิน"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
+#: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__posted
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13860,8 +13937,10 @@ msgstr "การส่งใบแจ้งหนี้"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__move_sent_values
 #: model:ir.model.fields,field_description:account.field_account_move__move_sent_values
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__sent
+#: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__sent
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Sent"
 msgstr "ส่งแล้ว"
 
@@ -14071,6 +14150,11 @@ msgid ""
 msgstr ""
 "ชื่อที่สั้นกว่าที่ใช้สำหรับแสดง "
 "รายการสมุดรายวันของสมุดรายวันนี้จะถูกตั้งชื่อโดยใช้คำนำหน้านี้ตามค่าเริ่มต้น"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_aba_routing
+msgid "Show Aba Routing"
+msgstr ""
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -17851,8 +17935,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "You can't create payments for entries belonging to different branches."
-msgstr "คุณไม่สามารถสร้างการชำระเงินสำหรับรายการที่อยู่ในสาขาที่แตกต่างกันได้"
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
+msgstr ""
 
 #. module: account
 #. odoo-python

@@ -3,16 +3,16 @@
 # 	* website
 # 
 # Translators:
-# Wil Odoo, 2025
 # Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Abe Manyo, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,6 +59,11 @@ msgid ""
 msgstr ""
 "\" Write a quote here from one of your customers. Quotes are a great way to "
 "build confidence in your products or services. \""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "\" alert with a"
+msgstr "\" beritahu dengan"
 
 #. module: website
 #. odoo-python
@@ -335,6 +340,7 @@ msgstr ", author:"
 
 #. module: website
 #: model:website,contact_us_button_url:website.default_website
+#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -428,6 +434,11 @@ msgid "16"
 msgstr "16"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "2 <span class=\"visually-hidden\">(current)</span>"
+msgstr "2 <span class=\"visually-hidden\">(saat ini)</span>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2 km"
 msgstr "2 km"
@@ -473,6 +484,7 @@ msgid "24/7 Support"
 msgstr "Bantuan 24/7"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "25%"
@@ -647,6 +659,11 @@ msgstr "8 km"
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 msgid ": Once loaded, follow the"
 msgstr ": Setelah dimuat, ikut"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<a class=\"o_translate_inline\" href=\"#\">Link</a>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -1529,6 +1546,23 @@ msgid "<p>Attached files: </p>"
 msgstr "<p>File-file terlampir: </p>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"<select id=\"exampleSelect\" class=\"form-select\">\n"
+"                                                            <option selected=\"true\">Open this select menu</option>\n"
+"                                                            <option value=\"1\">One</option>\n"
+"                                                            <option value=\"2\">Two</option>\n"
+"                                                            <option value=\"3\">Three</option>\n"
+"                                                        </select>"
+msgstr ""
+"<select id=\"exampleSelect\" class=\"form-select\">\n"
+"                                                            <option selected=\"true\">Buka menu pilihan ini</option>\n"
+"                                                            <option value=\"1\">Satu</option>\n"
+"                                                            <option value=\"2\">Dua</option>\n"
+"                                                            <option value=\"3\">Tiga</option>\n"
+"                                                        </select>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<small class=\"d-flex align-items-center\">\n"
@@ -1577,6 +1611,41 @@ msgstr ""
 "                                    </small>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-0)</small>"
+msgstr "<small class=\"text-muted\">(rounded-0)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-1)</small>"
+msgstr "<small class=\"text-muted\">(rounded-1)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-2)</small>"
+msgstr "<small class=\"text-muted\">(rounded-2)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-3)</small>"
+msgstr "<small class=\"text-muted\">(rounded-3)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(shadow)</small>"
+msgstr "<small class=\"text-muted\">(shadow)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(shadow-lg)</small>"
+msgstr "<small class=\"text-muted\">(shadow-lg)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(shadow-sm)</small>"
+msgstr "<small class=\"text-muted\">(shadow-sm)</small>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "<small class=\"text-muted\">13/06/2019</small>"
 msgstr "<small class=\"text-muted\">13/06/2019</small>"
@@ -1595,6 +1664,29 @@ msgstr "<small class=\"text-muted\">21/03/2021</small>"
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "<small class=\"text-muted\">25/12/2024</small>"
 msgstr "<small class=\"text-muted\">25/12/2024</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">Last updated 3 mins ago</small>"
+msgstr "<small class=\"text-muted\">Diperbarui terakhir 3 menit yang lalu</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Form field help "
+"text</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Teks bantuan untuk "
+"field formulir</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Kami tidak akan "
+"pernah membagikan email Anda dengan siapapun.</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -1627,6 +1719,16 @@ msgstr "<small>Gratis Pengembalian dan Pengiriman Standar</small>"
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons_horizontal
 msgid "<small>Instant setup, satisfied or reimbursed.</small>"
 msgstr "<small>Setup instan, Anda puas atau uang dikembalikkan.</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "<small>TABS</small>"
+msgstr "<small>TABS</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<span class=\"badge bg-primary\">14</span>"
+msgstr "<span class=\"badge bg-primary\">14</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
@@ -2597,6 +2699,11 @@ msgstr ""
 " yang lalu."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "A second item"
+msgstr "Barang kedua"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid ""
 "A spiced cake loaded with grated carrots, nuts, and a hint of cinnamon, "
@@ -2604,6 +2711,11 @@ msgid ""
 msgstr ""
 "A spiced cake loaded with grated carrots, nuts, and a hint of cinnamon, "
 "topped with a tangy cream cheese frosting."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "A third item"
+msgstr "Barang ketiga"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -2741,6 +2853,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Action"
 msgstr "Tindakan"
 
@@ -2762,6 +2875,8 @@ msgstr "Mengaktifkan %s Anda. "
 #: model:ir.model.fields,field_description:website.field_website_controller_page__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 msgid "Active"
 msgstr "Aktif"
@@ -3107,6 +3222,11 @@ msgid "Alert"
 msgstr "Peringatan"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Alerts"
+msgstr "Peringatan"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
 msgid "Alexander drives our marketing campaigns and brand presence."
 msgstr "Aleksander mendorong kampanye marketing dan brand presence kami."
@@ -3337,6 +3457,16 @@ msgid "An error occurred while rendering the template"
 msgstr "Error terjadi saat render templat"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "An example alert with an icon"
+msgstr "Contoh peringatan dengan ikon"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "An item"
+msgstr "Barang"
+
+#. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_website_analytics
 msgid "Analytics"
@@ -3405,6 +3535,11 @@ msgstr "Animasi"
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
 msgid "Another color block"
 msgstr "Blok warna lagi"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Another link"
+msgstr "Link lain"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cta_mobile
@@ -3588,6 +3723,11 @@ msgid "Autoredirect Language"
 msgstr "Bahasa Pengalihan Otomatis"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Autosizing"
+msgstr "Autosizing"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -3598,6 +3738,11 @@ msgstr "Tersedia di Website"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
 msgstr "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "BTS Base Colors"
+msgstr "BTS Base Colors"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -3633,6 +3778,7 @@ msgstr "VIdeo latar belakang"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Badge"
 msgstr "Lencana"
@@ -3690,6 +3836,11 @@ msgstr "Tampilan dasar"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_groups
 msgid "Basic"
 msgstr "Dasar"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Basic example"
+msgstr "Contoh sederhana"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
@@ -3871,6 +4022,26 @@ msgid "Border Width"
 msgstr "Lebar Border"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius large"
+msgstr "Radius border besar"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius medium"
+msgstr "Radius border medium"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius none"
+msgstr "Radius border nol"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius small"
+msgstr "Radius border kecil"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3904,6 +4075,12 @@ msgstr "Dikotakkan"
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Boxes"
 msgstr "Kotak-Kotak"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Breadcrumb"
+msgstr "Breadcrumb"
 
 #. module: website
 #. odoo-javascript
@@ -3950,6 +4127,7 @@ msgstr "Bundel"
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: code:addons/website/static/src/snippets/s_floating_blocks/options.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
 #: model_terms:ir.ui.view,arch_db:website.s_button
 #: model_terms:ir.ui.view,arch_db:website.s_floating_blocks_options
@@ -4135,6 +4313,7 @@ msgstr "Cappuccino"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Card"
 msgstr "Kartu"
@@ -4166,6 +4345,12 @@ msgid "Card Width"
 msgstr "Lebar Kartu"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Card link"
+msgstr "Link kartu"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_card
 msgid "Card title"
 msgstr "Judul kartu"
@@ -4625,6 +4810,7 @@ msgstr "Klien menghemat $32 juta dengan layanan kami."
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/001.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -4782,6 +4968,7 @@ msgid "Competitive pricing"
 msgstr "Harga kompetitif"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Components"
 msgstr "Komponen"
@@ -5178,6 +5365,11 @@ msgid "Crafting Your Digital Success Story"
 msgstr "Buat Cerita Sukses Digital Anda"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Cras justo odio"
+msgstr "Cras justo odio"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
@@ -5458,6 +5650,8 @@ msgstr "Putus-Putus"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/services/website_service.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Data"
 msgstr "Data"
 
@@ -5527,6 +5721,7 @@ msgid "Dedicated professionals driving our success"
 msgstr "Profesional terdedikasi mendorong kesuksesan kami"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -5576,6 +5771,11 @@ msgid "Default Value"
 msgstr "Nilai Baku"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Default checkbox"
+msgstr "Kotakcentang default"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_id
 msgid "Default language"
 msgstr "Bahasa standar"
@@ -5584,6 +5784,16 @@ msgstr "Bahasa standar"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_code
 msgid "Default language code"
 msgstr "Kode bahasa standar"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Default radio"
+msgstr "Radio default"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Default switch checkbox input"
+msgstr "Default switch checkbox input"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -5808,6 +6018,12 @@ msgid "Disable unused snippets assets"
 msgstr "Nonaktifkan aset snippet yang tidak digunakan"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Disabled"
+msgstr "Dinonaktifkan"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Disappearing"
 msgstr "Disappearing"
@@ -5962,6 +6178,36 @@ msgstr "Disket"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Display"
 msgstr "Tampilan"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 1"
+msgstr "Tampilan 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 2"
+msgstr "Tampilan 2"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 3"
+msgstr "Tampilan 3"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 4"
+msgstr "Tampilan 4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 5"
+msgstr "Tampilan 5"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 6"
+msgstr "Tampilan 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -6224,6 +6470,7 @@ msgid "Driving innovation together"
 msgstr "Driving innovation together"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Dropdown"
 msgstr "Dropdown"
@@ -6496,6 +6743,11 @@ msgid "Email Marketing"
 msgstr "Pemasaran Email"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Email address"
+msgstr "Alamat email"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_s_image_text
 msgid ""
 "Embark on a journey through time as we share the story of our humble "
@@ -6634,6 +6886,11 @@ msgid ""
 msgstr ""
 "Masukkan kode yang akan ditambahkan ke <head> pada setiap halaman website "
 "Anda."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Enter email"
+msgstr "Masukkan email"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_tabs
@@ -7355,6 +7612,7 @@ msgid "Footer Visible"
 msgstr "Visibilitas Footer"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_form_aside
 #: model_terms:ir.ui.view,arch_db:website.s_title_form
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -7888,6 +8146,11 @@ msgid "Grid"
 msgstr "Grid"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Group"
+msgstr "Grup"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_search_view
@@ -7924,6 +8187,16 @@ msgstr ""
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "H1 tag is missing, please add only one"
 msgstr "Tag H1 kurang, mohon tambahkan hanya satu"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "H4 Card title"
+msgstr "Judul Kartu H4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "H5 Card subtitle"
+msgstr "Subtitle Kartu H5"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_ace_editor
@@ -7970,6 +8243,11 @@ msgstr "Happy Anniversary Odoo!"
 #: model:ir.model.fields,field_description:website.field_website__has_social_default_image
 msgid "Has Social Default Image"
 msgstr "Memiliki Gambar Default untuk Sosial"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Header"
+msgstr "Kop"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_color
@@ -8020,6 +8298,36 @@ msgstr "Heading 1"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 msgid "Headings"
 msgstr "Heading"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 1"
+msgstr "Heading 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 2"
+msgstr "Heading 2"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 3"
+msgstr "Heading 3"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 4"
+msgstr "Heading 4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 5"
+msgstr "Heading 5"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 6"
+msgstr "Heading 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8182,6 +8490,7 @@ msgstr "Hint: Ketik '/' untuk mencari halaman dan '#' untuk link ke anchor."
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: model:website.menu,name:website.menu_home
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -8190,6 +8499,11 @@ msgstr "Hint: Ketik '/' untuk mencari halaman dan '#' untuk link ke anchor."
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "Home"
 msgstr "Beranda"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Home <span class=\"visually-hidden\">(current)</span>"
+msgstr "Home <span class=\"visually-hidden\">(saat ini)</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -9396,6 +9710,7 @@ msgid "Kickoff"
 msgstr "Kickoff"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9460,6 +9775,7 @@ msgid "Laptops"
 msgstr "Laptop"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -9609,6 +9925,11 @@ msgid "Layout Background Color"
 msgstr "Warna Latar Belakang Layout"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Lead text"
+msgstr "Lead text"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
 msgid "Leading the future with innovation and strategy"
 msgstr "Leading the future with innovation and strategy"
@@ -9633,6 +9954,7 @@ msgstr ""
 "kami dengan proses onboarding kami langkah demi langkah."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.s_card_options
@@ -9734,6 +10056,12 @@ msgid "Let’s get in touch"
 msgstr "Let’s get in touch"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Library"
+msgstr "Perpustakaan"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -9766,6 +10094,8 @@ msgstr "Tinggi Baris"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Link"
 msgstr "Tautan..."
 
@@ -9779,6 +10109,11 @@ msgstr "Link Anchor"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Link Style"
 msgstr "Style Link"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Link button"
+msgstr "Tombol Link"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -9841,6 +10176,11 @@ msgid "List of blocked 3rd-party domains"
 msgstr "Daftar domain pihak ke-3 yang diblokir"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "List-group"
+msgstr "List-group"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__view_id
 msgid "Listing view"
 msgstr "Listing view"
@@ -9879,6 +10219,7 @@ msgstr "Widget Livechat"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
+#: code:addons/website/static/src/js/editor/html_editor.js:0
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #: code:addons/website/static/src/xml/website.background.video.xml:0
 msgid "Loading..."
@@ -10286,6 +10627,7 @@ msgstr ""
 "posisinya saat ini. Mich adalah salah satu Direktur terbaik."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.template_header_sales_two
 msgid "Middle"
@@ -10358,6 +10700,16 @@ msgstr "Pratinjau Telepon Mobile"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Mockup Image"
 msgstr "Gambar Mockup"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Modal"
+msgstr "Modal"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Modal title"
+msgstr "Judul Modal"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__mode
@@ -10618,6 +10970,16 @@ msgid "Narrow"
 msgstr "Sempit"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Nav and tabs"
+msgstr "Navigasi dan tab"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Navbar"
+msgstr "Navbar"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_list
 msgid "Need help?"
 msgstr "Butuh bantuan?"
@@ -10723,6 +11085,7 @@ msgstr "Notifikasi SMS Buletin"
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/001.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
@@ -11603,6 +11966,7 @@ msgid "Out"
 msgstr "Keluar"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Outline"
 msgstr "Outline"
@@ -11787,6 +12151,11 @@ msgid "Pages"
 msgstr "Halaman"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Pagination"
+msgstr "Penomoran Halaman"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Pants"
 msgstr "Celana"
@@ -11796,6 +12165,28 @@ msgstr "Celana"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 msgid "Paragraph"
 msgstr "Paragraf"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
+"elit. <i>Integer posuere erat a ante</i>. <a class=\"o_translate_inline\" "
+"href=\"#\">Link text</a>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
+msgstr ""
+"Paragraf dengan teks <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> dan <em>italic</em>. "
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Paragraph. <a class=\"o_translate_inline\" href=\"#\">text link</a>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -12074,6 +12465,11 @@ msgid "Prepend"
 msgstr "Prepend"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Preset"
+msgstr "Preset"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
 msgid "Press %(key)s to exit full screen"
@@ -12115,6 +12511,7 @@ msgstr "Pratinaju URL ini di tab baru"
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/001.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
@@ -12821,6 +13218,7 @@ msgid "Rewrite"
 msgstr "Rewrite"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.s_card_options
@@ -13009,6 +13407,11 @@ msgid "Save and Reload"
 msgstr "Simpan dan Muat Ulang"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Save changes"
+msgstr "Simpan perubahan"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Save the block to use it elsewhere"
 msgstr "Simpan blok untuk digunakan di tempat lain"
@@ -13093,6 +13496,7 @@ msgstr "Mode Scrolling"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/hierarchy_navbar.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.header_search_box
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
@@ -13189,6 +13593,11 @@ msgid ""
 msgstr ""
 "Slide Kedua\n"
 "                                <small class=\"oe_unbreakable o_nav_tabs_description opacity-75\">Slide ini mengenai apa</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Second default radio"
+msgstr "Second default radio"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -13309,6 +13718,11 @@ msgid "Separate email addresses with a comma."
 msgstr "Pisahkan alamat email menggunakan koma."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Separated link"
+msgstr "Link yang dipisah"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_text_cover
@@ -13405,6 +13819,21 @@ msgstr "Setting pada halaman ini akan diterapkan pada website ini"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "Shadow"
 msgstr "Bayangan"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Shadow large"
+msgstr "Bayangan besar"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Shadow medium"
+msgstr "Bayangan medium"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Shadow small"
+msgstr "Bayangan kecil"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_floating_blocks_options
@@ -13715,6 +14144,7 @@ msgid "Slideshow"
 msgstr "Slideshow"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -13727,6 +14157,15 @@ msgstr "Kecil"
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Small Header"
 msgstr "Header Kecil"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
+msgstr ""
+"Teks kecil. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -13776,6 +14215,20 @@ msgstr "Solid"
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid "Some of these pages are used as new page templates."
 msgstr "Beberapa dari halaman ini digunakan sebagai templat halaman baru."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"Some quick example text to build on the card title and make up the bulk of "
+"the card's content."
+msgstr ""
+"Beberapa contoh cepat teks untuk memulai judul kartu dan mengisi konten "
+"kartu."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Something else here"
+msgstr "Hal lain di sini"
 
 #. module: website
 #. odoo-javascript
@@ -14074,6 +14527,11 @@ msgid "Sub Menus"
 msgstr "Sub Menu"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Subheading"
+msgstr "Subheading"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 msgid "Subject"
@@ -14170,6 +14628,7 @@ msgid "Tablets"
 msgstr "Tablet"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_tabs
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Tabs"
@@ -14353,6 +14812,11 @@ msgstr "Inline Teks"
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 msgid "Text Position"
 msgstr "Posisi Teks"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur."
+msgstr "Teks di-mute. Lorem <b>ipsum dolor sit amet</b>, consectetur."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
@@ -14616,6 +15080,11 @@ msgid "Theme Attachments"
 msgstr "Lampiran Tema"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Theme Colors"
+msgstr "Warna Tema"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
@@ -14789,6 +15258,24 @@ msgid "This font is hosted and served to your visitors by Google servers"
 msgstr "Font ini dihost dan ditunjukkan ke pengunjung Anda oleh Google server"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "This is a \""
+msgstr "Ini adalah \""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"This is a paragraph. Ambitioni dedisse scripsisse iudicaretur. Nihilne te "
+"nocturnum praesidium Palati, nihil urbis vigiliae. Unam incolunt Belgae, "
+"aliam Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus."
+" Phasellus laoreet lorem vel dolor tempus vehicula."
+msgstr ""
+"This is a paragraph. Ambitioni dedisse scripsisse iudicaretur. Nihilne te "
+"nocturnum praesidium Palati, nihil urbis vigiliae. Unam incolunt Belgae, "
+"aliam Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus."
+" Phasellus laoreet lorem vel dolor tempus vehicula."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_framed_intro
 msgid ""
 "This is a simple hero unit, a simple jumbotron-style component for calling "
@@ -14801,6 +15288,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_key_images
 msgid "This is a small title related to the current image"
 msgstr "Ini adalah judul kecil terkait gambar saat ini"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"This is a wider card with supporting text below as a natural lead-in to "
+"additional content. This content is a little bit longer."
+msgstr ""
+"Ini adalah kartu lebih lebar dengan teks pendukung sebagai pemulai alami "
+"menuju konten tambahan. Konten ini sedikit lebih panjang."
 
 #. module: website
 #: model:ir.ui.view,website_meta_description:website.contactus
@@ -15080,6 +15576,12 @@ msgstr ""
 "menu tarik-turun *Tindakan*."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Toggle"
+msgstr "Alihkan"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.template_header_mobile
 msgid "Toggle navigation"
 msgstr "Navigasi beralih"
@@ -15336,6 +15838,12 @@ msgstr ""
 "    "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/html_editor.xml:0
+msgid "Type your URL"
+msgstr "Ketik URL Anda"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__name_slugified
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -15356,6 +15864,12 @@ msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr ""
 "URL yang cocok dengan filter tersebut akan ditulis ulang menggunakan CDN "
 "Base URL"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "URL must not start with '#'."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
@@ -15676,6 +16190,11 @@ msgstr "Antarmuka User-Friendly"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Users"
 msgstr "Pengguna"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Utilities &amp; Typography"
+msgstr "Utilities &amp; Typography"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -17226,6 +17745,12 @@ msgid "and"
 msgstr "dan"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "base URL of 'URL to' should not be same as 'URL from'."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
 msgstr "block, blog, post, catalog, feed, items, entries, entry, collection"
@@ -17237,10 +17762,36 @@ msgid "blog"
 msgstr "blog"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "breadcrumb"
+msgstr "breadcrumb"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "broken link(s)"
 msgstr "link-link rusak"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-outline-primary"
+msgstr "btn-outline-primary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-outline-secondary"
+msgstr "btn-outline-secondary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-primary"
+msgstr "btn-primary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-secondary"
+msgstr "btn-secondary"
 
 #. module: website
 #. odoo-javascript
@@ -17945,6 +18496,11 @@ msgstr ""
 " discovery, thrill"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "link"
+msgstr "link"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "masonry, grid, column, pictures, photos, album, showcase, visuals, "
@@ -17986,6 +18542,11 @@ msgstr "navigation, sections, multi-tab, panel, toggle"
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 msgid "no value"
 msgstr "no value"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "o-color-"
+msgstr "o-color-"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_instagram_page_options
@@ -18081,6 +18642,11 @@ msgid ""
 msgstr ""
 "picture, photo, illustration, media, visual, start, launch, commencement, "
 "initiation, opening, kick-off, kickoff, beginning, events, parallax"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "placeholder"
+msgstr "placeholder"
 
 #. module: website
 #. odoo-javascript

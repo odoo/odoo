@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -59,6 +59,11 @@ msgid ""
 msgstr ""
 "«Добавьте сюда отзыв одного из ваших клиентов. Отзывы — отличный способ "
 "укрепить доверие к вашим продуктам или услугам.»"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "\" alert with a"
+msgstr "\" предупреждение с"
 
 #. module: website
 #. odoo-python
@@ -334,6 +339,7 @@ msgstr ", автор:"
 
 #. module: website
 #: model:website,contact_us_button_url:website.default_website
+#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -427,6 +433,11 @@ msgid "16"
 msgstr "16"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "2 <span class=\"visually-hidden\">(current)</span>"
+msgstr "2 <span class=\"visually-hidden\">(текущий)</span>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2 km"
 msgstr "2 км"
@@ -472,6 +483,7 @@ msgid "24/7 Support"
 msgstr "Поддержка 24/7"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "25%"
@@ -641,6 +653,11 @@ msgstr "8 км"
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 msgid ": Once loaded, follow the"
 msgstr ": После загрузки следуйте"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<a class=\"o_translate_inline\" href=\"#\">Link</a>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -1490,6 +1507,23 @@ msgid "<p>Attached files: </p>"
 msgstr "<p>Прикрепленные файлы: </p>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"<select id=\"exampleSelect\" class=\"form-select\">\n"
+"                                                            <option selected=\"true\">Open this select menu</option>\n"
+"                                                            <option value=\"1\">One</option>\n"
+"                                                            <option value=\"2\">Two</option>\n"
+"                                                            <option value=\"3\">Three</option>\n"
+"                                                        </select>"
+msgstr ""
+"<select id=\"exampleSelect\" class=\"form-select\">\n"
+"                                                            <option selected=\"true\">Откройте это меню выбора</option>\n"
+"                                                            <option value=\"1\">Один</option>\n"
+"                                                            <option value=\"2\">Два</option>\n"
+"                                                            <option value=\"3\">Три</option>\n"
+"                                                        </select>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<small class=\"d-flex align-items-center\">\n"
@@ -1538,6 +1572,41 @@ msgstr ""
 "                                    </small>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-0)</small>"
+msgstr "<small class=\"text-muted\">(без закруглений)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-1)</small>"
+msgstr "<small class=\"text-muted\">(закругление-1)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-2)</small>"
+msgstr "<small class=\"text-muted\">(закругление-2)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-3)</small>"
+msgstr "<small class=\"text-muted\">(закругление-3)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(shadow)</small>"
+msgstr "<small class=\"text-muted\">(тень)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(shadow-lg)</small>"
+msgstr "<small class=\"text-muted\">(большая тень)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(shadow-sm)</small>"
+msgstr "<small class=\"text-muted\">(маленькая тень)</small>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "<small class=\"text-muted\">13/06/2019</small>"
 msgstr "<small class=\"text-muted\">13.06.2019</small>"
@@ -1556,6 +1625,29 @@ msgstr "<small class=\"text-muted\">21.03.2021</small>"
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "<small class=\"text-muted\">25/12/2024</small>"
 msgstr "<small class=\"text-muted\">25.12.2024</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">Last updated 3 mins ago</small>"
+msgstr "<small class=\"text-muted\">Последнее обновление 3 минуты назад</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Form field help "
+"text</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Текст подсказки для "
+"поля формы</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Мы никогда не "
+"поделимся вашим email с кем-либо.</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -1589,6 +1681,16 @@ msgstr "<small>Бесплатный возврат и стандартная д�
 msgid "<small>Instant setup, satisfied or reimbursed.</small>"
 msgstr ""
 "<small>Мгновенная настройка, удовлетворение или возврат средств.</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "<small>TABS</small>"
+msgstr "<small>ВКЛАДКИ</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<span class=\"badge bg-primary\">14</span>"
+msgstr "<span class=\"badge bg-primary\">14</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
@@ -2533,6 +2635,11 @@ msgstr ""
 " назад."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "A second item"
+msgstr "Второй элемент"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid ""
 "A spiced cake loaded with grated carrots, nuts, and a hint of cinnamon, "
@@ -2540,6 +2647,11 @@ msgid ""
 msgstr ""
 "Пряный торт с тертой морковью, орехами и ноткой корицы, покрытый пикантным "
 "сливочным сырным кремом."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "A third item"
+msgstr "Третий элемент"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -2678,6 +2790,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Action"
 msgstr "Действие"
 
@@ -2699,6 +2812,8 @@ msgstr "Активация вашего %s."
 #: model:ir.model.fields,field_description:website.field_website_controller_page__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 msgid "Active"
 msgstr "Активный"
@@ -3044,6 +3159,11 @@ msgid "Alert"
 msgstr "Оповещение"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Alerts"
+msgstr "Оповещения"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
 msgid "Alexander drives our marketing campaigns and brand presence."
 msgstr "Александр управляет нашими маркетинговыми кампаниями и брендом."
@@ -3272,6 +3392,16 @@ msgid "An error occurred while rendering the template"
 msgstr "Произошла ошибка при рендеринге шаблона"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "An example alert with an icon"
+msgstr "Пример оповещения с иконкой"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "An item"
+msgstr "Элемент"
+
+#. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_website_analytics
 msgid "Analytics"
@@ -3339,6 +3469,11 @@ msgstr "Анимация"
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
 msgid "Another color block"
 msgstr "Еще один цветной блок"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Another link"
+msgstr "Еще одна ссылка"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cta_mobile
@@ -3522,6 +3657,11 @@ msgid "Autoredirect Language"
 msgstr "Автоматическое перенаправление языка"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Autosizing"
+msgstr "Автоматическое изменение размера"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -3532,6 +3672,11 @@ msgstr "Доступно на веб-сайте"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
 msgstr "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "BTS Base Colors"
+msgstr "Базовые цвета BTS"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -3567,6 +3712,7 @@ msgstr "Фоновое видео"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Badge"
 msgstr "Значок"
@@ -3624,6 +3770,11 @@ msgstr "Базовое представление"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_groups
 msgid "Basic"
 msgstr "Базовый"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Basic example"
+msgstr "Базовый пример"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
@@ -3805,6 +3956,26 @@ msgid "Border Width"
 msgstr "Ширина границы"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius large"
+msgstr "Большой радиус границы"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius medium"
+msgstr "Средний радиус границы"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius none"
+msgstr "Без радиуса границы"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius small"
+msgstr "Малый радиус границы"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3838,6 +4009,12 @@ msgstr "В коробке"
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Boxes"
 msgstr "Коробки"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Breadcrumb"
+msgstr "Хлебные крошки"
 
 #. module: website
 #. odoo-javascript
@@ -3884,6 +4061,7 @@ msgstr "Набор"
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: code:addons/website/static/src/snippets/s_floating_blocks/options.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
 #: model_terms:ir.ui.view,arch_db:website.s_button
 #: model_terms:ir.ui.view,arch_db:website.s_floating_blocks_options
@@ -4070,6 +4248,7 @@ msgstr "Капучино"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Card"
 msgstr "Карточка"
@@ -4101,6 +4280,12 @@ msgid "Card Width"
 msgstr "Ширина карточки"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Card link"
+msgstr "Ссылка на карточку"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_card
 msgid "Card title"
 msgstr "Заголовок карточки"
@@ -4556,6 +4741,7 @@ msgstr "Клиенты сэкономили 32 миллиона долларов
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/001.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -4713,6 +4899,7 @@ msgid "Competitive pricing"
 msgstr "Конкурентные цены"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Components"
 msgstr "Компоненты"
@@ -5109,6 +5296,11 @@ msgid "Crafting Your Digital Success Story"
 msgstr "Создаём вашу историю успеха в цифровом мире"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Cras justo odio"
+msgstr "Cras justo odio\"  # Оставлено без перевода, так как это placeholde"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
@@ -5388,6 +5580,8 @@ msgstr "Пунктир"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/services/website_service.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Data"
 msgstr "Данные"
 
@@ -5457,6 +5651,7 @@ msgid "Dedicated professionals driving our success"
 msgstr "Преданные профессионалы, обеспечивающие наш успех"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -5506,6 +5701,11 @@ msgid "Default Value"
 msgstr "Значение по умолчанию"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Default checkbox"
+msgstr "Флажок по умолчанию"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_id
 msgid "Default language"
 msgstr "Язык по умолчанию"
@@ -5514,6 +5714,16 @@ msgstr "Язык по умолчанию"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_code
 msgid "Default language code"
 msgstr "Код языка по умолчанию"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Default radio"
+msgstr "Радиокнопка по умолчанию"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Default switch checkbox input"
+msgstr "Переключатель по умолчанию"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -5737,6 +5947,12 @@ msgid "Disable unused snippets assets"
 msgstr "Отключить неиспользуемые ресурсы фрагментов"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Disabled"
+msgstr "Отключено"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Disappearing"
 msgstr "Исчезающий"
@@ -5891,6 +6107,36 @@ msgstr "Диск"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Display"
 msgstr "Отображение"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 1"
+msgstr "Display 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 2"
+msgstr "Display 2"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 3"
+msgstr "Display 3"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 4"
+msgstr "Дисплей 4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 5"
+msgstr "Отображение 5"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 6"
+msgstr "Отображение 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -6151,6 +6397,7 @@ msgid "Driving innovation together"
 msgstr "Двигаем инновации вместе"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Dropdown"
 msgstr "Выпадающий список"
@@ -6423,6 +6670,11 @@ msgid "Email Marketing"
 msgstr "Email-маркетинг"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Email address"
+msgstr "Email-адрес"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_s_image_text
 msgid ""
 "Embark on a journey through time as we share the story of our humble "
@@ -6557,6 +6809,11 @@ msgid ""
 "Enter code that will be added into the <head> of every page of your site."
 msgstr ""
 "Введите код, который будет добавлен в <head> каждой страницы вашего сайта."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Enter email"
+msgstr "Введите Email"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_tabs
@@ -7272,6 +7529,7 @@ msgid "Footer Visible"
 msgstr "Нижний колонтитул виден"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_form_aside
 #: model_terms:ir.ui.view,arch_db:website.s_title_form
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -7797,6 +8055,11 @@ msgid "Grid"
 msgstr "Сетка"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Group"
+msgstr "Группа"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_search_view
@@ -7833,6 +8096,16 @@ msgstr ""
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "H1 tag is missing, please add only one"
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "H4 Card title"
+msgstr "H4 Заголовок карты"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "H5 Card subtitle"
+msgstr "H5 Подзаголовок карты"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_ace_editor
@@ -7879,6 +8152,11 @@ msgstr "С годовщиной Odoo!"
 #: model:ir.model.fields,field_description:website.field_website__has_social_default_image
 msgid "Has Social Default Image"
 msgstr "Есть изображение по умолчанию для соцсетей"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Header"
+msgstr "Заголовок"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_color
@@ -7929,6 +8207,36 @@ msgstr "Заголовок 1"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 msgid "Headings"
 msgstr "Заголовки"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 1"
+msgstr "Заголовки 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 2"
+msgstr "Заголовки 2"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 3"
+msgstr "Заголовки 3"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 4"
+msgstr "Заголовки 4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 5"
+msgstr "Заголовки 5"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 6"
+msgstr "Заголовки 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8088,6 +8396,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: model:website.menu,name:website.menu_home
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -8096,6 +8405,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "Home"
 msgstr "Главная"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Home <span class=\"visually-hidden\">(current)</span>"
+msgstr "Главная <span class=\"visually-hidden\">(текущая)</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -9294,6 +9608,7 @@ msgid "Kickoff"
 msgstr "Старт"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9358,6 +9673,7 @@ msgid "Laptops"
 msgstr "Ноутбуки"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -9507,6 +9823,11 @@ msgid "Layout Background Color"
 msgstr "Цвет фона макета"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Lead text"
+msgstr "Вводный текст"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
 msgid "Leading the future with innovation and strategy"
 msgstr "Лидерство в будущем с инновациями и стратегией"
@@ -9531,6 +9852,7 @@ msgstr ""
 "нашего пошагового процесса адаптации."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.s_card_options
@@ -9631,6 +9953,12 @@ msgid "Let’s get in touch"
 msgstr "Давай свяжемся"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Library"
+msgstr "Библиотека"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -9663,6 +9991,8 @@ msgstr "Высота линии"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Link"
 msgstr "Ссылка"
 
@@ -9676,6 +10006,11 @@ msgstr "Якорь ссылки"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Link Style"
 msgstr "Стиль ссылки"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Link button"
+msgstr "Кнопка-ссылка"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -9738,6 +10073,11 @@ msgid "List of blocked 3rd-party domains"
 msgstr "Список заблокированных сторонних доменов"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "List-group"
+msgstr "Группа-список"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__view_id
 msgid "Listing view"
 msgstr "Представление списка"
@@ -9776,6 +10116,7 @@ msgstr "Виджет LiveChat"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
+#: code:addons/website/static/src/js/editor/html_editor.js:0
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #: code:addons/website/static/src/xml/website.background.video.xml:0
 msgid "Loading..."
@@ -10181,6 +10522,7 @@ msgstr ""
 " текущего уровня. Мих входит в число лучших умов."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.template_header_sales_two
 msgid "Middle"
@@ -10253,6 +10595,16 @@ msgstr "Предпросмотр для мобильных"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Mockup Image"
 msgstr "Макет изображения"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Modal"
+msgstr "Модальное окно"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Modal title"
+msgstr "Заголовок модального окна"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__mode
@@ -10510,6 +10862,16 @@ msgid "Narrow"
 msgstr "Узкий"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Nav and tabs"
+msgstr "Навигация и вкладки"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Navbar"
+msgstr "Навигационная панель"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_list
 msgid "Need help?"
 msgstr "Нужна помощь?"
@@ -10614,6 +10976,7 @@ msgstr "SMS-уведомления рассылки"
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/001.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
@@ -11487,6 +11850,7 @@ msgid "Out"
 msgstr "Вне"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Outline"
 msgstr "Контур"
@@ -11671,6 +12035,11 @@ msgid "Pages"
 msgstr "Страницы"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Pagination"
+msgstr "Пагинация"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Pants"
 msgstr "Брюки"
@@ -11680,6 +12049,28 @@ msgstr "Брюки"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 msgid "Paragraph"
 msgstr "Абзац"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
+"elit. <i>Integer posuere erat a ante</i>. <a class=\"o_translate_inline\" "
+"href=\"#\">Link text</a>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
+msgstr ""
+"Абзац с <strong>жирным</strong>, <span class=\"text-"
+"muted\">приглушённым</span> и <em>курсивным</em> текстом"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Paragraph. <a class=\"o_translate_inline\" href=\"#\">text link</a>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -11958,6 +12349,11 @@ msgid "Prepend"
 msgstr "Добавить в начало"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Preset"
+msgstr "Пресет"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
 msgid "Press %(key)s to exit full screen"
@@ -11999,6 +12395,7 @@ msgstr "Предпросмотр этого URL в новой вкладке"
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/001.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
@@ -12706,6 +13103,7 @@ msgid "Rewrite"
 msgstr "Переписать"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.s_card_options
@@ -12894,6 +13292,11 @@ msgid "Save and Reload"
 msgstr "Сохранить и перезагрузить"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Save changes"
+msgstr "Сохранить изменения"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Save the block to use it elsewhere"
 msgstr "Сохраните блок для использования в другом месте"
@@ -12978,6 +13381,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/hierarchy_navbar.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.header_search_box
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
@@ -13072,6 +13476,11 @@ msgid ""
 "Second Slide\n"
 "                                <small class=\"oe_unbreakable o_nav_tabs_description opacity-75\">What is this slide about</small>"
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Second default radio"
+msgstr "Вторая радиокнопка по умолчанию"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -13192,6 +13601,11 @@ msgid "Separate email addresses with a comma."
 msgstr "Разделяйте адреса электронной почты запятой."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Separated link"
+msgstr "Отдельная ссылка"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_text_cover
@@ -13286,6 +13700,21 @@ msgstr "Настройки на этой странице будут приме�
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "Shadow"
 msgstr "Тень"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Shadow large"
+msgstr "Большая тень"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Shadow medium"
+msgstr "Средняя тень"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Shadow small"
+msgstr "Маленькая тень"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_floating_blocks_options
@@ -13596,6 +14025,7 @@ msgid "Slideshow"
 msgstr "Слайд-шоу"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -13608,6 +14038,15 @@ msgstr "Маленький"
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Small Header"
 msgstr "Малый заголовок"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
+msgstr ""
+"Мелкий текст. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
+"elit. <i>Integer posuere erat a ante</i>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -13657,6 +14096,20 @@ msgstr "Сплошной"
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid "Some of these pages are used as new page templates."
 msgstr "Некоторые из этих страниц используются как шаблоны для новых страниц."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"Some quick example text to build on the card title and make up the bulk of "
+"the card's content."
+msgstr ""
+"Небольшой пример текста для дополнения заголовка карточки и формирования "
+"основной части её содержимого."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Something else here"
+msgstr "Что-то ещё здесь"
 
 #. module: website
 #. odoo-javascript
@@ -13954,6 +14407,11 @@ msgid "Sub Menus"
 msgstr "Подменю"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Subheading"
+msgstr "Подзаголовок"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 msgid "Subject"
@@ -14050,6 +14508,7 @@ msgid "Tablets"
 msgstr "Планшеты"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_tabs
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Tabs"
@@ -14233,6 +14692,11 @@ msgstr "Текст в строке"
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 msgid "Text Position"
 msgstr "Положение текста"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur."
+msgstr "Приглушённый текст. Lorem <b>ipsum dolor sit amet</b>, consectetur."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
@@ -14494,6 +14958,11 @@ msgid "Theme Attachments"
 msgstr "Вложения темы"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Theme Colors"
+msgstr "Цвета темы"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
@@ -14668,6 +15137,24 @@ msgstr ""
 "Этот шрифт размещен и предоставляется вашим посетителям серверами Google"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "This is a \""
+msgstr "Это \""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"This is a paragraph. Ambitioni dedisse scripsisse iudicaretur. Nihilne te "
+"nocturnum praesidium Palati, nihil urbis vigiliae. Unam incolunt Belgae, "
+"aliam Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus."
+" Phasellus laoreet lorem vel dolor tempus vehicula."
+msgstr ""
+"Это абзац. Считалось бы, что отдать предпочтение амбициям — это и есть "
+"написать. Разве тебя не тревожит ночная стража Палатина, не беспокоят "
+"городские патрули? Одни живут в Бельгии, другие — в Аквитании, третьи — в "
+"ином месте."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_framed_intro
 msgid ""
 "This is a simple hero unit, a simple jumbotron-style component for calling "
@@ -14680,6 +15167,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_key_images
 msgid "This is a small title related to the current image"
 msgstr "Это небольшой заголовок, относящийся к текущему изображению"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"This is a wider card with supporting text below as a natural lead-in to "
+"additional content. This content is a little bit longer."
+msgstr ""
+"Это более широкая карточка с сопроводительным текстом под ней, который "
+"естественно ведет к дополнительному контенту. Этот контент немного длиннее."
 
 #. module: website
 #: model:ir.ui.view,website_meta_description:website.contactus
@@ -14959,6 +15455,12 @@ msgstr ""
 "доступом к порталу\" в выпадающем меню *Действие*."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Toggle"
+msgstr "Переключить"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.template_header_mobile
 msgid "Toggle navigation"
 msgstr "Переключить навигацию"
@@ -15214,6 +15716,12 @@ msgstr ""
 "    "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/html_editor.xml:0
+msgid "Type your URL"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__name_slugified
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -15234,6 +15742,12 @@ msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr ""
 "URL, соответствующие этим фильтрам, будут перезаписаны с использованием "
 "базового URL CDN"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "URL must not start with '#'."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
@@ -15554,6 +16068,11 @@ msgstr "Удобный интерфейс"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Users"
 msgstr "Пользователи"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Utilities &amp; Typography"
+msgstr "Утилиты и типографика"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -17095,6 +17614,12 @@ msgid "and"
 msgstr "и"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "base URL of 'URL to' should not be same as 'URL from'."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
 msgstr "блок, блог, пост, каталог, лента, элементы, записи, запись, коллекция"
@@ -17106,10 +17631,36 @@ msgid "blog"
 msgstr "блог"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "breadcrumb"
+msgstr "хлебные крошки"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "broken link(s)"
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-outline-primary"
+msgstr "btn-outline-primary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-outline-secondary"
+msgstr "btn-outline-secondary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-primary"
+msgstr "btn-primary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-secondary"
+msgstr "btn-secondary"
 
 #. module: website
 #. odoo-javascript
@@ -17802,6 +18353,11 @@ msgstr ""
 "адаптация, открытие, азарт"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "link"
+msgstr "ссылка"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "masonry, grid, column, pictures, photos, album, showcase, visuals, "
@@ -17844,6 +18400,11 @@ msgstr "навигация, секции, много вкладок, панел�
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 msgid "no value"
 msgstr "нет значения"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "o-color-"
+msgstr "o-color-"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_instagram_page_options
@@ -17937,6 +18498,11 @@ msgid ""
 "picture, photo, illustration, media, visual, start, launch, commencement, "
 "initiation, opening, kick-off, kickoff, beginning, events, parallax"
 msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "placeholder"
+msgstr "placeholder"
 
 #. module: website
 #. odoo-javascript

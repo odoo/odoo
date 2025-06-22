@@ -5,16 +5,16 @@
 # Translators:
 # Daye Jeong, 2025
 # Martin Trigaux, 2025
-# Wil Odoo, 2025
 # Sarah Park, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
+"POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Sarah Park, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +53,11 @@ msgid ""
 "\" Write a quote here from one of your customers. Quotes are a great way to "
 "build confidence in your products or services. \""
 msgstr "\" 고객 중 한 명이 여기에 견적을 작성합니다. 견적서는 제품이나 서비스에 대한 자신감을 키울 수 있는 좋은 방법입니다. \""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "\" alert with a"
+msgstr "\" 다음으로 경고 "
 
 #. module: website
 #. odoo-python
@@ -322,6 +327,7 @@ msgstr ", 작성자 :"
 
 #. module: website
 #: model:website,contact_us_button_url:website.default_website
+#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -415,6 +421,11 @@ msgid "16"
 msgstr "16"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "2 <span class=\"visually-hidden\">(current)</span>"
+msgstr "2 <span class=\"visually-hidden\">(현재)</span>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "2 km"
 msgstr "2 km"
@@ -460,6 +471,7 @@ msgid "24/7 Support"
 msgstr "24시간 지원"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "25%"
@@ -629,6 +641,11 @@ msgstr "8 km"
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 msgid ": Once loaded, follow the"
 msgstr ": 로드가 완료되면"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<a class=\"o_translate_inline\" href=\"#\">Link</a>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -1472,6 +1489,23 @@ msgid "<p>Attached files: </p>"
 msgstr "<p>첨부 파일: </p>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"<select id=\"exampleSelect\" class=\"form-select\">\n"
+"                                                            <option selected=\"true\">Open this select menu</option>\n"
+"                                                            <option value=\"1\">One</option>\n"
+"                                                            <option value=\"2\">Two</option>\n"
+"                                                            <option value=\"3\">Three</option>\n"
+"                                                        </select>"
+msgstr ""
+"<select id=\"exampleSelect\" class=\"form-select\">\n"
+"                                                            <option selected=\"true\">해당 선택 메뉴 열기</option>\n"
+"                                                            <option value=\"1\">하나</option>\n"
+"                                                            <option value=\"2\">둘</option>\n"
+"                                                            <option value=\"3\">셋</option>\n"
+"                                                        </select>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<small class=\"d-flex align-items-center\">\n"
@@ -1518,6 +1552,41 @@ msgstr ""
 "                                    </small>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-0)</small>"
+msgstr "<small class=\"text-muted\">(반올림-0)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-1)</small>"
+msgstr "<small class=\"text-muted\">(반올림-1)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-2)</small>"
+msgstr "<small class=\"text-muted\">(반올림-2)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(rounded-3)</small>"
+msgstr "<small class=\"text-muted\">(반올림-3)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(shadow)</small>"
+msgstr "<small class=\"text-muted\">(그림자)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(shadow-lg)</small>"
+msgstr "<small class=\"text-muted\">(그림자-lg)</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">(shadow-sm)</small>"
+msgstr "<small class=\"text-muted\">(그림자-sm)</small>"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "<small class=\"text-muted\">13/06/2019</small>"
 msgstr "<small class=\"text-muted\">2019/06/13</small>"
@@ -1536,6 +1605,27 @@ msgstr "<small class=\"text-muted\">2021/03/21</small>"
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "<small class=\"text-muted\">25/12/2024</small>"
 msgstr "<small class=\"text-muted\">2024/12/25</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<small class=\"text-muted\">Last updated 3 mins ago</small>"
+msgstr "<small class=\"text-muted\">최근 업데이트가 3분 전 실행</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">Form field help "
+"text</small>"
+msgstr "<small id=\"emailHelp\" class=\"form-text text-muted\">양식 필드 도움말 텍스트</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+"<small id=\"emailHelp\" class=\"form-text text-muted\">귀하의 이메일은 다른 사람과 공유하지 "
+"않습니다.</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -1568,6 +1658,16 @@ msgstr "<small>무료 반품 및 일반 배송</small>"
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons_horizontal
 msgid "<small>Instant setup, satisfied or reimbursed.</small>"
 msgstr "<small>즉시 설정, 불만족 시 환불 가능</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "<small>TABS</small>"
+msgstr "<small>탭</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "<span class=\"badge bg-primary\">14</span>"
+msgstr "<span class=\"badge bg-primary\">14</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
@@ -2498,11 +2598,21 @@ msgid ""
 msgstr "마지막 연결이 8시간 이상 지난 경우 새로운 방문이 고려됩니다."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "A second item"
+msgstr "두번째 항목"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid ""
 "A spiced cake loaded with grated carrots, nuts, and a hint of cinnamon, "
 "topped with a tangy cream cheese frosting."
 msgstr "강판에 간 당근과 견과류, 약간의 시나몬을 넣은 스파이시 케이크에 톡 쏘는 크림치즈 프로스팅으로 마무리했습니다."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "A third item"
+msgstr "세번째 항목"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -2630,6 +2740,7 @@ msgstr "운동 습관을 보완하고 전반적으로 건강 상태를 개선해
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Action"
 msgstr "추가 작업"
 
@@ -2651,6 +2762,8 @@ msgstr "%s를 활성화하는 중."
 #: model:ir.model.fields,field_description:website.field_website_controller_page__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 msgid "Active"
 msgstr "활성화"
@@ -2985,6 +3098,11 @@ msgid "Alert"
 msgstr "주의"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Alerts"
+msgstr "주의"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
 msgid "Alexander drives our marketing campaigns and brand presence."
 msgstr "Alexander는 마케팅 캠페인을 담당하며 브랜드 인지도를 높이고 있습니다."
@@ -3210,6 +3328,16 @@ msgid "An error occurred while rendering the template"
 msgstr "서식 파일을 만드는 중 오류가 발생했습니다."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "An example alert with an icon"
+msgstr "아이콘이 포함된 알림 예시"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "An item"
+msgstr "아이템 추가"
+
+#. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_website_analytics
 msgid "Analytics"
@@ -3275,6 +3403,11 @@ msgstr "애니메이션"
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
 msgid "Another color block"
 msgstr "다른 색상 블럭"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Another link"
+msgstr "다른 링크"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cta_mobile
@@ -3452,6 +3585,11 @@ msgid "Autoredirect Language"
 msgstr "자동 리디렉션 언어"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Autosizing"
+msgstr "자동 크기 변경"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -3462,6 +3600,11 @@ msgstr "웹 사이트에서 사용 가능"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
 msgstr "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "BTS Base Colors"
+msgstr "BTS 기본 색상"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -3497,6 +3640,7 @@ msgstr "배경 동영상"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Badge"
 msgstr "배지"
@@ -3554,6 +3698,11 @@ msgstr "기본 보기"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_groups
 msgid "Basic"
 msgstr "기본"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Basic example"
+msgstr "기본 예시"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
@@ -3731,6 +3880,26 @@ msgid "Border Width"
 msgstr "테두리 두께"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius large"
+msgstr "테두리 반경 큼"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius medium"
+msgstr "테두리 반경 중간"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius none"
+msgstr "테두리 반경 없음"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Border radius small"
+msgstr "테두리 반경 작음"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3764,6 +3933,12 @@ msgstr "박스형"
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Boxes"
 msgstr "박스"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Breadcrumb"
+msgstr "사이트 이동 경로"
 
 #. module: website
 #. odoo-javascript
@@ -3810,6 +3985,7 @@ msgstr "번들"
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: code:addons/website/static/src/snippets/s_floating_blocks/options.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
 #: model_terms:ir.ui.view,arch_db:website.s_button
 #: model_terms:ir.ui.view,arch_db:website.s_floating_blocks_options
@@ -3988,6 +4164,7 @@ msgstr "카푸치노"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Card"
 msgstr "카드"
@@ -4019,6 +4196,12 @@ msgid "Card Width"
 msgstr "카드 너비"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Card link"
+msgstr "카드 링크"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_card
 msgid "Card title"
 msgstr "카드 제목"
@@ -4463,6 +4646,7 @@ msgstr "고객들은 저희 서비스를 통해 3,200만 달러를 절감했습�
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/001.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -4616,6 +4800,7 @@ msgid "Competitive pricing"
 msgstr "경쟁력 있는 가격"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Components"
 msgstr "구성 요소"
@@ -5006,6 +5191,11 @@ msgid "Crafting Your Digital Success Story"
 msgstr "디지털 성공 사례 제작하기"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Cras justo odio"
+msgstr "Cras justo odio"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
@@ -5278,6 +5468,8 @@ msgstr "현황판에 게시"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/services/website_service.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Data"
 msgstr "데이터"
 
@@ -5347,6 +5539,7 @@ msgid "Dedicated professionals driving our success"
 msgstr "성공을 이끄는 헌신적인 전문가들"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -5396,6 +5589,11 @@ msgid "Default Value"
 msgstr "기본값"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Default checkbox"
+msgstr "기본 체크박스"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_id
 msgid "Default language"
 msgstr "기본 언어"
@@ -5404,6 +5602,16 @@ msgstr "기본 언어"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_code
 msgid "Default language code"
 msgstr "기본 언어 코드"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Default radio"
+msgstr "기본 라디오"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Default switch checkbox input"
+msgstr "기본 스위치 체크박스 입력"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -5618,6 +5826,12 @@ msgid "Disable unused snippets assets"
 msgstr "사용하지 않는 코드조각 비활성화"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Disabled"
+msgstr "비활성화"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Disappearing"
 msgstr "사라짐"
@@ -5770,6 +5984,36 @@ msgstr "디스크"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Display"
 msgstr "표시"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 1"
+msgstr "표시 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 2"
+msgstr "표시 2"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 3"
+msgstr "표시 3"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 4"
+msgstr "표시 4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 5"
+msgstr "표시 5"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Display 6"
+msgstr "표시 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -6027,6 +6271,7 @@ msgid "Driving innovation together"
 msgstr "함께 혁신을 주도하기"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Dropdown"
 msgstr "드롭다운"
@@ -6296,6 +6541,11 @@ msgid "Email Marketing"
 msgstr "이메일 마케팅"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Email address"
+msgstr "이메일 주소"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_s_image_text
 msgid ""
 "Embark on a journey through time as we share the story of our humble "
@@ -6420,6 +6670,11 @@ msgstr "사이트의 모든 페이지에 추가할 코드를 입력하십시오.
 msgid ""
 "Enter code that will be added into the <head> of every page of your site."
 msgstr "사이트의 모든 페이지에 추가할 코드를 입력<head>하십시오."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Enter email"
+msgstr "이메일 입력"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_tabs
@@ -7117,6 +7372,7 @@ msgid "Footer Visible"
 msgstr "바닥글 표시"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_form_aside
 #: model_terms:ir.ui.view,arch_db:website.s_title_form
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -7626,6 +7882,11 @@ msgid "Grid"
 msgstr "그리드"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Group"
+msgstr "그룹"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_search_view
@@ -7659,6 +7920,16 @@ msgstr "성장 역량이란 지속적인 성공을 위해 증가하는 수요와
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "H1 tag is missing, please add only one"
 msgstr "H1 태그가 누락되었습니다, 하나만 추가하세요."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "H4 Card title"
+msgstr "H4 카드 제목"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "H5 Card subtitle"
+msgstr "H5 카드 소제목"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_ace_editor
@@ -7705,6 +7976,11 @@ msgstr "Odoo 기념일을 축하합니다!"
 #: model:ir.model.fields,field_description:website.field_website__has_social_default_image
 msgid "Has Social Default Image"
 msgstr "소셜 기본 이미지 있음"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Header"
+msgstr "머리글"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_color
@@ -7755,6 +8031,36 @@ msgstr "제목 1"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 msgid "Headings"
 msgstr "제목"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 1"
+msgstr "제목 1"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 2"
+msgstr "제목 2"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 3"
+msgstr "제목 3"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 4"
+msgstr "제목 4"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 5"
+msgstr "제목 5"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Headings 6"
+msgstr "제목 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7906,6 +8212,7 @@ msgstr "힌트 : 기존 페이지를 검색하려면 '/'를 입력하고 앵커�
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #: model:website.menu,name:website.menu_home
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -7914,6 +8221,11 @@ msgstr "힌트 : 기존 페이지를 검색하려면 '/'를 입력하고 앵커�
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "Home"
 msgstr "홈"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Home <span class=\"visually-hidden\">(current)</span>"
+msgstr "홈 <span class=\"visually-hidden\">(현재)</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -9089,6 +9401,7 @@ msgid "Kickoff"
 msgstr "개시"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9153,6 +9466,7 @@ msgid "Laptops"
 msgstr "랩탑"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -9300,6 +9614,11 @@ msgid "Layout Background Color"
 msgstr "배치 배경 색상"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Lead text"
+msgstr "리드 텍스트"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
 msgid "Leading the future with innovation and strategy"
 msgstr "혁신과 전략으로 미래를 선도하는 기업"
@@ -9322,6 +9641,7 @@ msgid ""
 msgstr "단계별 온보딩 가이드를 통해 서비스를 빠르게 설정하고 사용하는 방법을 알아보세요."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.s_card_options
@@ -9419,6 +9739,12 @@ msgid "Let’s get in touch"
 msgstr "문의하기"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Library"
+msgstr "라이브러리"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -9451,6 +9777,8 @@ msgstr "줄 높이"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Link"
 msgstr "링크"
 
@@ -9464,6 +9792,11 @@ msgstr "링크 앵커"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Link Style"
 msgstr "링크 스타일"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Link button"
+msgstr "링크 버튼"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -9526,6 +9859,11 @@ msgid "List of blocked 3rd-party domains"
 msgstr "차단된 타사 도메인 목록"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "List-group"
+msgstr "리스트-그룹"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__view_id
 msgid "Listing view"
 msgstr "목록 보기"
@@ -9562,6 +9900,7 @@ msgstr "실시간 채팅 위젯"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
+#: code:addons/website/static/src/js/editor/html_editor.js:0
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #: code:addons/website/static/src/xml/website.background.video.xml:0
 msgid "Loading..."
@@ -9965,6 +10304,7 @@ msgstr ""
 "오도록 도왔습니다. Mich은 가장 좋은 사람들 중 한 명이에요."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.template_header_sales_two
 msgid "Middle"
@@ -10037,6 +10377,16 @@ msgstr "모바일 미리 보기"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Mockup Image"
 msgstr "목업 이미지"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Modal"
+msgstr "모달"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Modal title"
+msgstr "모달 제목"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__mode
@@ -10288,6 +10638,16 @@ msgid "Narrow"
 msgstr "좁게"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Nav and tabs"
+msgstr "탐색 및 탭"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Navbar"
+msgstr "검색바"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_list
 msgid "Need help?"
 msgstr "도움이 필요하세요?"
@@ -10391,6 +10751,7 @@ msgstr "뉴스레터 SMS 알림"
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/001.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
@@ -11218,6 +11579,7 @@ msgid "Out"
 msgstr "아웃"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Outline"
 msgstr "외곽선"
@@ -11400,6 +11762,11 @@ msgid "Pages"
 msgstr "페이지"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Pagination"
+msgstr "페이지 번호"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Pants"
 msgstr "바지"
@@ -11409,6 +11776,28 @@ msgstr "바지"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 msgid "Paragraph"
 msgstr "문장"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
+"elit. <i>Integer posuere erat a ante</i>. <a class=\"o_translate_inline\" "
+"href=\"#\">Link text</a>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
+msgstr ""
+"<strong>굵게</strong>, <span class=\"text-muted\">옅게</span> 및 <em>기울임체</em>로 된"
+" 단락"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Paragraph. <a class=\"o_translate_inline\" href=\"#\">text link</a>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -11681,6 +12070,11 @@ msgid "Prepend"
 msgstr "준비"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Preset"
+msgstr "사전 설정"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
 msgid "Press %(key)s to exit full screen"
@@ -11722,6 +12116,7 @@ msgstr "새 탭에서 URL 미리보기"
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/001.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
@@ -12423,6 +12818,7 @@ msgid "Rewrite"
 msgstr "고쳐 쓰기"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.s_card_options
@@ -12607,6 +13003,11 @@ msgid "Save and Reload"
 msgstr "저장 및 다시 불러오기"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Save changes"
+msgstr "변경 사항 저장"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Save the block to use it elsewhere"
 msgstr "블록을 저장하여 다른 곳에서 사용"
@@ -12689,6 +13090,7 @@ msgstr "스크롤 모드"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/hierarchy_navbar.xml:0
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.header_search_box
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
@@ -12783,6 +13185,11 @@ msgid ""
 msgstr ""
 "두 번째 슬라이드\n"
 "                                <small class=\"oe_unbreakable o_nav_tabs_description opacity-75\">이 슬라이드의 내용은 무엇인가요</small>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Second default radio"
+msgstr "두 번째 기본 라디오"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -12903,6 +13310,11 @@ msgid "Separate email addresses with a comma."
 msgstr "이메일 주소는 쉼표로 구분하십시오"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Separated link"
+msgstr "분리된 링크"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_text_cover
@@ -12997,6 +13409,21 @@ msgstr "이 페이지의 설정은 이 웹 사이트에 적용됩니다"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "Shadow"
 msgstr "그림자"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Shadow large"
+msgstr "그림자 크게"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Shadow medium"
+msgstr "그림자 중간"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Shadow small"
+msgstr "그림자 작게"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_floating_blocks_options
@@ -13305,6 +13732,7 @@ msgid "Slideshow"
 msgstr "슬라이드쇼"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -13317,6 +13745,15 @@ msgstr "작게"
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Small Header"
 msgstr "작은 머리글"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid ""
+"Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
+msgstr ""
+"작은 글자. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
+"<i>Integer posuere erat a ante</i>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -13364,6 +13801,18 @@ msgstr "고체"
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid "Some of these pages are used as new page templates."
 msgstr "이러한 페이지 중 일부는 새 페이지 서식으로 사용됩니다."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"Some quick example text to build on the card title and make up the bulk of "
+"the card's content."
+msgstr "카드 제목을 기반으로 카드 콘텐츠를 구성하는 몇 가지 간단한 예시 텍스트를 작성할 수 있습니다."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Something else here"
+msgstr "다른 것"
 
 #. module: website
 #. odoo-javascript
@@ -13649,6 +14098,11 @@ msgid "Sub Menus"
 msgstr "하위 메뉴"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Subheading"
+msgstr "소제목"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 msgid "Subject"
@@ -13745,6 +14199,7 @@ msgid "Tablets"
 msgstr "태블릿"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_tabs
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Tabs"
@@ -13926,6 +14381,11 @@ msgstr "인라인 텍스트"
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 msgid "Text Position"
 msgstr "텍스트 위치"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur."
+msgstr "Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
@@ -14179,6 +14639,11 @@ msgid "Theme Attachments"
 msgstr "테마 첨부파일"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "Theme Colors"
+msgstr "테마 색상"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
@@ -14346,6 +14811,24 @@ msgid "This font is hosted and served to your visitors by Google servers"
 msgstr "Google 서버에서 이 글꼴을 방문자에게 호스팅 및 제공합니다."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "This is a \""
+msgstr "이것은 \""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"This is a paragraph. Ambitioni dedisse scripsisse iudicaretur. Nihilne te "
+"nocturnum praesidium Palati, nihil urbis vigiliae. Unam incolunt Belgae, "
+"aliam Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus."
+" Phasellus laoreet lorem vel dolor tempus vehicula."
+msgstr ""
+"단락입니다.  Ambitioni dedisse scripsisse iudicaretur. Nihilne te nocturnum "
+"praesidium Palati, nihil urbis vigiliae. Unam incolunt Belgae, aliam "
+"Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus. "
+"Phasellus laoreet lorem vel dolor tempus vehicula."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_framed_intro
 msgid ""
 "This is a simple hero unit, a simple jumbotron-style component for calling "
@@ -14356,6 +14839,13 @@ msgstr "점보트론을 이용하면, 웹사이트의 중요한 내용 또는 �
 #: model_terms:ir.ui.view,arch_db:website.s_key_images
 msgid "This is a small title related to the current image"
 msgstr "현재 이미지와 관련된 소제목입니다."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid ""
+"This is a wider card with supporting text below as a natural lead-in to "
+"additional content. This content is a little bit longer."
+msgstr "추가 콘텐츠로 자연스럽게 연결되는 넓은 카드입니다. 여기에 들어가는 콘텐츠는 조금 더 긴 분량입니다."
 
 #. module: website
 #: model:ir.ui.view,website_meta_description:website.contactus
@@ -14622,6 +15112,12 @@ msgstr ""
 "옵션을 클릭합니다."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Toggle"
+msgstr "토글"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.template_header_mobile
 msgid "Toggle navigation"
 msgstr "탐색 전환"
@@ -14871,6 +15367,12 @@ msgstr ""
 "308 리디렉션/재작성 : 새 URL로 컨트롤러의 이름을 변경하려는 경우에 해당합니다 (예: /shop-> /garden - 두 가지 URL에 모두 액세스 할 수 있지만 /shop은 자동으로 /garden으로 리디렉션됩니다)."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/html_editor.xml:0
+msgid "Type your URL"
+msgstr "URL 입력"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__name_slugified
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -14889,6 +15391,12 @@ msgstr "다음의 URL"
 #: model:ir.model.fields,help:website.field_website__cdn_filters
 msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr "해당 필터와 일치하는 URL은 CDN 기본 URL을 사용하여 다시 작성됩니다."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "URL must not start with '#'."
+msgstr "URL은 '#' 으로 시작할 수 없습니다."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
@@ -15200,6 +15708,11 @@ msgstr "사용자 친화적인 인터페이스"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Users"
 msgstr "사용자"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "Utilities &amp; Typography"
+msgstr "유틸리티 및 타이포그래피"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -16664,6 +17177,12 @@ msgid "and"
 msgstr "및"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "base URL of 'URL to' should not be same as 'URL from'."
+msgstr "'URL to'에 있는 기본 URL은 'URL from'과 동일할 수 없습니다."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
 msgstr "block, blog, post, catalog, feed, items, entries, entry, collection"
@@ -16675,10 +17194,36 @@ msgid "blog"
 msgstr "블로그"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "breadcrumb"
+msgstr "사이트 이동 경로"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "broken link(s)"
 msgstr "링크 해제"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-outline-primary"
+msgstr "btn-outline-primary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-outline-secondary"
+msgstr "btn-outline-secondary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-primary"
+msgstr "btn-primary"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "btn-secondary"
+msgstr "btn-secondary"
 
 #. module: website
 #. odoo-javascript
@@ -17378,6 +17923,11 @@ msgstr ""
 " discovery, thrill"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+msgid "link"
+msgstr "링크"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid ""
 "masonry, grid, column, pictures, photos, album, showcase, visuals, "
@@ -17419,6 +17969,11 @@ msgstr "navigation, sections, multi-tab, panel, toggle"
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 msgid "no value"
 msgstr "밸류 없음"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "o-color-"
+msgstr "o-color-"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_instagram_page_options
@@ -17514,6 +18069,11 @@ msgid ""
 msgstr ""
 "picture, photo, illustration, media, visual, start, launch, commencement, "
 "initiation, opening, kick-off, kickoff, beginning, events, parallax"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+msgid "placeholder"
+msgstr "플레이스홀더"
 
 #. module: website
 #. odoo-javascript
