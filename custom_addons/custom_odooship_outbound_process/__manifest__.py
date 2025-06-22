@@ -11,6 +11,7 @@
     'depends': ['stock', 'base', 'sale', 'ash_test', 'sale_stock'],
     'data': [
         'data/pack_app_sequence.xml',
+        'data/shipping_retrying_log_scheduler.xml',
         'security/ir.model.access.csv',
         'views/pc_totes_configuration_views.xml',
         'views/custom_pack_app_views.xml',
@@ -20,6 +21,7 @@
         'views/post_pack_message_view.xml',
         'views/stock_picking_type_inherit_view.xml',
         'views/stock_route_inherit_view.xml',
+        'views/shipping_integration_log_views.xml',
         'views/menuitem_view.xml',
         'wizard/custom_pack_app_wizard_view.xml',
 

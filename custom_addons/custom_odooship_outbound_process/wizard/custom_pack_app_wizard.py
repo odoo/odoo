@@ -144,11 +144,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             ("move_ids_without_package.pc_container_code", "=", scanned_tote),
             ("site_code_id", "=", self.site_code_id.id),
             ("state", "=", "assigned"),
+            ('current_state', '!=', 'pack')
         ])
 
         if not tote_pickings:
             raise ValidationError(
-                f"No picking found for scanned tote: {scanned_tote} at this site with state='assigned'. Please check the tote code or picking state."
+                f"No picking found for scanned tote: {scanned_tote} at this site with state='Ready'. Please check the tote code or picking state."
             )
 
         # Use first assigned picking for logic
@@ -165,6 +166,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ("discrete_pick", "=", True),
                 ("site_code_id", "=", self.site_code_id.id),
                 ("state", "=", "assigned"),
+                ('current_state', '!=', 'pack')
             ])
 
             # ========== VALIDATE CURRENT STATE (must be 'pick') ==========
@@ -234,6 +236,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ("move_ids_without_package.pc_container_code", "in", tote_codes),
                 ("site_code_id", "=", self.site_code_id.id),
                 ("state", "=", "assigned"),
+                ('current_state', '!=', 'pack')
             ])
 
             # ========== VALIDATE CURRENT STATE (must be 'pick') ==========
@@ -809,7 +812,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not self.picking_ids or not self.picking_ids.ids:
             _logger.warning("[PACK_PRODUCTS] picking_ids is empty or not properly set. Value: %s", self.picking_ids)
             raise ValidationError(_("No pickings are linked to this operation. Please check your container code."))
-
+        if self.single_pick_payload_sent:
+            _logger.info(f"[SINGLE PICK] Payload already sent for wizard {self.id}, skipping re-send.")
+            return
         # Check for unscanned lines
         unscanned_lines = self.line_ids.filtered(lambda l: not l.scanned)
         if unscanned_lines:
@@ -895,10 +900,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             payload = self.process_single_pick()
 
             # Only call OneTraker if not using legacy logic
-            if not (self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE"):
-                config = self.get_onetraker_config()
-                api_url = config["ONETRAKER_CREATE_ORDER_URL"]
-                self.send_payload_to_api(api_url, payload)
+            # if not (self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE"):
+            #     config = self.get_onetraker_config()
+            #     api_url = config["ONETRAKER_CREATE_ORDER_URL"]
+            #     self.send_payload_to_api(api_url, payload)
 
             self.write({'single_pick_payload_sent': True})
             self.env.cr.flush()
@@ -918,7 +923,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         Validates picking only after successful label generation & printing.
         """
         self.ensure_one()
-
+        if self.single_pick_payload_sent:
+            _logger.info(f"[SINGLE PICK] Payload already sent for wizard {self.id}, skipping re-send.")
+        self.single_pick_payload_sent = True
+        self.env.cr.flush()
         pickings = self.picking_ids
         if not pickings:
             raise ValidationError("No picking records found to pack.")
@@ -944,10 +952,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 # 'delivery_status': 'partial',
                 'tracking_url': 'https://auspost.com.au/mypost/track/details/Manual WB',
             })
-            # Validate all picks for this SO
-            for picking in pickings:
-                picking.write({'current_state': 'pack'})
-                picking.button_validate()
 
             self.send_tracking_update_to_ot_orders(
                 so_number=sale.name,
@@ -956,6 +960,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 origin=sale.origin or main_picking.origin or "N/A",
                 tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
             )
+            # Validate all picks for this SO
+            for picking in pickings:
+                picking.write({'current_state': 'pack'})
+                picking.button_validate()
 
             return {
                 "message": "Manual WB order processed successfully – no label generated.",
@@ -1075,10 +1083,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         #  Send to OneTraker and print label
         label_url, con_id = self.send_payload_and_print_label(payload, main_picking.name)
 
-        #  Validate all picks for this SO (this is the fix)
-        for picking in pickings:
-            picking.write({'current_state': 'pack'})
-            picking.button_validate()
 
         if (sale.carrier).upper() == "COURIERSPLEASE":
             tracking_url = f'https://www.couriersplease.com.au/tools-track?no={con_id}'
@@ -1100,6 +1104,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             origin=sale.origin or main_picking.origin or "N/A",
             tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
         )
+        #  Validate all picks for this SO (this is the fix)
+        for picking in pickings:
+            picking.write({'current_state': 'pack'})
+            # picking.button_validate()
         return payload
 
     def release_container(self):
@@ -1298,33 +1306,64 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             status_message = generic.get("apiStatusMessage", "").lower()
             status_error_code = generic.get("apiStatusErrorCode", "")
 
-            # If order already present, allow process to continue
-            if (
-                    status_code == 400
-                    and "order already present with order number" in status_message
-                    and status_error_code == "order_insert_failed"
-            ):
-                _logger.warning(f"[ONETRAKER] Order already present: {status_message}. Allowing process to continue.")
-                order_number = status_message.split("order number")[-1].strip()
-                label_url = None
-                con_id = ''
-                return label_url, con_id
-
-            if status_code != 200 or generic.get("apiSuccessStatus") != "True":
-                raise UserError(_(generic.get("apiStatusMessage", "Unknown error from OneTraker")))
-
             label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
                                                                                                     {}).get("url")
             con_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
 
-            # Start print via API instead of direct socket print
-            try:
-                if label_url:
-                    self._send_label_to_print_api(label_url)
-                else:
-                    raise ValueError("No label URL to send to print API.")
-            except Exception as e:
-                _logger.warning(f"[PRINT API][FAIL] Could not send label to print API for pick {pick_name}: {str(e)}")
+            picking_id = self.picking_ids[0].id if self.picking_ids else False
+            sale_order_id = self.picking_ids[0].sale_id.id if self.picking_ids and self.picking_ids[
+                0].sale_id else False
+            order_number = self.picking_ids[0].sale_id.name if self.picking_ids and self.picking_ids[
+                0].sale_id else pick_name
+            carrier = self.picking_ids[0].sale_id.carrier if self.picking_ids and self.picking_ids[0].sale_id else ''
+            origin = self.picking_ids[0].sale_id.origin if self.picking_ids and self.picking_ids[0].sale_id else ''
+            tracking_url = (f'https://www.couriersplease.com.au/tools-track?no={con_id}'
+                            if (carrier or '').upper() == "COURIERSPLEASE"
+                            else f'https://auspost.com.au/mypost/track/details/{con_id}')
+
+            # LOG ONLY ON SUCCESS
+            if status_code == 200 and generic.get("apiSuccessStatus") == "True":
+                self.env['shipping.integration.log'].sudo().create({
+                    'picking_id': picking_id,
+                    'sale_order_id': sale_order_id,
+                    'order_number': order_number,
+                    'payload_json': json.dumps(payload),
+                    'response_json': json.dumps(response_json),
+                    'status': 'success',
+                    'consignment_number': con_id,
+                    'tracking_url': tracking_url,
+                    'label_url': label_url,
+                    'attempted_at': fields.Datetime.now(),
+                    'carrier': carrier,
+                    'is_synced': False,
+                    'origin':origin,
+                })
+            elif (
+                    status_code == 400
+                    and "order already present with order number" in status_message
+                    and status_error_code == "order_insert_failed"
+            ):
+                _logger.warning(f"[ONETRAKER] Order already present: {status_message}. Skipping log.")
+            else:
+                raise UserError(_(generic.get("apiStatusMessage", "Unknown error from OneTraker")))
+
+            # Print the label (background)
+            if label_url:
+                def _background_print(label_url_inner, printer_id_inner):
+                    try:
+                        self._send_label_to_print_api(label_url_inner)
+                    except Exception as e:
+                        _logger.warning(
+                            f"[PRINT API][FAIL] Could not send label to print API for printer {printer_id_inner}: {str(e)}"
+                        )
+
+                threading.Thread(
+                    target=_background_print,
+                    args=(label_url, self.pack_bench_id.printer_name),
+                    daemon=True
+                ).start()
+            else:
+                _logger.warning(f"[PRINT API] No label_url to print for order {order_number}")
 
             return label_url, con_id
 
@@ -1354,7 +1393,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 f"[PRINT API] Label sent to print API for printer {printer_id}: {label_url} (env: {'PROD' if is_production else 'UAT'})")
         except Exception as e:
             _logger.error(f"[PRINT API][FAIL] Could not send label to print API for printer {printer_id}: {str(e)}")
-            raise UserError(_(f"Failed to send label to print API: {str(e)}"))
+            # raise UserError(_(f"Failed to send label to print API: {str(e)}"))
 
     def print_label_via_pack_bench(self, label_url):
         self.ensure_one()
@@ -1539,21 +1578,21 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 con_id = ''
                 # continue with post-label processing: update pick, update SO, release container
                 picking.write({'current_state': 'pack'})
-                sale.write({
-                    'carrier': carrier,
-                    'pick_status': 'packed',
-                    'consignment_number': con_id,
-                    'status': label_url,
-                    'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
-                })
+                # sale.write({
+                #     'carrier': carrier,
+                #     'pick_status': 'packed',
+                #     'consignment_number': con_id,
+                #     'status': label_url,
+                #     'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
+                # })
+                # self.send_tracking_update_to_ot_orders(
+                #     so_number=sale.name,
+                #     con_id=con_id,
+                #     carrier=carrier,
+                #     origin=sale.origin or "N/A",
+                #     tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
+                # )
                 picking.button_validate()
-                self.send_tracking_update_to_ot_orders(
-                    so_number=sale.name,
-                    con_id=con_id,
-                    carrier=carrier,
-                    origin=sale.origin or "N/A",
-                    tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
-                )
                 return True
 
             if generic.get("apiSuccessStatus") != "True":
@@ -1582,7 +1621,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'status': label_url,
                 'tracking_url': tracking_url,
             })
-            picking.button_validate()
 
             self.send_tracking_update_to_ot_orders(
                 so_number=sale.name,
@@ -1591,6 +1629,23 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 origin=sale.origin or "N/A",
                 tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
             )
+            self.env['shipping.integration.log'].sudo().create({
+                'picking_id': picking.id if picking else False,
+                'sale_order_id': sale.id if sale else False,
+                'order_number': sale.name if sale else picking.name,
+                'payload_json': json.dumps(payload),
+                'response_json': json.dumps(resp_data),
+                'status': 'success',
+                'consignment_number': con_id,
+                'tracking_url': (f'https://www.couriersplease.com.au/tools-track?no={con_id}' if (sale.carrier or '').upper() == "COURIERSPLEASE"
+                                 else f'https://auspost.com.au/mypost/track/details/{con_id}'),
+                'label_url': label_url,
+                'attempted_at': fields.Datetime.now(),
+                'carrier': sale.carrier if sale else '',
+                'is_synced': False,
+                'origin':sale.origin,
+            })
+            # picking.button_validate()
             return True
 
         except Exception as e:
@@ -1862,7 +1917,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         #             line.qty_done = line.product_uom_qty or 1.0
 
         # Validate the picking after setting qty_done
-        picking.button_validate()
+        # picking.button_validate()
         self.send_tracking_update_to_ot_orders(
             so_number=sale_order.name,
             con_id=tracking_number,
