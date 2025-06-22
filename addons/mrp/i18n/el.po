@@ -1564,6 +1564,11 @@ msgid ""
 "                                                       Also note that "
 "purchase security lead times will be added when appropriate."
 msgstr ""
+"Υπολογισμός των ημερών που απαιτούνται για την αναπλήρωση όλων των "
+"συστατικών από τη Λίστα Υλικών, είτε μέσω αγοράς είτε μέσω παραγωγής των "
+"συστατικών και/ή των υποσυγκροτημάτων."
+"                                                       Λάβετε επίσης υπόψη "
+"ότι θα προστεθούν οι προθεσμίες ασφαλείας αγορών όπου είναι απαραίτητο."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1607,12 +1612,12 @@ msgstr "Αναλωθέντα"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__consume_line_ids
 msgid "Consumed Disassembly Lines"
-msgstr ""
+msgstr "Αναλωμένες Γραμμές Αποσυναρμολόγησης"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__consume_unbuild_id
 msgid "Consumed Disassembly Order"
-msgstr ""
+msgstr "Αναλωμένη Εντολή Αποσυναρμολόγησης"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__operation_id
@@ -1653,58 +1658,60 @@ msgstr "Αντιγραφή Υφιστάμενων Ενεργειών"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_copy_to_bom_tree_view
 msgid "Copy selected operations"
-msgstr ""
+msgstr "Αντιγραφή επιλεγμένων ενεργειών"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Cost Breakdown of Products"
-msgstr ""
+msgstr "Ανάλυση Κόστους Προϊόντων"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__cost_share
 #: model:ir.model.fields,field_description:mrp.field_stock_move__cost_share
 msgid "Cost Share (%)"
-msgstr ""
+msgstr "Ποσοστό Κόστους (%)"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost as it is currently accumulated"
-msgstr ""
+msgstr "Κόστος όπως έχει συσσωρευτεί μέχρι στιγμής"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on cost projection"
-msgstr ""
+msgstr "Κόστος βάσει εκτίμησης κόστους"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on related replenishments. Otherwise cost from product form"
 msgstr ""
+"Κόστος βάσει σχετικών αναπληρώσεων. Διαφορετικά, κόστος από τη φόρμα του "
+"προϊόντος."
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on the BoM"
-msgstr ""
+msgstr "Κόστος βάσει Λίστας Υλικών"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Cost of Components per unit"
-msgstr ""
+msgstr "Κόστος Συστατικών ανά μονάδα"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Cost of Operations per unit"
-msgstr ""
+msgstr "Κόστο Ενεργειών ανά μονάδα"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__costs_hour
@@ -1721,7 +1728,7 @@ msgstr "Πληροφορίες Κοστολόγησης"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 msgid "Costs"
-msgstr ""
+msgstr "Κόστη"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__production_count
@@ -1731,18 +1738,18 @@ msgstr "Αριθμός της δημιουργημένης ΜΟ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
-msgstr ""
+msgstr " Αριθμός συνδεδεμένων εκκρεμών παραγγελιών"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Create New Lots/Serial Numbers for Components"
-msgstr ""
+msgstr "Δημιουργία Νέων Παρτίδων/ Σειριακών Αριθμών για τα Συστατικά"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create a Backorder"
-msgstr ""
+msgstr "Δημιουργία Εκκρεμούς Παραγγελίας"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1750,11 +1757,14 @@ msgid ""
 "Create a backorder if you expect to process the remaining products later. Do"
 " not create a backorder if you will not process the remaining products."
 msgstr ""
+"Δημιουργήστε εκκρεμή παραγγελία αν σκοπεύετε να επεξεργαστείτε τα υπόλοιπα "
+"προϊόντα αργότερα. Μην δημιουργήσετε εκκρεμή παραγγελία αν δεν πρόκειται να "
+"επεξεργαστείτε τα υπόλοιπα προϊόντα."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid "Create a new operation"
-msgstr ""
+msgstr "Δημιουργία νέας ενέργειας"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -1766,7 +1776,7 @@ msgstr "Δημιουργία νέου κέντρου εργασίας"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_workcenter_report
 msgid "Create a new work orders performance"
-msgstr ""
+msgstr "Δημιουργία νέας απόδοσης εντολών εργασίας"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__days_to_prepare_mo
@@ -1774,16 +1784,19 @@ msgid ""
 "Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
+"Δημιουργήστε και επιβεβαιώστε τις Εντολές Παραγωγής τόσες ημέρες νωρίτερα, ώστε να υπάρχει επαρκής χρόνος για την αναπλήρωση των συστατικών ή την παραγωγή ημιτελών προϊόντων.\n"
+"Σημειώστε ότι θα ληφθούν υπόψη και οι προθεσμίες ασφαλείας, όπου είναι απαραίτητο.."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create backorder"
-msgstr ""
+msgstr "Δημιουργία εκκρεμούς παραγγελίας"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
 msgstr ""
+"Δημιουργία παραμετροποιήσιμων φύλλων εργασίας για τους ποιοτικούς ελέγχους"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__allow_operation_dependencies
@@ -1794,11 +1807,13 @@ msgid ""
 "and nothing is specified, Odoo will assume that all operations can be "
 "started simultaneously."
 msgstr ""
+"Δημιουργήστε εξαρτήσεις μεταξύ ενεργειών που θα επηρεάζουν τόσο τον προγραμματισμό όσο και την κατάσταση των εντολών εργασίας κατά την επιβεβαίωση της Εντολής Παραγωγής.\n"
+"Αν ενεργοποιηθεί αυτή η λειτουργία χωρίς να οριστεί κάτι συγκεκριμένο, το Odoo θα υποθέσει ότι όλες οι ενέργειες μπορούν να ξεκινήσουν ταυτόχρονα."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
 msgid "Created Production Order"
-msgstr ""
+msgstr "Δημιουργημένη Εντολή Παραγωγής"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__create_uid
@@ -1857,7 +1872,7 @@ msgstr "Δημιουργήθηκε στις"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Creates a new serial/lot number"
-msgstr ""
+msgstr "Δημιουργεί νέα παρτίδα/σειριακό αριθμό"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__currency_id
@@ -1881,7 +1896,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
 msgid "Currently Produced Quantity"
-msgstr ""
+msgstr "Παραχθείσα Ποσότητα Μέχρι Στιγμής"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_description_variants
@@ -1903,24 +1918,28 @@ msgstr "Ημερομηνία Κατηγορίας"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Date by Month"
-msgstr ""
+msgstr "Ημερομηνία ανά Μήνα"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_finished
 msgid ""
 "Date you expect to finish production or actual date you finished production."
 msgstr ""
+"Ημερομηνία αναμενόμενης ολοκλήρωσης παραγωγής ή πραγματική ημερομηνία "
+"ολοκλήρωσης παραγωγής."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
+"Προγραμματισμένη ημερομηνία έναρξης παραγωγής ή πραγματική που ξεκίνησε η "
+"παραγωγή."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Date: Last 365 Days"
-msgstr ""
+msgstr "Ημερομηνία: Τελευταίες 365 ημέρες"
 
 #. module: mrp
 #. odoo-javascript
@@ -1934,12 +1953,12 @@ msgstr "Ημέρες"
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid "Days to Supply Components"
-msgstr ""
+msgstr "Ημέρες για την Προμήθεια Συστατικών"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__days_to_prepare_mo
 msgid "Days to prepare Manufacturing Order"
-msgstr ""
+msgstr "Ημέρες για την προετοιμασία Εντολής Παραγωγής"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -1949,12 +1968,12 @@ msgstr "Προθεσμία"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Default Duration"
-msgstr ""
+msgstr "Προεπιλεγμένη Διάρκεια"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__use_manufacturing_lead
 msgid "Default Manufacturing Lead Time"
-msgstr ""
+msgstr "Προεπιλεγμένος Χρόνος Εκτέλεσης Παραγωγής"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__default_capacity
@@ -1971,6 +1990,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__product_uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
+"Προεπιλεγμένη μονάδα μέτρησης που χρησιμοποιείται για όλες τις λειτουργίες "
+"αποθέματος."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -1978,6 +1999,8 @@ msgid ""
 "Define the components and finished products you wish to use in\n"
 "                bill of materials and manufacturing orders."
 msgstr ""
+"Ορίστε τα συστατικά και τα τελικά προϊόντα που θέλετε να χρησιμοποιήσετε\n"
+"                στις λίστες υλικών και στις εντολές παραγωγής."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
@@ -1985,6 +2008,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
+"Ορίστε το ωράριο εργασίας του πόρου. Αν δεν οριστεί, ο πόρος θα έχει πλήρως "
+"ευέλικτο ωράριο."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
@@ -1995,6 +2020,11 @@ msgid ""
 "  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
+" Καθορίζει αν μπορείτε να αναλώσετε περισσότερα ή λιγότερα συστατικά από την ποσότητα που ορίζεται στη Λίστα Υλικών:\n"
+"  * Επιτρέπεται: επιτρέπεται για όλους τους χρήστες παραγωγής.\n"
+"  * Επιτρέπεται με προειδοποίηση: επιτρέπεται για όλους τους χρήστες παραγωγής, με συνοπτική αναφορά των διαφορών κατανάλωσης κατά το κλείσιμο της εντολής παραγωγής.\n"
+"  Σημειώστε ότι στην περίπτωση της προβολής «Επισήμανση Ανάλωσης Συστατικού», όπου η ανάλωση καταχωρείται αποκλειστικά χειροκίνητα, θα εμφανίζονται προειδοποιήσεις ανάλωσης όπου χρειάζεται.\n"
+"  * Μπλοκαρισμένο: μόνο διαχειριστής μπορεί να κλείσει την εντολή παραγωγής όταν δεν τηρείται η προβλεπόμενη ανάλωση της Λίστας Υλικών."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2004,12 +2034,12 @@ msgstr "Καθυστέρηση Ημερομηνίας Ειδοποίησης"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Delayed Productions"
-msgstr ""
+msgstr "Καθυστερημένες Παραγωγές"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Delegate part of the production process to subcontractors"
-msgstr ""
+msgstr "Αναθέστε μέρος της παραγωγικής διαδικασίας σε υπεργολάβους"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
@@ -2038,7 +2068,7 @@ msgstr "Τοποθεσία Προορισμού"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unbuild_id
 msgid "Disassembly Order"
-msgstr ""
+msgstr "Εντολή Αποσυναρμολόγησης"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2088,22 +2118,24 @@ msgstr "Εμφάνιση Ονόματος"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lot_ids
 msgid "Display the serial number shortcut on the moves"
-msgstr ""
+msgstr "Εμφάνιση της συντόμευσης σειριακού αριθμού στις μετακινήσεις"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Displays the consumed Lot/Serial Numbers."
 msgstr ""
+"Εμφανίζει τους Αριθμούς Παρτίδας/Σειριακούς Αριθμούς που έχουν αναλωθεί."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Displays the produced Lot/Serial Numbers."
 msgstr ""
+"Εμφανίζει τους Αριθμούς Παρτίδας/Σειριακούς Αριθμούς που έχουν παραχθεί."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "Do you confirm you want to unbuild"
-msgstr ""
+msgstr "Επιβεβαιώνετε ότι θέλετε να αποσυναρμολογήσετε;"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -2137,17 +2169,17 @@ msgstr "Προσχέδιο"
 #. module: mrp
 #: model:product.template,name:mrp.product_product_drawer_drawer_product_template
 msgid "Drawer Black"
-msgstr ""
+msgstr "Μαύρο Συρτάρι"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_drawer_case_product_template
 msgid "Drawer Case Black"
-msgstr ""
+msgstr "Μαύρη Θήκη Συρταριού"
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_drawer_drawer_product_template
 msgid "Drawer on casters for great usability."
-msgstr ""
+msgstr "Συρτάρι με ροδάκια για μεγαλύτερη ευχρηστία."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
@@ -2170,27 +2202,27 @@ msgstr "Διάρκεια (σε λεπτά)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_mode
 msgid "Duration Computation"
-msgstr ""
+msgstr "Υπολογισμός Διάρκειας"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_percent
 msgid "Duration Deviation (%)"
-msgstr ""
+msgstr "Απόκλιση Διάρκειας (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_unit
 msgid "Duration Per Unit"
-msgstr ""
+msgstr "Διάρκεια Ανά Μονάδα"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_type
 msgid "Effectiveness"
-msgstr ""
+msgstr "Αποτελεσματικότητα"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_type
 msgid "Effectiveness Category"
-msgstr ""
+msgstr "Κατηγορία Αποτελεσματικότητας"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_finished
@@ -2216,19 +2248,19 @@ msgstr ""
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
 msgid "Equipment Failure"
-msgstr ""
+msgstr "Βλάβη Εξοπλισμού"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 msgid "Estimated %s"
-msgstr ""
+msgstr "Εκτιμώμενη %s"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Exception(s) occurred on the manufacturing order(s):"
-msgstr ""
+msgstr "Παρουσιάστηκαν εξαιρέσεις στις εντολές παραγωγής:"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2251,7 +2283,7 @@ msgstr "Αναμένεται"
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 msgid "Expected %s"
-msgstr ""
+msgstr "Αναμενόμενη %s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration_expected
@@ -2263,18 +2295,18 @@ msgstr "Αναμενόμενη Διάρκεια"
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 msgid "Expected Duration (minutes)"
-msgstr ""
+msgstr "Αναμενόμενη Διάρκεια (λεπτά)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_text_help
 msgid "Explanation for batch production"
-msgstr ""
+msgstr "Επεξήγηση για την παραγωγή κατά παρτίδες"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Files attached to the product."
-msgstr ""
+msgstr "Επισυναπτόμενα αρχεία προϊόντος."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -2284,7 +2316,7 @@ msgstr "Φίλτρα"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
 msgid "Final Location from procurement"
-msgstr ""
+msgstr "Τελική Τοποθεσία από την Προμήθεια"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__done
@@ -2295,27 +2327,27 @@ msgstr "Ολοκληρώθηκε"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__order_finished_lot_id
 msgid "Finished Lot/Serial Number"
-msgstr ""
+msgstr "Ολοκληρωμένες Παρτίδες/Σειριακοί Αριθμοί"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
 msgid "Finished Moves"
-msgstr ""
+msgstr "Ολοκληρωμένες Μετακινήσεις"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__finished_move_line_ids
 msgid "Finished Product"
-msgstr ""
+msgstr "Τελικά Προϊόντα"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_finished_product
 msgid "Finished Product Label (PDF)"
-msgstr ""
+msgstr "Ετικέτα Τελικού Προϊόντος (PDF)"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.label_manufacture_template
 msgid "Finished Product Label (ZPL)"
-msgstr ""
+msgstr "Ετικέτα Τελικού Προϊόντος (ZPL)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_finished_ids
@@ -2330,12 +2362,12 @@ msgstr "Τοποθεσία Ολοκληρωμένων Προϊόντων"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__lot_name
 msgid "First Lot/SN"
-msgstr ""
+msgstr "Πρώτη Παρτίδα/Σειριακός Αριθμός"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
 msgid "Flexible Consumption"
-msgstr ""
+msgstr "Ευέλικτη Aνάλωση"
 
 #. module: mrp
 #. odoo-javascript
@@ -2371,7 +2403,7 @@ msgstr "Γραμματοσειρά awesome  π.χ. fa-tasks"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Force"
-msgstr ""
+msgstr "Παράβλεψη και Συνέχεια"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2413,21 +2445,21 @@ msgstr "Προβλεπόμενο Πρόβλημα"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Free to Use"
-msgstr ""
+msgstr "Διαθέσιμο προς Χρήση"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Free to Use / On Hand"
-msgstr ""
+msgstr "Διαθέσιμο / Σε Απόθεμα"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Free to use / On Hand"
-msgstr ""
+msgstr "Διαθέσιμο / Σε Απόθεμα"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2437,12 +2469,12 @@ msgstr "Από"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Fully Productive"
-msgstr ""
+msgstr "Πλήρης Παραγωγικότητα"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason7
 msgid "Fully Productive Time"
-msgstr ""
+msgstr "Χρόνος Πλήρους Παραγωγικότητας"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -2458,43 +2490,47 @@ msgstr "Γενικές Πληροφορίες"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
 msgid "Generate"
-msgstr ""
+msgstr "Δημιουργία"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
 msgid "Generate Serial Numbers"
-msgstr ""
+msgstr "Δημιουργία Σειριακών Αριθμών"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Generate a new BoM from this Manufacturing Order"
-msgstr ""
+msgstr "Δημιουργία νέας Συνταγής Παραγωγής από αυτή την Εντολή Παραγωγής"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__generated_mrp_lot_label_to_print
 msgid "Generated Lot/SN Label to Print"
-msgstr ""
+msgstr "Δημιουργία Ετικετών Παρτίδων/Σεριακών Αριθμών προς Εκτύπωση"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
 msgid "Get statistics about the work orders duration related to this routing."
 msgstr ""
+"Λάβετε στατιστικά σχετικά με τη διάρκεια των εντολών εργασίας που "
+"σχετίζονται με αυτή τη ροή παραγωγής."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__sequence
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
 msgstr ""
+"Καθορίζει τη σειρά εμφάνισης των Κέντρων Εργασίας της ροής παραγωγής στη "
+"λίστα."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__sequence
 msgid "Gives the sequence order when displaying a list of work centers."
-msgstr ""
+msgstr "Καθορίζει τη σειρά εμφάνισης των Κέντρων Εργασίας στη λίστα."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__sequence
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "Καθορίζει τη σειρά εμφάνισης."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_google_slide
@@ -2529,17 +2565,17 @@ msgstr "Ομαδοποίηση κατά..."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Hardware"
-msgstr ""
+msgstr "Υλικό"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_produced
 msgid "Has Been Produced"
-msgstr ""
+msgstr "Έχει Παραχθεί"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__has_kits
 msgid "Has Kits"
-msgstr ""
+msgstr "Έχει Κιτ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__has_message
@@ -2553,12 +2589,12 @@ msgstr "Έχει Μήνυμα"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__has_routing_lines
 msgid "Has Routing Lines"
-msgstr ""
+msgstr "Έχει Γραμμές Ροής Παραγωγής"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__has_worksheet
 msgid "Has Worksheet"
-msgstr ""
+msgstr "Έχει Φύλλα Εργασίας"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
