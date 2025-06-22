@@ -15,6 +15,8 @@
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="livechat_member_type">agent</field>
             <field name="create_date" eval="DateTime.today() + relativedelta(months=-1, days=-1)"/>
+            <field name="response_time_hour" eval="8/60"/>
+            <field name="message_count">2</field>
         </record>
         <record id="im_livechat.livechat_channel_session_2_member_demo" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_demo"/>
@@ -37,16 +39,6 @@
             <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_2_history_guest'))]"/>
         </record>
 
-        <record id="livechat_channel_session_2_message_1" model="mail.message">
-            <field name="model">discuss.channel</field>
-            <field name="res_id" ref="im_livechat.livechat_channel_session_2"/>
-            <field name="author_id" ref="base.partner_demo"/>
-            <field name="body">Hello, how may I help you?</field>
-            <field name="message_type">comment</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=6)" name="date"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=6)" name="create_date"/>
-        </record>
         <record id="livechat_channel_session_2_message_2" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_2"/>
@@ -56,8 +48,8 @@
             <field name="body">I was wondering if Odoo has an application to easily manage social media for my business..</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=7)" name="date"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=7)" name="create_date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1)" name="date"/>
+            <field eval="DateTime.today() + relativedelta(months=-1, days=-1)" name="create_date"/>
         </record>
         <record id="livechat_channel_session_2_message_3" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -107,6 +99,11 @@
             <field name="end_dt" eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=10)"/>
             <field name="start_call_message_id" ref="livechat_channel_session_2_message_call_notification"/>
         </record>
+        <function model="im_livechat.channel.member.history" name="write">
+            <value model="im_livechat.channel.member.history"
+                eval="obj().search([('partner_id', '=', ref('base.partner_demo')), ('channel_id', '=', ref('livechat_channel_session_2'))]).ids"/>
+            <value eval="{'call_history_ids': [ref('livechat_channel_session_2_call_1')]}"/>
+        </function>
         <record id="livechat_channel_session_2_rating_message" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_2"/>
