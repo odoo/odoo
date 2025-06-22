@@ -1,4 +1,5 @@
 import publicWidget from '@web/legacy/js/public/public_widget';
+import { browser } from '@web/core/browser/browser';
 
 publicWidget.registry.PaymentInstallments = publicWidget.Widget.extend({
     selector: '#o_payment_installments_modal',
@@ -34,11 +35,11 @@ publicWidget.registry.PaymentInstallments = publicWidget.Widget.extend({
                 : (activatedTab === 'o_payment_full_tab' ? 'full' : false);
 
             if (mode) {
-                const url = new URL(window.location.href);
+                const url = new URL(browser.location.href);
                 url.searchParams.set('mode', mode);
                 url.searchParams.set('render_change', 'true');
 
-                window.location.href = url.toString();
+                browser.location.href = url;
             }
         });
     }
