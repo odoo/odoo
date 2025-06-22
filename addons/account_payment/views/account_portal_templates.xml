@@ -144,7 +144,7 @@
                             </div>
                             <div t-elif="installment_state in ('next', 'overdue') and amount_due != next_amount_to_pay" id="o_payment_installments_modal">
                                 <div class="btn-group w-100" id="o_payment_tabs" role="tablist">
-                                    <button class="btn btn-outline-primary o_btn_payment_tab active"
+                                    <button t-attf-class="btn btn-outline-primary o_btn_payment_tab #{tab_mode == 'installment' and 'active' or ''}"
                                         id="o_payment_installments_tab"
                                         data-bs-toggle="pill"
                                         data-bs-target="#o_payment_installments"
@@ -160,7 +160,7 @@
                                             t-options="{'widget': 'monetary', 'display_currency': currency}"
                                         />
                                     </button>
-                                    <button t-if="not hidden_total" class="btn btn-outline-primary o_btn_payment_tab"
+                                    <button t-attf-class="btn btn-outline-primary o_btn_payment_tab #{tab_mode == 'full' and 'active' or ''}"
                                         id="o_payment_full_tab"
                                         data-bs-toggle="pill"
                                         data-bs-target="#o_payment_full"
@@ -178,7 +178,7 @@
                                         A payment has already been made on this invoice, please make sure to not pay twice.
                                     </div>
                                     <div
-                                        class="tab-pane my-3 show active"
+                                        t-attf-class="tab-pane my-3 #{tab_mode == 'installment' and 'show active' or ''}"
                                         id="o_payment_installments"
                                         role="tabpanel"
                                         aria-labelledby="o_payment_installments_tab"
@@ -201,7 +201,7 @@
                                             </t>
                                         </div>
                                     </div>
-                                    <div class="tab-pane my-3"
+                                    <div t-attf-class="tab-pane my-3 #{tab_mode == 'full' and 'show active' or ''}"
                                         id="o_payment_full"
                                         role="tabpanel"
                                         aria-labelledby="o_payment_full_tab"

@@ -121,27 +121,18 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         invoice_company = invoices_data['company'] or request.env.company
 
         availability_report = {}
+        # Get compatible providers using minor amount
+        use_next_amount_to_pay = (invoices_data['installment_state'] in ('next', 'overdue') and
+                                  invoices_data['total_amount'] != invoices_data['next_amount_to_pay']
+                                  and kwargs.get('mode', 'installment') == 'installment')
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             invoice_company.id,
             partner_sudo.id,
-            invoices_data['total_amount'],
+            invoices_data['total_amount'] if not use_next_amount_to_pay else invoices_data['next_amount_to_pay'],
             currency_id=invoices_data['currency'].id,
             report=availability_report,
         )  # In sudo mode to read the fields of providers and partner (if logged out).
-
-        # Get compatible providers using minor amount
-        use_next_amount_to_pay = invoices_data['installment_state'] in ('next', 'overdue') and invoices_data['total_amount'] != invoices_data['next_amount_to_pay']
-        hidden_total = False
-        if len(providers_sudo) == 0 and use_next_amount_to_pay:
-            providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-                invoice_company.id,
-                partner_sudo.id,
-                invoices_data['next_amount_to_pay'],
-                currency_id=invoices_data['currency'].id,
-                report=availability_report,
-            )
-            hidden_total = len(providers_sudo) != 0
 
         payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
             providers_sudo.ids,
@@ -161,7 +152,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         portal_page_values = {
             'company_mismatch': company_mismatch,
             'expected_company': invoice_company,
-            'hidden_total': hidden_total
+            'tab_mode': kwargs.get('mode') or 'installment',
         }
         payment_form_values = {
             'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(
