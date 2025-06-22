@@ -123,8 +123,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         availability_report = {}
         # Get compatible providers using minor amount
         use_next_amount_to_pay = (invoices_data['installment_state'] in ('next', 'overdue') and
-                                  invoices_data['total_amount'] != invoices_data['next_amount_to_pay']
-                                  and kwargs.get('mode', 'installment') == 'installment')
+                                  invoices_data['total_amount'] != invoices_data['next_amount_to_pay'])
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             invoice_company.id,
@@ -148,11 +147,12 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         company_mismatch = not PaymentPortal._can_partner_pay_in_company(
             partner_sudo, invoice_company
         )
-
+        valid_modes = {'installment', 'full'}
+        mode = kwargs.get('mode')
         portal_page_values = {
             'company_mismatch': company_mismatch,
             'expected_company': invoice_company,
-            'tab_mode': kwargs.get('mode') or 'installment',
+            'tab_mode': mode if mode in valid_modes else 'installment'
         }
         payment_form_values = {
             'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(

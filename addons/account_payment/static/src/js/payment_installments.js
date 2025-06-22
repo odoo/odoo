@@ -30,19 +30,19 @@ publicWidget.registry.PaymentInstallments = publicWidget.Widget.extend({
     _onChangePaymentTabs() {
         $('.o_btn_payment_tab').on('shown.bs.tab', function (event) {
             const activatedTab = event.target.id;
-            let mode = (activatedTab === 'o_payment_installments_tab')
+            const mode = activatedTab === 'o_payment_installments_tab'
                 ? 'installment'
-                : (activatedTab === 'o_payment_full_tab' ? 'full' : false);
+                : (activatedTab === 'o_payment_full_tab' ? 'full' : null);
 
             if (mode) {
-                const url = new URL(browser.location.href);
-                url.searchParams.set('mode', mode);
+                const url = new URL(window.location.href, location.origin);
+                url.searchParams.set('mode', encodeURIComponent(mode));
                 url.searchParams.set('render_change', 'true');
-
-                browser.location.href = url;
+                document.location = encodeURI(url.href);
             }
         });
     }
+
 })
 
 export default publicWidget.registry.PaymentInstallments;
