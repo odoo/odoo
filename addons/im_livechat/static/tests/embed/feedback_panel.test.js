@@ -134,11 +134,16 @@ test("Start new session from feedback panel", async () => {
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
     pyEnv["im_livechat.channel"].write([channelId], {
+        user_ids: [Command.clear(serverState.userId)],
+    });
+    pyEnv["im_livechat.channel"].write([channelId], {
         user_ids: [
-            Command.clear(serverState.userId),
-            Command.create({ partner_id: pyEnv["res.partner"].create({ name: "Bob Operator" }) }),
+            pyEnv["res.users"].create({
+                partner_id: pyEnv["res.partner"].create({ name: "Bob Operator" }),
+            }),
         ],
     });
+
     await click("button", { text: "New Session" });
     await contains(".o-mail-ChatWindow", { count: 1 });
     await contains(".o-mail-ChatWindow", { text: "Bob Operator" });

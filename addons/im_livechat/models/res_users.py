@@ -11,6 +11,9 @@ class ResUsers(models.Model):
     """
     _inherit = 'res.users'
 
+    livechat_channel_ids = fields.Many2many(
+        "im_livechat.channel", "im_livechat_channel_im_user", "user_id", "channel_id"
+    )
     livechat_username = fields.Char(
         string="Livechat Username",
         groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
@@ -35,6 +38,16 @@ class ResUsers(models.Model):
         store=False,
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
+    livechat_ongoing_session_count = fields.Integer(
+        "Number of Ongoing sessions",
+        compute="_compute_livechat_ongoing_session_count",
+        groups="im_livechat.im_livechat_group_user",
+    )
+    livechat_is_in_call = fields.Boolean(
+        help="Whether the user is in a call, only available if the user is in a live chat agent",
+        compute="_compute_livechat_is_in_call",
+        groups="im_livechat.im_livechat_group_user",
+    )
     has_access_livechat = fields.Boolean(compute='_compute_has_access_livechat', string='Has access to Livechat', store=False, readonly=True)
 
     @property
@@ -53,6 +66,27 @@ class ResUsers(models.Model):
             "livechat_lang_ids",
             "livechat_username",
         ]
+
+    @api.depends("livechat_channel_ids", "is_in_call")
+    def _compute_livechat_is_in_call(self):
+        for user in self:
+            # sudo - res.users: checking if user is in call is allowed if the user is member of a live chat channel.
+            user.livechat_is_in_call = user.sudo().is_in_call if user.livechat_channel_ids else None
+
+    @api.depends("livechat_channel_ids.channel_ids.livechat_end_dt", "partner_id")
+    def _compute_livechat_ongoing_session_count(self):
+        count_by_partner = dict(
+            self.env["im_livechat.channel.member.history"]._read_group(
+                [
+                    ("channel_id.livechat_end_dt", "=", False),
+                    ("partner_id", "in", self.partner_id.ids),
+                ],
+                ["partner_id"],
+                ["__count"],
+            )
+        )
+        for user in self:
+            user.livechat_ongoing_session_count = count_by_partner.get(user.partner_id, 0)
 
     @api.depends('res_users_settings_id.livechat_username')
     def _compute_livechat_username(self):
