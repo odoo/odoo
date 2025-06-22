@@ -51,6 +51,7 @@ const discoverTalkSteps = function (talkName, fromList, checkToggleReminder, rem
             content: 'Go on "' + talkName + '" talk in List',
             trigger: 'a:contains("' + talkName + '")',
             run: "click",
+            expectUnloadPage: true,
         }];
     }
     else {
@@ -58,6 +59,7 @@ const discoverTalkSteps = function (talkName, fromList, checkToggleReminder, rem
             content: 'Click on Live Track',
             trigger: 'article span:contains("' + talkName + '")',
             run: 'click',
+            expectUnloadPage: true,
         }];
     }
     steps = steps.concat([{
@@ -137,11 +139,13 @@ const registerSteps = [
         content: "Validate attendees details",
         trigger: ".modal button[type=submit]:enabled",
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "Click on 'register favorites talks' button",
         trigger: "a:contains(register to your favorites talks now)",
         run: "click",
+        expectUnloadPage: true,
     },
     {
         trigger: "h5:contains(Book your talks)",
@@ -157,6 +161,7 @@ var initTourSteps = function (eventName) {
         content: 'Go on "' + eventName + '" page',
         trigger: 'a[href*="/event"]:contains("' + eventName + '"):first',
         run: "click",
+        expectUnloadPage: true,
     }];
 };
 
@@ -168,6 +173,7 @@ var browseTalksSteps = [{
     content: 'Browse Talks Submenu',
     trigger: 'a.dropdown-item span:contains("Talks")',
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: 'Check we are on the talk list page',
     trigger: 'h5:contains("Book your talks")',
@@ -177,6 +183,7 @@ var browseBackSteps = [{
     content: 'Browse Back',
     trigger: 'a:contains("All Talks")',
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: 'Check we are back on the talk list page',
     trigger: 'h5:contains("Book your talks")',

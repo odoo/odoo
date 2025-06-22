@@ -358,7 +358,7 @@ registry.category("web_tour.tours").add("PosSettleOrder5", {
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Product A", 1),
-            Chrome.clickMenuOption("Backend"),
+            Chrome.clickMenuOption("Backend", { expectUnloadPage: true }),
         ].flat(),
 });
 
