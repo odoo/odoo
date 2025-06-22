@@ -16,6 +16,8 @@
             <field name="channel_id" ref="livechat_channel_session_11"/>
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="livechat_member_type">agent</field>
+            <field name="response_time_hour" eval="15/3600"/>
+            <field name="message_count">1</field>
         </record>
         <record id="im_livechat.livechat_channel_session_11_member_admin" model="discuss.channel.member">
             <field name="partner_id" ref="base.partner_admin"/>

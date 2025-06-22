@@ -98,6 +98,33 @@ class DiscussChannel(models.Model):
         readonly=False,
         store=True,
     )
+    livechat_outcome = fields.Selection(
+        [
+            ("no_answer", "Never Answered"),
+            ("no_agent", "No one Available"),
+            ("no_failure", "Success"),
+            ("escalated", "Escalated"),
+        ],
+        compute="_compute_livechat_outcome",
+        store=True,
+    )
+    livechat_start_hour = fields.Float(
+        "Session Start Hour", compute="_compute_livechat_start_hour", store=True
+    )
+    livechat_week_day = fields.Selection(
+        [
+            ("0", "Monday"),
+            ("1", "Tuesday"),
+            ("2", "Wednesday"),
+            ("3", "Thursday"),
+            ("4", "Friday"),
+            ("5", "Saturday"),
+            ("6", "Sunday"),
+        ],
+        string="Day of the Week",
+        compute="_compute_livechat_week_day",
+        store=True,
+    )
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
@@ -249,6 +276,23 @@ class DiscussChannel(models.Model):
                 if channel.livechat_is_escalated
                 else None
             )
+
+    @api.depends("livechat_is_escalated", "livechat_failure")
+    def _compute_livechat_outcome(self):
+        for channel in self:
+            self.livechat_outcome = (
+                "escalated" if channel.livechat_is_escalated else channel.livechat_failure
+            )
+
+    @api.depends("create_date")
+    def _compute_livechat_start_hour(self):
+        for channel in self:
+            channel.livechat_start_hour = channel.create_date.hour
+
+    @api.depends("create_date")
+    def _compute_livechat_week_day(self):
+        for channel in self:
+            channel.livechat_week_day = str(channel.create_date.weekday())
 
     def _sync_field_names(self):
         field_names = super()._sync_field_names()
@@ -511,19 +555,28 @@ class DiscussChannel(models.Model):
                 }
             )
 
-        # sudo: discuss.channel - accessing history for checking if author is an agent is acceptable
-        author_is_agent = bool(
-            self.sudo().livechat_channel_member_history_ids.filtered(
-                lambda h: h.partner_id == message.author_id and h.livechat_member_type == "agent",
-            ),
-        )
-        if not self.livechat_end_dt and author_is_agent:
+        author_history = self.env["im_livechat.channel.member.history"]
+        # sudo - discuss.channel: accessing history to update its state is acceptable
+        if message.author_id or message.author_guest_id:
+            author_history = self.sudo().livechat_channel_member_history_ids.filtered(
+                lambda h: h.partner_id == message.author_id
+                if message.author_id
+                else h.guest_id == message.author_guest_id
+            )
+        if author_history:
+            if message.message_type not in ("notification", "user_notification"):
+                author_history.message_count += 1
+        if author_history.livechat_member_type == "agent" and not author_history.response_time_hour:
+            author_history.response_time_hour = (
+                fields.Datetime.now() - author_history.create_date
+            ).total_seconds() / 3600
+        if not self.livechat_end_dt and author_history.livechat_member_type == "agent":
             self.livechat_failure = "no_failure"
         # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
         if (
             not self.livechat_end_dt
             and self.sudo().livechat_status == "waiting"
-            and not author_is_agent
+            and author_history.livechat_member_type == "visitor"
         ):
             # sudo: discuss.channel - writing livechat_status when a message is posted is acceptable
             self.sudo().livechat_status = "in_progress"
