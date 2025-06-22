@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="PurchaseSuggestSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="attributes">
+            <attribute name="t-call">purchase.SearchPanel.Regular</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="purchase.SearchPanelContent" t-inherit="web.SearchPanelContent" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_search_panel')]/section" position="before">
+            <header 
+                class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default"
+                title="Get recommendations of products to purchase for the filtered vendor based on stock on hand, and expected sales volumes or actual demand."
+            >
+                <i t-attf-class="fa fa-lg fa-lightbulb-o o_search_panel_section_icon text-primary me-2"/>
+                <b> Suggest </b>    
+            </header>  
+            <div class="d-flex align-items-center ms-2">
+                <span class="me-2">
+                    Replenish for
+                </span>
+                <input type="text" inputmode="numeric" placeholder="7" 
+                    class="o_input_suggest_search_panel form-control form-control-sm border-0 border-bottom border-dark text-dark text-end rounded-0 mx-0 p-1"
+                    style="width: 2rem;"    
+                />
+                <span class="ms-2">day(s)</span>
+                <span class="fa fa-question ms-2 text-info" title="The number of days to consider for the replenishment suggestion."></span>
+            </div>
+
+            <div class="d-inline-flex align-items-center ms-2"> Based on </div>   
+            <div class="d-inline-flex align-items-center ms-1">
+                <select class="form-select bg-white form-select-sm border-0 border-bottom border-dark text-dark rounded-0 mx-1 p-1"
+                    style="width: 7rem; box-shadow: none; background-position: right 0rem center; background-size: 0.6rem;">
+                    <option value="stock_on_hand">Stock on hand</option>
+                    <option value="expected_sales">Expected sales</option>
+                    <option value="actual_demand">Actual demand</option>
+                </select>
+                <span>x</span>
+                <input type="text" inputmode="numeric" placeholder="100" 
+                    class="form-control form-control-sm border-0 border-bottom border-dark text-dark text-end rounded-0 mx-0 p-1"
+                    style="width: 2rem;"    
+                />
+                <span>%</span>
+                <span class="fa fa-question ms-2 text-info" title="Estimate the sales volume for the period based on past period or order the forecasted quantity for that period."></span>
+            </div>   
+        </xpath>
+    </t>
+
+    <t t-name="purchase.SearchPanel.Regular" t-inherit="purchase.SearchPanelContent" t-inherit-mode="primary"/>
+
+</templates>
