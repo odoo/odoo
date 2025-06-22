@@ -36,6 +36,7 @@
         ],
         'web.assets_frontend': [
             'account_payment/static/src/js/payment_form.js',
+            'account_payment/static/src/js/payment_installments.js',
             'account_payment/static/src/interactions/**/*',
         ],
     },
