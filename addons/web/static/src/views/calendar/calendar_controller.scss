@@ -46,20 +46,15 @@ $o-cw-filter-avatar-size: 20px;
 
     .o_calendar_sidebar {
         @include o-webclient-padding($top: $o-horizontal-padding/2);
-        width: 230px;
+        max-width: calc(#{$o-datetime-picker-width} + 2 * #{map-get($spacers, 3)});
 
         .o_datetime_picker {
-            --DateTimePicker__Cell-size-md: 1.5rem;
             padding-right: 0 !important;
             padding-left: 0 !important;
 
             .o_day_of_week_cell {
                 --background-color: transparent;
                 border: none !important;
-            }
-
-            .o_cell_md {
-                font-size: .75rem;
             }
         }
 

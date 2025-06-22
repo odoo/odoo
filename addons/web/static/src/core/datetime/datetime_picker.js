@@ -27,7 +27,7 @@ const { DateTime, Info } = luxon;
  * @typedef DateTimePickerProps
  * @property {number} [focusedDateIndex=0]
  * @property {boolean} [showWeekNumbers]
- * @property {DaysOfWeekFormat} [daysOfWeekFormat="short"]
+ * @property {DaysOfWeekFormat} [daysOfWeekFormat="narrow"]
  * @property {DateLimit} [maxDate]
  * @property {PrecisionLevel} [maxPrecision="decades"]
  * @property {DateLimit} [minDate]
@@ -192,7 +192,7 @@ const PRECISION_LEVELS = new Map()
                     Info.weekdays("narrow", { locale: d.range[0].locale })[d.range[0].weekday - 1],
                 ]);
                 if (showWeekNumbers) {
-                    daysOfWeek.unshift(["#", _t("Week numbers"), "#"]);
+                    daysOfWeek.unshift(["", _t("Week numbers"), ""]);
                 }
 
                 return {
@@ -320,7 +320,7 @@ export class DateTimePicker extends Component {
 
     static defaultProps = {
         focusedDateIndex: 0,
-        daysOfWeekFormat: "short",
+        daysOfWeekFormat: "narrow",
         maxPrecision: "decades",
         minPrecision: "days",
         rounding: 5,

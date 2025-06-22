@@ -9,7 +9,7 @@
                 >
                     <t t-foreach="month.daysOfWeek" t-as="dayOfWeek" t-key="dayOfWeek[0]">
                         <div
-                            class="o_day_of_week_cell o_text_sm o_cell_md fw-bolder bg-100 border-bottom border-2 d-flex align-items-center justify-content-center"
+                            class="o_day_of_week_cell fw-bolder bg-100 border-bottom border-2 d-flex align-items-center justify-content-center"
                             t-att-title="dayOfWeek[1]"
                         >
                             <div class="text-nowrap overflow-hidden" t-esc="props.daysOfWeekFormat === 'narrow' ? dayOfWeek[2] : dayOfWeek[0]"/>
@@ -18,15 +18,14 @@
                     <t t-foreach="month.weeks" t-as="week" t-key="week.number">
                         <t t-if="props.showWeekNumbers ?? !props.range">
                             <div
-                                class="o_week_number_cell o_center o_cell_md o_text_sm bg-100 fw-bolder"
-                                t-att-class="{ 'border-bottom': !week_last }"
+                                class="o_week_number_cell d-flex align-items-center ps-2 text-muted fst-italic"
                                 t-esc="week.number"
                             />
                         </t>
                         <t t-foreach="week.days" t-as="itemInfo" t-key="itemInfo.id">
                             <t t-set="arInfo" t-value="getActiveRangeInfo(itemInfo)" />
                             <div
-                                class="o_date_item_cell o_datetime_button o_center o_cell_md cursor-pointer"
+                                class="o_date_item_cell o_datetime_button o_center cursor-pointer"
                                 t-att-class="{
                                     'o_out_of_range text-muted': itemInfo.isOutOfRange,
                                     o_selected: arInfo.isSelected,
@@ -76,7 +75,7 @@
             <t t-foreach="items" t-as="itemInfo" t-key="itemInfo.id">
                 <t t-set="arInfo" t-value="getActiveRangeInfo(itemInfo)" />
                 <div
-                    class="o_date_item_cell o_datetime_button o_center o_cell_lg"
+                    class="o_date_item_cell o_datetime_button o_center"
                     t-att-class="{
                         o_selected: arInfo.isSelected,
                         o_select_start: arInfo.isSelectStart,
@@ -95,7 +94,7 @@
 
     <t t-name="web.DateTimePicker">
         <div
-            class="o_datetime_picker d-flex flex-column gap-2 user-select-none p-2 p-lg-3"
+            class="o_datetime_picker d-flex flex-column gap-2 user-select-none p-2"
             t-attf-style="--DateTimePicker__Day-template-columns: {{ props.showWeekNumbers ?? !props.range ? 8 : 7 }}"
         >
             <nav class="o_datetime_picker_header btn-group">
