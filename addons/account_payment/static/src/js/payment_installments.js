@@ -1,5 +1,4 @@
 import publicWidget from '@web/legacy/js/public/public_widget';
-import { browser } from '@web/core/browser/browser';
 
 publicWidget.registry.PaymentInstallments = publicWidget.Widget.extend({
     selector: '#o_payment_installments_modal',
