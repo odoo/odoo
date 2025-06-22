@@ -415,7 +415,7 @@ msgstr "Ekler"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
 msgid "Attachments of expenses"
-msgstr ""
+msgstr "Gider ekleri"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_base
@@ -456,7 +456,7 @@ msgstr "İptal"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__cannot_approve_reason
 msgid "Cannot Approve Reason"
-msgstr ""
+msgstr "Sebep Onaylanmadı"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__product_ids
@@ -727,7 +727,7 @@ msgstr "Personel (geri ödenecek)"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
-msgstr ""
+msgstr "Çalışan Gider Defteri"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -742,7 +742,7 @@ msgid ""
 "Enter a name then choose a category and configure the amount of your "
 "expense."
 msgstr ""
-"Bir ad girin, ardından bir kategori seçin ve masrafınızın tutarını "
+"Bir isim girin ve ardından bir kategori seçip harcamanızın tutarını "
 "yapılandırın."
 
 #. module: hr_expense
@@ -840,7 +840,7 @@ msgstr "Gider Raporu Tarihi"
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_expense_sheet_img
 msgid "Expense Report Image"
-msgstr ""
+msgstr "Gider Raporu Görseli"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
@@ -1003,7 +1003,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_base__filter_for_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
-msgstr ""
+msgstr "Gider Filtresi"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1202,7 +1202,7 @@ msgstr "Yevmiye Kaydı"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_delete
 msgid "Journal Entry Deleted"
-msgstr ""
+msgstr "Muhasebe Kaydı Silindi"
 
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_draft
@@ -1223,7 +1223,7 @@ msgstr ""
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
 msgid "Journal entry deleted"
-msgstr ""
+msgstr "Muhasebe kaydı silindi"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_draft
@@ -1233,7 +1233,7 @@ msgstr "Yevmiye kaydı taslağa sıfırlandı"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_currency_rate
 msgid "Label Currency Rate"
-msgstr ""
+msgstr "Kur Etiketi"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
@@ -1303,8 +1303,8 @@ msgid ""
 "Managers can approve the report here, then an accountant can post the "
 "accounting entries."
 msgstr ""
-"Yöneticiler raporu buradan onaylayabilir, ardından bir muhasebeci yevmiye "
-"kayıtlarını onaylayabilir."
+"Yöneticiler raporu buradan onayladıktan sonra muhasebeci de muhasebe "
+"kayıtlarını girebilir."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1524,8 +1524,7 @@ msgstr "Odoo"
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr ""
-"Masrafınızı oluşturduğunuzda, onu onaylayacak yöneticinize gönderiniz."
+msgstr "Gideri oluşturduğunuzda onaylanmak üzere müdürünüze iletin."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1534,8 +1533,8 @@ msgid ""
 "Once your <b>Expense Report</b> is ready, you can submit it to your manager "
 "and wait for approval."
 msgstr ""
-"<b>Masraf Raporunuz</b> hazır olduğunda, yöneticinize gönderebilir ve onay "
-"için bekleyebilirsiniz."
+"<b>Harcama Raporunuz</b> hazır olduğunda, yöneticinize iletebilir ve onay "
+"sürecini bekleyebilirsiniz."
 
 #. module: hr_expense
 #. odoo-python
@@ -1682,7 +1681,7 @@ msgstr "Ürün Açıklaması"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
 msgid "Product Has Cost"
-msgstr ""
+msgstr "Ürünün Maliyeti Var"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1829,7 +1828,7 @@ msgstr "Satış Fiyatı"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_receipt_expense_ids
 msgid "Same Receipt Expense"
-msgstr ""
+msgstr "Aynı Fişteki Gider"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1866,6 +1865,11 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
+"Bu e-posta takma adına, faturayı ekleyerek bir e-posta gönderin; gideri tek "
+"tıklamayla oluşturun. E-posta konusunun ilk kelimesi kategori iç referansı "
+"ya da kategori adını içeriyorsa, ilgili kategori otomatik olarak atanır. "
+"Gider tutarını da konu satırına yazarsanız, tutar gider kaydına otomatik "
+"olarak eklenir."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1987,12 +1991,12 @@ msgstr "Ara Toplam"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Subtotal In Currency"
-msgstr ""
+msgstr "Para Birimi Cinsinden Ara Toplam"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Subtotal in currency"
-msgstr ""
+msgstr "Para birimi cinsinden ara toplam"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_tax
@@ -2161,7 +2165,7 @@ msgstr "Gönderilecek"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To be Reimbursed"
-msgstr ""
+msgstr "Geri Ödenecek"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -2321,6 +2325,13 @@ msgid ""
 "allowances for mileage, per diem, accommodation"
 "                                             or meal."
 msgstr ""
+"Bir gider kalemi ürününün maliyeti 0'dan farklıysa, bu ürünü kullanan"
+"                                             kullanıcı gider tutarını "
+"değiştiremez, yalnızca miktarı değiştirebilir."
+"                                             Kilometre, günlük harcırah, "
+"konaklama veya yemek gibi sabit                                             "
+"maliyetle şirket tarafından finanse edilen gider kategorileri için 0'dan "
+"farklı bir maliyet kullanın.                                             "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2414,6 +2425,8 @@ msgid ""
 "You cannot delete only some entries linked to an expense report. All entries"
 " must be deleted at the same time."
 msgstr ""
+"Bir gider raporuna bağlı yalnızca bazı kayıtları silemezsiniz. Tüm kayıtlar "
+"aynı anda silinmelidir."
 
 #. module: hr_expense
 #. odoo-python
@@ -2422,6 +2435,8 @@ msgid ""
 "You cannot delete only some payments linked to an expense report. All "
 "payments must be deleted at the same time."
 msgstr ""
+"Bir gider raporuna bağlı yalnızca bazı ödemeleri silemezsiniz. Tüm ödemeler "
+"aynı anda silinmelidir."
 
 #. module: hr_expense
 #. odoo-python
@@ -2430,7 +2445,7 @@ msgid ""
 "You cannot do this modification since the payment is linked to an expense "
 "report."
 msgstr ""
-"Ödeme bir masraf raporuna bağlı olduğu için bu değişikliği yapamazsınız."
+"Ödeme bir gider raporuna bağlı olduğundan, bu değişikliği yapamazsınız."
 
 #. module: hr_expense
 #. odoo-python
@@ -2515,8 +2530,8 @@ msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
 msgstr ""
-"Devam etmek için veritabanınızda Masraf olabilir seçili en az bir kategoriye"
-" sahip olmanız gerekir!"
+"Devam edebilmek için veri tabanınızda masraf olarak kaydedilebilir en az bir"
+" kategori bulunmalıdır!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
