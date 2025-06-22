@@ -37,6 +37,7 @@ publicWidget.registry.PaymentInstallments = publicWidget.Widget.extend({
                 const url = new URL(window.location.href, location.origin);
                 url.searchParams.set('mode', encodeURIComponent(mode));
                 url.searchParams.set('render_change', 'true');
+                url.searchParams.set('payment', 'true')
                 document.location = encodeURI(url.href);
             }
         });
