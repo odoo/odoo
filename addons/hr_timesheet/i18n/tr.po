@@ -161,6 +161,18 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        Çalışma çizelgeleri olan çalışanların kaydını silemezsiniz.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            Bu çalışanların kaydını ancak arşivleyebilirsiniz. Kayıt silmek için ise önce tüm çalışma çizelgelerini silmeniz gerekir.\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Lütfen önce söz konusu çalışanlara ait tüm çalışma çizelgelerini silin.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        Bu çalışanların kaydını silmek istediğinizden emin misiniz?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table

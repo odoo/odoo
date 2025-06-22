@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-14 20:46+0000\n"
+"POT-Creation-Date: 2025-06-20 18:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -1961,7 +1961,7 @@ msgstr "会計関連の設定は次で管理"
 #: model:ir.model.fields.selection,name:account.selection__account_account_tag__applicability__accounts
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Accounts"
-msgstr "アカウント"
+msgstr "勘定科目"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
@@ -2286,7 +2286,7 @@ msgstr "後続の税の基準額に影響"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #, python-format
 msgid "After"
-msgstr "変更後"
+msgstr "日後"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__aggregation
@@ -5181,7 +5181,7 @@ msgstr "翌月末後日数"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_after
 msgid "Days after invoice date"
-msgstr "日以降：請求日から"
+msgstr "請求日後日数"
 
 #. module: account
 #. odoo-python
@@ -5948,12 +5948,12 @@ msgstr "以下に対する支払額："
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #, python-format
 msgid "Due Date"
-msgstr "期日"
+msgstr "支払期日"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Due Terms"
-msgstr "期限"
+msgstr "支払条件行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
@@ -6939,7 +6939,7 @@ msgstr "取消済請求書、削除された項目、または未決済期間の
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Gaps in the sequence"
-msgstr "付番内のギャップ"
+msgstr "シーケンスの欠落"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
@@ -16327,8 +16327,10 @@ msgstr "%sのジャーナルに設定された仮勘定をせずに新しい文�
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
-msgid "You can't create payments for entries belonging to different branches."
-msgstr "異なる支店に属する仕訳に対して支払を作成することはできません。"
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16643,7 +16645,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr "アカウントをマージできません。"
+msgstr "勘定科目を統合できません。"
 
 #. module: account
 #. odoo-python
