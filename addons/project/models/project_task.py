@@ -35,6 +35,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'user_ids',
     'display_parent_task_button',
     'current_user_same_company_partner',
+    'allow_recurring_tasks',
     'allow_milestones',
     'milestone_id',
     'has_late_and_unreached_milestone',
@@ -282,6 +283,7 @@ class ProjectTask(models.Model):
     display_follow_button = fields.Boolean(compute='_compute_display_follow_button', compute_sudo=True, export_string_translation=False)
 
     # recurrence fields
+    allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks', export_string_translation=False)
     recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False, index='btree_not_null')

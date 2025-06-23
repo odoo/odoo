@@ -73,32 +73,9 @@ const formViewParams = {
     `,
 };
 
-async function mockCheckFeatureEnabled() {
-    let allow_task_dependencies = false;
-    let allow_milestones = false;
-    let allow_recurring_tasks = false;
-    for (const record of ProjectProject._records) {
-        if (record.allow_task_dependencies) {
-            allow_task_dependencies = true;
-        }
-        if (record.allow_milestones) {
-            allow_milestones = true;
-        }
-        if (record.allow_recurring_tasks) {
-            allow_recurring_tasks = true;
-        }
-    }
-    return { allow_task_dependencies, allow_milestones, allow_recurring_tasks };
-}
+onRpc("project.project", "check_features_enabled", ({ method }) => expect.step(method));
 
-onRpc(({ method, model }) => {
-    if (model === "project.project" && method === "check_features_enabled") {
-        expect.step(method);
-        return mockCheckFeatureEnabled();
-    } else if (method === "web_save") {
-        expect.step(method);
-    }
-});
+onRpc("web_save", ({ method }) => expect.step(method));
 
 test("project.project (form) hide archive action for project user", async () => {
     onRpc("has_group", ({ args }) => args[1] === "project.group_project_user");

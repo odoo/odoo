@@ -158,7 +158,7 @@
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <filter string="Unassigned" name="unassigned_projects" domain="[('user_id', '=', False)]"/>
                     <separator invisible="context.get('default_is_template')"/>
-                    <filter string="Late Milestones" name="late_milestones" domain="[('is_milestone_exceeded', '=', True)]" groups="project.group_project_milestone" invisible="context.get('default_is_template')"/>
+                    <filter string="Late Milestones" name="late_milestones" domain="[('is_milestone_exceeded', '=', True)]" groups="project.group_project_milestone" invisible="context.get('default_is_template') or not context.get('allow_milestones', True)"/>
                     <separator invisible="context.get('default_is_template')"/>
                     <filter string="Start Date" name="start_date" date="date_start" end_month="1" end_year="1"/>
                     <filter string="End Date" name="end_date" date="date" end_month="1" end_year="1"/>

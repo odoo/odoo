@@ -30,29 +30,32 @@
                                 <field name="name" placeholder="e.g. To Do"/>
                                 <field name="fold"/>
                                 <field name="user_id" invisible="True"/>
-                                <field name="mail_template_id" context="{'default_model': 'project.task'}" invisible="user_id"/>
-                                <field name="rating_template_id"
-                                       placeholder="Task: Rating Request"
-                                       context="{'default_model': 'project.task'}"
-                                       invisible="user_id or not rating_active"
-                                       required="rating_active"/>
                                 <field name="auto_validation_state" invisible="not rating_template_id"/>
                                 <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color', 'edit_tags': True}" invisible="user_id" required="not user_id"/>
                                 <field name="color" widget="color_picker"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group>
-                            <group name="group_customer_rating">
-                                <div>
-                                    <label for="rating_active" string="Send a customer rating request" class="fw-bold"/>
-                                </div>
-                                <div>
+                            <group>
+                                <field name="mail_template_id" context="{'default_model': 'project.task'}" invisible="user_id"/>
+                            </group>
+                            <group name="group_customer_rating" string="Customer Rating" class="row o_settings_container" invisible="user_id">
+                                <setting class="col-lg-12">
                                     <field name="rating_active"/>
-                                    <div invisible="not rating_active" class="mt-2">
-                                        <field name="rating_status" widget="radio"/>
-                                        <div invisible="rating_status != 'periodic'" required="rating_status == 'periodic'">
-                                            <label for="rating_status_period" string="Frequency"/>
-                                            <field class="mx-3 w-auto" name="rating_status_period"/>
-                                        </div>
+                                    <div invisible="not rating_active">
+                                        <field name="rating_status" widget="radio" class="o_row"/>
+                                        <group class="mt-2">
+                                            <field
+                                                name="rating_status_period"
+                                                invisible="rating_status != 'periodic'"
+                                                required="rating_status == 'periodic'"
+                                            />
+                                            <field
+                                                name="rating_template_id"
+                                                placeholder="Task: Rating Request"
+                                                context="{'default_model': 'project.task'}"
+                                                required="rating_active"
+                                            />
+                                        </group>
                                         <span colspan="2" class="text-muted o_row ps-1">
                                             <i class="fa fa-lightbulb-o pe-2"/>
                                             <span name="rating_status_helper">
@@ -61,7 +64,7 @@
                                             </span>
                                         </span>
                                     </div>
-                                </div>
+                                </setting>
                             </group>
                         </group>
                     </sheet>

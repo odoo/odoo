@@ -856,6 +856,8 @@ class ProjectProject(models.Model):
             'create': self.active,
             'active_test': self.active,
             'active_id': self.id,
+            'allow_milestones': self.allow_milestones,
+            'allow_task_dependencies': self.allow_task_dependencies,
             })
         action['context'] = context
         if self.is_template:
