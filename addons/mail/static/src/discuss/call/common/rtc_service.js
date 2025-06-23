@@ -2007,12 +2007,11 @@ export const rtcService = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
-        const rtc = env.services["mail.store"].rtc;
+        const store = env.services["mail.store"];
+        const rtc = store.rtc;
         rtc.p2pService = services["discuss.p2p"];
         rtc.p2pService.acceptOffer = async (id, sequence) => {
-            const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
-                Number(id)
-            );
+            const session = await store["discuss.channel.rtc.session"].getWhenReady(Number(id));
             /**
              * We only accept offers for new connections (higher sequence),
              * or offers that renegotiate an existing connection (same sequence).
