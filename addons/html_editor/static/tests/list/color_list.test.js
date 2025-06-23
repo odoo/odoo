@@ -163,7 +163,7 @@ test("should remove color from partially selected list item", async () => {
         contentBefore: '<ol><li style="color: rgb(255, 0, 0);">ab[cd]ef</li></ol>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter:
-            '<ol><li style="color: rgb(255, 0, 0);">ab<font style="color: initial;">[cd]</font>ef</li></ol>',
+            '<ol><li style="color: rgb(255, 0, 0);">ab<font class="o_default_color">[cd]</font>ef</li></ol>',
     });
 });
 
