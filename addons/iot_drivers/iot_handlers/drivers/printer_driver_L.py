@@ -6,14 +6,13 @@ from escpos import printer
 import escpos.exceptions
 import logging
 import netifaces as ni
-import re
 import time
 
 from odoo import http
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
-from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import PPDs, conn, cups_lock
+from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import conn, cups_lock
 from odoo.addons.iot_drivers.main import iot_devices
 from odoo.addons.iot_drivers.tools import helpers, wifi, route
 
@@ -64,46 +63,7 @@ class PrinterDriver(PrinterDriverBase):
 
     @classmethod
     def supported(cls, device):
-        if device.get('supported', False):
-            return True
-        protocol = ['dnssd', 'lpd', 'socket']
-        if (
-                any(x in device['url'] for x in protocol)
-                and device['device-make-and-model'] != 'Unknown'
-                or 'direct' in device['device-class']
-        ):
-            model = cls.get_device_model(device)
-            ppd_file = ''
-            for ppd in PPDs:
-                if model and model in PPDs[ppd]['ppd-product']:
-                    ppd_file = ppd
-                    break
-            with cups_lock:
-                if ppd_file:
-                    conn.addPrinter(name=device['identifier'], ppdname=ppd_file, device=device['url'])
-                else:
-                    conn.addPrinter(name=device['identifier'], device=device['url'])
-
-                conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
-                conn.enablePrinter(device['identifier'])
-                conn.acceptJobs(device['identifier'])
-                conn.setPrinterUsersAllowed(device['identifier'], ['all'])
-                conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
-                conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
-            return True
-        return False
-
-    @classmethod
-    def get_device_model(cls, device):
-        device_model = ""
-        if device.get('device-id'):
-            for device_id in device['device-id'].split(';'):
-                if any(x in device_id for x in ['MDL', 'MODEL']):
-                    device_model = device_id.split(':')[1]
-                    break
-        elif device.get('device-make-and-model'):
-            device_model = device['device-make-and-model']
-        return re.sub(r"[\(].*?[\)]", "", device_model).strip()
+        return True
 
     def disconnect(self):
         self.send_status('disconnected', 'Printer was disconnected')
