@@ -93,7 +93,7 @@ class MailComposeMessage(models.TransientModel):
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', string='Attachments',
-        compute='_compute_attachment_ids', readonly=False, store=True)
+        compute='_compute_attachment_ids', readonly=False, store=True, bypass_search_access=True)
     email_layout_xmlid = fields.Char(
         'Email Notification Layout',
         compute='_compute_email_layout_xmlid', readonly=False, store=True,
