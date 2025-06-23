@@ -2052,8 +2052,12 @@ export class PosStore extends WithLazyGetterTrap {
         );
     }
     async loadSampleData() {
-        const isPosManager = await user.hasGroup("point_of_sale.group_pos_manager");
-        if (!isPosManager) {
+        const [isPosManager, isAdmin] = await Promise.all([
+            user.hasGroup("point_of_sale.group_pos_manager"),
+            user.hasGroup("base.group_system"),
+        ]);
+
+        if (!(isPosManager && isAdmin)) {
             this.dialog.add(AlertDialog, {
                 title: _t("Access Denied"),
                 body: _t("It seems like you don't have enough rights to load data."),

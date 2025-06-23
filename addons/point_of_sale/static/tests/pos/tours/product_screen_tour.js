@@ -929,6 +929,21 @@ registry.category("web_tour.tours").add("test_load_pos_demo_data_by_pos_user", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_load_pos_demo_data_with_member_role", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            clickLoadSampleButton(),
+            {
+                trigger:
+                    '.modal-content:has(.modal-title:contains("Access Denied")) .modal-footer .btn.btn-primary:contains("Ok")',
+                content: "Click Ok on the Access Denied dialog box",
+                run: "click",
+            },
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_only_existing_lots", {
     steps: () =>
         [

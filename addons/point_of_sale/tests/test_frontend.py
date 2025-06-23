@@ -2631,6 +2631,20 @@ class TestUi(TestPointOfSaleHttpCommon):
         products = self.env['product.template'].search_count([('available_in_pos', '=', True)])
         self.assertFalse(products, 'Demo data should not be loaded by user.')
 
+        # Member role with POS Administrator access
+        self.pos_user.write({'group_ids': [
+            Command.set(
+                [
+                    self.env.ref('base.group_user').id,
+                    self.env.ref('point_of_sale.group_pos_manager').id,
+                    self.env.ref('account.group_account_manager').id,
+                ]
+            )
+        ]})
+        self.start_pos_tour('test_load_pos_demo_data_with_member_role', login='pos_user')
+        products = self.env['product.template'].search_count([('available_in_pos', '=', True)])
+        self.assertFalse(products, 'Demo data should not be loaded by user with member role.')
+
     def test_combo_variant_mix(self):
         color_attribute = self.env['product.attribute'].create({
             'name': 'Color',
