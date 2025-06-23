@@ -1,12 +1,9 @@
-import { registry } from "@web/core/registry";
-
+import { patch } from "@web/core/utils/patch";
 import { purchaseProductCatalogKanbanView } from "@purchase/product_catalog/kanban_view";
-import { PurchaseSuggestSearchPanel } from "./search/search_panel";
+import { PurchaseSuggestCatalogSearchPanel } from "./search/search_panel";
+import { PurchaseSuggestCatalogKanbanController } from "./controller/kanban_controller";
 
-
-export const purchaseSuggestProductCatalogKanbanView = {
-    ...purchaseProductCatalogKanbanView,
-    SearchPanel: PurchaseSuggestSearchPanel,
-};
-
-registry.category("views").add("purchase_suggest_product_kanban_catalog", purchaseSuggestProductCatalogKanbanView);
+patch(purchaseProductCatalogKanbanView, {
+    Controller: PurchaseSuggestCatalogKanbanController,
+    SearchPanel: PurchaseSuggestCatalogSearchPanel,
+});
