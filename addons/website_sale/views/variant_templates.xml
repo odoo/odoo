@@ -101,7 +101,7 @@
                             <t t-foreach="ptavs" t-as="ptav">
                                 <li t-attf-class="o_variant_pills js_attribute_value border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if ptav in combination else ''}">
                                     <input type="radio"
-                                        t-attf-class="js_variant_change position-absolute #{attribute.create_variant} opacity-0"
+                                        t-attf-class="js_variant_change position-absolute #{attribute.create_variant} opacity-0 cursor-pointer"
                                         t-att-checked="ptav in combination"
                                         t-att-name="'ptal-%s' % ptal.id"
                                         t-att-value="ptav.id"
