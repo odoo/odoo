@@ -172,10 +172,16 @@ class ImLivechatChannelMemberHistory(models.Model):
                 lambda r: r.rated_partner_id == history.partner_id
             )[:1]  # Live chats only allow one rating.
 
-    @api.depends("create_date", "channel_id.livechat_end_dt")
+    @api.depends("create_date", "channel_id.livechat_end_dt", "channel_id.message_ids")
     def _compute_session_duration_hour(self):
+        ongoing_chats = self.channel_id.filtered(lambda c: not c.livechat_end_dt)
+        last_msg_dt_by_channel_id = {
+            message.res_id: message.create_date for message in ongoing_chats._get_last_messages()
+        }
         for history in self:
-            end = history.channel_id.livechat_end_dt or fields.Datetime.now()
+            end = history.channel_id.livechat_end_dt or last_msg_dt_by_channel_id.get(
+                history.channel_id.id, fields.Datetime.now()
+            )
             history.session_duration_hour = (end - history.create_date).total_seconds() / 3600
 
     @api.model
