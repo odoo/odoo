@@ -18,6 +18,7 @@ import {
     patchWithCleanup,
     serverState,
     stepAllNetworkCalls,
+    mockService,
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
@@ -1961,4 +1962,37 @@ test("highlight search in many2many", async () => {
         </span>
         ord
     `);
+});
+
+test("test view button warning on opening unsaved record", async () => {
+    // Making the field required so that we get a sticky notification
+    Turtle._fields.name.required = true;
+
+    mockService("notification", {
+        add(message, options) {
+            expect.step("notification");
+            expect(message).toBe("Please save your changes first");
+            expect(options).toEqual({ type: "danger" });
+        },
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles" context="{'default_turtle_trululu': id}" >
+                    <list editable="bottom" open_form_view="True">
+                        <field name="name"/>
+                        <field name="turtle_foo"/>
+                    </list>
+                </field>
+            </form>
+        `,
+    });
+
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_list_record_open_form_view button").click();
+
+    expect.verifySteps(["notification"]);
 });

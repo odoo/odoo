@@ -118,6 +118,7 @@ export class X2ManyField extends Component {
             return selectCreate(p);
         };
         this.action = useService("action");
+        this.notificationService = useService("notification");
     }
 
     get activeField() {
