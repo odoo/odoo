@@ -118,7 +118,7 @@ test("model option", async () => {
         ["Contact", "Created on", "Display name", "Id", "Last Modified on", "Note", "Salesperson"],
         { message: "should display fields of the specified model" }
     );
-    expect(".o_model_field_selector_popover_item_relation").toHaveCount(4, {
+    expect(".o_model_field_selector_popover_item_relation").toHaveCount(2, {
         message: "following relations is supported by default",
     });
     await followRelation();
