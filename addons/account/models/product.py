@@ -3,7 +3,7 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools import SQL, format_amount
+from odoo.tools import format_amount
 
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
 
@@ -239,9 +239,7 @@ class ProductProduct(models.Model):
         partner_id = self.env.context.get('partner_id')
         products_and_last_invoice_date = self._get_products_and_most_recent_invoice_date(partner_id, journal_type)
         dates_by_product = defaultdict(lambda: False)
-        for data in products_and_last_invoice_date:
-            date = data['invoice_date']
-            product = self.browse(data['product_id'])
+        for product, date in products_and_last_invoice_date:
             dates_by_product[product] = date if date <= today else today
         for (product, date) in dates_by_product.items():
             product.last_invoice_date = date
@@ -328,29 +326,18 @@ class ProductProduct(models.Model):
             record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price)
 
     def _get_products_and_most_recent_invoice_date(self, partner_id, journal_type):
-        sql_query = SQL("""
-            SELECT product_id, invoice_date
-            FROM(
-                SELECT DISTINCT ON (aml.product_id)
-                    aml.product_id,
-                    am.invoice_date
-                FROM account_move am
-                JOIN account_move_line aml ON aml.move_id = am.id
-                JOIN product_product product ON product.id = aml.product_id
-                JOIN account_journal journal ON journal.id = am.journal_id
-                WHERE am.partner_id = %(partner_id)s
-                    AND am.state = 'posted'
-                    AND journal.type = %(journal_type)s
-                    AND product.id IN %(product_ids)s
-                ORDER BY aml.product_id, invoice_date DESC
-            ) sub
-            ORDER BY invoice_date DESC;""",
-            partner_id=partner_id,
-            journal_type=journal_type,
-            product_ids=tuple(self.ids)
+        domain = [
+            ('product_id', 'in', self.ids),
+            ('move_id.state', '=', 'posted'),
+            ('move_id.partner_id', '=', partner_id),
+            ('journal_id.type', '=', journal_type),
+        ]
+        aml_data = self.env['account.move.line']._read_group(
+            domain=domain,
+            groupby=['product_id'],
+            aggregates=['invoice_date:max']
         )
-        self.env.cr.execute(sql_query)
-        return self.env.cr.dictfetchall()
+        return aml_data
 
     # -------------------------------------------------------------------------
     # EDI
