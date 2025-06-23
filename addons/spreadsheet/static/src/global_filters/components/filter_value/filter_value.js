@@ -91,10 +91,18 @@ export class FilterValue extends Component {
     }
 
     onTextInput(id, value) {
+        if (Array.isArray(value) && value.length === 0) {
+            this.clear(id);
+            return;
+        }
         this.props.setGlobalFilterValue(id, value);
     }
 
     onBooleanInput(id, value) {
+        if (Array.isArray(value) && value.length === 0) {
+            this.clear(id);
+            return;
+        }
         this.props.setGlobalFilterValue(id, value);
     }
 

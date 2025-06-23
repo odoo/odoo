@@ -1121,7 +1121,6 @@ test("ODOO.FILTER.VALUE relation filter", async function () {
         type: "relation",
         label: "Relation Filter",
         modelName: "partner",
-        defaultValue: [],
     });
     await animationFrame();
     const [filter] = model.getters.getGlobalFilters();
@@ -2277,7 +2276,6 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
         {
             id: "42",
             type: "relation",
-            defaultValue: [],
         },
         { pivot: { "PIVOT#1": { chain: "product_id", type: "many2one" } } }
     );
@@ -2304,7 +2302,6 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
         {
             id: "42",
             type: "relation",
-            defaultValue: [],
         },
         { pivot: { "PIVOT#1": { chain: "product_id", type: "many2one" } } }
     );
@@ -2328,7 +2325,6 @@ test("getFiltersMatchingPivot return correctly matching filter when there is a f
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
-        defaultValue: [],
     });
     const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B3"));
     expect(filters).toEqual([]);
@@ -2348,7 +2344,6 @@ test("getFiltersMatchingPivot return empty filter for cell formula without any a
         {
             id: "42",
             type: "relation",
-            defaultValue: [],
         },
         { pivot: { "PIVOT#1": { chain: "product_id", type: "many2one" } } }
     );
@@ -2460,7 +2455,6 @@ test("getFiltersMatchingPivot return correctly matching filter with the 'measure
         id: "42",
         label: "fake",
         type: "relation",
-        defaultValue: [],
     });
     const filters = getFiltersMatchingPivot(model, getCellFormula(model, "B2"));
     expect(filters).toEqual([]);
@@ -2727,7 +2721,6 @@ test("Can add a boolean filter", async () => {
         id: "42",
         label: "test",
         type: "boolean",
-        defaultValue: [],
     };
     model.dispatch("ADD_GLOBAL_FILTER", { filter });
     model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true] });
@@ -2752,7 +2745,6 @@ test("Can set a boolean filter with both true and false", async () => {
         id: "42",
         label: "test",
         type: "boolean",
-        defaultValue: [],
     };
     model.dispatch("ADD_GLOBAL_FILTER", { filter });
     model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true, false] });
@@ -2765,7 +2757,6 @@ test("Check boolean filter domain", async () => {
         id: "42",
         label: "test",
         type: "boolean",
-        defaultValue: [],
     };
     model.dispatch("ADD_GLOBAL_FILTER", { filter });
     model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [] });
@@ -2866,6 +2857,15 @@ test("Default value of text filter", () => {
         type: "text",
         label: "Default value cannot be a boolean",
         defaultValue: false,
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "6",
+        type: "text",
+        label: "Default value cannot be an empty array",
+        defaultValue: [],
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
@@ -2983,6 +2983,15 @@ test("Default value of relation filter", () => {
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "8",
+        type: "relation",
+        label: "Default value cannot be an empty array",
+        defaultValue: [],
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
 });
 
 test("Default value of boolean filter", () => {
@@ -3025,6 +3034,15 @@ test("Default value of boolean filter", () => {
         type: "boolean",
         label: "Default value cannot be a boolean",
         defaultValue: false,
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "6",
+        type: "boolean",
+        label: "Default value cannot be an empty array",
+        defaultValue: [],
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);

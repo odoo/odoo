@@ -129,7 +129,7 @@ export function checkFilterValueIsValid(filter, value) {
  * @returns {boolean}
  */
 function isTextFilterValueValid(value) {
-    return Array.isArray(value) && value.every((text) => typeof text === "string");
+    return Array.isArray(value) && value.length && value.every((text) => typeof text === "string");
 }
 
 /**
@@ -147,7 +147,7 @@ function isRelationFilterDefaultValueValid(value) {
  * @returns {boolean}
  */
 function isRelationFilterValueValid(value) {
-    return Array.isArray(value) && value.every((v) => typeof v === "number");
+    return Array.isArray(value) && value.length && value.every((v) => typeof v === "number");
 }
 
 /**
@@ -156,7 +156,7 @@ function isRelationFilterValueValid(value) {
  * @returns {boolean}
  */
 function isBooleanFilterValueValid(value) {
-    return Array.isArray(value) && value.every((v) => typeof v === "boolean");
+    return Array.isArray(value) && value.length && value.every((v) => typeof v === "boolean");
 }
 
 /**
