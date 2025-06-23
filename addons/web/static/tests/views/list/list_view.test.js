@@ -7109,34 +7109,6 @@ test(`no nocontent helper when no data and no help`, async () => {
     expect(`.o_list_view table`).toHaveCount(1, { message: "should have a table in the dom" });
 });
 
-test.tags("desktop");
-test("reset filter button should appear when no data corresponding to facets", async () => {
-    await mountView({
-        type: "list",
-        resModel: "foo",
-        arch: `<list><field name="foo"/></list>`,
-        searchViewArch: `
-            <search>
-                <filter name="no_match" string="Match nothing" domain="[['id', '=', 0]]"/>
-            </search>`,
-        noContentHelp: "click to add a partnerReset Filters",
-    });
-
-    await contains(".o_list_view").click();
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Match nothing");
-
-    expect(".o_view_nocontent").toHaveCount(1);
-    expect(getFacetTexts()).not.toEqual([]);
-    expect(".o_reset_filter_button").toHaveCount(1);
-    expect(".o_reset_filter_button").toHaveText("Reset Filters");
-    expect(".o_facet_value").toHaveText("Match nothing");
-
-    await contains(".o_reset_filter_button").click();
-    expect(getFacetTexts()).toEqual([]);
-    expect(".o_reset_filter_button").not.toHaveCount(1);
-});
-
 test(`empty list with sample data`, async () => {
     await mountView({
         resModel: "foo",

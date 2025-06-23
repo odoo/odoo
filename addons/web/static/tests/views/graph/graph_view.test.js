@@ -7,7 +7,6 @@ import {
     defineModels,
     editFavoriteName,
     fields,
-    getFacetTexts,
     getService,
     makeMockServer,
     mockService,
@@ -2263,42 +2262,6 @@ test("graph view sort by measure for multiple grouped data", async () => {
         { data: [0, 1, 0, 0] },
         { data: [2, 3, 1, 2] },
     ]);
-});
-
-test("reset filter button should appear when no data corresponding to facets", async () => {
-    await mountView({
-        type: "graph",
-        resModel: "foo",
-        arch: /* xml */ `
-            <graph sample="1">
-                <field name="product_id" />
-                <field name="date" />
-            </graph>
-        `,
-        context: {
-            search_default_false_domain: 1,
-        },
-        searchViewArch: /* xml */ `
-            <search>
-                <filter name="no_match" string="Match nothing" domain="[['id', '=', 0]]"/>
-            </search>
-        `,
-        noContentHelp: /* xml */ `<p class="abc">click to add a foo</p>`,
-    });
-
-    await contains(".o_graph_view").click();
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Match nothing");
-
-    expect(".o_view_nocontent").toHaveCount(1);
-    expect(getFacetTexts()).not.toEqual([]);
-    expect(".o_reset_filter_button").toHaveCount(1);
-    expect(".o_reset_filter_button").toHaveText("Reset Filters");
-    expect(".o_facet_value").toHaveText("Match nothing");
-
-    await contains(".o_reset_filter_button").click();
-    expect(getFacetTexts()).toEqual([]);
-    expect(".o_reset_filter_button").not.toHaveCount(1);
 });
 
 test("empty graph view with sample data", async () => {

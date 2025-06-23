@@ -10,19 +10,11 @@ export class ActionHelper extends Component {
         noContentHelp: { type: String, optional: true },
     };
 
-    get hasFacets() {
-        return this.env.searchModel.facets.length > 0;
-    }
-
     get showDefaultHelper() {
         return !this.props.noContentHelp;
     }
 
     showWidgetSampleData() {
         return this.props.showRibbon;
-    }
-
-    clearFilters() {
-        this.env.searchModel.clearFilters();
     }
 }
