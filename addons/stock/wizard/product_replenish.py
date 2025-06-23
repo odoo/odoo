@@ -108,7 +108,7 @@ class ProductReplenish(models.TransientModel):
                     self.product_id,
                     self.quantity,
                     uom_reference,
-                    self.warehouse_id.lot_stock_id,  # Location
+                    self._get_procurement_location(),  # Location
                     _("Manual Replenishment"),  # Name
                     _("Manual Replenishment"),  # Origin
                     self.warehouse_id.company_id,
@@ -127,6 +127,10 @@ class ProductReplenish(models.TransientModel):
             return act_window_close
         except UserError as error:
             raise UserError(error)
+
+    def _get_procurement_location(self):
+        self.ensure_one()
+        return self.warehouse_id.lot_stock_id  # Location
 
     # TODO: to remove in master
     def _prepare_orderpoint_values(self):
