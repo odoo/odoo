@@ -90,12 +90,10 @@ test("ChatGPT dialog opens in translate mode when clicked on translate button in
 
 test("ChatGPT dialog opens in translate mode when clicked on translate dropdown in toolbar", async () => {
     loadLanguages.installedLanguages = false;
-    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => {
-        return [
-            ["en_US", "English (US)"],
-            ["fr_BE", "French (BE) / Français (BE)"],
-        ];
-    });
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English (US)"],
+        ["fr_BE", "French (BE) / Français (BE)"],
+    ]);
     await setupEditor("<p>te[s]t</p>", {
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
@@ -248,12 +246,10 @@ test("insert the response from ChatGPT alternatives dialog", async () => {
 
 test("insert the response from ChatGPT translate dialog", async () => {
     loadLanguages.installedLanguages = false;
-    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => {
-        return [
-            ["en_US", "English (US)"],
-            ["fr_BE", "French (BE) / Français (BE)"],
-        ];
-    });
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English (US)"],
+        ["fr_BE", "French (BE) / Français (BE)"],
+    ]);
     const { editor, el } = await setupEditor("<p>[Hello]</p>", {
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
