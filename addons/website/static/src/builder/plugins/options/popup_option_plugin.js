@@ -106,8 +106,7 @@ class MoveBlockAction extends BuilderAction {
 class SetBackdropAction extends BuilderAction {
     static id = "setBackdrop";
     isApplied({ editingElement }) {
-        const hasBackdropColor =
-            editingElement.style.getPropertyValue("background-color").trim() === "var(--black-50)";
+        const hasBackdropColor = !!editingElement.style.getPropertyValue("background-color").trim();
         const hasNoBackdropClass = editingElement.classList.contains("s_popup_no_backdrop");
         return hasBackdropColor && !hasNoBackdropClass;
     }

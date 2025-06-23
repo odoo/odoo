@@ -21,14 +21,14 @@
     </BuilderRow>
     <BuilderRow label.translate="Backdrop">
         <BuilderCheckbox id="'popup_backdrop_opt'" action="'setBackdrop'" preview="false"/>
-        <BuilderColorPicker t-if="isActiveItem('popup_backdrop_opt')" styleAction="'background-color'"/>
+        <BuilderColorPicker t-if="isActiveItem('popup_backdrop_opt')" styleAction="'background-color'" enabledTabs="['solid', 'custom']"/>
     </BuilderRow>
 </t>
 
 <t t-name="website.PopupOption">
     <t t-call="website.base_popup_options"/>
     <BuilderRow label.translate="Close Button Color">
-        <BuilderColorPicker styleAction="'color'" applyTo="'.s_popup_close'"/>
+        <BuilderColorPicker styleAction="'color'" applyTo="'.s_popup_close'" enabledTabs="['solid', 'custom']"/>
     </BuilderRow>
     <BuilderRow label.translate="Display">
         <BuilderSelect dataAttributeAction="'display'" preview="false">
