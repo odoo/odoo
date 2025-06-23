@@ -407,9 +407,9 @@ class DiscussChannel(models.Model):
         result = super().write(vals)
         for channel in self:
             new_subchannel_vals = get_vals(channel)
-            for subchannel, vals in new_subchannel_vals.items():
+            for subchannel, values in new_subchannel_vals.items():
                 diff = []
-                for field_name, (value, field_description) in vals.items():
+                for field_name, (value, field_description) in values.items():
                     if value != old_vals[channel][subchannel][field_name][0]:
                         diff.append(field_description)
                 if diff:
