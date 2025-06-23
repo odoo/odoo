@@ -63,7 +63,7 @@ const meetingRoomTemplate = `
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-oe-model="ir.ui.view" data-oe-id="1450" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/button[1]"></button>
                                     <span data-oe-model="ir.ui.view" data-oe-id="1450" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/span[1]">This room is not open right now!</span><br data-oe-model="ir.ui.view" data-oe-id="1450" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/br[1]">
                                     Join us here on the
-                                    <strong itemprop="startDate" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/strong[1]" data-oe-model="event.event" data-oe-id="8" data-oe-field="date_begin" data-oe-type="datetime" data-oe-expression="event.date_begin" data-oe-original="2024-12-16 06:00:00" data-oe-original-with-format="12/16/2024 06:00:00" data-oe-original-tz="Europe/Brussels">Dec 16, 2024, 6:00:00 AM</strong>
+                                    <strong itemprop="startDate" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/strong[1]" data-oe-model="event.event" data-oe-id="8" data-oe-field="date_begin" data-oe-type="datetime" data-oe-expression="event.date_begin" data-oe-original="2024-12-16 06:00:00" data-oe-original-with-format="12/16/2024 06:00:00" data-oe-original-tz="Europe/Brussels">Dec 16, 2024, 6:00:00 AM</strong>
                                     <strong>(Europe/Brussels)</strong>
                                     to have a chat with us!
                                 </div>
@@ -124,7 +124,7 @@ const meetingRoomTemplate = `
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-oe-model="ir.ui.view" data-oe-id="1450" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/button[1]"></button>
                                     <span data-oe-model="ir.ui.view" data-oe-id="1450" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/span[1]">This room is not open right now!</span><br data-oe-model="ir.ui.view" data-oe-id="1450" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/br[1]">
                                     Join us here on the
-                                    <strong itemprop="startDate" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/strong[1]" data-oe-model="event.event" data-oe-id="8" data-oe-field="date_begin" data-oe-type="datetime" data-oe-expression="event.date_begin" data-oe-original="2024-12-16 06:00:00" data-oe-original-with-format="12/16/2024 06:00:00" data-oe-original-tz="Europe/Brussels">Dec 16, 2024, 6:00:00 AM</strong>
+                                    <strong itemprop="startDate" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/strong[1]" data-oe-model="event.event" data-oe-id="8" data-oe-field="date_begin" data-oe-type="datetime" data-oe-expression="event.date_begin" data-oe-original="2024-12-16 06:00:00" data-oe-original-with-format="12/16/2024 06:00:00" data-oe-original-tz="Europe/Brussels">Dec 16, 2024, 6:00:00 AM</strong>
                                     <strong>(Europe/Brussels)</strong>
                                     to have a chat with us!
                                 </div>
@@ -186,7 +186,7 @@ const meetingRoomTemplate = `
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-oe-model="ir.ui.view" data-oe-id="1450" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/button[1]"></button>
                                     <span data-oe-model="ir.ui.view" data-oe-id="1450" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/span[1]">This room is not open right now!</span><br data-oe-model="ir.ui.view" data-oe-id="1450" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/br[1]">
                                     Join us here on the
-                                    <strong itemprop="startDate" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/strong[1]" data-oe-model="event.event" data-oe-id="8" data-oe-field="date_begin" data-oe-type="datetime" data-oe-expression="event.date_begin" data-oe-original="2024-12-16 06:00:00" data-oe-original-with-format="12/16/2024 06:00:00" data-oe-original-tz="Europe/Brussels">Dec 16, 2024, 6:00:00 AM</strong>
+                                    <strong itemprop="startDate" data-oe-xpath="/t[1]/div[1]/div[1]/div[1]/div[1]/t[1]/strong[1]" data-oe-model="event.event" data-oe-id="8" data-oe-field="date_begin" data-oe-type="datetime" data-oe-expression="event.date_begin" data-oe-original="2024-12-16 06:00:00" data-oe-original-with-format="12/16/2024 06:00:00" data-oe-original-tz="Europe/Brussels">Dec 16, 2024, 6:00:00 AM</strong>
                                     <strong>(Europe/Brussels)</strong>
                                     to have a chat with us!
                                 </div>
@@ -256,11 +256,10 @@ test("website_event_meeting_room is started when there is an element .o_wevent_m
 });
 
 test("[click] website_event_meeting_room enable to pin / unpin a room", async () => {
-    onRpc("/web/dataset/call_kw/event.meeting.room/write", async (request) => {
-        const { params } = await request.json();
+    onRpc("event.meeting.room", "write", ({ args }) => {
         expect.step("rpc");
-        expect(params.args[0]).toEqual([3]); // model id
-        expect(params.args[1]).toEqual({ is_pinned: false });
+        expect(args[0]).toEqual([3]); // model id
+        expect(args[1]).toEqual({ is_pinned: false });
         return true;
     });
     await startInteractions(meetingRoomTemplate);
@@ -273,11 +272,10 @@ test("[click] website_event_meeting_room enable to pin / unpin a room", async ()
 });
 
 test("[click] website_event_meeting_room enable to delete a room", async () => {
-    onRpc("/web/dataset/call_kw/event.meeting.room/write", async (request) => {
-        const { params } = await request.json();
+    onRpc("event.meeting.room", "write", ({ args }) => {
         expect.step("rpc");
-        expect(params.args[0]).toEqual([3]); // model id
-        expect(params.args[1]).toEqual({ is_published: false });
+        expect(args[0]).toEqual([3]); // model id
+        expect(args[1]).toEqual({ is_published: false });
         return;
     });
     await startInteractions(meetingRoomTemplate);
@@ -295,10 +293,9 @@ test("[click] website_event_meeting_room enable to delete a room", async () => {
 });
 
 test("[click] website_event_meeting_room enable to duplicate a room", async () => {
-    onRpc("/web/dataset/call_kw/event.meeting.room/copy", async (request) => {
-        const { params } = await request.json();
+    onRpc("event.meeting.room", "copy", ({ args }) => {
         expect.step("rpc");
-        expect(params.args).toEqual([3]); // model id
+        expect(args).toEqual([3]); // model id
         return;
     });
     await startInteractions(meetingRoomTemplate);
