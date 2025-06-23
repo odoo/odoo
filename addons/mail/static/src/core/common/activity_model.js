@@ -35,16 +35,12 @@ export class Activity extends Record {
     attachment_ids;
     /** @type {boolean} */
     can_write;
-    /** @type {'suggest'|'trigger'} */
-    chaining_type;
     create_date = fields.Datetime();
     create_uid = fields.One("res.users");
     date_deadline = fields.Date();
     date_done = fields.Date();
     /** @type {string} */
     display_name;
-    /** @type {boolean} */
-    has_recommended_activities;
     /** @type {string} */
     feedback;
     /** @type {string} */

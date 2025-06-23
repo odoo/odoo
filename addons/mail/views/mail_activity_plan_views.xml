@@ -81,9 +81,7 @@
                                         <field name="delay_count"/>
                                         <field name="delay_unit" string="Unit"/>
                                         <field name="delay_from"/>
-                                        <field name="next_activity_ids"
-                                            widget="many2many_tags"
-                                            invisible="not next_activity_ids"
+                                        <field name="suggested_next_type_id"
                                             options="{
                                                 'no_quick_create': True,
                                                 'on_tag_click': 'open_form',
@@ -102,13 +100,13 @@
                                                     <field name="activity_type_id"/>
                                                 </div>
                                                 <field name="summary"/>
+                                                <field name="responsible_type"/>
                                                 <div>
                                                     <field name="delay_count"/> <field name="delay_unit"/>
                                                     (<field name="delay_from"/>)
                                                 </div>
-                                                <field name="next_activity_ids" widget="many2many_tags" invisible="not next_activity_ids"/>
+                                                <field name="suggested_next_type_id"/>
                                                 <footer class="p-0">
-                                                    <field name="responsible_type"/>
                                                     <field class="ms-auto" name="responsible_id" widget="many2one_avatar_user" readonly="1"/>
                                                 </footer>
                                             </t>

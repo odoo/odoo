@@ -48,19 +48,10 @@ class MailActivityType(models.Model):
     res_model = fields.Selection(selection=_get_model_selection, string="Model",
         help='Specify a model if the activity should be specific to a model'
              ' and not available when managing activities for other models.')
-    triggered_next_type_id = fields.Many2one(
-        'mail.activity.type', string='Trigger', compute='_compute_triggered_next_type_id',
-        inverse='_inverse_triggered_next_type_id', store=True, readonly=False,
-        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]", ondelete='restrict',
-        help="Automatically schedule this activity once the current one is marked as done.")
-    chaining_type = fields.Selection([
-        ('suggest', 'Suggest Next Activity'), ('trigger', 'Trigger Next Activity')
-    ], string="Chaining Type", required=True, default="suggest")
-    suggested_next_type_ids = fields.Many2many(
-        'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id', string='Suggest',
+    suggested_next_type_id = fields.Many2one(
+        'mail.activity.type', string='Suggest Next Activity',
         domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
-        compute='_compute_suggested_next_type_ids', inverse='_inverse_suggested_next_type_ids', store=True, readonly=False,
-        help="Suggest these activities once the current one is marked as done.")
+        help="Suggest this activity once the current one is marked as done.")
     previous_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'recommended_id', 'activity_id',
         domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
@@ -110,32 +101,6 @@ class MailActivityType(models.Model):
         for activity_type in self:
             unit = selection_description_values[activity_type.delay_unit]
             activity_type.delay_label = '%s %s' % (activity_type.delay_count, unit)
-
-    @api.depends('chaining_type')
-    def _compute_suggested_next_type_ids(self):
-        """suggested_next_type_ids and triggered_next_type_id should be mutually exclusive"""
-        for activity_type in self:
-            if activity_type.chaining_type == 'trigger':
-                activity_type.suggested_next_type_ids = False
-
-    def _inverse_suggested_next_type_ids(self):
-        for activity_type in self:
-            if activity_type.suggested_next_type_ids:
-                activity_type.chaining_type = 'suggest'
-
-    @api.depends('chaining_type')
-    def _compute_triggered_next_type_id(self):
-        """suggested_next_type_ids and triggered_next_type_id should be mutually exclusive"""
-        for activity_type in self:
-            if activity_type.chaining_type == 'suggest':
-                activity_type.triggered_next_type_id = False
-
-    def _inverse_triggered_next_type_id(self):
-        for activity_type in self:
-            if activity_type.triggered_next_type_id:
-                activity_type.chaining_type = 'trigger'
-            else:
-                activity_type.chaining_type = 'suggest'
 
     def write(self, vals):
         # Protect some master types against model change when they are used

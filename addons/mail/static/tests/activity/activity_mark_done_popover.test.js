@@ -33,30 +33,6 @@ test("activity mark done popover simplest layout", async () => {
     await contains(".o-mail-ActivityMarkAsDone button:text('Discard')");
 });
 
-test("activity with force next mark done popover simplest layout", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const activityTypeId = pyEnv["mail.activity.type"].create({
-        name: "TriggerType",
-        chaining_type: "trigger",
-    });
-    pyEnv["mail.activity"].create({
-        activity_category: "not_upload_file",
-        activity_type_id: activityTypeId,
-        can_write: true,
-        res_id: partnerId,
-        res_model: "res.partner",
-    });
-    await start();
-    await openFormView("res.partner", partnerId);
-    await click(".btn:text('Mark Done')");
-    await contains(".o-mail-ActivityMarkAsDone");
-    await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
-    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
-    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']", { count: 0 });
-    await contains(".o-mail-ActivityMarkAsDone button:text('Discard')");
-});
-
 test("activity mark done popover mark done without feedback", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});

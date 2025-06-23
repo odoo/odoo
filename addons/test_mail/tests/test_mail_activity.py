@@ -557,7 +557,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         lead_act_attachments = self.lead_act_attachments.with_user(self.user_employee)
         self.assertEqual(len(lead_activities), 4, 'Simulate UI where activities are still displayed even if record removed')
         self.assertEqual(len(lead_act_attachments), 4, 'Simulate UI where activities are still displayed even if record removed')
-        messages, _next_activities = lead_activities._action_done()
+        messages = lead_activities._action_done()
         self.assertEqual(len(messages), 3, 'Should have posted one message / live record')
         self.assertEqual(lead_activities.exists(), lead_activities - self.test_activities_removed, 'Mark done should unlink activities linked to removed records')
         self.assertEqual(lead_activities.exists().mapped('active'), [False] * 3)

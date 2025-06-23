@@ -29,13 +29,9 @@
                                 <field class="oe_inline" name="delay_from"/>
                             </div>
                         </group>
-                        <group name="activity_planning" string="Next Activity">
-                            <field name="chaining_type" invisible="category == 'upload_file'"/>
-                            <field name="triggered_next_type_id" options="{'no_open': True}" context="{'default_res_model': res_model}"
-                                invisible="chaining_type == 'suggest' and category != 'upload_file'"
-                                required="chaining_type == 'trigger' and category != 'upload_file'"/>
-                            <field name="suggested_next_type_ids" widget="many2many_tags" context="{'default_res_model': res_model}"
-                                invisible="chaining_type == 'trigger' or category == 'upload_file'"/>
+                        <group name="activity_planning" string="Next Activity" invisible="category == 'upload_file' and not res_model">
+                            <field name="suggested_next_type_id" string="Default Type" context="{'default_res_model': res_model}"
+                                invisible="category == 'upload_file'"/>
                             <field name="mail_template_ids" widget="many2many_tags"
                                 domain="[('model_id.model', '=', res_model)]"
                                 invisible="not res_model"
@@ -72,9 +68,7 @@
                 <field name="delay_from" string="Type"/>
                 <field name="res_model" column_invisible="context.get('default_res_model')"/>
                 <field name="icon" groups="base.group_no_one"/>
-                <field name="triggered_next_type_id" optional="hide"
-                    string="Triggered Next"/>
-                <field name="suggested_next_type_ids" optional="hide" widget="many2many_tags"
+                <field name="suggested_next_type_id" optional="hide"
                     string="Suggested Next"/>
             </list>
         </field>
@@ -145,14 +139,6 @@
                         <field name="res_model" invisible="1"/>
                         <field name="res_model_id" invisible="1"/>
                         <field name="res_id" invisible="1"/>
-                        <field name="chaining_type" invisible="1"/>
-                        <field name="previous_activity_type_id"/>
-                        <field name="has_recommended_activities"/>
-                    </group>
-                    <group invisible="not has_recommended_activities">
-                        <field name="recommended_activity_type_id" widget="selection_badge"
-                            domain="[('previous_type_ids', '=', previous_activity_type_id)]"
-                            string="Recommended Activities"/>
                     </group>
 
                     <group>
@@ -170,7 +156,7 @@
                             invisible="id" data-hotkey="q"/>
                         <button id="mail_activity_save" string="Save" name="action_close_dialog" type="object" class="btn-primary"
                             invisible="not id" data-hotkey="q"/>
-                        <button invisible="chaining_type == 'trigger'" string="Mark Done" name="action_done"
+                        <button string="Mark Done" name="action_done"
                             type="object" class="btn-secondary" data-hotkey="w"
                             context="{'mail_activity_quick_update': True}"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
