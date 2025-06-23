@@ -101,6 +101,7 @@ class AccountBankStatement(models.Model):
     attachment_ids = fields.Many2many(
         comodel_name='ir.attachment',
         string="Attachments",
+        bypass_search_access=True,
     )
 
     _journal_id_date_desc_id_desc_idx = models.Index("(journal_id, date DESC, id DESC)")

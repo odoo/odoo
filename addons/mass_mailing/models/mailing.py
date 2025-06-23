@@ -118,7 +118,7 @@ class MailingMailing(models.Model):
     is_body_empty = fields.Boolean(compute="_compute_is_body_empty")
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mass_mailing_ir_attachments_rel',
-        'mass_mailing_id', 'attachment_id', string='Attachments')
+        'mass_mailing_id', 'attachment_id', string='Attachments', bypass_search_access=True)
     keep_archives = fields.Boolean(string='Keep Archives')
     campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign', index=True, ondelete='set null')
     medium_id = fields.Many2one(
