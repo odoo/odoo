@@ -225,9 +225,15 @@ export class StyleAction extends BuilderAction {
             return `${color} ${values}${inset ? " inset" : ""}`;
         } else if (
             styleName === "border-width" ||
-            CSS_SHORTHANDS["border-width"].includes(styleName)
+            CSS_SHORTHANDS["border-width"].includes(styleName) ||
+            CSS_SHORTHANDS["border-width"].includes(styleName.substring(6)) ||
+            styleName === "border-radius" ||
+            CSS_SHORTHANDS["border-radius"].includes(styleName) ||
+            CSS_SHORTHANDS["border-radius"].includes(styleName.substring(6))
         ) {
-            let value = getStyleValue(el, styleName);
+            let value = styleName.includes("--box-border")
+                ? getStyleValue(el, styleName.substring(6))
+                : getStyleValue(el, styleName);
             if (value.endsWith("px")) {
                 value = value
                     .split(/\s+/g)
@@ -274,6 +280,22 @@ export class StyleAction extends BuilderAction {
                 value = `text-${match[1]}`;
             }
             this.dependencies.color.colorElement(editingElement, value, "color");
+        } else if (styleName === "--box-border-radius") {
+            this._setStyle(editingElement, styleName, value, params);
+            this._setStyle(
+                editingElement,
+                "border-radius",
+                "var(--box-border-top-left-radius) var(--box-border-top-right-radius) var(--box-border-bottom-right-radius) var(--box-border-bottom-left-radius)",
+                params
+            );
+        } else if (styleName === "--box-border-width") {
+            this._setStyle(editingElement, styleName, value, params);
+            this._setStyle(
+                editingElement,
+                "border-width",
+                "var(--box-border-top-width) var(--box-border-right-width) var(--box-border-bottom-width) var(--box-border-left-width)",
+                params
+            );
         } else {
             this._setStyle(editingElement, styleName, value, params);
         }
