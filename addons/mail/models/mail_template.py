@@ -183,7 +183,7 @@ class MailTemplate(models.Model):
             if self.env[model]._abstract:
                 raise ValidationError(_('You may not define a template on an abstract model: %s', model))
 
-    def _check_can_be_rendered(self, fnames=None):
+    def _check_can_be_rendered(self, fnames=None, render_options=None):
         dynamic_fnames = self._get_dynamic_field_names()
 
         for template in self:
@@ -197,7 +197,7 @@ class MailTemplate(models.Model):
             fnames = fnames & dynamic_fnames if fnames else dynamic_fnames
             for fname in fnames:
                 try:
-                    template._render_field(fname, record.ids)
+                    template._render_field(fname, record.ids, options=render_options)
                 except Exception as e:
                     raise ValidationError(
                         _("Oops! We couldn't save your template due to an issue with this value: %(template_txt)s. Correct it and try again.",
