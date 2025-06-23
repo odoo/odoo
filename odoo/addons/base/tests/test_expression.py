@@ -1474,6 +1474,8 @@ class TestBypassAccess(TransactionExpressionCase):
         states = State.search([('country_id', '=', country_us.id)], limit=2)
         Industry = self.env['res.partner.industry']
         industries = Industry.create([{'name': 'Ind1'}, {'name': 'Ind2'}])
+        Category = self.env['res.partner.category']
+        categories = Category.create([{'name': name} for name in ('foo', 'bar')])
 
         # Create demo data: partners and bank object
         p_a = partner_obj.create({'name': 'test__A', 'industry_id': industries[0].id, 'state_id': states[0].id})
@@ -1485,17 +1487,11 @@ class TestBypassAccess(TransactionExpressionCase):
         b_aa = bank_obj.create({'acc_number': '123', 'acc_type': 'bank', 'partner_id': p_aa.id})
         b_ab = bank_obj.create({'acc_number': '456', 'acc_type': 'bank', 'partner_id': p_ab.id})
         b_ba = bank_obj.create({'acc_number': '789', 'acc_type': 'bank', 'partner_id': p_ba.id})
+        p_a.category_id = categories[0]
+        p_b.category_id = categories[1]
 
         # --------------------------------------------------
-        # Test1: basics about the attribute
-        # --------------------------------------------------
-
-        patch_bypass_search_access(partner_obj, 'category_id', True)
-        with self.assertRaises(AssertionError):
-            partner_obj.search([('category_id.name', '=', 'foo')])
-
-        # --------------------------------------------------
-        # Test2: one2many
+        # Test: one2many
         # --------------------------------------------------
 
         name_test = '12'
@@ -1542,7 +1538,7 @@ class TestBypassAccess(TransactionExpressionCase):
             "bypass_search_access on: ('child_ids.bank_ids.id', 'not in', [..]): incorrect result")
 
         # --------------------------------------------------
-        # Test3: many2one
+        # Test: many2one
         # --------------------------------------------------
         name_test = 'US'
 
@@ -1580,7 +1576,7 @@ class TestBypassAccess(TransactionExpressionCase):
             "bypass_search_access on: ('state_id.country_id.code', 'like', '..') incorrect result")
 
         # --------------------------------------------------
-        # Test4: domain attribute on one2many fields
+        # Test: domain attribute on one2many fields
         # --------------------------------------------------
 
         patch_bypass_search_access(partner_obj, 'child_ids', True)
@@ -1601,9 +1597,19 @@ class TestBypassAccess(TransactionExpressionCase):
             "bypass_search_access on one2many with domains incorrect result")
 
         # ----------------------------------------
-        # Test5: result-based tests
+        # Test: domain attribute on many2many fields
         # ----------------------------------------
 
+        patch_domain(partner_obj, 'category_id', lambda self: [('name', '!=', 'bar')])
+        self.assertIn(p_a, self._search(partner_obj, [('category_id.name', '=', 'foo')]))
+        patch_bypass_search_access(partner_obj, 'category_id', True)
+        self.assertIn(p_a, self._search(partner_obj, [('category_id.name', '=', 'foo')]))
+
+        # ----------------------------------------
+        # Test: result-based tests
+        # ----------------------------------------
+
+        patch_bypass_search_access(partner_obj, 'category_id', False)
         patch_bypass_search_access(partner_obj, 'bank_ids', False)
         patch_bypass_search_access(partner_obj, 'child_ids', False)
         patch_bypass_search_access(partner_obj, 'state_id', False)
@@ -2566,7 +2572,18 @@ class TestMany2many(TransactionCase):
 
     def testbypass_search_access(self):
         self.patch(self.User._fields['group_ids'], 'bypass_search_access', True)
-        with self.assertRaises(AssertionError):
+        with self.assertQueries(['''
+            SELECT "res_users"."id"
+            FROM "res_users"
+            LEFT JOIN "res_partner" AS "res_users__partner_id" ON ("res_users"."partner_id" = "res_users__partner_id"."id")
+            WHERE EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
+                WHERE "res_users__group_ids"."uid" = "res_users"."id" AND "res_users__group_ids"."gid" IN (
+                    SELECT "res_groups"."id" FROM "res_groups" WHERE "res_groups"."name"->>%s IN %s
+                )
+            )
+            ORDER BY "res_users__partner_id"."name"  , "res_users"."login"
+        ''']):
             self.User.search([('group_ids.name', '=', 'foo')])
 
     def test_name_search(self):
