@@ -52,8 +52,7 @@ class PrinterDriver(PrinterDriverBase):
 
     @classmethod
     def supported(cls, device):
-        # discard virtual printers (like "Microsoft Print to PDF") as they will trigger dialog boxes prompt
-        return device['port'] != 'PORTPROMPT:'
+        return True
 
     @staticmethod
     def _compute_device_connection(device):
