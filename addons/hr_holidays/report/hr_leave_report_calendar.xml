@@ -28,11 +28,11 @@
         <field name="model">hr.leave.report.calendar</field>
         <field name="arch" type="xml">
             <form string="Time Off">
-                <sheet class="py-0 pe-0 overflow-hidden">
+                <sheet >
                     <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
                     <widget name="web_ribbon" title="Refused" bg_color="bg-danger" invisible="state != 'refuse'"/>
                     <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
-                    <group>
+                    <group class="py-0 pe-0 overflow-hidden">
                         <field name="name"/>
                         <field name="start_datetime"/>
                         <field name="stop_datetime"/>
