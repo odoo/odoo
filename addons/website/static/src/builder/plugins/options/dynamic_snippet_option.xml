@@ -51,7 +51,13 @@
         </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow id="number_of_records_opt_row" label.translate="Fetched Elements" t-if="!!dynamicOptionParams.domState.filterId or isSingleMode">
-        <BuilderSelect action="'numberOfRecords'" preview="false" id="'number_of_records_opt'">
+        <BuilderSelect action="'numberOfRecords'" preview="false" id="'number_of_records_opt'" customInputComponent="'builderNumberInput'"
+            customInputProps="{
+                min: 1,
+                preview: false,
+                select: true
+            }"
+        >
             <t t-foreach="['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']" t-as="value" t-key="value">
                 <BuilderSelectItem actionParam="value" t-out="value"/>
             </t>
