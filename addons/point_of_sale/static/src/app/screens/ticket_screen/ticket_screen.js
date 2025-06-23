@@ -369,6 +369,11 @@ export class TicketScreen extends Component {
         this.setSelectedOrder(this.pos.getOrder());
     }
 
+    // Used to override inside `pos_blackbox_be` and `pos_urban_piper`
+    async _doneOrder(order) {
+        return;
+    }
+
     postRefund(destinationOrder) {}
 
     setPartnerToRefundOrder(partner, destinationOrder) {
