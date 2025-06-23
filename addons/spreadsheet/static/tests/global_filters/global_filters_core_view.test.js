@@ -53,6 +53,13 @@ test("Value of text filter", () => {
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+        value: [],
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
 });
 
 test("Value of date filter", () => {
@@ -219,6 +226,13 @@ test("Value of relation filter", () => {
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+        value: [],
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
 });
 
 test("Value of boolean filter", () => {
@@ -257,6 +271,13 @@ test("Value of boolean filter", () => {
     result = setGlobalFilterValueWithoutReload(model, {
         id: "1",
         value: false,
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+        value: [],
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
