@@ -629,6 +629,7 @@ class HolidaysType(models.Model):
             ('holiday_status_id', 'in', self.ids),
         ]
         action['context'] = {
+            'employee_id': False,
             'default_holiday_type': 'department',
             'default_holiday_status_id': self.ids[0],
             'search_default_approved_state': 1,
