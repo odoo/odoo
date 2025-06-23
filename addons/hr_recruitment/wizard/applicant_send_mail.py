@@ -10,7 +10,7 @@ class ApplicantSendMail(models.TransientModel):
 
     applicant_ids = fields.Many2many('hr.applicant', string='Applications', required=True)
     author_id = fields.Many2one('res.partner', 'Author', required=True, default=lambda self: self.env.user.partner_id.id)
-    attachment_ids = fields.Many2many('ir.attachment', string='Attachments', readonly=False, store=True)
+    attachment_ids = fields.Many2many('ir.attachment', string='Attachments', readonly=False, store=True, bypass_search_access=True)
 
     @api.depends('subject')
     def _compute_render_model(self):
