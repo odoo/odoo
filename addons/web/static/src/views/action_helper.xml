@@ -24,11 +24,6 @@
                 <t t-else="">
                     <t t-out="props.noContentHelp"/>
                 </t>
-                <t t-if="hasFacets">
-                    <button 
-                        class="btn text-nowrap me-1 btn-primary my-2 o_reset_filter_button"
-                        t-on-click="this.clearFilters">Reset Filters</button>
-                </t>
             </div>    
         </div>
     </t>
