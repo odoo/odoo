@@ -354,10 +354,7 @@ patch(PosStore.prototype, {
         this.computeTableCount(data);
     },
     computeTableCount(data) {
-        const tableIds = data?.table_ids;
-        const tables = tableIds
-            ? this.models["restaurant.table"].readMany(tableIds)
-            : this.models["restaurant.table"].getAll();
+        const tables = this.models["restaurant.table"].getAll();
         const orders = this.getOpenOrders();
         for (const table of tables) {
             const tableOrders = orders.filter(

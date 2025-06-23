@@ -271,10 +271,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async closingSessionNotification(data) {
-        if (
-            parseInt(data.login_number) == this.session.login_number ||
-            this.session.id !== parseInt(data.session_id)
-        ) {
+        if (parseInt(data.login_number) == this.session.login_number) {
             return;
         }
 
