@@ -51,6 +51,7 @@ from urllib3.util import Url, parse_url
 
 import odoo
 from odoo import api
+from odoo import fields
 from odoo.models import BaseModel
 from odoo.exceptions import AccessError
 from odoo.http import BadRequest
@@ -764,6 +765,7 @@ class TransactionCase(BaseCase):
         cls.addClassCleanup(cls.registry.clear_caches)
 
         cls.cr = cls.registry.cursor()
+        cls.cr._now = fields.Datetime.now()
         cls.addClassCleanup(cls.cr.close)
 
         def check_cursor_stack():
