@@ -302,6 +302,20 @@ class AccountWithholdingLine(models.AbstractModel):
             if line.account_id in line._get_valid_liquidity_accounts():
                 raise UserError(line.env._('The account "%(account_name)s" is not valid to use on withholding lines.', account_name=line.account_id.display_name))
 
+    @api.constrains('tax_id')
+    def _constrains_tax_id(self):
+        for line in self.filtered(lambda l: l.account_id == l.company_id.withholding_tax_base_account_id):
+            if any(
+                tax_line.repartition_type == 'tax' and not tax_line.account_id
+                for tax_line in line.tax_id.repartition_line_ids
+            ):
+                raise UserError(
+                    line.env._(
+                        "The tax '%(tax_name)s' used on withholding lines does not have an account set on its tax repartition line.",
+                        tax_name=line.tax_id.display_name,
+                    )
+                )
+
     # ----------------
     # Business methods
     # ----------------
@@ -401,14 +415,15 @@ class AccountWithholdingLine(models.AbstractModel):
             aggregated_amounts['balance'] += to_update['balance']
 
         # Add the base lines.
+        wth_account_id = self.company_id.withholding_tax_base_account_id
         for grouping_key, amounts in aggregated_base_lines.items():
-            aml_create_values_list.append({
+            wh_base_line = {
                 **grouping_key,
                 'name': self.env._('WH Base: %(names)s', names=', '.join(amounts['names'])),
                 'amount_currency': amounts['amount_currency'],
                 'balance': amounts['balance'],
-            })
-            aml_create_values_list.append({
+            }
+            wh_base_counterpart_line = {
                 **grouping_key,
                 'name': self.env._('WH Base Counterpart: %(names)s', names=', '.join(amounts['names'])),
                 'tax_ids': [],
@@ -416,7 +431,12 @@ class AccountWithholdingLine(models.AbstractModel):
                 'analytic_distribution': None,
                 'amount_currency': -amounts['amount_currency'],
                 'balance': -amounts['balance'],
-            })
+            }
+            if wth_account_id and grouping_key['account_id'] != wth_account_id.id:
+                wh_base_line['account_id'] = wth_account_id.id
+                wh_base_counterpart_line['account_id'] = wth_account_id.id
+            aml_create_values_list.append(wh_base_line)
+            aml_create_values_list.append(wh_base_counterpart_line)
 
         return aml_create_values_list
 
@@ -473,7 +493,7 @@ class AccountWithholdingLine(models.AbstractModel):
         def grouping_function(base_line_data, tax_data):
             if not tax_data:
                 return None
-            account = company.withholding_tax_base_account_id or base_line_data['account_id']
+            account = base_line_data['account_id']
             tax = tax_data['tax']
             # Note: keep this aligned with _get_grouping_key
             return {
