@@ -18,7 +18,7 @@ class SlideChannelInvite(models.TransientModel):
     _description = 'Channel Invitation Wizard'
 
     # composer content
-    attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
+    attachment_ids = fields.Many2many('ir.attachment', string='Attachments', bypass_search_access=True)
     send_email = fields.Boolean('Send Email', compute="_compute_send_email", readonly=False, store=True)
     # recipients
     partner_ids = fields.Many2many('res.partner', string='Recipients')

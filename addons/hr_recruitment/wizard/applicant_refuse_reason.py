@@ -34,7 +34,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
     duplicate_applicant_ids_domain = fields.Binary(compute="_compute_duplicate_applicant_ids_domain")
     attachment_ids = fields.Many2many(
         'ir.attachment', string='Attachments',
-        compute="_compute_from_template_id", readonly=False, store=True
+        compute="_compute_from_template_id", readonly=False, store=True, bypass_search_access=True,
     )
     scheduled_date = fields.Char(
         'Scheduled Date',
