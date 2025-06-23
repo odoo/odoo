@@ -1334,3 +1334,19 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pos_order_id = self.env['pos.order'].sync_from_ui([pos_order])['pos.order'][0]['id']
         pos_order = self.env['pos.order'].browse(pos_order_id)
         self.assertFalse(pos_order.account_move.invoice_payment_term_id)
+
+    def test_salesperson_in_quotation_dialog(self):
+        self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'user_id': self.env.uid,
+            'state': 'draft',
+            'order_line': [Command.create({
+                    'name': 'Test Product',
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 100,
+                })
+            ],
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_salesperson_in_quotation_dialog', login="accountman")
