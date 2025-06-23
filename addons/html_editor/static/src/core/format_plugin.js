@@ -4,7 +4,7 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { cleanTextNode, fillEmpty, splitTextNode, unwrapContents } from "../utils/dom";
+import { cleanTextNode, fillEmpty, removeClass, splitTextNode, unwrapContents } from "../utils/dom";
 import {
     areSimilarElements,
     isContentEditable,
@@ -175,7 +175,7 @@ export class FormatPlugin extends Plugin {
             ) {
                 continue;
             }
-            this._formatSelection(format, { applyStyle: false });
+            this.formatSelection(format, { applyStyle: false, removeFormat: true });
         }
         this.dependencies.history.addStep();
     }
@@ -228,9 +228,9 @@ export class FormatPlugin extends Plugin {
         );
     }
 
-    formatSelection(...args) {
-        this.delegateTo("format_selection_overrides", ...args);
-        if (this._formatSelection(...args)) {
+    formatSelection(formatName, options) {
+        this.delegateTo("format_selection_overrides", formatName, options);
+        if (this._formatSelection(formatName, options) && !options?.removeFormat) {
             this.dependencies.history.addStep();
         }
     }
@@ -323,6 +323,9 @@ export class FormatPlugin extends Plugin {
                         parentNode
                     );
                     removeFormat(newLastAncestorInlineFormat, formatSpec);
+                    if (["setFontSizeClassName", "fontSize"].includes(formatName) && applyStyle) {
+                        removeClass(newLastAncestorInlineFormat, "o_default_font_size");
+                    }
                     if (newLastAncestorInlineFormat.isConnected) {
                         inlineAncestors.push(newLastAncestorInlineFormat);
                         currentNode = newLastAncestorInlineFormat;

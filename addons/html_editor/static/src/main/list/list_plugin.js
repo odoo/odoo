@@ -11,6 +11,7 @@ import {
     isProtected,
     isProtecting,
     isShrunkBlock,
+    isVisibleTextNode,
     listElementSelector,
 } from "@html_editor/utils/dom_info";
 import {
@@ -1044,21 +1045,21 @@ export class ListPlugin extends Plugin {
     }
 
     applyColorToListItem(color, mode) {
-        const targetedNodes = new Set(
-            this.dependencies.selection
-                .getTargetedNodes()
-                .map((n) => closestElement(n, "li"))
-                .filter(Boolean)
+        this.dependencies.split.splitSelection();
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const listItems = new Set(
+            targetedNodes.map((n) => closestElement(n, "li")).filter(Boolean)
         );
-        if (!targetedNodes.size || mode !== "color") {
+        if (!listItems.size || mode !== "color") {
             return;
         }
-        for (const list of targetedNodes) {
-            if (this.dependencies.selection.areNodeContentsFullySelected(list)) {
+        const cursors = this.dependencies.selection.preserveSelection();
+        for (const listItem of listItems) {
+            if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
                 for (const node of [
-                    list,
-                    ...descendants(list).filter(
-                        (n) => isElement(n) && closestElement(n, "LI") === list
+                    listItem,
+                    ...descendants(listItem).filter(
+                        (n) => isElement(n) && closestElement(n, "LI") === listItem
                     ),
                 ]) {
                     removeClass(node, "o_default_color");
@@ -1066,34 +1067,58 @@ export class ListPlugin extends Plugin {
                         node.style.color = "";
                     }
                 }
-                const sublists = childNodes(list).filter(isListElement);
-                for (const list of sublists) {
-                    list.classList.add("o_default_color");
+
+                if (color) {
+                    this.dependencies.color.colorElement(listItem, color, mode);
+                    const sublists = childNodes(listItem).filter(isListElement);
+                    for (const list of sublists) {
+                        list.classList.add("o_default_color");
+                    }
                 }
-                this.dependencies.color.colorElement(list, color, mode);
+            } else if (color === "" && listItem.style.color) {
+                const textNodes = targetedNodes.filter(
+                    (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
+                );
+                // Remove inline color from partial selection by
+                // wrapping in font with default color.
+                for (const node of textNodes) {
+                    const font = this.document.createElement("font");
+                    font.classList.add("o_default_color");
+                    node.before(font);
+                    cursors.update(callbacksForCursorUpdate.before(node, font));
+                    font.append(node);
+                    cursors.update(callbacksForCursorUpdate.append(font, node));
+                }
             }
         }
+        cursors.restore();
     }
 
-    applyFormatToListItem(formatName, { formatProps } = {}) {
-        const targetedNodes = new Set(
-            this.dependencies.selection
-                .getTargetedNodes()
-                .map((n) => closestElement(n, "li"))
-                .filter(Boolean)
+    applyFormatToListItem(formatName, { formatProps, applyStyle } = {}) {
+        if (!["setFontSizeClassName", "fontSize"].includes(formatName)) {
+            return;
+        }
+        this.dependencies.split.splitSelection();
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const listItems = new Set(
+            targetedNodes.map((n) => closestElement(n, "li")).filter(Boolean)
         );
-        if (!targetedNodes.size || !["setFontSizeClassName", "fontSize"].includes(formatName)) {
+        if (!listItems.size) {
             return false;
         }
         const listsSet = new Set();
-        for (const listItem of targetedNodes) {
+        const cursors = this.dependencies.selection.preserveSelection();
+        for (const listItem of listItems) {
             // Skip list items with block descendants other than base
-            // container or a list related elements.
-            if (
-                ![...descendants(listItem)]
-                    .filter(isBlock)
-                    .every((n) => n.matches(`${baseContainerGlobalSelector}, ol, ul, li`))
-            ) {
+            // container or a list related elements or no font size formatting
+            // to remove.
+            const hasOnlyBaseBlocks = [...descendants(listItem)]
+                .filter(isBlock)
+                .every((n) => n.matches(`${baseContainerGlobalSelector}, ol, ul, li`));
+            const hasExistingFontSize =
+                FONT_SIZE_CLASSES.some((c) => listItem.classList.contains(c)) ||
+                listItem.style.fontSize;
+            if (!hasOnlyBaseBlocks || (!applyStyle && !hasExistingFontSize)) {
                 continue;
             }
 
@@ -1110,19 +1135,35 @@ export class ListPlugin extends Plugin {
                     }
                 }
 
-                const sublists = childNodes(listItem).filter(isListElement);
-                for (const list of sublists) {
-                    list.classList.add("o_default_font_size");
+                if (applyStyle) {
+                    if (formatName === "setFontSizeClassName") {
+                        listItem.classList.add(formatProps.className);
+                    } else if (formatName === "fontSize") {
+                        listItem.style.fontSize = formatProps.size;
+                    }
+                    const sublists = childNodes(listItem).filter(isListElement);
+                    for (const list of sublists) {
+                        list.classList.add("o_default_font_size");
+                    }
                 }
-
-                if (formatName === "setFontSizeClassName") {
-                    listItem.classList.add(formatProps.className);
-                } else if (formatName === "fontSize") {
-                    listItem.style.fontSize = formatProps.size;
+            } else if (!applyStyle && hasExistingFontSize) {
+                const textNodes = targetedNodes.filter(
+                    (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
+                );
+                // Remove inline font size from partial selection by
+                // wrapping in span with default font size.
+                for (const node of textNodes) {
+                    const span = this.document.createElement("span");
+                    span.classList.add("o_default_font_size");
+                    node.before(span);
+                    cursors.update(callbacksForCursorUpdate.before(node, span));
+                    span.append(node);
+                    cursors.update(callbacksForCursorUpdate.append(span, node));
                 }
             }
             listsSet.add(listItem.parentElement);
         }
+        cursors.restore();
         for (const list of listsSet) {
             this.adjustListPadding(list);
         }
