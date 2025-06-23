@@ -1236,8 +1236,6 @@ class Many2many(_RelationalMulti):
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, relation: str | Sentinel = SENTINEL,
                  column1: str | Sentinel = SENTINEL, column2: str | Sentinel = SENTINEL,
                  string: str | Sentinel = SENTINEL, **kwargs):
-        if 'bypass_search_access' in kwargs:
-            raise NotImplementedError("bypass_search_access is not supported on Many2many fields")
         super().__init__(
             comodel_name=comodel_name,
             relation=relation,
@@ -1658,7 +1656,6 @@ class Many2many(_RelationalMulti):
             ])
 
     def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
-        assert not self.bypass_search_access, f"bypass_search_access not implemented for many2many fields ({self})"
         if coquery.is_empty():
             return SQL("FALSE") if exists else SQL("TRUE")
         rel_table, rel_id1, rel_id2 = self.relation, self.column1, self.column2
