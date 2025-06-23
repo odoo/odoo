@@ -283,19 +283,12 @@ export class KanbanController extends Component {
             addFieldDependencies(activeFields, fields, [{ name: cardColorField, type: "integer" }]);
         }
 
-        // Remove fields aggregator unused to avoid asking them for no reason
-        const aggregateFieldNames = this.progressBarAggregateFields.map((field) => field.name);
-        for (const [key, value] of Object.entries(activeFields)) {
-            if (!aggregateFieldNames.includes(key)) {
-                value.aggregator = null;
-            }
-        }
-
         addFieldDependencies(activeFields, fields, this.progressBarAggregateFields);
         const modelConfig = this.props.state?.modelState?.config || {
             resModel,
             activeFields,
             fields,
+            fieldsToAggregate: this.progressBarAggregateFields.map((field) => field.name),
             openGroupsByDefault: true,
         };
 

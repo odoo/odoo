@@ -46,6 +46,7 @@ import { FetchRecordError } from "./errors";
  * @typedef {SearchParams & {
  *  fields: Record<string, Field>;
  *  activeFields: Record<string, FieldInfo>;
+ *  fieldsToAggregate: string[];
  *  isMonoRecord: boolean;
  *  isRoot: boolean;
  *  resIds?: number[];
@@ -137,6 +138,7 @@ export class RelationalModel extends Model {
         this.config = {
             isMonoRecord: false,
             context: {},
+            fieldsToAggregate: Object.keys(params.config.activeFields), // active fields by default
             ...params.config,
             isRoot: true,
         };
@@ -451,6 +453,7 @@ export class RelationalModel extends Model {
             resModel: config.resModel,
             fields: config.fields,
             activeFields: config.activeFields,
+            fieldsToAggregate: config.fieldsToAggregate,
             offset: 0,
         };
 
@@ -782,9 +785,8 @@ export class RelationalModel extends Model {
                 }
             });
         }
-
         const aggregates = getAggregateSpecifications(
-            pick(config.fields, ...Object.keys(config.activeFields))
+            pick(config.fields, ...config.fieldsToAggregate)
         );
         const currentGroupInfos = getGroupInfo(config.groups);
         const { activeFields, fields } = config;

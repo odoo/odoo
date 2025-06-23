@@ -13187,7 +13187,7 @@ test("Correct values for progress bar with toggling filter and slow RPC", async 
 test("group by numeric field (with aggregator)", async () => {
     onRpc("web_read_group", ({ kwargs }) => {
         expect(kwargs.groupby).toEqual(["int_field"]);
-        expect(kwargs.aggregates).toEqual(["int_field:sum", "float_field:sum"]);
+        expect(kwargs.aggregates).toEqual([]); // No progressbar - no aggregate needed
         expect.step("web_read_group");
     });
     await mountView({
