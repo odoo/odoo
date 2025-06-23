@@ -273,7 +273,7 @@ class Keyword extends Component {
                 "gi"
             );
             this.state.suggestions = [
-                ...new Set(JSON.parse(suggestions).map((word) => word.replace(regex, "").trim())),
+                ...new Set(JSON.parse(suggestions).map((word) => word.replace(regex, "").trim()).filter(Boolean)),
             ];
         });
     }
@@ -291,32 +291,6 @@ class Keyword extends Component {
 
     getBodyText() {
         return this.website.pageDocument.body.textContent;
-    }
-
-    get mentionedIn() {
-        return [
-            this.usedInH1 && "H1",
-            this.usedInH2 && "H2",
-            this.usedInTitle && "Title",
-            this.usedInDescription && "Description",
-            this.usedInContent && "Body",
-        ]
-            .filter(Boolean)
-            .join(", ");
-    }
-
-    get notMentionedIn() {
-        const res = [
-            !this.usedInH1 && "H1",
-            !this.usedInH2 && "H2",
-            !this.usedInTitle && "Title",
-            !this.usedInDescription && "Description",
-            !this.usedInContent && "Body",
-        ].filter(Boolean);
-        if (res.length === 5) {
-            return _t("Not in the page");
-        }
-        return _t(res.join(", "));
     }
 
     get usedInH1() {

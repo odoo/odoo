@@ -22,20 +22,23 @@
 </t>
 
 <t t-name="website.Keyword">
-    <tr>
+    <tr class="o_seo_keyword_row">
         <td><span t-out="props.keyword"></span></td>
-        <td t-out="mentionedIn"></td>
-        <td t-out="notMentionedIn"></td>
+        <td class="text-center o_seo_mentioned_keyword"><i t-if="usedInH1" class="fa fa-check text-success" t-att-title="'&quot;' + props.keyword + '&quot; is used in page first level heading'"/></td>
+        <td class="text-center o_seo_mentioned_keyword"><i t-if="usedInH2" class="fa fa-check text-success" t-att-title="'&quot;' + props.keyword + '&quot; is used in page second level heading'"/></td>
+        <td class="text-center o_seo_mentioned_keyword"><i t-if="usedInTitle" class="fa fa-check text-success" t-att-title="'&quot;' + props.keyword + '&quot; is used in page title'"/></td>
+        <td class="text-center o_seo_mentioned_keyword"><i t-if="usedInDescription" class="fa fa-check text-success" t-att-title="'&quot;' + props.keyword + '&quot; is used in page description'"/></td>
+        <td class="text-center o_seo_mentioned_keyword"><i t-if="usedInContent" class="fa fa-check text-success" t-att-title="'&quot;' + props.keyword + '&quot; is used in page content'"/></td>
         <td class="o_seo_keyword_suggestion">
             <ul class="list-inline mb0">
                 <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion">
-                    <li class="list-inline-item" t-on-click="() => props.addKeyword(suggestion)">
-                        <span class="o_seo_suggestion badge text-bg-info" t-att-title="'Add ' + suggestion" t-esc="suggestion"/>
+                    <li class="list-inline-item me-1 mb-1" t-on-click="() => props.addKeyword(suggestion)">
+                        <span class="o_seo_suggestion badge rounded py-1 text-bg-info" t-att-title="'Add &quot;' + suggestion + '&quot;'" t-esc="suggestion"/>
                     </li>
                 </t>
             </ul>
         </td>
-        <td class="text-center" t-on-click="() => props.removeKeyword(props.keyword)"><a href="#" class="oe_remove" t-att-title="'Remove ' + props.keyword"><i class="fa fa-trash"/></a></td>
+        <td class="text-center" t-on-click="() => props.removeKeyword(props.keyword)"><a href="#" class="oe_remove text-danger" t-att-title="'Remove &quot;' + props.keyword + '&quot;'"><i class="fa fa-trash"/></a></td>
     </tr>
 </t>
 
@@ -120,17 +123,21 @@
 
 <t t-name="website.MetaKeywords">
     <section class="mt-3">
-        <h4>
+        <h4 class="d-inline-block me-1">
             Content Check
         </h4>
+        <i class="fa fa-question-circle text-primary" data-tooltip-position="right" data-tooltip="Add up to 10 relevant keywords"/>
         <hr class="mt-0"/>
-        <div class="table-responsive mt16">
+        <div class="table-responsive mt16" t-if="seoContext.keywords.length">
             <table class="table table-sm">
                 <thead>
                     <tr>
                         <th class="w-25">Keyword</th>
-                        <th class="mention-keyword" title="Used in page first level heading">Mentioned in</th>
-                        <th class="mention-keyword" title="Used in page second level heading">Not mentioned in</th>
+                        <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page first level heading">H1</abbr></th>
+                        <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page second level heading">H2</abbr></th>
+                        <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page title">T</abbr></th>
+                        <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page description">D</abbr></th>
+                        <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page content">C</abbr></th>
                         <th title="Most searched topics related to your keyword, ordered by importance">Content ideas based on Google searches</th>
                         <th class="text-center"></th>
                     </tr>
@@ -138,26 +145,22 @@
                 <t t-foreach="seoContext.keywords" t-as="keyword" t-key="keyword">
                     <Keyword language="state.language" keyword="keyword" addKeyword="(keyword) => this.addKeyword(keyword)" removeKeyword="(keyword) => this.removeKeyword(keyword)"/>
                 </t>
-                <tr>
-                    <td role="form" colspan="3">
-                        <div class="input-group w-auto">
-                            <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? 'Remove a keyword first' : 'Keyword'" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
-                            <select t-if="languages.length > 1" title="The language of the keyword and related keywords."
-                                    t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
-                                <t t-foreach="languages" t-as="lang" t-key="lang[0]">
-                                    <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
-                                </t>
-                            </select>
-                            <button t-on-click="() => this.addKeyword(state.keyword)" t-att-disabled="isFull" class="btn btn-primary" type="button">Add</button>
-                            <button t-if="!seoContext.keywords.length" t-on-click="provideKeywords" class="btn btn-secondary" type="button">
-                                Generate keywords
-                            </button>
-                        </div>
-                    </td>
-                </tr>
             </table>
-            <div t-if="state.errorMessage" class="alert alert-warning" t-out="state.errorMessage"></div>
         </div>
+        <div role="form" class="input-group w-50">
+            <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? 'Remove a keyword first' : 'Add your keyword'" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
+            <select t-if="languages.length > 1" title="The language of the keyword and related keywords."
+                    t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
+                <t t-foreach="languages" t-as="lang" t-key="lang[0]">
+                    <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
+                </t>
+            </select>
+            <button t-on-click="() => this.addKeyword(state.keyword)" t-att-disabled="isFull" class="btn btn-primary" type="button">Add</button>
+            <button t-if="!seoContext.keywords.length" t-on-click="provideKeywords" class="btn btn-secondary" type="button">
+                Generate keywords
+            </button>
+        </div>
+        <div t-if="state.errorMessage" class="alert alert-warning" t-out="state.errorMessage"></div>
     </section>
 </t>
 
