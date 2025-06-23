@@ -72,7 +72,7 @@ class FleetVehicleLogContract(models.Model):
                 name = record.cost_subtype_id.name + ' ' + name
             record.name = name
 
-    @api.depends('vehicle_id')
+    @api.depends('vehicle_id', 'cost_subtype_id')
     def _compute_has_open_contract(self):
         today = fields.Date.today()
         open_contracts = self.env['fleet.vehicle.log.contract'].search([
@@ -80,8 +80,9 @@ class FleetVehicleLogContract(models.Model):
             ('state', '=', 'open'),
             ('expiration_date', '>=', today)
         ])
+        open_contract_keys = {(c.vehicle_id.id, c.cost_subtype_id.id) for c in open_contracts}
         for log_contract in self:
-            log_contract.has_open_contract = log_contract.vehicle_id in open_contracts.vehicle_id
+            log_contract.has_open_contract = (log_contract.vehicle_id.id, log_contract.cost_subtype_id.id) in open_contract_keys
 
     @api.depends('expiration_date', 'state')
     def _compute_days_left(self):
