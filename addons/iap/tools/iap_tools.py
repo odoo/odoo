@@ -44,7 +44,12 @@ _MAIL_PROVIDERS = {
     'asterisk-tech.mn', 'in.com', 'aliceadsl.fr', 'lycos.com', 'topnet.tn', 'teleworm.us', 'kedgebs.com', 'supinfo.com', 'posteo.de',
     'yahoo.com ', 'op.pl', 'gmail.fr', 'grr.la', 'oci.fr', 'aselcis.com', 'optusnet.com.au', 'mailcatch.com', 'rambler.ru', 'protonmail.ch',
     'prisme.ch', 'bbox.fr', 'orbitalu.com', 'netcourrier.com', 'iinet.net.au', 'cegetel.net', 'proton.me', 'dbmail.com', 'club-internet.fr', 'outlook.jp',
+<<<<<<< 2a157ae83856708bccf829478b98b2ce8888faf5
     'eim.ae',
+||||||| 4863c2add3b9e3547336b06901b5bc85fea674a3
+=======
+    'pm.me',
+>>>>>>> 7370b662d1613366e3065c94d35408e05552d5a7
     # Dummy entries
     'example.com',
 }
