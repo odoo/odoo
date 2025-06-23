@@ -304,7 +304,8 @@ export class KanbanController extends Component {
             maxGroupByDepth: 1,
             activeIdsLimit: session.active_ids_limit,
             hooks: {
-                onRecordSaved: this.onRecordSaved.bind(this),
+                onRecordMovedGroup: this.onRecordMovedGroup.bind(this),
+                // onRecordSaved: this.onRecordSaved.bind(this),
             },
         };
     }
@@ -435,6 +436,7 @@ export class KanbanController extends Component {
         } else {
             await this.props.createRecord();
         }
+        // Should we reload progressbar ?
     }
 
     get canCreate() {
@@ -470,13 +472,8 @@ export class KanbanController extends Component {
         return this.isQuickCreateField(list.groupByField);
     }
 
-    onRecordSaved(record) {
-        if (this.model.root.isGrouped) {
-            const group = this.model.root.groups.find((l) =>
-                l.records.find((r) => r.id === record.id)
-            );
-            this.progressBarState?.updateCounts(group);
-        }
+    onRecordMovedGroup(record, sourceGroup, targetGroup) {
+        this.progressBarState?.updateCounts([sourceGroup, targetGroup]);
     }
 
     onPageChangeScroll() {

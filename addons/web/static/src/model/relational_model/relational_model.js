@@ -96,6 +96,8 @@ const DEFAULT_HOOKS = {
     onWillSetInvalidField: () => {},
     /** @type {(record: RelationalRecord) => any} */
     onRecordChanged: () => {},
+    /** @type {(record: RelationalRecord, sourceGroup: Group, targetGroup: Group) => any} */
+    onRecordMovedGroup: () => {},
 };
 
 rpcBus.addEventListener("RPC:RESPONSE", (ev) => {

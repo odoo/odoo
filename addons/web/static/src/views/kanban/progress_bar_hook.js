@@ -190,41 +190,72 @@ class ProgressBarState {
             })
         );
         if (this._aggregateFields.length) {
-            proms.push(this._updateAggregateGroup(group, bars, nextActiveBar));
+            proms.push(this._updateAggregatesBars([group], [bars], [nextActiveBar]));
         }
         await Promise.all(proms);
         this.activeBars[group.serverValue] = nextActiveBar;
-        this.updateCounts(group);
     }
 
-    _updateAggregateGroup(group, bars, activeBar) {
-        const filterDomain = _createFilterDomain(
-            this.progressAttributes.fieldName,
-            bars,
-            activeBar.value
-        );
+    _updateAggregatesBars(groups, groupsBars, activeBars) {
+        const domain = Domain.or(
+            groups.map((group, i) => {
+                const bars = groupsBars[i];
+                const activeBar = activeBars[i];
+                const filterDomain = _createFilterDomain(
+                    this.progressAttributes.fieldName,
+                    bars,
+                    activeBar.value
+                );
+                return filterDomain
+                    ? Domain.and([group.groupDomain, filterDomain]).toList()
+                    : group.groupDomain;
+            })
+        ).toList();
+
         const { context, fields, groupBy, resModel } = this.model.root;
         const kwargs = { context };
         const aggregateSpecs = getAggregateSpecifications(fields);
-        const domain = filterDomain
-            ? Domain.and([group.groupDomain, filterDomain]).toList()
-            : group.groupDomain;
         return this.model.orm
             .formattedReadGroup(resModel, domain, groupBy, aggregateSpecs, kwargs)
-            .then((groups) => {
-                if (groups.length) {
-                    const groupByField = group.groupByField;
-                    const aggrValues = _groupsToAggregateValues(groups, groupBy, fields, domain);
-                    activeBar.aggregates = _findGroup(aggrValues, groupByField, group.serverValue);
+            .then((resGroups) => {
+                const aggrValues = _groupsToAggregateValues(resGroups, groupBy, fields, domain);
+                for (const resGroup of resGroups) {
+                    const rawValue = Array.isArray(resGroup[groupBy])
+                        ? resGroup[groupBy][0]
+                        : resGroup[groupBy];
+                    const i = groups.findIndex((g) => g.serverValue === rawValue);
+                    activeBars[i].aggregates = _findGroup(
+                        aggrValues,
+                        groups[i].groupByField,
+                        groups[i].serverValue
+                    );
                 }
             });
     }
 
-    updateCounts(group) {
-        this._updateProgressBar();
+    updateCounts(groupsToReload) {
+        this._updateProgressBars(groupsToReload);
         if (this._aggregateFields.length) {
-            this._updateAggregates();
-            this.updateAggregateGroup(group);
+            // Update aggregates without taking in account the bar selection
+            this._updateAggregates(groupsToReload);
+
+            const updateAggregatesGroups = [];
+            const updateAggregatesGroupsBars = [];
+            const updateAggregatesActiveBars = [];
+            for (const group in groupsToReload) {
+                if (this.activeBars[group.serverValue]) {
+                    updateAggregatesGroups.push(group);
+                    updateAggregatesGroupsBars.push(this.getGroupInfo(group).bars);
+                    updateAggregatesActiveBars.push(this.activeBars[group.serverValue]);
+                }
+            }
+            if (updateAggregatesGroups.length > 0) {
+                this._updateAggregatesBars(
+                    updateAggregatesGroups,
+                    updateAggregatesGroupsBars,
+                    updateAggregatesActiveBars
+                );
+            }
         }
 
         // If the selected bar is empty, remove the selection
@@ -235,62 +266,68 @@ class ProgressBarState {
         }
     }
 
-    updateAggregateGroup(group) {
-        if (group && this.activeBars[group.serverValue]) {
-            const { bars } = this.getGroupInfo(group);
-            this._updateAggregateGroup(group, bars, this.activeBars[group.serverValue]);
-        }
-    }
-
-    async _updateAggregates() {
-        const { context, fields, groupBy, domain, resModel } = this.model.root;
+    async _updateAggregates(groupsToReload) {
+        const { context, fields, groupBy, resModel } = this.model.root;
         const kwargs = { context };
+        const groupsDomain = Domain.or(groupsToReload.map((g) => g.groupDomain)).toList();
         const groups = await this.model.orm.formattedReadGroup(
             resModel,
-            domain,
+            groupsDomain,
             groupBy,
             getAggregateSpecifications(this._aggregateFields),
             kwargs
         );
-        this._aggregateValues = _groupsToAggregateValues(groups, groupBy, fields);
+        const updatedAggregateValues = _groupsToAggregateValues(groups, groupBy, fields);
+        const groupByFieldName = groupBy[0].split(":")[0];
+        for (const updatedAggregateValue of updatedAggregateValues) {
+            const index = this._aggregateValues.findIndex(
+                (aggregateValue) =>
+                    aggregateValue[groupByFieldName] === updatedAggregateValue[groupByFieldName]
+            );
+            if (index !== -1) {
+                this._aggregateValues[index] = updatedAggregateValue;
+            } else {
+                this._aggregateValues.push(updatedAggregateValue);
+            }
+        }
     }
 
-    async _updateProgressBar() {
-        const groupBy = this.model.root.groupBy;
-        if (groupBy.length) {
-            const resModel = this.model.root.resModel;
-            const domain = this.model.root.domain;
-            const context = this.model.root.context;
-            const { colors, fieldName: field, help } = this.progressAttributes;
-            const groupsId = this.model.root.groups.map((g) => g.id).join();
-            const res = await this.model.orm.call(resModel, "read_progress_bar", [], {
-                domain,
-                group_by: groupBy[0],
-                progress_bar: { colors, field, help },
-                context,
-            });
-            if (groupsId !== this.model.root.groups.map((g) => g.id).join()) {
-                return;
-            }
-            this._pbCounts = res;
-            for (const group of this.model.root.groups) {
-                if (!group.isFolded) {
-                    const groupInfo = this.getGroupInfo(group);
-                    const groupValue = this._getGroupValue(group);
-                    const counts = res[groupValue];
-                    for (const bar of groupInfo.bars) {
-                        bar.count = (counts && counts[bar.value]) || 0;
-                    }
-                    groupInfo.bars.find((b) => b.value === FALSE).count = counts
-                        ? group.count - Object.values(counts).reduce((a, b) => a + b, 0)
-                        : group.count;
+    async _updateProgressBars(groupsToReload) {
+        const resModel = this.model.root.resModel;
+        const domain = Domain.or(groupsToReload.map((g) => g.groupDomain)).toList();
+        const context = this.model.root.context;
+        const { colors, fieldName: field, help } = this.progressAttributes;
+        const groupsId = this.model.root.groups.map((g) => g.id).join();
+        const res = await this.model.orm.call(resModel, "read_progress_bar", [], {
+            domain,
+            group_by: this.model.root.groupBy[0],
+            progress_bar: { colors, field, help },
+            context,
+        });
+        if (groupsId !== this.model.root.groups.map((g) => g.id).join()) {
+            return;
+        }
+        this._pbCounts = Object.assign(this._pbCounts || {}, res);
 
-                    if (this.activeBars[group.serverValue]) {
-                        this.activeBars[group.serverValue].count = groupInfo.bars.find(
-                            (x) => x.value === this.activeBars[group.serverValue].value
-                        ).count;
-                    }
-                }
+        const idsReloaded = groupsToReload.map((g) => g.id);
+        for (const group of this.model.root.groups) {
+            if (group.isFolded || !idsReloaded.includes(group.id)) {
+                continue;
+            }
+            const groupInfo = this.getGroupInfo(group);
+            const groupValue = this._getGroupValue(group);
+            const counts = res[groupValue];
+            for (const bar of groupInfo.bars) {
+                bar.count = (counts && counts[bar.value]) || 0;
+            }
+            groupInfo.bars.find((b) => b.value === FALSE).count = counts
+                ? group.count - Object.values(counts).reduce((a, b) => a + b, 0)
+                : group.count;
+
+            if (this.activeBars[group.serverValue]) {
+                this.activeBars[group.serverValue].count = groupInfo.bars.find(
+                    (x) => x.value === this.activeBars[group.serverValue].value
+                ).count;
             }
         }
     }
