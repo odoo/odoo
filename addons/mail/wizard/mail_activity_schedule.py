@@ -82,7 +82,6 @@ class MailActivitySchedule(models.TransientModel):
     activity_user_id = fields.Many2one(
         'res.users', 'Assigned to', compute='_compute_activity_user_id',
         readonly=False, store=True)
-    chaining_type = fields.Selection(related='activity_type_id.chaining_type', readonly=True)
     # used in both (plan- and activity- based)
     activity_user_id_fname = fields.Char('User Field', help="Field name of the user to choose on the record")
 
@@ -225,32 +224,6 @@ class MailActivitySchedule(models.TransientModel):
 
                 # append main line before handling next activities
                 schedule_line_values_list.append(schedule_line_values)
-
-                activity_type = template.activity_type_id
-                if activity_type.triggered_next_type_id:
-                    next_activity = activity_type.triggered_next_type_id
-                    schedule_line_values = {
-                        'line_description': next_activity.summary or next_activity.name,
-                        'responsible_user_id': next_activity.default_user_id.id or False
-                    }
-                    if activity_date_deadline:
-                        schedule_line_values['line_date_deadline'] = next_activity.with_context(
-                            activity_previous_deadline=activity_date_deadline
-                        )._get_date_deadline()
-
-                    schedule_line_values_list.append(schedule_line_values)
-                elif activity_type.suggested_next_type_ids:
-                    for suggested in activity_type.suggested_next_type_ids:
-                        schedule_line_values = {
-                            'line_description': suggested.summary or suggested.name,
-                            'responsible_user_id': suggested.default_user_id.id or False,
-                        }
-                        if activity_date_deadline:
-                            schedule_line_values['line_date_deadline'] = suggested.with_context(
-                                activity_previous_deadline=activity_date_deadline
-                            )._get_date_deadline()
-
-                        schedule_line_values_list.append(schedule_line_values)
 
                 scheduler.plan_schedule_line_ids = [(5,)] + [(0, 0, values) for values in schedule_line_values_list]
 

@@ -7,7 +7,6 @@
             <field name="arch" type="xml">
                 <form>
                     <field name="activity_category" invisible="1"/>
-                    <field name="chaining_type" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="has_error" invisible="1"/>
                     <field name="has_warning" invisible="1"/>
@@ -67,7 +66,7 @@
                         <button name="action_schedule_activities" string="Save" type="object" class="btn-primary"
                                 invisible="has_error" data-hotkey="q"/>
                         <button name="action_schedule_activities_done" string="Mark Done" type="object"
-                            invisible="has_error or chaining_type == 'trigger'"
+                            invisible="has_error"
                             class="btn-secondary"  data-hotkey="w"
                             context="{'mail_activity_quick_update': True}"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>

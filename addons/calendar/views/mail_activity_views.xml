@@ -19,7 +19,7 @@
                   <attribute name="invisible">activity_category != 'phonecall' and not id</attribute>
             </xpath>
             <xpath expr="//button[@name='action_done']" position="attributes">
-                  <attribute name="invisible">activity_category == 'meeting' or chaining_type == 'trigger'</attribute>
+                  <attribute name="invisible">activity_category == 'meeting'</attribute>
             </xpath>
             <xpath expr="//field[@name='note']" position="attributes">
                   <attribute name="invisible">activity_category == 'meeting'</attribute>
