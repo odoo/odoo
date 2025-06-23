@@ -257,21 +257,22 @@
                                 </group>
                             </page>
                             <page name="payroll_information" string="Payroll" groups="hr.group_hr_user">
+                                <field name="currency_id" invisible="1"/>
                                 <group name="payroll_group">
                                     <group name="contract" string="Contract Overview" groups="hr.group_hr_user">
                                         <label for="contract_date_start" string="Contract"/>
                                         <div class="o_row" name="contract_dates">
                                             <field name="contract_date_start" string="Start Date" placeholder="Not Employed" class="o_hr_narrow_field me-3"/>to
-                                            <field name="contract_date_end" string="End Date" placeholder="Indefinite" 
+                                            <field name="contract_date_end" string="End Date" placeholder="Indefinite"
                                                 class="o_hr_narrow_field ms-3" invisible="not contract_date_start"/>
-                                                <button name="action_new_contract" type="object" string="New Contract" class="btn btn-link p-0 ms-auto"
-                                                    invisible="not contract_date_start and not contract_date_end"/>
-                                            </div>
-                                            <label for="wage"/>
-                                            <div class="o_row" name="wage">
-                                                <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
-                                                <div class="mb-3" name="wage_period_label">/ month</div>
-                                                <button name="%(hr_version_wizard_action)d" type="action" string="Load a Template" class="btn btn-link p-0 ms-auto"/>
+                                            <button name="action_new_contract" type="object" string="New Contract" class="btn btn-link p-0 ms-auto"
+                                                invisible="not contract_date_start and not contract_date_end"/>
+                                        </div>
+                                        <label for="wage"/>
+                                        <div class="o_row" name="wage">
+                                            <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                                            <div class="mb-3" name="wage_period_label">/ month</div>
+                                            <button name="%(hr_version_wizard_action)d" type="action" string="Load a Template" class="btn btn-link p-0 ms-auto"/>
                                         </div>
                                         <field name="employee_type"/>
                                         <label for="contract_type_id" string="Contract Type"/>
@@ -281,19 +282,15 @@
                                             <field name="structure_type_id" class="oe_inline" nolabel="1" placeholder="Salary Structure Type"
                                                     domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                                         </div>
-                                        <separator string="Schedule"/>
+
+                                        <separator name="schedule" string="Schedule"/>
                                         <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
                                         <field name="tz" required="id"/>
                                     </group>
                                 </group>
-                                <group name="payroll_localization">
-                                    <group name="yearly_benefits" string="Benefits" invisible="1">
-                                    </group>
-
-                                </group>
                             </page>
                             <page name="hr_settings" string="Settings" groups="hr.group_hr_user">
-                                <group>
+                                <group name="settings_group">
                                     <group string="User" name="user">
                                         <field name="user_id" string="User" placeholder="Not linked to an user"
                                             domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
@@ -321,8 +318,6 @@
                                             groups="!base.group_erp_manager"
                                             options="{'no_open': True}"/>
                                     </group>
-                                </group>
-                                <group>
                                     <group name="application_group" string="Application Settings" invisible="1"/>
                                     <group string="Attendance/Point of Sale" name="identification_group">
                                         <field name="pin" string="PIN Code"/>
@@ -333,8 +328,6 @@
                                             <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" invisible="not barcode"/>
                                         </div>
                                     </group>
-                                </group>
-                                <group>
                                     <group name="managers" string="Approvers">
                                         <field name="hr_responsible_id" widget="many2one_avatar_user"/>
                                     </group>
