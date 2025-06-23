@@ -175,8 +175,15 @@ class ProductTemplate(models.Model):
     # Properties
     product_properties = fields.Properties('Properties', definition='categ_id.product_properties_definition', copy=True)
 
+    def _base_domain_item_ids(self):
+        return [
+            '|',
+            ('pricelist_id', '=', False),
+            ('pricelist_id.active', '=', True),
+        ]
+
     def _domain_pricelist_rule_ids(self):
-        return []
+        return self._base_domain_item_ids()
 
     @api.depends('type')
     def _compute_service_tracking(self):
