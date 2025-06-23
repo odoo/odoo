@@ -1,5 +1,6 @@
 import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
+import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -41,6 +42,25 @@ const storePatch = {
             chatWindow.open({ focus: true, jumpToNewMessage: true });
         });
         return true;
+    },
+    get livechatStatusButtons() {
+        return [
+            {
+                label: _t("In progress"),
+                status: "in_progress",
+                icon: "fa fa-commenting-o",
+            },
+            {
+                label: _t("Waiting for customer"),
+                status: "waiting",
+                icon: "fa fa-hourglass-o",
+            },
+            {
+                label: _t("Looking for help"),
+                status: "need_help",
+                icon: "fa fa-exclamation",
+            },
+        ];
     },
     /**
      * @override

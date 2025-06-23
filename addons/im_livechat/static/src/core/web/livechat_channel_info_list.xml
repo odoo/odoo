@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="im_livechat.channelInfoList">
+    <t t-name="im_livechat.LivechatChannelInfoList">
         <ActionPanel title.translate="Information" minWidth="200" initialWidth="250" icon="'fa fa-info'">
-            <div t-if="!props.thread.livechat_end_dt or props.thread.livechat_status" class="d-flex flex-column bg-inherit gap-1">
+            <div t-if="!props.thread.livechat_end_dt" class="o-livechat-LivechatChannelInfoList d-flex flex-column bg-inherit gap-1">
                 <h3 class="pt-3">Status</h3>
-                <t t-foreach="statusButtons" t-as="btn" t-key="btn.status">
-                    <button
-                        class="flex btn btn-sm px-1 btn-secondary rounded-3 gap-1"
-                        t-att-class="{
-                            'active': props.thread.livechat_status === btn.status,
-                            'btn-warning': props.thread.livechat_status === btn.status and btn.status === 'waiting',
-                            'btn-info': props.thread.livechat_status === btn.status and btn.status === 'need_help',
-                        }"
-                        t-on-click="() => this.updateLivechatStatus(btn.status)"
-                    >
-                        <i t-att-class="btn.icon"/>
-                        <span class="ms-2 text-truncate" t-esc="btn.label"/>
-                    </button>
+                <t t-call="im_livechat.LivechatStatusSelection">
+                    <t t-set="livechatThread" t-value="props.thread"/>
                 </t>
             </div>
             <div class="d-flex flex-column bg-inherit gap-1">
