@@ -619,15 +619,6 @@ class AccountMove(models.Model):
         compute='_compute_is_being_sent'
     )
 
-    move_sent_values = fields.Selection(
-        selection=[
-            ('sent', 'Sent'),
-            ('not_sent', 'Not Sent'),
-        ],
-        string='Sent',
-        compute='compute_move_sent_values',
-        search='_search_move_sent_values',
-    )
     invoice_user_id = fields.Many2one(
         string='Salesperson',
         comodel_name='res.users',
@@ -794,19 +785,6 @@ class AccountMove(models.Model):
     def _compute_is_being_sent(self):
         for move in self:
             move.is_being_sent = bool(move.sending_data)
-
-    @api.depends('is_move_sent')
-    def compute_move_sent_values(self):
-        for move in self:
-            move.move_sent_values = 'sent' if move.is_move_sent else 'not_sent'
-
-    def _search_move_sent_values(self, operator, value):
-        if operator in ('=', '!='):
-            if value == 'sent':
-                return [('is_move_sent', operator, True)]
-            if value == 'not_sent':
-                return [('is_move_sent', operator, False)]
-        raise NotImplementedError
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
