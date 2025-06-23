@@ -26,7 +26,7 @@ export class ChatHub extends Component {
         this.ui = useService("ui");
         this.busMonitoring = useService("bus.monitoring_service");
         this.bubblesHover = useHover("bubbles");
-        this.moreHover = useHover(["more-button", "more-menu*"], {
+        this.moreHover = useHover(["more-button", "more-menu"], {
             onHover: () => (this.more.isOpen = true),
             onAway: () => (this.more.isOpen = false),
         });

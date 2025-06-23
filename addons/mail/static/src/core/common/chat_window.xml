@@ -150,9 +150,24 @@
 </t>
 
 <t t-name="mail.ThreadActionsAsDropdownContent.action">
-    <DropdownItem class="'btn d-flex align-items-baseline m-0 ' + (env.inChatWindow ? 'o-mail-ChatWindow-command rounded-0 p-2' : ('rounded-3 px-2 py-1 bg-200 ' + (!action_first ? 'rounded-top-0' : !action_last ? 'rounded-bottom-0' : '')))" onSelected="() => action.onSelect()">
-        <i t-att-class="action.icon"/>
-        <span t-att-class="{ 'mx-2': env.inChatWindow, 'mx-1': !env.inChatWindow }" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
+    <t t-if="action.dropdown">
+        <Dropdown menuClass="action.dropdown.menuClass">
+            <t t-call="mail.ThreadActionsAsDropdownContent.actionMain"/>
+            <t t-set-slot="content">
+                <t t-call="{{ action.dropdown.template }}"/>
+            </t>
+        </Dropdown>
+    </t>
+    <t t-else="" t-call="mail.ThreadActionsAsDropdownContent.actionMain"/>
+</t>
+
+<t t-name="mail.ThreadActionsAsDropdownContent.actionMain">
+    <DropdownItem class="'btn d-flex align-items-center m-0 gap-0 ' + (env.inChatWindow ? 'o-mail-ChatWindow-command rounded-0 p-2' : ('rounded-3 px-2 py-1 bg-200 ' + (!action_first ? 'rounded-top-0' : !action_last ? 'rounded-bottom-0' : '')))" onSelected="() => action.onSelect()">
+        <t t-if="action.icon?.template" t-call="{{ action.icon.template }}">
+            <t t-set="templateParams" t-value="action.icon.params"/>
+        </t>
+        <i t-else="" class="me-1" t-att-class="action.icon"/>
+        <span t-att-class="{ 'ms-1 me-2': env.inChatWindow, 'mx-1': !env.inChatWindow }" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
     </DropdownItem>
 </t>
 

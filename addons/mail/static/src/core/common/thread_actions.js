@@ -112,11 +112,23 @@ function transformAction(component, id, action) {
         get disabledCondition() {
             return action.disabledCondition?.(component);
         },
-        /** Icon for the button this action. */
+        /** Determines whether this action opens a dropdown on selection. Value is shaped { template, menuClass } */
+        dropdown: action.dropdown,
+        /**
+         * Icon for the button this action.
+         * - When a string, this is considered an icon as classname (.fa and .oi).
+         * - When an object with property `template`, this is an icon rendered in template.
+         *   Template params are provided in `params` and passed to template as a `t-set="templateParams"`
+         */
         get icon() {
             return typeof action.icon === "function" ? action.icon(component) : action.icon;
         },
-        /** Large icon for the button this action. */
+        /**
+         * Large icon for the button this action.
+         * - When a string, this is considered an icon as classname (.fa and .oi).
+         * - When an object with property `template`, this is an icon rendered in template.
+         *   Template params are provided in `params` and passed to template as a `t-set="templateParams"`
+         */
         get iconLarge() {
             return typeof action.iconLarge === "function"
                 ? action.iconLarge(component)

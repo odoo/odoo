@@ -1,11 +1,14 @@
 import {
+    Component,
     onMounted,
     onPatched,
     onWillUnmount,
+    toRaw,
     useComponent,
     useEffect,
     useRef,
     useState,
+    xml,
 } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -13,6 +16,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
+import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -102,11 +106,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
             targets.push({ ref: refName });
             continue;
         }
-        targets.push({
-            ref: refName.endsWith("*")
-                ? useRef(refName.substring(0, refName.length - 1))
-                : useRef(refName),
-        });
+        targets.push({ ref: useRef(refName) });
     }
     const state = useState({
         set isHover(newIsHover) {
@@ -119,8 +119,25 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
             void this._count;
             return this._isHover;
         },
+        _contains: [],
         _count: 0,
         _isHover: false,
+        _targets: targets,
+        addTarget(target) {
+            state._targets.push(target);
+            const handleMouseenter = (ev) => onmouseenter(ev);
+            const handleMouseleave = (ev) => onmouseleave(ev);
+            target.ref.el.addEventListener("mouseenter", handleMouseenter, true);
+            target.ref.el.addEventListener("mouseleave", handleMouseleave, true);
+            return () => {
+                target.ref.el.removeEventListener("mouseenter", handleMouseenter, true);
+                target.ref.el.removeEventListener("mouseleave", handleMouseleave, true);
+                const idx = state._targets.findIndex((t) => t === target);
+                if (idx) {
+                    state._targets.splice(idx, 1);
+                }
+            };
+        },
     });
     function setHover(hovering) {
         if (hovering && !wasHovering) {
@@ -152,7 +169,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
         if (state.isHover) {
             return;
         }
-        for (const target of targets) {
+        for (const target of toRaw(state)._targets) {
             if (!target.ref.el) {
                 continue;
             }
@@ -162,16 +179,27 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
                 return;
             }
         }
+        for (const contains of state._contains) {
+            if (contains(ev.target)) {
+                setHover(true);
+                return;
+            }
+        }
     }
     function onmouseleave(ev) {
         if (!state.isHover) {
             return;
         }
-        for (const target of targets) {
+        for (const target of toRaw(state._targets)) {
             if (!target.ref.el) {
                 continue;
             }
             if (target.ref.el.contains(ev.relatedTarget)) {
+                return;
+            }
+        }
+        for (const contains of state._contains) {
+            if (contains(ev.relatedTarget)) {
                 return;
             }
         }
@@ -206,6 +234,31 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
         }, stateObserver);
     }
     return state;
+}
+
+export class UseHoverOverlay extends Component {
+    static props = ["slots", "hover"];
+    static template = xml`<div t-ref="root"><t t-slot="default"/></div>`;
+
+    setup() {
+        super.setup();
+        this.root = useRef("root");
+        const overlayContains = toRaw(this.env[OVERLAY_SYMBOL].contains);
+        let removeTarget;
+        onMounted(() => {
+            this.props.hover._contains.push(overlayContains);
+            removeTarget = this.props.hover.addTarget({
+                ref: { el: this.root.el.closest(".o-overlay-item") },
+            });
+        });
+        onWillUnmount(() => {
+            const idx = this.props.hover._contains.find((c) => c === overlayContains);
+            if (idx) {
+                this.props.hover._contains.splice(idx, 1);
+            }
+            removeTarget?.();
+        });
+    }
 }
 
 /**

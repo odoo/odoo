@@ -17,7 +17,7 @@ export class Mailbox extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.hover = useHover(["root", "floating*"], {
+        this.hover = useHover(["root", "floating"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.floating.isOpen = true;

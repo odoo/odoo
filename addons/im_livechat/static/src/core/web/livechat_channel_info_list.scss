@@ -1,0 +1,37 @@
+.o-livechat-LivechatStatusSelection {
+    button {
+        border-color: transparent !important;
+        &:not(.active):not(:hover) {
+            span, i {
+                opacity: 65%;
+            }
+        }
+        &.o-inProgress {
+            --btn-active-border-color: #{rgba($o-action, .5)};
+            --btn-active-bg: #{$o-view-background-color};
+        }
+    }
+}
+
+.o-livechat-LivechatStatusLabel-bubble {
+    --oi-font-size: 1.75em;
+    &.o-info {
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, .75), 0px 0px 1px $o-info;
+    }
+    &.o-warning {
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, .75), 0px 0px 1px $o-warning;
+    }
+    &.o-white {
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, .75), 0px 0px 1px $o-view-background-color;
+    }
+}
+
+.o-livechat-LivechatStatusLabel-icon {
+    &.o-info {
+        color: white !important;
+        text-shadow: 0px 0px 3px rgba(0, 0, 0, .5) !important;
+    }
+    &.o-warning, &.o-white {
+        color: rgba(0, 0, 0, .75) !important;
+    }
+}
