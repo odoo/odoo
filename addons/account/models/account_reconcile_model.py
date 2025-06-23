@@ -2,7 +2,7 @@
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountReconcileModelLine(models.Model):
@@ -84,11 +84,6 @@ class AccountReconcileModel(models.Model):
     _order = 'sequence, id'
     _check_company_auto = True
 
-    _name_unique = models.Constraint(
-        'unique(name, company_id)',
-        'A reconciliation model already bears this name.',
-    )
-
     # Base fields.
     active = fields.Boolean(default=True)
     name = fields.Char(string='Name', required=True, translate=True)
@@ -148,6 +143,26 @@ class AccountReconcileModel(models.Model):
                     re.compile(record.match_label_param)
                 except re.error:
                     raise UserError(_('The regex is not valid'))
+
+    @api.constrains('company_id', 'name', 'match_label', 'match_label_param')
+    def _check_unique_match_label_param(self):
+        for model in self:
+            domain = [
+                ('id', '!=', model.id),
+                ('company_id', '=', model.company_id.id),
+                ('name', '=ilike', model.name),
+            ]
+            if model.match_label:
+                domain.append(('match_label', '=', model.match_label))
+                if model.match_label == 'match_regex':
+                    domain.append(('match_label_param', '=', model.match_label_param))
+                else:
+                    domain.append(('match_label_param', '=ilike', model.match_label_param))
+            else:
+                domain.append(('match_label', '=', False))
+
+            if self.search_count(domain) > 0:
+                raise ValidationError(_("A reconciliation model already bears this configuration."))
 
     @api.depends('mapped_partner_id', 'match_label', 'match_partner_ids', 'trigger')
     def _compute_can_be_proposed(self):
