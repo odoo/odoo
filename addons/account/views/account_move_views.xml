@@ -522,7 +522,7 @@
                     <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" readonly="state != 'draft'" string="Bill Date" decoration-warning="abnormal_date_warning"/>
                     <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" readonly="state != 'draft'" string="Invoice Date" decoration-warning="abnormal_date_warning"/>
                     <field name="date" optional="hide" string="Accounting Date" readonly="state in ['cancel', 'posted']"/>
-                    <field name="invoice_date_due" widget="remaining_days" optional="show" invisible="payment_state in ('paid', 'in_payment', 'reversed') or state == 'cancel'"/>
+                    <field name="invoice_date_due" widget="remaining_days" optional="show" invisible="payment_state in ('paid', 'in_payment', 'reversed')"/>
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
                     <field name="payment_reference" optional="hide" column_invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')"/>
                     <field name="ref" optional="hide"/>
