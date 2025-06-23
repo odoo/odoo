@@ -535,8 +535,9 @@ class ResUsers(models.Model):
 
     @api.constrains('group_ids')
     def _check_at_least_one_administrator(self):
-        system = self.env.ref('base.group_system', raise_if_not_found=False)
-        if system and not system.user_ids:
+        if not self.env.registry._init_modules:
+            return  # ignore the constraint when updating the module 'base'
+        if not self.env.ref('base.group_system').user_ids:
             raise ValidationError(_("You must have at least an administrator user."))
 
     def onchange(self, values, field_names, fields_spec):
