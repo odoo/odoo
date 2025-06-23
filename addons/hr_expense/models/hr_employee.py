@@ -16,7 +16,7 @@ class HrEmployeeBase(models.AbstractModel):
         domain = Domain.FALSE  # Nothing accepted by domain, by default
         user = self.env.user
         employee = user.employee_id
-        if user.has_groups('hr_expense.group_hr_expense_user') or user.has_groups('account.group_account_user'):
+        if user.has_groups('hr_expense.group_hr_expense_user'):
             domain = Domain('company_id', '=', False) | Domain('company_id', 'child_of', self.env.company.root_id.id)  # Then, domain accepts everything
         elif user.has_groups('hr_expense.group_hr_expense_team_approver') and user.employee_ids:
             domain = (
