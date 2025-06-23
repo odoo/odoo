@@ -5,8 +5,9 @@
             <field name="name">email.template.form</field>
             <field name="model">mail.template</field>
             <field name="arch" type="xml">
-                <form string="Templates">
+                <form string="Templates" js_class="email_template_form_view">
                     <header>
+                        <field name="html_field_history_metadata" invisible="1"/>
                         <field name="ref_ir_act_window" invisible="1"/>
                         <field name="template_fs" invisible="1"/>
                         <field name="is_template_editor" invisible="1"/>

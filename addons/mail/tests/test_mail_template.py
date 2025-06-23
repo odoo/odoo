@@ -472,6 +472,10 @@ class TestMailTemplateUI(HttpCase):
     def test_mail_template_dynamic_placeholder_tour(self):
         self.start_tour("/odoo", 'mail_template_dynamic_placeholder_tour', login="admin")
 
+    def test_mail_template_history(self):
+        """This tour will check that the history works properly."""
+        self.start_tour('/odoo', 'mail_template_history_tour', login='admin')
+
 
 @tagged("mail_template", "-at_install", "post_install")
 class TestTemplateConfigRestrictEditor(MailCommon):
