@@ -299,14 +299,14 @@
                 <BuilderSelectItem dataAttributeActionValue="'!selected'">Is not equal to</BuilderSelectItem>
             </BuilderSelect>
         </div>
-        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row">
+        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row" data-name="hidden_condition_additional_text">
             <BuilderSelect t-if="state.conditionValueList and (domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT')"
                 id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
             >
                 <!-- checkbox, select, radio possible values -->
                 <BuilderSelectItem t-foreach="state.conditionValueList" t-as="record" t-key="record.value"
                     dataAttributeActionValue="record.value"
-                    t-out="record.textContent"
+                    t-out="record.display_name"
                 />
             </BuilderSelect>
             <BuilderSelect t-if="state.conditionValueList and domStateDependency.isRecordField"
@@ -319,7 +319,7 @@
                 />
             </BuilderSelect>
             <BuilderTextInput t-if="isTextConditionValueVisible"
-                id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
+                attributeAction="'visibilityCondition'" id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
             />
             <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
                 id="'hidden_condition_additional_datetime'" dataAttributeAction="'visibilityCondition'" type="'datetime'"
