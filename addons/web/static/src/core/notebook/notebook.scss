@@ -49,6 +49,10 @@
             outline: none;
         }
 
+        &:focus-visible, &.active:focus-visible {
+            box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color;
+        }
+
         &:hover {
             border-color: var(--Notebook__link-border-color--hover);
         }
