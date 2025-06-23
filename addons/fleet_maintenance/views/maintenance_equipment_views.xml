@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="maintenance_equipment_view_form_inherit_fleet" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.form.inherit.fleet</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='equipment_assign_to']" position="after">
+                <field name="vehicle_id" string="Vehicle" invisible="equipment_assign_to != 'vehicle' and equipment_assign_to != 'other'"/>
+            </xpath>
+            <xpath expr="//field[@name='owner_user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
