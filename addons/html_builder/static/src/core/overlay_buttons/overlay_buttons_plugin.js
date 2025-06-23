@@ -60,15 +60,15 @@ export class OverlayButtonsPlugin extends Plugin {
 
         // On keydown, hide the buttons and then show them again when the mouse
         // moves.
-        const onMouseMoveOrDown = throttleForAnimation((ev) => {
+        const onMouseMoveOrDown = throttleForAnimation(() => {
             this.showOverlayButtons();
-            ev.currentTarget.removeEventListener("mousemove", onMouseMoveOrDown);
-            ev.currentTarget.removeEventListener("mousedown", onMouseMoveOrDown);
+            this.editable.removeEventListener("mousemove", onMouseMoveOrDown);
+            this.editable.removeEventListener("mousedown", onMouseMoveOrDown);
         });
-        this.addDomListener(this.editable, "keydown", (ev) => {
+        this.addDomListener(this.editable, "keydown", () => {
             this.hideOverlayButtons();
-            ev.currentTarget.addEventListener("mousemove", onMouseMoveOrDown);
-            ev.currentTarget.addEventListener("mousedown", onMouseMoveOrDown);
+            this.editable.addEventListener("mousemove", onMouseMoveOrDown);
+            this.editable.addEventListener("mousedown", onMouseMoveOrDown);
         });
 
         // Hide the buttons when scrolling. Show them again when the scroll is
