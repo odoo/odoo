@@ -27,6 +27,9 @@
         $-safe-text-color: color-contrast(mix($-bg-color, $o-view-background-color));
         @include bg-variant(".bg-#{$-name}-light", rgba(map-get($theme-colors, $-name), 0.5), $-safe-text-color);
     }
+    & thead{
+        display: table-row-group;
+    }
 }
 
 .o_label_page {
