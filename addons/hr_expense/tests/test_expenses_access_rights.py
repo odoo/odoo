@@ -49,3 +49,26 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         })
         self.start_tour("/odoo", 'hr_expense_access_rights_test_tour', login="test-expense")
         self.assertRecordValues(expense, [{'state': 'submitted'}])
+
+    def test_account_admin_make_expense(self):
+        """
+        Test that a user with accounting rights is able to create expenses for every employee
+        by checking is_editable
+        """
+        user = new_test_user(self.env, login='test-expense', groups='account.group_account_user')
+
+        expense_employee = self.env['hr.employee'].create({
+            'name': 'expense employee',
+            'user_id': self.env.user.id,
+            'work_contact_id': self.env.user.partner_id.id,
+        })
+
+        expense = self.env['hr.expense'].with_user(user).create({
+            'name': "Superboy costume washing",
+            'employee_id': expense_employee.id,
+            'product_id': self.product_a.id,
+            'quantity': 1,
+            'price_unit': 1,
+        })
+
+        self.assertTrue(expense.is_editable)
