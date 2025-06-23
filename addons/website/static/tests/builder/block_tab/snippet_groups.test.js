@@ -529,3 +529,62 @@ test("Cancel snippet drag & drop over sidebar", async () => {
 
     expect(editableContent).toHaveInnerHTML("");
 });
+
+test("Renaming custom snippets don't make an orm call", async () => {
+    onRpc("ir.ui.view", "rename_snippet", ({ args }) => true);
+    const structureSnippetDesc = {
+        name: "Dummy Section",
+        groupName: "custom",
+        content: `
+        <section data-snippet="s_dummy">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `,
+        keywords: ["dummy"],
+    };
+    const snippets = {
+        snippet_groups: [
+            '<div name="Custom" data-oe-snippet-id="123" data-o-snippet-group="custom"><section data-snippet="s_snippet_group"></section></div>',
+        ],
+        snippet_structure: [getSnippetStructure(structureSnippetDesc)],
+        snippet_custom: [getSnippetStructure(structureSnippetDesc)],
+    };
+    await setupWebsiteBuilder(
+        `<section data-name="Dummy Section" data-snippet="s_dummy">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <p>TEST</p>
+                        <p><a class="btn">BUTTON</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        `,
+        { snippets }
+    );
+
+    await contains(
+        ".o-website-builder_sidebar .o_snippets_container .o_snippet[name='Custom'] button"
+    ).click();
+    await animationFrame();
+    // override the rpc call to catch it if it's called on renaming
+    onRpc("ir.ui.view", "render_public_asset", (args) => {
+        throw new Error("shouldn't make an rpc call on snippet rename");
+    });
+    await contains(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_custom_snippet_edit button.fa-pencil"
+    ).click();
+    expect(".o-overlay-item .modal-dialog:contains('Rename the block')").toHaveCount(1);
+    await contains(".o-overlay-item .modal-dialog input#inputConfirmation").fill("new custom name");
+    await contains(".o-overlay-item .modal-dialog footer>button:contains('Save')").click();
+    expect(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_custom_snippet_edit>span:contains('new custom name')"
+    ).toHaveCount(1);
+});
