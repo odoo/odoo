@@ -4,7 +4,6 @@ import {
     formatDate,
     formatDateTime,
 } from "@web/core/l10n/dates";
-import { parseTime } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
 import {
@@ -12,12 +11,7 @@ import {
     Expression,
     isTree,
     normalizeValue,
-    splitPath,
 } from "@web/core/tree_editor/condition_tree";
-import {
-    getOptionsFor,
-    OPTIONS_WITH_SELECT,
-} from "@web/core/tree_editor/tree_editor_datetime_options";
 import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { unique, zip } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
@@ -31,18 +25,6 @@ import { Within } from "./tree_editor_components";
  * @returns
  */
 function formatValue(val, disambiguate, fieldDef, displayNames) {
-    if (
-        fieldDef?.type === "date_option" &&
-        OPTIONS_WITH_SELECT.has(fieldDef.name) &&
-        typeof val !== "string"
-    ) {
-        const options = getOptionsFor(fieldDef.name, true);
-        const valToCompare = val instanceof Expression ? val._expr : val;
-        const [, label] = (options || []).find(([v]) => v === valToCompare) || [];
-        if (label !== undefined) {
-            val = label;
-        }
-    }
     if (val instanceof Expression) {
         return val.toString();
     }
@@ -63,14 +45,8 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
         if (fieldDef?.type === "datetime") {
             return formatDateTime(deserializeDateTime(val));
         }
-        if (
-            fieldDef?.type === "date" ||
-            (fieldDef?.type === "datetime_option" && fieldDef.name === "__date")
-        ) {
+        if (fieldDef?.type === "date") {
             return formatDate(deserializeDate(val));
-        }
-        if (fieldDef?.type === "datetime_option" && fieldDef.name === "__time") {
-            return parseTime(val, true).toString(true);
         }
     }
     if (disambiguate && typeof val === "string") {
@@ -382,28 +358,12 @@ function _extractIdsRecursive(tree, getFieldDef, idsByModel) {
     return idsByModel;
 }
 
-function makePaths(path) {
-    const paths = [path];
-    const { initialPath, lastPart } = splitPath(path);
-    if (initialPath && lastPart) {
-        // these paths are used in _createSpecialPaths
-        paths.push(
-            initialPath,
-            [initialPath, "__date"].join("."),
-            [initialPath, "__time"].join("."),
-            [initialPath, "__date", lastPart].join("."),
-            [initialPath, "__time", lastPart].join(".")
-        );
-    }
-    return paths;
-}
-
-function _getPathsInTree(tree, lookInSubTrees = false) {
+function getPathsInTree(tree, lookInSubTrees = false) {
     const paths = [];
     if (tree.type === "condition") {
         paths.push(tree.path);
         if (typeof tree.path === "string" && lookInSubTrees && isTree(tree.value)) {
-            const subTreePaths = _getPathsInTree(tree.value, lookInSubTrees);
+            const subTreePaths = getPathsInTree(tree.value, lookInSubTrees);
             for (const p of subTreePaths) {
                 if (typeof p === "string") {
                     paths.push(`${tree.path}.${p}`);
@@ -413,15 +373,10 @@ function _getPathsInTree(tree, lookInSubTrees = false) {
     }
     if (tree.type === "connector" && tree.children) {
         for (const child of tree.children) {
-            paths.push(..._getPathsInTree(child, lookInSubTrees));
+            paths.push(...getPathsInTree(child, lookInSubTrees));
         }
     }
     return unique(paths);
-}
-
-function getPathsInTree(tree, lookInSubTrees = false) {
-    const paths = _getPathsInTree(tree, lookInSubTrees);
-    return paths.flatMap((p) => makePaths(p));
 }
 
 const SPECIAL_FIELDS = ["country_id", "user_id", "partner_id", "stage_id", "id"];

@@ -5,7 +5,6 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
-import { SPECIAL_MODEL_NAMES } from "@web/core/field_service";
 
 class Page {
     constructor(resModel, fieldDefs, options = {}) {
@@ -22,9 +21,7 @@ class Page {
         this.selectedName = selectedName;
         this.isDebugMode = isDebugMode;
         this.readProperty = readProperty;
-        this.sortedFieldNames = SPECIAL_MODEL_NAMES.has(resModel)
-            ? Object.keys(fieldDefs)
-            : sortFn(fieldDefs);
+        this.sortedFieldNames = sortFn(fieldDefs);
         this.fieldNames = this.sortedFieldNames;
         this.query = "";
         this.focusedFieldName = null;
@@ -176,19 +173,13 @@ export class ModelFieldSelectorPopover extends Component {
         if (!this.props.followRelations) {
             return false;
         }
-        return (
-            fieldDef.relation ||
-            // fields that are not groupable are in general not searchable
-            (fieldDef.groupable && (fieldDef.type === "datetime" || fieldDef.type === "date")) ||
-            fieldDef.type === "datetime_option"
-        );
+        return fieldDef.relation;
     }
 
     filter(fieldDefs, path) {
-        const filteredKeys =
-            "__date" in fieldDefs
-                ? ["__date", "__time"]
-                : Object.keys(fieldDefs).filter((k) => this.props.filter(fieldDefs[k], path));
+        const filteredKeys = Object.keys(fieldDefs).filter((k) =>
+            this.props.filter(fieldDefs[k], path)
+        );
         return Object.fromEntries(filteredKeys.map((k) => [k, fieldDefs[k]]));
     }
 

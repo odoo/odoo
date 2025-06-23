@@ -34,10 +34,6 @@ function getSpecificOperators(fieldDef, params) {
             return [">", "<", "between", "not_between", "ilike", "not ilike"];
         case "json":
             return ["ilike", "not ilike"];
-        case "date_option":
-        case "time_option":
-        case "datetime_option":
-            return [">", "<", "between", "not_between"];
         default:
             return [];
     }

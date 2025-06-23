@@ -1,15 +1,11 @@
 import { Domain } from "@web/core/domain";
-import { parseDate, serializeDate } from "@web/core/l10n/dates";
-import { parseTime } from "@web/core/l10n/time";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
 import { ASTPattern } from "@web/core/tree_editor/ast_pattern";
 import { Hole, setHoleValues, upToHole } from "@web/core/tree_editor/hole";
 import { Just, Nothing } from "@web/core/tree_editor/maybe_monad";
 import { Pattern } from "@web/core/tree_editor/pattern";
-import { omit, pick } from "@web/core/utils/objects";
-
-const { DateTime } = luxon;
+import { omit } from "@web/core/utils/objects";
 
 /** @typedef { import("@web/core/py_js/py_parser").AST } AST */
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
@@ -833,25 +829,8 @@ export function splitPath(path) {
     return { initialPath, lastPart };
 }
 
-/**
- * @param {string} path
- * @returns {[string,string]} path
- */
-export function splitPath2(path) {
-    const pathParts = path.split(".");
-    let index = pathParts.findIndex((p) => ["__date", "__time"].includes(p)); // by construction, must be -1 or >= 1
-    index = index > -1 ? index - 1 : pathParts.length - 1;
-    const path1 = pathParts.slice(0, index).join(".");
-    const path2 = pathParts.slice(index).join(".");
-    return [path1, path2];
-}
-
 function isSimplePath(path) {
-    return typeof path === "string" && !splitPath2(path)[0];
-}
-
-function allEqual(...values) {
-    return values.slice(1).every((v) => v === values[0]);
+    return typeof path === "string" && !splitPath(path).initialPath;
 }
 
 export function applyTransformations(transformations, transformed, ...fixedParams) {
@@ -1078,81 +1057,6 @@ class OperatorPattern extends Pattern {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// in - not in
-////////////////////////////////////////////////////////////////////////////////
-
-function isPathOnDatetimeOption(path) {
-    return ["__date", "__time"].includes(splitPath(path).lastPart);
-}
-
-function _introduceInForDatetimeOptions(c) {
-    const { path, operator, value, negate } = c;
-    if (value === false || !isPathOnDatetimeOption(path)) {
-        return;
-    }
-    if (operator === "=") {
-        return condition(path, "in", normalizeValue([value]), negate);
-    }
-    if (operator === "!=") {
-        return condition(path, "not in", normalizeValue([value]), negate);
-    }
-}
-
-function isSimplePathOnDatetimeOption(path) {
-    return isPathOnDatetimeOption(path) && isSimplePath(path);
-}
-
-function _mergeInOperatorsForDatetimeOptions(c) {
-    const op = c.value === "|" ? "in" : "not in";
-    const children = [];
-    let currentCondition = null;
-    for (let index = 0; index < c.children.length; index++) {
-        const child = c.children[index];
-        if (isSimplePathOnDatetimeOption(child.path) && !child.negate && child.operator === op) {
-            if (!currentCondition || child.path !== currentCondition.path) {
-                currentCondition = condition(child.path, op, []);
-                children.push(currentCondition);
-            }
-            // @ts-ignore
-            currentCondition.value.push(...child.value);
-        } else {
-            currentCondition = null;
-            children.push(child);
-        }
-    }
-    return { ...c, children };
-}
-
-function _removeInForDatetimeOptions(c) {
-    const { path, operator, value, negate } = c;
-    if (!isPathOnDatetimeOption(path)) {
-        return;
-    }
-    const [initialPath, lastPart] = splitPath2(path);
-
-    if (operator === "in" && Array.isArray(value)) {
-        return wrapInAny(
-            connector(
-                "|",
-                value.map((v) => condition(lastPart, "=", normalizeValue(v)))
-            ),
-            initialPath,
-            negate
-        );
-    }
-    if (operator === "not in" && Array.isArray(value)) {
-        return wrapInAny(
-            connector(
-                "&",
-                value.map((v) => condition(lastPart, "!=", normalizeValue(v)))
-            ),
-            initialPath,
-            negate
-        );
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // between - not_between
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1163,15 +1067,6 @@ const patternBetween = OperatorPattern.of(
 const patternNotBetween = OperatorPattern.of(
     "not_between",
     `["|", (path, "<", value1), (path, ">", value2)]`
-);
-
-const patternBetweenForDatetimeOptions = OperatorPattern.of(
-    "between",
-    `[
-        "&",
-            "|", (path, ">", value1), (path, "=", value1),
-            "|", (path, "<", value2), (path, "=", value2)
-    ]`
 );
 
 function wrapInAny(tree, initialPath, negate) {
@@ -1210,7 +1105,7 @@ function _removeBetweenOperator(c) {
     ) {
         return;
     }
-    const [initialPath, lastPart] = splitPath2(path);
+    const { initialPath, lastPart } = splitPath(path);
     return Pattern.S([patternBetween, patternNotBetween])
         .make({
             path: lastPart,
@@ -1219,312 +1114,6 @@ function _removeBetweenOperator(c) {
             value2: value[1],
         })
         .bind((tree) => wrapInAny(tree, initialPath, negate));
-}
-
-/**
- * @param {Connector} c
- */
-function _createBetweenOperatorForDatetimeOptions(c) {
-    return patternBetweenForDatetimeOptions.detect(c).bind(({ path, operator, value1, value2 }) => {
-        if (isSimplePathOnDatetimeOption(path)) {
-            return Just.of(condition(path, operator, normalizeValue([value1, value2])));
-        }
-        return Nothing.of();
-    });
-}
-
-/**
- * @param {Condition} c
- */
-function _removeBetweenOperatorForDatetimeOptions(c) {
-    const { negate, path, operator, value } = c;
-    if (!Array.isArray(value) || operator !== "between" || !isPathOnDatetimeOption(path)) {
-        return;
-    }
-    const [initialPath, lastPart] = splitPath2(path);
-    return patternBetweenForDatetimeOptions
-        .make({
-            path: lastPart,
-            operator,
-            value1: value[0],
-            value2: value[1],
-        })
-        .bind((tree) => wrapInAny(tree, initialPath, negate));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// special paths
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @param {Condition} c
- * @param {Options} [options={}]
- */
-function _createSpecialPath(c, options = {}) {
-    const { negate, path, operator, value } = c;
-    const { initialPath, lastPart } = splitPath(path);
-    if (!isPathOnDatetimeOption(initialPath) && lastPart) {
-        if (getFieldType(initialPath, options) === "datetime") {
-            const pathFieldType = getFieldType(path, options);
-            if (pathFieldType === "date_option") {
-                const newPath = [initialPath, "__date", lastPart].join(".");
-                return condition(newPath, operator, value, negate);
-            }
-            if (pathFieldType === "time_option") {
-                const newPath = [initialPath, "__time", lastPart].join(".");
-                return condition(newPath, operator, value, negate);
-            }
-        }
-    }
-}
-
-/**
- * @param {Condition} c
- */
-function _removeSpecialPath(c) {
-    const { negate, path, operator, value } = c;
-    const { initialPath, lastPart } = splitPath(path);
-    const { initialPath: subPath } = splitPath(initialPath);
-    if (isPathOnDatetimeOption(initialPath) && lastPart) {
-        const newPath = [subPath, lastPart].join(".");
-        return condition(newPath, operator, value, negate);
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// __time - __date
-////////////////////////////////////////////////////////////////////////////////
-
-function parseDateCustom(value) {
-    try {
-        return parseDate(value);
-    } catch {
-        return null;
-    }
-}
-
-function to2Digit(nat) {
-    return nat < 10 ? `0${nat}` : `${nat}`;
-}
-
-class ParamsPattern extends Pattern {
-    constructor(options = {}) {
-        super();
-        this.options = options;
-    }
-    detect({ path1, path2, path3, operator, value1, value2, value3 }) {
-        const { initialPath: ip1, lastPart: lp1 } = splitPath(path1);
-        const { initialPath: firstPart, lastPart: fieldName } = splitPath(ip1);
-
-        if (firstPart || getFieldType(ip1, this.options) !== "datetime") {
-            return Nothing.of();
-        }
-
-        const { initialPath: ip2, lastPart: lp2 } = splitPath(path2);
-        const { initialPath: ip3, lastPart: lp3 } = splitPath(path3);
-
-        if (!allEqual(ip1, ip2, ip3)) {
-            return Nothing.of();
-        }
-        let lastPart;
-        if (lp1 === "year_number" && lp2 === "month_number" && lp3 === "day_of_month") {
-            lastPart = "__date";
-        }
-        if (lp1 === "hour_number" && lp2 === "minute_number" && lp3 === "second_number") {
-            lastPart = "__time";
-        }
-
-        if (!lastPart) {
-            return Nothing.of();
-        }
-
-        const path = `${fieldName}.${lastPart}`;
-
-        let value;
-        let success = false;
-        if (allEqual(false, value1, value2, value3) && ["=", "!="].includes(operator)) {
-            return Just.of(condition(path, operator, false));
-        }
-
-        if ([value1, value2, value3].some((v) => !Number.isInteger(v) || v < 0)) {
-            return Nothing.of();
-        }
-
-        if (lastPart === "__date") {
-            const date = parseDateCustom(`${value1}-${to2Digit(value2)}-${to2Digit(value3)}`);
-            if (date) {
-                success = true;
-                value = serializeDate(date);
-            }
-        } else {
-            const time = parseTime(
-                `${to2Digit(value1)}:${to2Digit(value2)}:${to2Digit(value3)}`,
-                true
-            );
-            if (time) {
-                success = true;
-                value = DateTime.fromObject(pick(time, "hour", "minute", "second")).toFormat(
-                    "HH:mm:ss"
-                );
-            }
-        }
-
-        if (success) {
-            return Just.of(condition(path, operator, value));
-        }
-        return Nothing.of();
-    }
-    make(c) {
-        const { path, operator, value } = c;
-        const { initialPath, lastPart } = splitPath(path);
-        if (!isPathOnDatetimeOption(path)) {
-            return Nothing.of();
-        }
-
-        const { initialPath: firstPart, lastPart: fieldName } = splitPath(initialPath);
-
-        let path1;
-        let path2;
-        let path3;
-        let value1;
-        let value2;
-        let value3;
-        if (lastPart === "__date") {
-            path1 = `${fieldName}.year_number`;
-            path2 = `${fieldName}.month_number`;
-            path3 = `${fieldName}.day_of_month`;
-        } else {
-            path1 = `${fieldName}.hour_number`;
-            path2 = `${fieldName}.minute_number`;
-            path3 = `${fieldName}.second_number`;
-        }
-
-        let success = false;
-        if (value === false) {
-            success = true;
-            value1 = false;
-            value2 = false;
-            value3 = false;
-        } else if (lastPart === "__date") {
-            const date = typeof value === "string" ? parseDateCustom(value) : null;
-            if (date) {
-                success = true;
-                value1 = date.year;
-                value2 = date.month;
-                value3 = date.day;
-            }
-        } else {
-            const time = typeof value === "string" ? parseTime(value, true) : null;
-            if (time) {
-                success = true;
-                value1 = time.hour;
-                value2 = time.minute;
-                value3 = time.second;
-            }
-        }
-
-        if (success) {
-            const res = {
-                path1,
-                path2,
-                path3,
-                operator,
-                value1,
-                value2,
-                value3,
-            };
-            if (firstPart) {
-                res.firstPart = firstPart;
-            }
-            return Just.of(res);
-        }
-        return Nothing.of();
-    }
-}
-
-const domains = {
-    "<": `[
-        "|",
-        "|",
-            (path1, "<", value1),
-            "&",
-                (path1, "=", value1),
-                (path2, "<", value2),
-            "&",
-            "&",
-                (path1, "=", value1),
-                (path2, "=", value2),
-                (path3, "<", value3),
-    ]`,
-    ">": `[
-        "|", "|",
-            (path1, ">", value1),
-            "&",
-                (path1, "=", value1),
-                (path2, ">", value2),
-            "&", "&",
-                (path1, "=", value1),
-                (path2, "=", value2),
-                (path3, ">", value3),
-    ]`,
-    "=": `[
-        "&", "&",
-            (path1, "=", value1),
-            (path2, "=", value2),
-            (path3, "=", value3),
-    ]`,
-    "!=": `[
-        "|", "|",
-            (path1, "!=", value1),
-            (path2, "!=", value2),
-            (path3, "!=", value3),
-    ]`,
-};
-
-const makeDomainWithAny = (domain) => `[(firstPart, "any", ${domain})]`;
-
-const makePattern = (operator) => OperatorPattern.of(operator, domains[operator]);
-const makePatternWithAny = (operator) =>
-    OperatorPattern.of(operator, makeDomainWithAny(domains[operator]));
-
-const simpleOperatorPatterns = [
-    makePattern(">"),
-    makePattern("<"),
-    makePattern("="),
-    makePattern("!="),
-];
-
-const simpleOperatorPatternsWithAny = [
-    makePatternWithAny(">"),
-    makePatternWithAny("<"),
-    makePatternWithAny("="),
-    makePatternWithAny("!="),
-];
-/**
- * @param {Connector} c
- * @param {Options} [options={}]
- */
-function _createDatetimeOption(c, options = {}) {
-    const paramsPattern = new ParamsPattern(options);
-    return Pattern.C([Pattern.S(simpleOperatorPatterns), paramsPattern]).detect(c);
-}
-
-/**
- * @param {Condition} c
- */
-function _removeDatetimeOption(c) {
-    const paramsPattern = new ParamsPattern();
-    const pattern = Pattern.C([
-        Pattern.S([...simpleOperatorPatternsWithAny, ...simpleOperatorPatterns]),
-        paramsPattern,
-    ]);
-    const mv = pattern.make(c);
-    if (mv instanceof Nothing) {
-        return;
-    }
-    const tree = cloneTree(mv.value);
-    tree.negate = c.negate;
-    return tree;
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -1541,7 +1130,7 @@ function _removeAnyOperator(c) {
         typeof value.path === "string" &&
         !negate &&
         !value.negate &&
-        (["between", "not_between"].includes(value.operator) || isPathOnDatetimeOption(value.path))
+        ["between", "not_between"].includes(value.operator)
     ) {
         return condition(`${path}.${value.path}`, value.operator, value.value);
     }
@@ -1769,49 +1358,6 @@ function removeBetweenOperators(tree) {
 
 /**
  * @param {Tree} tree
- * @returns {Tree}
- */
-function createBetweenOperatorsForDatetimeOptions(tree, options = {}) {
-    return operate(
-        rewriteNConsecutiveChildren(_createBetweenOperatorForDatetimeOptions),
-        tree,
-        options,
-        "connector"
-    );
-}
-
-/**
- * @param {Tree} tree
- * @returns {Tree}
- */
-function removeBetweenOperatorsForDatetimeOptions(tree) {
-    return operate(_removeBetweenOperatorForDatetimeOptions, tree);
-}
-
-/**
- * @param {Tree} tree
- * @param {Options} [options={}]
- * @returns {Tree}
- */
-export function createDatetimeOptions(tree, options = {}) {
-    return operate(
-        rewriteNConsecutiveChildren(_createDatetimeOption, 3),
-        tree,
-        options,
-        "connector"
-    );
-}
-
-/**
- * @param {Tree} tree
- * @returns {Tree}
- */
-function removeDatetimeOptions(tree) {
-    return operate(_removeDatetimeOption, tree);
-}
-
-/**
- * @param {Tree} tree
  * @param {Options} [options=[]]
  * @returns {Tree}
  */
@@ -1825,35 +1371,6 @@ export function createVirtualOperators(tree, options = {}) {
  */
 export function removeVirtualOperators(tree) {
     return operate(_removeVirtualOperator, tree);
-}
-
-export function introduceInForDatetimeOptions(tree) {
-    return operate(_introduceInForDatetimeOptions, tree);
-}
-
-export function mergeInOperatorsForDatetimeOptions(tree, options = {}) {
-    return operate(_mergeInOperatorsForDatetimeOptions, tree, options, "connector");
-}
-
-export function removeInOperatorsForDatetimeOptions(tree) {
-    return operate(_removeInForDatetimeOptions, tree);
-}
-
-/**
- * @param {Tree} tree
- * @param {Options} [options=[]]
- * @returns {Tree}
- */
-export function createSpecialPaths(tree, options = {}) {
-    return operate(_createSpecialPath, tree, options);
-}
-
-/**
- * @param {Tree} tree
- * @returns {Tree}
- */
-function removeSpecialPaths(tree) {
-    return operate(_removeSpecialPath, tree);
 }
 
 /**
@@ -1888,21 +1405,12 @@ function removeFalseTrueLeaves(tree) {
 const VIRTUAL_OPERATORS_INTRODUCTION = [createVirtualOperators, createBetweenOperators];
 export const FULL_VIRTUAL_OPERATORS_INTRODUCTION = [
     removeAnyOperators,
-    mergeInOperatorsForDatetimeOptions,
-    introduceInForDatetimeOptions,
     ...VIRTUAL_OPERATORS_INTRODUCTION,
-    createBetweenOperatorsForDatetimeOptions,
-    createSpecialPaths,
-    createDatetimeOptions,
 ];
 
 const VIRTUAL_OPERATORS_ELIMINATION = [removeBetweenOperators, removeVirtualOperators];
 export const FULL_VIRTUAL_OPERATORS_ELIMINATION = [
-    removeDatetimeOptions,
-    removeSpecialPaths,
     ...VIRTUAL_OPERATORS_ELIMINATION,
-    removeInOperatorsForDatetimeOptions,
-    removeBetweenOperatorsForDatetimeOptions,
     removeComplexConditions,
 ];
 
