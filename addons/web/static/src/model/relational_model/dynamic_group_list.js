@@ -232,6 +232,7 @@ export class DynamicGroupList extends DynamicList {
             resModel: this.config.resModel,
             fields: this.config.fields,
             activeFields: this.config.activeFields,
+            fieldsToAggregate: this.config.fieldsToAggregate,
         };
         const context = {
             ...this.context,
