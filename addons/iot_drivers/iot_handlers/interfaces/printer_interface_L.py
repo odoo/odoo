@@ -2,7 +2,6 @@
 
 from cups import Connection as CupsConnection
 from itertools import groupby
-from re import sub
 from threading import Lock
 from urllib.parse import urlsplit, parse_qs, unquote
 from zeroconf import (
@@ -13,6 +12,7 @@ from zeroconf import (
 )
 import logging
 import pyudev
+import re
 import time
 
 from odoo.addons.iot_drivers.interface import Interface
@@ -37,22 +37,33 @@ class PrinterInterface(Interface):
         with cups_lock:
             printers = conn.getPrinters()
             devices = conn.getDevices()
-            for printer_name, printer in printers.items():
-                path = printer.get('device-uri', False)
-                if printer_name != self.get_identifier(path):
-                    device_class = 'direct' if 'usb' in printer.get('device-uri') else 'network'
-                    printer.update({
-                        'supported': True,
-                        'device-class': device_class,
-                        'device-make-and-model': printer_name,  # give name set in Cups
-                        'device-id': '',
-                    })
-                    devices.update({printer_name: printer})
 
+        # get and adjust configuration of printers already added in cups
+        for printer_name, printer in printers.items():
+            path = printer.get('device-uri')
+            if path and printer_name != self.get_identifier(path):
+                device_class = 'direct' if 'usb' in path else 'network'
+                printer.update({
+                    'already-configured': True,
+                    'device-class': device_class,
+                    'device-make-and-model': printer_name,  # give name set in Cups
+                    'device-id': '',
+                })
+                devices.update({printer_name: printer})
+
+        # filter devices (both added and not added in cups) to show as detected by the IoT Box
         for path, device in devices.items():
             identifier, device = self.process_device(path, device)
-            discovered_devices.update({identifier: device})
-        discovered_devices = self.deduplicate_printers(discovered_devices)
+
+            url_is_supported = any(protocol in device["url"] for protocol in ['dnssd', 'lpd', 'socket'])
+            model_is_valid = device["device-make-and-model"] != "Unknown"
+            printer_is_usb = "direct" in device["device-class"]
+
+            if (url_is_supported and model_is_valid) or printer_is_usb:
+                discovered_devices.update({identifier: device})
+
+                if not device.get("already-configured"):
+                    self.set_up_printer_in_cups(device)
 
         # Let get_devices be called again every 20 seconds (get_devices of PrinterInterface
         # takes between 4 and 15 seconds) but increase the delay to 2 minutes if it has been
@@ -61,7 +72,7 @@ class PrinterInterface(Interface):
             self._loop_delay = 120
             self.start_time = None  # Reset start_time to avoid changing the loop delay again
 
-        return discovered_devices
+        return self.deduplicate_printers(discovered_devices)
 
     def process_device(self, path, device):
         identifier = self.get_identifier(path)
@@ -92,7 +103,7 @@ class PrinterInterface(Interface):
             Input: "uuid=1234-5678-90ab-cdef"
             Output: "1234-5678-90ab-cdef
         """
-        return sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)
+        return re.sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)
 
     def get_ip(self, device_path):
         hostname = urlsplit(device_path).hostname
@@ -135,7 +146,7 @@ class PrinterInterface(Interface):
             chosen_printer = next((
                 printer for printer in printers_with_same_ip
                 if 'CMD:' in printer['device-id'] or 'ZPL' in printer['device-id']
-                ), None)
+            ), None)
             if not chosen_printer:
                 chosen_printer = printers_with_same_ip[0]
             result.append(chosen_printer)
@@ -191,6 +202,30 @@ class PrinterInterface(Interface):
 
         zeroconf = Zeroconf(ip_version=IPVersion.V4Only)
         self.zeroconf_browser = ServiceBrowser(zeroconf, service_types, handlers=[on_service_change])
+
+    @staticmethod
+    def set_up_printer_in_cups(device):
+        """Configure detected printer in cups: ppd files, name, info, groups, ...
+
+        :param dict device: printer device to configure in cups (detected but not added)
+        """
+        fallback_model = device.get('device-make-and-model', "")
+        model = next((
+            device_id.split(":")[1] for device_id in device.get('device-id', "").split(";")
+            if any(key in device_id for key in ['MDL', 'MODEL'])
+        ), fallback_model)
+        model = re.sub(r"[\(].*?[\)]", "", model).strip()
+
+        ppdname_argument = next(({"ppdname": ppd} for ppd in PPDs if model and model in PPDs[ppd]['ppd-product']), {})
+
+        with cups_lock:
+            conn.addPrinter(name=device['identifier'], device=device['url'], **ppdname_argument)
+            conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
+            conn.enablePrinter(device['identifier'])
+            conn.acceptJobs(device['identifier'])
+            conn.setPrinterUsersAllowed(device['identifier'], ['all'])
+            conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
+            conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
 
     def start(self):
         super().start()
