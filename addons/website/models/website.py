@@ -876,8 +876,8 @@ class Website(models.Model):
 
         template_record = self.env.ref(template)
         arch = template_record.arch
-        if sections_arch:
-            tree = html.fromstring(arch)
+        tree = html.fromstring(arch)
+        if sections_arch and tree.xpath('//div[@id="wrap"]'):
             wrap = tree.xpath('//div[@id="wrap"]')[0]
             for section in html.fromstring(f'<wrap>{sections_arch}</wrap>'):
                 wrap.append(section)
