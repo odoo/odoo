@@ -159,7 +159,8 @@ export class CustomColorPicker extends Component {
             this.opacitySliderPointerRef.el.style.top = `${Math.round(z - 2)}px`;
 
             // Add gradient color on opacity slider
-            opacitySlider.style.background = `linear-gradient(${this.colorComponents.hex} 0%, transparent 100%)`;
+            const sliderColor = this.colorComponents.hex.slice(0, 7);
+            opacitySlider.style.background = `linear-gradient(${sliderColor} 0%, transparent 100%)`;
         }
     }
     /**
