@@ -548,14 +548,6 @@
                            invisible="payment_state == 'invoicing_legacy' or move_type == 'entry'"
                            optional="show"
                     />
-                    <field name="move_sent_values"
-                           string="Sent"
-                           widget="badge"
-                           decoration-success="move_sent_values == 'sent'"
-                           decoration-danger="move_sent_values == 'not_sent'"
-                           column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')"
-                           optional="hide"
-                    />
                     <field name="move_type" column_invisible="context.get('default_move_type', True)"/>
                     <field name="abnormal_amount_warning" column_invisible="1"/>
                     <field name="abnormal_date_warning" column_invisible="1"/>
