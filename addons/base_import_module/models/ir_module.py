@@ -14,7 +14,7 @@ from io import BytesIO
 from os.path import join as opj
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied, AccessError, UserError
+from odoo.exceptions import AccessDenied, AccessError, RedirectWarning, UserError
 from odoo.http import request
 from odoo.modules.module import adapt_version, MANIFEST_NAMES
 from odoo.osv.expression import is_leaf
@@ -439,6 +439,27 @@ class IrModule(models.Model):
         except requests.exceptions.ConnectionError:
             return []
 
+    def _get_module_latest_major_version(self, zip_data):
+        with zipfile.ZipFile(BytesIO(zip_data), "r") as z:
+            manifest_files = [
+                file
+                for file in z.filelist
+                if file.filename.count('/') == 1
+                and file.filename.split('/')[1] in MANIFEST_NAMES
+            ]
+            for manifest_file in manifest_files:
+                if manifest_file.file_size > MAX_FILE_SIZE:
+                    raise UserError(_("File '%s' exceed maximum allowed file size", manifest_file.filename))
+                try:
+                    with z.open(manifest_file) as manifest:
+                        terp = ast.literal_eval(manifest.read().decode())
+                except Exception:
+                    continue
+                version = terp.get('version', [])
+                if version:
+                    return int(version.split('.')[0])
+        return None
+
     def button_immediate_install_app(self):
         if not self.env.is_admin():
             raise AccessDenied()
@@ -452,12 +473,17 @@ class IrModule(models.Model):
             missing_dependencies_description, unavailable_modules = self._get_missing_dependencies(resp.content)
             if unavailable_modules:
                 raise UserError(missing_dependencies_description)
+
+            latest_major_version = self._get_module_latest_major_version(resp.content)
+            module_data = self.search([('name', '=', module_name)])
+            installed_major_version = int(module_data.installed_version.split('.')[2]) if module_data else None
+
             import_module = self.env['base.import.module'].create({
                 'module_file': base64.b64encode(resp.content),
                 'state': 'init',
                 'modules_dependencies': missing_dependencies_description,
             })
-            return {
+            IMPORT_ACTION = {
                 'name': _("Install an Industry"),
                 'view_mode': 'form',
                 'target': 'new',
@@ -466,6 +492,13 @@ class IrModule(models.Model):
                 'type': 'ir.actions.act_window',
                 'context': {'data_module': True}
             }
+            if installed_major_version and latest_major_version and installed_major_version < latest_major_version:
+                raise RedirectWarning(
+                    _("A new version is available!\n\nHowever upgrade script is not yet available to upgrade to new version.\nProceeding may break some data in your modules."),
+                    IMPORT_ACTION,
+                    _('Upgrade')
+                )
+            return IMPORT_ACTION
         except requests.exceptions.HTTPError:
             raise UserError(_('The module %s cannot be downloaded') % module_name)
         except requests.exceptions.ConnectionError:
