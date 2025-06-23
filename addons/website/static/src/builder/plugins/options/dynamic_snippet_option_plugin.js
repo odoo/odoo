@@ -392,9 +392,12 @@ export class NumberOfRecordsAction extends BuilderAction {
     isApplied({ editingElement: el, params }) {
         return el.dataset.numberOfRecords === params.mainParam;
     }
-    apply({ editingElement: el, params }) {
+    getValue({ editingElement }) {
+        return editingElement.dataset.numberOfRecords;
+    }
+    apply({ editingElement: el, params, value }) {
         const isSingleModeBefore = this.utils.isSingleModeSnippet(el.dataset);
-        el.dataset.numberOfRecords = params.mainParam;
+        el.dataset.numberOfRecords = params.mainParam || value;
         // Changing the number of records should automatically switch to a
         // "single record" filter mode if only one record is selected, and
         // conversely, revert to the default filter mode when more than one
