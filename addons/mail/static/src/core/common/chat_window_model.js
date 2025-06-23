@@ -49,7 +49,10 @@ export class ChatWindow extends Record {
     });
 
     computeCanShow() {
-        return !this.store.discuss?.isActive || this.store.env.services.ui.isSmall;
+        return (
+            !(this.hubAsFolded && !this.store.chatHub.showBubbles) &&
+            (!this.store.discuss?.isActive || this.store.env.services.ui.isSmall)
+        );
     }
 
     async close(options = {}) {

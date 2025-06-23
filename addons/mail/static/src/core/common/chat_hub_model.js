@@ -146,9 +146,15 @@ export class ChatHub extends Record {
         );
     }
 
+    showBubbles = fields.Attr(true, {
+        compute() {
+            return !this.store.discuss?.isActive;
+        },
+    });
+
     showConversations = fields.Attr(false, {
         compute() {
-            return this.canShowOpened.length + this.canShowFolded.length > 0;
+            return this.showBubbles && this.canShowOpened.length + this.canShowFolded.length > 0;
         },
     });
 }
