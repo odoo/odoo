@@ -39,7 +39,11 @@ export function refresh() {
                 }
             };
 
-            checkTransaction();
+            // Wait indexedDB debouncer
+            setTimeout(() => {
+                checkTransaction();
+            }, 305);
+
             setTimeout(() => {
                 throw new Error("Timeout waiting indexedDB for transactions to finish");
             }, 2000);
