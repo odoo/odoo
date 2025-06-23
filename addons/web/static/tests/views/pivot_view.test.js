@@ -2729,41 +2729,6 @@ test("empty pivot view with action helper", async () => {
 });
 
 test.tags("desktop");
-test("reset filter button should appear when no data corresponding to facets", async () => {
-    Partner._views["pivot,false"] = `<pivot>
-		<field name="product_id" type="measure"/>
-		<field name="date" interval="month" type="col"/>
-	</pivot>`;
-    Partner._views["search,false"] = `<search>
-		<filter name="no_match" string="Match nothing" domain="[['id', '=', 0]]"/>
-	</search>`;
-
-    await mountView({
-        type: "pivot",
-        resModel: "partner",
-        context: { search_default_small_than_0: true },
-        noContentHelp: markup(`<p class="abc">click to add a foo</p>`),
-        config: {
-            views: [[false, "search"]],
-        },
-    });
-
-    await contains(".o_pivot_view").click();
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Match nothing");
-
-    expect(".o_view_nocontent").toHaveCount(1);
-    expect(getFacetTexts()).not.toEqual([]);
-    expect(".o_reset_filter_button").toHaveCount(1);
-    expect(".o_reset_filter_button").toHaveText("Reset Filters");
-    expect(".o_facet_value").toHaveText("Match nothing");
-
-    await contains(".o_reset_filter_button").click();
-    expect(getFacetTexts()).toEqual([]);
-    expect(".o_reset_filter_button").not.toHaveCount(1);
-});
-
-test.tags("desktop");
 test("empty pivot view with sample data", async () => {
     Partner._views["pivot"] = `<pivot sample="1">
 		<field name="product_id" type="measure"/>

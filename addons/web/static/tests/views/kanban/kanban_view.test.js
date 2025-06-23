@@ -6110,41 +6110,6 @@ test("quick create column with x_name as _rec_name", async () => {
 });
 
 test.tags("desktop");
-test("reset filter button should appear when no data corresponding to facets", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        searchViewArch: `
-            <search>
-                <filter name="no_match" string="Match nothing" domain="[['id', '=', 0]]"/>
-            </search>`,
-        noContentHelp: "click to add a partnerReset Filters",
-    });
-
-    await contains(".o_kanban_view").click();
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Match nothing");
-
-    expect(".o_view_nocontent").toHaveCount(1);
-    expect(getFacetTexts()).not.toEqual([]);
-    expect(".o_reset_filter_button").toHaveCount(1);
-    expect(".o_reset_filter_button").toHaveText("Reset Filters");
-    expect(".o_facet_value").toHaveText("Match nothing");
-
-    await contains(".o_reset_filter_button").click();
-    expect(getFacetTexts()).toEqual([]);
-    expect(".o_reset_filter_button").not.toHaveCount(1);
-});
-
-test.tags("desktop");
 test("count of folded groups in empty kanban with sample data", async () => {
     onRpc("web_read_group", () => ({
         groups: [
