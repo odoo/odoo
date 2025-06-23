@@ -1,3 +1,6 @@
+import hashlib
+import hmac
+
 from odoo import api, fields, models, tools, _
 from odoo.osv import expression
 
@@ -20,6 +23,8 @@ class SlideChannelPartner(models.Model):
     completed_slides_count = fields.Integer('# Completed Contents', default=0)
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
+    opt_out = fields.Boolean('Opt Outed')
+    opt_out_dt = fields.Datetime('Opt Out Datetime')
     # channel-related information (for UX purpose)
     channel_user_id = fields.Many2one('res.users', string='Responsible', related='channel_id.user_id')
     channel_type = fields.Selection(related='channel_id.channel_type')
@@ -81,6 +86,14 @@ class SlideChannelPartner(models.Model):
 
         for membership in self:
             membership.next_slide_id = next_slide_per_membership.get(membership.id, False)
+
+    def _generate_mailing_token(self):
+        """Generate a secure token for a given channel and recipient (based on
+        their email). This allows notably to opt-out from channel notifications. """
+        self.ensure_one()
+        secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
+        token = (self.env.cr.dbname, self.channel_id.id, self.partner_id.id)
+        return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()
 
     def _recompute_completion(self):
         """ This method computes the completion and member_status of attendees that are neither

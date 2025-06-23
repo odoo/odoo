@@ -1,7 +1,106 @@
+from werkzeug.urls import url_decode
+
+import contextlib
+import re
+
+from odoo import tools
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
+from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.website_slides.tests.common import SlidesCase
+from odoo.tests import tagged, users
+
+
+@tagged('mail_thread')
+class TestSlidesNotifications(SlidesCase, CronMixinCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_manager.group_ids += cls.env.ref('mail.group_mail_template_editor')
+        cls.test_template_publish = cls.env['mail.template'].with_user(cls.user_manager).create({
+            'auto_delete': True,
+            'body_html': '<p>Published <t t-out="object.name"/></p>',
+            'email_from': '{{ object.user_id.email_formatted or user.email_formatted or "" }}',
+            'model_id': cls.env['ir.model']._get_id('slide.slide'),
+            'name': 'Test Publish Template',
+            'subject': 'Published {{ object.name }}'
+        })
+        cls.channel.publish_template_id = cls.test_template_publish.id
+
+        cls.test_users = cls.env['res.users'].with_context(MailCase._test_context).create([
+            {
+                'group_ids': [(4, cls.env.ref('base.group_portal').id)],
+                'email': f'test.user.{user_idx}@test.example.com',
+                'login': f'user_{user_idx}',
+                'name': f'User {user_idx}',
+                'password': f'user_{user_idx}',
+            } for user_idx in range(10)
+        ])
+        cls.channel._action_add_members(cls.test_users.partner_id, member_status='joined')
+        cls.attendee_ids_asc = cls.channel.channel_partner_all_ids.sorted('id')
+        cls.mailing_cron = cls.env.ref('website_slides.ir_cron_slide_slide_mailing')
+
+    def _execute_slide_mailing_cron(self, freeze_date=None):
+        cron = self.mailing_cron.sudo()
+        with contextlib.ExitStack() as stack:
+            if freeze_date:
+                stack.enter_context(self.mock_datetime_and_now(freeze_date))
+            stack.enter_context(self.mock_mail_gateway())
+            stack.enter_context(self.mock_mail_app())
+            capture = stack.enter_context(self.capture_triggers('website_slides.ir_cron_slide_slide_mailing'))
+            cron.method_direct_trigger()
+            return capture
+
+    def _extract_unfollow_url(self, mail_body):
+        unfollow_urls = [
+            link_url
+            for _, link_url, _, _ in re.findall(tools.mail.HTML_TAG_URL_REGEX, mail_body)
+            if '/slides/channel' in link_url
+        ]
+        return unfollow_urls
+
+    def test_assert_initial_values(self):
+        self.assertEqual(len(self.attendee_ids_asc), 11, 'Should have 10 test users + creator (officer)')
+
+    @users('user_officer')
+    def test_publish_notification(self):
+        test_channel = self.channel.with_env(self.env)
+        test_batch_size = 2
+
+        with self.capture_triggers('website_slides.ir_cron_slide_slide_mailing'), \
+             self.mock_mail_gateway(), self.mock_mail_app():
+            self.env['slide.slide'].create({
+                'channel_id': test_channel.id,
+                'is_published': True,
+                'name': 'Test Publish',
+            })
+        # should have a cron trigger, as iterative mode should be used (too much attendees)
+        self.assertNotSentEmail()
+
+        self._execute_slide_mailing_cron()
+        for mail in self._new_mails:
+            unfollow_url = self._extract_unfollow_url(mail.body_html)
+            self.assertEqual(len(unfollow_url), 1)
+            url = unfollow_url[0]
+            print('url', url)
+            # caca = url_decode(url)
+            # print('caca', caca)
+            res = self.url_open(url)
+            print('res', res)
+
+        # should have sent one email / attendee until the iteration max
+        self.assertEqual(len(self._new_mails), test_batch_size)
+        contacted = self.attendee_ids_asc[:test_batch_size]
+        for contact in contacted:
+            self.assertMailMailWEmails(
+                [contact.partner_id.email_formatted],
+                'sent',
+                author=self.env.user.partner_id,
+            )
 
 
 class TestSlidesMail(SlidesCase):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

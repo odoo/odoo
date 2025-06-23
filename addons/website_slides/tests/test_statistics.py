@@ -247,7 +247,7 @@ class TestSlideStatistics(common.SlidesCase):
         self.assertEqual(self.channel.total_slides, 3, 'The channel should still contain 3 slides')
 
 @tagged('functional')
-class TestHttpSlideStatistics(HttpCase, common.SlidesCase):
+class TestHttpSlideStatistics(common.SlidesCase):
     @classmethod
     def setUpClass(cls):
         super(TestHttpSlideStatistics, cls).setUpClass()
