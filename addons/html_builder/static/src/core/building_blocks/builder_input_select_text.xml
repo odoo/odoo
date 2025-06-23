@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderInputSelectText" t-inherit="html_builder.BuilderSelect">
+    <xpath expr="//button" position="replace">
+        <BuilderTextInput
+            t-props="this.inputSelectTextProps"
+            t-on-click="this.onClick"
+            t-on-keydown.stop="this.onInputKeydown"
+        />
+    </xpath>
+</t>
+
+</templates>
