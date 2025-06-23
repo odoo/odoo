@@ -192,6 +192,9 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         const quantity = await addToCart;
         if (quantity > 0 && !document.getElementById('b2b_wish').checked) {
             this._removeWish(ev, false);
+            if (this.wishlistProductIDs.length === 0) {
+                this._redirectNoWish();
+            }
         }
         return addToCart;
     },
