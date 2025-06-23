@@ -47,16 +47,17 @@ class HrLeaveType extends models.Model {
 defineHrHolidaysModels();
 defineModels([HrLeave, HrLeaveType]);
 
-onRpc("hr.employee", "get_allocation_requests_amount", () => ({}));
+onRpc("hr.employee", "get_time_off_dashboard_data", () => (
+    {has_accrual_allocation: true, allocation_data: {}, allocation_request_amount: 0}
+));
 onRpc("hr.employee", "get_mandatory_days", () => ({}));
 onRpc("hr.employee", "get_special_days_data", () => ({ mandatoryDays: [], bankHolidays: [] }));
 onRpc("hr.leave", "get_unusual_days", () => ({}));
 onRpc("hr.leave", "has_access", () => true);
-onRpc("hr.leave.type", "get_allocation_data_request", () => []);
 onRpc("hr.leave.type", "has_accrual_allocation", () => true);
 
-test(`test employee is passed to has_accrual_allocation`, async () => {
-    onRpc("hr.leave.type", "has_accrual_allocation", ({ kwargs }) => {
+test(`test employee is passed to get_time_off_dashboard_data`, async () => {
+    onRpc("hr.employee", "get_time_off_dashboard_data", ({ kwargs }) => {
         expect.step(kwargs.context.employee_id);
     });
 

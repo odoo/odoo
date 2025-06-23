@@ -315,6 +315,14 @@ class HrEmployee(models.Model):
         }, public_holidays))
 
     @api.model
+    def get_time_off_dashboard_data(self, target_date=None):
+        dashboard_data = {}
+        dashboard_data['has_accrual_allocation'] = self.env['hr.leave.type'].has_accrual_allocation()
+        dashboard_data['allocation_data'] = self.env['hr.leave.type'].get_allocation_data_request(target_date, False)
+        dashboard_data['allocation_request_amount'] = self.get_allocation_requests_amount()
+        return dashboard_data
+
+    @api.model
     def get_allocation_requests_amount(self):
         employee = self._get_contextual_employee()
         return self.env['hr.leave.allocation'].search_count([
