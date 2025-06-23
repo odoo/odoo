@@ -19,6 +19,7 @@ class Im_LivechatReportChannel(models.Model):
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', readonly=True)
     start_date = fields.Datetime('Start Date of session', readonly=True)
     start_hour = fields.Char('Start Hour of session', readonly=True)
+    start_date_minutes = fields.Char("Start Date of session, truncated to minutes", readonly=True)
     day_number = fields.Selection(
         selection=[
             ("0", "Sunday"),
@@ -101,6 +102,7 @@ class Im_LivechatReportChannel(models.Model):
                 channel_member_history.visitor_partner_id AS visitor_partner_id,
                 to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
                 to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
+                to_char(date_trunc('minute', C.create_date), 'YYYY-MM-DD HH:MI:SS') AS start_date_minutes,
                 EXTRACT(dow from C.create_date)::text AS day_number,
                 EXTRACT('epoch' FROM message_vals.last_message_dt - c.create_date)/60 AS duration,
                 CASE
