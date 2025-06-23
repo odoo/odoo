@@ -570,3 +570,9 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.write({'iface_tipproduct': True, 'tip_product_id': self.tip.id})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_tip_after_payment')
+
+    def test_book_and_release_table(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_book_and_release_table', login="pos_user")
+        order = self.env['pos.order'].search([], limit=1, order='id desc')
+        self.assertEqual(order.state, "cancel", "The order should be in cancel state after releasing the table")

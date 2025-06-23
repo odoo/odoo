@@ -58,3 +58,12 @@ export function setTab(name) {
         Dialog.confirm(),
     ];
 }
+export function bookOrReleaseTable() {
+    return [
+        {
+            content: "click book or release table button",
+            trigger: ".table-booking button",
+            run: "click",
+        },
+    ];
+}
