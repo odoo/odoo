@@ -393,7 +393,7 @@ test("can follow relations", async () => {
             readonly: false,
             path: "",
             resModel: "partner",
-            followRelations: true, // default
+            followRelations: () => true, // default
             update(path) {
                 expect(path).toBe("product_id");
             },
@@ -428,7 +428,7 @@ test("cannot follow relations", async () => {
             readonly: false,
             path: "",
             resModel: "partner",
-            followRelations: false,
+            followRelations: () => false,
             update(path) {
                 expect(path).toBe("product_id");
             },

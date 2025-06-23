@@ -64,8 +64,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
                 close: this.onClose.bind(this),
                 validate: this.onValidate.bind(this),
                 resModel: resModel,
-                canFollowRelationFor: (field, followRelations) =>
-                    (field.relation && followRelations) || field.type === "properties",
+                followRelation: (field) => field.relation || field.type === "properties",
             },
         });
     }

@@ -13,7 +13,7 @@ export class FieldSelectorField extends Component {
         ...standardFieldProps,
         resModel: { type: String, optional: true },
         onlySearchable: { type: Boolean, optional: true },
-        followRelations: { type: Boolean, optional: true },
+        followRelations: { type: Function, optional: true },
     };
 
     filter(fieldDef) {
@@ -70,7 +70,7 @@ export const fieldSelectorField = {
     ],
     extractProps({ options }, dynamicInfo) {
         return {
-            followRelations: options.follow_relations ?? true,
+            followRelations: () => options.follow_relations ?? true,
             onlySearchable: exprToBoolean(options.only_searchable),
             resModel: options.model,
         };

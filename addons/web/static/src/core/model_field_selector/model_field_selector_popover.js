@@ -113,8 +113,7 @@ export class ModelFieldSelectorPopover extends Component {
         close: Function,
         filter: { type: Function, optional: true },
         sort: { type: Function, optional: true },
-        followRelations: { type: Boolean, optional: true },
-        canFollowRelationFor: { type: Function, optional: true },
+        followRelation: { type: Function, optional: true },
         showDebugInput: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
         path: { optional: true },
@@ -126,7 +125,6 @@ export class ModelFieldSelectorPopover extends Component {
     static defaultProps = {
         filter: (value) => value.searchable && value.type != "json",
         isDebugMode: false,
-        followRelations: true,
     };
 
     setup() {
@@ -171,14 +169,14 @@ export class ModelFieldSelectorPopover extends Component {
     }
 
     canFollowRelationFor(fieldDef) {
-        if (typeof this.props.canFollowRelationFor === "function") {
-            return this.props.canFollowRelationFor(fieldDef, this.props.followRelation);
+        const followRelation = this.props.followRelations
+            ? this.props.followRelations(fieldDef)
+            : null;
+        if ([true, false].includes(followRelation)) {
+            return followRelation;
         }
         if (fieldDef.type === "properties") {
             return true;
-        }
-        if (!this.props.followRelations) {
-            return false;
         }
         return (
             fieldDef.relation ||
