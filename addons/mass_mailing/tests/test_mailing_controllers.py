@@ -658,7 +658,8 @@ class TestMailingTracking(TestMailingControllersCommon):
             f'r/{link_tracker_code.code}/m/{mailing_trace.id}'
         )
         with freeze_time(self._reference_now):
-            _response = self.url_open(short_link_url)
+            response = self.url_open(short_link_url, allow_redirects=False)
+            self.assertTrue(response.headers['Location'].startswith('https://www.example.com/foo/bar?baz=qux'))
 
         self.assertEqual(link_tracker_code.link_id.count, 1)
         self.assertEqual(mailing_trace.links_click_datetime, self._reference_now)

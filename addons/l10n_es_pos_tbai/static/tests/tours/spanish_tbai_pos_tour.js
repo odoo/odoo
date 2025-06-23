@@ -4,6 +4,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScr
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
+import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("spanish_pos_tbai_tour", {
@@ -23,9 +24,8 @@ registry.category("web_tour.tours").add("spanish_pos_tbai_tour", {
         ProductScreen.pressNumpad("1"),
         TicketScreen.toRefundTextContains("To Refund: 1.00"),
         TicketScreen.confirmRefund(),
-        {
-            trigger: 'button:contains("R1")',
-        },
+        SelectionPopup.isShown(),
+        SelectionPopup.clickItem("R1"),
         ProductScreen.isShown(),
         ProductScreen.clickPayButton(),
         PaymentScreen.clickPaymentMethod("Bank"),

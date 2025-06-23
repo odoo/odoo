@@ -27,9 +27,16 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         return float_round(value, JO_MAX_DP)
 
     def _get_line_amount_before_discount_jod(self, line):
-        if line.discount < 100:
-            amount_after_discount = line.price_subtotal
-            return (amount_after_discount / (1 - line.discount / 100))
+        if line.discount < 100 and line.tax_ids:
+            taxes_res = line.tax_ids.with_context({'round_base': False}).compute_all(
+                line.price_unit,
+                quantity=line.quantity,
+                currency=line.currency_id,
+                product=line.product_id,
+                partner=line.partner_id,
+                is_refund=line.is_refund,
+            )
+            return taxes_res['total_excluded']
         else:
             # reported numbers won't matter if discount is 100%
             return line.price_unit * line.quantity
@@ -59,7 +66,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         for invoice_line_id, invoice_line in enumerate(invoice_lines, 1):
             if line.product_id == invoice_line.product_id \
                     and line.name == invoice_line.name \
-                    and line.price_unit == invoice_line.price_unit:
+                    and line.price_unit == invoice_line.price_unit \
+                    and line.discount == invoice_line.discount:
                 line_id = invoice_line_id
                 break
         if line_id == -1:
