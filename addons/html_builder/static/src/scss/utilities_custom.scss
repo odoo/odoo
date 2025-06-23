@@ -1,0 +1,61 @@
+// Extend utilities
+
+$rounded-sizes: () !default;
+$rounded-sizes: map-merge(
+    $rounded-sizes,
+    (
+        null: var(--#{$prefix}border-radius),
+        0: 0,
+        1: var(--#{$prefix}border-radius-sm),
+        2: var(--#{$prefix}border-radius),
+        3: var(--#{$prefix}border-radius-lg),
+        4: var(--#{$prefix}border-radius-xl),
+        5: var(--#{$prefix}border-radius-xxl),
+        circle: 50%,
+        pill: var(--#{$prefix}border-radius-pill)
+    )
+);
+
+// Assigns Bootstrap variable to a CSS variable so that
+// it can be used in CSS calculations
+$utilities: () !default;
+$utilities: map-merge(
+    $utilities,
+    (
+        "rounded": (
+            property: --box-border-radius,
+            class: rounded,
+            values: $rounded-sizes,
+        ),
+        "rounded-top": (
+            property: --box-border-top-left-radius --box-border-top-right-radius,
+            class: rounded-top,
+            values: $rounded-sizes,
+        ),
+        "rounded-end": (
+            property: --box-border-top-right-radius --box-border-bottom-right-radius,
+            class: rounded-end,
+            values: $rounded-sizes,
+        ),
+        "rounded-bottom": (
+            property: --box-border-bottom-right-radius --box-border-bottom-left-radius,
+            class: rounded-bottom,
+            values: $rounded-sizes,
+        ),
+        "rounded-start": (
+            property: --box-border-bottom-left-radius --box-border-top-left-radius,
+            class: rounded-start,
+            values: $rounded-sizes,
+        ),
+    ),
+);
+
+$utilities-radius-keys: ("rounded", "rounded-top", "rounded-end", "rounded-bottom", "rounded-start") !default;
+@each $direction in $utilities-radius-keys {
+    @each $size, $value in $rounded-sizes {
+        $class-suffix: if($size == null, "", "-#{$size}");
+        .#{$direction}#{$class-suffix} {
+            @extend %box-border-radius-rules !optional;
+        }
+    }
+};

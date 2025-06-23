@@ -66,6 +66,9 @@
             'html_builder/static/tests/**/*',
             ('include', 'website.website_builder_assets'),
         ],
+        'web._assets_bootstrap': [
+            ('before', 'web/static/lib/bootstrap/scss/utilities/_api.scss', 'html_builder/static/src/scss/utilities_custom.scss'),
+        ],
     },
     'license': 'LGPL-3',
 }
