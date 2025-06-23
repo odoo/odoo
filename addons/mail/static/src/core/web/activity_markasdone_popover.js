@@ -13,10 +13,6 @@ export class ActivityMarkAsDone extends Component {
         hasHeader: false,
     };
 
-    get isSuggested() {
-        return this.props.activity.chaining_type === "suggest";
-    }
-
     setup() {
         super.setup();
         this.textArea = useRef("textarea");
