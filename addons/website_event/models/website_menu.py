@@ -81,7 +81,9 @@ class WebsiteMenu(models.Model):
 
         menus_by_parent_id = {}
         for menu in data['data']:
-            if menu.get('parent_id') and not menus_by_parent_id.get(menu['parent_id']):
+            if not menu.get('parent_id'):
+                continue
+            if not menus_by_parent_id.get(menu['parent_id']):
                 menus_by_parent_id[menu['parent_id']] = []
 
             menus_by_parent_id[menu['parent_id']].append(menu)
