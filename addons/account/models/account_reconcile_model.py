@@ -84,11 +84,6 @@ class AccountReconcileModel(models.Model):
     _order = 'sequence, id'
     _check_company_auto = True
 
-    _name_unique = models.Constraint(
-        'unique(name, company_id)',
-        'A reconciliation model already bears this name.',
-    )
-
     # Base fields.
     active = fields.Boolean(default=True)
     name = fields.Char(string='Name', required=True, translate=True)
