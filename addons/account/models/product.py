@@ -8,6 +8,20 @@ from odoo.tools import SQL, format_amount
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
 
 
+def _sort_invoiced_products(products, limit=100):
+    # Helper function to sort invoiced products (template and variant.)
+    invoiced_products = products.filtered('last_invoice_date').sorted(lambda p:
+        (p.last_invoice_date, -p.id), reverse=True
+    )
+    remaining_limit = max(limit - len(invoiced_products), 0)
+    if remaining_limit:
+        remaining_products = (products - invoiced_products)[:remaining_limit]
+        products = invoiced_products + remaining_products.sorted()
+    else:
+        products = invoiced_products
+    return products[:limit]
+
+
 class ProductCategory(models.Model):
     _inherit = "product.category"
 
@@ -197,11 +211,8 @@ class ProductTemplate(models.Model):
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         if not name and self._must_prioritize_invoiced_product():
-            today = fields.Date.today()
             products = self.search(domain)
-            products = products.sorted(lambda p:
-                (bool(p.last_invoice_date), p.last_invoice_date or today), reverse=True
-            )[:limit]
+            products = _sort_invoiced_products(products, limit)
             return [(product.id, product.display_name) for product in products]
         else:
             return super().name_search(name, domain, operator, limit)
@@ -387,11 +398,8 @@ class ProductProduct(models.Model):
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         ProductTemplate = self.env['product.template']
         if not name and ProductTemplate._must_prioritize_invoiced_product():
-            today = fields.Date.today()
             products = self.search(domain)
-            products = products.sorted(lambda p:
-                (bool(p.last_invoice_date), p.last_invoice_date or today), reverse=True
-            )[:limit]
+            products = _sort_invoiced_products(products, limit)
             return [(product.id, product.display_name) for product in products]
         else:
             return super().name_search(name, domain, operator, limit)
