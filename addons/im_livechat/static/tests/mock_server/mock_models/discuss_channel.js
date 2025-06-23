@@ -7,6 +7,7 @@ import { ensureArray } from "@web/core/utils/arrays";
 
 export class DiscussChannel extends mailModels.DiscussChannel {
     livechat_channel_id = fields.Many2one({ relation: "im_livechat.channel", string: "Channel" }); // FIXME: somehow not fetched properly
+    livechat_note = fields.Html({ sanitize: true });
 
     action_unfollow(idOrIds) {
         /** @type {import("mock_models").BusBus} */
@@ -28,6 +29,11 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         }
         return super.action_unfollow(...arguments);
     }
+
+    _channel_basic_info_fields() {
+        return super._channel_basic_info_fields().concat(["livechat_note"]);
+    }
+
     /**
      * @override
      * @type {typeof mailModels.DiscussChannel["prototype"]["_to_store"]}
@@ -64,6 +70,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                     channelInfo.livechat_operator_id = false;
                 }
                 channelInfo["livechat_end_dt"] = channel.livechat_end_dt;
+                channelInfo["livechat_note"] = ["markup", channel.livechat_note];
                 channelInfo.livechat_channel_id = mailDataHelpers.Store.one(
                     this.env["im_livechat.channel"].browse(channel.livechat_channel_id),
                     makeKwArgs({ fields: ["name"] })

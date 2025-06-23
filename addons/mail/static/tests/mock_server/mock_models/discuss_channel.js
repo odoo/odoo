@@ -222,6 +222,20 @@ export class DiscussChannel extends models.ServerModel {
         return DiscussChannel.browse(id);
     }
 
+    _channel_basic_info_fields() {
+        return [
+            "avatar_cache_key",
+            "channel_type",
+            "create_uid",
+            "default_display_mode",
+            "description",
+            "group_public_id",
+            "last_interest_dt",
+            "name",
+            "uuid",
+        ];
+    }
+
     /** @param {number[]} ids */
     _channel_basic_info(ids) {
         const kwargs = getKwArgs(arguments, "ids");
@@ -231,21 +245,7 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
 
-        const [data] = this._read_format(
-            ids,
-            [
-                "avatar_cache_key", // mock server simplification
-                "channel_type",
-                "create_uid",
-                "default_display_mode",
-                "description",
-                "group_public_id",
-                "last_interest_dt",
-                "name",
-                "uuid",
-            ],
-            false
-        );
+        const [data] = this._read_format(ids, this._channel_basic_info_fields(), false);
         const [channel] = this.browse(ids);
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         Object.assign(data, {
