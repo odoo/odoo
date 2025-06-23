@@ -201,12 +201,13 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'invoice_date': kwargs['date'],
             'invoice_date_due': kwargs['date_due'],
             'currency_id': self.company.currency_id.id,
-            'invoice_line_ids': [Command.create({
-                'product_id': kwargs['product_id'].id,
-                'price_unit': kwargs['price'],
-                'quantity': kwargs.get('quantity', 1.0),
-                'tax_ids': [Command.set(self.tax_15.ids)],
-            }),
+            'invoice_line_ids': kwargs.get('invoice_line_ids') or [
+                Command.create({
+                    'product_id': kwargs['product_id'].id,
+                    'price_unit': kwargs['price'],
+                    'quantity': kwargs.get('quantity', 1.0),
+                    'tax_ids': [Command.set(self.tax_15.ids)],
+                }),
             ],
         }
         move = self.env['account.move'].create(vals)
