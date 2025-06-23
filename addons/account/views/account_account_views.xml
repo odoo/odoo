@@ -158,7 +158,7 @@
                     <filter string="Inactive Accounts" name="inactiveacc" domain="[('active', '=', False)]"/>
                     <separator/>
                     <field name="account_type"/>
-                    <group expand="0" string="Group By">
+                    <group string="Group By">
                         <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'account_type'}"/>
                     </group>
                     <searchpanel class="account_root w-auto">

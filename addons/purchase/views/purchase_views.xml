@@ -444,7 +444,7 @@
                     <separator/>
                     <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
-                    <group expand="0" string="Group By">
+                    <group string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Buyer" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
@@ -486,7 +486,7 @@
                     <separator/>
                     <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
-                    <group expand="0" string="Group By">
+                    <group string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Buyer" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
                         <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
@@ -797,7 +797,7 @@
                         domain="[
                             ('date_order', '>', ((context_today() - relativedelta(years=1)).strftime('%Y-%m-%d')))
                         ]" invisible="1"/>
-                    <group expand="0" string="Group By">
+                    <group string="Group By">
                         <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter string="Order Reference" name="order_reference" domain="[]" context="{'group_by' :'order_id'}"/>

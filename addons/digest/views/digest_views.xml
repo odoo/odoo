@@ -84,7 +84,7 @@
                 <field name="user_ids"/>
                 <filter name="filter_activated" string="Activated" domain="[('state', '=', 'activated')]"/>
                 <filter name="filter_deactivated" string="Deactivated" domain="[('state', '=', 'deactivated')]"/>
-                <group expand="1" string="Group by">
+                <group string="Group by">
                     <filter string="Periodicity" name="periodicity" context="{'group_by': 'periodicity'}"/>
                 </group>
             </search>
