@@ -10,7 +10,7 @@
                <separator/>
                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                <filter string="Partial working schedules" name="partial_working_schedules" domain="[('work_time_rate', '&lt;', 100)]"/>
-               <group expand='0'>
+               <group>
                     <filter string="Flexible" name="groupby_flexible_hours" context="{'group_by': 'flexible_hours'}"/>
                     <filter name="groupby_company" context="{'group_by': 'company_id'}"/>
                 </group>

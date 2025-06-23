@@ -10,7 +10,7 @@
                 <field name="crm_team_id"/>
                 <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
-                <group expand="0" string="Group By">
+                <group string="Group By">
                     <filter string="Sales Team" name="groupby_crm_team_id" context="{'group_by': 'crm_team_id'}"/>
                 </group>
             </search>
