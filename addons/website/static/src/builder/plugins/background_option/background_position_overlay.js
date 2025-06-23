@@ -132,8 +132,16 @@ export class BackgroundPositionOverlay extends Component {
         const targetRect = this.props.editingElement.getBoundingClientRect();
         overlayContentEl.style.left = `${targetRect.left + window.scrollX}px`;
 
-        this.bgDraggerEl.style.width = `${this.props.editingElement.clientWidth}px`;
-        this.bgDraggerEl.style.height = `${this.props.editingElement.clientHeight}px`;
+        this.bgDraggerEl.style.setProperty(
+            "width",
+            `${this.props.editingElement.clientWidth}px`,
+            "important"
+        );
+        this.bgDraggerEl.style.setProperty(
+            "height",
+            `${this.props.editingElement.clientHeight}px`,
+            "important"
+        );
 
         const topPos = Math.max(
             0,
