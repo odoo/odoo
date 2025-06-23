@@ -167,3 +167,36 @@ test("Resize in grid mode (sizingGrid)", async () => {
     expect(":iframe .row").toHaveAttribute("data-row-count", "6");
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .o_grid_item");
 });
+
+test("Mouse move on throttleForAnimation", async () => {
+    await setupWebsiteBuilder(`
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+
+    await contains(":iframe .col-lg-3").click();
+    expect(".oe_overlay.oe_active").toHaveCount(1);
+
+    const keyDownEvent = new KeyboardEvent('keydown', { bubbles: true });
+    const mouseMoveEvent = new KeyboardEvent('mousemove', { bubbles: true });
+    const p = queryOne(":iframe p");
+
+    p.dispatchEvent(keyDownEvent);
+    expect(".oe_overlay.oe_active.o_overlay_hidden").toHaveCount(1);
+    p.dispatchEvent(mouseMoveEvent);
+    expect(".oe_overlay.oe_active:not(.o_overlay_hidden)").toHaveCount(1);
+    p.dispatchEvent(keyDownEvent);
+    expect(".oe_overlay.oe_active.o_overlay_hidden").toHaveCount(1);
+    p.dispatchEvent(mouseMoveEvent);
+    // Due to throttleForAnimation, the second mousemove event listener call 
+    // will be throttled at animationFrame time
+    await animationFrame();
+    expect(".oe_overlay.oe_active:not(.o_overlay_hidden)").toHaveCount(1);
+});
