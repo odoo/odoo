@@ -32,3 +32,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'chart_311',
             },
         }
+
+    @template(model='account.journal')
+    def _get_account_journal(self, template_code):
+        vals = super()._get_account_journal(template_code)
+        if template_code == 'pt':
+            if 'cash' in vals:
+                vals['cash']['default_account_id'] = 'chart_11'
+            if 'bank' in vals:
+                vals['bank']['default_account_id'] = 'chart_12'
+        return vals
