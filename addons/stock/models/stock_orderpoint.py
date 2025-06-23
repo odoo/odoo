@@ -28,7 +28,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     name = fields.Char(
         'Name', copy=False, required=True, readonly=True,
-        default=lambda self: self.env['ir.sequence'].next_by_code('stock.orderpoint'))
+        default=lambda self: self._get_default_name())
     trigger = fields.Selection([
         ('auto', 'Auto'), ('manual', 'Manual')], string='Trigger', default='auto', required=True)
     active = fields.Boolean(
@@ -98,6 +98,11 @@ class StockWarehouseOrderpoint(models.Model):
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
         ('product_location_check', 'unique (product_id, location_id, company_id)', 'A replenishment rule already exists for this product on this location.'),
     ]
+
+    @api.model
+    def _get_default_name(self):
+        """ Returns the default name for the orderpoint. """
+        return self.env['ir.sequence'].next_by_code('stock.orderpoint') or _('New')
 
     @api.depends('warehouse_id')
     def _compute_allowed_location_ids(self):
@@ -227,7 +232,14 @@ class StockWarehouseOrderpoint(models.Model):
         if 'snoozed_until' in vals:
             if any(orderpoint.trigger == 'auto' for orderpoint in self):
                 raise UserError(_("You can only snooze manual orderpoints. You should rather archive 'auto-trigger' orderpoints if you do not want them to be triggered."))
-        return super().write(vals)
+        res = super().write(vals)
+        if 'trigger' in vals and vals['trigger'] == 'auto':
+            # if the trigger is set to 'auto', we reset the name to the default one,
+            # also we don't care when the trigger is set to 'manual' because the
+            # orderpoint is deleted after replenishment.
+            for orderpoint in self:
+                orderpoint.name = orderpoint._get_default_name()
+        return res
 
     def action_product_forecast_report(self):
         self.ensure_one()
