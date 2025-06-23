@@ -48,16 +48,16 @@ export class BuilderOverlayPlugin extends Plugin {
 
         // On keydown, hide the overlay and then show it again when the mouse
         // moves.
-        const onMouseMoveOrDown = throttleForAnimation((ev) => {
+        const onMouseMoveOrDown = throttleForAnimation(() => {
             this.toggleOverlaysVisibility(true);
             this.refreshPositions();
-            ev.currentTarget.removeEventListener("mousemove", onMouseMoveOrDown);
-            ev.currentTarget.removeEventListener("mousedown", onMouseMoveOrDown);
+            this.editable.removeEventListener("mousemove", onMouseMoveOrDown);
+            this.editable.removeEventListener("mousedown", onMouseMoveOrDown);
         });
-        this.addDomListener(this.editable, "keydown", (ev) => {
+        this.addDomListener(this.editable, "keydown", () => {
             this.toggleOverlaysVisibility(false);
-            ev.currentTarget.addEventListener("mousemove", onMouseMoveOrDown);
-            ev.currentTarget.addEventListener("mousedown", onMouseMoveOrDown);
+            this.editable.addEventListener("mousemove", onMouseMoveOrDown);
+            this.editable.addEventListener("mousedown", onMouseMoveOrDown);
         });
 
         // Hide the overlay when scrolling. Show it again when the scroll is
