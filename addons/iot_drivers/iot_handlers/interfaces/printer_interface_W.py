@@ -34,6 +34,10 @@ class PrinterInterface(Interface):
                     _logger.warning('Printer "%s" has no port name. Used dummy port', identifier)
                     printer_port = 'IOT_DUMMY_PORT'
 
+                if printer_port == "PORTPROMPT:":
+                    # discard virtual printers (like "Microsoft Print to PDF") as they will trigger dialog boxes prompt
+                    continue
+
                 printer_devices[identifier] = {
                     'identifier': identifier,
                     'printer_handle': handle_printer,
