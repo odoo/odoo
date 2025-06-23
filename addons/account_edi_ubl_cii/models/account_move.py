@@ -73,7 +73,7 @@ class AccountMove(models.Model):
             for partner in self.commercial_partner_id
             if (suggested_format := partner ._get_suggested_ubl_cii_edi_format())
         }
-        if self.ubl_cii_xml_id or suggested_edi_formats:
+        if self.state == 'posted' and (self.ubl_cii_xml_id or suggested_edi_formats):
             print_items.append({
                 'key': 'download_ubl',
                 'description': _('Export XML'),
