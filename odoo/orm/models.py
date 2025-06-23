@@ -78,7 +78,6 @@ from .utils import (
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator, Reversible, Sequence
-    from types import MappingProxyType
     from .table_objects import TableObject
     from .environments import Environment
     from .registry import Registry, TriggerTree
@@ -358,9 +357,7 @@ class BaseModel(metaclass=MetaModel):
     pool: Registry  # all registry classes have a registry on the class
     # TODO replace most usages with self.env.registry; pool is reserved for class instance
 
-    _fields__: dict[str, Field]
-    _fields: MappingProxyType[str, Field]
-
+    _fields: dict[str, Field]
     _auto: bool = False
     """Whether a database table should be created.
     If set to ``False``, override :meth:`~odoo.models.BaseModel.init`
