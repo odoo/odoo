@@ -75,13 +75,7 @@ class ProductTemplate(models.Model):
         for product in self:
             if product.last_invoice_date:
                 days_count = (today - product.last_invoice_date).days
-                if days_count > 365:
-                    day_value_str = self.env._('%(years_count)sy', years_count=(days_count // 365))
-                elif days_count > 30:
-                    day_value_str = self.env._('%(months_count)smo', months_count=(days_count // 30))
-                else:
-                    day_value_str = self.env._('%(days_count)sd', days_count=days_count)
-                product.last_invoice_since = day_value_str
+                product.last_invoice_since = self._get_last_invoice_since(days_count)
 
     @api.depends('invoice_policy', 'sale_ok', 'service_tracking')
     def _compute_product_tooltip(self):
@@ -257,11 +251,19 @@ class ProductTemplate(models.Model):
         """
         return ['no']
 
+    @api.model
+    def _get_last_invoice_since(self, days_count):
+        if days_count > 365:
+            return self.env._('%(years_count)sy', years_count=(days_count // 365))
+        elif days_count > 30:
+            return self.env._('%(months_count)smo', months_count=(days_count // 30))
+        else:
+            return self.env._('%(days_count)sd', days_count=days_count)
+
     ####################################
     # Product/combo configurator hooks #
     ####################################
 
-    @api.model
     def _get_configurator_display_price(
         self, product_or_template, quantity, date, currency, pricelist, **kwargs
     ):

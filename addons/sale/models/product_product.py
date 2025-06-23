@@ -37,13 +37,7 @@ class ProductProduct(models.Model):
         for product in self:
             if product.last_invoice_date:
                 days_count = (today - product.last_invoice_date).days
-                if days_count > 365:
-                    day_value_str = self.env._('%(years_count)sy', years_count=(days_count // 365))
-                elif days_count > 30:
-                    day_value_str = self.env._('%(months_count)smo', months_count=(days_count // 30))
-                else:
-                    day_value_str = self.env._('%(days_count)sd', days_count=days_count)
-                product.last_invoice_since = day_value_str
+                product.last_invoice_since = self.env['product.template']._get_last_invoice_since(days_count)
 
     def _compute_sales_count(self):
         r = {}
