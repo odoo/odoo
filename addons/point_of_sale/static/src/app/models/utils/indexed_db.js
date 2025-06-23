@@ -19,7 +19,7 @@ export default class IndexedDB {
             window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
         if (!indexedDB) {
-            console.error(
+            console.debug(
                 _t(
                     "Warning: Your browser doesn't support IndexedDB. The data won't be saved. Please use a modern browser."
                 )
@@ -29,7 +29,7 @@ export default class IndexedDB {
         this.dbInstance = indexedDB;
         const dbInstance = indexedDB.open(this.dbName, this.dbVersion);
         dbInstance.onerror = (event) => {
-            console.error("Database error: " + event.target.errorCode);
+            console.debug("Database error: " + event.target.errorCode);
         };
         dbInstance.onsuccess = (event) => {
             this.db = event.target.result;
@@ -88,7 +88,7 @@ export default class IndexedDB {
                         try {
                             transaction.abort();
                         } catch (e) {
-                            console.error("Error aborting transaction:", e);
+                            console.debug("Error aborting transaction:", e);
                         }
                     }
                 }, TRANSACTION_TIMEOUT);
@@ -119,7 +119,7 @@ export default class IndexedDB {
                         request.onerror = (event) => {
                             hasError = true;
                             clearTimeout(timeoutId);
-                            console.error("IndexedDB error:", event.target?.error);
+                            console.debug("IndexedDB error:", event.target?.error);
                             reject(event.target?.error || "Unknown error");
                         };
                     } catch {
@@ -195,7 +195,7 @@ export default class IndexedDB {
                     const request = objectStore.getAll();
 
                     const errorMethod = (event) => {
-                        console.error("Error reading data from the indexed database:", event);
+                        console.debug("Error reading data from the indexed database:", event);
                         reject(event.target.error || "Unknown error");
                     };
 
