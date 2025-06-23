@@ -47,6 +47,40 @@
         </field>
     </record>
 
+    <record id="hr_employee_public_view_form_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.public.view.form.inherit.org_chart</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='o_employee_org_chart']" position="inside">
+                <div invisible="not subordinate_ids and (not parent_id or parent_id == id)">
+                    <div class="d-flex flex-column align-items-start mt-0 pt-4 w-100" style="cursor: default;">
+                        <div class="d-flex justify-content-between w-100 mb-0">
+                            <span class="text-uppercase fw-bolder" style="font-size: 13px">Organization Chart</span>
+                            <a name="%(hr_org_chart.action_hr_employee_public_org_chart)d"
+                                type="action"
+                                role="button"
+                                context="{'hierarchy_res_id': id}">
+                                <i class="fa fa-sitemap me-1 mt-1"/>
+                                <span class="fw-bolder">Zoom</span>
+                            </a>
+                        </div>
+                        <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"></div>
+                    </div>
+                </div>
+                <div invisible="subordinate_ids or (parent_id and not parent_id == id)">
+                    <div class="d-flex flex-column align-items-start mt-0 pt-4" style="cursor: default;">
+                        <div class="d-flex align-items-left mb-0">
+                            <span class="text-uppercase fw-bolder" style="font-size: 13px">Organization Chart</span>
+                        </div>
+                        <div class="w-100 border-top border-1 border-secondary mt-0 mb-3"></div>
+                    </div>
+                </div>
+                <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="act_hr_employee_public_hierarchy_view" model="ir.actions.act_window.view">
         <field name="sequence" eval="16"/>
         <field name="view_mode">hierarchy</field>
