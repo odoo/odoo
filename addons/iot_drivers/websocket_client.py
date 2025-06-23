@@ -79,6 +79,11 @@ class WebsocketClient(Thread):
                 case 'server_clear':
                     helpers.disconnect_from_server()
                     close_server_log_sender_handler()
+                case 'server_update':
+                    helpers.update_conf({
+                        'remote_server': payload['server_url']
+                    })
+                    helpers.get_odoo_server_url.cache_clear()
                 case 'restart_odoo':
                     ws.close()
                     helpers.odoo_restart()
