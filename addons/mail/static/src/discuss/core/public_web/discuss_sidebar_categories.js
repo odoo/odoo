@@ -3,7 +3,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
 import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_sidebar_channel_actions";
-import { useHover } from "@mail/utils/common/hooks";
+import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 
 import { Component, useSubEnv } from "@odoo/owl";
 
@@ -21,12 +21,12 @@ export const discussSidebarChannelIndicatorsRegistry = registry.category(
 export class DiscussSidebarSubchannel extends Component {
     static template = "mail.DiscussSidebarSubchannel";
     static props = ["thread", "isFirst?"];
-    static components = { DiscussSidebarChannelActions, Dropdown };
+    static components = { DiscussSidebarChannelActions, Dropdown, UseHoverOverlay };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.hover = useHover(["root", "floating*"], {
+        this.hover = useHover(["root"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.floating.isOpen = true;
@@ -68,12 +68,13 @@ export class DiscussSidebarChannel extends Component {
         Dropdown,
         ImStatus,
         ThreadIcon,
+        UseHoverOverlay,
     };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.hover = useHover(["root", "floating*"], {
+        this.hover = useHover(["root"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.floating.isOpen = true;
@@ -173,7 +174,7 @@ export class DiscussSidebarCategory extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.discusscorePublicWebService = useService("discuss.core.public.web");
-        this.hover = useHover(["root", "floating*"], {
+        this.hover = useHover(["root", "floating"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.onHover(true);
@@ -230,7 +231,7 @@ export class DiscussSidebarCategories extends Component {
         this.orm = useService("orm");
         this.ui = useService("ui");
         this.command = useService("command");
-        this.searchHover = useHover(["search-btn", "search-floating*"], {
+        this.searchHover = useHover(["search-btn", "search-floating"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.searchFloating.isOpen = true;

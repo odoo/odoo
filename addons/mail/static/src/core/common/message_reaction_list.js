@@ -18,7 +18,7 @@ export class MessageReactionList extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.preview = useDropdownState();
-        this.hover = useHover(["reactionButton", "reactionList*"], {
+        this.hover = useHover(["reactionButton", "reactionList"], {
             onHover: () => (this.preview.isOpen = true),
             onAway: () => (this.preview.isOpen = false),
             stateObserver: () => [this.preview?.isOpen],
