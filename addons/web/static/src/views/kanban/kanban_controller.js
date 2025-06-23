@@ -305,7 +305,7 @@ export class KanbanController extends Component {
             activeIdsLimit: session.active_ids_limit,
             hooks: {
                 onRecordMovedGroup: this.onRecordMovedGroup.bind(this),
-                // onRecordSaved: this.onRecordSaved.bind(this),
+                onRecordSaved: this.onRecordSaved.bind(this),
             },
         };
     }
@@ -470,6 +470,17 @@ export class KanbanController extends Component {
         }
 
         return this.isQuickCreateField(list.groupByField);
+    }
+
+    onRecordSaved(record, change) {
+        // If we change field used by read_group_bar changed only
+        // Or let the onRecordMovedGroup done rest of the triggering
+        if (this.model.root.isGrouped) {
+            const group = this.model.root.groups.find((l) =>
+                l.records.find((r) => r.id === record.id)
+            );
+            this.progressBarState?.updateCounts([group]);
+        }
     }
 
     onRecordMovedGroup(record, sourceGroup, targetGroup) {
