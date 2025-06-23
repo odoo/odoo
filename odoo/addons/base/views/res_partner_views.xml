@@ -324,7 +324,7 @@
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>
-                    <group expand="0" name="group_by" string="Group By">
+                    <group name="group_by" string="Group By">
                         <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
                         <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
