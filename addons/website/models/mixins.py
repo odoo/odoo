@@ -22,13 +22,14 @@ class WebsiteSeoMetadata(models.AbstractModel):
 
     _description = 'SEO metadata'
 
-    is_seo_optimized = fields.Boolean("SEO optimized", compute='_compute_is_seo_optimized')
+    is_seo_optimized = fields.Boolean("SEO optimized", compute='_compute_is_seo_optimized', store=True)
     website_meta_title = fields.Char("Website meta title", translate=True, prefetch="website_meta")
     website_meta_description = fields.Text("Website meta description", translate=True, prefetch="website_meta")
     website_meta_keywords = fields.Char("Website meta keywords", translate=True, prefetch="website_meta")
     website_meta_og_img = fields.Char("Website opengraph image")
     seo_name = fields.Char("Seo name", translate=True, prefetch=True)
 
+    @api.depends("website_meta_title", "website_meta_description", "website_meta_keywords")
     def _compute_is_seo_optimized(self):
         for record in self:
             record.is_seo_optimized = record.website_meta_title and record.website_meta_description and record.website_meta_keywords

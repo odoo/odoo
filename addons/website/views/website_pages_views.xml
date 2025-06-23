@@ -172,6 +172,8 @@
             <separator/>
             <filter string="Tracked" name="tracked" domain="[('track', '=', True)]"/>
             <filter string="Not tracked" name="not_tracked" domain="[('track', '=', False)]"/>
+            <separator/>
+            <filter string="Not SEO optimized" name="not_seo_optimized" domain="[('is_seo_optimized', '=', False)]"/>
         </search>
     </field>
 </record>
