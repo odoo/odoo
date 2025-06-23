@@ -1274,7 +1274,7 @@ Contracts:
             state_result['validate'].update({'confirm', 'refuse'})
             state_result['refuse'].update({'confirm', 'validate'})
             state_result['cancel'].update({'confirm', 'validate', 'refuse'})
-        elif is_time_off_manager and not is_in_past:
+        elif is_time_off_manager:
             if validation_type != 'hr':
                 state_result['confirm'].add('refuse')
                 state_result['validate'].add('refuse')
@@ -1298,7 +1298,6 @@ Contracts:
             is_time_off_manager = holiday.employee_id.leave_manager_id == self.env.user
             dict_all_possible_state = holiday._get_next_states_by_state()
             validation_type = holiday.validation_type
-            is_in_past = holiday.date_from.date() < fields.Date.today()
             error_message = ""
             # Standard Check
             if holiday.state == state:
@@ -1307,11 +1306,6 @@ Contracts:
                 error_message = self.env._('Not possible state. State Approve is only used for leave needed 2 approvals')
             elif holiday.state == 'cancel':
                 error_message = self.env._('A cancelled leave cannot be modified.')
-
-            # Leave in past
-            elif is_in_past and not is_officer:
-                error_message = self.env._('Only a Time Off Officer can change the state of a leave in the past.')
-
             elif state not in dict_all_possible_state.get(holiday.state, {}):
                 if state == 'cancel':
                     error_message = self.env._('You can only cancel your own leave. You can cancel a leave only if this leave \
