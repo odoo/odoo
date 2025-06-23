@@ -322,9 +322,7 @@ export class Rtc extends Record {
         compute() {
             return callActionsRegistry
                 .getEntries()
-                .filter(([key, action]) => {
-                    return action.condition({ rtc: this });
-                })
+                .filter(([key, action]) => action.condition({ rtc: this }))
                 .map(([key, action]) => [key, action.isActive({ rtc: this }), action.isTracked]);
         },
         onUpdate() {
@@ -2148,7 +2146,8 @@ export const rtcService = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
-        const rtc = env.services["mail.store"].rtc;
+        const store = env.services["mail.store"];
+        const rtc = store.rtc;
         rtc.pipService = services["discuss.pip_service"];
         onChange(rtc.pipService.state, "active", () => {
             const isPipMode = rtc.pipService.state.active;
@@ -2165,9 +2164,7 @@ export const rtcService = {
         });
         rtc.p2pService = services["discuss.p2p"];
         rtc.p2pService.acceptOffer = async (id, sequence) => {
-            const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
-                Number(id)
-            );
+            const session = await store["discuss.channel.rtc.session"].getWhenReady(Number(id));
             /**
              * We only accept offers for new connections (higher sequence),
              * or offers that renegotiate an existing connection (same sequence).
