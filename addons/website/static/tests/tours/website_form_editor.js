@@ -844,6 +844,8 @@ registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
     },
 ]));
 
+
+// SHSA: Testing does it breaks on runbot and not on local
 registerWebsitePreviewTour(
     "website_form_conditional_required_checkboxes",
     {
