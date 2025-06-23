@@ -136,9 +136,25 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
     left: 50%; // Avoid horizontal scrollbar in Chrome
 }
 
+// Pagination
 .pagination {
-    // Ensure circle for one digit numbers
     font-variant-numeric: tabular-nums;
+}
+
+// Ensure circle pagination
+.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    width: 2.5em;
+    aspect-ratio: 1 / 1;
+}
+
+// Ensure the readability of numbers when there are many (>3) and
+// they overflow the circle.
+.page-link.active, .active > .page-link {
+    text-shadow: 0 0 .1em var(--pagination-active-bg);
 }
 
 // Show the page content behind the offcanvas < sm, fallback at 400px above.
