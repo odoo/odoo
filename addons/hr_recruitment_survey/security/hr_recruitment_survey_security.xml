@@ -64,8 +64,8 @@
         </record>
         <record id="survey_invite_recruitment_manager" model="ir.rule">
             <field name="name">Survey invite: recruitment manager: all recruitment</field>
-            <field name="model_id" ref="survey.model_survey_invite"/>
-            <field name="domain_force">[('survey_id.survey_type', '=', 'recruitment')]</field>
+            <field name="model_id" ref="hr_recruitment_survey.model_hr_recruitment_survey_invite"/>
+            <field name="domain_force">[('all_surveys_are_recruitment', '=', True)]</field>
             <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
             <field name="perm_unlink" eval="0"/>
             <field name="perm_write" eval="1"/>
@@ -102,11 +102,11 @@
         </record>
         <record id="survey_invite_recruitment_user" model="ir.rule">
             <field name="name">Survey invite: recruitment officer: unrestricted or in restricted users</field>
-            <field name="model_id" ref="survey.model_survey_invite"/>
+            <field name="model_id" ref="hr_recruitment_survey.model_hr_recruitment_survey_invite"/>
             <field name="domain_force">[
-                '&amp;', ('survey_id.survey_type', '=', 'recruitment'),
-                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
-                        ('survey_id.restrict_user_ids', '=', False)]</field>
+                '&amp;',
+                ('all_surveys_are_recruitment', '=', True),
+                ('accessible_by_current_user', '=', True)]</field>
             <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
             <field name="perm_unlink" eval="0"/>
             <field name="perm_write" eval="1"/>
@@ -173,11 +173,11 @@
 
         <record id="survey_invite_recruitment_interviewer" model="ir.rule">
             <field name="name">Survey invite: recruitment interviewer: send surveys to applicants for which they are set as interviewer</field>
-            <field name="model_id" ref="survey.model_survey_invite"/>
-            <field name="domain_force">[('survey_id.survey_type', '=', 'recruitment'),
-                '|', ('survey_id.hr_job_ids.interviewer_ids', 'in', user.id),
-                     ('survey_id.hr_job_ids.application_ids.interviewer_ids', 'in', user.id)
-                ]</field>
+            <field name="model_id" ref="hr_recruitment_survey.model_hr_recruitment_survey_invite"/>
+            <field name="domain_force">[
+                '&amp;',
+                ('all_surveys_are_recruitment', '=', True),
+                ('accessible_by_interviewer_user', '=', True)]</field>
             <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
             <field name="perm_unlink" eval="0"/>
             <field name="perm_write" eval="1"/>
