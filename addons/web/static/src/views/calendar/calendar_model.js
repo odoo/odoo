@@ -475,10 +475,24 @@ export class CalendarModel extends Model {
         // Remove records that don't match dynamic filters
         for (const [recordId, record] of Object.entries(data.records)) {
             for (const [fieldName, filterInfo] of Object.entries(dynamicSections)) {
+                const field = this.meta.fields[fieldName];
+                if (!field) continue;
+                const isX2Many = ["many2many", "one2many"].includes(field.type);
+
                 for (const filter of filterInfo.filters) {
+                    if (filter.active) continue;
+
                     const rawValue = record.rawRecord[fieldName];
-                    const value = Array.isArray(rawValue) ? rawValue[0] : rawValue;
-                    if (filter.value === value && !filter.active) {
+
+                    let match = false;
+                    if (isX2Many) {
+                        match = Array.isArray(rawValue) && rawValue.includes(filter.value);
+                    } else {
+                        const recordValue = Array.isArray(rawValue) ? rawValue[0] : rawValue;
+                        match = filter.value === recordValue;
+                    }
+
+                    if (match) {
                         delete data.records[recordId];
                     }
                 }
@@ -868,6 +882,26 @@ export class CalendarModel extends Model {
             return filters;
         }, []);
 
+        const isX2Many = ["many2many", "one2many"].includes(field.type);
+
+        if (isX2Many && rawFilters.length > 0) {
+            const relatedIds = rawFilters.map(f => f.id).filter(id => id);
+            if (relatedIds.length > 0) {
+                const names = await this.orm.searchRead(
+                    field.relation,
+                    [['id', 'in', relatedIds]],
+                    ['display_name']
+                );
+                const namesById = Object.fromEntries(names.map(r => [r.id, r.display_name]));
+
+                for (const rawFilter of rawFilters) {
+                    if (namesById[rawFilter.id]) {
+                        rawFilter[fieldName] = [rawFilter.id, namesById[rawFilter.id]];
+                    }
+                }
+            }
+        }
+
         const { colorFieldName } = filterInfo;
         const shouldFetchColor =
             colorFieldName &&
@@ -922,7 +956,8 @@ export class CalendarModel extends Model {
         const rawValue = rawFilter[fieldName];
         const value = Array.isArray(rawValue) ? rawValue[0] : rawValue;
         const field = fields[fieldName];
-        const formatter = registry.category("formatters").get(field.type);
+        const isX2Many = ["many2many", "one2many"].includes(field.type);
+        const formatter = registry.category("formatters").get(isX2Many ? "many2one" : field.type);
 
         const { colorFieldName } = filterInfo;
         const colorField = fields[fieldMapping.color];
