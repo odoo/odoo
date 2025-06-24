@@ -52,7 +52,7 @@ class MailRenderMixin(models.AbstractModel):
     lang = fields.Char(
         'Language',
         help="Optional translation language (ISO code) to select when sending out an email. "
-             "If not set, the english version will be used. This should usually be a placeholder expression "
+             "If not set, the main partner's language will be used. This should usually be a placeholder expression "
              "that provides the appropriate language, e.g. {{ object.partner_id.lang }}.")
     # rendering context
     render_model = fields.Char("Rendering Model", compute='_compute_render_model', store=False)
@@ -626,8 +626,17 @@ class MailRenderMixin(models.AbstractModel):
         :rtype: dict
         """
         self.ensure_one()
+        if self.lang:
+            rendered_langs = self._render_template(
+                self.lang, self.render_model, res_ids, engine=engine)
+        else:
+            rendered_langs = dict.fromkeys(res_ids, "")
+            records = self.env[self.render_model].browse(res_ids)
+            customers = records._mail_get_partners()
+            for record in records:
+                partner = customers[record.id][0] if customers[record.id] else self.env['res.partner']
+                rendered_langs[record.id] = partner.lang
 
-        rendered_langs = self._render_template(self.lang, self.render_model, res_ids, engine=engine)
         return dict(
             (res_id, lang)
             for res_id, lang in rendered_langs.items()
@@ -640,7 +649,6 @@ class MailRenderMixin(models.AbstractModel):
         :param list res_ids: list of ids of records (all belonging to same model
           defined by self.render_model)
         :param string engine: inline_template, qweb, or qweb_view;
-
         :return: {lang: (template with lang=lang_code if specific lang computed
           or template, res_ids targeted by that language}
         :rtype: dict
@@ -660,7 +668,9 @@ class MailRenderMixin(models.AbstractModel):
         )
 
     def _render_field(self, field, res_ids, engine='inline_template',
-                      compute_lang=False, set_lang=False,
+                      # lang options
+                      compute_lang=False, res_ids_lang=False, set_lang=False,
+                      # rendering context and options
                       add_context=None, options=None):
         """ Given some record ids, render a template located on field on all
         records. ``field`` should be a field of self (i.e. ``body_html`` on
@@ -675,6 +685,8 @@ class MailRenderMixin(models.AbstractModel):
         :param boolean compute_lang: compute language to render on translated
           version of the template instead of default (probably english) one.
           Language will be computed based on ``self.lang``;
+        :param dict res_ids_lang: record id to lang, e.g. already rendered
+          using another way;
         :param string set_lang: force language for rendering. It should be a
           valid lang code matching an activate res.lang. Checked only if
           ``compute_lang`` is False;
@@ -703,6 +715,11 @@ class MailRenderMixin(models.AbstractModel):
         self.ensure_one()
         if compute_lang:
             templates_res_ids = self._classify_per_lang(res_ids)
+        elif res_ids_lang:
+            templates_res_ids = {}
+            for res_id, lang in res_ids_lang.items():
+                lang_values = templates_res_ids.setdefault(lang, (self.with_context(lang=lang), []))
+                lang_values[1].append(res_id)
         elif set_lang:
             templates_res_ids = {set_lang: (self.with_context(lang=set_lang), res_ids)}
         else:

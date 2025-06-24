@@ -1103,7 +1103,7 @@ class MailComposeMessage(models.TransientModel):
 
         # langs, used currently only to propagate in comment mode for notification
         # layout translation
-        langs = self._render_field('lang', res_ids)
+        langs = self._render_lang(res_ids)
         subjects = self._render_field('subject', res_ids, compute_lang=True)
         bodies = self._render_field(
             'body', res_ids, compute_lang=True,

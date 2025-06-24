@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError
@@ -14,7 +13,7 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMailComposerMixin, cls).setUpClass()
+        super().setUpClass()
 
         cls.mail_template = cls.env['mail.template'].create({
             'body_html': '<p>EnglishBody for <t t-out="object.name"/></p>',
@@ -126,9 +125,10 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
         with self.assertRaises(AccessError):
             rendered = composer._render_lang(source.ids)
 
-        # _render_lang should not crash when content is not coming from template but not dynamic
+        # _render_lang should not crash when content is not coming from template
+        # but not dynamic and/or is actually the default computed based on partner
         for lang_value, expected in [
-            (False, ""), ("", ""), ("fr_FR", "fr_FR")
+            (False, self.partner_1.lang), ("", self.partner_1.lang), ("fr_FR", "fr_FR")
         ]:
             with self.subTest(lang_value=lang_value):
                 composer.lang = lang_value
@@ -196,8 +196,8 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
         self.assertEqual(subject, f'SpanishSubject for {source.name}',
                          'Translation comes from the template, as both values equal')
 
-        # check default computation when 'lang' is void in both -> no default, Enligsh as default
+        # check default computation when 'lang' is void in both -> main customer lang
         self.mail_template.lang = False
         subject = composer._render_field('subject', source.ids, compute_lang=True)[source.id]
-        self.assertEqual(subject, f'EnglishSubject for {source.name}',
-                         'No value, default is English')
+        self.assertEqual(subject, f'SpanishSubject for {source.name}',
+                         'Translation comes from customer lang, being default when no value is rendered')
