@@ -1195,20 +1195,15 @@ class Field(typing.Generic[T]):
     # SQL generation methods
     #
 
-    def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
+    def to_sql(self, model: BaseModel, alias: str) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias.
 
         The query object is necessary for fields that need to add tables to the query.
-
-        When parameter ``flush`` is true, the method adds some metadata in the
-        result to make method :meth:`~odoo.api.Environment.execute_query` flush
-        the field before executing the query.
         """
         if not self.store or not self.column_type:
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
-        field_to_flush = self if flush else None
-        sql_field = SQL.identifier(alias, self.name, to_flush=field_to_flush)
+        sql_field = SQL.identifier(alias, self.name, to_flush=self)
         if self.company_dependent:
             fallback = self.get_company_dependent_fallback(model)
             fallback = self.convert_to_column(self.convert_to_write(fallback, model), model)
