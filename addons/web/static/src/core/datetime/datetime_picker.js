@@ -34,9 +34,11 @@ const { DateTime, Info } = luxon;
  * @property {PrecisionLevel} [minPrecision="days"]
  * @property {() => any} [onReset]
  * @property {(value: DateTime | DateRange, unit: "date" | "time") => any} [onSelect]
+ * @property {() => any} [onToggleRange]
  * @property {boolean} [range]
  * @property {number} [rounding=5] the rounding in minutes, pass 0 to show seconds, pass 1 to avoid
  *  rounding minutes without displaying seconds.
+ * @property {() => boolean} [showRangeToggler]
  * @property {{ buttons?: any }} [slots]
  * @property {"date" | "datetime"} [type]
  * @property {NullableDateTime | NullableDateRange} [value]
@@ -300,8 +302,10 @@ export class DateTimePicker extends Component {
         },
         onReset: { type: Function, optional: true },
         onSelect: { type: Function, optional: true },
+        onToggleRange: { type: Function, optional: true },
         range: { type: Boolean, optional: true },
         rounding: { type: Number, optional: true },
+        showRangeToggler: { type: Boolean, optional: true },
         slots: {
             type: Object,
             shape: { buttons: { type: Object, optional: true } },

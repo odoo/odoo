@@ -10,6 +10,8 @@ import { standardFieldProps } from "../standard_field_props";
 import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 import { formatDate, formatDateTime } from "../formatters";
 
+const { DateTime } = luxon;
+
 function getFormattedPlaceholder(value, type, options) {
     if (value instanceof luxon.DateTime) {
         return type === "date" ? formatDate(value, options) : formatDateTime(value, options);
@@ -110,6 +112,30 @@ export class DateTimeField extends Component {
                 value,
                 type: this.field.type,
                 range: this.isRange(value),
+                showRangeToggler: !this.props.required && !this.props.alwaysRange,
+                onToggleRange: () => {
+                    this.state.range = !this.state.range;
+
+                    if (this.state.range) {
+                        let values = this.values;
+                        const optionalFieldIndex = values[0] ? 1 : 0;
+
+                        if (!values[0] && !values[1]) {
+                            values = [DateTime.local(), DateTime.local()];
+                        }
+                        values[optionalFieldIndex] = optionalFieldIndex
+                            ? values[0].plus({ hours: 1 })
+                            : values[1].minus({ hours: 1 });
+
+                        this.state.focusedDateIndex = 0;
+                        this.state.value = values;
+                    } else {
+                        const mainFieldIndex = this.props.name === this.startDateField ? 0 : 1;
+
+                        this.state.focusedDateIndex = mainFieldIndex;
+                        this.state.value[mainFieldIndex ? 0 : 1] = false;
+                    }
+                },
             };
             if (this.props.maxDate) {
                 pickerProps.maxDate = this.parseLimitDate(this.props.maxDate);
@@ -189,22 +215,6 @@ export class DateTimeField extends Component {
     //-------------------------------------------------------------------------
     // Methods
     //-------------------------------------------------------------------------
-
-    /**
-     * @param {number} valueIndex
-     */
-    async addDate(valueIndex) {
-        const values = this.values;
-        values[valueIndex] = valueIndex
-            ? values[0].plus({ hours: 1 })
-            : values[1].minus({ hours: 1 });
-
-        this.state.focusedDateIndex = valueIndex;
-        this.state.value = values;
-        this.state.range = true;
-
-        this.openPicker(valueIndex);
-    }
 
     /**
      * @param {number} valueIndex
