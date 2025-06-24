@@ -201,3 +201,12 @@ export function shippingDateIsToday() {
         },
     ];
 }
+
+export function cashierNameExists(name) {
+    return [
+        {
+            content: `Cashier ${name} exists on the receipt`,
+            trigger: `.pos-receipt-contact .cashier:contains(Served by):contains(${name})`,
+        },
+    ];
+}
