@@ -852,12 +852,11 @@ test("fieldmany2many list comodel not writable", async () => {
             </list>`,
         search: '<search><field name="name"/></search>',
     };
-    onRpc((args) => {
-        if (args.route === "/web/dataset/call_kw/partner/web_save" && args.args[0].length === 0) {
-            expect(args.args[1]).toEqual({ timmy: [[4, 1]] });
-        }
-        if (args.route === "/web/dataset/call_kw/partner/web_save" && args.args[0].length !== 0) {
-            expect(args.args[1]).toEqual({ timmy: [[3, 1]] });
+    onRpc("partner", "web_save", ({ args }) => {
+        if (args[0].length === 0) {
+            expect(args[1]).toEqual({ timmy: [[4, 1]] });
+        } else {
+            expect(args[1]).toEqual({ timmy: [[3, 1]] });
         }
     });
     await mountView({

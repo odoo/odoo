@@ -6,14 +6,13 @@ import {
     manuallyDispatchProgrammaticEvent,
     middleClick,
     press,
-    queryAll,
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
 } from "@odoo/hoot-dom";
 import {
-    Deferred,
     animationFrame,
+    Deferred,
     mockTimeZone,
     mockTouch,
     runAllTimers,
@@ -10400,20 +10399,19 @@ test("resequence list lines when previous resequencing crashed", async () => {
     await contains(".o_form_button_save").click();
     await animationFrame();
 
-    const getNames = () => [...queryAll(".o_list_char")].map((el) => el.textContent);
-    expect(getNames()).toEqual(["first line", "second line"]);
+    expect(queryAllTexts(".o_list_char")).toEqual(["first line", "second line"]);
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
         "tbody.ui-sortable tr:nth-child(2)"
     );
     await animationFrame();
     expect.verifyErrors(["RPC_ERROR"]);
-    expect(getNames()).toEqual(["first line", "second line"]);
+    expect(queryAllTexts(".o_list_char")).toEqual(["first line", "second line"]);
 
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
         "tbody.ui-sortable tr:nth-child(2)"
     );
     await animationFrame();
-    expect(getNames()).toEqual(["second line", "first line"]);
+    expect(queryAllTexts(".o_list_char")).toEqual(["second line", "first line"]);
     expect.verifySteps(["resequence onChange crash", "resequence onChange ok"]);
 });
 

@@ -1,16 +1,13 @@
+import { patchWithCleanupImg } from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { VersionControlPlugin } from "@html_builder/core/version_control_plugin";
-import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
-import { WebsiteSessionPlugin } from "@website/builder/plugins/website_session_plugin";
-import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
-import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { after, before, describe } from "@odoo/hoot";
+import { after, describe } from "@odoo/hoot";
 import {
     advanceTime,
     animationFrame,
@@ -35,9 +32,12 @@ import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
-import { patchWithCleanupImg } from "@html_builder/../tests/helpers";
-import { getWebsiteSnippets } from "./snippets_getter.hoot";
+import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
+import { WebsiteSessionPlugin } from "@website/builder/plugins/website_session_plugin";
+import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
+import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
+import { getWebsiteSnippets } from "./snippets_getter.hoot";
 
 class Website extends models.Model {
     _name = "website";
@@ -64,9 +64,7 @@ export function defineWebsiteModels() {
     describe.current.tags("desktop");
     defineMailModels();
     defineModels([Website, IrUiView]);
-    before(() => {
-        onRpc("/website/theme_customize_data_get", () => []);
-    });
+    onRpc("/website/theme_customize_data_get", () => []);
 }
 
 /**

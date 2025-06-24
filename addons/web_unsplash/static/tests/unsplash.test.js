@@ -14,9 +14,7 @@ test("Unsplash is inserted in the Media Dialog", async () => {
         access_token: false,
         public: true,
     };
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-        return [imageRecord];
-    });
+    onRpc("ir.attachment", "search_read", () => [imageRecord]);
     const fetchDef = new Deferred();
     onRpc("/web_unsplash/fetch_images", () => {
         expect.step("fetch_images");
@@ -44,9 +42,9 @@ test("Unsplash is inserted in the Media Dialog", async () => {
             ],
         };
     });
-    onRpc("/web_unsplash/attachment/add", (args) => {
-        return [{ ...imageRecord, description: "unsplash_image" }];
-    });
+    onRpc("/web_unsplash/attachment/add", (args) => [
+        { ...imageRecord, description: "unsplash_image" },
+    ]);
     const env = await makeMockEnv();
     const { editor } = await setupEditor(`<p>[]</p>`, { env });
     await expectElementCount(".o-we-powerbox", 0);
@@ -74,9 +72,7 @@ test("Unsplash error is displayed when there is no key", async () => {
         access_token: false,
         public: true,
     };
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-        return [imageRecord];
-    });
+    onRpc("ir.attachment", "search_read", () => [imageRecord]);
     const fetchDef = new Deferred();
     onRpc("/web_unsplash/fetch_images", () => {
         fetchDef.resolve();
@@ -100,18 +96,16 @@ test("Unsplash error is displayed when there is no key", async () => {
 });
 
 test("Document tab does not crash with FileSelector extension", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-        return [
-            {
-                id: 1,
-                name: "logo",
-                mimetype: "image/png",
-                image_src: "/web/static/img/logo2.png",
-                access_token: false,
-                public: true,
-            },
-        ];
-    });
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
     const env = await makeMockEnv();
     const { editor } = await setupEditor("<p>a[]</p>", { env });
     await insertText(editor, "/image");
