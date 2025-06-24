@@ -116,7 +116,7 @@ class IrModuleModule(models.Model):
         for pattern in terp.get('cloc_exclude', []):
             exclude_list.update(str(p.relative_to(base_dir)) for p in base_dir.glob(pattern) if p.is_file())
 
-        kind_of_files = ['data', 'init_xml', 'update_xml']
+        kind_of_files = ['data', 'init_xml']
         if with_demo:
             kind_of_files.append('demo')
         for kind in kind_of_files:
@@ -126,9 +126,7 @@ class IrModuleModule(models.Model):
                     _logger.info("module %s: skip unsupported file %s", module, filename)
                     continue
                 _logger.info("module %s: loading %s", module, filename)
-                noupdate = False
-                if ext == '.csv' and kind in ('init', 'init_xml'):
-                    noupdate = True
+                noupdate = ext == '.csv' and kind == 'init_xml'
                 pathname = opj(path, filename)
                 idref = {}
                 with file_open(pathname, 'rb', env=self.env) as fp:

@@ -10,11 +10,7 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 class TestQweb(TransactionCaseWithUserDemo):
     def _load(self, module, filepath):
-        tools.convert_file(
-            self.env, module,
-            filepath,
-            {}, 'init', False, 'test'
-        )
+        tools.convert_file(self.env, module, filepath, {}, 'init')
 
     def test_qweb_cdn(self):
         self._load('test_website', 'tests/template_qweb_test.xml')
