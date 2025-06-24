@@ -4,6 +4,7 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selection_popup_util";
 import { registry } from "@web/core/registry";
+import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
     steps: () =>
@@ -259,5 +260,24 @@ registry.category("web_tour.tours").add("test_loyalty_on_order_with_fixed_tax", 
             ProductScreen.clickDisplayedProduct("Product A"),
             PosLoyalty.enterCode("563412"),
             PosLoyalty.hasRewardLine("10% on your order", "-1.50"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_reward_with_variant", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductConfiguratorPopup.pickRadio("Value 1"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductConfiguratorPopup.pickRadio("Value 1"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductConfiguratorPopup.pickRadio("Value 1"),
+            Dialog.confirm(),
+            PosLoyalty.hasRewardLine("Free Product", "-10", "1.00"),
         ].flat(),
 });

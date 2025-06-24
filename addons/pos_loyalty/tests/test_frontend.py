@@ -2992,6 +2992,61 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_refund_does_not_decrease_points', login="pos_user")
         self.assertEqual(card.points, 30)
 
+    def test_loyalty_reward_with_variant(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        product_tag = self.env['product.tag'].create({'name': 'Test Tag'})
+        product_test = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 10,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'product_tag_ids': [(4, product_tag.id)],
+        })
+        attribute = self.env['product.attribute'].create({
+            'name': 'Attribute 1',
+            'create_variant': 'always',
+        })
+        attribute_value_1 = self.env['product.attribute.value'].create({
+            'name': 'Value 1',
+            'attribute_id': attribute.id,
+        })
+        attribute_value_2 = self.env['product.attribute.value'].create({
+            'name': 'Value 2',
+            'attribute_id': attribute.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_test.product_tmpl_id.id,
+            'attribute_id': attribute.id,
+            'value_ids': [(6, 0, [attribute_value_1.id, attribute_value_2.id])],
+        })
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1 with tag',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_tag_id': product_tag.id,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 2,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': product_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_loyalty_reward_with_variant",
+            login="pos_user",
+        )
+
     def test_multiple_loyalty_products(self):
         """This test makes sure that when a product is linked to multiple loyalty programs, the user is not asked to select
         a program every time he adds the product to the cart."""
