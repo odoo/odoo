@@ -6,7 +6,10 @@
         <div class="d-flex align-items-center mb-3">
             <label for="highlightPicker" class="flex-grow-1">Highlight:</label>
             <button id="highlightPicker" title="highlightPicker" class="btn btn-secondary" t-on-click="openHighlightPicker">
-                <t t-out="this.highlightIdToName[this.state.highlightId]"/>
+                 <t t-if="this.state.highlightId === 'multiple'">
+                    <span class="mx-3 d-inline-block"></span>
+                </t>
+                <t t-else="" t-out="this.highlightIdToName[this.state.highlightId]"/>
             </button>
             <button class="btn btn-sm btn-light fa fa-trash" title="Reset" t-on-click="deleteHighlight"/>
         </div>
