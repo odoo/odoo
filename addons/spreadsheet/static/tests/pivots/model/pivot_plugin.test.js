@@ -32,8 +32,8 @@ import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
-import { user } from "@web/core/user";
 import { localization } from "@web/core/l10n/localization";
+import { user } from "@web/core/user";
 
 import { Model } from "@odoo/o-spreadsheet";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
@@ -652,23 +652,18 @@ test("display loading while data is not fully available", async function () {
             },
         },
     };
-    onRpc(async ({ kwargs, model, method, parent }) => {
-        if (model === "partner" && method === "fields_get") {
-            expect.step(`${model}/${method}`);
-            await metadataPromise;
-        }
-        if (
-            model === "partner" &&
-            method === "formatted_read_group" &&
-            kwargs.groupby[0] === "product_id"
-        ) {
+    onRpc("partner", "fields_get", async ({ method, model }) => {
+        expect.step(`${model}/${method}`);
+        await metadataPromise;
+    });
+    onRpc("partner", "formatted_read_group", async ({ kwargs, method, model }) => {
+        if (kwargs.groupby[0] === "product_id") {
             expect.step(`${model}/${method}`);
             await dataPromise;
         }
-        if (model === "product" && method === "read") {
-            throw new Error("should not be called because data is put in cache");
-        }
-        return parent();
+    });
+    onRpc("product", "read", () => {
+        throw new Error("should not be called because data is put in cache");
     });
     const { model } = await createModelWithDataSource({ spreadsheetData });
     expect(getCellValue(model, "A1")).toBe("Loading...");

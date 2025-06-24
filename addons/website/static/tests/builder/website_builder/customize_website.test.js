@@ -46,7 +46,7 @@ test("click on BuilderButton with action “websiteConfig”", async () => {
         expect(params.enable).toEqual(["test_template_1"]);
         expect(params.disable).toEqual([]);
     });
-    onRpc("ir.ui.view", "save", async () => {
+    onRpc("ir.ui.view", "save", () => {
         expect.step("websiteSave");
         return true;
     });
@@ -80,7 +80,7 @@ test("click on BuilderSelectItem with action “websiteConfig”", async () => {
         expect(params.enable).toEqual(["test_template_1"]);
         expect(params.disable).toEqual(["test_template_2"]);
     });
-    onRpc("ir.ui.view", "save", async () => {
+    onRpc("ir.ui.view", "save", () => {
         expect.step("websiteSave");
         return true;
     });
