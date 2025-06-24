@@ -139,7 +139,8 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
-    trigger: 'input#login, a:contains(Sign in)',
+    isActive: ["body:not(:has(input#login))"],
+    trigger: "a:contains(Sign in)",
     run: "click",
     expectUnloadPage: true,
 }, {
@@ -180,7 +181,8 @@ registry.category("web_tour.tours").add('totp_login_device', {
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
-    trigger: 'input#login, a:contains(Sign in)',
+    isActive: ["body:not(:has(input#login))"],
+    trigger: "a:contains(Sign in)",
     run: "click",
     expectUnloadPage: true,
 }, {
@@ -286,7 +288,8 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
-    trigger: 'input#login, a:contains(Sign in)',
+    isActive: ["body:not(:has(input#login))"],
+    trigger: "a:contains(Sign in)",
     run: "click",
     expectUnloadPage: true,
 }, {
