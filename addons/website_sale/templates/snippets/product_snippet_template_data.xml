@@ -108,6 +108,17 @@
                                             <i class="fa fa-shopping-cart fa-fw" role="presentation"/><span class="o_label small ms-1">Add to Cart</span>
                                         </button>
                                     </t>
+                                    <t t-elif="data.get('prevent_sale')">
+                                        <a
+                                            title="Contact us"
+                                            aria-label="Contact us"
+                                            t-att-href="website._get_contact_us_url(product.display_name)"
+                                            class="o_wsale_product_btn_primary btn btn-outline-primary"
+                                        >
+                                            <i class="fa fa-envelope fa-fw" role="presentation"/>
+                                            <span class="o_label small ms-1">Contact Us</span>
+                                        </a>
+                                    </t>
                                 </div>
                             </div>
                         </div>
@@ -117,7 +128,7 @@
         </template>
 
         <template id="website_sale.price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
-            <t t-if="not data.get('prevent_zero_price_sale') and not data.get('is_sample')">
+            <t t-if="not data.get('hide_price') and not data.get('is_sample')">
                 <span t-out="data['price']"
                       class="mb-0 fw-bold"
                       name="product_price"

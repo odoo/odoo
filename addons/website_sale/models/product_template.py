@@ -645,13 +645,17 @@ class ProductTemplate(models.Model):
                     product_or_template,
                     website=website,
                 )
-
+        is_zero_price = float_is_zero(
+            combination_info['price'],
+            precision_rounding=currency.rounding,
+        )
+        prevent_sale = (
+            website.prevent_sale
+            and website._prevent_product_sale(product_or_template, is_zero_price)
+        )
         combination_info.update({
-            'prevent_zero_price_sale': website.prevent_zero_price_sale and float_is_zero(
-                combination_info['price'],
-                precision_rounding=currency.rounding,
-            ),
-
+            'prevent_sale': prevent_sale,
+            'hide_price': prevent_sale and is_zero_price,
             # additional info to simplify overrides
             'currency': currency,  # displayed currency
             'date': date,
@@ -668,9 +672,9 @@ class ProductTemplate(models.Model):
                 'base_unit_price': product_or_template._get_base_unit_price(price_per_product_uom),
             })
 
-        if combination_info['prevent_zero_price_sale']:
-            # If price is zero and prevent_zero_price_sale is enabled we don't want to send any
-            # price information regarding the product
+        if combination_info['hide_price']:
+            # If the price should be hidden, we don't want to send any price information regarding
+            # the product
             combination_info['compare_list_price'] = 0
 
         return combination_info
@@ -812,9 +816,17 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_product_types_allow_zero_price(self):
-        """
-        Returns a list of service_tracking (`product.template.service_tracking`) that can ignore the
-        `prevent_zero_price_sale` rule when buying products on a website.
+        """Return service_tracking types that can be sold at zero price.
+
+        When the website's `prevent_sale` is enabled with `prevent_sale_for='zero_price'`,
+        products with these service_tracking values are exempt and can still be added to cart
+        even with a zero price (e.g., event tickets, online courses).
+
+        Note: This exemption only applies to `prevent_sale_for='zero_price'` mode, not to
+        category-based prevention (`prevent_sale_for='specific_categories'`).
+
+        :return: List of service_tracking values that are allowed to have zero price.
+        :rtype: list
         """
         return []
 
@@ -936,7 +948,7 @@ class ProductTemplate(models.Model):
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):
-        if combination_info.get('prevent_zero_price_sale'):
+        if combination_info.get('hide_price'):
             return None, None
 
         monetary_options = {'display_currency': mapping['detail']['display_currency']}
@@ -976,7 +988,11 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         if not self.filtered_domain(self.env['website']._product_domain()):
             return False
-        return not request.website.prevent_zero_price_sale or self._get_contextual_price()
+        website = self.env['website'].get_current_website()
+        return not (
+            website.prevent_sale
+            and website._prevent_product_sale(self, not self._get_contextual_price())
+        )
 
     @api.model
     def _get_configurator_display_price(

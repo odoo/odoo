@@ -16,7 +16,7 @@
                 />
                 <h6 class="flex-grow-1 mb-0 text-truncate">
                     <span t-out="props.display_name" class="d-block mb-0 small text-truncate"/>
-                    <small t-if="!props.prevent_zero_price_sale" class="mb-0 text-body">
+                    <small t-if="!props.hide_price" class="mb-0 text-body">
                         <span t-out="formattedPrice" class="me-1 text-nowrap"/>
                         <del
                             t-if="props.strikethrough_price"

@@ -42,7 +42,7 @@
                                                     t-out="combination_info['display_name']"
                                                 />
                                                 <div
-                                                    t-if="not combination_info['prevent_zero_price_sale']"
+                                                    t-if="not combination_info['hide_price']"
                                                     class="text-wrap"
                                                 >
                                                     <small
@@ -119,7 +119,7 @@
                                         <a t-att-href="product.website_url">
                                             <h6 t-out="product.display_name"/>
                                         </a>
-                                        <span t-if="not combination_info['prevent_zero_price_sale']">
+                                        <span t-if="not combination_info['hide_price']">
                                             <span t-out="combination_info['price']"
                                                   t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                             <del
@@ -142,8 +142,8 @@
                                         </span>
                                         <div class="mt-auto pt-3">
                                             <a
-                                                t-if="combination_info['prevent_zero_price_sale']"
-                                                t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
+                                                t-if="combination_info['prevent_sale']"
+                                                t-att-href="website._get_contact_us_url(combination_info['display_name'])"
                                                 class="btn btn-primary btn_cta"
                                             >
                                                Contact Us

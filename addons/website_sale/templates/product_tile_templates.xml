@@ -178,15 +178,24 @@
                 <t t-else="">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <div class="product_price" aria-label="Price information">
+                        <t t-set="hide_price" t-value="(
+                            not template_price_vals['price_reduce']
+                            and website.prevent_sale
+                            and website._prevent_product_sale(product, True)
+                        )"/>
                         <span
                             class="mb-0 fw-bold"
                             aria-label="Sale price"
-                            t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
+                            t-if="not hide_price"
                             t-out="template_price_vals['price_reduce']"
                             t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                         />
                         <t
-                            t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)"
+                            t-if="(
+                                'base_price' in template_price_vals
+                                and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce'])
+                                and not hide_price
+                            )"
                             name="product_base_price"
                         >
                             <del
@@ -236,6 +245,19 @@
                     <i class="fa fa-fw fa-shopping-cart o_not-animable" role="presentation"/>
                     <span class="o_label small ms-1">Add to Cart</span>
                 </button>
+            </t>
+            <t t-elif="website.prevent_sale and website._prevent_product_sale(
+                product, not template_price_vals['price_reduce']
+            )">
+                <a
+                    title="Contact us"
+                    aria-label="Contact us"
+                    t-att-href="website._get_contact_us_url(product.with_context(display_default_code=False).display_name)"
+                    class="o_wsale_product_btn_primary btn btn-outline-primary"
+                >
+                    <i class="fa fa-fw fa-envelope o_not-animable" role="presentation"/>
+                    <span class="o_label small ms-1">Contact Us</span>
+                </a>
             </t>
         </div>
     </t>

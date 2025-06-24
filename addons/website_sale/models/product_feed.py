@@ -289,10 +289,10 @@ class ProductFeed(models.Model):
     def _prepare_gmc_price_info(self, product):
         """Prepare price-related information for Google Merchant Center.
 
-        Note: If the product is flagged to prevent zero price sales, an empty dictionary is
-        returned.
+        Note: If the product is not sellable on the website, an empty dictionary is returned
+        and the product is excluded from the feed.
 
-        :return: A dictionary containing nothing if the product is "prevent zero price sale", or:
+        :return: A dictionary containing nothing if sale is prevented (zero price or specific category), or:
             - List price,
             - Sale price (if applicable), and
             - Comparison prices (e.g., $100 / ml) if "Product Reference Price" is enabled.
@@ -310,7 +310,7 @@ class ProductFeed(models.Model):
             date=fields.Date.context_today(self),
             website=self.website_id,
         )
-        if combination_info['prevent_zero_price_sale']:
+        if combination_info['prevent_sale']:
             return {}
 
         price_info = {

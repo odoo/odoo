@@ -704,9 +704,9 @@ class SaleOrder(models.Model):
                     and product._website_show_quick_add()
                     and product.filtered_domain(self.env['product.product']._check_company_domain(line.company_id))
                     and product._is_variant_possible()
-                    and (
-                        not self.website_id.prevent_zero_price_sale
-                        or product._get_contextual_price()
+                    and not (
+                        self.website_id.prevent_sale
+                        and self.website_id._prevent_product_sale(product, not product._get_contextual_price())
                     )
                 )
 

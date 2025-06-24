@@ -121,7 +121,7 @@ patch(ProductPage.prototype, {
                     addQtyInput.value = addQtyInput.dataset.max;
                 }
             }
-            if (combination.free_qty < 1) {
+            if (combination.free_qty < 1 && !combination.prevent_sale) {
                 ctaWrapper.classList.replace('d-flex', 'd-none');
                 ctaWrapper.classList.add('out_of_stock');
             }
@@ -132,7 +132,7 @@ patch(ProductPage.prototype, {
                     addQtyInput.value = addQtyInput.dataset.max;
                 }
             }
-            if (combination.max_combo_quantity < 1) {
+            if (combination.max_combo_quantity < 1 && !combination.prevent_sale) {
                 ctaWrapper.classList.replace('d-flex', 'd-none');
                 ctaWrapper.classList.add('out_of_stock');
             }

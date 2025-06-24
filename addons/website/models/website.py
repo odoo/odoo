@@ -110,7 +110,7 @@ class Website(models.CachedModel):
     # website module and accesses website.default_lang_id.
     #
     # Here, we cache the needed fields only to avoid prefetching any
-    # translatable field, such as contact_us_button_url by website_sale, as
+    # translatable field, such as contact_us_link_url by website_sale, as
     # translating to an invalid language would result in an error.
     _clear_cache_name = 'default'
     _cached_data_fields = (

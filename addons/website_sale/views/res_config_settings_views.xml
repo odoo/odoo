@@ -162,17 +162,36 @@
                 </setting>
                 <setting
                     id="hide_add_to_cart_setting"
-                    help="If product price equals 0, replace 'Add to Cart' by 'Contact us'."
+                    help="Show &quot;Contact Us&quot; for zero-priced products or specific categories."
                 >
-                    <field name="website_sale_prevent_zero_price_sale"/>
-                    <div class="content-group" invisible="not website_sale_prevent_zero_price_sale">
+                    <field name="prevent_sale"/>
+                    <div class="content-group" invisible="not prevent_sale">
                         <div class="row mt16">
                             <label
-                                string="Button URL"
-                                for="website_sale_contact_us_button_url"
+                                string="For"
+                                for="prevent_sale_for"
                                 class="o_light_label col-lg-3"
                             />
-                            <field name="website_sale_contact_us_button_url"/>
+                            <field name="prevent_sale_for" required="prevent_sale"/>
+                        </div>
+                        <div
+                            class="row mt16"
+                            invisible="prevent_sale_for != 'specific_categories'"
+                        >
+                            <label
+                                for="prevent_sale_for_categories"
+                                class="o_light_label col-lg-3"
+                            />
+                            <field
+                                name="prevent_sale_for_categories"
+                                widget="many2many_tags"
+                                options="{'no_create': True}"
+                                required="prevent_sale_for == 'specific_categories'"
+                            />
+                        </div>
+                        <div class="row mt16">
+                            <label for="contact_us_link_url" class="o_light_label col-lg-3"/>
+                            <field name="contact_us_link_url"/>
                         </div>
                     </div>
                 </setting>
