@@ -6,8 +6,8 @@
                 <tr class="bg-light">
                     <th scope="col">Stock &amp; Incoming</th>
                     <th scope="col">Outgoing</th> <!--<t t-out="props.docs.uom"/>-->
-                    <th scope="col">Used by</th>
-                    <th scope="col"></th> <!-- Action Button -->
+                    <th scope="col" class="border-end-0">Used by</th>
+                    <th scope="col" class="border-start-0"></th> <!-- Action Button -->
                     <th scope="col">Delivery Date</th>
                 </tr>
             </thead>
@@ -27,17 +27,18 @@ We may use href=".collapseGroup_y" with class="collapseGroup_y" to avoid using i
                     <td/>
                     <td/>
                 </tr>
+                <t t-set="last_line_index" t-value="props.docs.lines.length - 1"/>
                 <t t-foreach="props.docs.lines" t-as="line" t-key="line_index">
                     <t t-if="multipleProducts and (line_index === 0 or line.product.id !== props.docs.lines[line_index - 1].product.id)">
                         <tr t-attf-class="#{line.is_matched and 'table-info' or ''}">
-                            <td colspan="5" class="fw-bold text-uppercase">
-                                <span t-out="line.product.display_name"/>
-                                <button class="btn btn-sm btn-secondary float-end"
+                            <td colspan="5" class="fw-bold text-uppercase border-0">
+                                <button class="btn btn-sm btn-secondary me-2"
                                     data-bs-toggle="collapse"
                                     t-attf-data-bs-target=".collapseGroup_#{line.product.id}"
                                     aria-expanded="true" t-attf-aria-controls=".collapseGroup_#{line.product.id}">
                                     <i class="icon fa"/>
                                 </button>
+                                <span t-out="line.product.display_name"/>
                             </td>
                         </tr>
                     </t>
@@ -52,7 +53,7 @@ We may use href=".collapseGroup_y" with class="collapseGroup_y" to avoid using i
                                         t-on-click.prevent="() => this.props.openView(line.document_in._name, 'form', line.document_in.id)"
                                         t-out="line.document_in.name"
                                         class="fw-bold"/>
-                                    <span t-if="line.receipt_date">: <t t-out="_formatFloat(skip_row > 0 ? splittedIncomingLines[line_index].tot_qty : line.quantity)"/> <t t-out="props.docs.uom"/> expected on <t t-out="line.receipt_date"/></span>
+                                    <span t-if="line.receipt_date">: <t t-out="_formatFloat(skip_row > 0 ? splittedIncomingLines[line_index].tot_qty : line.quantity)"/> <t t-out="line.uom_id.display_name"/> expected on <t t-out="line.receipt_date"/></span>
                                 </t>
                                 <t t-elif="line.reservation">
                                     <a t-out="line.reservation.name" href="#" class="fw-bold"
@@ -70,18 +71,15 @@ We may use href=".collapseGroup_y" with class="collapseGroup_y" to avoid using i
                                 <t t-elif="line.replenishment_filled">
                                     <t t-if="line.document_out">
                                         <!-- <t t-out="_formatFloat(skip_row > 0 ? splittedIncomingLines[line_index].tot_qty : line.quantity)"/> -->
-                                        <t t-out="_formatFloat(reservedOnHandTotalQty)"/> <t t-out="props.docs.uom"/> On Hand
+                                        <t t-out="_formatFloat(reservedOnHandTotalQty)"/> <t t-out="line.uom_id.display_name"/> On Hand
                                     </t>
                                     <t t-else="" t-out="freeStockLabel"/>
                                 </t>
                                 <span t-else="" class="text-muted">Not Available</span>
                             </td>
                         </t>
-                        <td t-out="line.receipt_date or ''"
-                        t-attf-class="#{line.is_late and 'table-danger' or classForLine(line)}"/>
-                        <td t-if="props.docs.multiple_product" t-out="line.product.display_name" t-att-class="classForLine(line)"/>
-                        <td class="text-end" t-att-class="classForLine(line)"><t t-if="! line.replenishment_filled">- </t><t t-out="_formatFloat(line.quantity)"/> <t t-out="props.docs.uom"/></td>
-                        <td t-attf-class="#{! line.replenishment_filled and 'table-danger'}" name="usedby_cell">
+                        <td class="text-end" t-att-class="classForLine(line)"><t t-if="! line.replenishment_filled">- </t><t t-out="_formatFloat(line.quantity)"/> <t t-out="line.uom_id.display_name"/></td>
+                        <td class="border-end-0" t-attf-class="#{! line.replenishment_filled and 'table-danger'}" name="usedby_cell">
                             <button t-if="line.move_out and line.move_out.picking_id"
                                 t-attf-class="o_priority o_priority_star me-1 fa fa-star#{line.move_out.picking_id.priority=='1' ? '' : '-o'}"
                                 t-on-click="() => this._onClickChangePriority('stock.picking', line.move_out.picking_id)"
@@ -92,7 +90,7 @@ We may use href=".collapseGroup_y" with class="collapseGroup_y" to avoid using i
                                 t-out="line.document_out.name"
                                 class="fw-bold"/>
                         </td>
-                        <td class="p-0 text-center">
+                        <td class="p-0 text-center border-start-0">
                             <t t-if="displayReserve(line)">
                                 <button t-if="line.reservation"
                                             class="btn btn-sm btn-primary o_report_replenish_unreserve"
@@ -111,40 +109,48 @@ We may use href=".collapseGroup_y" with class="collapseGroup_y" to avoid using i
                         <td t-out="line.delivery_date or ''"
                             t-attf-class="#{! line.replenishment_filled and 'table-danger'}"/>
                     </tr>
+                    <t t-if="line_index === last_line_index or line.product.id !== props.docs.lines[line_index + 1].product.id">
+                        <tr t-if="this.props.docs.product[line.product.id].qty_to_order" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                            <td>To Order</td>
+                            <td class="text-end">
+                                <t t-out="_formatFloat(this.props.docs.product[line.product.id].qty_to_order)"/> <t t-out="line.uom_id.display_name"/>
+                            </td>
+                        </tr>
+                        <tr t-if="this.props.docs.product[line.product.id].qty_to_order !== this.props.docs.product[line.product.id].qty_to_order_with_visibility_days" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                            <td>To Order with Visibility Days</td>
+                            <td class="text-end">
+                                <t t-out="_formatFloat(this.props.docs.product[line.product.id].qty_to_order_with_visibility_days)"/> <t t-out="line.uom_id.display_name"/>
+                            </td>
+                        </tr>
+                        <tr class="o_forecasted_row fw-bold table-secondary" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                            <td class="border-end-0">Forecasted Inventory</td>
+                            <td class="text-end border-start-0 border-end-0">
+                                <t t-out="_formatFloat(this.props.docs.product[line.product.id].virtual_available)"/> <t t-out="line.uom_id.display_name"/>
+                            </td>
+                            <td class="border-start-0" colspan="3"/>
+                        </tr>
+                        <tr t-if="props.docs.product[line.product.id].draft_picking_qty.in" name="draft_picking_in" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                            <td>Incoming Draft Transfer</td>
+                            <td class="text-end">
+                                <t t-out="_formatFloat(props.docs.product[line.product.id].draft_picking_qty.in)"/> <t t-out="line.uom_id.display_name"/>
+                            </td>
+                        </tr>
+                        <tr t-if="props.docs.product[line.product.id].draft_picking_qty.out" name="draft_picking_out" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                            <td>Outgoing Draft Transfer</td>
+                            <td class="text-end">
+                                <t t-out="_formatFloat(-props.docs.product[line.product.id].draft_picking_qty.out)"/> <t t-out="line.uom_id.display_name"/>
+                            </td>
+                        </tr>
+                        <tr class="o_forecasted_row fw-bold table-secondary" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                            <td class="border-end-0">Forecasted with Pending</td>
+                            <td class="text-end border-start-0 border-end-0">
+                                <t t-out="_formatFloat(futureVirtualAvailable(line))"/> <t t-out="line.uom_id.display_name"/>
+                            </td>
+                            <td class="border-start-0" colspan="3"/>
+                        </tr>
+                    </t>
                 </t>
-                <tr t-if="this.props.docs.qty_to_order">
-                    <td>To Order</td>
-                    <td t-out="this.props.docs.lead_days_date"/>
-                    <td t-out="_formatFloat(this.props.docs.qty_to_order)" class="text-end"/>
-                </tr>
-                <tr t-if="this.props.docs.qty_to_order !== this.props.docs.qty_to_order_with_visibility_days">
-                    <td>To Order with Visibility Days</td>
-                    <td t-out="this.props.docs.visibility_days_date"/>
-                    <td t-out="_formatFloat(this.props.docs.qty_to_order_with_visibility_days)" class="text-end"/>
-                </tr>
             </tbody>
-            <thead>
-                <tr class="o_forecasted_row bg-200">
-                    <td>Forecasted Inventory</td>
-                    <td t-out="_formatFloat(this.props.docs.virtual_available)" class="text-end"/>
-                </tr>
-            </thead>
-            <tbody t-if="props.docs.qty.in or props.docs.qty.out">
-                <tr t-if="props.docs.draft_picking_qty.in" name="draft_picking_in">
-                    <td>Incoming Draft Transfer</td>
-                    <td t-out="_formatFloat(this.props.docs.draft_picking_qty.in)" class="text-end"/>
-                </tr>
-                <tr t-if="props.docs.draft_picking_qty.out" name="draft_picking_out">
-                    <td>Outgoing Draft Transfer</td>
-                    <td t-out="_formatFloat(this.props.docs.draft_picking_qty.out)" class="text-end"/>
-                </tr>
-            </tbody>
-            <thead>
-                <tr class="o_forecasted_row bg-200">
-                    <td>Forecasted with Pending</td>
-                    <td t-out="_formatFloat(futureVirtualAvailable)" class="text-end"/>
-                </tr>
-            </thead>
         </table>
     </t>
 </templates>

@@ -82,8 +82,9 @@ export class ForecastedDetails extends Component {
         return this.props.docs.multiple_product;
     }
 
-    get futureVirtualAvailable() {
-        return this.props.docs.virtual_available + this.props.docs.qty.in - this.props.docs.qty.out;
+    futureVirtualAvailable(line) {
+        const product = this.props.docs.product[line.product.id]
+        return product.virtual_available + product.qty.in - product.qty.out;
     }
 
     get freeStockLabel() {

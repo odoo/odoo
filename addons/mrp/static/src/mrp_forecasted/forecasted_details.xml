@@ -2,15 +2,19 @@
 <templates id="template">
     <t t-name="mrp.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
         <xpath expr="//tr[@name='draft_picking_in']" position="after">
-            <tr t-if="props.docs.draft_production_qty.in" name="draft_mo_in">
+            <tr t-if="props.docs.product[line.product.id].draft_production_qty.in" name="draft_mo_in" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
                 <td colspan="2">Production of Draft MO</td>
-                <td t-out="_formatFloat(props.docs.draft_production_qty.in)" class="text-end"/>
+                <td class="text-end">
+                    <t t-out="_formatFloat(props.docs.product[line.product.id].draft_production_qty.in)"/> <t t-out="line.uom_id.display_name"/>
+                </td>
             </tr>
         </xpath>
         <xpath expr="//tr[@name='draft_picking_out']" position="after">
-            <tr t-if="props.docs.draft_production_qty.out" name="draft_mo_out">
+            <tr t-if="props.docs.product[line.product.id].draft_production_qty.out" name="draft_mo_out" t-attf-class="#{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
                 <td colspan="2">Component of Draft MO</td>
-                <td t-out="_formatFloat(-props.docs.draft_production_qty.out)" class="text-end"/>
+                <td class="text-end">
+                    <t t-out="_formatFloat(-props.docs.product[line.product.id].draft_production_qty.out)"/> <t t-out="line.uom_id.display_name"/>
+                </td>
             </tr>
         </xpath>
         <xpath expr="//button[@name='change_priority_link']" position="after">
