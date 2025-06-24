@@ -32,7 +32,7 @@
         'web.assets_tests': [
             'website_sale_slides/static/tests/tours/*.js',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_sale_slides/static/src/website_builder/**/*',
         ],
     },

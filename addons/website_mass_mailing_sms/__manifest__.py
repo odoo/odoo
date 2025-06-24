@@ -19,7 +19,7 @@ your visitors to subscribe with their phone number.
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'assets': {
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_mass_mailing_sms/static/src/website_builder/**/*',
         ],
     },
