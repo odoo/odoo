@@ -90,7 +90,6 @@ export const datetimePickerService = {
                 }
 
                 function enable() {
-                    let editableInputs = 0;
                     for (const [el, value] of zip(
                         getInputs(),
                         ensureArray(pickerProps.value),
@@ -103,7 +102,6 @@ export const datetimePickerService = {
                             el.addEventListener("click", onInputClick);
                             el.addEventListener("focus", onInputFocus);
                             el.addEventListener("keydown", onInputKeydown);
-                            editableInputs++;
                         }
                     }
                     const calendarIconGroupEl = getInput(0)?.parentElement.querySelector(
@@ -112,9 +110,6 @@ export const datetimePickerService = {
                     if (calendarIconGroupEl) {
                         calendarIconGroupEl.classList.add("cursor-pointer");
                         calendarIconGroupEl.addEventListener("click", () => open(0));
-                    }
-                    if (!editableInputs && isOpen()) {
-                        saveAndClose();
                     }
                     return () => {};
                 }
@@ -444,16 +439,6 @@ export const datetimePickerService = {
                     ...markValuesRaw(params.pickerProps),
                 };
                 const pickerProps = reactive(rawPickerProps, () => {
-                    // Resets the popover position when switching from single date to a range
-                    // or vice-versa
-                    const currentIsRange = pickerProps.range;
-                    if (isOpen() && lastIsRange !== currentIsRange) {
-                        allowOnClose = false;
-                        popover.open(getPopoverTarget(), { pickerProps });
-                        allowOnClose = true;
-                    }
-                    lastIsRange = currentIsRange;
-
                     // Update inputs
                     for (const [el, value] of zip(
                         getInputs(),
@@ -474,9 +459,6 @@ export const datetimePickerService = {
                 });
                 const popover = createPopover(DateTimePickerPopover, {
                     onClose() {
-                        if (!allowOnClose) {
-                            return;
-                        }
                         updateValueFromInputs();
                         apply();
                         setFocusClass(null);
@@ -488,15 +470,12 @@ export const datetimePickerService = {
                     },
                 });
 
-                /** Decides whether the popover 'onClose' callback can be called */
-                let allowOnClose = true;
                 /** @type {boolean[]} */
                 let inputsChanged = [];
                 /** @type {DateTimePickerProps | null} */
                 let lastInitialProps = null;
                 /** @type {DateTimePickerProps["value"] | null}*/
                 let lastAppliedValue = null;
-                let lastIsRange = pickerProps.range;
                 /** @type {(() => void) | null} */
                 let restoreTargetMargin = null;
                 let shouldFocus = false;

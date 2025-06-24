@@ -7,15 +7,6 @@
             <t t-if="props.readonly">
                 <span t-if="!isEmpty(startDateField)" class="text-truncate" t-esc="getFormattedValue(0)" />
             </t>
-            <t t-elif="!props.required and !props.alwaysRange and isEmpty(startDateField) and !isEmpty(endDateField)">
-                <button
-                    class="o_add_date o_add_start_date btn btn-secondary btn-sm w-100"
-                    t-on-click="() => this.addDate(0)"
-                >
-                    <i class="fa fa-plus me-2" />
-                    Add start date
-                </button>
-            </t>
             <t t-elif="props.required or props.alwaysRange or !isEmpty(startDateField) or startDateField === props.name">
                 <t t-if="picker.activeInput !== startDateField and values[0]">
                     <button 
@@ -53,16 +44,7 @@
                 <t t-if="props.readonly">
                     <span class="text-truncate" t-esc="getFormattedValue(1)" />
                 </t>
-                <t t-elif="!props.required and !props.alwaysRange and !isEmpty(startDateField) and isEmpty(endDateField)">
-                    <button
-                        class="o_add_date o_add_end_date btn btn-secondary btn-sm w-100"
-                        t-on-click="() => this.addDate(1)"
-                    >
-                        <i class="fa fa-plus me-2" />
-                        Add end date
-                    </button>
-                </t>
-                <t t-elif="props.required or props.alwaysRange or !isEmpty(endDateField) or endDateField === props.name">
+                <t t-elif="props.required or props.alwaysRange or !isEmpty(endDateField) or (isEmpty(startDateField) and endDateField === props.name)">
                     <t t-if="picker.activeInput !== endDateField and values[1]">
                         <button 
                             t-ref="end-date" 
