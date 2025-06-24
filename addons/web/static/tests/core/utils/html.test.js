@@ -50,8 +50,20 @@ test("htmlEscape keeps html markup", () => {
 });
 
 test("htmlJoin keeps html markup and escapes text", () => {
-    const res = htmlJoin(markup("<p>test</p>"), "<p>test</p>");
+    const res = htmlJoin([markup`<p>test</p>`, "<p>test</p>"]);
     expect(res.toString()).toBe("<p>test</p>&lt;p&gt;test&lt;/p&gt;");
+    expect(res).toBeInstanceOf(Markup);
+});
+
+test("htmlJoin escapes text separator", () => {
+    const res = htmlJoin(["a", "b"], "<br>");
+    expect(res.toString()).toBe("a&lt;br&gt;b");
+    expect(res).toBeInstanceOf(Markup);
+});
+
+test("htmlJoin keeps html separator", () => {
+    const res = htmlJoin(["a", "b"], markup`<br>`);
+    expect(res.toString()).toBe("a<br>b");
     expect(res).toBeInstanceOf(Markup);
 });
 
