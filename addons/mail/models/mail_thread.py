@@ -1380,14 +1380,16 @@ class MailThread(models.AbstractModel):
                     subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
             post_params = dict(
-                incoming_email_cc=message_dict.pop('cc', False),
-                incoming_email_to=message_dict.pop('to', False),
+                incoming_email_cc=message_dict.pop('cc_filtered', False),
+                incoming_email_to=message_dict.pop('to_filtered', False),
                 subtype_id=subtype_id,
                 partner_ids=partner_ids,
                 **message_dict,
             )
             # remove computational values not stored on mail.message and avoid warnings when creating it
-            for x in ('from', 'recipients', 'references', 'in_reply_to', 'x_odoo_message_id',
+            for x in ('from', 'recipients',
+                      'cc', 'to',  # use cc_filtered, to_filtered
+                      'references', 'in_reply_to', 'x_odoo_message_id',
                       'is_bounce', 'bounced_email', 'bounced_message', 'bounced_msg_ids', 'bounced_partner'):
                 post_params.pop(x, None)
             new_msg = False
@@ -1808,13 +1810,25 @@ class MailThread(models.AbstractModel):
             ] if address
             for formatted_email in email_split_and_format(address))
         )
-        msg_dict['to'] = ','.join(set(formatted_email
+        email_to_list = list({
+            formatted_email
             for address in [
                 decode_message_header(message, 'Delivered-To', separator=','),
                 decode_message_header(message, 'To', separator=',')
             ] if address
-            for formatted_email in email_split_and_format(address))
+            for formatted_email in email_split_and_format(address)
+        })
+        msg_dict['to'] = ','.join(email_to_list)
+        # filtered to / cc, excluding aliases
+        recipients_normalized_all = email_normalize_all(f'{msg_dict["to"]},{msg_dict["cc"]}')
+        alias_emails = self.env['mail.alias.domain'].sudo()._find_aliases(recipients_normalized_all)
+        msg_dict['cc_filtered'] = ','.join(
+            cc for cc in email_cc_list if email_normalize(cc) not in alias_emails
         )
+        msg_dict['to_filtered'] = ','.join(
+            to for to in email_to_list if email_normalize(to) not in alias_emails
+        )
+
         # compute references to find if email_message is a reply to an existing thread
         msg_dict['references'] = decode_message_header(message, 'References')
         msg_dict['in_reply_to'] = decode_message_header(message, 'In-Reply-To').strip()
