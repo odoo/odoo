@@ -747,6 +747,125 @@ class TestPrivateReadGroup(common.TransactionCase):
             ],
         )
 
+    def test_groupby_many2many_active_test_domain(self):
+        Tag = self.env['test_read_group.tag']
+        active_tag, archive_tag = Tag.create([
+            {'name': 'Active tag', 'active': True},
+            {'name': 'Archive tag', 'active': False},
+        ])
+        tasks = self.env['test_read_group.task'].create([
+            {
+                'name': "Both tags",
+                'tag_ids': [Command.set((active_tag + archive_tag).ids)],
+            },
+            {
+                'name': "Active tag",
+                'tag_ids': [Command.set(active_tag.ids)],
+            },
+            {
+                'name': "Archive tag",
+                'tag_ids': [Command.set(archive_tag.ids)],
+            },
+            {
+                'name': "No tag",
+            },
+        ])
+
+        with self.assertQueries([
+            """
+            SELECT "test_read_group_task__tag_ids"."tag_id",
+                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
+            FROM "test_read_group_task"
+            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__tag_ids"
+                ON (
+                    "test_read_group_task"."id" = "test_read_group_task__tag_ids"."task_id"
+                    AND "test_read_group_task__tag_ids"."tag_id" IN (
+                        SELECT
+                            "test_read_group_tag"."id"
+                        FROM
+                            "test_read_group_tag"
+                        WHERE
+                            ("test_read_group_tag"."active" = %s)
+                    )
+                )
+            WHERE ("test_read_group_task"."id" IN %s)
+            GROUP BY "test_read_group_task__tag_ids"."tag_id"
+            ORDER BY "test_read_group_task__tag_ids"."tag_id" ASC
+            """,
+        ]):
+            self.assertEqual(
+                tasks._read_group(
+                    [('id', 'in', tasks.ids)],
+                    ['tag_ids'],
+                    ['name:array_agg'],
+                ),
+                [
+                    (active_tag, ["Both tags", "Active tag"]),
+                    (Tag, ["Archive tag", "No tag"]),
+                ],
+            )
+
+        with self.assertQueries([
+            """
+            SELECT "test_read_group_task__active_tag_ids"."tag_id",
+                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
+            FROM "test_read_group_task"
+            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__active_tag_ids"
+                ON (
+                    "test_read_group_task"."id" = "test_read_group_task__active_tag_ids"."task_id"
+                    AND "test_read_group_task__active_tag_ids"."tag_id" IN (
+                        SELECT
+                            "test_read_group_tag"."id"
+                        FROM
+                            "test_read_group_tag"
+                        WHERE
+                            ("test_read_group_tag"."active" = true)
+                    )
+                )
+            WHERE ("test_read_group_task"."id" IN %s)
+            GROUP BY "test_read_group_task__active_tag_ids"."tag_id"
+            ORDER BY "test_read_group_task__active_tag_ids"."tag_id" ASC
+            """,
+        ]):
+            self.assertEqual(
+                tasks._read_group(
+                    [('id', 'in', tasks.ids)],
+                    ['active_tag_ids'],
+                    ['name:array_agg'],
+                ),
+                [
+                    (active_tag, ["Both tags", "Active tag"]),
+                    (Tag, ["Archive tag", "No tag"]),
+                ],
+            )
+
+        with self.assertQueries([
+            """
+            SELECT "test_read_group_task__all_tag_ids"."tag_id",
+                ARRAY_AGG("test_read_group_task"."name" ORDER BY "test_read_group_task"."id")
+            FROM "test_read_group_task"
+            LEFT JOIN "test_read_group_task_tag_rel" AS "test_read_group_task__all_tag_ids"
+                ON (
+                    "test_read_group_task"."id" = "test_read_group_task__all_tag_ids"."task_id"
+                )
+            WHERE ("test_read_group_task"."id" IN %s)
+            GROUP BY "test_read_group_task__all_tag_ids"."tag_id"
+            ORDER BY "test_read_group_task__all_tag_ids"."tag_id" ASC
+            """,
+        ]):
+            self.assertEqual(
+                tasks._read_group(
+                    [('id', 'in', tasks.ids)],
+                    ['all_tag_ids'],
+                    ['name:array_agg'],
+                ),
+                [
+                    (active_tag, ["Both tags", "Active tag"]),
+                    (archive_tag, ["Both tags", "Archive tag"]),
+                    (Tag, ["No tag"]),
+                ],
+            )
+
     def test_float_aggregate(self):
         records = self.env['test_read_group.aggregate'].create({'numeric_value': 42.42})
         [[result]] = records._read_group([('id', 'in', records.ids)], [], ['numeric_value:array_agg'])
