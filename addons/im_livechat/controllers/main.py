@@ -268,19 +268,3 @@ class LivechatController(http.Controller):
         in conversation with an operator, it's not possible to send the visitor a chat request."""
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
             channel._close_livechat_session()
-
-    def _get_updated_channel_members(self, channel, channel_vals):
-        pass
-        # partner_to_channel_member = {}
-        # for channel_member in channel.channel_member_ids:
-        #     partner_to_channel_member[channel_member.partner_id.id] = channel_member.id
-
-        # old_channel_members_partner_ids = channel.channel_member_ids.mapped('partner_id.id')
-        # updated_channel_members = []
-        # for channel_member_create_command in channel_vals['channel_member_ids']:
-        #     _, _, channel_member_data = channel_member_create_command
-        #     if channel_member_data['partner_id'] in old_channel_members_partner_ids:
-        #         updated_channel_members.append(Command.update(partner_to_channel_member[channel_member_data['partner_id']], channel_member_data))
-        #     else:
-        #         updated_channel_members.append(channel_member_create_command)
-        # return updated_channel_members
