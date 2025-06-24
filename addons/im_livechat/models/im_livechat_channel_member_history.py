@@ -65,10 +65,8 @@ class ImLivechatChannelMemberHistory(models.Model):
         selection=[
             ("requested", "Help Requested"),
             ("provided", "Help Provided"),
-            ("none", "No Help"),
         ],
         compute="_compute_help_status",
-        search="_search_help_status",
         store=True,
     )
     response_time_hour = fields.Float("Response Time", aggregator="avg")
@@ -145,22 +143,16 @@ class ImLivechatChannelMemberHistory(models.Model):
             history.call_duration_hour = sum(history.call_history_ids.mapped("duration_hour"))
 
     @api.depends(
-        "channel_id.livechat_agent_requesting_help_history.partner_id",
-        "channel_id.livechat_agent_providing_help_history.partner_id",
+        "channel_id.livechat_agent_requesting_help_history",
+        "channel_id.livechat_agent_providing_help_history",
     )
     def _compute_help_status(self):
         agent_histories = self.filtered(lambda h: h.livechat_member_type == "agent")
-        (self - agent_histories).help_status = "none"
+        (self - agent_histories).help_status = None
         for history in agent_histories:
-            if (
-                history.channel_id.livechat_agent_requesting_help_history.partner_id
-                == history.partner_id
-            ):
+            if history.channel_id.livechat_agent_requesting_help_history == history:
                 history.help_status = "requested"
-            elif (
-                history.channel_id.livechat_agent_providing_help_history.partner_id
-                == history.partner_id
-            ):
+            elif history.channel_id.livechat_agent_providing_help_history == history:
                 history.help_status = "provided"
 
     @api.depends("channel_id.rating_ids")
