@@ -297,8 +297,8 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         if picking_type_id.code == 'outgoing':
-            return self.name
-        return html2plaintext(self.description) if not is_html_empty(self.description) else self.name
+            return self.display_name
+        return html2plaintext(self.description) if not is_html_empty(self.description) else self.display_name
 
     def _get_picking_description(self, picking_type_id):
         """
