@@ -92,20 +92,28 @@ export class HighlightPlugin extends Plugin {
     updateSelectedHighlight() {
         const nodes = this.getSelectedHighlightNodes();
         const uniqueNodes = new Set(nodes);
-        this.highlightState.isDisabled = uniqueNodes.size > 1;
-        if (uniqueNodes.size != 1) {
+        if (uniqueNodes.size === 0) {
             this.highlightState.highlightId = undefined;
             this.highlightState.color = "";
             this.highlightState.thickness = undefined;
             return;
         }
 
-        this.highlightState.highlightId = getCurrentTextHighlight(nodes[0]);
+        this.highlightState.highlightId =
+            uniqueNodes.size > 1 ? "multiple" : getCurrentTextHighlight(nodes[0]);
         if (this.highlightState.highlightId) {
-            const style = getComputedStyle(nodes[0]);
-            this.highlightState.color = style.getPropertyValue("--text-highlight-color");
-            const thickness = style.getPropertyValue("--text-highlight-width");
-            this.highlightState.thickness = thickness ? parseInt(thickness) : "";
+            // If multiple highlights are selected, either show the common highlight properties
+            // or nothing if none
+            const style = nodes.map((node) =>
+                getComputedStyle(node).getPropertyValue("--text-highlight-color")
+            );
+            this.highlightState.color = style.every((v) => v === style[0]) ? style[0] : undefined;
+            const thickness = nodes.map((node) =>
+                getComputedStyle(node).getPropertyValue("--text-highlight-width")
+            );
+            this.highlightState.thickness = thickness.every((v) => v === thickness[0])
+                ? parseInt(thickness[0])
+                : "";
         }
     }
 
@@ -273,7 +281,7 @@ class HighlightToolbarButton extends Component {
         getSelection: Function,
     };
     static template = xml`
-        <button t-ref="root" t-attf-class="btn btn-light o-select-highlight {{highlightState.isDisabled ? 'disabled' : ''}}" t-on-click="openHighlightConfigurator" t-att-title="highlightState.isDisabled ? 'Highlighting is disabled when your selection overlaps more than one highlight' : props.title">
+        <button t-ref="root" t-attf-class="btn btn-light o-select-highlight" t-on-click="openHighlightConfigurator" t-att-title="props.title">
             <i class="fa oi oi-text-effect oi-fw py-1"/>
         </button>
     `;
@@ -295,9 +303,6 @@ class HighlightToolbarButton extends Component {
         });
     }
     openHighlightConfigurator() {
-        if (this.highlightState.isDisabled) {
-            return;
-        }
         this.props.onClick();
         this.configuratorPopover.open(this.root.el, {
             stackState: this.componentStack,

@@ -143,3 +143,27 @@ test("Remove format on highlight does not create an empty node", async () => {
     expect("p>.o_text_highlight_freehand_2").toHaveCount(1);
     expect(selectedHighlights(editor)).toHaveLength(0);
 });
+
+test("Can modify multiple highlights", async () => {
+    await setupEditor(
+        `<p> [
+            <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 3px;">highlight1</span>
+            <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 3px;">highlight</span>
+            ]
+        </p>`,
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin] } }
+    );
+    await expandToolbar();
+    expect(".o-select-highlight").toHaveCount(1);
+    expect(".o_text_highlight").toHaveCount(2);
+    await contains(".o-we-toolbar .o-select-highlight").click();
+    expect("#highlightPicker").toHaveText("");
+    expect("#colorButton").toHaveStyle({
+        "background-color": "rgb(231, 156, 156)",
+    });
+    expect("#thicknessInput").toHaveValue(3);
+    await contains("#highlightPicker").click();
+    await contains(".o_popover .o_text_highlight_underline").click();
+    expect("p>.o_text_highlight_underline").toHaveCount(1);
+    expect(".o_text_highlight").toHaveCount(1);
+});
