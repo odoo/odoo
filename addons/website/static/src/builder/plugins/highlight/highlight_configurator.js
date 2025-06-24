@@ -81,7 +81,7 @@ export class HighlightConfigurator extends Component {
                         normalizeColor(color)
                     ),
                 applyColorResetPreview: this.props.revertHighlightStyle,
-                className: "w-100",
+                className: "d-contents",
             },
             "Select a color",
             true
