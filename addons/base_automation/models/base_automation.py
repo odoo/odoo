@@ -1106,7 +1106,7 @@ class BaseAutomation(models.Model):
             # use the calendar information from the record
             # _get_calendar can be overwritten and cannot be optimized
             time_domain = Domain.TRUE if is_date_automation_last else Domain(date_field.name, '!=', False)
-            if (date_field.store or date_field.search):
+            if date_field._description_searchable:
                 records = Model.search(time_domain & domain)
             else:
                 records = Model.search(domain).filtered_domain(time_domain)
@@ -1149,7 +1149,7 @@ class BaseAutomation(models.Model):
             if is_date_automation_last:
                 time_domain |= Domain(date_field.name, '=', False) & Domain('create_date', '>=', relative_last_run) & Domain('create_date', '<', relative_until)
 
-        if (date_field.store or date_field.search):
+        if date_field._description_searchable:
             return Model.search(time_domain & domain)
         else:
             return Model.search(domain).filtered_domain(time_domain)

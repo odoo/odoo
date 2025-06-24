@@ -946,10 +946,10 @@ class Field(typing.Generic[T]):
 
     @property
     def _description_searchable(self) -> bool:
-        return bool(self.store or self.search)
+        return bool(self.store or self.search or self.compute_sql)
 
     def _description_sortable(self, env: Environment):
-        if self.column_type and self.store:  # shortcut
+        if self.column_type and (self.store or self.compute_sql):  # shortcut
             return True
 
         model = env[self.model_name]
@@ -961,7 +961,7 @@ class Field(typing.Generic[T]):
             return False
 
     def _description_groupable(self, env: Environment):
-        if self.column_type and self.store:  # shortcut
+        if self.column_type and (self.store or self.compute_sql):  # shortcut
             return True
 
         model = env[self.model_name]
@@ -974,7 +974,7 @@ class Field(typing.Generic[T]):
             return False
 
     def _description_aggregator(self, env: Environment):
-        if not self.aggregator or (self.column_type and self.store):  # shortcut
+        if not self.aggregator or (self.column_type and (self.store or self.compute_sql)):  # shortcut
             return self.aggregator
 
         model = env[self.model_name]

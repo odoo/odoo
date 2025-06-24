@@ -2280,6 +2280,7 @@ class BaseModel(metaclass=MetaModel):
         """Extend the group to include all target records by default."""
         return groups.search([])
 
+    @typing.final
     def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
@@ -3221,7 +3222,7 @@ class BaseModel(metaclass=MetaModel):
         for field in fields:
             if field.name == 'id':
                 continue
-            assert field.store
+            assert field.store or field.compute_sql
             (column_fields if field.column_type else other_fields).add(field)
 
         context = self.env.context
