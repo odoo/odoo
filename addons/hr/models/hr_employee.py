@@ -172,6 +172,7 @@ class HrEmployee(models.Model):
     private_car_plate = fields.Char(groups="hr.group_hr_user", help="If you have more than one car, just separate the plates by a space.")
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, groups="hr.group_hr_user")
     related_partners_count = fields.Integer(compute="_compute_related_partners_count", groups="hr.group_hr_user")
+    is_draft_version = fields.Boolean(compute="_compute_is_draft_version", groups="hr.group_hr_user")
     # properties
     employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_user")
 
@@ -282,6 +283,10 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.hr_icon_display = 'presence_' + employee.hr_presence_state
             employee.show_hr_icon_display = bool(employee.user_id)
+
+    @api.depends('version_id')
+    def _compute_is_draft_version(self):
+        self.is_draft_version = False
 
     def _get_first_versions(self):
         self.ensure_one()

@@ -144,7 +144,8 @@
                                 </div>
                             </div>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active or is_draft_version" groups="hr.group_hr_user"/>
+                        <widget name="web_ribbon" title="Draft" bg_color="text-bg-info" invisible="active or not is_draft_version" groups="hr.group_hr_user"/>
                         <field name="employee_properties" columns="2"/>
                         <notebook>
                             <page name="work_information" string="Work">
