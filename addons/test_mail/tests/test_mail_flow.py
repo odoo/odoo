@@ -1,6 +1,5 @@
-from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
-from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
+from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, MAIL_TEMPLATE_SHORT
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.tools.mail import formataddr
 from odoo.tests import tagged
@@ -104,6 +103,122 @@ class TestMailFlow(MailCommon, TestRecipients):
             self.env['res.partner'].search([('email_normalized', 'in', self.test_emails_normalized)]),
             self.customer_zboing + self.customer_portal_zboing,
         )
+
+    def test_lead_email_to_email(self):
+        """ Test email-to-email (e.g. gmail) usage """
+        self.user_employee.notification_type = 'email'
+        lead = self.env['mail.test.lead'].with_user(self.user_employee).create({
+            'partner_id': self.customer_zboing.id,
+        })
+        # employee posts, pinging the customer
+        recipients = lead._message_get_suggested_recipients(
+            reply_discussion=True, no_create=False,
+        )
+        self.assertEqual(recipients, [{
+            'create_values': {},
+            'email': self.customer_zboing.email_normalized,
+            'name': self.customer_zboing.name,
+            'partner_id': self.customer_zboing.id,
+        }])
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            emp_msg = lead.message_post(
+                body='Hello @customer',
+                message_type='comment',
+                partner_ids=[recipients[0]['partner_id']],
+                subtype_xmlid='mail.mt_comment',
+            )
+        reply_to_emp = emp_msg.reply_to
+        self.assertEqual(reply_to_emp, formataddr((self.user_employee.name, f'{self.alias_catchall}@{self.alias_domain}')))
+        self.assertSMTPEmailsSent(
+            mail_server=self.mail_server_notification,
+            msg_from=formataddr(
+                (self.partner_employee.name, f'{self.default_from}@{self.alias_domain}')
+            ),
+            smtp_from=self.mail_server_notification.from_filter,
+            smtp_to_list=[self.customer_zboing.email_normalized],
+            msg_to_lst=[self.customer_zboing.email_formatted],
+        )
+
+        # customer replies from their email reader, adds a CC and someone in the To
+        cust_reply = self.gateway_mail_reply_from_smtp_email(
+            MAIL_TEMPLATE_SHORT, [self.customer_zboing.email_normalized], reply_all=True,
+            add_to_lst=[self.test_emails[0]], cc=self.test_emails[1],
+        )
+        reply_to_cust = cust_reply.reply_to
+        self.assertMailNotifications(
+            cust_reply,
+            [
+                {
+                    'content': "Eli alla à l'eau",
+                    'message_type': 'email',
+                    'message_values': {
+                        'author_id': self.customer_zboing,
+                        'email_from': self.customer_zboing.email_formatted,
+                        'incoming_email_cc': self.test_emails[1],
+                        # FIXME: no catchall.test inside the incoming_email_to !
+                        'incoming_email_to': f'{reply_to_emp},{self.test_emails[0]}',
+                        'notified_partner_ids': self.user_employee.partner_id,
+                        # only recognized partners
+                        'partner_ids': self.env['res.partner'],
+                        'reply_to': formataddr((self.customer_zboing.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                        'subject': 'Re: False',
+                        'subtype_id': self.env.ref('mail.mt_comment'),
+                    },
+                    'notif': [{'partner': self.user_employee.partner_id, 'type': 'email'}],
+                },
+            ],
+        )
+        self.assertSMTPEmailsSent(
+            mail_server=self.mail_server_notification,
+            msg_from=formataddr(
+                (self.customer_zboing.name, f'{self.default_from}@{self.alias_domain}')
+            ),
+            smtp_from=self.mail_server_notification.from_filter,
+            smtp_to_list=[self.user_employee.email_normalized],
+            msg_to_lst=[self.user_employee.email_formatted],
+            # FIXME: missing customer in CC of reply -> will get out of discussion
+            msg_cc_lst=[],
+        )
+
+        # employee replies from their email reader, adds their colleague
+        emp_reply = self.gateway_mail_reply_from_smtp_email(
+            MAIL_TEMPLATE_SHORT, [self.user_employee.email_normalized], reply_all=True,
+            cc=self.partner_employee_2.email_formatted,
+        )
+        self.assertMailNotifications(
+            emp_reply,
+            [
+                {
+                    'content': "Eli alla à l'eau",
+                    'message_type': 'email',
+                    'message_values': {
+                        'author_id': self.partner_employee,
+                        'email_from': self.partner_employee.email_formatted,
+                        'incoming_email_cc': self.partner_employee_2.email_formatted,
+                        'incoming_email_to': reply_to_cust,
+                        'notified_partner_ids': self.env['res.partner'],
+                        # only recognized partners
+                        'partner_ids': self.partner_employee_2,
+                        'subject': 'Re: Re: False',
+                        'subtype_id': self.env.ref('mail.mt_comment'),
+                    },
+                    # partner_employee_2 received an email, hence no duplicate notification
+                    'notif': [],
+                },
+            ],
+        )
+        # FIXME: customer + additional recipients are out of discussion
+        self.assertEqual(emp_reply.notified_partner_ids, self.env['res.partner'])
+        self.assertFalse(self.emails)
+        # self.assertSMTPEmailsSent(
+        #     mail_server=self.mail_server_notification,
+        #     msg_from=formataddr(
+        #         (self.partner_employee.name, f'{self.default_from}@{self.alias_domain}')
+        #     ),
+        #     smtp_from=self.mail_server_notification.from_filter,
+        #     smtp_to_list=[],
+        #     msg_to_lst=[],
+        # )
 
     def test_lead_mailgateway(self):
         """ Flow of this test

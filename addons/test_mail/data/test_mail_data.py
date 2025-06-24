@@ -135,6 +135,38 @@ Message-ID: {msg_id}
 </html>
 """
 
+MAIL_TEMPLATE_SHORT = """Return-Path: {return_path}
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="----=_Part_4200734_24778174.1344608186754"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+------=_Part_4200734_24778174.1344608186754
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Eli alla à l'eau
+
+--
+Signature
+------=_Part_4200734_24778174.1344608186754
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+<div>Eli alla à l'eau<br/>
+--<br/>
+Sylvie
+</div>
+------=_Part_4200734_24778174.1344608186754--
+"""
+
+
 MAIL_MULTIPART_MIXED = """Return-Path: <ignasse.carambar@gmail.com>
 X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
