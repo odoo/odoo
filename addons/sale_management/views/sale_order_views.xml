@@ -30,7 +30,7 @@
                                     <div class="row">
                                         <field name="product_id" class="col-10 fw-bolder"/>
                                         <button name="button_add_to_order"
-                                            class="col-2 btn btn-link oe_link fa fa-shopping-cart"
+                                            t-att-class="'col-2 btn btn-link oe_link fa fa-shopping-cart ' + (record.id.raw_value ? '' : 'disabled')"
                                             title="Add to order lines"
                                             type="object"
                                             invisible="is_present"/>
