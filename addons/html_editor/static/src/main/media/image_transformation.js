@@ -318,7 +318,6 @@ export class ImageTransformation extends Component {
             return { top: 0, left: 0 };
         } else {
             const rect = target.getBoundingClientRect();
-            const win = target.ownerDocument.defaultView;
             const frameElement = target.ownerDocument.defaultView.frameElement;
             const offset = { top: 0, left: 0 };
             if (frameElement) {
@@ -327,8 +326,8 @@ export class ImageTransformation extends Component {
                 offset.top += frameRect.top;
             }
             return {
-                top: rect.top + win.pageYOffset + offset.top,
-                left: rect.left + win.pageXOffset + offset.left,
+                top: rect.top + window.pageYOffset + offset.top,
+                left: rect.left + window.pageXOffset + offset.left,
             };
         }
     }
