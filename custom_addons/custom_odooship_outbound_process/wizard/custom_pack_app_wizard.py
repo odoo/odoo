@@ -407,9 +407,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         # 1. Search product by barcode or default_code WITH tenant match
         product = self.env['product.product'].search([
             ('tenant_id', '=', tenant),
-            '|',
+            # '|',
             ('barcode', '=', scanned_input),
-            ('default_code', '=', scanned_input)
+            # ('default_code', '=', scanned_input)
         ], limit=1)
 
         # 2. If not found, search in product.barcode.multi
