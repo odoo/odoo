@@ -431,7 +431,7 @@ class TestDomainOptimize(TransactionCase):
         model = self.env['test_orm.bar']
         foo = model.foo.create({"name": "ok"})
         self.assertEqual(
-            Domain('foo', '=', foo.id).optimize(model, full=True),
+            Domain('foo', '=', foo.id).optimize_full(model),
             Domain('name', 'in', ["ok"]).optimize(model),
         )
         self.assertEqual(
@@ -570,7 +570,7 @@ class TestDomainOptimize(TransactionCase):
             "the condition should not be reduced to a constant",
         )
         self.assertEqual(
-            Domain('important', 'not in', [True, False]).optimize(model, full=True),
+            Domain('important', 'not in', [True, False]).optimize_full(model),
             Domain.FALSE,
         )
         self.assertEqual(
@@ -582,7 +582,7 @@ class TestDomainOptimize(TransactionCase):
             is_important,
         )
         self.assertEqual(
-            Domain('important', 'in', [0, 2]).optimize(model, full=True),
+            Domain('important', 'in', [0, 2]).optimize_full(model),
             Domain.TRUE,
         )
         self.assertEqual(
@@ -591,7 +591,7 @@ class TestDomainOptimize(TransactionCase):
             "the condition should not be reduced to a constant for active record",
         )
         self.assertEqual(
-            Domain('active', 'in', [True, False]).optimize(model, full=True),
+            Domain('active', 'in', [True, False]).optimize_full(model),
             Domain.TRUE,
         )
 
@@ -728,11 +728,11 @@ class TestDomainOptimize(TransactionCase):
         categ = model.create({'name': 'parent'})
         categ_child = model.create({'name': 'child', 'parent': categ.id})
         self.assertEqual(
-            Domain('id', 'child_of', categ.ids).optimize(model, full=True),
+            Domain('id', 'child_of', categ.ids).optimize_full(model),
             Domain('parent_path', '=like', f"{categ.parent_path}%"),
         )
         self.assertEqual(
-            Domain('id', 'parent_of', categ_child.ids).optimize(model, full=True),
+            Domain('id', 'parent_of', categ_child.ids).optimize_full(model),
             Domain('id', 'in', OrderedSet([categ_child.id, categ.id])),
         )
 
@@ -877,37 +877,37 @@ class TestDomainOptimize(TransactionCase):
         ]:
             field_type = model._fields[field_name].type
             m2o = field_type == 'many2one'
-            left = left.optimize(model[field_name], full=True)
-            right = right.optimize(model[field_name], full=True)
+            left = left.optimize_full(model[field_name])
+            right = right.optimize_full(model[field_name])
 
             with self.subTest(field_type=field_type):
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', right)).optimize(model, full=True),
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', right)).optimize_full(model),
                     Domain(field_name, 'any', left | right),
                 )
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) & Domain(field_name, 'any', right)).optimize(model, full=True),
+                    (Domain(field_name, 'any', left) & Domain(field_name, 'any', right)).optimize_full(model),
                     Domain(field_name, 'any', left & right) if m2o
                     else Domain(field_name, 'any', left) & Domain(field_name, 'any', right),
                 )
                 query = model[field_name]._search([])
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', query) | Domain(field_name, 'any', right)).optimize(model, full=True),
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', query) | Domain(field_name, 'any', right)).optimize_full(model),
                     Domain(field_name, 'any', left | right) | Domain(field_name, 'any!', query),
                     "Don't merge query with domains",
                 )
                 self.assertEqual(
-                    (Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right)).optimize(model, full=True),
+                    (Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right)).optimize_full(model),
                     Domain(field_name, 'not any', left & right) if m2o
                     else Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right),
                 )
                 self.assertEqual(
-                    (Domain(field_name, 'not any', left) & Domain(field_name, 'not any', right)).optimize(model, full=True),
+                    (Domain(field_name, 'not any', left) & Domain(field_name, 'not any', right)).optimize_full(model),
                     Domain(field_name, 'not any', left | right),
                 )
 
                 self.assertEqual(
-                    (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)).optimize(model, full=True),
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)).optimize_full(model),
                     (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)),
                     "Do not merge any and not any",
                 )
@@ -927,5 +927,5 @@ class TestDomainOptimize(TransactionCase):
         self.patch(self.registry['test_orm.bar'], '_search_foo', search_foo)
         bar = self.env['test_orm.bar']
         domain = Domain('foo', '=', 4) | Domain('foo', '=', 5)
-        domain = domain.optimize(bar, full=True)
+        domain = domain.optimize_full(bar)
         self.assertEqual(domain, Domain('name', 'in', OrderedSet(['(4, 5)'])))

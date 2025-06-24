@@ -4891,7 +4891,7 @@ class BaseModel(metaclass=MetaModel):
         ):
             domain &= Domain(self._active_name, '=', True)
 
-        domain = domain.optimize(self, full=True)
+        domain = domain.optimize_full(self)
         if domain.is_false():
             return self.browse()._as_query()
         query = Query(self.env, self._table, self._table_sql)
@@ -4922,7 +4922,7 @@ class BaseModel(metaclass=MetaModel):
         domain = self.env['ir.rule']._compute_domain(self._name, mode)
         if not domain.is_true():
             model = self.sudo()
-            domain = domain.optimize(model, full=True)
+            domain = domain.optimize_full(model)
             query.add_where(domain._to_sql(model, query.table, query))
 
     def _order_to_sql(self, order: str, query: Query, alias: (str | None) = None,
@@ -5058,7 +5058,7 @@ class BaseModel(metaclass=MetaModel):
             sec_domain = Domain.TRUE
         else:
             sec_domain = self.env['ir.rule']._compute_domain(self._name, 'read')
-            sec_domain = sec_domain.optimize(self.sudo(), full=True)
+            sec_domain = sec_domain.optimize_full(self.sudo())
 
         # build the query
         if sec_domain.is_false() or (not limit and limit is not None and limit is not False):

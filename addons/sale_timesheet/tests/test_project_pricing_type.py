@@ -24,7 +24,7 @@ class TestProjectPricingType(TestCommonSaleTimesheet):
 
         def _search_pricing_type(operator, value):
             # execute the optimization to transform the domain
-            return Domain('pricing_type', operator, value).optimize(project, full=True)
+            return Domain('pricing_type', operator, value).optimize_full(project)
 
         # 1) Take a project non billable and check if the pricing_type is equal to False
         self.assertFalse(project.allow_billable, 'The allow_billable should be false if the project is non billable.')
