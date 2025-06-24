@@ -117,9 +117,10 @@ class Id(Field[IdType | typing.Literal[False]]):
     def convert_to_column(self, value, record, values=None, validate=True):
         return value
 
-    def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
+    def to_sql(self, model: BaseModel, alias: str) -> SQL:
         # do not flush, just return the identifier
         assert self.store, 'id field must be stored'
+        # id is never flushed
         return SQL.identifier(alias, self.name)
 
     def expression_getter(self, field_expr):
