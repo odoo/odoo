@@ -210,6 +210,8 @@ export class Form extends Interaction {
                 pickerProps: {
                     type: fieldEl.matches(".s_website_form_date, .o_website_form_date") ? "date" : "datetime",
                     value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
+                    buttonClass: "btn-sm",
+                    popoverButtonClass: "btn-light",
                 },
             }).enable());
         }

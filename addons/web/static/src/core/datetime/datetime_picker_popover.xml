@@ -4,7 +4,8 @@
         <DateTimePicker t-props="props.pickerProps">
             <t t-set-slot="buttons">
                 <button
-                    class="btn btn-sm btn-secondary"
+                    class="btn btn-sm"
+                    t-att-class="props.pickerProps.popoverButtonClass || 'btn-secondary'"
                     tabindex="-1"
                     t-on-click="() => props.pickerProps.range || props.pickerProps.focusedDateIndex ? props.pickerProps.onSelect([false, false]) : props.pickerProps.onSelect(false)"
                 >

@@ -41,6 +41,8 @@ const { DateTime, Info } = luxon;
  * @property {NullableDateTime | NullableDateRange} [value]
  * @property {(date: DateTime) => boolean} [isDateValid]
  * @property {(date: DateTime) => string} [dayCellClass]
+ * @property {string} [buttonClass]
+ * @property {string} [popoverButtonClass]
  *
  * @typedef {DateItem | MonthItem} Item
  *
@@ -316,6 +318,8 @@ export class DateTimePicker extends Component {
         isDateValid: { type: Function, optional: true },
         dayCellClass: { type: Function, optional: true },
         tz: { type: String, optional: true },
+        buttonClass: { type: String, optional: true },
+        popoverButtonClass: { type: String, optional: true },
     };
 
     static defaultProps = {
