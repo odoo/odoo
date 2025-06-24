@@ -6,6 +6,7 @@ import logging
 import typing
 
 from collections import defaultdict
+from types import MappingProxyType
 
 from . import models
 from . import fields  # must be imported after models
@@ -18,7 +19,6 @@ from odoo.tools import (
     frozendict,
     sql,
 )
-from odoo.tools.misc import ReadonlyDict
 
 if typing.TYPE_CHECKING:
     from odoo.api import Environment
@@ -183,9 +183,10 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
             '_inherit_module': {},                  # map parent to introducing module
             '_inherit_children': OrderedSet(),      # names of children models
             '_inherits_children': set(),            # names of children models
-            '_fields': ReadonlyDict({}),            # populated in _setup()
+            '_fields__': {},                        # populated in _setup()
             '_table_objects': frozendict(),         # populated in _setup()
         })
+        model_cls._fields = MappingProxyType(model_cls._fields__)
 
     # determine all the classes the model should inherit from
     bases = LastOrderedSet([model_def])
@@ -362,7 +363,7 @@ def _setup(model_cls: type[BaseModel], env: Environment):
     # avoid clashes with inheritance between different models
     for name in model_cls._fields:
         discardattr(model_cls, name)
-    model_cls._fields._data__.clear()
+    model_cls._fields__.clear()
 
     # collect the definitions of each field (base definition + overrides)
     definitions = defaultdict(list)
@@ -385,7 +386,7 @@ def _setup(model_cls: type[BaseModel], env: Environment):
                 _logger.debug("Patching %s.%s with translate=True", model_cls._name, name)
                 fields_.append(type(fields_[0])(translate=True))
         if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == model_cls._name:
-            model_cls._fields._data__[name] = fields_[0]
+            model_cls._fields__[name] = fields_[0]
         else:
             Field = type(fields_[-1])
             add_field(model_cls, name, Field(_base_fields__=tuple(fields_)))
@@ -585,13 +586,13 @@ def add_field(model_cls: type[BaseModel], name: str, field: Field):
     setattr(model_cls, name, field)
     field._toplevel = True
     field.__set_name__(model_cls, name)
-    # add field as an attribute and in model_cls._fields (for reflection)
-    model_cls._fields._data__[name] = field
+    # add field as an attribute and in model_cls._fields__ (for reflection)
+    model_cls._fields__[name] = field
 
 
 def pop_field(model_cls: type[BaseModel], name: str) -> Field | None:
     """ Remove the field with the given ``name`` from the model class of ``model``. """
-    field = model_cls._fields._data__.pop(name, None)
+    field = model_cls._fields__.pop(name, None)
     discardattr(model_cls, name)
     if model_cls._rec_name == name:
         # fixup _rec_name and display_name's dependencies
