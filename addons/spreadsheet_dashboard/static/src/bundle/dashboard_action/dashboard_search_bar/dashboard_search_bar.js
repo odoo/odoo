@@ -5,6 +5,8 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DashboardSearchDialog } from "../dashboard_search_dialog/dashboard_search_dialog";
 import { getFacetInfo } from "@spreadsheet/global_filters/helpers";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
+import { getFacetInfo } from "@spreadsheet/global_filters/helpers";
+import { FiltersSearchDialog } from "@spreadsheet/global_filters/components/filters_search_dialog/filters_search_dialog";
 
 export class DashboardSearchBar extends Component {
     static template = "spreadsheet_dashboard.DashboardSearchBar";
@@ -26,7 +28,7 @@ export class DashboardSearchBar extends Component {
     }
 
     openDialog() {
-        this.dialog.add(DashboardSearchDialog, {
+        this.dialog.add(FiltersSearchDialog, {
             model: this.props.model,
         });
     }
