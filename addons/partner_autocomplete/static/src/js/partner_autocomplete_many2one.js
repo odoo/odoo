@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { Component } from "@odoo/owl";
@@ -28,6 +29,7 @@ class PartnerAutoCompleteMany2one extends Component {
 
     setup() {
         super.setup();
+        this.orm = useService("orm");
         this.partnerAutocomplete = usePartnerAutocomplete();
         this.openRecord = useOpenMany2XRecord({
             resModel: this.props.record.fields[this.props.name].relation,
@@ -105,6 +107,12 @@ class PartnerAutoCompleteMany2one extends Component {
         if (data.logo) {
             context.default_image_1920 = data.logo;
         }
+
+        const unspsc_codes = data.company.unspsc_codes;
+        if(unspsc_codes){
+            context.default_category_id = await this.orm.call("res.partner", "iap_partner_autocomplete_get_tag_ids", [[], unspsc_codes]);
+        }
+
         return this.openRecord({ context });
     }
 }
