@@ -106,6 +106,16 @@ class StockLandedCost(models.Model):
                 _('Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them'))
         return self.write({'state': 'cancel'})
 
+    @api.model
+    def _get_original_quantity(self, move):
+        """Returns the 'original' quantity for which revaluation should be made.
+
+        We just use move.quantity if it's positive. Otherwise (i.e. qty_done of the move
+        line got zeroed out after it was once done) use the quantity of the first
+        valuation layer record attached.
+        """
+        return move.product_qty or move.stock_valuation_layer_ids[:1].quantity
+
     def button_validate(self):
         self._check_can_validate()
         cost_without_adjusment_lines = self.filtered(lambda c: not c.valuation_adjustment_lines)
@@ -131,7 +141,7 @@ class StockLandedCost(models.Model):
                 linked_layer = line.move_id.stock_valuation_layer_ids[:1]
 
                 # Prorate the value at what's still in stock
-                cost_to_add = (remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+                cost_to_add = (remaining_qty / self._get_original_quantity(line.move_id)) * line.additional_landed_cost
                 if not cost.company_id.currency_id.is_zero(cost_to_add):
                     valuation_layer = self.env['stock.valuation.layer'].create({
                         'value': cost_to_add,
@@ -196,13 +206,14 @@ class StockLandedCost(models.Model):
         lines = []
 
         for move in self._get_targeted_move_ids():
+            quantity = self._get_original_quantity(move)
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel' or not move.product_qty:
+            if move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel' or not quantity:
                 continue
             vals = {
                 'product_id': move.product_id.id,
                 'move_id': move.id,
-                'quantity': move.product_qty,
+                'quantity': quantity,
                 'former_cost': sum(move.stock_valuation_layer_ids.mapped('value')),
                 'weight': move.product_id.weight * move.product_qty,
                 'volume': move.product_id.volume * move.product_qty
