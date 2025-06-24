@@ -27,11 +27,11 @@ test("Should set a shape on an image", async () => {
     expect(img.src.startsWith("data:image/svg+xml;base64,")).toBe(true);
     expect(":iframe .test-options-target img").toHaveAttribute(
         "data-original-src",
-        "/website/static/src/img/snippets_demo/s_text_image.jpg"
+        "/website/static/src/img/snippets_demo/s_text_image.webp"
     );
     expect(":iframe .test-options-target img").toHaveAttribute(
         "data-mimetype-before-conversion",
-        "image/jpeg"
+        "image/webp"
     );
     expect(":iframe .test-options-target img").toHaveAttribute(
         "data-shape",

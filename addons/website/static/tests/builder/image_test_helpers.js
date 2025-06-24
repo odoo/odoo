@@ -8,8 +8,8 @@ function onRpcReal(route) {
 export const testImg = `
     <img src='/web/image/website.s_text_image_default_image'
         data-original-id="1"
-        data-original-src="/website/static/src/img/snippets_demo/s_text_image.jpg"
-        data-mimetype-before-conversion="image/jpeg"
+        data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
+        data-mimetype-before-conversion="image/webp"
         >
     `;
 
@@ -21,14 +21,14 @@ export function mockImageRequests() {
             },
             original: {
                 id: 1,
-                image_src: "/website/static/src/img/snippets_demo/s_text_image.jpg",
-                mimetype: "image/jpeg",
+                image_src: "/website/static/src/img/snippets_demo/s_text_image.webp",
+                mimetype: "image/webp",
             },
         }));
         onRpcReal("/html_builder/static/image_shapes/geometric/geo_shuriken.svg");
         onRpcReal("/html_builder/static/image_shapes/pattern/pattern_wave_4.svg");
         onRpcReal("/html_builder/static/image_shapes/geometric/geo_tetris.svg");
         onRpcReal("/web/image/website.s_text_image_default_image");
-        onRpcReal("/website/static/src/img/snippets_demo/s_text_image.jpg");
+        onRpcReal("/website/static/src/img/snippets_demo/s_text_image.webp");
     });
 }
