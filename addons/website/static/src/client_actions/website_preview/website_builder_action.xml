@@ -19,7 +19,7 @@
         <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
         <div t-att-class="{'o_builder_sidebar_open': state.isEditing and state.showSidebar, 'o_is_microsoft_edge': isMicrosoftEdge}"
             class="o-website-builder_sidebar border-start border-dark">
-            <LazyComponent  t-if="state.isEditing" Component="'website.WebsiteBuilder'" props="() => this.websiteBuilderProps" bundle="'html_builder.assets'" t-key="state.key"/>
+            <LazyComponent  t-if="state.isEditing" Component="'website.WebsiteBuilder'" props="() => this.websiteBuilderProps" bundle="'website.website_builder_assets'" t-key="state.key"/>
         </div>
     </div>
 </t>

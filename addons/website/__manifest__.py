@@ -497,7 +497,8 @@
             # Don't include dark mode files in light mode
             ('remove', 'website/static/src/components/dialog/*.dark.scss'),
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
+            ('include', 'html_builder.assets'),
             'website/static/src/scss/website_common.scss',
             'website/static/src/builder/**/*',
             ('remove', 'website/static/src/builder/**/*.inside.scss'),

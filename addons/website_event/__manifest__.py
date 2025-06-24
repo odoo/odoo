@@ -79,7 +79,7 @@
         'website.assets_editor': [
             'website_event/static/src/js/systray_items/*.js',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_event/static/src/website_builder/**/*',
         ],
     },

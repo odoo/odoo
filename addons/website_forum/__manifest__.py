@@ -88,7 +88,7 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/interactions/website_forum_spam.js',
             'website_forum/static/src/xml/public_templates.xml',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_forum/static/src/website_builder/**/*',
         ],
     },
