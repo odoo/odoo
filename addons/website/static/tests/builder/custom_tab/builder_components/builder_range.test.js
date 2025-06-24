@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, waitFor } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, click, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
 import {
     addActionOption,
@@ -10,6 +10,7 @@ import {
     setupWebsiteBuilder,
 } from "../../website_helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { HistoryPlugin } from "@html_editor/core/history_plugin";
 
 defineWebsiteModels();
 
@@ -48,4 +49,87 @@ test("should commit changes", async () => {
     await animationFrame();
     expect(".o-snippets-top-actions .fa-undo").toBeEnabled();
     expect(".o-snippets-top-actions .fa-repeat").not.toBeEnabled();
+});
+
+test("range input should step up or down with arrow keys", async () => {
+    addActionOption({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.textContent;
+            }
+            apply({ editingElement, value }) {
+                expect.step(`customAction ${value}`);
+                editingElement.textContent = value;
+            }
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">10</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    // Simulate ArrowUp
+    await contains(".options-container input").keyDown("ArrowUp");
+    expect(":iframe .test-options-target").toHaveInnerHTML("12");
+    // Simulate ArrowRight
+    await contains(".options-container input").keyDown("ArrowRight");
+    expect(":iframe .test-options-target").toHaveInnerHTML("14");
+    // Simulate ArrowDown
+    await contains(".options-container input").keyDown("ArrowDown");
+    expect(":iframe .test-options-target").toHaveInnerHTML("12");
+    // Simulate ArrowLeft
+    await contains(".options-container input").keyDown("ArrowLeft");
+    expect(":iframe .test-options-target").toHaveInnerHTML("10");
+
+    expect.verifySteps(["customAction 12", "customAction 14", "customAction 12", "customAction 10"]);
+});
+
+test("keeping an arrow key pressed should commit only once", async () => {
+    patchWithCleanup(HistoryPlugin.prototype, {
+        makePreviewableAsyncOperation(...args) {
+            const res = super.makePreviewableAsyncOperation(...args);
+            const commit = res.commit;
+            res.commit = async (...args) => {
+                expect.step(`commit ${args[0][0].actionValue}`);
+                commit(...args);
+            }
+            return res;
+        }
+    });
+    addActionOption({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.textContent;
+            }
+            apply({ editingElement, value }) {
+                expect.step(`customAction ${value}`);
+                editingElement.textContent = value;
+            }
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">10</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    // Simulate a long press on ArrowUp
+    await contains(".options-container input").keyDown("ArrowUp");
+    await advanceTime(500);
+    await contains(".options-container input").keyDown("ArrowUp");
+    await advanceTime(50);
+    await contains(".options-container input").keyDown("ArrowUp");
+    await advanceTime(50);
+    await contains(".options-container input").keyDown("ArrowUp");
+    expect(":iframe .test-options-target").toHaveInnerHTML("18");
+    expect.verifySteps(["customAction 12", "customAction 14", "customAction 16", "customAction 18"]);
+    await advanceTime(550);
+    expect.verifySteps(["commit 18", "customAction 18"]);
 });

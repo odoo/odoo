@@ -4,6 +4,7 @@ import {
     basicContainerBuilderComponentProps,
     useInputBuilderComponent,
     useBuilderComponent,
+    useInputDebouncedCommit,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import {
@@ -12,7 +13,6 @@ import {
 } from "@html_builder/core/building_blocks/builder_text_input_base";
 import { useChildRef } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
-import { useDebounced } from "@web/core/utils/timing";
 
 export class BuilderNumberInput extends Component {
     static template = "html_builder.BuilderNumberInput";
@@ -51,14 +51,7 @@ export class BuilderNumberInput extends Component {
         this.state = state;
 
         this.inputRef = useChildRef();
-        this.debouncedCommitValue = useDebounced(() => {
-            const normalizedDisplayValue = this.commit(this.inputRef.el.value);
-            this.inputRef.el.value = normalizedDisplayValue;
-        }, 550);
-        // ↑ 500 is the delay when holding keydown between the 1st and 2nd event
-        // fired. Some additional delay by the browser may add another ~5-10ms.
-        // We debounce above that threshold to keep a single history step when
-        // holding up/down on a number input.
+        this.debouncedCommitValue = useInputDebouncedCommit(this.inputRef);
     }
 
     /**
