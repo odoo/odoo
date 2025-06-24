@@ -160,6 +160,9 @@ export class CarouselSlider extends Interaction {
      * @param {number} [nbItemsToLoad=1] The number of items to preload on each side.
      */
     loadItemsToAppear(nbItemsToLoad = 1) {
+        if (!this.carouselInnerEl) {
+            return;
+        }
         const itemEls = Array.from(this.carouselInnerEl.children);
         const index = itemEls.findIndex(el => el.classList.contains("active"));
         const activeItemIndex = index >= 0 ? index : 0;
