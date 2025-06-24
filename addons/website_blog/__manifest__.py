@@ -51,7 +51,7 @@
             'website_blog/static/src/scss/website_blog.scss',
             'website_blog/static/src/snippets/**/*.js',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_blog/static/src/website_builder/**/*',
         ],
     },

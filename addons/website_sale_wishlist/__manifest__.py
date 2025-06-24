@@ -23,7 +23,7 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
         'web.assets_tests': [
             'website_sale_wishlist/static/tests/**/*',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_sale_wishlist/static/src/website_builder/**/*',
         ],
     },

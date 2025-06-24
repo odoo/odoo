@@ -189,7 +189,7 @@ Featuring
             'website_slides/static/src/interactions/**/*',
             'website_slides/static/src/js/public/**/*',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_slides/static/src/website_builder/**/*',
         ],
         'portal.assets_chatter': [
