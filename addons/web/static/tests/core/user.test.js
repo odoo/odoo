@@ -117,3 +117,36 @@ test("company evalContext", async () => {
     expect(companyEvalContext.has(false, "country_code", "AR")).toBe(false);
     expect(companyEvalContext.has(4, "country_code", "AR")).toBe(false);
 });
+
+test("activate company branches after access error", async () => {
+    cookie.set("cids", "1")
+    serverState.companies = [
+        {
+            id: 1,
+            name: "Company 1",
+            sequence: 1,
+            parent_id: false,
+            child_ids: [2, 3],
+        },
+        {
+            id: 2,
+            name: "Company 1 Branch 1",
+            sequence: 2,
+            parent_id: 1,
+            child_ids: [],
+        },
+        {
+            id: 3,
+            name: "Company 1 Branch 2",
+            sequence: 3,
+            parent_id: 1,
+            child_ids: [],
+        },
+    ];
+
+    const activeCompanyIds = user.activeCompanies.map((c) => c.id);
+    activeCompanyIds.push(2);
+    user.activateCompanies(activeCompanyIds);
+    // Activating the first branch should activate all branches
+    expect(cookie.get("cids")).toBe("1-2-3");
+})
