@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from itertools import chain
 from unittest.mock import patch, PropertyMock
 
 from odoo import Command, fields
@@ -1765,3 +1766,28 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if channel == self.channel_livechat_2:
             return {**common_data, "display_name": "anon 2 Ernest Employee"}
         return {}
+
+
+@tagged("post_install", "-at_install", "is_query_count")
+class TestRatingStatsPerformance(HttpCase, MailCommon):
+    @warmup
+    def test_fetch_rating_stats(self):
+        """
+        Computation of rating_stats should run a single query per model with rating_stats enabled.
+        """
+        first_model_records = self.env["mail.test.rating"].create(
+            [{"name": f"Ticket {i}"} for i in range(3)]
+        )
+        second_model_records = self.env["slide.channel"].create(
+            [{"name": f"Course {i}"} for i in range(3)]
+        )
+        for record in chain(first_model_records, second_model_records):
+            record.message_post(
+                body=f"<p>Test message for {record.name}</p>",
+                message_type="comment",
+                partner_ids=[self.user_employee.partner_id.id],
+                rating_value="4",
+            )
+        self.authenticate(self.user_employee.login, self.user_employee.password)
+        with self.assertQueryCount(28):
+            self.make_jsonrpc_request("/mail/inbox/messages")
