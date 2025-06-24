@@ -276,6 +276,26 @@ test("parse smart date input", async () => {
     expect(parseDateTime("-3m").toFormat(format)).toBe("2019-10-01 00:00");
     expect(parseDateTime("-2w").toFormat(format)).toBe("2019-12-18 00:00");
     expect(parseDateTime("-1d").toFormat(format)).toBe("2019-12-31 00:00");
+
+    // continue with only parseDateTime (which uses the same underlaying function)
+    mockDate("2020-01-01 00:01:00", 0);
+
+    expect(parseDateTime("=3d").toFormat(format)).toBe("2020-01-03 00:00");
+    expect(parseDateTime("+3d +1m").toFormat(format)).toBe("2020-02-04 00:01");
+    expect(parseDateTime("=11d +2H +15M").toFormat(format)).toBe("2020-01-11 02:15");
+    expect(parseDateTime("=11d =3H +2H +15M").toFormat(format)).toBe("2020-01-11 05:15");
+
+    expect(parseDateTime("now").toFormat(format)).toBe("2020-01-01 00:01");
+    expect(parseDateTime("today").toFormat(format)).toBe("2020-01-01 00:00");
+    expect(parseDateTime("today +1w").toFormat(format)).toBe("2020-01-08 00:00");
+
+    expect(parseDateTime("=monday").toFormat(format)).toBe("2019-12-29 00:00");
+    expect(parseDateTime("=sunday").toFormat(format)).toBe("2020-01-04 00:00");
+    expect(parseDateTime("+monday").toFormat(format)).toBe("2020-01-05 00:01");
+
+    // reset after setting the day
+    expect(parseDateTime("=3H =11d").toFormat(format)).toBe("2020-01-11 00:00");
+    expect(parseDateTime("=3H =sunday").toFormat(format)).toBe("2020-01-04 00:00");
 });
 
 test("parseDateTime ISO8601 Format", async () => {
