@@ -186,6 +186,19 @@ registry.category("services").add("website_edit", {
                         return NaN; // So that it is different from itself
                     },
                     shouldStop() {
+                        // Selector does not match anymore ?
+                        const I = this.constructor;
+                        let isMatch = this.el.matches(I.selector);
+                        if (I.selectorHas) {
+                            isMatch &&= !!this.el.querySelector(I.selectorHas);
+                        }
+                        if (I.selectorNotHas) {
+                            isMatch &&= !this.el.querySelector(I.selectorNotHas);
+                        }
+                        if (!isMatch) {
+                            return true;
+                        }
+                        // Configuration changed ?
                         const snapshot = this.getConfigurationSnapshot();
                         if (snapshot === this.configurationSnapshot) {
                             return false;
