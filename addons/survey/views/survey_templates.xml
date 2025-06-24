@@ -81,9 +81,10 @@
             <div t-attf-class="o_survey_nav flex-grow-1 #{'order-2 order-md-1' if languages else None}">
                 <div class="container m-0 p-0">
                     <div class="row">
-                        <div  class="col-lg-10">
-                            <h1 t-if="answer.state == 'new' or survey.questions_layout != 'page_per_question'"
-                                t-esc="survey.title" class="o_survey_main_title pt-4"/>
+                        <div class="col-lg-10">
+                            <t t-set="displayTitle" t-value="answer.state == 'in_progress' and survey.questions_layout != 'page_per_question'"/>
+                            <h1 t-out="survey.title" class="o_survey_main_title o_survey_main_title_fade pt-4"
+                                t-attf-class="o_survey_main_title o_survey_main_title_fade pt-4 {{'opacity-0' if not displayTitle else 'opacity-100'}}"/>
                         </div>
                         <div class="o_survey_timer col-lg-2 pt-4">
                             <h1 class="o_survey_timer_container timer text-end"/>
@@ -146,7 +147,8 @@
     <template id="survey_fill_form_start" name="Survey: start form content">
         <div class="wrap o_survey_start">
             <div class='mb32'>
-                <div t-field='survey.description' class="oe_no_empty pb-5 text-break"/>
+                <h1 t-out="survey.title" class="o_survey_main_title pb-2"/>
+                <div t-field='survey.description' class="oe_no_empty pb-2 text-break"/>
                 <t t-if="answer.is_session_answer">
                     <div class="fw-bold">
                         The session will begin automatically when the host starts.
@@ -282,6 +284,7 @@
     <template id="survey_fill_form_done" name="Survey: finished">
         <div class="wrap">
             <div class="o_survey_finished mt32 mb32">
+                <h1 t-out="survey.title" class="o_survey_main_title pb-2"/>
                 <h1 class="fs-2">
                     <t t-if="survey.scoring_type != 'no_scoring'">
                         You scored <t t-out="answer.scoring_percentage"/>%
