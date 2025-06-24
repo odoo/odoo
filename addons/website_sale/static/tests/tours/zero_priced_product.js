@@ -8,10 +8,6 @@ registry.category('web_tour.tours').add('website_sale.contact_us_button', {
             trigger: '.js_attribute_value:has([checked]):contains(red)',
         },
         {
-            content: "Zero-priced product should be unavailable",
-            trigger: '#product_unavailable',
-        },
-        {
             content: "Price should be hidden",
             trigger: '.product_price:not(:visible)',
         },

@@ -50,16 +50,13 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     salesteam_id = fields.Many2one(related='website_id.salesteam_id', readonly=False)
-    website_sale_prevent_zero_price_sale = fields.Boolean(
-        string="Prevent Sale of Zero Priced Product",
-        related='website_id.prevent_zero_price_sale',
+    prevent_sale = fields.Boolean(related='website_id.prevent_sale', readonly=False)
+    prevent_sale_for = fields.Selection(related='website_id.prevent_sale_for', readonly=False)
+    prevent_sale_for_categories = fields.Many2many(
+        related='website_id.prevent_sale_for_categories',
         readonly=False,
     )
-    website_sale_contact_us_button_url = fields.Char(
-        string="Button Url",
-        related='website_id.contact_us_button_url',
-        readonly=False,
-    )
+    contact_us_link_url = fields.Char(related='website_id.contact_us_link_url', readonly=False)
     show_line_subtotals_tax_selection = fields.Selection(
         related='website_id.show_line_subtotals_tax_selection',
         readonly=False,

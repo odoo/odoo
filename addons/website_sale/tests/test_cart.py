@@ -89,7 +89,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
 
     def test_zero_price_product_rule(self):
         """
-        With the `prevent_zero_price_sale` that we have on website, we can't add free products
+        With the `prevent_sale` that we have on website, we can't add free products
         to our cart.
         There is an exception for certain product types specified by the
         `_get_product_types_allow_zero_price` method, so this test ensures that it works
@@ -97,7 +97,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
         """
         website_prevent_zero_price = self.env['website'].create({
             'name': 'Prevent zero price sale',
-            'prevent_zero_price_sale': True,
+            'prevent_sale': True,
         })
         product_consu = self.env['product.product'].create({
             'name': 'Cannot be zero price',

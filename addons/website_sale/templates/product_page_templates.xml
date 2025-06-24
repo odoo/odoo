@@ -156,31 +156,6 @@
                                     >
                                         <t t-call="website_sale.product_accordion"/>
                                     </div>
-
-                                    <div
-                                        t-if="combination_info['prevent_zero_price_sale']"
-                                        class="o_wsale_product_details_content_section o_wsale_product_details_content_section_contact mb-4"
-                                    >
-                                        <div
-                                            id="contact_us_wrapper"
-                                            t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes}"
-                                        >
-                                            <section
-                                                class="s_text_block"
-                                                data-snippet="s_text_block"
-                                                data-name="Text">
-                                                <div class="container">
-                                                    <a
-                                                        t-att-href="website.contact_us_button_url"
-                                                        t-att-data-url="website.contact_us_button_url"
-                                                        class="btn btn-primary btn_cta"
-                                                    >
-                                                        Contact Us
-                                                    </a>
-                                                </div>
-                                            </section>
-                                        </div>
-                                    </div>
                                     <t
                                         t-set="single_value_attributes"
                                         t-value="product.valid_product_template_attribute_line_ids._prepare_single_value_for_display()"
@@ -573,7 +548,7 @@
         >
             <div
                 id="add_to_cart_wrap"
-                t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-flex'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else ' w-100'}}"
+                t-attf-class="{{'d-none' if combination_info['prevent_sale'] else 'd-flex'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else ' w-100'}}"
             >
                 <!-- data-action="add_to_cart" is the default, but it's needed to distinguish this
                 button from the "buy now" button in xpaths. -->
@@ -591,6 +566,17 @@
                     <i class="fa fa-shopping-cart me-2"/>
                     Add to cart
                 </button>
+            </div>
+            <div
+                id="contact_us_wrapper"
+                t-attf-class="{{'d-flex' if combination_info['prevent_sale'] else 'd-none'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else 'w-100'}}"
+            >
+                <a
+                    t-att-href="website._get_contact_us_url(combination_info.get('display_name', ''))"
+                    class="btn btn-primary flex-grow-1 w-100"
+                >
+                    Contact Us
+                </a>
             </div>
             <div
                 id="product_option_block"
@@ -616,11 +602,17 @@
         <xpath expr="//div[@id='add_to_cart_wrap']" position="attributes">
             <attribute name="t-attf-class" remove="flex-lg-grow-0" separator=" "/>
         </xpath>
+        <div id="contact_us_wrapper" position="attributes">
+            <attribute name="t-attf-class" remove="flex-lg-grow-0" separator=" "/>
+        </div>
         <xpath expr="//div[@id='product_option_block']" position="attributes">
             <attribute name="t-att-class" remove="flex-lg-grow-0" separator=" "/>
         </xpath>
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="inside">
-            <div class="d-flex gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom">
+            <div
+                class="d-none gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom"
+                id="o_wsale_cta_wrapper_boxed_price"
+            >
                 <span name="o_wsale_cta_wrapper_boxed_price_label" class="text-muted">Price</span>
                 <t t-call="website_sale.product_price"/>
             </div>
@@ -637,6 +629,12 @@
         </xpath>
         <xpath expr="//div[@id='add_to_cart_wrap']" position="attributes">
             <attribute name="t-attf-class" remove="flex-lg-grow-0" separator=" "/>
+        </xpath>
+        <div id="contact_us_wrapper" position="attributes">
+            <attribute name="t-attf-class" remove="flex-lg-grow-0" separator=" "/>
+        </div>
+        <xpath expr="//div[@id='contact_us_wrapper']/a" position="attributes">
+            <attribute name="class" add="btn-lg" separator=" "/>
         </xpath>
         <xpath expr="//div[@id='product_option_block']" position="attributes">
             <attribute name="t-att-class" remove="flex-lg-grow-0" separator=" "/>
@@ -848,7 +846,7 @@
     >
         <div id="add_to_cart_wrap" position="inside">
             <div
-                t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex order-first'}} align-middle border"
+                t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_sale'] else 'd-inline-flex order-first'}} align-middle border"
                 contenteditable="false"
             >
                 <a
@@ -940,7 +938,7 @@
     <template id="website_sale.product_price">
         <div
             name="product_price"
-            t-attf-class="product_price {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}"
+            t-attf-class="product_price {{'d-none' if combination_info['hide_price'] else 'd-inline-block'}}"
         >
             <div
                 name="product_price_container"
@@ -993,9 +991,6 @@
             <small t-if="combination_info.get('tax_disclaimer')" class="text-muted">
                 <t t-out="combination_info['tax_disclaimer']"/>
             </small>
-        </div>
-        <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
-            <br/>
         </div>
     </template>
 

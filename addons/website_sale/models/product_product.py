@@ -137,7 +137,11 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not self.filtered_domain(self.env['website']._product_domain()):
             return False
-        return not request.website.prevent_zero_price_sale or self._get_contextual_price()
+        website = self.env['website'].get_current_website()
+        return not (
+            website.prevent_sale
+            and website._prevent_product_sale(self, not self._get_contextual_price())
+        )
 
     def _is_add_to_cart_allowed(self):
         self.ensure_one()
@@ -147,9 +151,13 @@ class ProductProduct(models.Model):
             return False
         if not self.filtered_domain(self.env['website']._product_domain()):
             return False
-        if request.website.prevent_zero_price_sale and not self._get_contextual_price():
+        website = self.env['website'].get_current_website()
+        if (
+            website.prevent_sale
+            and website._prevent_product_sale(self, not self._get_contextual_price())
+        ):
             return False
-        return request.website.has_ecommerce_access()
+        return website.has_ecommerce_access()
 
     @api.onchange('public_categ_ids')
     def _onchange_public_categ_ids(self):

@@ -4,6 +4,7 @@ import base64
 import json
 import logging
 import re
+from urllib.parse import parse_qsl, urlencode, urlsplit
 
 from lxml import etree
 from werkzeug import urls
@@ -102,8 +103,8 @@ class Website(models.Model):
         domain=[('model', '=', 'sale.order')],
         default=_default_recovery_mail_template,
     )
-    contact_us_button_url = fields.Char(
-        string="Contact Us Button URL", translate=True, default="/contactus",
+    contact_us_link_url = fields.Char(
+        string="Link URL", translate=True, default='/contactus',
     )
     cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
     send_abandoned_cart_email = fields.Boolean(
@@ -277,7 +278,21 @@ class Website(models.Model):
         default="16px",
     )
 
-    prevent_zero_price_sale = fields.Boolean(string="Hide 'Add To Cart' when price = 0")
+    prevent_sale = fields.Boolean(string="Hide Add To Cart")
+
+    prevent_sale_for = fields.Selection(
+        string="Prevent Sale For",
+        selection=[
+            ('zero_price', "0 price products"),
+            ('specific_categories', "Specific categories"),
+        ],
+        default='zero_price',
+    )
+
+    prevent_sale_for_categories = fields.Many2many(
+        string="Categories",
+        comodel_name='product.public.category',
+    )
 
     currency_id = fields.Many2one(
         string="Default Currency",
@@ -1061,6 +1076,42 @@ class Website(models.Model):
 
     def _get_snippet_defaults(self, snippet):
         return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})
+
+    def _prevent_product_sale(self, product_or_template, is_zero_price_product):
+        """Return whether selling the provided product online should be prevented, depending on
+        price and categories.
+
+        :param product.product|product.template product_or_template: The product to check.
+        :param boolean is_zero_price_product: Whether the product price is zero or not.
+        :return: Whether selling the product online should be prevented.
+        :rtype: boolean
+        """
+        # If the sale of zero-priced products should be prevented.
+        if self.prevent_sale_for == 'zero_price':
+            return is_zero_price_product
+
+        # If the sale of products in specific categories should be prevented.
+        if self.prevent_sale_for == 'specific_categories' and self.prevent_sale_for_categories:
+            return bool(product_or_template.public_categ_ids.filtered_domain([
+                ('id', 'child_of', self.prevent_sale_for_categories.ids),
+            ]))
+
+        return False
+
+    def _get_contact_us_url(self, subject=''):
+        """Build the contact us URL with an optional subject parameter.
+
+        :param str subject: Optional subject to add as a query parameter.
+        :return: The contact us URL with properly encoded parameters.
+        :rtype: str
+        """
+        base_url = self.contact_us_link_url or '/contactus'
+        if not subject:
+            return base_url
+
+        parsed = urlsplit(base_url)
+        query = urlencode([*parse_qsl(parsed.query), ('subject', subject)])
+        return parsed._replace(query=query).geturl()
 
     def _get_product_image_ratio_classes(self):
         """ Return the classes defining the product image aspect ratio from the website's design

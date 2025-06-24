@@ -376,7 +376,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
     def test_product_configurator_zero_priced(self):
         """Test that the product configurator prevents the sale of zero-priced products."""
-        self.website.prevent_zero_price_sale = True
+        self.website.prevent_sale = True
         price_attribute = self.env['product.attribute'].create({
             'name': "Price",
             'value_ids': [

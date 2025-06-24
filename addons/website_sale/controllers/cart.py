@@ -363,7 +363,7 @@ class Cart(PaymentPortal):
         - Its product is already in the cart.
         - It's a combo parent line.
         - It has an unsellable product.
-        - It has a zero-priced product (if the website blocks them).
+        - Its sale is prevented (zero-priced or in a restricted category).
         - It has an already seen product (duplicate or identical combo).
 
         The dates are represented by labels like "Today", "Yesterday", or "X days ago".
@@ -393,14 +393,17 @@ class Cart(PaymentPortal):
         seen_lines_sudo = SaleOrderLineSudo
         lines_per_order_date = {}
         for line_sudo in previous_orders_lines_sudo:
-            # Ignore lines that are combo parents, unsellable, or zero-priced.
+            # Ignore lines that are combo parents, unsellable, or prevented from sale.
             product_id = line_sudo.product_id.id
             if (
                 line_sudo.linked_line_id.product_type == 'combo'
                 or not line_sudo._is_sellable()
                 or (
-                    request.website.prevent_zero_price_sale
-                    and line_sudo.product_id._get_combination_info_variant()['price'] == 0
+                    request.website.prevent_sale
+                    and request.website._prevent_product_sale(
+                        line_sudo.product_id,
+                        line_sudo.product_id._get_combination_info_variant()['price'] == 0
+                    )
                 )
             ):
                 continue

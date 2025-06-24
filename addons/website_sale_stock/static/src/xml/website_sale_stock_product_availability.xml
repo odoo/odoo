@@ -3,7 +3,7 @@
 <templates>
     <t t-name="website_sale_stock.product_availability">
         <div
-            t-if="is_storable and !prevent_zero_price_sale"
+            t-if="is_storable and !prevent_sale"
             id="product_stock_availability"
         >
             <div t-if="free_qty lte 0 and !cart_qty" t-attf-class="availability_message_#{product_template} d-flex flex-column gap-2">
@@ -77,7 +77,7 @@
     </t>
     <t t-name="website_sale_stock.product_availability_wishlist">
         <div
-            t-if="is_storable and !free_qty and !allow_out_of_stock_order and !prevent_zero_price_sale"
+            t-if="is_storable and !free_qty and !allow_out_of_stock_order and !prevent_sale"
             id="stock_wishlist_message"
             t-attf-class="availability_message_#{product_template} my-2 d-flex align-items-center flex-column flex-md-row"
         >
