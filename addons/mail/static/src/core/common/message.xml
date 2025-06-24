@@ -39,6 +39,7 @@
                                 <strong class="me-1" t-esc="message.authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
+                            <t t-if="isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                             <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeShort">
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
                                 <t t-else="" t-out="message.dateSimpleWithDay"/>
@@ -57,7 +58,7 @@
                                 </span>
                             </div>
                             <t t-if="isAlignedRight" t-call="mail.Message.notification"/>
-                            <t t-if="!message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
+                            <t t-if="!isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
                         <div
                             class="o-mail-Message-contentContainer position-relative d-flex"
