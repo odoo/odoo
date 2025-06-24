@@ -297,6 +297,9 @@ export class PaymentScreen extends Component {
         this.numberBuffer.reset();
     }
     async validateOrder(isForceValidate) {
+        if (!this.pos.isFastPaymentRunning && (await this.pos.askBeforeValidation()) === false) {
+            return false;
+        }
         this.numberBuffer.capture();
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return;
@@ -336,7 +339,9 @@ export class PaymentScreen extends Component {
         this.pos.addPendingOrder([this.currentOrder.id]);
         this.currentOrder.state = "paid";
 
-        this.env.services.ui.block();
+        if (!this.pos.isFastPaymentRunning) {
+            this.env.services.ui.block();
+        }
         let syncOrderResult;
         try {
             // 1. Save order to server.
@@ -360,7 +365,9 @@ export class PaymentScreen extends Component {
         } catch (error) {
             return this.handleValidationError(error);
         } finally {
-            this.env.services.ui.unblock();
+            if (!this.pos.isFastPaymentRunning) {
+                this.env.services.ui.unblock();
+            }
         }
 
         // 3. Post process.
@@ -472,22 +479,6 @@ export class PaymentScreen extends Component {
             return "/point_of_sale/static/src/img/card-bank.png";
         }
     }
-    async _askForCustomerIfRequired() {
-        const splitPayments = this.paymentLines.filter(
-            (payment) => payment.payment_method_id.split_transactions
-        );
-        if (splitPayments.length && !this.currentOrder.getPartner()) {
-            const paymentMethod = splitPayments[0].payment_method_id;
-            const confirmed = await ask(this.dialog, {
-                title: _t("Customer Required"),
-                body: _t("Customer is required for %s payment method.", paymentMethod.name),
-            });
-            if (confirmed) {
-                this.pos.selectPartner();
-            }
-            return false;
-        }
-    }
 
     async _isOrderValid(isForceValidate) {
         if (this.currentOrder.isRefundInProcess()) {
@@ -504,7 +495,7 @@ export class PaymentScreen extends Component {
             return false;
         }
 
-        if ((await this._askForCustomerIfRequired()) === false) {
+        if ((await this.pos._askForCustomerIfRequired()) === false) {
             return false;
         }
 

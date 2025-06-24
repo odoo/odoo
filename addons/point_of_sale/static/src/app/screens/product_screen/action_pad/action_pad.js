@@ -13,6 +13,7 @@ export class ActionpadWidget extends Component {
         actionName: String,
         actionToTrigger: Function,
         showActionButton: { type: Boolean, optional: true },
+        fastValidate: { type: Function, optional: true },
     };
     static defaultProps = {
         showActionButton: true,
@@ -25,5 +26,13 @@ export class ActionpadWidget extends Component {
 
     get currentOrder() {
         return this.pos.getOrder();
+    }
+
+    get showFastPaymentMethods() {
+        return (
+            this.pos.config.is_fast_payment &&
+            this.pos.config.fast_payment_method_ids?.length &&
+            this.pos.router.state.current === "ProductScreen"
+        );
     }
 }

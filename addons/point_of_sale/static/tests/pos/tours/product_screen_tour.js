@@ -897,6 +897,17 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_fast_payment_validation_from_product_screen", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.clickFastPaymentButton("Bank"),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_only_existing_lots", {
     steps: () =>
         [

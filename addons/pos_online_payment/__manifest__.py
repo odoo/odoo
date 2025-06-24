@@ -6,6 +6,7 @@
     'name': 'Point of Sale online payment',
     'depends': ['point_of_sale', 'account_payment'],
     'data': [
+        'views/res_config_settings_views.xml',
         'views/payment_transaction_views.xml',
         'views/pos_payment_views.xml',
         'views/pos_payment_method_views.xml',

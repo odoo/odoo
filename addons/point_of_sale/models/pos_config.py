@@ -203,6 +203,10 @@ class PosConfig(models.Model):
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
     epson_printer_ip = fields.Char(string='Epson Printer IP', help="Local IP address of an Epson receipt printer.")
+    is_fast_payment = fields.Boolean('Fast Payment Validation', help="Enable fast payment methods to validate orders on the product screen.")
+    fast_payment_method_ids = fields.Many2many(
+        'pos.payment.method', string='Fast Payment Methods', compute="_compute_fast_payment_method_ids", relation='pos_payment_method_config_fast_validation_relation',
+        store=True, help="These payment methods will be available for fast payment", readonly=False)
 
     def notify_synchronisation(self, session_id, login_number, records={}):
         self.ensure_one()
@@ -273,6 +277,13 @@ class PosConfig(models.Model):
             record['pricelist_id'] = False
         record['_IS_VAT'] = self.env.company.country_id.id in self.env.ref("base.europe").country_ids.ids
         return read_records
+
+    @api.depends('payment_method_ids')
+    def _compute_fast_payment_method_ids(self):
+        for config in self:
+            config.fast_payment_method_ids = config.fast_payment_method_ids.filtered(lambda pm: pm.id in config.payment_method_ids.ids)
+            if not config.fast_payment_method_ids:
+                config.is_fast_payment = False
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):

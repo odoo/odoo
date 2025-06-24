@@ -946,3 +946,14 @@ export function loadSampleButtonIsThere() {
         trigger: ".product-screen .o_nocontent_help button:contains('Load Sample')",
     };
 }
+
+export function clickFastPaymentButton(paymentMethodName) {
+    return [
+        clickReview(),
+        {
+            content: `Select ${paymentMethodName} fast Payment Method`,
+            trigger: `.product-screen button:contains(${paymentMethodName})`,
+            run: "click",
+        },
+    ];
+}

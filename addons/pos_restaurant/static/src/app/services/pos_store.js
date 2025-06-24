@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
-import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 patch(PosStore.prototype, {
     /**
@@ -15,6 +15,7 @@ patch(PosStore.prototype, {
         this.isEditMode = false;
         this.tableSyncing = false;
         this.tableSelectorState = false;
+        this.pushOrderToPreparation = false;
         await super.setup(...arguments);
     },
     get firstPage() {
@@ -968,5 +969,40 @@ patch(PosStore.prototype, {
             ...super.getOrderData(order, reprint),
             customer_count: order.getCustomerCount(),
         };
+    },
+    async askBeforeValidation() {
+        const currentOrder = this.getOrder();
+        if (!currentOrder) {
+            return false;
+        }
+        if (this.config.module_pos_restaurant && currentOrder.hasChange && !currentOrder.isRefund) {
+            const confirmed = await ask(this.dialog, {
+                title: _t("Warning !"),
+                body: _t(
+                    "It seems that the order has not been sent. Would you like to send it to preparation?"
+                ),
+                confirmLabel: _t("Order"),
+                cancelLabel: _t("Discard"),
+            });
+            if (confirmed) {
+                if (!this.isFastPaymentRunning) {
+                    await this.sendOrderInPreparationUpdateLastChange(currentOrder);
+                } else {
+                    this.pushOrderToPreparation = true;
+                }
+            }
+        }
+        return await super.askBeforeValidation();
+    },
+
+    async validateOrderFast(paymentScreenEl, paymentMethod) {
+        const currentOrder = this.getOrder();
+        if (!currentOrder) {
+            return false;
+        }
+        if (this.pushOrderToPreparation) {
+            await this.sendOrderInPreparationUpdateLastChange(currentOrder);
+        }
+        await super.validateOrderFast(...arguments);
     },
 });
