@@ -4,14 +4,14 @@ import useStore from "../../hooks/useStore.js";
 import { BootstrapDialog } from "./BootstrapDialog.js";
 import { LoadingFullScreen } from "../LoadingFullScreen.js";
 
-const { Component, xml, useState, toRaw } = owl;
+const { Component, xml, useState } = owl;
 
 export class ServerDialog extends Component {
     static props = {};
     static components = { BootstrapDialog, LoadingFullScreen };
 
     setup() {
-        this.store = toRaw(useStore());
+        this.store = useStore();
         this.state = useState({ waitRestart: false, loading: false, error: null });
         this.form = useState({ token: "" });
     }
@@ -38,14 +38,11 @@ export class ServerDialog extends Component {
     }
 
     async clearConfiguration() {
+        this.state.waitRestart = true;
         try {
-            const data = await this.store.rpc({
+            await this.store.rpc({
                 url: "/iot_drivers/server_clear",
             });
-
-            if (data.status === "success") {
-                this.state.waitRestart = true;
-            }
         } catch {
             console.warn("Error while clearing configuration");
         }
