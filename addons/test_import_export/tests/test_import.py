@@ -886,6 +886,28 @@ foo3,US,0,persons\n""",
         self.assertEqual(tag3, partners[1].category_id)
         self.assertEqual(tag1 | tag3, partners[2].category_id)
 
+    def test_multi_mapping_hmtl(self):
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.complex',
+            'file': 'html,html\n'
+                    '"<p>foo</p>","<p>bar</p>"\n',
+            'file_type': 'text/csv',
+        })
+
+        results = import_wizard.execute_import(
+            ['html', 'html'],
+            [],
+            {
+                'quoting': '"',
+                'separator': ',',
+                'has_headers': True,
+            },
+        )
+        self.assertItemsEqual(results['messages'], [])  # No error
+
+        last_record = self.env['import.complex'].search([], order='id DESC', limit=1)
+        self.assertItemsEqual(last_record.html, "<p>foo</p><br><p>bar</p>")
+
     @mute_logger('odoo.addons.base_import.models.base_import')
     @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
     def test_xls_datetime_values(self):

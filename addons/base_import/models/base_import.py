@@ -49,6 +49,13 @@ MIMETYPE_TO_READER = {
     'application/vnd.oasis.opendocument.spreadsheet': 'ods',
 }
 
+CONCAT_SEPARATOR_IMPORT = {
+    'char': ' ',
+    'text': '\n',
+    'html': '<br>',
+    'many2many': ',',
+}
+
 
 class ImportValidationError(Exception):
     """
@@ -1598,12 +1605,9 @@ class Base_ImportImport(models.TransientModel):
                 field_type = field.type if field else ''
 
                 # merge data if necessary
-                if field_type == 'char':
-                    new_record.append(' '.join(record[idx] for idx in indexes if record[idx]))
-                elif field_type == 'text':
-                    new_record.append('\n'.join(record[idx] for idx in indexes if record[idx]))
-                elif field_type == 'many2many':
-                    new_record.append(','.join(record[idx] for idx in indexes if record[idx]))
+                if field_type in CONCAT_SEPARATOR_IMPORT:
+                    separator = CONCAT_SEPARATOR_IMPORT[field_type]
+                    new_record.append(separator.join(record[idx] for idx in indexes if record[idx]))
                 else:
                     new_record.append(record[indexes[0]])
 
