@@ -13,7 +13,6 @@ const macroSchema = {
                 action: { type: [Function, String], optional: true },
                 timeout: { type: Number, optional: true },
                 trigger: { type: [Function, String], optional: true },
-                expectUnloadPage: { type: Boolean, optional: true },
             },
             validate: (step) => step.action || step.trigger,
         },
@@ -106,7 +105,6 @@ async function waitUntil(predicate) {
 export class Macro {
     currentIndex = 0;
     isComplete = false;
-    allowUnload = false;
     constructor(descr) {
         try {
             validate(descr, macroSchema);
@@ -126,8 +124,6 @@ export class Macro {
     }
 
     async start() {
-        //TODO: uncomment this line
-        // this.listenBeforeUnload();
         await this.advance();
     }
 
@@ -151,23 +147,10 @@ export class Macro {
                     `TIMEOUT step failed to complete within ${timeoutDelay} ms.`
                 );
             };
-            this.allowUnload = currentStep.expectUnloadPage;
             // If falsy action result, it means the action worked properly.
             // So we can proceed to the next step.
             const actionResult = await Promise.race([executeStep(), launchTimer()]);
             if (actionResult) {
-                this.stop();
-                return;
-            }
-            if (currentStep.expectUnloadPage) {
-                setTimeout(() => {
-                    const message = `
-                            The key { expectUnloadPage } is defined but page has not been unloaded within 20000 ms. 
-                            You probably don't need it.
-                        `.replace(/^\s+/gm, "");
-                    const error = new MacroError("UnauthorizedBeforeUnload", message);
-                    this.onError(error);
-                }, 20000);
                 this.stop();
                 return;
             }
@@ -189,22 +172,6 @@ export class Macro {
         } else if (this.currentIndex === this.steps.length) {
             this.onComplete();
         }
-    }
-
-    listenBeforeUnload() {
-        this.allowUnload = false;
-        window.addEventListener("beforeunload", () => {
-            if (!this.allowUnload) {
-                const message = `
-                    Be sure to use { expectUnloadPage: true } for any step
-                    that involves firing a beforeUnload event.
-                    This avoid a non-deterministic behavior by explicitly stopping 
-                    the macro that might continue before the page is unloaded.
-                `.replace(/^\s+/gm, "");
-                const error = new MacroError("UnauthorizedBeforeUnload", message);
-                this.stop(error);
-            }
-        });
     }
 }
 

@@ -8,6 +8,7 @@ import * as hootDom from "@odoo/hoot-dom";
 
 export class TourAutomatic {
     mode = "auto";
+    allowUnload = false;
     constructor(data) {
         Object.assign(this, data);
         this.steps = this.steps.map((step, index) => new TourStepAutomatic(step, this, index));
@@ -55,7 +56,6 @@ export class TourAutomatic {
                 },
                 {
                     trigger: step.trigger ? () => step.findTrigger() : null,
-                    expectUnloadPage: step.expectUnloadPage,
                     timeout:
                         step.pause && this.debugMode
                             ? 9999999
@@ -63,6 +63,16 @@ export class TourAutomatic {
                     action: async (trigger) => {
                         if (delayToCheckUndeterminisms > 0) {
                             await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
+                        }
+                        if (!step.skipped && step.expectUnloadPage) {
+                            this.allowUnload = true;
+                            setTimeout(() => {
+                                const message = `
+                                    The key { expectUnloadPage } is defined but page has not been unloaded within 20000 ms. 
+                                    You probably don't need it.
+                                `.replace(/^\s+/gm, "");
+                                throw new Error(message);
+                            }, 20000);
                         }
                         const result = await step.doAction();
                         if (this.debugMode) {
@@ -78,7 +88,7 @@ export class TourAutomatic {
                             }
                         }
                         tourState.setCurrentIndex(step.index + 1);
-                        return result;
+                        return this.allowUnload ? "StopTheMacro!" : result;
                     },
                 },
             ]);
@@ -128,6 +138,21 @@ export class TourAutomatic {
                 end();
             },
         });
+
+        //TODO: uncomment the listener
+        // window.addEventListener("beforeunload", () => {
+        //     if (!this.allowUnload) {
+        //         const message = `
+        //             Be sure to use { expectUnloadPage: true } for any step
+        //             that involves firing a beforeUnload event.
+        //             This avoid a non-deterministic behavior by explicitly stopping
+        //             the tour that might continue before the page is unloaded.
+        //         `.replace(/^\s+/gm, "");
+        //         const error = new Error(message);
+        //         this.throwError(error);
+        //     }
+        // });
+
         if (this.debugMode && this.currentIndex === 0) {
             // Starts the tour with a debugger to allow you to choose devtools configuration.
             // eslint-disable-next-line no-debugger
