@@ -5,7 +5,6 @@ import {
     isProtected,
     isProtecting,
     isUnprotecting,
-    previousLeaf,
 } from "@html_editor/utils/dom_info";
 import {
     childNodes,
@@ -16,7 +15,7 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
-import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
+import { DIRECTIONS, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
     normalizeCursorPosition,
@@ -133,8 +132,8 @@ function scrollToSelection(selection) {
     const offsetTop = rect.top - containerRect.top + container.scrollTop;
     const offsetBottom = rect.bottom - containerRect.top + container.scrollTop;
 
-    if (rect.height >= containerRect.height) {
-        // Selection is larger than scrollable so we do nothing.
+    if (rect.bottom > containerRect.top && rect.top < containerRect.bottom) {
+        // If selection is partially visible, no need to scroll.
         return;
     }
     // Simulate the "nearest" behavior by scrolling to the closest top/bottom edge
@@ -201,8 +200,8 @@ export class SelectionPlugin extends Plugin {
             }
         });
         this.addDomListener(this.editable, "mousedown", (ev) => {
-            if (ev.detail >= 3) {
-                this.correctTripleClick = true;
+            if (ev.detail === 2) {
+                this.correctDoubleClick = true;
             }
             this.handleEmptySelection();
         });
@@ -219,6 +218,11 @@ export class SelectionPlugin extends Plugin {
                 this.onKeyDownArrows(ev);
             }
         });
+        this.addDomListener(this.editable, "click", (ev) => {
+            if (ev.detail % 3 === 0) {
+                this.onTripleClick(ev);
+            }
+        });
     }
 
     selectAll() {
@@ -232,6 +236,18 @@ export class SelectionPlugin extends Plugin {
 
     resetSelection() {
         this.activeSelection = this.makeActiveSelection();
+    }
+
+    onTripleClick() {
+        const selectionData = this.getSelectionData();
+        if (selectionData.documentSelectionIsInEditable) {
+            const { documentSelection } = selectionData;
+            const block = closestBlock(documentSelection.anchorNode);
+            const [anchorNode, anchorOffset] = getDeepestPosition(block, 0);
+            const [focusNode, focusOffset] = getDeepestPosition(block, nodeSize(block));
+            this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+            return;
+        }
     }
 
     handleEmptySelection() {
@@ -271,12 +287,29 @@ export class SelectionPlugin extends Plugin {
         this.previousActiveSelection = this.activeSelection;
         const selectionData = this.getSelectionData();
         if (selectionData.documentSelectionIsInEditable) {
-            if (this.correctTripleClick) {
-                this.correctTripleClick = false;
-                let { anchorNode, anchorOffset, focusNode, focusOffset } = this.activeSelection;
-                if (focusOffset === 0 && anchorNode !== focusNode) {
-                    [focusNode, focusOffset] = endPos(previousLeaf(focusNode));
-                    return this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+            if (this.correctDoubleClick) {
+                this.correctDoubleClick = false;
+                const { anchorNode, anchorOffset, focusNode } = this.activeSelection;
+                const anchorElement = closestElement(anchorNode);
+                // Allow editing the text of a link after "double click" on the last word of said link.
+                // This is done by correcting the selection focus inside of the link
+                if (
+                    anchorElement.tagName === "A" &&
+                    anchorNode !== focusNode &&
+                    focusNode.previousSibling === anchorElement
+                ) {
+                    const anchorElementLength = anchorElement.childNodes.length;
+
+                    // Due to the ZWS added around links we can always expect
+                    // the last childNode to be a ZWS in its own textNode.
+                    // therefore we can safely set the selection focus before last node.
+                    const newSelection = {
+                        anchorNode: anchorNode,
+                        anchorOffset: anchorOffset,
+                        focusNode: anchorElement,
+                        focusOffset: anchorElementLength - 1,
+                    };
+                    return this.setSelection(newSelection);
                 }
             }
 

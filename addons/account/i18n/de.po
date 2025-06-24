@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-06-20 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -213,6 +213,18 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"%(tax_account)s (%(account_name)s) should be an account of type "
+"\"%(receivable)s\" or \"%(payable)s\" with both options "
+"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+msgstr ""
+"Das Konto %(tax_account)s (%(account_name)s) sollte vom Typ „%(receivable)s“"
+" oder „%(payable)s“ sein und beide Optionen „%(allow_reconciliation)s“ und "
+"„%(non_trade)s“ sollten aktiviert sein."
 
 #. module: account
 #. odoo-python
@@ -1379,7 +1391,7 @@ msgstr "<span>Warnung: Dieses Dokument könnte ein Duplikat sein von</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Versandadresse</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5066,6 +5078,8 @@ msgid "Create Automatic Entries"
 msgstr "Automatische Buchungen erstellen"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_bill
 msgid "Create Bill"
 msgstr "Rechnung erstellen"
@@ -8516,7 +8530,7 @@ msgstr "Ungewöhnlichen Rechnungsbetrag ignorieren"
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_date
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_date
 msgid "Ignore Abnormal Invoice Date"
-msgstr "Ungewöhnlichen Rechnungsbetrag ignorieren"
+msgstr "Ungewöhnliches Rechnungsdatum ignorieren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -15529,6 +15543,14 @@ msgstr ""
 " implementiert"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+"Der Geschäftspartner wurde für alle zugehörigen Buchungen aktualisiert."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Das Unternehmen, zu dem diese Verteilungszeile gehört."
@@ -18385,10 +18407,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "You can't create payments for entries belonging to different branches."
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
 msgstr ""
-"Sie können keine Zahlungen für Posten erstellen, die zu verschiedenen "
-"Niederlassungen gehören."
 
 #. module: account
 #. odoo-python
@@ -18887,6 +18909,16 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
+"Sie können keinen Partner als Rechnungsadresse eines anderen Partners "
+"festlegen, wenn dieser einen andere %(vat_label)s hat."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
@@ -19296,7 +19328,7 @@ msgstr "z. B. https://www.odoo.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. mycompany.com"
-msgstr "z. B. mycompany.com"
+msgstr "z. B. meinunternehmen.com"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format

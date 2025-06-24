@@ -166,7 +166,6 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
 });
 
 registry.category("web_tour.tours").add("self_order_pricelist", {
-    test: true,
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),

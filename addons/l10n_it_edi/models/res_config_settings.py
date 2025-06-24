@@ -3,11 +3,13 @@
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
 
+
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     is_edi_proxy_active = fields.Boolean(compute='_compute_is_edi_proxy_active')
-    company_parent_id = fields.Many2one(related='company_id.parent_id', readonly=True)
+    company_parent_id = fields.Many2one(related='company_id.parent_id', readonly=True)  # TODO: remove in master
+    use_root_proxy_user = fields.Boolean(compute='_compute_use_root_proxy_user')
     l10n_it_edi_proxy_current_state = fields.Char(compute='_compute_l10n_it_edi_proxy_current_state')
     l10n_it_edi_register = fields.Boolean(compute='_compute_l10n_it_edi_register', inverse='_set_l10n_it_edi_register_demo_mode')
     l10n_it_edi_demo_mode = fields.Selection(
@@ -64,3 +66,10 @@ class ResConfigSettings(models.TransientModel):
                 if old_edi_mode == 'demo' and edi_mode != 'demo':
                     proxy_user.sudo().unlink()
                 self._create_proxy_user(config.company_id, edi_mode)
+
+    @api.depends('company_id.account_edi_proxy_client_ids', 'company_id.account_edi_proxy_client_ids.active')
+    def _compute_use_root_proxy_user(self):
+        for record in self:
+            main_company = self.company_id.root_id
+            edi_company = self.company_id._l10n_it_get_edi_company()
+            record.use_root_proxy_user = edi_company == main_company and self.company_id != main_company

@@ -62,16 +62,32 @@ TAX_EXEMPTION_MAPPING = {
     'VATEX-FR-CNWVAT': 'France domestic Credit Notes without VAT, due to supplier forfeit of VAT for discount',
 }
 
+# Some codes were added with _ instead of -, this is a fix for stable version to add them correctly in XML files.
+FIX_WRONG_CODES_MAPPING = {
+    'VATEX_EU_AE': 'VATEX-EU-AE',
+    'VATEX_EU_D': 'VATEX-EU-D',
+    'VATEX_EU_F': 'VATEX-EU-F',
+    'VATEX_EU_G': 'VATEX-EU-G',
+    'VATEX_EU_I': 'VATEX-EU-I',
+    'VATEX_EU_IC': 'VATEX-EU-IC',
+    'VATEX_EU_O': 'VATEX-EU-O',
+    'VATEX_EU_J': 'VATEX-EU-J',
+    'VATEX_FR-FRANCHISE': 'VATEX-FR-FRANCHISE',
+    'VATEX_FR-CNWVAT': 'VATEX-FR-CNWVAT',
+}
+
 
 class AccountEdiCommon(models.AbstractModel):
     _inherit = "account.edi.common"
 
     def _get_tax_unece_codes(self, customer, supplier, tax):
         if tax.ubl_cii_tax_category_code:
-            tax_exemption_reason = TAX_EXEMPTION_MAPPING.get(tax.ubl_cii_tax_exemption_reason_code)
+            reason_code = tax.ubl_cii_tax_exemption_reason_code
+            reason_code = FIX_WRONG_CODES_MAPPING.get(reason_code, reason_code)
+            tax_exemption_reason = TAX_EXEMPTION_MAPPING.get(reason_code)
             return {
                 'tax_category_code': tax.ubl_cii_tax_category_code,
-                'tax_exemption_reason_code': tax.ubl_cii_tax_exemption_reason_code,
+                'tax_exemption_reason_code': reason_code,
                 'tax_exemption_reason': tax_exemption_reason,
             }
         return super()._get_tax_unece_codes(customer, supplier, tax)

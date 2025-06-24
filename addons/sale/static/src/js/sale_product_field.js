@@ -147,6 +147,33 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return className;
     }
 
+    get label() {
+        let label = this.props.record.data.name;
+        if (this.translatedProductName && label.startsWith(this.translatedProductName)) {
+            // Remove the translated name as it is already shown to the salesman on the SOL.
+            label = label.slice(this.translatedProductName.length + 1);  // + "\n"
+        } else {
+            label = super.label;
+        }
+        return label;
+    }
+
+    get translatedProductName() {
+        return this.props.record.data.translated_product_name;
+    }
+
+    updateLabel(value) {
+        if (!this.translatedProductName) {
+            return super.updateLabel(value);
+        }
+        this.props.record.update({
+            name: (
+                value && this.translatedProductName.concat("\n", value)
+                || this.translatedProductName
+            ),
+        });
+    }
+
     onClick(ev) {
         // Override to get internal link to products in SOL that cannot be edited
         if (this.props.readonly) {

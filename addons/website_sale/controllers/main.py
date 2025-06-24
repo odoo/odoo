@@ -1431,7 +1431,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             name_change = (
                 'name' in address_values
                 and partner_sudo.name
-                and address_values['name'] != partner_sudo.name
+                and address_values['name'] != partner_sudo.name.strip()
             )
             email_change = (
                 'email' in address_values
@@ -1849,6 +1849,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _get_shop_payment_values(self, order, **kwargs):
         checkout_page_values = {
+            'sale_order': order,
             'website_sale_order': order,
             'errors': self._get_shop_payment_errors(order),
             'partner': order.partner_invoice_id,

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-06-20 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -216,6 +216,18 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"%(tax_account)s (%(account_name)s) should be an account of type "
+"\"%(receivable)s\" or \"%(payable)s\" with both options "
+"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+msgstr ""
+"%(tax_account)s (%(account_name)s) moet een account zijn van het type "
+"\"%(receivable)s\" of \"%(payable)s\" met beide opties "
+"\"%(allow_reconciliation)s\" en \"%(non_trade)s\" ingeschakeld."
 
 #. module: account
 #. odoo-python
@@ -760,7 +772,7 @@ msgstr ""
 "            PS: Bekijk je urenstaten <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">op het portaal.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Aarzel niet om ons te contacteren als je nog vragen hebt.\n"
+"        Aarzel niet om contact met ons op te nemen als je nog vragen hebt.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
@@ -1380,7 +1392,7 @@ msgstr "<span>Waarschuwing: dit document kan een duplicaat zijn van</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Afleveradres</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5050,6 +5062,8 @@ msgid "Create Automatic Entries"
 msgstr "Maak automatische boekingen"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_bill
 msgid "Create Bill"
 msgstr "Maak leveranciersfactuur"
@@ -11969,7 +11983,7 @@ msgstr "Partners met ontbrekende bankrekening"
 #: code:addons/account/models/partner.py:0
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
-" Partners die worden gebruikt in gehashte boekingen kunnen niet worden "
+"Partners die worden gebruikt in gehashte boekingen kunnen niet worden "
 "samengevoegd."
 
 #. module: account
@@ -15477,6 +15491,14 @@ msgstr ""
 "geïmplementeerd"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+"De commerciële partner is bijgewerkt voor alle gerelateerde boekingen."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Het bedrijf waartoe deze verdeelregel behoord."
@@ -18306,10 +18328,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "You can't create payments for entries belonging to different branches."
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
 msgstr ""
-"Je kunt geen betalingen aanmaken voor boekingen die tot verschillende "
-"vestigingen behoren."
 
 #. module: account
 #. odoo-python
@@ -18794,6 +18816,16 @@ msgid ""
 msgstr ""
 "Je kunt op deze rekening geen valuta instellen omdat er al boekingen zijn "
 "met een andere vreemde valuta."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
+"Je kunt een partner niet instellen als factuuradres van een andere partner "
+"als deze een andere %(vat_label)s heeft."
 
 #. module: account
 #. odoo-python

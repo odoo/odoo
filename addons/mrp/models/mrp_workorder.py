@@ -6,6 +6,7 @@ from collections import defaultdict
 import json
 
 from odoo import api, fields, models, _
+from odoo.addons.resource.models.utils import Intervals, sum_intervals
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, format_datetime, float_is_zero, float_round
 
@@ -100,6 +101,7 @@ class MrpWorkorder(models.Model):
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Operation', check_company=True)
         # Should be used differently as BoM can change in the meantime
+    has_worksheet = fields.Boolean(compute='_compute_has_worksheet')
     worksheet = fields.Binary(
         'Worksheet', related='operation_id.worksheet', readonly=True)
     worksheet_type = fields.Selection(
@@ -345,7 +347,7 @@ class MrpWorkorder(models.Model):
             if delta_duration > 0:
                 if order.state not in ('progress', 'done'):
                     order.state = 'progress'
-                enddate = datetime.now()
+                enddate = fields.Datetime.now()
                 date_start = enddate - timedelta(seconds=_float_duration_to_second(delta_duration))
                 if order.duration_expected >= new_order_duration or old_order_duration >= order.duration_expected:
                     # either only productive or only performance (i.e. reduced speed) time respectively
@@ -383,6 +385,11 @@ class MrpWorkorder(models.Model):
                 order.progress = order.duration * 100 / order.duration_expected
             else:
                 order.progress = 0
+
+    def _compute_has_worksheet(self):
+        workorders_has_worksheet = self.env['mrp.workorder'].search([('worksheet', '!=', False), ('id', 'in', self.ids)])
+        for order in self:
+            order.has_worksheet = order in workorders_has_worksheet
 
     def _compute_working_users(self):
         """ Checks whether the current user is working, all the users currently working and the last user that worked. """
@@ -579,12 +586,13 @@ class MrpWorkorder(models.Model):
         :param date datetime: Only calculate for time_ids that ended before this date
         """
         total = 0
-        for wo in self:
-            if date:
-                duration = sum(wo.time_ids.filtered(lambda t: t.date_end and t.date_end <= date).mapped('duration'))
-            else:
-                duration = sum(wo.time_ids.mapped('duration'))
-            total += (duration / 60.0) * wo.workcenter_id.costs_hour
+        for workorder in self:
+            intervals = Intervals([
+                [t.date_start, t.date_end, t]
+                for t in workorder.time_ids if not date or t.date_end < date
+            ])
+            duration = sum_intervals(intervals)
+            total += duration * workorder.workcenter_id.costs_hour
         return total
 
     def button_start(self, raise_on_invalid_state=False):

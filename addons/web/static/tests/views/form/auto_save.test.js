@@ -119,7 +119,6 @@ test(`save when page changed`, async () => {
                 </group>
             </form>
         `,
-        search: `<search/>`,
     };
 
     onRpc("web_save", ({ args }) => {
@@ -171,7 +170,6 @@ test(`save when breadcrumb clicked`, async () => {
                 </group>
             </form>
         `,
-        search: `<search/>`,
     };
 
     onRpc("web_save", ({ args }) => {
@@ -221,7 +219,6 @@ test(`error on save when breadcrumb clicked`, async () => {
                 </group>
             </form>
         `,
-        search: `<search/>`,
     };
 
     onRpc("web_save", () => {
@@ -268,7 +265,6 @@ test(`save when action changed`, async () => {
                 </group>
             </form>
         `,
-        search: `<search/>`,
         kanban: `
             <kanban>
                 <templates>
@@ -492,7 +488,6 @@ test(`save on closing tab/browser (detached form)`, async () => {
                 </group>
             </form>
         `,
-        search: `<search/>`,
     };
 
     mockSendBeacon(() => expect.step("sendBeacon"));
@@ -911,7 +906,6 @@ test(`doesn't autosave when a many2one search more is open (visibility change)`,
                     <field name="name"/>
                 </list>
             `,
-        search: `<search/>`,
     };
 
     defineModels([Product]);

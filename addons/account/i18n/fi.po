@@ -54,7 +54,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-06-20 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -254,6 +254,18 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"%(tax_account)s (%(account_name)s) should be an account of type "
+"\"%(receivable)s\" or \"%(payable)s\" with both options "
+"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+msgstr ""
+"%(tax_account)s (%(account_name)s) tulisi olla tilityyppiä "
+"\"%(receivable)s\" tai \"%(payable)s\", ja molempien vaihtoehtojen "
+"\"%(allow_reconciliation)s\" ja \"%(non_trade)s\" tulisi olla käytössä."
 
 #. module: account
 #. odoo-python
@@ -1422,7 +1434,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Toimitusosoite</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1532,7 +1544,7 @@ msgid ""
 "disabled again if there are any existing journal items."
 msgstr ""
 "<strong>Varoitus:</strong> Kun kirjausketju on otettu käyttöön, sitä ei voi "
-"poistaa käytöstä, jos yhtäkään päiväkirjamerkintöjä on olemassa."
+"poistaa käytöstä, jos se sisältää yhdenkin päiväkirjamerkinnän."
 
 #. module: account
 #. odoo-python
@@ -1553,7 +1565,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A Ledger group name must be unique per company."
-msgstr "Kirjanpitoryhmän nimen on oltava yksilöllinen kullakin yhtiöllä."
+msgstr "Pääkirjaryhmän nimen on oltava yksilöllinen per yritys."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -3572,7 +3584,7 @@ msgstr "Tilinumero"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr "Pankkitili %(link)s ja tilinumero %(number)s ovat arkistoitu"
+msgstr "Pankkitili %(link)s ja tilinumero %(number)s ovat arkistoituja"
 
 #. module: account
 #. odoo-python
@@ -5073,6 +5085,8 @@ msgid "Create Automatic Entries"
 msgstr "Luo automaattiset viennit"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_bill
 msgid "Create Bill"
 msgstr "Luo ostolasku"
@@ -13519,7 +13533,7 @@ msgstr "Maksettava palkka"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Sale"
-msgstr "Ale"
+msgstr "Myynti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_sale_receipts
@@ -15441,6 +15455,14 @@ msgstr ""
 "Päiväkirjan viitemallin ja viitetyypin yhdistelmää ei ole otettu käyttöön"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+"Kauppakumppanin kaikki siihen liittyvät kirjanpitomerkinnät on päivitetty."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Yritys, jolle tämä jakorivi kuuluu."
@@ -15672,7 +15694,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr "Ulkomaan valuutan on oltava eri kuin päiväkirjalla: %s"
+msgstr "Ulkomaan valuutan on oltava eri kuin päiväkirjan valuutan: %s"
 
 #. module: account
 #. odoo-python
@@ -18217,8 +18239,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "You can't create payments for entries belonging to different branches."
-msgstr "Et voi luoda maksuja eri haaroihin kuuluville nimikkeille."
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18687,6 +18711,16 @@ msgid ""
 msgstr ""
 "Et voi asettaa valuuttaa tälle tilille, koska sillä on jo joitakin "
 "lokimerkintöjä, joilla on eri ulkomaanvaluutta."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
+"Et voi asettaa kumppania toisen laskutusosoitteeksi, jos heillä on eri "
+"%(vat_label)s."
 
 #. module: account
 #. odoo-python

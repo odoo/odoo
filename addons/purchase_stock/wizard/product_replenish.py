@@ -20,12 +20,18 @@ class ProductReplenish(models.TransientModel):
                     *self.env['stock.warehouse']._check_company_domain(company),
                 ], limit=1).id
             orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', 'in', [product_tmpl_id.product_variant_id.id, product_id.id]), ("warehouse_id", "=", res['warehouse_id'])], limit=1)
-            res['supplier_id'] = False
-            if orderpoint:
+            if orderpoint.route_id:
+                res['route_id'] = orderpoint.route_id.id
+            if orderpoint.supplier_id:
                 res['supplier_id'] = orderpoint.supplier_id.id
-            elif product_tmpl_id.seller_ids:
-                res['supplier_id'] = product_tmpl_id.seller_ids[0].id
         return res
+
+    @api.onchange('route_id')
+    def _onchange_supplier_id(self):
+        if self.show_vendor and not self.supplier_id and self.product_tmpl_id.seller_ids:
+            self.supplier_id = self.product_tmpl_id.seller_ids[0].id
+        elif not self.show_vendor:
+            self.supplier_id = False
 
     @api.depends('route_id', 'supplier_id')
     def _compute_date_planned(self):
@@ -87,6 +93,7 @@ class ProductReplenish(models.TransientModel):
 
     def _get_route_domain(self, product_tmpl_id):
         domain = super()._get_route_domain(product_tmpl_id)
-        if not product_tmpl_id.seller_ids:
-            domain = AND([domain, [('id', '!=', self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).id)]])
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
+        if buy_route and not product_tmpl_id.seller_ids:
+            domain = AND([domain, [('id', '!=', buy_route.id)]])
         return domain

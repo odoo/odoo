@@ -24,8 +24,8 @@ class LoyaltyProgram(models.Model):
     def _load_pos_data_fields(self, config_id):
         return [
             'name', 'trigger', 'applies_on', 'program_type', 'pricelist_ids', 'date_from',
-            'date_to', 'limit_usage', 'max_usage', 'is_nominative', 'portal_visible',
-            'portal_point_name', 'trigger_product_ids', 'rule_ids', 'reward_ids'
+            'date_to', 'limit_usage', 'max_usage', 'total_order_count', 'is_nominative',
+            'portal_visible', 'portal_point_name', 'trigger_product_ids', 'rule_ids', 'reward_ids'
         ]
 
     @api.depends("communication_plan_ids.pos_report_print_id")

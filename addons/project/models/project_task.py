@@ -136,7 +136,7 @@ class Task(models.Model):
         if 'default_project_id' in self.env.context and not self._context.get('subtask_action') and 'project_kanban' in self.env.context:
             search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
 
-        stage_ids = stages.sudo()._search(search_domain, order=stages._order)
+        stage_ids = stages._search(search_domain, order=stages._order)
         return stages.browse(stage_ids)
 
     @api.model
@@ -358,7 +358,7 @@ class Task(models.Model):
     @api.depends('project_id', 'parent_id')
     def _compute_show_display_in_project(self):
         for task in self:
-            task.show_display_in_project = bool(task.parent_id) and task.project_id == task.parent_id.project_id
+            task.show_display_in_project = bool(task.parent_id) and task.project_id == task.parent_id.sudo().project_id
 
     @api.depends('stage_id', 'depend_on_ids.state')
     def _compute_state(self):

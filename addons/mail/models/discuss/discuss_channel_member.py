@@ -233,7 +233,7 @@ class ChannelMember(models.Model):
             :param is_typing: (boolean) tells whether the members are typing or not
         """
         for member in self:
-            member.channel_id._bus_send_store(Store(member).add(member, {"isTyping": is_typing}))
+            member.channel_id._bus_send_store(Store(member).add(member, {"isTyping": is_typing, "is_typing_dt": fields.Datetime.now()}))
 
     def _notify_mute(self):
         for member in self:

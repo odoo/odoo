@@ -208,19 +208,21 @@ def check_image():
     return {'major': version[0], 'minor': version[1]}
 
 
-def save_conf_server(url, token, db_uuid, enterprise_code):
+def save_conf_server(url, token, db_uuid, enterprise_code, db_name=None):
     """
     Save server configurations in odoo.conf
     :param url: The URL of the server
     :param token: The token to authenticate the server
     :param db_uuid: The database UUID
     :param enterprise_code: The enterprise code
+    :param db_name: The database name
     """
     update_conf({
         'remote_server': url,
         'token': token,
         'db_uuid': db_uuid,
         'enterprise_code': enterprise_code,
+        'db_name': db_name,
     })
 
 
@@ -611,6 +613,7 @@ def disconnect_from_server():
         'token': '',
         'db_uuid': '',
         'enterprise_code': '',
+        'db_name': '',
         'screen_orientation': '',
         'browser_url': '',
         'iot_handlers_etag': '',

@@ -446,7 +446,27 @@ export class Store extends BaseStore {
     }
 
     /** Provides an override point for when the store service has started. */
-    onStarted() {}
+    onStarted() {
+        navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
+            const { type, payload } = data;
+            if (type === "notification-display-request") {
+                const { correlationId, model, res_id } = payload;
+                const thread = this.Thread.get({ model, id: res_id });
+                let isTabFocused;
+                try {
+                    isTabFocused = parent.document.hasFocus();
+                } catch {
+                    // assumes tab not focused: parent.document from iframe triggers CORS error
+                }
+                if (isTabFocused && thread?.isDisplayed) {
+                    navigator.serviceWorker.controller.postMessage({
+                        type: "notification-display-response",
+                        payload: { correlationId },
+                    });
+                }
+            }
+        });
+    }
 
     /**
      * Search and fetch for a partner with a given user or partner id.
@@ -760,7 +780,7 @@ export const storeService = {
      */
     start(env, services) {
         const store = makeStore(env);
-        store.insert(session.storeData);
+        store.insert(session.storeData, { html: true });
         /**
          * Add defaults for `self` and `settings` because in livechat there could be no user and no
          * guest yet (both undefined at init), but some parts of the code that loosely depend on

@@ -8,24 +8,24 @@
 # Vasilis Dimopoulos <iap3tos@outlook.com>, 2024
 # Giota Dandidou <giotadandidou@gmail.com>, 2024
 # Alexandros Kapetanios <alexandros@gnugr.org>, 2024
-# Martin Trigaux, 2024
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
-# Maria Chalepiadou, 2025
 # Georgios Geitonas <g.geitonas@dileanity.com>, 2025
 # Agapi Psyllou, 2025
 # Gerasimos Kanelatos, 2025
 # Anastasia Mimou, 2025
 # Charalampos Loukas, 2025
 # Iasonas Polydoros <j.polydoros@dileanity.com>, 2025
+# Martin Trigaux, 2025
+# Maria Chalepiadou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:39+0000\n"
+"POT-Creation-Date: 2025-06-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Iasonas Polydoros <j.polydoros@dileanity.com>, 2025\n"
+"Last-Translator: Maria Chalepiadou, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2052,6 +2052,11 @@ msgid "Email"
 msgstr "Email"
 
 #. module: sale
+#: model:ir.model,name:sale.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Οδηγός Σύνταξης Email"
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
 msgstr ""
@@ -2092,7 +2097,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Ημερ. Λήξης"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2564,7 +2569,7 @@ msgstr "Στόχος Τιμολόγησης"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address"
-msgstr ""
+msgstr "Διεύθυνση Τιμολόγησης και Αποστολής"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
@@ -2645,7 +2650,7 @@ msgstr "Γλώσσα"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Last Invoices"
-msgstr ""
+msgstr "Τελευταία Παραστατικά"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -3878,7 +3883,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Sale Information"
-msgstr ""
+msgstr "Πληροφορίες Πώλησης"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -4152,6 +4157,11 @@ msgstr "Πωλητής"
 #: model:ir.ui.menu,name:sale.menu_reporting_salespeople
 msgid "Salespersons"
 msgstr "Πωλητές"
+
+#. module: sale
+#: model:ir.model,name:sale.model_mail_scheduled_message
+msgid "Scheduled Message"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4987,6 +4997,11 @@ msgid "Transactions"
 msgstr "Συναλλαγές"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__translated_product_name
+msgid "Translated Product Name"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
 msgid "Type Name"
 msgstr ""
@@ -5163,12 +5178,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "View Details"
-msgstr ""
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "View Order"
 msgstr ""
 
 #. module: sale

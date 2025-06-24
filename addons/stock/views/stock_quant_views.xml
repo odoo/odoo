@@ -419,7 +419,7 @@ in this location. That leads to a negative stock.
                             display="always"
                         />
                     <button name="stock.action_stock_inventory_adjustement_name" type="action" string="Apply"/>
-                    <button name="action_reset" type="object" string="Clear"/>
+                    <button name="action_reset" type="object" string="Clear" groups="stock.group_stock_manager"/>
                     <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>
                     <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_inventory_tree'}"/>
                 </header>

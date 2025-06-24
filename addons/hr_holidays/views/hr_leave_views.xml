@@ -141,15 +141,15 @@
                             </div>
                             <div t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
                                 <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm ps-0"
-                                    groups="hr_holidays.group_hr_holidays_user">
+                                    groups="hr_holidays.group_hr_holidays_responsible">
                                     <i class="fa fa-thumbs-up"/> Approve
                                 </button>
                                 <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-link btn-sm ps-0"
-                                    groups="hr_holidays.group_hr_holidays_manager">
+                                    groups="hr_holidays.group_hr_holidays_responsible">
                                     <i class="fa fa-check"/> Validate
                                 </button>
                                 <button t-if="['confirm', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-link btn-sm ps-0"
-                                    groups="hr_holidays.group_hr_holidays_user">
+                                    groups="hr_holidays.group_hr_holidays_responsible">
                                     <i class="fa fa-times"/> Refuse
                                 </button>
                             </div>
@@ -476,11 +476,11 @@
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check"
                     invisible="state != 'validate1'"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     icon="fa-times"
                     invisible="state not in ('confirm', 'validate1')"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>
         </field>

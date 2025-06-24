@@ -37,8 +37,8 @@
 # Ivan Espinola, 2025
 # marcescu, 2025
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
-# Santiago Payà <santiagopim@gmail.com>, 2025
 # Wil Odoo, 2025
+# Santiago Payà <santiagopim@gmail.com>, 2025
 # Noemi Pla, 2025
 # 
 msgid ""
@@ -94,6 +94,18 @@ msgid ""
 "    * Defines tax reports U1/U30\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Plans de comptes austríacs (Einheitskontenrahmen 2010).\n"
+"===================================================== ========\n"
+"\n"
+"* Defineix els següents models de pla comptable:\n"
+"* Pla comptable general austríac 2010\n"
+"* Defineix plantilles per a l'IVA en vendes i compres\n"
+"* Defineix plantilles d'impostos\n"
+"* Defineix les posicions fiscals per a la legislació fiscal austríaca\n"
+"* Defineix els informes fiscals U1/U30\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail
@@ -2430,6 +2442,42 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
 "\n"
 msgstr ""
+"\n"
+"Declaracions automàtiques de DIMONA\n"
+"=============\n"
+"\n"
+"Prerequisits:\n"
+"--------------\n"
+"\n"
+"- Necessites un certificat digital compatible amb el govern belga, lliurat per Global\n"
+"  Signa. Vegeu: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Genera els fitxers de certificat a partir del vostre certificat SSL (fitxer.pfx) que cal crear\n"
+"  un usuari tècnic (fitxer .cer) i per a autenticar-se remotament al fitxer ONSS (.pem). En un sistema\n"
+"  UNIX, podeu utilitzar les ordres següents:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in mycert.pfx -out mycert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in mycert.crt -outform der -out mycert.cer\n"
+"\n"
+"  - PFX - : PEM: openssl pkcs12 -in mycert.pfx -out mycert.pem -nodes\n"
+"\n"
+"- Abans de poder utilitzar el servei de seguretat social REST web, heu de crear un compte\n"
+"  per a tu o per al teu client i configurar la seguretat. (Tot el procediment és\n"
+"  disponible a https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Gestió del compte d'usuari: seguiu el Procediment https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Creeu un usuari tècnic: ara el vostre client ha de crear un usuari tècnic a la gestió d'accés\n"
+"    servei en línia. El procediment següent: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Activa un canal de servei web: un cop creat l'usuari tècnic, el vostre client ha d'\n"
+"    activar el canal de servei web a la gestió d'accés. El manual següent explica els\n"
+"    passos a seguir per activar el canal: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"\n"
+"  - Al final del procediment, hauríeu de rebre un «Número Expeditor d'ONSS», és possible\n"
+"    codificar en la configuració de nòmina, amb el fitxer .pem i amb la contrasenya relacionada, si n'hi ha.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_accountant
@@ -2666,6 +2714,53 @@ msgid ""
 "  - At the end of the procedure, you should have received a \"ONSS Expeditor Number\", you may\n"
 "    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
 msgstr ""
+"\n"
+"Regles de nòmina belgues.\n"
+"==========\n"
+"\n"
+"    * Detalls de l'empleat\n"
+"    * Contractes d'empleat\n"
+"    * Contracte basat en passaport\n"
+"    * Permisos/Deduccions\n"
+"    * Permet configurar el salari bàsic/brut/net\n"
+"    * Nòmina de l'empleat\n"
+"    * Registre de nòmina mensual\n"
+"    * Integrat amb la gestió d'absències\n"
+"    * Salari Maj., ONSS, retenció d'impostos, ajut per fill, etc.\n"
+"\n"
+"Signatura automàtica DmfA\n"
+"==========\n"
+"\n"
+"Prerequisits:\n"
+"--------------\n"
+"\n"
+"- Necessites un certificat digital compatible amb el govern belga, lliurat per Global\n"
+"  Signa. Vegeu: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Genera els fitxers de certificat a partir del vostre certificat SSL (fitxer.pfx) que cal crear\n"
+"  un usuari tècnic (fitxer .cer) i per a autenticar-se remotament al fitxer ONSS (.pem). En un sistema\n"
+"  UNIX, podeu utilitzar les ordres següents:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in mycert.pfx -out mycert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in mycert.crt -outform der -out mycert.cer\n"
+"\n"
+"  - PFX - : PEM: openssl pkcs12 -in mycert.pfx -out mycert.pem -nodes\n"
+"\n"
+"  - PFX -s CLAU: openssl pkcs12 -in mycert.pfx -out mycert.key -nocerts\n"
+"\n"
+"- Abans de poder utilitzar el servei de seguretat social REST web, heu de crear un compte\n"
+"  per a tu o per al teu client i configurar la seguretat. (Tot el procediment és\n"
+"  disponible a https://www.socialsecurity.be/site_fr/general/helpcentre/batch/sftp/previewstep.htm)\n"
+"\n"
+"  - Creeu un usuari tècnic + Activeu un canal SFTP: ara el vostre client ha de crear un usuari tècnic a la gestió d'accés\n"
+"    servei en línia. El procediment següent: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Configureu el vostre client SFTP: https://www.socialsecurity.be/site_fr/general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"\n"
+"  - Al final del procediment, hauríeu d'haver rebut un «Número Expeditor d'ONSS», és possible\n"
+"    codificar en la configuració de nòmina, amb el fitxer .pem i amb la contrasenya relacionada, si n'hi ha.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -2689,6 +2784,24 @@ msgid ""
 "requests for on-premise installations.\n"
 "No modified version is certified and supported by Odoo SA.\n"
 msgstr ""
+"\n"
+"Caixa registradora belga\n"
+"================================\n"
+"\n"
+"Aquest mòdul converteix el mòdul Punt de venda en una caixa registradora belga certificada.\n"
+"\n"
+"Més informació:\n"
+"  * http://www.systemedecaisseenregistreuse.be/\n"
+"  * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Legal\n"
+"-----\n"
+"**L'ús de les fonts pos_blackbox_be només està certificat a la plataforma SaaS d'odoo.com\n"
+"per a la versió 17.0** Contacta amb Odoo SA abans d'instal·lar el mòdul pos_blackbox_be.\n"
+"\n"
+"Es pot proporcionar una versió ofuscada i certificada del pos_blackbox_be\n"
+"a les sol·licituds d'instal·lacions locals.\n"
+"No hi ha cap versió modificada certificada i compatible amb Odoo SA.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -14952,7 +15065,7 @@ msgstr "Taules de classificació Charts & Tax"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__auth_method
 msgid "Auth Method"
-msgstr ""
+msgstr "Mètode d'autenticació"
 
 #. module: base
 #. odoo-python
@@ -18780,8 +18893,8 @@ msgstr "D - SUBMINISTRACIÓ D'ELECTRICITAT, GAS, VAPOR I AIRE CONDICIONAT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Express Shipping"
-msgstr "Enviament DHL Express"
+msgid "DHL Express Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008
@@ -21435,7 +21548,7 @@ msgstr "Executa cada"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
 msgid "Execute Existing Actions"
-msgstr ""
+msgstr "Executar accions existents"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
@@ -22244,7 +22357,7 @@ msgstr "Cerqueu registres antics i arxiveu-los/suprimiu-los"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_restaurant
 msgid "Fine Dining Restaurant"
-msgstr ""
+msgstr "Restaurant d'alta gamma"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__finished
@@ -31878,7 +31991,7 @@ msgstr "Empreses: %(category)s"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_passkey
 msgid "Passkeys"
-msgstr ""
+msgstr "Claus d'accés"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -32695,7 +32808,7 @@ msgstr "Privacitat"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
 msgid "Private Address Form"
-msgstr "Forma de direcció privada."
+msgstr "Forma de adreça privada."
 
 #. module: base
 #. odoo-python
@@ -35503,8 +35616,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
-msgid "Send your shippings through DHL and track them online"
-msgstr "Envia els teus enviaments a través de DHL i rastreja'ls en línia"
+msgid ""
+"This is the legacy integration with DHL Express that is no longer supported."
+" Please install the new \"DHL Express Shipping\" module and uninstall this "
+"one as soon as possible."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex_rest
@@ -35901,7 +36017,7 @@ msgstr "Mostrar monedes inactives"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_google_map
 msgid "Show your company address on Google Maps"
-msgstr "Mostrar la direcció de la teva companyia en google maps"
+msgstr "Mostrar la adreça de la teva companyia en google maps"
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -40414,7 +40530,7 @@ msgid ""
 "modify the input form for addresses."
 msgstr ""
 "Usa aquest camp si vols reemplaçar la manera habitual de codificar els "
-"direccions completes. Tingui en compte que el camp format_direcció és usat "
+"direccions completes. Tingui en compte que el camp address_format és usat "
 "per a modificar la manera de mostrar direccions (en informes per exemple), "
 "mentre que aquest camp és usat per a modificar les entrades per a les "
 "direccions."

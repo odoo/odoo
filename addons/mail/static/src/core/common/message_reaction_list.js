@@ -80,7 +80,7 @@ export class MessageReactionList extends Component {
     }
 
     hasSelfReacted(reaction) {
-        return this.store.self.in(reaction.personas);
+        return this.props.message.effectiveSelf.in(reaction.personas);
     }
 
     onClickReaction(reaction) {
