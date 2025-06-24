@@ -47,18 +47,22 @@ class ShippingIntegrationLog(models.Model):
                         'tracking_url': log.tracking_url,
                         'carrier': log.carrier,
                         'pick_status': "packed",
-                        'status':log.label_url,
-                        'is_released':'released'
+                        'status': log.label_url,
+                        'is_released': 'released'
                         # 'delivery_status': "partial", # Uncomment if field exists
                     })
-                # --- Validate the picking ---
-                if picking and picking.state not in ['done', 'cancel']:
-                    # If you want to force qty_done to be correct:
-                    # for move in picking.move_ids:
-                    #     for line in move.move_line_ids:
-                    #         if line.quantity == 0:
-                    #             line.quantity = line.product_uom_qty or 1.0
-                    picking.button_validate()
+                # --- Validate ALL pickings for the sale order ---
+                if sale_order:
+                    all_pickings = self.env['stock.picking'].search([
+                        ('sale_id', '=', sale_order.id),
+                        ('state', 'not in', ['done', 'cancel'])
+                    ])
+                    pickings = all_pickings.filtered(
+                        lambda p: p.state not in ('cancel', 'done')
+                                  and getattr(p.picking_type_id, 'picking_process_type', 'pick') == 'pick'
+                    )
+                    for pick in pickings:
+                        pick.button_validate()
                 # --- Send tracking update if required ---
                 sale_order and sale_order.env['custom.pack.app.wizard'].send_tracking_update_to_ot_orders(
                     so_number=sale_order.name,
@@ -72,3 +76,4 @@ class ShippingIntegrationLog(models.Model):
                 log.error_message = str(e)
                 log.retry_count += 1
                 # log.status = 'failed'
+
