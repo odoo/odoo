@@ -1,9 +1,10 @@
-import { Component, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useRef, useState } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { AnimateOption } from "./animate_option";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { DependencyManager } from "@html_builder/core/dependency_manager";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { POSITION_BUS } from "@web/core/position/position_hook";
 
 class AnimateTextPopover extends BaseOptionComponent {
     static template = "website_builder.AnimateTextPopover";
@@ -15,6 +16,20 @@ class AnimateTextPopover extends BaseOptionComponent {
         close: { type: Function, optional: true },
     };
     static components = { AnimateOption };
+
+    setup() {
+        super.setup();
+        this.contentRef = useRef("content");
+        this.resizeObserver = new ResizeObserver(() => {
+            this.env[POSITION_BUS]?.trigger("update");
+        });
+        onMounted(() => {
+            this.resizeObserver.observe(this.contentRef.el);
+        });
+        onWillDestroy(() => {
+            this.resizeObserver.disconnect();
+        });
+    }
 }
 
 export class AnimateText extends Component {
