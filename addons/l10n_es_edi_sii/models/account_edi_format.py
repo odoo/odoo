@@ -587,6 +587,23 @@ class AccountEdiFormat(models.Model):
 
         return results
 
+<<<<<<< f44a2ba8cafead9a6517df8b2088459d49b56f2b
+||||||| e83f253ac302012f1ddeceffba28857b10288c36
+    def _has_oss_taxes(self, invoice):
+        if self.env['ir.module.module'].sudo().search([('name', '=', 'l10n_eu_oss'), ('state', '=', 'installed')]):
+            oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
+            lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note'))
+            tax_tags = lines.mapped('tax_ids.invoice_repartition_line_ids.tag_ids')
+            return oss_tag in tax_tags
+        return False
+
+=======
+    def _has_oss_taxes(self, invoice):
+        oss_tag = self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
+        lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note'))
+        return bool(oss_tag and oss_tag in lines.tax_ids.invoice_repartition_line_ids.tag_ids)
+
+>>>>>>> 57e30b75b653546a2bce1b4afb08343d68919508
     # -------------------------------------------------------------------------
     # EDI OVERRIDDEN METHODS
     # -------------------------------------------------------------------------
