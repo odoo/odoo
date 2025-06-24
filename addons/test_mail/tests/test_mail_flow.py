@@ -196,29 +196,27 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'incoming_email_cc': self.partner_employee_2.email_formatted,
                         # be sure not to have catchall reply-to !
                         'incoming_email_to': False,
-                        'notified_partner_ids': self.env['res.partner'],
+                        'notified_partner_ids': self.customer_zboing,
                         # only recognized partners
                         'partner_ids': self.partner_employee_2,
                         'subject': 'Re: Re: False',
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
                     # partner_employee_2 received an email, hence no duplicate notification
-                    'notif': [],
+                    'notif': [{'partner': self.customer_zboing, 'type': 'email'}],
                 },
             ],
         )
-        # FIXME: customer + additional recipients are out of discussion
-        self.assertEqual(emp_reply.notified_partner_ids, self.env['res.partner'])
-        self.assertFalse(self.emails)
-        # self.assertSMTPEmailsSent(
-        #     mail_server=self.mail_server_notification,
-        #     msg_from=formataddr(
-        #         (self.partner_employee.name, f'{self.default_from}@{self.alias_domain}')
-        #     ),
-        #     smtp_from=self.mail_server_notification.from_filter,
-        #     smtp_to_list=[],
-        #     msg_to_lst=[],
-        # )
+        # FIXME: additional recipients are out of discussion
+        self.assertSMTPEmailsSent(
+            mail_server=self.mail_server_notification,
+            msg_from=formataddr(
+                (self.partner_employee.name, f'{self.default_from}@{self.alias_domain}')
+            ),
+            smtp_from=self.mail_server_notification.from_filter,
+            smtp_to_list=[self.customer_zboing.email_normalized],
+            msg_to_lst=[self.customer_zboing.email_formatted],
+        )
 
     def test_lead_mailgateway(self):
         """ Flow of this test
