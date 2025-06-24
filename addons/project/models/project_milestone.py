@@ -27,7 +27,7 @@ class ProjectMilestone(models.Model):
     # computed non-stored fields
     is_deadline_exceeded = fields.Boolean(compute="_compute_is_deadline_exceeded", export_string_translation=False)
     is_deadline_future = fields.Boolean(compute="_compute_is_deadline_future", export_string_translation=False)
-    task_count = fields.Integer('# of Tasks', compute='_compute_task_count', groups='project.group_project_milestone, export_string_translation=False')
+    task_count = fields.Integer('# of Tasks', compute='_compute_task_count', groups='project.group_project_milestone', export_string_translation=False)
     done_task_count = fields.Integer('# of Done Tasks', compute='_compute_task_count', groups='project.group_project_milestone', export_string_translation=False)
     can_be_marked_as_done = fields.Boolean(compute='_compute_can_be_marked_as_done', export_string_translation=False)
 
