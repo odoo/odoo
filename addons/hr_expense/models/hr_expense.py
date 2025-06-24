@@ -978,6 +978,13 @@ class HrExpense(models.Model):
             }
         return ""
 
+    def _track_created_moves(self):
+        for expense in self:
+            expense.message_post_with_source(
+                'hr_expense.hr_expense_template_posted_expenses',
+                render_values={'move': expense.account_move_id},
+            )
+
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' not in init_values:
@@ -988,8 +995,14 @@ class HrExpense(models.Model):
                 return self.env.ref('hr_expense.mt_expense_reset')
             case 'cancel':
                 return self.env.ref('hr_expense.mt_expense_refused')
+            case 'posted':
+                if init_values['state'] == 'approved':
+                    self._track_created_moves()
+                return super()._track_subtype(init_values)
             case 'paid':
-                return self.env.ref('hr_expense.mt_expense_paid')
+                subtype = self.env.ref('hr_expense.mt_expense_paid')
+                self._track_created_moves()
+                return subtype
             case 'approved':
                 if init_values['state'] in {'posted', 'in_payment', 'paid'}:  # Reverting state
                     subtype = 'hr_expense.mt_expense_entry_draft' if self.account_move_id else 'hr_expense.mt_expense_entry_delete'
