@@ -19,7 +19,6 @@
 </div>
 <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;" groups="project.group_project_stages">You are receiving this email because your project has been moved to the stage <b t-out="object.stage_id.name or ''">Done</b></span>
             </field>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
     </data>
