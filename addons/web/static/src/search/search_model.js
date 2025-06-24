@@ -200,6 +200,8 @@ export class SearchModel extends EventBus {
         // used to manage search items related to date/datetime fields
         this.referenceMoment = DateTime.local();
         this.intervalOptions = getIntervalOptions();
+        this.categoriesLoadId = 0;
+        this.filtersLoadId = 0;
     }
 
     /**
@@ -1428,13 +1430,21 @@ export class SearchModel extends EventBus {
     async _fetchCategories(categories) {
         const filterDomain = this._getFilterDomain();
         const searchDomain = this.searchDomain;
+        const categoriesLoadId = ++this.categoriesLoadId;
         await Promise.all(
             categories.map(async (category) => {
-                const result = await this.orm.call(
-                    this.resModel,
-                    "search_panel_select_range",
-                    [category.fieldName],
-                    {
+                const result = await this.orm
+                    .cached({
+                        onUpdate: (result) => {
+                            if (categoriesLoadId !== this.categoriesLoadId) {
+                                return;
+                            }
+                            this._createCategoryTree(category.id, result);
+                            this._reset();
+                            this.trigger("update");
+                        },
+                    })
+                    .call(this.resModel, "search_panel_select_range", [category.fieldName], {
                         category_domain: this._getCategoryDomain(category.id),
                         context: this.globalContext,
                         enable_counters: category.enableCounters,
@@ -1443,8 +1453,7 @@ export class SearchModel extends EventBus {
                         hierarchize: category.hierarchize,
                         limit: category.limit,
                         search_domain: searchDomain,
-                    }
-                );
+                    });
                 this._createCategoryTree(category.id, result);
             })
         );
@@ -1463,13 +1472,21 @@ export class SearchModel extends EventBus {
         }
         const categoryDomain = this._getCategoryDomain();
         const searchDomain = this.searchDomain;
+        const filtersLoadId = ++this.filtersLoadId;
         await Promise.all(
             filters.map(async (filter) => {
-                const result = await this.orm.call(
-                    this.resModel,
-                    "search_panel_select_multi_range",
-                    [filter.fieldName],
-                    {
+                const result = await this.orm
+                    .cached({
+                        onUpdate: (result) => {
+                            if (filtersLoadId !== this.filtersLoadId) {
+                                return;
+                            }
+                            this._createFilterTree(filter.id, result);
+                            this._reset();
+                            this.trigger("update");
+                        },
+                    })
+                    .call(this.resModel, "search_panel_select_multi_range", [filter.fieldName], {
                         category_domain: categoryDomain,
                         comodel_domain: new Domain(filter.domain).toList(evalContext),
                         context: this.globalContext,
@@ -1480,8 +1497,7 @@ export class SearchModel extends EventBus {
                         group_domain: this._getGroupDomain(filter),
                         limit: filter.limit,
                         search_domain: searchDomain,
-                    }
-                );
+                    });
                 this._createFilterTree(filter.id, result);
             })
         );

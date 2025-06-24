@@ -8,6 +8,7 @@ import {
     defineModels,
     fields,
     getService,
+    MockServer,
     models,
     mountWithCleanup,
     mountWithSearch,
@@ -274,6 +275,272 @@ test("basic rendering of a component with search panel", async () => {
 
     expect.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
     expect(component.domain).toEqual([]); // initial domain (does not need the sections to be loaded)
+});
+
+test("when category is empty fallback to All", async () => {
+    Partner._views.search = /* xml */ `
+            <search>
+                <searchpanel>
+                    <field name="company_id" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        `;
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(1);
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n2",
+        "agrolait\n2",
+    ]);
+    expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(4);
+
+    MockServer.env["partner"].unlink([2, 4]);
+
+    await contains(queryAll`.o_search_panel_category_value header`[2]).click();
+    expect(queryAllTexts`.o_search_panel_category_value header.active`).toEqual(["All"]);
+    expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(2);
+});
+
+test("cache search panel", async () => {
+    let spSelectRangeDef;
+    let spSelectMultiRangeDef;
+    onRpc("search_panel_select_range", () => spSelectRangeDef);
+    onRpc("search_panel_select_multi_range", () => spSelectMultiRangeDef);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(2);
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n2",
+        "agrolait\n2",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "gold\n1",
+        "silver\n3",
+    ]);
+
+    spSelectRangeDef = new Deferred();
+    spSelectMultiRangeDef = new Deferred();
+
+    // Go to a form view
+    await getService("action").doAction(2);
+    expect(`.o_form_view`).toHaveCount(1);
+
+    // Came back to search panel
+    await getService("action").doAction(1);
+    // Search Panel is rendered with cached data !
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(2);
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n2",
+        "agrolait\n2",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "gold\n1",
+        "silver\n3",
+    ]);
+
+    spSelectRangeDef.resolve({
+        parent_field: "parent_id",
+        values: [
+            {
+                id: 3,
+                display_name: "asustek",
+                parent_id: false,
+                __count: 1,
+            },
+            {
+                id: 5,
+                display_name: "agrolait",
+                parent_id: false,
+                __count: 2,
+            },
+            {
+                id: 7,
+                display_name: "plop",
+                parent_id: false,
+                __count: 4,
+            },
+        ],
+    });
+    await animationFrame();
+
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(2);
+
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n1",
+        "agrolait\n2",
+        "plop\n4",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "gold\n1",
+        "silver\n3",
+    ]);
+
+    spSelectMultiRangeDef.resolve({
+        values: [
+            {
+                id: 6,
+                display_name: "gold",
+                __count: 5,
+            },
+            {
+                id: 7,
+                display_name: "silver",
+                __count: 3,
+            },
+            {
+                id: 9,
+                display_name: "plop",
+                __count: 2,
+            },
+        ],
+    });
+    await animationFrame();
+
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(2);
+
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n1",
+        "agrolait\n2",
+        "plop\n4",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "gold\n5",
+        "silver\n3",
+        "plop\n2",
+    ]);
+});
+
+test("cache search panel (onUpdate called after anoter load)", async () => {
+    const spSelectRangeDef = [null, new Deferred(), new Deferred()];
+    let spSelectRangeCount = 0;
+    const spSelectMultiRangeDef = [null, new Deferred(), new Deferred()];
+    let spSelectMultiRangeCount = 0;
+    onRpc("search_panel_select_range", () => spSelectRangeDef[spSelectRangeCount++]);
+    onRpc(
+        "search_panel_select_multi_range",
+        () => spSelectMultiRangeDef[spSelectMultiRangeCount++]
+    );
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(2);
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n2",
+        "agrolait\n2",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "gold\n1",
+        "silver\n3",
+    ]);
+
+    // Go to a form view
+    await getService("action").doAction(2);
+    expect(`.o_form_view`).toHaveCount(1);
+
+    // Came back to search panel
+    await getService("action").doAction(1);
+    await animationFrame();
+
+    await contains(queryAll`.o_search_panel_label`[4]).click();
+
+    // resolve RPCs (3th call) from the click
+    spSelectRangeDef[2].resolve({
+        parent_field: "parent_id",
+        values: [
+            {
+                id: 11,
+                display_name: "plop22",
+                parent_id: false,
+                __count: 8,
+            },
+        ],
+    });
+    spSelectMultiRangeDef[2].resolve({
+        values: [
+            {
+                id: 13,
+                display_name: "plop22",
+                __count: 99,
+            },
+        ],
+    });
+    await animationFrame();
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "plop22\n8",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "plop22\n99",
+    ]);
+
+    // resolve RPCs (2nd call) from the came back => must be ignored
+    spSelectRangeDef[1].resolve({
+        parent_field: "parent_id",
+        values: [
+            {
+                id: 3,
+                display_name: "asustek",
+                parent_id: false,
+                __count: 1,
+            },
+            {
+                id: 5,
+                display_name: "agrolait",
+                parent_id: false,
+                __count: 2,
+            },
+            {
+                id: 7,
+                display_name: "plop",
+                parent_id: false,
+                __count: 4,
+            },
+        ],
+    });
+    spSelectMultiRangeDef[1].resolve({
+        values: [
+            {
+                id: 6,
+                display_name: "gold",
+                __count: 5,
+            },
+            {
+                id: 7,
+                display_name: "silver",
+                __count: 3,
+            },
+            {
+                id: 9,
+                display_name: "plop",
+                __count: 2,
+            },
+        ],
+    });
+    await animationFrame();
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "plop22\n8",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "plop22\n99",
+    ]);
 });
 
 test("sections with custom icon and color", async () => {
