@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { press, tick, waitFor, click } from "@odoo/hoot-dom";
+import { click, press, tick, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { loadLanguages } from "@web/core/l10n/translation";
@@ -9,8 +9,8 @@ import { getContent } from "./_helpers/selection";
 
 import { ChatGPTTranslatePlugin } from "@html_editor/main/chatgpt/chatgpt_translate_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { execCommand } from "./_helpers/userCommands";
 import { expandToolbar } from "./_helpers/toolbar";
+import { execCommand } from "./_helpers/userCommands";
 
 const TRANSLATE_DIALOG_TITLE = "Translate with AI";
 
@@ -43,7 +43,7 @@ test("ChatGPT dialog opens in translate mode when clicked on translate button in
 
 test("ChatGPT dialog opens in translate mode when clicked on translate dropdown in toolbar", async () => {
     loadLanguages.installedLanguages = false;
-    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => [
+    onRpc("res.lang", "get_installed", () => [
         ["en_US", "English (US)"],
         ["fr_BE", "French (BE) / Français (BE)"],
     ]);
@@ -121,7 +121,7 @@ test("Translate should be disabled if selection spans across non editable conten
 
 test("insert the response from ChatGPT translate dialog", async () => {
     loadLanguages.installedLanguages = false;
-    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => [
+    onRpc("res.lang", "get_installed", () => [
         ["en_US", "English (US)"],
         ["fr_BE", "French (BE) / Français (BE)"],
     ]);
@@ -163,7 +163,7 @@ test("Translate dropdown should have the default language at top", async () => {
         ["fr_BE", "French (BE) / Français (BE)"],
     ];
 
-    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => languages);
+    onRpc("res.lang", "get_installed", () => languages);
     await setupEditor("<p>[test]</p>", {
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTTranslatePlugin] },
     });

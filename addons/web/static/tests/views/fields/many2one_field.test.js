@@ -28,19 +28,19 @@ import {
     mountViewInDialog,
     mountWithCleanup,
     onRpc,
+    patchWithCleanup,
     selectFieldDropdownItem,
     serverState,
     toggleMenuItem,
     toggleSearchBarMenu,
-    patchWithCleanup,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
 
 import { user } from "@web/core/user";
 import { Record } from "@web/model/record";
 import { Field } from "@web/views/fields/field";
-import { WebClient } from "@web/webclient/webclient";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
 
@@ -423,9 +423,9 @@ test("many2one show_address in edit", async () => {
         2: "second record\nSecond\nRecord",
         4: "aaa\nAAA\nRecord",
     };
-    onRpc("web_read", async ({ kwargs, parent }) => {
+    onRpc("web_read", ({ kwargs, parent }) => {
         if (kwargs.specification.trululu.context.show_address) {
-            const result = await parent();
+            const result = parent();
             result[0].trululu = {
                 id: result[0].trululu.id,
                 display_name: namegets[result[0].trululu.id],
@@ -433,8 +433,8 @@ test("many2one show_address in edit", async () => {
             return result;
         }
     });
-    onRpc("web_name_search", async ({ parent }) => {
-        const result = await parent();
+    onRpc("web_name_search", ({ parent }) => {
+        const result = parent();
         return result.map(({ id }) => ({
             id,
             display_name: namegets[id],
@@ -1287,8 +1287,8 @@ test("many2one search with trailing and leading spaces", async () => {
 
 // Should be removed ?
 test("many2one field with option always_reload (edit)", async () => {
-    onRpc("web_read", async ({ parent }) => {
-        const result = await parent();
+    onRpc("web_read", ({ parent }) => {
+        const result = parent();
         result[0].trululu = {
             ...result[0].trululu,
             display_name: "first record\nand some address",
@@ -2309,8 +2309,8 @@ test("creating record with many2one with option always_reload", async () => {
         },
     });
 
-    onRpc("onchange", async ({ parent }) => {
-        const result = await parent();
+    onRpc("onchange", ({ parent }) => {
+        const result = parent();
         result.value.trululu = {
             ...result.value.trululu,
             display_name: "hello world\nso much noise",
@@ -3877,7 +3877,7 @@ test("many2one search with false as name", async () => {
 });
 
 test("many2one search with formatted name", async () => {
-    onRpc("web_name_search", async (params) => [
+    onRpc("web_name_search", () => [
         {
             id: 1,
             display_name: "Paul Eric",

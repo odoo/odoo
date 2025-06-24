@@ -262,7 +262,7 @@ test("char field translatable", async () => {
             ];
         }
     });
-    onRpc("res.partner", "update_field_translations", async function ({ args, kwargs }) {
+    onRpc("res.partner", "update_field_translations", function ({ args, kwargs }) {
         expect(args[2]).toEqual(
             { en_US: "bar", es_ES: false },
             {
@@ -344,25 +344,19 @@ test("translation dialog should close if field is not there anymore", async () =
             </sheet>
         </form>`,
     });
-    onRpc(async ({ method, model }) => {
-        if (method === "get_installed" && model === "res.lang") {
-            return [
-                ["en_US", "English"],
-                ["fr_BE", "French (Belgium)"],
-                ["es_ES", "Spanish"],
-            ];
-        }
-        if (method === "get_field_translations" && model === "res.partner") {
-            return [
-                [
-                    { lang: "en_US", source: "yop", value: "yop" },
-                    { lang: "fr_BE", source: "yop", value: "valeur français" },
-                    { lang: "es_ES", source: "yop", value: "yop español" },
-                ],
-                { translation_type: "char", translation_show_source: false },
-            ];
-        }
-    });
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+        ["es_ES", "Spanish"],
+    ]);
+    onRpc("res.partner", "get_field_translations", () => [
+        [
+            { lang: "en_US", source: "yop", value: "yop" },
+            { lang: "fr_BE", source: "yop", value: "valeur français" },
+            { lang: "es_ES", source: "yop", value: "yop español" },
+        ],
+        { translation_type: "char", translation_show_source: false },
+    ]);
     expect("[name=name] input").toHaveClass("o_field_translate");
     await contains("[name=name] input").click();
     await contains(".o_field_char .btn.o_field_translate").click();
@@ -388,53 +382,44 @@ test("html field translatable", async () => {
 
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
-    onRpc(async ({ args, method, model }) => {
-        if (method === "get_installed" && model === "res.lang") {
-            return [
-                ["en_US", "English"],
-                ["fr_BE", "French (Belgium)"],
-            ];
-        }
-        if (method === "get_field_translations" && model === "res.partner") {
-            return [
-                [
-                    {
-                        lang: "en_US",
-                        source: "first paragraph",
-                        value: "first paragraph",
-                    },
-                    {
-                        lang: "en_US",
-                        source: "second paragraph",
-                        value: "second paragraph",
-                    },
-                    {
-                        lang: "fr_BE",
-                        source: "first paragraph",
-                        value: "premier paragraphe",
-                    },
-                    {
-                        lang: "fr_BE",
-                        source: "second paragraph",
-                        value: "deuxième paragraphe",
-                    },
-                ],
-                {
-                    translation_type: "char",
-                    translation_show_source: true,
-                },
-            ];
-        }
-
-        if (method === "update_field_translations" && model === "res.partner") {
-            expect(args[2]).toEqual(
-                { en_US: { "first paragraph": "first paragraph modified" } },
-                {
-                    message: "the new translation value should be written",
-                }
-            );
-            return true;
-        }
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+    onRpc("res.partner", "get_field_translations", () => [
+        [
+            {
+                lang: "en_US",
+                source: "first paragraph",
+                value: "first paragraph",
+            },
+            {
+                lang: "en_US",
+                source: "second paragraph",
+                value: "second paragraph",
+            },
+            {
+                lang: "fr_BE",
+                source: "first paragraph",
+                value: "premier paragraphe",
+            },
+            {
+                lang: "fr_BE",
+                source: "second paragraph",
+                value: "deuxième paragraphe",
+            },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: true,
+        },
+    ]);
+    onRpc("res.partner", "update_field_translations", ({ args }) => {
+        expect(args[2]).toEqual(
+            { en_US: { "first paragraph": "first paragraph modified" } },
+            { message: "the new translation value should be written" }
+        );
+        return true;
     });
 
     // this will not affect the translate_fields effect until the record is

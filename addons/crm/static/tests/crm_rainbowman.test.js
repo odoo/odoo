@@ -184,13 +184,13 @@ const testKanbanView = {
     groupBy: ["stage_id"],
 };
 
-onRpc("crm.lead", "get_rainbowman_message", async ({ parent }) => {
-    const result = await parent();
+onRpc("crm.lead", "get_rainbowman_message", ({ parent }) => {
+    const result = parent();
     expect.step(result || "no rainbowman");
     return result;
 });
 
-test.tags("desktop")
+test.tags("desktop");
 test("first lead won, click on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
@@ -202,7 +202,7 @@ test("first lead won, click on statusbar on desktop", async () => {
     expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
 });
 
-test.tags("mobile")
+test.tags("mobile");
 test("first lead won, click on statusbar on mobile", async () => {
     await mountView({
         ...testFormView,
@@ -215,7 +215,7 @@ test("first lead won, click on statusbar on mobile", async () => {
     expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
 });
 
-test.tags("desktop")
+test.tags("desktop");
 test("first lead won, click on statusbar in edit mode on desktop", async () => {
     await mountView({
         ...testFormView,
@@ -227,7 +227,7 @@ test("first lead won, click on statusbar in edit mode on desktop", async () => {
     expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
 });
 
-test.tags("mobile")
+test.tags("mobile");
 test("first lead won, click on statusbar in edit mode on mobile", async () => {
     await mountView({
         ...testFormView,
@@ -240,7 +240,7 @@ test("first lead won, click on statusbar in edit mode on mobile", async () => {
     expect.verifySteps(["Go, go, go! Congrats for your first deal."]);
 });
 
-test.tags("desktop")
+test.tags("desktop");
 test("team record 30 days, click on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
@@ -252,7 +252,7 @@ test("team record 30 days, click on statusbar on desktop", async () => {
     expect.verifySteps(["Boom! Team record for the past 30 days."]);
 });
 
-test.tags("mobile")
+test.tags("mobile");
 test("team record 30 days, click on statusbar on mobile", async () => {
     await mountView({
         ...testFormView,
@@ -265,7 +265,7 @@ test("team record 30 days, click on statusbar on mobile", async () => {
     expect.verifySteps(["Boom! Team record for the past 30 days."]);
 });
 
-test.tags("desktop")
+test.tags("desktop");
 test("team record 7 days, click on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
@@ -277,7 +277,7 @@ test("team record 7 days, click on statusbar on desktop", async () => {
     expect.verifySteps(["Yeah! Deal of the last 7 days for the team."]);
 });
 
-test.tags("mobile")
+test.tags("mobile");
 test("team record 7 days, click on statusbar on mobile", async () => {
     await mountView({
         ...testFormView,
@@ -290,7 +290,7 @@ test("team record 7 days, click on statusbar on mobile", async () => {
     expect.verifySteps(["Yeah! Deal of the last 7 days for the team."]);
 });
 
-test.tags("desktop")
+test.tags("desktop");
 test("user record 30 days, click on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
@@ -302,7 +302,7 @@ test("user record 30 days, click on statusbar on desktop", async () => {
     expect.verifySteps(["You just beat your personal record for the past 30 days."]);
 });
 
-test.tags("mobile")
+test.tags("mobile");
 test("user record 30 days, click on statusbar on mobile", async () => {
     await mountView({
         ...testFormView,
@@ -315,7 +315,7 @@ test("user record 30 days, click on statusbar on mobile", async () => {
     expect.verifySteps(["You just beat your personal record for the past 30 days."]);
 });
 
-test.tags("desktop")
+test.tags("desktop");
 test("user record 7 days, click on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
@@ -327,7 +327,7 @@ test("user record 7 days, click on statusbar on desktop", async () => {
     expect.verifySteps(["You just beat your personal record for the past 7 days."]);
 });
 
-test.tags("mobile")
+test.tags("mobile");
 test("user record 7 days, click on statusbar on mobile", async () => {
     await mountView({
         ...testFormView,
@@ -340,7 +340,7 @@ test("user record 7 days, click on statusbar on mobile", async () => {
     expect.verifySteps(["You just beat your personal record for the past 7 days."]);
 });
 
-test.tags("desktop")
+test.tags("desktop");
 test("click on stage (not won) on statusbar on desktop", async () => {
     await mountView({
         ...testFormView,
@@ -352,7 +352,7 @@ test("click on stage (not won) on statusbar on desktop", async () => {
     expect.verifySteps(["no rainbowman"]);
 });
 
-test.tags("mobile")
+test.tags("mobile");
 test("click on stage (not won) on statusbar on mobile", async () => {
     await mountView({
         ...testFormView,

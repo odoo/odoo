@@ -1,15 +1,15 @@
+import { Plugin } from "@html_editor/plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, press, tick, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { onRpc } from "@web/../tests/web_test_helpers";
+import { PowerboxPlugin } from "../src/main/powerbox/powerbox_plugin";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { insertText } from "./_helpers/user_actions";
-import { onRpc } from "@web/../tests/web_test_helpers";
-import { Plugin } from "@html_editor/plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { PowerboxPlugin } from "../src/main/powerbox/powerbox_plugin";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { insertText } from "./_helpers/user_actions";
 
 describe.tags("desktop");
 describe("visibility", () => {
@@ -113,7 +113,7 @@ describe("buttons", () => {
     });
 
     test("should open image selector using power buttons", async () => {
-        onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+        onRpc("ir.attachment", "search_read", () => [
             {
                 id: 1,
                 name: "logo",

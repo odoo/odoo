@@ -6,7 +6,7 @@ import { defineWebsiteModels, dummyBase64Img, setupWebsiteBuilder } from "../web
 defineWebsiteModels();
 
 test("Add image in gallery", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+    onRpc("ir.attachment", "search_read", () => [
         {
             id: 1,
             name: "logo",

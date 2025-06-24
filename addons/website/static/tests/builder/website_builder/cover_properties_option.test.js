@@ -24,10 +24,12 @@ const websiteServiceWithUserModelName = {
     },
     // Minimal context to avoid crashes.
     context: { showNewContentModal: false },
-    websites: [{
-        id: 1,
-        metadata: {},
-    }],
+    websites: [
+        {
+            id: 1,
+            metadata: {},
+        },
+    ],
 };
 
 test("Add image as cover", async () => {
@@ -39,7 +41,7 @@ test("Add image as cover", async () => {
         },
     });
 
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+    onRpc("ir.attachment", "search_read", () => [
         {
             id: 1,
             name: "logo",

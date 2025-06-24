@@ -28,7 +28,7 @@ test("hr org chart: empty render", async () => {
 
     onRpc("/hr/get_org_chart", async (request) => {
         const { params: args } = await request.json();
-        expect("employee_id" in args).toBe(true, {
+        expect(args).toInclude("employee_id", {
             message: "it should have 'employee_id' as argument",
         });
         expect("new_parent_id" in args).toBe(true, {
@@ -40,9 +40,7 @@ test("hr org chart: empty render", async () => {
             managers_more: false,
         };
     });
-    onRpc("/hr/get_redirect_model", () => {
-        return "hr.employee";
-    });
+    onRpc("/hr/get_redirect_model", () => "hr.employee");
     await mountView({
         type: "form",
         resModel: "hr.employee",
@@ -62,7 +60,7 @@ test("hr org chart: render without data", async () => {
 
     onRpc("/hr/get_org_chart", async (request) => {
         const { params: args } = await request.json();
-        expect("employee_id" in args).toBe(true, {
+        expect(args).toInclude("employee_id", {
             message: "it should have 'employee_id' as argument",
         });
         expect("new_parent_id" in args).toBe(true, {
@@ -89,7 +87,7 @@ test("hr org chart: basic render", async () => {
 
     onRpc("/hr/get_org_chart", async (request) => {
         const { params: args } = await request.json();
-        expect("employee_id" in args).toBe(true, {
+        expect(args).toInclude("employee_id", {
             message: "it should have 'employee_id' as argument",
         });
         expect("new_parent_id" in args).toBe(true, {
@@ -120,9 +118,7 @@ test("hr org chart: basic render", async () => {
             },
         };
     });
-    onRpc("/hr/get_redirect_model", () => {
-        return "hr.employee";
-    });
+    onRpc("/hr/get_redirect_model", () => "hr.employee");
     await mountView({
         type: "form",
         resModel: "hr.employee",
@@ -152,7 +148,7 @@ test("hr org chart: basic manager render", async () => {
 
     onRpc("/hr/get_org_chart", async (request) => {
         const { params: args } = await request.json();
-        expect("employee_id" in args).toBe(true, {
+        expect(args).toInclude("employee_id", {
             message: "it should have 'employee_id' as argument",
         });
         expect("new_parent_id" in args).toBe(true, {
@@ -193,9 +189,7 @@ test("hr org chart: basic manager render", async () => {
             },
         };
     });
-    onRpc("/hr/get_redirect_model", () => {
-        return "hr.employee";
-    });
+    onRpc("/hr/get_redirect_model", () => "hr.employee");
     await mountView({
         type: "form",
         resModel: "hr.employee",

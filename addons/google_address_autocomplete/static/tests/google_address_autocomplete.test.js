@@ -1,4 +1,7 @@
 import { expect, test } from "@odoo/hoot";
+import { runAllTimers } from "@odoo/hoot-mock";
+import * as fields from "@web/../tests/_framework/mock_server/mock_fields";
+import { Model, ServerModel } from "@web/../tests/_framework/mock_server/mock_model";
 import {
     contains,
     defineModels,
@@ -6,9 +9,6 @@ import {
     onRpc,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import * as fields from "@web/../tests/_framework/mock_server/mock_fields";
-import { Model, ServerModel } from "@web/../tests/_framework/mock_server/mock_model";
-import { runAllTimers } from "@odoo/hoot-mock";
 
 class ResCountryState extends ServerModel {
     _name = "res.country.state";
@@ -82,9 +82,8 @@ test("correctly fill all standard fields", async () => {
         expect(params.google_place_id).toBe("1");
         expect.step("/autocomplete/address_full");
     });
-    onRpc("/web/dataset/call_kw/res.partner/web_save", async (request) => {
-        const { params } = await request.json();
-        expect(params.args[1]).toEqual({
+    onRpc("res.partner", "web_save", ({ args }) => {
+        expect(args[1]).toEqual({
             city: "Ramillies",
             country_id: 13,
             state_id: 2,
@@ -170,7 +169,7 @@ test("fills current field with values of unknown ones", async () => {
 
 test("typing in input should make form dirty", async () => {
     onRpc("web_save", ({ args }) => {
-        expect.step(args[1])
+        expect.step(args[1]);
     });
     await mountView({
         type: "form",
@@ -183,7 +182,7 @@ test("typing in input should make form dirty", async () => {
     expect(".o_form_button_save:visible").toHaveCount(0);
     await contains(".o_field_widget[name='street'] input").edit("odoo farm 3", { confirm: false });
     await contains(".o_form_button_save:visible").click();
-    expect.verifySteps([{street: 'odoo farm 3'}]);
+    expect.verifySteps([{ street: "odoo farm 3" }]);
 });
 
 test("support field mapping in options", async () => {

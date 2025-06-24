@@ -48,7 +48,7 @@ test("attach document widget calls action with attachment ids", async () => {
         },
     });
 
-    onRpc(async ({ args, kwargs, method, model }) => {
+    onRpc(({ args, kwargs, method, model }) => {
         expect.step(method);
         if (method === "my_action") {
             expect(model).toBe("partner");
@@ -107,19 +107,19 @@ test("attach document widget calls action with attachment ids on a new record", 
         },
     });
 
-    onRpc(async (params) => {
-        expect.step(params.method);
-        if (params.method === "my_action") {
-            expect(params.model).toBe("partner");
-            expect(params.args).toEqual([2]);
-            expect(params.kwargs.attachment_ids).toEqual([5, 2]);
+    onRpc(({ args, kwargs, method, model }) => {
+        expect.step(method);
+        if (method === "my_action") {
+            expect(model).toBe("partner");
+            expect(args).toEqual([2]);
+            expect(kwargs.attachment_ids).toEqual([5, 2]);
             return true;
         }
-        if (params.method === "web_save") {
-            expect(params.args[1]).toEqual({ display_name: "yop" });
+        if (method === "web_save") {
+            expect(args[1]).toEqual({ display_name: "yop" });
         }
-        if (params.method === "web_read") {
-            expect(params.args[0]).toEqual([2]);
+        if (method === "web_read") {
+            expect(args[0]).toEqual([2]);
         }
     });
 

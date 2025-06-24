@@ -558,7 +558,7 @@ test("remove an image with a caption, using the backspace key", async () => {
 });
 
 test("replace an image with a caption", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+    onRpc("ir.attachment", "search_read", () => [
         {
             id: 1,
             name: "logo",

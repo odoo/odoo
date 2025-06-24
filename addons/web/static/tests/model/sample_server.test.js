@@ -349,8 +349,8 @@ describe("RPC calls", () => {
             model: "hobbit",
             groupBy: ["profession", "age"],
         });
-        expect("profession" in result[0]).toBe(true);
-        expect("age" in result[0]).toBe(true);
+        expect(result[0]).toInclude("profession");
+        expect(result[0]).toInclude("age");
     });
 
     test("'formatted_read_group': multiple groupBys among which a many2many", async () => {

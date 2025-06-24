@@ -42,7 +42,7 @@ test("AceEditorField on text fields works", async () => {
         type: "form",
         arch: `<form><field name="foo" widget="code"/></form>`,
     });
-    expect("ace" in window).toBe(true, { message: "the ace library should be loaded" });
+    expect(window).toInclude("ace", { message: "the ace library should be loaded" });
     expect(`div.ace_content`).toHaveCount(1);
     expect(".o_field_code").toHaveText(/yop/);
 });

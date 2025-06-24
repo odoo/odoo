@@ -380,22 +380,15 @@ test("SelectCreateDialog cascade x2many in create mode on desktop", async () => 
     Badassery._views["list"] = /* xml */ `<list><field name="level"/></list>`;
     Badassery._views["search"] = /* xml */ `<search><field name="level"/></search>`;
 
-    onRpc(async ({ route, args }) => {
-        if (route === "/web/dataset/call_kw/partner/get_formview_id") {
-            return false;
-        }
-        if (route === "/web/dataset/call_kw/instrument/get_formview_id") {
-            return false;
-        }
-        if (route === "/web/dataset/call_kw/instrument/web_save") {
-            expect(args[1]).toEqual(
-                { badassery: [[4, 1]], name: "ABC" },
-                {
-                    message: "The method create should have been called with the right arguments",
-                }
-            );
-            return [{ id: 90 }];
-        }
+    onRpc(["partner", "instrument"], "get_formview_id", () => false);
+    onRpc("instrument", "web_save", ({ args }) => {
+        expect(args[1]).toEqual(
+            { badassery: [[4, 1]], name: "ABC" },
+            {
+                message: "The method create should have been called with the right arguments",
+            }
+        );
+        return [{ id: 90 }];
     });
 
     await mountView({
@@ -467,24 +460,14 @@ test("SelectCreateDialog cascade x2many in create mode on mobile", async () => {
         "kanban"
     ] = /* xml */ `<kanban><templates><t t-name="card"><field name="level"/></t></templates></kanban>`;
 
-    onRpc(async ({ route, args }) => {
-        if (route === "/web/dataset/call_kw/partner/get_formview_id") {
-            return false;
-        }
-        if (route === "/web/dataset/call_kw/instrument/get_formview_id") {
-            return false;
-        }
-        if (route === "/web/dataset/call_kw/instrument/web_save") {
-            expect(args[1]).toEqual(
-                { badassery: [[4, 1]], name: "ABC" },
-                {
-                    message: "The method create should have been called with the right arguments",
-                }
-            );
-            return [{ id: 90 }];
-        }
+    onRpc(["partner", "instrument"], "get_formview_id", () => false);
+    onRpc("instrument", "web_save", ({ args }) => {
+        expect(args[1]).toEqual(
+            { badassery: [[4, 1]], name: "ABC" },
+            { message: "The method create should have been called with the right arguments" }
+        );
+        return [{ id: 90 }];
     });
-
     await mountView({
         type: "form",
         resModel: "product",
