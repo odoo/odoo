@@ -11,6 +11,7 @@
         'views/pos_payment_method_views.xml',
         'views/payment_portal_templates.xml',
         'views/account_payment_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'auto_install': True,
     'installable': True,

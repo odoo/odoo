@@ -18,13 +18,21 @@
                     </button>
                 </t>
             </div>
-            <div t-if="props.showActionButton" class="validation d-flex gap-2">
-                <BackButton t-if="pos.showBackButton()" onClick="() => pos.onClickBackButton()"/>
-                <button class="pay pay-order-button button btn btn-primary btn-lg py-3 d-flex align-items-center justify-content-center flex-fill"
-                    t-on-click="props.actionToTrigger"
-                    t-esc="props.actionName"
-                />
-            </div>
+            <t t-if="props.showActionButton">
+                <div class="mw-100 container validation" t-att-class="{'p-0': !showFastPaymentMethods}">
+                    <div class="gap-2" t-attf-class="{{showFastPaymentMethods ? 'row' : 'd-flex'}}">
+                        <BackButton t-if="pos.showBackButton() and !pos.config.module_pos_restaurant" class="{'col-3': showFastPaymentMethods}" onClick="() => pos.onClickBackButton()"/>
+                        <button class="pay pay-order-button button btn btn-primary btn-lg py-3 d-flex align-items-center justify-content-center flex-fill"
+                            t-att-class="{'col-3': showFastPaymentMethods}" t-on-click="props.actionToTrigger" t-out="props.actionName" />
+                        <t t-if="showFastPaymentMethods" t-foreach="this.pos.config.fast_payment_method_ids" t-as="paymentMethod" t-key="paymentMethod.id">
+                            <button class="fast-pay-button col-3 button btn btn-secondary btn-lg py-3 d-flex align-items-center justify-content-center flex-fill"
+                                t-on-click="() => props.fastValidate(paymentMethod)"
+                                t-out="paymentMethod.name"
+                            />
+                        </t>
+                    </div>
+                </div>
+            </t>
         </div>
     </t>
 
