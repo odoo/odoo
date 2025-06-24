@@ -7,11 +7,11 @@ import { _t } from "@web/core/l10n/translation";
 
 /**
  * This component is used to display a dialog with the global filters of a
- * dashboard. It allows the user to select the values of the filters and
- * confirm or discard the changes.
+ * spreadsheet/dashboard. It allows the user to select the values of the filters
+ * and confirm or discard the changes.
  */
-export class DashboardSearchDialog extends Component {
-    static template = "spreadsheet_dashboard.DashboardSearchDialog";
+export class FiltersSearchDialog extends Component {
+    static template = "spreadsheet_dashboard.FiltersSearchDialog";
     static components = {
         Dialog,
         Dropdown,
@@ -22,6 +22,7 @@ export class DashboardSearchDialog extends Component {
     static props = {
         close: Function,
         model: Object,
+        openFiltersEditor: { type: Function, optional: true },
     };
 
     setup() {
