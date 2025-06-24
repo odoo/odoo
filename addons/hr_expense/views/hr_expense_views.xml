@@ -22,6 +22,11 @@
                     <field name="is_editable" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="company_currency_id" column_invisible="True"/>
+                    <field name="attachment_ids">
+                        <list>
+                            <field name="mimetype"/>
+                        </list>
+                    </field>
                     <field name="nb_attachment" column_invisible="True"/>
                     <field name="is_multiple_currency" column_invisible="True"/>
                     <field name="product_has_cost" column_invisible="True"/>
@@ -35,8 +40,8 @@
                     <field name="department_id" optional="hide" readonly="True"/>
                     <field name="date" optional="show" readonly="not is_editable"/>
                     <field name="product_id" optional="show" readonly="not is_editable" required="1"/>
-                    <field name="payment_mode" optional="show" readonly="not is_editable"/>
-                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="payment_mode" optional="show" readonly="not is_editable" invisible="payment_mode=='company_account'"/>
+                    <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="analytic_distribution" widget="analytic_distribution"
                            optional="show"
                            groups="analytic.group_analytic_accounting"
@@ -91,7 +96,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//list" position="attributes">
                     <!-- Display the tree dashboard view with the header -->
-                    <attribute name="js_class">hr_expense_dashboard_tree</attribute>
+                    <attribute name="js_class">hr_expense_overview_tree</attribute>
                 </xpath>
             </field>
         </record>
@@ -105,7 +110,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//list" position="attributes">
                     <!-- Display the tree dashboard view with the header -->
-                    <attribute name="js_class">hr_expense_dashboard_tree</attribute>
+                    <attribute name="js_class">hr_expense_overview_tree</attribute>
                 </xpath>
             </field>
         </record>
