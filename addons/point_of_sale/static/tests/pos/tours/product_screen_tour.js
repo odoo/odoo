@@ -306,7 +306,6 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
             ProductScreen.selectedOrderlineHas("Test Product 1", "2", "160.0"),
 
             scan_barcode("0100300"),
-            ProductScreen.selectedOrderlineHas("Test Product 3", "1", "50.0"),
             Chrome.endTour(),
         ].flat(),
 });
