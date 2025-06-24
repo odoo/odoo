@@ -902,6 +902,9 @@ class TestSalePrices(SaleCommon):
         """When adding a discount on a SO line, this test ensures that the untaxed amount to invoice is
         equal to the untaxed subtotal"""
         self.product.invoice_policy = 'delivery'
+        
+        self.product.write({'invoice_policy': 'delivery'})
+
         order = self.empty_order
 
         order.order_line = [Command.create({
