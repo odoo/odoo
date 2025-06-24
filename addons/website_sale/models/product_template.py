@@ -979,3 +979,7 @@ class ProductTemplate(models.Model):
                 "target_type": "public",
             }
         return super()._get_access_action(access_uid=access_uid, force_website=force_website)
+
+    @api.model
+    def _allow_publish_rating_stats(self):
+        return True

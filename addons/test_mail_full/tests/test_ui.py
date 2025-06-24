@@ -62,3 +62,10 @@ class TestUIPortal(TestPortal):
             "load_more_tour",
             login=self.user_employee.login,
         )
+
+    def test_rating_record_portal(self):
+        record_rating = self.env["mail.test.rating"].create({"name": "Test rating record"})
+        self.start_tour(
+            f"/my/test_portal_rating_records/{record_rating.id}?token={record_rating._portal_ensure_token()}",
+            "portal_rating_tour",
+        )
