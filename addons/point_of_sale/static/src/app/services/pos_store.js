@@ -686,6 +686,8 @@ export class PosStore extends WithLazyGetterTrap {
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
                 productTemplate: pTemplate,
+                hideAlwaysVariants: opts.hideAlwaysVariants,
+                forceVariantValue: opts.forceVariantValue,
             });
         }
         return {
