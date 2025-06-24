@@ -56,7 +56,6 @@ export class TourAutomatic {
                 },
                 {
                     trigger: step.trigger ? () => step.findTrigger() : null,
-                    expectUnloadPage: step.expectUnloadPage,
                     timeout:
                         step.pause && this.debugMode
                             ? 9999999
