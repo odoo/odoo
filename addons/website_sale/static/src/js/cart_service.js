@@ -129,9 +129,7 @@ export class CartService {
         if (!productId && ptavs.length) {
             productId = await this.rpc('/sale/create_product_variant', {
                 product_template_id: productTemplateId,
-                product_template_attribute_value_ids: JSON.stringify(
-                    ptavs.concat(noVariantAttributeValues)
-                ),
+                product_template_attribute_value_ids: ptavs.concat(noVariantAttributeValues),
             })
         }
 
