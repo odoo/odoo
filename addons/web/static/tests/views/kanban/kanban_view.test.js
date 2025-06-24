@@ -5355,11 +5355,11 @@ test("environment is updated when (un)folding groups", async () => {
 
 test.tags("desktop");
 test("create a column in grouped on m2o", async () => {
-    onRpc("web_resequence", async ({ args }) => {
-        expect.step(["web_resequence", args[0]]);
+    onRpc("web_resequence", ({ args, method }) => {
+        expect.step([method, args[0]]);
     });
-    onRpc("name_create", () => {
-        expect.step("name_create");
+    onRpc("name_create", ({ method }) => {
+        expect.step(method);
     });
 
     await mountView({
@@ -5446,7 +5446,7 @@ test("create a column in grouped on m2o without sequence field on view model", a
     onRpc("name_create", () => {
         expect.step("name_create");
     });
-    onRpc("web_resequence", async ({ args }) => {
+    onRpc("web_resequence", ({ args }) => {
         expect.step(["resequence", args[0]]);
         return [];
     });
@@ -5570,9 +5570,9 @@ test.tags("desktop");
 test("delete a column in grouped on m2o", async () => {
     stepAllNetworkCalls();
     let resequencedIDs = [];
-    onRpc("web_resequence", async ({ args }) => {
+    onRpc("web_resequence", ({ args }) => {
         resequencedIDs = args[0];
-        expect(resequencedIDs.filter(isNaN).length).toBe(0, {
+        expect(resequencedIDs.filter(isNaN)).toHaveLength(0, {
             message: "column resequenced should be existing records with IDs",
         });
     });
@@ -7845,7 +7845,7 @@ test("resequence columns in grouped by m2o", async () => {
 
 test.tags("desktop");
 test("resequence all when creating new record + partial resequencing", async () => {
-    onRpc("web_resequence", async ({ args, kwargs }) => {
+    onRpc("web_resequence", ({ args, kwargs }) => {
         const [ids] = args;
         const { field_name: fieldName, offset } = kwargs;
         expect.step({ ids, ...(offset ? { offset } : {}) });
@@ -10484,7 +10484,7 @@ test("ungrouped kanban with handle field", async () => {
     onRpc("web_search_read", ({ kwargs }) => {
         expect.step(`web_search_read: order: ${kwargs.order}`);
     });
-    onRpc("web_resequence", async ({ args }) => {
+    onRpc("web_resequence", ({ args }) => {
         expect(args[0]).toEqual([2, 1, 3, 4], {
             message: "should write the sequence in correct order",
         });

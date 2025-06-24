@@ -38,16 +38,11 @@ class DebugMenuParent extends Component {
 
 const debugRegistry = registry.category("debug");
 
-onRpc(async (args) => {
-    if (args.method === "has_access") {
-        return true;
-    }
-    if (args.route === "/web/dataset/call_kw/ir.attachment/regenerate_assets_bundles") {
-        expect.step("ir.attachment/regenerate_assets_bundles");
-        return true;
-    }
+onRpc("has_access", () => true);
+onRpc("ir.attachment", "regenerate_assets_bundles", () => {
+    expect.step("ir.attachment/regenerate_assets_bundles");
+    return true;
 });
-
 beforeEach(() => {
     // Remove this service to clear the debug menu from anything else than what the test insert into
     registry.category("services").remove("profiling");
@@ -103,8 +98,7 @@ describe("DebugMenu", () => {
         expect(children.map((el) => el.tagName)).toEqual(["DIV", "SPAN", "SPAN", "DIV", "SPAN"]);
         expect(queryAllTexts(children)).toEqual(["a", "Item 2", "Item 1", "b", "Item 3"]);
 
-        const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
-        for (const item of items) {
+        for (const item of queryAll(".dropdown-menu .dropdown-item")) {
             await click(item);
         }
 
@@ -146,8 +140,12 @@ describe("DebugMenu", () => {
             });
         await mountWithCleanup(DebugMenuParent);
         await contains("button.dropdown-toggle").click();
-        const items = [...queryAll(".dropdown-menu .dropdown-item")];
-        expect(items.map((el) => el.textContent)).toEqual(["Item 1", "Item 2", "Item 3", "Item 4"]);
+        expect(queryAllTexts(".dropdown-menu .dropdown-item")).toEqual([
+            "Item 1",
+            "Item 2",
+            "Item 3",
+            "Item 4",
+        ]);
     });
 
     test("Don't display the DebugMenu if debug mode is disabled", async () => {
@@ -211,8 +209,8 @@ describe("DebugMenu", () => {
         await contains(".o_dialog .o_debug_manager button").click();
         expect(".dropdown-menu .dropdown-item").toHaveCount(2);
         // Check that global debugManager elements are not displayed (global_1)
-        const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
-        expect(items.map((el) => el.textContent)).toEqual(["Item 1", "Item 2"]);
+        const items = queryAll(".dropdown-menu .dropdown-item");
+        expect(queryAllTexts(items)).toEqual(["Item 1", "Item 2"]);
         for (const item of items) {
             await click(item);
         }
@@ -418,7 +416,7 @@ describe("DebugMenu", () => {
     test("set defaults: click close", async () => {
         serverState.debug = "1";
 
-        onRpc("ir.default", "set", async () => {
+        onRpc("ir.default", "set", () => {
             throw new Error("should not create a default");
         });
 
@@ -449,8 +447,8 @@ describe("DebugMenu", () => {
         expect.assertions(3);
         serverState.debug = "1";
 
-        onRpc("ir.default", "set", async (args) => {
-            expect(args.args).toEqual(["res.partner", "name", "p1", true, true, false]);
+        onRpc("ir.default", "set", ({ args }) => {
+            expect(args).toEqual(["res.partner", "name", "p1", true, true, false]);
             return true;
         });
 
@@ -516,20 +514,18 @@ describe("DebugMenu", () => {
     test("view metadata: basic rendering", async () => {
         serverState.debug = "1";
 
-        onRpc("get_metadata", async () => {
-            return [
-                {
-                    create_date: "2023-01-26 14:12:10",
-                    create_uid: [4, "Some user"],
-                    id: 1003,
-                    noupdate: false,
-                    write_date: "2023-01-26 14:13:31",
-                    write_uid: [6, "Another User"],
-                    xmlid: "abc.partner_16",
-                    xmlids: [{ xmlid: "abc.partner_16", noupdate: false }],
-                },
-            ];
-        });
+        onRpc("get_metadata", () => [
+            {
+                create_date: "2023-01-26 14:12:10",
+                create_uid: [4, "Some user"],
+                id: 1003,
+                noupdate: false,
+                write_date: "2023-01-26 14:13:31",
+                write_uid: [6, "Another User"],
+                xmlid: "abc.partner_16",
+                xmlids: [{ xmlid: "abc.partner_16", noupdate: false }],
+            },
+        ]);
 
         webModels.ResPartner._records.push({ id: 1003, name: "p1" });
 
@@ -567,10 +563,8 @@ describe("DebugMenu", () => {
     test("set defaults: setting default value for datetime field", async () => {
         serverState.debug = "1";
 
-        const argSteps = [];
-
-        onRpc("ir.default", "set", async (args) => {
-            argSteps.push(args.args);
+        onRpc("ir.default", "set", ({ args }) => {
+            expect.step(args);
             return true;
         });
 
@@ -637,7 +631,7 @@ describe("DebugMenu", () => {
             expect(".modal").toHaveCount(0);
         }
 
-        expect(argSteps).toEqual([
+        expect.verifySteps([
             ["partner", "datetime", "2024-01-24 16:46:16", true, true, false],
             [
                 "partner",
@@ -682,10 +676,9 @@ describe("DebugMenu", () => {
         serverState.debug = "1";
 
         const fooValue = "12".repeat(250);
-        const argSteps = [];
 
-        onRpc("ir.default", "set", async (args) => {
-            argSteps.push(args.args);
+        onRpc("ir.default", "set", ({ args }) => {
+            expect.step(args);
             return true;
         });
 
@@ -755,6 +748,6 @@ describe("DebugMenu", () => {
         await contains(".modal #formview_default_fields").select("foo");
         await contains(".modal .modal-footer button:nth-child(2)").click();
         expect(".modal").toHaveCount(0);
-        expect(argSteps).toEqual([["partner", "foo", fooValue, true, true, false]]);
+        expect.verifySteps([["partner", "foo", fooValue, true, true, false]]);
     });
 });

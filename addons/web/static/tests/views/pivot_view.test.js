@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryFirst, queryOne, queryText } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, mockDate } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import {
     contains,
@@ -3546,16 +3546,14 @@ test("no class 'o_view_sample_data' when real data are presented", async () => {
 });
 
 test("group by properties in pivot view", async () => {
-    onRpc("/web/dataset/call_kw/partner/web_search_read", async (request) => {
-        const { params } = await request.json();
-        if (params.kwargs.specification?.properties_definition) {
+    onRpc("partner", "web_search_read", ({ kwargs }) => {
+        if (kwargs.specification?.properties_definition) {
             expect.step("fetch_definition");
         }
     });
-    onRpc("/web/dataset/call_kw/partner/formatted_read_group", async (request) => {
-        const { params } = await request.json();
-        if (params.kwargs.groupby?.includes("properties.my_char")) {
-            expect.step("formatted_read_group");
+    onRpc("partner", "formatted_read_group", ({ kwargs, method }) => {
+        if (kwargs.groupby?.includes("properties.my_char")) {
+            expect.step(method);
             return [
                 {
                     "properties.my_char": false,
