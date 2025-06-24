@@ -42,7 +42,6 @@
     </p>
 </div>
             </field>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -85,7 +84,6 @@
 </div>
             </field>
             <field name="report_template_ids" eval="[(4, ref('survey.certification_report'))]"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
     </data>
