@@ -263,7 +263,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         )
 
     def gateway_mail_reply_from_smtp_email(self, template, source_smtp_to_list,
-                                           reply_all=False, cc=False,
+                                           reply_all=False, add_to_lst=False, cc=False,
                                            force_email_from=False, force_return_path=False,
                                            extra=False, use_references=True, extra_references=False, use_in_reply_to=False,
                                            debug_log=False,
@@ -296,6 +296,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 email for email in email_split_and_format_normalize(smtp_email['msg_to'])
                 if email_normalize(email) not in source_smtp_to_list]
             )
+        if add_to_lst:
+            replying_to = f'{replying_to},{",".join(add_to_lst)}'
         with RecordCapturer(self.env['mail.message'], []) as capture_messages, \
              self.mock_mail_gateway():
             self._gateway_mail_reply(
@@ -306,7 +308,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 debug_log=debug_log,
                 target_model=target_model,
             )
-        return capture_messages
+        return capture_messages.records
 
     def gateway_mail_reply_last_email(self, template, force_email_to=False, debug_log=False):
         """ Tool to automatically reply to last outgoing mail. """
