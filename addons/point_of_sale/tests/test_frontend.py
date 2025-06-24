@@ -2571,6 +2571,64 @@ class TestUi(TestPointOfSaleHttpCommon):
         products = self.env['product.product'].search([])
         self.assertTrue(products, 'Demo data should be loaded by admin.')
 
+    def test_combo_variant_mix(self):
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'value_ids': [
+                Command.create({'name': 'Red'}),
+                Command.create({'name': 'Blue'})
+            ],
+            'create_variant': 'no_variant',
+        })
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'value_ids': [
+                Command.create({'name': 'Small'}),
+                Command.create({'name': 'Large'})
+            ],
+            'create_variant': 'always',
+        })
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': color_attribute.id,
+                    'value_ids': [Command.link(id) for id in color_attribute.value_ids.ids]
+                }),
+                Command.create({
+                    'attribute_id': size_attribute.id,
+                    'value_ids': [Command.link(id) for id in size_attribute.value_ids.ids]
+                })
+            ]
+        })
+
+        combo = self.env['product.combo'].create({
+            'name': 'Test Combo',
+            'combo_item_ids': [
+                Command.create({
+                    'product_id': product_template.product_variant_ids[0].id,
+                    'extra_price': 0,
+                }),
+                Command.create({
+                    'product_id': product_template.product_variant_ids[1].id,
+                    'extra_price': 0,
+                }),
+            ]
+        })
+        self.env['product.template'].create({
+            'name': 'Test Product Combo',
+            'available_in_pos': True,
+            'list_price': 20,
+            'taxes_id': False,
+            'type': 'combo',
+            'combo_ids': [Command.link(combo.id)],
+        })
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_combo_variant_mix', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
