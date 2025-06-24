@@ -1039,3 +1039,27 @@ class TestAccountAccount(TestAccountMergeCommon):
         invoice.line_ids._compute_account_id()
 
         self.assertEqual(invoice.invoice_line_ids.account_id, self.company_data['default_account_revenue'])
+
+    def test_tax_ids_from_selected_company_ids(self):
+        account = self.env['account.account'].with_context(
+            allowed_company_ids=[self.company_data['company'].id, self.company_data_2['company'].id]
+        )
+        account_form = Form(account)
+        account_form.name = "Test Account"
+        account_form.code = '101010'
+
+        # Add company 2
+        with account_form.code_mapping_ids.edit(1) as code_mapping_form:
+            code_mapping_form.code = '202020'
+        account_form.company_ids.add(self.company_data_2['company'])
+
+        # Add tax group from company 1 and 2
+        account_form.tax_ids.add(self.company_data['default_tax_sale'])
+        account_form.tax_ids.add(self.company_data_2['default_tax_sale'])
+
+        # Remove company 2
+        account_form.company_ids.remove(id=self.company_data_2['company'].id)
+
+        # Save the record to trigger constraint checks
+        with self.assertRaises(UserError):
+            account_form.save()
