@@ -738,25 +738,35 @@ export class Form extends Interaction {
      *      recalculate the visibility of fieldEl
      */
     buildVisibilityFunction(fieldEl) {
-        const visibilityCondition = fieldEl.dataset.visibilityCondition;
-        const dependencyName = fieldEl.dataset.visibilityDependency;
-        const comparator = fieldEl.dataset.visibilityComparator;
-        const between = fieldEl.dataset.visibilityBetween;
-        return () => {
-            // To be visible, at least one field with the dependency name must be visible.
-            const dependencyVisibilityFunction = this.visibilityFunctionByFieldName.get(dependencyName);
-            const dependencyIsVisible = !dependencyVisibilityFunction || dependencyVisibilityFunction();
-            if (!dependencyIsVisible) {
-                return false;
-            }
+    const visibilityCondition = fieldEl.dataset.visibilityCondition;
+    const dependencyName = fieldEl.dataset.visibilityDependency;
+    const comparator = fieldEl.dataset.visibilityComparator;
+    const between = fieldEl.dataset.visibilityBetween;
 
-            const formData = this.getFormDataIncludingDisabledFields(this.el);
-            const currentValueOfDependency = ["contains", "!contains"].includes(comparator)
-                ? formData.getAll(dependencyName).join()
-                : formData.get(dependencyName);
-            return this.compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
-        };
-    }
+    let cachedFormData = null;
+
+    const checkVisibility = () => {
+        if (!cachedFormData) {
+            cachedFormData = this.getFormDataIncludingDisabledFields(this.el);
+        }
+        // To be visible, at least one field with the dependency name must be visible.
+        const dependencyVisibilityFunction = this.visibilityFunctionByFieldName.get(dependencyName);
+        const dependencyIsVisible = !dependencyVisibilityFunction || dependencyVisibilityFunction();
+        if (!dependencyIsVisible) {
+            return false;
+        }
+        const currentVal = ["contains", "!contains"].includes(comparator)
+            ? cachedFormData.getAll(dependencyName).join()
+            : cachedFormData.get(dependencyName);
+        return this.compareTo(comparator, currentVal, visibilityCondition, between);
+    };
+
+    checkVisibility.invalidateCache = () => {
+        cachedFormData = null;
+    };
+
+    return checkVisibility;
+}
 
     /**
      * @param {HTMLElement} formEl the form from which we want to retrieve
@@ -811,8 +821,13 @@ export class Form extends Interaction {
      * Calculates the visibility of the fields at each input event on the
      * form (this method should be debounced in the start).
      */
-    onFieldInput() {
-        // Implicitly updates DOM.
+    onFieldInput(event) {
+        const changedFieldName = event.target.name;
+        for (const [fieldEl, checkVisibilityFn] of this.visibilityFunctionByFieldEl.entries()) {
+            if (fieldEl.dataset.visibilityDependency === changedFieldName) {
+                checkVisibilityFn.invalidateCache();
+            }
+        }
     }
 
     /**
