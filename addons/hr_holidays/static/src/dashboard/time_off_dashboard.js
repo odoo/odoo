@@ -24,14 +24,7 @@ export class TimeOffDashboard extends Component {
         });
 
         onWillStart(async () => {
-            const promises = [
-                this.orm.call("hr.leave.type", "has_accrual_allocation", [], {
-                    context: this.getContext(),
-                }),
-                this.loadDashboardData(),
-            ];
-            const [hasAccrualAllocation] = await Promise.all(promises);
-            this.hasAccrualAllocation = hasAccrualAllocation;
+            this.loadDashboardData();
         });
     }
 
@@ -48,18 +41,15 @@ export class TimeOffDashboard extends Component {
         if (date) {
             this.state.date = date;
         }
-        const promises = [
-            this.orm.call(
-                "hr.leave.type",
-                "get_allocation_data_request",
-                [this.state.date, false],
-                { context }
-            ),
-            this.orm.call("hr.employee", "get_allocation_requests_amount", [], { context }),
-        ];
-        const [holidays, allocationRequests] = await Promise.all(promises);
-        this.state.holidays = holidays;
-        this.state.allocationRequests = allocationRequests;
+        const dashboardData = await this.orm.call(
+            "hr.employee",
+            "get_time_off_dashboard_data",
+            [this.state.date],
+            { context }
+        )
+        this.state.holidays = dashboardData['allocation_data'];
+        this.state.allocationRequests = dashboardData['allocation_request_amount'];
+        this.hasAccrualAllocation = dashboardData['has_accrual_allocation'];
     }
 
     async newAllocationRequest() {
