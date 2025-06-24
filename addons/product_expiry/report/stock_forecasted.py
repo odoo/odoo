@@ -26,6 +26,14 @@ class StockForecasted_Product_Product(models.AbstractModel):
         res += [('removal_date', '<=', date.today())]
         return res
 
+    def _calculate_transit_stock(self, product, product_stock, free_stock, wh_stock_location):
+        res = super()._calculate_transit_stock(product, product_stock, free_stock, wh_stock_location)
+        if product.use_expiration_date:
+            transit_locations = (wh_stock_location.warehouse_id.wh_qc_stock_loc_id.id, wh_stock_location.warehouse_id.wh_input_stock_loc_id.id)
+            transit_to_remove = self.env['stock.quant']._read_group(self._get_expired_quant_domain(transit_locations, product), aggregates=['reserved_quantity:sum'])[0][0]
+            res += transit_to_remove
+        return res
+
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         res = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit, read)
         removal_date = self.env.context.get('removal_date')
@@ -38,7 +46,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
             return self.env['product.template'].browse(product_templates).product_variant_ids.filtered(lambda p: p.use_expiration_date)
         return self.env['product.product'].browse(products).filtered(lambda p: p.use_expiration_date)
 
-    def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read):
+    def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read, transit_diff):
         res = []
         if product.use_expiration_date:
             reserved_expired, unreserved_expired = self.env['stock.quant']._read_group(self._get_expired_quant_domain(wh_location_ids, product), aggregates=['reserved_quantity:sum', 'available_quantity:sum'])[0]
@@ -60,5 +68,5 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     res.append(self.with_context(removal_date=removal_date)._prepare_report_line(free_stock_at_date, product=product, read=read))
 
             # Compensate for any reserved products that are no longer fresh
-            free_stock += reserved_expired
-        return res + super()._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
+            free_stock += reserved_expired - transit_diff
+        return res + super()._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read, transit_diff)
