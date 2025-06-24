@@ -1175,7 +1175,7 @@ class One2many(_RelationalMulti):
 
         comodel = model.env[self.comodel_name].sudo()
         inverse_field = comodel._fields[self.inverse_name]
-        if not inverse_field.store:
+        if not (inverse_field.store or inverse_field.compute_sql):
             # determine ids1 in model related to ids2
             # TODO should we support this in the future?
             recs = comodel.browse(coquery).with_context(prefetch_fields=False)
