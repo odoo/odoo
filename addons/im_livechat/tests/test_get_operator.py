@@ -449,16 +449,15 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             {
                 "name": "Livechat Channel",
                 "user_ids": [first_operator.id, second_operator.id],
-                "buffer_time": 10,
             }
         )
         now = fields.Datetime.now()
-        with freeze_all_time(now + timedelta(minutes=-1)):
+        with freeze_all_time(now + timedelta(minutes=-3)):
             self._create_chat(livechat_channel, second_operator)
         with freeze_all_time(now):
             self._create_chat(livechat_channel, first_operator)
             self.assertEqual(second_operator, livechat_channel._get_operator())
-        with freeze_all_time(now + timedelta(seconds=11)):
+        with freeze_all_time(now + timedelta(seconds=121)):
             self.assertEqual(first_operator, livechat_channel._get_operator())
 
     def test_bypass_buffer_time_when_impossible_selection(self):
@@ -468,7 +467,6 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             {
                 "name": "Livechat Channel",
                 "user_ids": [first_operator.id, second_operator.id],
-                "buffer_time": 10,
             }
         )
         now = fields.Datetime.now()
