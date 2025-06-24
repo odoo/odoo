@@ -145,6 +145,23 @@ export class SnippetModel extends Reactive {
         return this.loadProm;
     }
 
+    /**
+     * Reloads the snippet data, optionally updating the context.
+     *
+     * @param {Object} context - Optional context to override or extend the
+     *                           current context.
+     * @returns {Promise<void>} A promise that resolves once the snippets are
+     *                          reloaded.
+     */
+    reload(context = {}) {
+        this.loadProm = null;
+        this.context = {
+            ...this.context,
+            ...context,
+        };
+        return this.load();
+    }
+
     computeSnippetTemplates(snippetsDocument) {
         const snippetsBody = snippetsDocument.body;
         this.snippetsByCategory = {};
@@ -260,8 +277,7 @@ export class SnippetModel extends Reactive {
             template_key: this.snippetsName,
         });
         // Reload snippet to have updated name.
-        this.loadProm = null;
-        await this.load();
+        await this.reload();
     }
 
     setSnippetName(snippetsDocument) {
@@ -380,9 +396,8 @@ export class SnippetModel extends Reactive {
                             context,
                         });
 
-                        this.loadProm = null;
                         // Reload the snippets so the sidebar is up to date.
-                        await this.load();
+                        await this.reload();
                         resolve(savedName);
                     },
                 },
