@@ -83,18 +83,15 @@ export class PartnerAutoCompleteCharField extends CharField {
         if (data.company.name) {
             await this.props.record.update({name: data.company.name});  // Needed otherwise name it is not saved
         }
-        await this.props.record.update(data.company);
 
         // Add UNSPSC codes (tags)
         if (this.props.record.resModel === 'res.partner' && unspsc_codes && unspsc_codes.length !== 0) {
-            // We must first save the record so that we can then create the tags (many2many)
-            const saved = await this.props.record.save();
-            if (saved){
-                await this.props.record.load();
-                await this.orm.call("res.partner", "iap_partner_autocomplete_add_tags", [this.props.record.resId, unspsc_codes]);
-                await this.props.record.load();
-            }
+            // category id is fetched and then tags are created (many2many)
+            const category_id = await this.orm.call("res.partner", "iap_partner_autocomplete_add_tags", [this.props.record.resId, unspsc_codes]);
+            data.company['category_id'] = [[6, 0, category_id]];
         }
+        await this.props.record.update(data.company);
+        
         if (this.props.setDirty) {
             this.props.setDirty(false);
         }
