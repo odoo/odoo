@@ -896,7 +896,7 @@ test("display names in facets (with a property)", async () => {
     Partner._records = [{ id: 1, name: "John" }];
 
     onRpc("/web/domain/validate", () => true);
-    onRpc("/web/dataset/call_kw/parent.model/web_search_read", () => ({
+    onRpc("parent.model", "web_search_read", () => ({
         records: [
             {
                 id: 1337,

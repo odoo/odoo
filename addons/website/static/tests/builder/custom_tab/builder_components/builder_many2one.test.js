@@ -26,7 +26,7 @@ defineModels([Test]);
 test("many2one: async load", async () => {
     const defWillLoad = new Deferred();
     const defDidApply = new Deferred();
-    onRpc("/web/dataset/call_kw/test/name_search", async (args) => [
+    onRpc("test", "name_search", () => [
         [1, "First"],
         [2, "Second"],
         [3, "Third"],

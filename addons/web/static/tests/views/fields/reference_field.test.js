@@ -928,10 +928,8 @@ test("reference field should await fetch model before render", async () => {
     Partner._records[0].model_id = 20;
 
     const def = new Deferred();
-    onRpc(async (args) => {
-        if (args.method === "read" && args.model === "ir.model") {
-            await def;
-        }
+    onRpc("ir.model", "read", async () => {
+        await def;
     });
     mountView({
         type: "form",

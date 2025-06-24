@@ -1604,7 +1604,7 @@ export class Model extends Array {
     _views = {};
 
     get env() {
-        return MockServer.current.env;
+        return MockServer.env;
     }
 
     // Default fields, common to all models
@@ -2961,6 +2961,7 @@ export class Model extends Array {
     //-------------------------------------------------------------------------
 
     /**
+     * @private
      * @param {Record<string, ModelRecord>} [originalRecords={}]
      */
     _applyComputesAndValidate(originalRecords = {}) {
@@ -2994,6 +2995,7 @@ export class Model extends Array {
     }
 
     /**
+     * @private
      * @param {ModelRecord} record
      * @param {Context} [context]
      */
@@ -3029,6 +3031,9 @@ export class Model extends Array {
         }
     }
 
+    /**
+     * @private
+     */
     _compute_display_name() {
         if (this._rec_name) {
             for (const record of this) {
@@ -3043,6 +3048,7 @@ export class Model extends Array {
     }
 
     /**
+     * @private
      * @param {string} fieldName
      */
     _compute_related_field(fieldName) {
@@ -3071,6 +3077,7 @@ export class Model extends Array {
      * that if we have an 'active' field, we implicitely add active = true in
      * the domain.
      *
+     * @private
      * @param {DomainListRepr} [domain]
      * @param {{ active_test?: boolean }} [options]
      */
@@ -3164,6 +3171,7 @@ export class Model extends Array {
     }
 
     /**
+     * @private
      * @param {ModelRecord} record
      * @param {string[]} fieldNames
      * @returns {[any, FieldType]}
@@ -3194,11 +3202,15 @@ export class Model extends Array {
         return [value, currentField?.type];
     }
 
+    /**
+     * @private
+     */
     _getNextId() {
         return Math.max(0, ...this.map((record) => record?.id || 0)) + 1;
     }
 
     /**
+     * @private
      * @param {FieldDefinition} field
      * @param {ModelRecord} record
      */
@@ -3215,6 +3227,7 @@ export class Model extends Array {
     }
 
     /**
+     * @private
      * @param {MaybeIterable<number>} idOrIds
      * @param {Iterable<string>} [fnames=[]]
      * @param {string | false} [load="_classic_read"]
@@ -3315,6 +3328,7 @@ export class Model extends Array {
     }
 
     /**
+     * @private
      * @param {SearchParams} params
      */
     _search(params) {
@@ -3331,6 +3345,7 @@ export class Model extends Array {
     }
 
     /**
+     * @private
      * @param {Record<string, any>} spec
      * @param {ModelRecord[]} records
      */
@@ -3431,6 +3446,7 @@ export class Model extends Array {
     }
 
     /**
+     * @private
      * @param {ModelRecord} values
      * @param {number} id
      */

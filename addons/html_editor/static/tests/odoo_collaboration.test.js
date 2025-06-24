@@ -310,9 +310,9 @@ async function insertEditorText(editor, text) {
 }
 
 beforeEach(() => {
-    onRpc("/web/dataset/call_kw/res.users/read", () => [{ id: 0, name: "admin" }]);
+    onRpc("res.users", "read", () => [{ id: 0, name: "admin" }]);
     onRpc("/html_editor/get_ice_servers", () => []);
-    onRpc("/html_editor/bus_broadcast", (params) => {
+    onRpc("/html_editor/bus_broadcast", () => {
         throw new Error("Should not be called.");
     });
 });
