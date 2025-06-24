@@ -581,6 +581,7 @@ export class PosStore extends Reactive {
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
                 product: product,
+                hideAlwaysVariants: opts.hideAlwaysVariants,
             });
         }
         return {
