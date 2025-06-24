@@ -27,6 +27,7 @@
             <field name="paperformat_id" ref="l10n_in_ewaybill.paperformat_ewaybill"/>
             <field name="binding_model_id" ref="model_l10n_in_ewaybill"/>
             <field name="binding_type">report</field>
+            <field name="domain" eval="[('state', '=', 'generated')]"/>
         </record>
     </data>
 </odoo>
