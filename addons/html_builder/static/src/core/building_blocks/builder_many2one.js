@@ -22,6 +22,7 @@ export class BuilderMany2One extends Component {
         limit: { type: Number, optional: true },
         id: { type: String, optional: true },
         allowUnselect: { type: Boolean, optional: true },
+        unselectBtnTitle: { type: String, optional: true },
         defaultMessage: { type: String, optional: true },
         createAction: { type: String, optional: true },
         nullText: { type: String, optional: true },
@@ -29,6 +30,7 @@ export class BuilderMany2One extends Component {
     static defaultProps = {
         ...BuilderComponent.defaultProps,
         allowUnselect: true,
+        unselectBtnTitle: "Unselect",
     };
     static components = { BuilderComponent, SelectMany2X };
 

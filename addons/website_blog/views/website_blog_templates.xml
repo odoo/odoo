@@ -326,6 +326,10 @@ list of filtered posts (by date or tag).
     Show 'read next' banner at the bottom of the page
 -->
 <template id="opt_blog_post_read_next" name="Read Next Article" inherit_id="website_blog.blog_post_complete" active="True">
+    <xpath expr="//section[@id='o_wblog_post_footer']" position="attributes">
+        <attribute name="t-att-data-next-post-id">next_post and next_post.id</attribute>
+        <attribute name="t-att-data-is-next-post-recommended">is_next_post_recommended and ''</attribute>
+    </xpath>
     <xpath expr="//section[@id='o_wblog_post_footer']" position="inside">
         <div t-if="next_post" class="mt-5">
             <t t-if="opt_blog_post_regular_cover">

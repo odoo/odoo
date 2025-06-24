@@ -44,10 +44,29 @@
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_breadcrumb']}"/>
         </BuilderRow>
 
+        <BuilderRow label.translate="Comments" tooltip.translate="Toggle comments">
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_comment']}"/>
+        </BuilderRow>
+
         <BuilderRow label.translate="Bottom">
-            <BuilderButton label.translate="Next Article" actionParam="{views: ['website_blog.opt_blog_post_read_next']}"/>
-            <BuilderButton label.translate="Comments" actionParam="{views: ['website_blog.opt_blog_post_comment']}"/>
+            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_read_next']}" id="'next_article_opt'"/>
         </BuilderRow>
     </BuilderContext>
+
+    <BuilderRow label.translate="Recommended Post" tooltip.translate="Promote a post" level="1" t-if="isActiveItem('next_article_opt')">
+        <BuilderMany2One
+            action="'setRecommendedNextPost'"
+            applyTo="'#o_wblog_post_footer'"
+            model="'blog.post'"
+            domain="[
+                ['is_published', '=', true],
+                ['id', '!=', this.services.website.currentWebsite.metadata.mainObject.id],
+                ['website_id', 'in', [false, this.services.website.currentWebsite.id]],
+            ]"
+            allowUnselect="blogState.isNextPostRecommended"
+            unselectBtnTitle.translate="Reset to default post"
+            preview="false"
+        />
+    </BuilderRow>
 </t>
 </templates>
