@@ -141,7 +141,9 @@ class EWayBillApi:
             if operation_type == "cancel" and "312" in e.error_codes:
                 # E-waybill is already canceled
                 # this happens when timeout from the Government portal but IRN is generated
-                e.error_json['odoo_warning'].append({
+                # Avoid raising error in this case, since it is already cancelled
+                response = e.error_json
+                response['odoo_warning'].append({
                     'message': Markup("%s<br/>%s:<br/>%s") % (
                         self.env['l10n.in.ewaybill']._get_default_help_message(
                             self.env._('cancelled')
@@ -151,7 +153,10 @@ class EWayBillApi:
                     ),
                     'message_post': True
                 })
-                raise
+                # We return the error json as this a government document
+                # On which in case of error 312, consider the ewaybill
+                # as already cancelled
+                return response
 
             if operation_type == "generate" and "604" in e.error_codes:
                 # Get E-waybill by details in case of E-waybill is already generated
