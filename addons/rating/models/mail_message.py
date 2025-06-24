@@ -45,3 +45,5 @@ class MailMessage(models.Model):
             for records in self._records_by_model_name().values():
                 if issubclass(self.pool[records._name], self.pool["rating.mixin"]):
                     store.add(records, fields=["rating_avg", "rating_count"], as_thread=True)
+                    if records._allow_publish_rating_stats():
+                        store.add(records, {"rating_stats": records.rating_get_stats()}, as_thread=True)

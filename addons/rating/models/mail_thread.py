@@ -190,3 +190,8 @@ class MailThread(models.AbstractModel):
         if same_author and rating.res_model == message.model and rating.res_id == message.res_id:
             rating.message_id = message.id
         super()._message_post_after_hook(message, msg_values)
+
+    @api.model
+    def _allow_publish_rating_stats(self):
+        """Override to allow the rating stats to be demonstrated."""
+        return False
