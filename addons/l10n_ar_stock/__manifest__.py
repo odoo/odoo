@@ -3,7 +3,7 @@
     'version': '1.0',
     'description': """Argentinean - Stock""",
     'category': 'Accounting/Localizations',
-    'depends': ['l10n_ar', 'stock'],
+    'depends': ['l10n_ar', 'stock_account'],
     'data': [
         # data
         'data/mail_template_data.xml',
