@@ -1069,3 +1069,7 @@ class SlideChannel(models.Model):
         if field in image_fields:
             return self.website_default_background_image_url
         return super()._get_placeholder_filename(field)
+
+    @api.model
+    def _allow_publish_rating_stats(self):
+        return True
