@@ -1637,7 +1637,58 @@ export class PosStore extends WithLazyGetterTrap {
             true
         );
     }
+<<<<<<< 5fa80189b178b8eda0a1900275314aa589c1f332
 
+||||||| dea3c068dfb25f56d54d90a1129995a324f82e2a
+    showScreen(name, props = {}, newOrder = false) {
+        if (name === "PaymentScreen" && !props.orderUuid) {
+            name = "ProductScreen";
+        }
+        if (name === "ProductScreen") {
+            this.getOrder()?.deselectOrderline();
+        }
+        const component = registry.category("pos_screens").get(name);
+        if (
+            (component.updatePreviousScreen ?? true) &&
+            (this.mainScreen.component?.updatePreviousScreen ?? true)
+        ) {
+            this.previousScreen = this.mainScreen.component?.name;
+        }
+        this.mainScreen = { component, props };
+        // Save the screen to the order so that it is shown again when the order is selected.
+        if (component.storeOnOrder ?? true) {
+            this.getOrder()?.setScreenData({ name, props });
+        }
+        if (newOrder) {
+            this.addNewOrder();
+        }
+    }
+=======
+    showScreen(name, props = {}, newOrder = false) {
+        if (name === "PaymentScreen" && !props.orderUuid) {
+            name = "ProductScreen";
+        }
+        if (name === "ProductScreen") {
+            this.getOrder()?.deselectOrderline();
+        }
+        const component = registry.category("pos_screens").get(name);
+        if (
+            (component.updatePreviousScreen ?? true) &&
+            (this.mainScreen.component?.updatePreviousScreen ?? true)
+        ) {
+            this.previousScreen = this.mainScreen.component?.name;
+        }
+        this.mainScreen = { component, props };
+        // Save the screen to the order so that it is shown again when the order is selected.
+        if (component.storeOnOrder ?? true) {
+            this.getOrder()?.setScreenData({ name, props });
+        }
+        if (newOrder) {
+            this.addNewOrder();
+        }
+        return true;
+    }
+>>>>>>> 698db60754ef036f79389237fa0a1ec13c32bdae
     async printReceipt({
         basic = false,
         order = this.getOrder(),
