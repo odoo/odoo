@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PaymentScreen.prototype, {
     async validateOrder(isForceValidate) {
-        if (this.pos.config.module_pos_hr && this.pos.getCashier() === null) {
+        if (this.pos.config.module_pos_hr) {
             this.currentOrder.employee_id = this.pos.getCashier();
         }
 
