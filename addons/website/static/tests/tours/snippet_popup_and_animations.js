@@ -127,10 +127,8 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Wait until the column is no longer animated/visible.",
-        trigger: ":iframe .s_popup .s_three_columns .row > :last-child:not(:has(.o_animating))",
+        trigger: ":iframe .s_popup .s_three_columns .row > :last-child:not(.o_animating):hidden",
         async run() {
-            //TODO: understand why we now wait 500ms before check the condition
-            await new Promise((r) => setTimeout(r, 500));
             // If the column has been animated successfully, the animation delay
             // should be set to approximately zero when it is not visible.
             if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== 0) {

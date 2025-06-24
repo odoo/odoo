@@ -6,7 +6,7 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _l10n_jo_is_edi_applicable(self, move):
-        return move.l10n_jo_edi_is_needed and move.l10n_jo_edi_state != 'sent'
+        return move.l10n_jo_edi_is_needed and move.l10n_jo_edi_state not in move._l10n_jo_edi_state_sent_options()
 
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'

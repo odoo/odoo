@@ -250,6 +250,7 @@ export class Composer extends Component {
     }
 
     onClickCancelOrSaveEditText(ev) {
+        ev.preventDefault();
         const composer = toRaw(this.props.composer);
         if (composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
             this.props.onDiscardCallback(ev);
@@ -564,7 +565,7 @@ export class Composer extends Component {
         }
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,
-            this.props.composer.emailAddSignature ? markup(this.store.self.signature) : ""
+            this.props.composer.emailAddSignature ? this.thread.effectiveSelf.signature : ""
         );
         const context = {
             default_attachment_ids: attachmentIds,

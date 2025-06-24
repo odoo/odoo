@@ -9,7 +9,7 @@
 # Tamás Németh <ntomasz81@gmail.com>, 2024
 # Martin Trigaux, 2024
 # krnkris, 2024
-# gezza <geza.nagy@oregional.hu>, 2024
+# gezza <geza.nagy@oregional.hu>, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,6 +83,9 @@ msgid ""
 "Adding %(user_name)s in this team will remove them from %(team_names)s. "
 "Working in multiple teams? Activate the option under Configuration>Settings."
 msgstr ""
+"%(user_name)s felhasználó csapathoz történő hozzáadása eltávolítja a "
+"felhasználót innen: %(team_names)s. Több csapat is dolgozik? Aktiválja az "
+"opciót itt: Konfiguráció > Beállítások."
 
 #. module: sales_team
 #. odoo-python
@@ -90,6 +93,8 @@ msgstr ""
 msgid ""
 "Adding %(user_names)s in this team will remove them from %(team_names)s."
 msgstr ""
+"%(user_names)s felhasználó csapathoz történő hozzáadása eltávolítja a "
+"felhasználót innen: %(team_names)s."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -198,12 +203,12 @@ msgstr "Pénznem"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr ""
+msgstr "Kezelőpult gomb"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr ""
+msgstr "Kezelőpult grafikon adat"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -238,6 +243,8 @@ msgstr "Kedvenc tagok"
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
+"A kedvencként jelölt csapatok megjelennek a kezelőpulton és könnyebben "
+"elérhetők."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -281,6 +288,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"Ha igaz, akkor a felhasználók több értékesítési csapat tagjai is lehetnek. "
+"Egyéb esetben a tagság csak egy értékesítési csapatra korlátozódik."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -301,6 +310,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"Ha az aktív mező hamisra van állítva, akkor el lehet rejteni az értékesítési"
+" csapatot annak eltávolítása nélkül."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -343,6 +354,8 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"Felhasználó fő értékesítési csapata. Felhasználásra kerül például a folyamat"
+" megjelenítésében, számlázás során és előfizetések kezelésekor is."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
@@ -434,7 +447,7 @@ msgstr "Értékesítési pont"
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "Előértékesítés"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
@@ -487,7 +500,7 @@ msgstr "Értékesítés csapattagok"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "Értékesítés csapat tagjai (inaktívak is)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -530,7 +543,7 @@ msgstr "Szolgáltatások"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr ""
+msgstr "Megjelenítés kezelőpulton"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor2
@@ -557,7 +570,7 @@ msgstr "Címkék"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr "Csapat részletek"
+msgstr "Csapat részletei"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -574,6 +587,8 @@ msgstr "Csapat tagjai"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Team Members are salespersons assigned to specific teams."
 msgstr ""
+"A csapattagok olyan értékesítők, akik specifikus csapatokhoz vannak "
+"rendelve."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_pipeline
@@ -596,6 +611,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"Ezek testesítik meg az elvégzendő dolgok különféle kategóriáit (pl: "
+"\"Hívás\" vagy \"Találkozó előkészítése\")."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -607,24 +624,30 @@ msgstr "Képzés"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: duplikálódás elkerülése céljából a kiválasztott csapatba nem lehet "
+"felhasználót adni"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
 msgstr ""
+"UX: korlátozás csapat vállalatára vagy az összesre, ha nincs vállalat "
+"kiválasztva"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "Nem definiált grafikon modell értékesítési csapathoz: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid ""
 "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+"Használjon értékesítési csapatokat az értékesítés megszervezéséhez és "
+"kimutatások elkészítéséhez."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -633,6 +656,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Használjon értékesítési csapatokat az értékesítés megszervezeéséhez.\n"
+"                Minden csapat saját folyamatban dolgozhat."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -640,6 +665,8 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
+"Használjon címkéket a lehetőségek kezeléséhez és követéséhez (termék "
+"struktúra, értékesítés típus, ...)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -669,7 +696,7 @@ msgstr "Felhasználó: Összes dokumentum"
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr "Felhasználó: Csak a saját dokumentumok"
+msgstr "Felhasználó: Csak saját dokumentumok"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
@@ -687,6 +714,8 @@ msgstr "Weboldal"
 msgid ""
 "Working in multiple teams? Activate the option under Configuration>Settings."
 msgstr ""
+"Több csapat is dolgozik? Aktiválja az opciót a Konfiguráció>Beállítások "
+"menüben."
 
 #. module: sales_team
 #. odoo-python
@@ -700,12 +729,12 @@ msgstr ""
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr "pld: Észak-Amerika"
+msgstr "pl: Észak-Amerika"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr "pld: szolgáltatások"
+msgstr "pl: szolgáltatások"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
@@ -730,4 +759,4 @@ msgid ""
 " reports."
 msgstr ""
 "a felhasználónak hozzáférése lesz az értékesítés konfigurálásához és a "
-"statikus riportokhoz."
+"statisztikai riportokhoz."

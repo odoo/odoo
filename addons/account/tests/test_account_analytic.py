@@ -505,3 +505,85 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
                 'analytic_distribution': {str(self.analytic_account_1.id): 100.00},
             },
         ])
+
+    def test_get_relevant_plans_in_multi_company(self):
+        """ Test the plans returned with applicability rules and options in multi-company """
+        self.analytic_plan_1.write({
+            'applicability_ids': [Command.create({
+                'business_domain': 'general',
+                'applicability': 'mandatory',
+                'account_prefix': '60, 61, 62',
+            })],
+        })
+        company_2 = self.company_data_2['company']
+        plans_json = self.env['account.analytic.plan'].sudo().with_company(company_2).get_relevant_plans(
+            business_domain='general',
+            account=self.company_data['default_account_assets'].id,
+            company=self.company.id,
+        )
+        self.assertTrue(plans_json)
+
+    def test_analytic_distribution_with_discount(self):
+        """Ensure that discount lines include analytic distribution when a discount expense account is set."""
+
+        # Create discount expense account
+        self.company_data['company'].account_discount_expense_allocation_id = self.env['account.account'].create({
+            'name': 'Discount Expense',
+            'code': 'DIS',
+            'account_type': 'expense',
+            'reconcile': False,
+        })
+
+        # Create invoice with 2 lines: each has a discount and analytic distribution
+        out_invoice = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'tax_ids': [Command.clear()],
+                'price_unit': 200.0,
+                'discount': 20,  # 40.0 discount
+                'analytic_distribution': {
+                    self.analytic_account_1.id: 100,
+                },
+            }), Command.create({
+                'product_id': self.product_b.id,
+                'tax_ids': [Command.clear()],
+                'price_unit': 200.0,
+                'discount': 10,  # 20.0 discount
+                'analytic_distribution': {
+                    self.analytic_account_2.id: 100,
+                },
+            })]
+        }])
+        out_invoice.action_post()
+        self.assertRecordValues(out_invoice.line_ids, [{
+            'display_type': 'product',
+            'balance': -160.0,
+            'analytic_distribution': {str(self.analytic_account_1.id): 100},
+        }, {
+            'display_type': 'product',
+            'balance': -180.0,
+            'analytic_distribution': {str(self.analytic_account_2.id): 100},
+        }, {
+            'display_type': 'discount',
+            'balance': -40.0,
+            'analytic_distribution': {str(self.analytic_account_1.id): 100}
+        }, {
+            'display_type': 'discount',
+            'balance': 60.0,
+            'analytic_distribution': {
+                str(self.analytic_account_1.id): 66.67,
+                str(self.analytic_account_2.id): 33.33,
+            }
+        }, {
+            'display_type': 'discount',
+            'balance': -20.0,
+            'analytic_distribution': {str(self.analytic_account_2.id): 100}
+        }, {
+            'display_type': 'payment_term',
+            'balance': 340.0,
+            'analytic_distribution': False,
+        }])

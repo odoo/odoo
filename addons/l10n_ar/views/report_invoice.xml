@@ -278,7 +278,7 @@
         <div id="qrcode" position="after">
             <!-- RG 5614/2024: Show ARCA VAT and Other National Internal Taxes -->
             <t t-set="l10n_ar_custom_tax_summary" t-value="o._l10n_ar_get_invoice_custom_tax_summary_for_report()"/>
-            <div class="l10n_ar_tax_details" t-if="l10n_ar_custom_tax_summary">
+            <div t-attf-class="l10n_ar_tax_details {{ 'col-6' if report_type == 'pdf' else '' }}" t-if="l10n_ar_custom_tax_summary">
                 <table class="table table-sm table-borderless" style="page-break-inside: avoid;">
                     <th class="border-black" style="border-bottom: 1px solid" colspan="2">
                            Fiscal Transparency Regime for the Final Consumer (Law 27.743)

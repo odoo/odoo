@@ -89,6 +89,8 @@ class TestDropship(common.TransactionCase):
 
     def test_00_dropship(self):
         self.dropship_product.description_purchase = "description_purchase"
+        self.dropship_product.description = "internal note"
+        self.dropship_product.description_pickingout = "description_out"
         # Required for `route_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('stock.group_adv_location')
 
@@ -136,6 +138,10 @@ class TestDropship(common.TransactionCase):
             ('location_dest_id', '=', self.env.ref('stock.stock_location_customers').id),
             ('product_id', '=', self.dropship_product.id)])
         self.assertEqual(len(move_line.ids), 1, 'There should be exactly one move line')
+
+        # Check description is not the internal note
+        self.assertNotEqual(move_line.move_id.description_picking, self.dropship_product.description)
+        self.assertEqual(move_line.move_id.description_picking, self.dropship_product.description_pickingout)
 
     def test_sale_order_picking_partner(self):
         """ Test that the partner is correctly set on the picking and the move when the product is dropshipped or not."""
@@ -378,6 +384,37 @@ class TestDropship(common.TransactionCase):
                 'picking_id': dropship_picking.id,
                 'quantity': 2.0,
             }]
+        )
+
+    def test_delivery_type(self):
+        # Create an operation type starting as incoming/internal.
+        operation_type = self.env['stock.picking.type'].create({
+            "name": "test",
+            "sequence_code": "TEST",
+            "code": "incoming"
+        })
+
+        # Update the code/type to outgoing/delivery.
+        operation_type.write({
+            "code": "outgoing"
+        })
+
+        # Trigger re-computes.
+        operation_type.default_location_src_id
+        operation_type.default_location_dest_id
+
+        self.assertEqual(operation_type.code, "outgoing")
+
+        # Expect source location to be warehouse's location.
+        self.assertEqual(
+            operation_type.default_location_src_id,
+            operation_type.warehouse_id.lot_stock_id
+        )
+
+        # Expect destination location to be customer's location.
+        self.assertEqual(
+            operation_type.default_location_dest_id,
+            self.env.ref('stock.stock_location_customers')
         )
 
 

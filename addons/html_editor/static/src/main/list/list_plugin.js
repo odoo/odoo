@@ -9,6 +9,7 @@ import {
     isParagraphRelatedElement,
     isProtected,
     isProtecting,
+    isShrunkBlock,
     listElementSelector,
 } from "@html_editor/utils/dom_info";
 import {
@@ -622,14 +623,16 @@ export class ListPlugin extends Plugin {
         const ul = li.parentNode;
         const dir = ul.getAttribute("dir");
         const textAlign = ul.style.getPropertyValue("text-align");
-        wrapInlinesInBlocks(li, {
-            baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
-            cursors,
-        });
-        if (!li.hasChildNodes()) {
-            // Outdenting an empty LI produces an empty baseContainer
+        const children = childNodes(li);
+        if (!children.every(isBlock)) {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.append(this.document.createElement("br"));
+            for (const child of children) {
+                cursors.update(callbacksForCursorUpdate.append(baseContainer, child));
+                baseContainer.append(child);
+            }
+            if (isShrunkBlock(baseContainer)) {
+                baseContainer.append(this.document.createElement("br"));
+            }
             li.append(baseContainer);
             cursors.remapNode(li, baseContainer);
         }

@@ -95,7 +95,7 @@ viewsRegistry.category("form").add(
 
 // should be enough to decide whether or not notifications/channel
 // subscriptions... are received.
-const TIMEOUT = 500;
+const TIMEOUT = 2000;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -187,17 +187,12 @@ export function waitForChannels(channels, { operation = "add" } = {}) {
         }
         clearTimeout(failTimeout);
         offWebsocketEvent();
-        const message = (pass, r) =>
+        const message = (pass) =>
             pass
-                ? [r`Channel(s)`, channels, operation === "add" ? r`added` : r`deleted`]
-                : [
-                      r`Waited`,
-                      TIMEOUT,
-                      r`ms for`,
-                      channels,
-                      r`to be`,
-                      operation === "add" ? r`added` : r`deleted`,
-                  ];
+                ? `Channel(s) ${channels} ${operation === "add" ? `added` : `deleted`}`
+                : `Waited ${TIMEOUT}ms for ${channels} to be ${
+                      operation === "add" ? `added` : `deleted`
+                  }`;
         expect(success).toBe(true, { message });
         if (success) {
             def.resolve();

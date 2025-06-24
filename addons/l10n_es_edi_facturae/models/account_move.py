@@ -379,8 +379,8 @@ class AccountMove(models.Model):
         invoice_values = {
             'invoice_record': self,
             'invoice_currency': inv_curr,
-            'InvoiceDocumentType': 'FC',
-            'InvoiceClass': 'OO',
+            'InvoiceDocumentType': 'FA' if self.l10n_es_is_simplified else 'FC',
+            'InvoiceClass': 'OR' if self.move_type in ['out_refund', 'in_refund'] else 'OO',
             'Corrective': self._l10n_es_edi_facturae_get_corrective_data(),
             'InvoiceIssueData': {
                 'OperationDate': operation_date,
@@ -421,7 +421,7 @@ class AccountMove(models.Model):
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
 
         def grouping_function(base_line, tax_data):
-            return tax_data['tax']
+            return tax_data['tax'] if tax_data else None
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
         for base_line, aggregated_values in base_lines_aggregated_values:

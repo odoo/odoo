@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { Deferred, press, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { onWillStart } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -8,7 +9,9 @@ import {
     models,
     mountView,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { DynamicPlaceholderPopover } from "@web/views/fields/dynamic_placeholder_popover";
 
 class Partner extends models.Model {
     char = fields.Char();
@@ -94,4 +97,34 @@ test("dynamic placeholder close when clicking on the cross", async () => {
     await contains(".o_model_field_selector_popover_item_relation").click();
     await contains(".o_model_field_selector_popover_close").click();
     expect(".o_model_field_selector_popover").toHaveCount(0);
+});
+
+test("correctly cache model qweb variables and don't prevent opening of other popovers", async () => {
+    const def = new Deferred();
+    let willStarts = 0;
+    patchWithCleanup(DynamicPlaceholderPopover.prototype, {
+        setup() {
+            super.setup();
+            onWillStart(() => {
+                willStarts++;
+            });
+        },
+    });
+
+    onRpc("partner", "mail_allowed_qweb_expressions", async () => {
+        expect.step("mail_allowed_qweb_expressions");
+        await def;
+        return [];
+    });
+
+    await mountView({ type: "form", resModel: "partner", resId: 1 });
+    await contains(".o_field_char input").edit("#", { confirm: false });
+    await waitUntil(() => willStarts === 1);
+    await contains(".o_field_char input").edit("#", { confirm: false });
+    await waitUntil(() => willStarts === 2);
+
+    def.resolve();
+    await waitFor(".o_model_field_selector_popover");
+    expect(willStarts).toBe(2);
+    expect.verifySteps(["mail_allowed_qweb_expressions"]);
 });

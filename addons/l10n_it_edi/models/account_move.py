@@ -416,6 +416,8 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_it_edi_grouping_function_base_lines(self, base_line, tax_data):
+        if not tax_data:
+            return None
         tax = tax_data['tax']
         return {
             'tax_amount_field': -23.0 if tax.amount == -11.5 else tax.amount,
@@ -425,6 +427,8 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_it_edi_grouping_function_tax_lines(self, base_line, tax_data):
+        if not tax_data:
+            return None
         tax = tax_data['tax']
 
         if tax._l10n_it_is_split_payment():
@@ -447,8 +451,26 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_it_edi_grouping_function_total(self, base_line, tax_data):
+        if not tax_data:
+            return None
         skip = tax_data['is_reverse_charge'] or self._l10n_it_edi_is_neg_split_payment(tax_data)
         return not skip
+
+    def _prepare_product_base_line_for_taxes_computation(self, product_line):
+        """
+            Prepares tax base line. Rounding lines must appear in the XML,
+            so they are converted to regular lines with tax exemption code ('N2.2').
+        """
+        base_line = super()._prepare_product_base_line_for_taxes_computation(product_line)
+
+        if product_line.display_type == 'rounding':
+            base_line.update({
+                'quantity': 1,
+                'price_unit': -product_line.amount_currency,
+                'tax_ids': self._l10n_it_edi_search_tax_for_import(self.company_id, 0.0, l10n_it_exempt_reason='N2.2'),
+            })
+
+        return base_line
 
     def _l10n_it_edi_get_values(self, pdf_values=None):
         self.ensure_one()
@@ -464,7 +486,7 @@ class AccountMove(models.Model):
         convert_to_euros = self.currency_id.name != 'EUR'
 
         # Base lines.
-        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product')
+        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' or x.display_type == 'rounding')
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
@@ -538,7 +560,7 @@ class AccountMove(models.Model):
             importo_totale_documento += values['base_amount_currency']
             importo_totale_documento += values['tax_amount_currency']
 
-        company = self.company_id.root_id
+        company = self.company_id._l10n_it_get_edi_company()
         partner = self.commercial_partner_id
         sender = company
         buyer = partner if not is_self_invoice else company
@@ -716,8 +738,8 @@ class AccountMove(models.Model):
                      'import_type': 'in_refund',
                      'self_invoice': False,
                      'simplified': False},
-            'TD05': {'move_types': ['out_refund'],
-                     'import_type': 'in_refund',
+            'TD05': {'move_types': ['in_invoice', 'out_invoice'],
+                     'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False},
             'TD06': {'move_types': ['out_invoice'],
@@ -1314,19 +1336,30 @@ class AccountMove(models.Model):
                 move_line.tax_ids = [Command.set(fitting_taxes)]
 
         # Discounts
-        if elements := element.xpath('.//ScontoMaggiorazione'):
-            # Special case of only 1 percentage discount
-            if len(elements) == 1:
-                element = elements[0]
-                if discount_percentage := get_float(element, './/Percentuale'):
-                    discount_type = get_text(element, './/Tipo')
-                    discount_sign = -1 if discount_type == 'MG' else 1
-                    move_line.discount = discount_sign * discount_percentage
-            # Discounts in cascade summarized in 1 percentage
-            else:
-                total = get_float(element, './/PrezzoTotale')
-                discount = 100 - (100 * total) / (move_line.quantity * move_line.price_unit)
-                move_line.discount = discount
+        if discounts := element.xpath('.//ScontoMaggiorazione'):
+            current_unit_price = move_line.price_unit
+            # We apply the discounts in the order they are found in the XML.
+            # The first discount is applied to the unit price, the second to the result of the first, etc.
+            # If the discount is a percentage, it is applied to the unit price.
+            # If the discount is an amount, it is subtracted from the unit price.
+            # If the computed amount is different than the expected one, we log a message.
+            for discount in discounts:
+                discount_type = get_text(discount, './/Tipo')
+                discount_sign = -1 if discount_type == 'MG' else 1
+                if discount_percentage := get_float(discount, './/Percentuale'):
+                    current_unit_price *= discount_sign * (100 - discount_percentage) / 100
+                elif discount_amount := get_float(discount, './/Importo'):
+                    current_unit_price -= discount_sign * discount_amount
+            expected_total = get_float(element, './/PrezzoTotale')
+            current_total = current_unit_price * move_line.quantity
+            if float_compare(expected_total, current_total, precision_rounding=move_line.currency_id.rounding) != 0:
+                message = Markup("<br/>").join((
+                    _("The amount_total %(current_total)s is different than PrezzoTotale %(expected_total)s for '%(move_name)s'", current_total=current_total, expected_total=expected_total, move_name=move_line.name),
+                    self._compose_info_message(element, '.')
+                ))
+                message_to_log.append(message)
+            discount = 100 - (100 * current_unit_price) / move_line.price_unit
+            move_line.discount = discount
 
         return message_to_log
 

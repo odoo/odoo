@@ -5,7 +5,6 @@ from collections import defaultdict
 import requests
 
 from odoo import _, fields, models
-from odoo.exceptions import UserError
 from odoo.tools import html_escape, zeep
 from odoo.tools.float_utils import float_round
 
@@ -348,11 +347,6 @@ class AccountEdiFormat(models.Model):
                         invoice_node.setdefault('TipoDesglose', {})
                         invoice_node['TipoDesglose'].setdefault('DesgloseTipoOperacion', {})
                         invoice_node['TipoDesglose']['DesgloseTipoOperacion']['Entrega'] = tax_details_info_consu_vals['tax_details_info']
-                    if not invoice_node.get('TipoDesglose'):
-                        raise UserError(_(
-                            "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
-                            "\n".join(invoice.line_ids.tax_ids.mapped('name'))
-                        ))
 
                     invoice_node['ImporteTotal'] = float_round(sign * (
                         tax_details_info_service_vals['tax_details']['base_amount']
@@ -626,8 +620,10 @@ class AccountEdiFormat(models.Model):
 
         if not move.company_id.vat:
             res.append(_("VAT number is missing on company %s", move.company_id.display_name))
+        total_taxes = self.env['account.tax']
         for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section')):
             taxes = line.tax_ids.flatten_taxes_hierarchy()
+            total_taxes |= taxes
             recargo_count = taxes.mapped('l10n_es_type').count('recargo')
             retention_count = taxes.mapped('l10n_es_type').count('retencion')
             sujeto_count = taxes.mapped('l10n_es_type').count('sujeto')
@@ -645,6 +641,11 @@ class AccountEdiFormat(models.Model):
                 res.append(_("Line %s should only have one no sujeto (localizations) tax.", line.display_name))
             if sujeto_count + no_sujeto_loc_count + no_sujeto_count > 1:
                 res.append(_("Line %s should only have one main tax.", line.display_name))
+        if move.is_inbound() and move.commercial_partner_id._l10n_es_is_foreign() and not any(t.tax_scope for t in total_taxes):
+            res.append(
+                _("In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
+                  "\n".join(total_taxes.mapped('name')))
+            )
         if move.move_type in ('in_invoice', 'in_refund'):
             if not move.ref:
                 res.append(_("You should put a vendor reference on this vendor bill. "))

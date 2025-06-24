@@ -18,7 +18,7 @@ export class MessageReactions extends Component {
             onSelect: (emoji) => {
                 const reaction = this.props.message.reactions.find(
                     ({ content, personas }) =>
-                        content === emoji && personas.find((persona) => persona.eq(this.store.self))
+                        content === emoji && this.props.message.effectiveSelf.in(personas)
                 );
                 if (!reaction) {
                     this.props.message.react(emoji);

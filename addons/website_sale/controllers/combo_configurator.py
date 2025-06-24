@@ -20,9 +20,11 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         self._populate_currency_and_pricelist(kwargs)
         request.update_context(display_default_code=False)  # Hide internal product reference
         res = super().sale_combo_configurator_get_data(*args, **kwargs)
+        is_quantity_view_enabled = request.website.is_view_active('website_sale.product_quantity')
         res.update({
             'show_quantity': (
-                bool(request.website.is_view_active('website_sale.product_quantity'))
+                # if view doesn't exist default to true
+                is_quantity_view_enabled if is_quantity_view_enabled is not None else True
             ),
         })
         return res

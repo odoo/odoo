@@ -484,10 +484,16 @@ class MrpProduction(models.Model):
 
     @api.depends('procurement_group_id', 'procurement_group_id.stock_move_ids.group_id')
     def _compute_picking_ids(self):
+        grouped_stock_pickings = self.env['stock.picking']._read_group(
+            domain=[('group_id', 'in', self.procurement_group_id.ids), ('group_id', '!=', False)],
+            aggregates=['id:recordset'],
+            groupby=['group_id'],
+        )
+        pickings_per_procurement_group = {
+            group_id.id: picking_ids.sorted() for group_id, picking_ids in grouped_stock_pickings
+        }
         for order in self:
-            order.picking_ids = self.env['stock.picking'].search([
-                ('group_id', '=', order.procurement_group_id.id), ('group_id', '!=', False),
-            ])
+            order.picking_ids = pickings_per_procurement_group.get(order.procurement_group_id.id, [])
             order.picking_ids |= order.move_raw_ids.move_orig_ids.picking_id
             order.delivery_count = len(order.picking_ids)
 
@@ -1054,9 +1060,9 @@ class MrpProduction(models.Model):
             action['domain'] = [('id', 'in', self.picking_ids.ids)]
         elif self.picking_ids:
             action['res_id'] = self.picking_ids.id
-            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
-            if 'views' in action:
-                action['views'] += [(state, view) for state, view in action['views'] if view != 'form']
+            picking_form = self.env.ref('stock.view_picking_form', False)
+            picking_form_view = [(picking_form and picking_form.id or False, 'form')]
+            action['views'] = picking_form_view + [(state, view) for state, view in action.get('views', []) if view != 'form']
         action['context'] = dict(self._context, default_origin=self.name)
         return action
 
@@ -1268,7 +1274,10 @@ class MrpProduction(models.Model):
         # waiting for a preproduction move before assignement
         is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
 
-        for move in (self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none') | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
+        for move in (
+            self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none')
+            | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
+        ):
             # picked + manual means the user set the quantity manually
             if move.manual_consumption and move.picked:
                 continue
@@ -1279,7 +1288,9 @@ class MrpProduction(models.Model):
 
             new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
             move._set_quantity_done(new_qty)
-            if not move.manual_consumption or pick_manual_consumption_moves:
+            if (not move.manual_consumption or pick_manual_consumption_moves) \
+                    and move.quantity \
+                    and (move.product_id != self.product_id or not move.production_id or move.product_id.tracking != 'serial'):
                 move.picked = True
 
     def _should_postpone_date_finished(self, date_finished):
@@ -1683,7 +1694,7 @@ class MrpProduction(models.Model):
         documents_by_production = {}
         for production in self:
             documents = defaultdict(list)
-            for move_raw_id in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
+            for move_raw_id in production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
                 iterate_key = self._get_document_iterate_key(move_raw_id)
                 if iterate_key:
                     document = self.env['stock.picking']._log_activity_get_documents({move_raw_id: (move_raw_id.product_uom_qty, 0)}, iterate_key, 'UP')
@@ -1691,6 +1702,8 @@ class MrpProduction(models.Model):
                         documents[key] += [value]
             if documents:
                 documents_by_production[production] = documents
+            if self.env.context.get('skip_activity'):
+                continue
             # log an activity on Parent MO if child MO is cancelled.
             finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             if finish_moves:
@@ -2196,6 +2209,8 @@ class MrpProduction(models.Model):
             elif mo_ids_always:
                 # we have to pass all the MOs that the nevers/no issue MOs are also passed to be "mark done" without a backorder
                 res = self.with_context(skip_backorder=True, mo_ids_to_backorder=mo_ids_always).button_mark_done()
+                if res is not True:
+                    res['context'] = dict(res.get('context', {}), marked_as_done=all(mo.state == 'done' for mo in self))
                 return res if self._should_return_records() else True
         return True
 

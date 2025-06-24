@@ -27,7 +27,7 @@
 # Wil Odoo, 2025
 # Melih Melik Sonmez, 2025
 # Hakan Türkün, 2025
-# Deniz Guvener, 2025
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Deniz Guvener, 2025\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,7 +113,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "(incl"
-msgstr ""
+msgstr "(dahil:"
 
 #. module: hr_expense
 #. odoo-python
@@ -131,6 +131,8 @@ msgstr "2023-08-11"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "<b>Wasting time recording your receipts?</b> Let’s try a better way."
 msgstr ""
+"<b>Makbuzlarınızı kaydederken vakit mi kaybediyorsunuz?</b> Daha iyi bir "
+"yöntem deneyelim."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -141,7 +143,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "<span class=\"o_stat_text\">Expense Report</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Gider Raporu</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -282,7 +284,7 @@ msgstr "Ödenecek Tutar"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "An"
-msgstr ""
+msgstr "Bir"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -413,7 +415,7 @@ msgstr "Ekler"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
 msgid "Attachments of expenses"
-msgstr ""
+msgstr "Gider ekleri"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_base
@@ -454,7 +456,7 @@ msgstr "İptal"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__cannot_approve_reason
 msgid "Cannot Approve Reason"
-msgstr ""
+msgstr "Sebep Onaylanmadı"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__product_ids
@@ -519,8 +521,6 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Ölçü Birimleri arası dönüştürme yalnızca aynı kategoriye sahiplerse "
-"yapılabilir. Dönüşümler oranlara göre yapılacaktır."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_kanban_view
@@ -671,9 +671,6 @@ msgid ""
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
-"Masraf belgelerini ceplerinizde taşımayın. Belgenin fotoğrafını çekin ve "
-"Odoo sizin için dijitalleştirsin. OCR ve Yapay Zeka veriyi otomatik olarak "
-"dolduracaktır."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
@@ -730,7 +727,7 @@ msgstr "Personel (geri ödenecek)"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
-msgstr ""
+msgstr "Çalışan Gider Defteri"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -745,7 +742,7 @@ msgid ""
 "Enter a name then choose a category and configure the amount of your "
 "expense."
 msgstr ""
-"Bir ad girin, ardından bir kategori seçin ve masrafınızın tutarını "
+"Bir isim girin ve ardından bir kategori seçip harcamanızın tutarını "
 "yapılandırın."
 
 #. module: hr_expense
@@ -838,12 +835,12 @@ msgstr "Masraf Formu"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Expense Report Date"
-msgstr ""
+msgstr "Gider Raporu Tarihi"
 
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_expense_sheet_img
 msgid "Expense Report Image"
-msgstr ""
+msgstr "Gider Raporu Görseli"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
@@ -904,7 +901,7 @@ msgstr "Masraf kategorileri müşterilerinize yeniden faturalandırılabilir."
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Expense entry created from: %s"
-msgstr ""
+msgstr "Gider kaydı şuradan oluşturuldu: %s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -929,7 +926,7 @@ msgstr "Masraf formu reddedildi"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense report reset to Draft"
-msgstr ""
+msgstr "Gider raporu Taslağa sıfırlandı"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -1006,7 +1003,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_base__filter_for_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
-msgstr ""
+msgstr "Gider Filtresi"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1063,7 +1060,7 @@ msgstr "Müşterilere veya tedarikçilere hediyeler"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "Go to settings"
-msgstr ""
+msgstr "Ayarlara gidin"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1205,12 +1202,12 @@ msgstr "Yevmiye Kaydı"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_delete
 msgid "Journal Entry Deleted"
-msgstr ""
+msgstr "Muhasebe Kaydı Silindi"
 
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_draft
 msgid "Journal Entry Reset to Draft"
-msgstr ""
+msgstr "Yevmiye Kaydı Taslağa Sıfırlandı"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
@@ -1226,17 +1223,17 @@ msgstr ""
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
 msgid "Journal entry deleted"
-msgstr ""
+msgstr "Muhasebe kaydı silindi"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_draft
 msgid "Journal entry reset to draft"
-msgstr ""
+msgstr "Yevmiye kaydı taslağa sıfırlandı"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_currency_rate
 msgid "Label Currency Rate"
-msgstr ""
+msgstr "Kur Etiketi"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
@@ -1306,8 +1303,8 @@ msgid ""
 "Managers can approve the report here, then an accountant can post the "
 "accounting entries."
 msgstr ""
-"Yöneticiler raporu buradan onaylayabilir, ardından bir muhasebeci yevmiye "
-"kayıtlarını onaylayabilir."
+"Yöneticiler raporu buradan onayladıktan sonra muhasebeci de muhasebe "
+"kayıtlarını girebilir."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1345,7 +1342,7 @@ msgstr "Kilometre"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
@@ -1513,7 +1510,7 @@ msgstr "Teslimat hatası olan mesaj adedi"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
 msgid "Numbers computed from your personal expenses."
-msgstr ""
+msgstr "Kişisel harcamalarınızdan hesaplanan rakamlar."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1527,8 +1524,7 @@ msgstr "Odoo"
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr ""
-"Masrafınızı oluşturduğunuzda, onu onaylayacak yöneticinize gönderiniz."
+msgstr "Gideri oluşturduğunuzda onaylanmak üzere müdürünüze iletin."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1537,8 +1533,8 @@ msgid ""
 "Once your <b>Expense Report</b> is ready, you can submit it to your manager "
 "and wait for approval."
 msgstr ""
-"<b>Masraf Raporunuz</b> hazır olduğunda, yöneticinize gönderebilir ve onay "
-"için bekleyebilirsiniz."
+"<b>Harcama Raporunuz</b> hazır olduğunda, yöneticinize iletebilir ve onay "
+"sürecini bekleyebilirsiniz."
 
 #. module: hr_expense
 #. odoo-python
@@ -1685,7 +1681,7 @@ msgstr "Ürün Açıklaması"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
 msgid "Product Has Cost"
-msgstr ""
+msgstr "Ürünün Maliyeti Var"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1727,9 +1723,6 @@ msgid ""
 "don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
 "navigate."
 msgstr ""
-"Hazır? Manuel olarak kaydedebilir veya değişiklikleri buradan atabilirsiniz."
-" <em>Kaydetmenize gerek yok</em> - Odoo gezinirken sizin için herşeyi "
-"kurtaracak."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -1751,7 +1744,7 @@ msgstr "Referans"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Refund employees via their payslips."
-msgstr ""
+msgstr "Çalışanlara bordroları üzerinden geri ödeme yapın."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1835,7 +1828,7 @@ msgstr "Satış Fiyatı"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_receipt_expense_ids
 msgid "Same Receipt Expense"
-msgstr ""
+msgstr "Aynı Fişteki Gider"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1857,8 +1850,6 @@ msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
-"Bu personelin \"Masraf\" onayından sorumlu kullanıcıyı seçiniz.\n"
-"Eğer boşsa, onay bir Yönetici veya Onaylayıcı (ayarlar/kullanıcılar kısmında belirlenen) tarafından yapılır."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
@@ -1874,11 +1865,11 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"Tek bir tıklamayla masraf oluşturmak için bu e-posta rumuzuna fişi ekte olan"
-" bir e-posta gönderin. Posta konusunun ilk sözcüğü kategorinin iç "
-"başvurusunu veya kategori adını içeriyorsa, ilgili kategori otomatik olarak "
-"ayarlanır. Masraf tutarını, masraf üzerinde de ayarlamak için postaya konu "
-"olarak yazın."
+"Bu e-posta takma adına, faturayı ekleyerek bir e-posta gönderin; gideri tek "
+"tıklamayla oluşturun. E-posta konusunun ilk kelimesi kategori iç referansı "
+"ya da kategori adını içeriyorsa, ilgili kategori otomatik olarak atanır. "
+"Gider tutarını da konu satırına yazarsanız, tutar gider kaydına otomatik "
+"olarak eklenir."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1913,13 +1904,13 @@ msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "Show missing work email employees"
-msgstr ""
+msgstr "İş e-postası eksik olan çalışanları göster"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
-msgstr ""
+msgstr "İlgili tedarikçi faturasının fatura tarihini belirtin."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1966,10 +1957,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Aktivitelere göre durum \n"
-"Gecikmiş\\: Son tarih geçmiş\n"
-"Bugün\\: Aktivite tarihi bugün\n"
-"Planlanmış\\: Gelecek Aktiviteler."
+"Faaliyetlere dayalı durum\n"
+"Gecikmiş: Son tarih geçmiş\n"
+"Bugün: Etkinlik tarihi bugün\n"
+"Planlanan: Gelecekteki faaliyetler."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2000,12 +1991,12 @@ msgstr "Ara Toplam"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Subtotal In Currency"
-msgstr ""
+msgstr "Para Birimi Cinsinden Ara Toplam"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Subtotal in currency"
-msgstr ""
+msgstr "Para birimi cinsinden ara toplam"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_tax
@@ -2081,8 +2072,6 @@ msgid ""
 "The first word of the email subject did not correspond to any category code."
 " You'll have to set the category manually on the expense."
 msgstr ""
-"E-posta konusunun ilk kelimesi herhangi bir kategori koduna karşılık "
-"gelmiyordu. Kategoriyi masraf üzerinde manuel olarak ayarlamanız gerekir."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -2091,9 +2080,6 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
-"Aşağıdaki onaylanmış giderler, bu raporun bazı giderlerinden benzer çalışan,"
-" tutar ve kategoriye sahiptir. Lütfen bu raporun kopya içermediğini "
-"doğrulayın."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
@@ -2161,7 +2147,7 @@ msgstr "İpucu: Uzaktan uygulama ile fişlerin fotoğrafını çekiniz"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Tip: try sending receipts by email"
-msgstr ""
+msgstr "İpucu: Makbuzları e-posta ile göndermeyi deneyin"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -2179,7 +2165,7 @@ msgstr "Gönderilecek"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To be Reimbursed"
-msgstr ""
+msgstr "Geri Ödenecek"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -2339,6 +2325,13 @@ msgid ""
 "allowances for mileage, per diem, accommodation"
 "                                             or meal."
 msgstr ""
+"Bir gider kalemi ürününün maliyeti 0'dan farklıysa, bu ürünü kullanan"
+"                                             kullanıcı gider tutarını "
+"değiştiremez, yalnızca miktarı değiştirebilir."
+"                                             Kilometre, günlük harcırah, "
+"konaklama veya yemek gibi sabit                                             "
+"maliyetle şirket tarafından finanse edilen gider kategorileri için 0'dan "
+"farklı bir maliyet kullanın.                                             "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2432,6 +2425,8 @@ msgid ""
 "You cannot delete only some entries linked to an expense report. All entries"
 " must be deleted at the same time."
 msgstr ""
+"Bir gider raporuna bağlı yalnızca bazı kayıtları silemezsiniz. Tüm kayıtlar "
+"aynı anda silinmelidir."
 
 #. module: hr_expense
 #. odoo-python
@@ -2440,6 +2435,8 @@ msgid ""
 "You cannot delete only some payments linked to an expense report. All "
 "payments must be deleted at the same time."
 msgstr ""
+"Bir gider raporuna bağlı yalnızca bazı ödemeleri silemezsiniz. Tüm ödemeler "
+"aynı anda silinmelidir."
 
 #. module: hr_expense
 #. odoo-python
@@ -2448,7 +2445,7 @@ msgid ""
 "You cannot do this modification since the payment is linked to an expense "
 "report."
 msgstr ""
-"Ödeme bir masraf raporuna bağlı olduğu için bu değişikliği yapamazsınız."
+"Ödeme bir gider raporuna bağlı olduğundan, bu değişikliği yapamazsınız."
 
 #. module: hr_expense
 #. odoo-python
@@ -2511,6 +2508,8 @@ msgid ""
 "You do not have the rights to add or remove any expenses on an approved or "
 "paid expense report."
 msgstr ""
+"Onaylanmış veya ödenmiş bir gider raporuna herhangi bir gider ekleme veya "
+"rapordan gider çıkarma hakkınız yoktur."
 
 #. module: hr_expense
 #. odoo-python
@@ -2531,13 +2530,13 @@ msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
 msgstr ""
-"Devam etmek için veritabanınızda Masraf olabilir seçili en az bir kategoriye"
-" sahip olmanız gerekir!"
+"Devam edebilmek için veri tabanınızda masraf olarak kaydedilebilir en az bir"
+" kategori bulunmalıdır!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense Report"
-msgstr ""
+msgstr "Gider Raporunuz"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register

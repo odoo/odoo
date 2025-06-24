@@ -463,3 +463,28 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
         ])
+
+    def test_no_component_consumption_on_lot_removal(self):
+        """
+        If we have a manufacturing order (MO) for a product tracked by lot, and we assign a lot number
+        and then unassign it, the components should not be consumed at that point.
+        """
+        quant = self.create_quant(self.raw_none, 3)
+        quant |= self.create_quant(self.raw_lot, 2)
+        quant |= self.create_quant(self.raw_serial, 1)
+        quant.action_apply_inventory()
+        mo = self.create_mo(self.mo_lot_tmpl, self.DEFAULT_TRIGGERS_COUNT)
+        mo.action_confirm()
+        mo.action_generate_serial()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 3.0, 'picked': False},
+            {'quantity': 2.0, 'picked': False},
+            {'quantity': 1.0, 'picked': False},
+        ])
+        with Form(mo) as mo_form:
+            mo_form.lot_producing_id = self.env['stock.lot']
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 0.0, 'picked': False},
+            {'quantity': 0.0, 'picked': False},
+            {'quantity': 0.0, 'picked': False},
+        ])

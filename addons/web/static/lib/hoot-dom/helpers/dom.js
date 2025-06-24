@@ -309,13 +309,18 @@ function generateStringFromLayers(layers, tabSize) {
  */
 function getFiltersDescription(modifierInfo) {
     const description = [];
-    for (const [modifier, content, count] of modifierInfo) {
+    for (const [modifier, content, count = 0] of modifierInfo) {
         const makeLabel = MODIFIER_SUFFIX_LABELS[modifier];
         const elements = plural("element", count);
         if (typeof makeLabel === "function") {
             description.push(`${count} ${elements} ${makeLabel(content)}`);
         } else {
             description.push(`${count} ${modifier} ${elements}`);
+        }
+        if (!count) {
+            // Stop at first null count to avoid situations like:
+            // "found 0 elements, including 0 visible elements, including 0 ..."
+            break;
         }
     }
     return description;
@@ -404,7 +409,7 @@ function isNodeHaving(selector, node) {
 
 /** @type {NodeFilter} */
 function isNodeHidden(node) {
-    return !isVisible(node);
+    return !isNodeVisible(node);
 }
 
 /** @type {NodeFilter} */
@@ -586,7 +591,7 @@ function parseSelector(selector) {
     /**
      * @param {string} selector
      */
-    const addToSelector = (selector) => {
+    function addToSelector(selector) {
         registerChar = false;
         const index = currentPart.length - 1;
         if (typeof currentPart[index] === "string") {
@@ -594,7 +599,7 @@ function parseSelector(selector) {
         } else {
             currentPart.push(selector);
         }
-    };
+    }
 
     /** @type {(string | ReturnType<PseudoClassPredicateBuilder>)[]} */
     const firstPart = [""];
@@ -835,22 +840,24 @@ function registerQueryMessage(filteredNodes, expectedCount) {
 
         // Next message part: initial element count (with selector if string)
         const rootModifierInfo = globalModifierInfo.shift();
-        const [rootModifier, rootContent, initialCount] = rootModifierInfo;
-        if (rootContent) {
-            lastQueryMessage += `: ${initialCount} ${rootModifier} ${JSON.stringify(rootContent)}`;
-        } else {
+        const [, rootContent, initialCount = 0] = rootModifierInfo;
+        if (typeof rootContent === "string") {
+            lastQueryMessage += `: ${initialCount} matching ${JSON.stringify(rootContent)}`;
+            if (selectorFilterDescriptors.size) {
+                // Selector filters will only be available with a custom selector
+                const selectorModifierInfo = [...selectorFilterDescriptors.values()];
+                lastQueryMessage += ` (${getFiltersDescription(selectorModifierInfo).join(" > ")})`;
+            }
+        } else if (filteredCount !== initialCount) {
+            // Do not report count if same as announced initially
             lastQueryMessage += `: ${initialCount} ${plural("element", initialCount)}`;
         }
-
-        if (selectorFilterDescriptors.size) {
-            const selectorModifierInfo = [...selectorFilterDescriptors.values()];
-            lastQueryMessage += ` (${getFiltersDescription(selectorModifierInfo).join(" > ")})`;
+        if (initialCount) {
+            // Next message parts: each count associated with each modifier
+            lastQueryMessage += getFiltersDescription(globalModifierInfo)
+                .map((part) => `, including ${part}`)
+                .join("");
         }
-
-        // Next message parts: each count associated with each modifier
-        lastQueryMessage += getFiltersDescription(globalModifierInfo)
-            .map((part) => `, including ${part}`)
-            .join("");
     } else {
         lastQueryMessage = "";
     }
@@ -870,14 +877,29 @@ function selectorError(pseudoClass, message) {
 }
 
 /**
+ * Wrapper around '_queryAll' calls to ensure global variables are properly cleaned
+ * up on any thrown error.
+ *
+ * @param {Target} target
+ * @param {QueryOptions} options
+ */
+function _guardedQueryAll(target, options) {
+    try {
+        return _queryAll(target, options);
+    } catch (error) {
+        queryAllLevel = 0;
+        shouldRegisterQueryMessage = false;
+        globalFilterDescriptors.clear();
+        selectorFilterDescriptors.clear();
+        throw error;
+    }
+}
+
+/**
  * @param {Target} target
  * @param {QueryOptions} options
  */
 function _queryAll(target, options) {
-    if (!target) {
-        return [];
-    }
-
     queryAllLevel++;
 
     const { exact, root, ...modifiers } = options || {};
@@ -887,16 +909,18 @@ function _queryAll(target, options) {
     let selector;
 
     if (typeof target === "string") {
-        nodes = root ? _queryAll(root) : [getDefaultRoot()];
+        if (target) {
+            nodes = root ? _queryAll(root) : [getDefaultRoot()];
+        }
         selector = target.trim();
         // HTMLSelectElement is iterable ¯\_(ツ)_/¯
     } else if (isIterable(target) && !isNode(target)) {
         nodes = filterUniqueNodes(target);
-    } else {
+    } else if (target) {
         nodes = filterUniqueNodes([target]);
     }
 
-    globalFilterDescriptors.set("root", ["matching", typeof target === "string" ? target : null]);
+    globalFilterDescriptors.set("root", ["", target]);
     if (selector && nodes.length) {
         if (rCustomPseudoClass.test(selector)) {
             nodes = queryWithCustomSelector(nodes, selector);
@@ -941,7 +965,7 @@ function _queryAll(target, options) {
  * @param {QueryOptions} options
  */
 function _queryOne(target, options) {
-    return _queryAll(target, { ...options, exact: 1 })[0];
+    return _guardedQueryAll(target, { ...options, exact: 1 })[0];
 }
 
 /**
@@ -951,7 +975,7 @@ function _queryOne(target, options) {
  */
 function _waitForFirst(target, options, isLast) {
     shouldRegisterQueryMessage = isLast;
-    const result = _queryAll(target, options)[0];
+    const result = _guardedQueryAll(target, options)[0];
     shouldRegisterQueryMessage = false;
     return result;
 }
@@ -963,23 +987,13 @@ function _waitForFirst(target, options, isLast) {
  */
 function _waitForNone(target, options, isLast) {
     shouldRegisterQueryMessage = isLast;
-    const result = _queryAll(target, options).length === 0;
+    const result = _guardedQueryAll(target, options).length === 0;
     shouldRegisterQueryMessage = false;
     return result;
 }
 
 class HootDomError extends Error {
     name = "HootDomError";
-
-    constructor() {
-        super(...arguments);
-
-        // Resets all internal variables as soon as an error is created
-        queryAllLevel = 0;
-        shouldRegisterQueryMessage = false;
-        globalFilterDescriptors.clear();
-        selectorFilterDescriptors.clear();
-    }
 }
 
 // Regexes
@@ -1706,7 +1720,7 @@ export function getPreviousFocusableElement(options) {
  * @returns {boolean}
  */
 export function isDisplayed(target) {
-    return _queryAll(target, { displayed: true }).length > 0;
+    return _guardedQueryAll(target, { displayed: true }).length > 0;
 }
 
 /**
@@ -1744,7 +1758,7 @@ export function isEditable(node) {
  * @returns {boolean}
  */
 export function isFocusable(target) {
-    return _queryAll(target, { focusable: true }).length > 0;
+    return _guardedQueryAll(target, { focusable: true }).length > 0;
 }
 
 /**
@@ -1768,7 +1782,7 @@ export function isInDOM(target) {
  * @returns {boolean}
  */
 export function isInViewPort(target) {
-    return _queryAll(target, { viewPort: true }).length > 0;
+    return _guardedQueryAll(target, { viewPort: true }).length > 0;
 }
 
 /**
@@ -1779,7 +1793,7 @@ export function isInViewPort(target) {
  * @returns {boolean}
  */
 export function isScrollable(target, axis) {
-    return _queryAll(target, { scrollable: axis }).length > 0;
+    return _guardedQueryAll(target, { scrollable: axis }).length > 0;
 }
 
 /**
@@ -1795,7 +1809,7 @@ export function isScrollable(target, axis) {
  * @returns {boolean}
  */
 export function isVisible(target) {
-    return _queryAll(target, { visible: true }).length > 0;
+    return _guardedQueryAll(target, { visible: true }).length > 0;
 }
 
 /**
@@ -1812,7 +1826,7 @@ export function isVisible(target) {
  *  matches(buttonEl, ":contains(Submit)");
  */
 export function matches(target, selector) {
-    return elementsMatch(_queryAll(target), selector);
+    return elementsMatch(_guardedQueryAll(target), selector);
 }
 
 /**
@@ -1938,7 +1952,7 @@ export function observe(target, callback) {
  */
 export function queryAll(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _queryAll(target, options);
+    return _guardedQueryAll(target, options);
 }
 
 /**
@@ -1951,7 +1965,7 @@ export function queryAll(target, options) {
  * @returns {string[]}
  */
 export function queryAllAttributes(target, attribute, options) {
-    return _queryAll(target, options).map((node) => getNodeAttribute(node, attribute));
+    return _guardedQueryAll(target, options).map((node) => getNodeAttribute(node, attribute));
 }
 
 /**
@@ -1964,7 +1978,7 @@ export function queryAllAttributes(target, attribute, options) {
  * @returns {any[]}
  */
 export function queryAllProperties(target, property, options) {
-    return _queryAll(target, options).map((node) => node[property]);
+    return _guardedQueryAll(target, options).map((node) => node[property]);
 }
 
 /**
@@ -1982,7 +1996,7 @@ export function queryAllProperties(target, property, options) {
  */
 export function queryAllRects(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _queryAll(target, options).map(getNodeRect);
+    return _guardedQueryAll(target, options).map(getNodeRect);
 }
 
 /**
@@ -1995,7 +2009,7 @@ export function queryAllRects(target, options) {
  */
 export function queryAllTexts(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _queryAll(target, options).map((node) => getNodeText(node, options));
+    return _guardedQueryAll(target, options).map((node) => getNodeText(node, options));
 }
 
 /**
@@ -2008,7 +2022,7 @@ export function queryAllTexts(target, options) {
  */
 export function queryAllValues(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _queryAll(target, options).map(getNodeValue);
+    return _guardedQueryAll(target, options).map(getNodeValue);
 }
 
 /**
@@ -2049,7 +2063,7 @@ export function queryAttribute(target, attribute, options) {
  */
 export function queryFirst(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _queryAll(target, options)[0] || null;
+    return _guardedQueryAll(target, options)[0] || null;
 }
 
 /**

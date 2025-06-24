@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-06-13 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -9518,6 +9518,7 @@ msgstr "Widget de chat"
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
 #: code:addons/website/static/src/components/dialog/seo.xml:0
+#: code:addons/website/static/src/js/editor/html_editor.js:0
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #: code:addons/website/static/src/xml/website.background.video.xml:0
 msgid "Loading..."
@@ -11947,7 +11948,7 @@ msgstr "Punchy Image"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__domain_punycode
 msgid "Punycode Domain"
-msgstr ""
+msgstr "Punycode Domain"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -14904,6 +14905,12 @@ msgstr ""
 "    "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/html_editor.xml:0
+msgid "Type your URL"
+msgstr "Digite seu URL"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__name_slugified
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -14923,6 +14930,12 @@ msgstr "URL de"
 msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr ""
 "O URL correspondente a esses filtros será reescrito usando o URL base da CDN"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "URL must not start with '#'."
+msgstr "O URL não deve começar com '#'."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
@@ -16734,6 +16747,12 @@ msgstr "uma loja online"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "and"
 msgstr "e"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "base URL of 'URL to' should not be same as 'URL from'."
+msgstr "O URL de base do \"URL to\" não deve ser igual ao \"URL from\"."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

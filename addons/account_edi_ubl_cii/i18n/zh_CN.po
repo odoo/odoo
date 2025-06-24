@@ -5,16 +5,17 @@
 # Translators:
 # 何彬 <vnsoft.he@gmail.com>, 2024
 # kunqing shi, 2025
-# Chloe Wang, 2025
 # Wil Odoo, 2025
+# Raymond Yu <cl_yu@hotmail.com>, 2025
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-06-06 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,11 +27,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
-"%s should have a KVK or OIN number: the Peppol e-address (EAS) should be "
-"'0106' or '0190'."
-msgstr ""
-"%s should have a KVK or OIN number: the Peppol e-address (EAS) should be "
-"'0106' or '0190'."
+"%s should have a KVK or OIN number set in Company ID field or as Peppol "
+"e-address (EAS code 0106 or 0190)."
+msgstr "%s 应在公司 ID 字段中设置 KVK 或 OIN 编号，或作为 Peppol 电子地址（EAS 代码 0106 或 0190）。"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -52,6 +51,11 @@ msgstr "检查到%s的付款。"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
 msgstr "A-NZ BIS Billing 3.0"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__as
+msgid "AS2 exchange"
+msgstr "AS2 交换"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
@@ -315,6 +319,11 @@ msgid "Each invoice line should have at least one tax."
 msgstr "Each invoice line should have at least one tax."
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__em
+msgid "Electronic mail"
+msgstr "电子邮件"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Errors occurred while creating the EDI document (format: %s):"
@@ -345,6 +354,11 @@ msgstr "Factur-X（CII）"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/XRechnung CII 2.2.0"
 msgstr "Factur-x/XRechnung CII 2.2.0"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__au
+msgid "File Transfer Protocol"
+msgstr "文件传输协议（FTP）"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0037
@@ -578,6 +592,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0192
 msgid "Norway Org.nr."
 msgstr "Norway Org.nr."
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__an
+msgid "O.F.T.P. (ODETTE File Transfer Protocol)"
+msgstr "O.F.T.P.（ODETTE 文件传输协议）"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -877,6 +896,11 @@ msgid ""
 msgstr ""
 "When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
 "each invoice line should be greater than 0."
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__aq
+msgid "X.400 address for mail text"
+msgstr "X.400 邮件文本地址"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

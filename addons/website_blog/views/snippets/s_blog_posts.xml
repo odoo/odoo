@@ -36,7 +36,7 @@
             <t t-call="website.record_cover">
                 <t t-set="_record" t-value="record"/>
                 <t t-set="use_filters" t-value="True"/>
-                <t t-set="additionnal_classes" t-value="'h-100 w-100 bg-600 position-absolute'"/>
+                <t t-set="additionnal_classes" t-value="'h-100 w-100 bg-600 position-absolute o_snippet_not_selectable'"/>
 
                 <div class="s_blog_post_big_picture_infos position-absolute top-0 start-0 w-100 h-100 text-white">
                     <div class="s_blog_posts_post_cover_header d-flex flex-column justify-content-end w-100">
@@ -63,7 +63,7 @@
                         <div class="s_blog_posts_post_cover h-100">
                             <t t-call="website.record_cover">
                                 <t t-set="_record" t-value="record"/>
-                                <t t-set="additionnal_classes" t-value="'h-100 rounded-3 overflow-hidden'"/>
+                                <t t-set="additionnal_classes" t-value="'h-100 rounded-3 overflow-hidden o_snippet_not_selectable'"/>
                             </t>
                         </div>
                     </a>
@@ -95,7 +95,7 @@
                 <div class="s_blog_posts_post_cover o_not_editable card-img-top ratio ratio-16x9">
                     <t t-call="website.record_cover">
                         <t t-set="_record" t-value="record"/>
-                        <t t-set="additionnal_classes" t-value="'position-absolute w-100 h-100 bg-600'"/>
+                        <t t-set="additionnal_classes" t-value="'position-absolute w-100 h-100 bg-600 o_snippet_not_selectable'"/>
                     </t>
                 </div>
                 <div class="card-body">

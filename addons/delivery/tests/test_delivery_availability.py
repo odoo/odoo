@@ -127,18 +127,10 @@ class TestDeliveryAvailability(DeliveryCommon, SaleCommon):
         self.assertFalse(self.carrier.id in choose_delivery_carrier.available_carrier_ids.ids, "Order lines should be converted to the default UoM before checking volume")
 
     def test_04_check_must_have_tag(self):
-        self.carrier.write({
-            'must_have_tag_ids': [self.must_have_tag.id],
-        })
-
-        self.sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'partner_invoice_id': self.partner.id,
-            'order_line': [Command.create({
-                'product_id': self.product.id,
-                'product_uom_qty': 1,
-            })],
-        })
+        self.carrier.must_have_tag_ids = [
+            Command.link(self.must_have_tag.id),
+            Command.link(self.must_have_tag.copy({'name': "Alt Must Have"}).id),
+        ]
 
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
             'default_order_id': self.sale_order.id,

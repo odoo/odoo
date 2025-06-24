@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-06-13 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -9593,6 +9593,7 @@ msgstr "Livechat-Widget"
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
 #: code:addons/website/static/src/components/dialog/seo.xml:0
+#: code:addons/website/static/src/js/editor/html_editor.js:0
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #: code:addons/website/static/src/xml/website.background.video.xml:0
 msgid "Loading..."
@@ -9611,7 +9612,7 @@ msgstr "Logo"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "Logo of MyCompany"
-msgstr "Logo von MyCompany"
+msgstr "Logo von MeinUnternehmen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10284,7 +10285,7 @@ msgstr "Meine Website"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "MyCompany"
-msgstr "MyCompany"
+msgstr "MeinUnternehmen"
 
 #. module: website
 #. odoo-javascript
@@ -11271,7 +11272,7 @@ msgstr "Außerhalb, zentriert"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Over The Content"
-msgstr "Über den Inhalt"
+msgstr "Über dem Inhalt"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -12018,7 +12019,7 @@ msgstr "Aussagekrätiges Bild"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__domain_punycode
 msgid "Punycode Domain"
-msgstr ""
+msgstr "Domain von Punycode"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -14993,6 +14994,12 @@ msgstr ""
 "    "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/html_editor.xml:0
+msgid "Type your URL"
+msgstr "Geben Sie Ihre URL ein"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__name_slugified
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -15013,6 +15020,12 @@ msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr ""
 "URL, die über diese Filter erkannt werden, werden mit der CDN-Basis-URL "
 "überschrieben"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "URL must not start with '#'."
+msgstr "URL muss mit „#“ beginnen."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
@@ -16853,6 +16866,12 @@ msgid "and"
 msgstr "und"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "base URL of 'URL to' should not be same as 'URL from'."
+msgstr "Basis-URL der „URL zu“ sollte nicht dieselbe sein wie „URL von“."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
 msgstr ""
@@ -17197,8 +17216,8 @@ msgstr ""
 "vier Abschnitte, Spalte, Raster, Teilung, Aufteilung, Segmente, Bilder, "
 "Illustration, Medien, Fotos, Kacheln, Anordnung, Galerie, Bilder-Raster, "
 "gemischt, Sammlung, Stapelung, visuelles Raster, Schaufenster, visuelle "
-"Elemente, Portfolio, Miniaturansichten, interagieren, Handlungsaufforderung,"
-" CTA, Schaufenster"
+"Elemente, Portfolio, Vorschaubilder, interagieren, Handlungsaufforderung, "
+"CTA, Schaufenster"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
@@ -17223,7 +17242,7 @@ msgid ""
 "thumbnails, slideshow"
 msgstr ""
 "Galerie, Karussell, Bilder, Fotos, Album, Präsentation, visuell, Portfolio, "
-"Miniaturbilder, Diashow"
+"Vorschaubilder, Diashow"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -17318,7 +17337,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 msgid "hello@mycompany.com"
-msgstr "hello@mycompany.com"
+msgstr "hello@meinunternehmen.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

@@ -91,12 +91,11 @@ export class ChatWindow extends Component {
     }
 
     get style() {
-        const maxHeight = !this.ui.isSmall ? "max-height: 95vh;" : "";
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
         const visibleOffset = this.ui.isSmall ? 0 : this.props.right;
         const oppositeFrom = offsetFrom === "right" ? "left" : "right";
-        return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto; ${maxHeight}`;
+        return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto;`;
     }
 
     onKeydown(ev) {

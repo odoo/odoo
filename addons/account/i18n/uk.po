@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-06-20 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -214,6 +214,18 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"%(tax_account)s (%(account_name)s) should be an account of type "
+"\"%(receivable)s\" or \"%(payable)s\" with both options "
+"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+msgstr ""
+"%(tax_account)s (%(account_name)s) має бути рахунок з типом "
+"\"%(receivable)s\"або \"%(payable)s\" з двома опціями "
+"\"%(allow_reconciliation)s\" та включеним \"%(non_trade)s\"."
 
 #. module: account
 #. odoo-python
@@ -1371,7 +1383,7 @@ msgstr "<span>Попередження: цей документ може бут�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Адреса доставки</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5025,6 +5037,8 @@ msgid "Create Automatic Entries"
 msgstr "Створити автоматичні записи"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_bill
 msgid "Create Bill"
 msgstr "Створити рахунок"
@@ -15418,6 +15432,14 @@ msgid ""
 msgstr "Поєднання моделі та типу референсу в журналі не реалізовано"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+"Комерційного партнера оновлено для всіх пов'язаних бухгалтерських проводок."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Компанія, якій належить цей рядок розповсюдження."
@@ -18215,9 +18237,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "You can't create payments for entries belonging to different branches."
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
 msgstr ""
-"Ви не можете створювати платежі для записів, що належать до різних гілок."
 
 #. module: account
 #. odoo-python
@@ -18697,6 +18720,16 @@ msgid ""
 msgstr ""
 "Ви не можете встановити валюту на цьому обліковому записі, оскільки вона вже"
 " має деякі записи журналу, які мають іншу іноземну валюту."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
+"Ви не можете встановити партнера як адресу для виставлення рахунків іншого, "
+"якщо в нього інша адреса %(vat_label)s."
 
 #. module: account
 #. odoo-python

@@ -13,6 +13,7 @@ import {
     getCell,
     getCellContent,
     getCellFormula,
+    getCellFormattedValue,
     getCells,
     getCellValue,
     getEvaluatedCell,
@@ -76,6 +77,34 @@ test("Boolean fields are correctly formatted", async () => {
     const { model } = await createSpreadsheetWithList({ columns: ["bar"] });
     expect(getCellValue(model, "A2")).toBe(true);
     expect(getCellValue(model, "A5")).toBe(false);
+});
+
+test("Numeric/monetary fields are correctly loaded and displayed", async () => {
+    Partner._records.push({
+        id: 5,
+        probability: 0,
+        field_with_array_agg: 0,
+        currency_id: 2,
+        pognon: 0,
+    })
+    const { model } = await createSpreadsheetWithList({
+        columns: ["pognon", "probability", "field_with_array_agg"],
+    });
+    expect(getCellFormattedValue(model, "A2")).toBe("74.40€");
+    expect(getCellFormattedValue(model, "A3")).toBe("$74.80");
+    expect(getCellFormattedValue(model, "A4")).toBe("4.00€");
+    expect(getCellFormattedValue(model, "A5")).toBe("$1,000.00");
+    expect(getCellFormattedValue(model, "A6")).toBe("$0.00");
+    expect(getCellFormattedValue(model, "B2")).toBe("10.00");
+    expect(getCellFormattedValue(model, "B3")).toBe("11.00");
+    expect(getCellFormattedValue(model, "B4")).toBe("95.00");
+    expect(getCellFormattedValue(model, "B5")).toBe("15.00");
+    expect(getCellFormattedValue(model, "B6")).toBe("0.00");
+    expect(getCellFormattedValue(model, "C2")).toBe("1");
+    expect(getCellFormattedValue(model, "C3")).toBe("2");
+    expect(getCellFormattedValue(model, "C4")).toBe("3");
+    expect(getCellFormattedValue(model, "C5")).toBe("4");
+    expect(getCellFormattedValue(model, "C6")).toBe("0");
 });
 
 test("properties field displays property display names", async () => {
@@ -958,7 +987,7 @@ test("can import (export) action xml id", async function () {
                 domain: [],
                 model: "partner",
                 orderBy: [],
-                actionXmlId: "spreadsheet.test_action"
+                actionXmlId: "spreadsheet.test_action",
             },
         },
     };

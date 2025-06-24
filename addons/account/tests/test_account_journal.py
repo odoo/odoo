@@ -8,6 +8,7 @@ from odoo.addons.account.models.account_payment_method import AccountPaymentMeth
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import Form, tagged
 from odoo.exceptions import UserError, ValidationError
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -361,3 +362,39 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         })
         self.assertEqual(journal.alias_name, f'test-journal-{company_name}')
         self.assertEqual(journal2.alias_name, f'test-journal-{company_name}-b')
+
+    def test_use_default_account_from_journal(self):
+        """
+        Test that the autobalance uses the default account id of the journal
+        """
+        autobalance_account = self.env['account.account'].create({
+            'name': 'Autobalance Account',
+            'account_type': 'income',
+            'code': 'A',
+        })
+        journal = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'general',
+            'code': 'B',
+            'default_account_id': autobalance_account.id,
+        })
+
+        entry = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': journal.id,
+            'line_ids': [
+                Command.create({
+                    'debit': 100.0,
+                    'credit': 0.0,
+                    'tax_ids': (self.company_data['default_tax_sale']),
+                    'account_id': self.company_data['default_account_revenue'].id
+                })
+            ]
+        })
+
+        entry.action_post()
+        self.assertRecordValues(entry.line_ids, [
+            {'balance': 100.0, 'account_id': self.company_data['default_account_revenue'].id},
+            {'balance': 15.0, 'account_id': self.company_data['default_account_tax_sale'].id},
+            {'balance': -115.0, 'account_id': autobalance_account.id},
+        ])

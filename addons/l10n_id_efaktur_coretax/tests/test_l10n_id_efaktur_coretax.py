@@ -299,7 +299,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <TrxCode>01</TrxCode>
             </xpath>
             <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>100000.0</OtherTaxBase>
+                <OtherTaxBase>100000.00</OtherTaxBase>
             </xpath>
             <xpath expr="//VATRate" position="replace">
                 <VATRate>11.0</VATRate>
@@ -346,13 +346,13 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <FacilityStamp>TD.01105</FacilityStamp>
             </xpath>
             <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>100000.0</OtherTaxBase>
+                <OtherTaxBase>100000.00</OtherTaxBase>
             </xpath>
             <xpath expr="//VATRate" position="replace">
                 <VATRate>11.0</VATRate>
             </xpath>
             <xpath expr="//VAT" position="replace">
-                <VAT>11000.0</VAT>
+                <VAT>11000.00</VAT>
             </xpath>
             <xpath expr="//CustomDoc" position="replace">
                 <CustomDoc>custom doc</CustomDoc>
@@ -424,15 +424,15 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                         <Code>000000</Code>
                         <Name>product_a</Name>
                         <Unit>UM.0018</Unit>
-                        <Price>100000.0</Price>
+                        <Price>100000.00</Price>
                         <Qty>1.0</Qty>
-                        <TotalDiscount>0.0</TotalDiscount>
-                        <TaxBase>100000.0</TaxBase>
-                        <OtherTaxBase>100000.0</OtherTaxBase>
+                        <TotalDiscount>0.00</TotalDiscount>
+                        <TaxBase>100000.00</TaxBase>
+                        <OtherTaxBase>100000.00</OtherTaxBase>
                         <VATRate>11.0</VATRate>
-                        <VAT>11000.0</VAT>
+                        <VAT>11000.00</VAT>
                         <STLGRate>0.0</STLGRate>
-                        <STLG>0.0</STLG>
+                        <STLG>0.00</STLG>
                         </GoodService>
                     </ListOfGoodService>
                 </TaxInvoice>
@@ -476,15 +476,15 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                     <Code>000000</Code>
                     <Name>Product B</Name>
                     <Unit>UM.0018</Unit>
-                    <Price>100000.0</Price>
+                    <Price>100000.00</Price>
                     <Qty>1.0</Qty>
-                    <TotalDiscount>0.0</TotalDiscount>
-                    <TaxBase>100000.0</TaxBase>
+                    <TotalDiscount>0.00</TotalDiscount>
+                    <TaxBase>100000.00</TaxBase>
                     <OtherTaxBase>91666.67</OtherTaxBase>
                     <VATRate>12</VATRate>
-                    <VAT>11000.0</VAT>
+                    <VAT>11000.00</VAT>
                     <STLGRate>0.0</STLGRate>
-                    <STLG>0.0</STLG>
+                    <STLG>0.00</STLG>
                 </GoodService>
             </xpath>
             '''
@@ -527,7 +527,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <TrxCode>01</TrxCode>
             </xpath>
             <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>100000.0</OtherTaxBase>
+                <OtherTaxBase>100000.00</OtherTaxBase>
             </xpath>
             <xpath expr="//VATRate" position="replace">
                 <VATRate>11.0</VATRate>
@@ -536,11 +536,10 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <STLGRate>20.0</STLGRate>
             </xpath>
             <xpath expr="//STLG" position="replace">
-                <STLG>20000.0</STLG>
+                <STLG>20000.00</STLG>
             </xpath>
             '''
         )
-
         self.assertXmlTreeEqual(result_tree, expected_tree)
 
     def test_invoice_user_main_contact(self):
@@ -605,7 +604,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             etree.fromstring(self.sample_xml),
             '''
             <xpath expr="//Price" position="replace">
-                <Price>100000.0</Price>
+                <Price>100000.00</Price>
             </xpath>
             '''
         )
@@ -634,19 +633,19 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             etree.fromstring(self.sample_xml),
             '''
             <xpath expr="//Price" position="replace">
-                <Price>100000.0</Price>
+                <Price>100000.00</Price>
             </xpath>
             <xpath expr="//TotalDiscount" position="replace">
-                <TotalDiscount>10000.0</TotalDiscount>
+                <TotalDiscount>10000.00</TotalDiscount>
             </xpath>
             <xpath expr="//TaxBase" position="replace">
-                <TaxBase>90000.0</TaxBase>
+                <TaxBase>90000.00</TaxBase>
             </xpath>
             <xpath expr="//OtherTaxBase" position="replace">
-                <OtherTaxBase>82500.0</OtherTaxBase>
+                <OtherTaxBase>82500.00</OtherTaxBase>
             </xpath>
             <xpath expr="//VAT" position="replace">
-                <VAT>9900.0</VAT>
+                <VAT>9900.00</VAT>
             </xpath>
             '''
         )

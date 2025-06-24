@@ -70,7 +70,7 @@ class StockPickingType(models.Model):
     def _compute_warehouse_id(self):
         super()._compute_warehouse_id()
         for picking_type in self:
-            if picking_type.default_location_src_id.usage == 'supplier' and picking_type.default_location_dest_id.usage == 'customer':
+            if picking_type.code == 'dropship':
                 picking_type.warehouse_id = False
 
     @api.depends('code')
@@ -98,3 +98,15 @@ class StockLot(models.Model):
             ('location_dest_id.usage', '=', 'customer'),
             ('location_id.usage', '=', 'supplier'),
         ]])
+
+
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    def _get_layer_candidates(self):
+        layer_candidates = super()._get_layer_candidates()
+        if self._is_dropshipped():
+            layer_candidates = layer_candidates.filtered(lambda svl: svl.quantity < 0)
+        elif self._is_dropshipped_returned():
+            layer_candidates = layer_candidates.filtered(lambda svl: svl.quantity > 0)
+        return layer_candidates

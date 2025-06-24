@@ -3,7 +3,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { FileSelector } from "@html_editor/main/media/media_dialog/file_selector";
 import { uploadService } from "@html_editor/main/media/media_dialog/upload_progress_toast/upload_service";
 import { HtmlComposerMessageField } from "@mail/views/web/fields/html_composer_message_field/html_composer_message_field";
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     manuallyDispatchProgrammaticEvent,
     press,
@@ -11,6 +11,7 @@ import {
     queryAllTexts,
     queryOne,
     waitFor,
+    waitForNone,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import {
@@ -21,8 +22,9 @@ import {
     mountViewInDialog,
     onRpc,
     patchWithCleanup,
+    serverState,
 } from "@web/../tests/web_test_helpers";
-import { defineMailModels, mailModels } from "../mail_test_helpers";
+import { defineMailModels, mailModels, openFormView, start } from "../mail_test_helpers";
 
 // Need this hack to use the arch in mountView(...)
 mailModels.MailComposeMessage._views = {};
@@ -86,9 +88,7 @@ test("media dialog: upload", async function () {
         return attachment;
     });
 
-    onRpc("/web/dataset/call_kw/ir.attachment/generate_access_token", () => {
-        return ["129a52e1-6bf2-470a-830e-8e368b022e13"];
-    });
+    onRpc("ir.attachment", "generate_access_token", () => ["129a52e1-6bf2-470a-830e-8e368b022e13"]);
     await mountView({
         type: "form",
         resId,
@@ -195,4 +195,91 @@ test("mention a channel", async () => {
     await press("a");
     await animationFrame();
     expect.verifySteps(["get_mention_suggestions: a"]);
+});
+
+describe("Remove attachments", () => {
+    beforeEach(() => {
+        mailModels.MailComposeMessage._views = {
+            "form,false": `
+            <form js_class="mail_composer_form">
+                <field name="body" type="html" widget="html_composer_message"/>
+                <field name="attachment_ids" widget="mail_composer_attachment_list"/>
+            </form>`,
+        };
+    });
+
+    test("should remove file from html editor if removed from attachment list", async () => {
+        mockService("uploadLocalFiles", {
+            async upload() {
+                expect.step("File Uploaded");
+                return [{ id: 1, name: "file.txt", public: true, checksum: "123" }];
+            },
+        });
+        await start();
+        await openFormView("res.partner", serverState.partnerId);
+        await contains("button:contains('Log note')").click();
+        await contains("button[title='Full composer']").click();
+        await waitFor(".odoo-editor-editable");
+        const anchorNode = queryOne(".odoo-editor-editable div.o-paragraph");
+        setSelection({ anchorNode, anchorOffset: 0 });
+        await insertText(htmlEditor, "/file");
+        await press("Enter");
+        await expect.waitForSteps(["File Uploaded"]);
+        await waitFor("[name='attachment_ids'] a:contains('file.txt')");
+        await waitFor(".odoo-editor-editable .o_file_box:has(a:contains('file.txt'))");
+        await contains("[name='attachment_ids'] button:has(i.fa-times)").click();
+        await waitForNone("[name='attachment_ids'] a:contains('file.txt')");
+        await waitForNone(".odoo-editor-editable .o_file_box:has(a:contains('file.txt'))");
+    });
+
+    test("should remove image from html editor if removed from attachment list", async () => {
+        patchWithCleanup(FileSelector.prototype, {
+            async onUploaded() {
+                await super.onUploaded(...arguments);
+                expect.step("Image Uploaded");
+            },
+        });
+        onRpc("/html_editor/attachment/add_data", () => ({
+            id: 1,
+            name: "test.jpg",
+            description: false,
+            mimetype: "image/jpeg",
+            checksum: "7951a43bbfb08fd742224ada280913d1897b89ab",
+            url: false,
+            type: "binary",
+            res_id: 0,
+            res_model: "mail.compose.message",
+            public: false,
+            access_token: false,
+            image_src: "/web/image/1-a0e63e61/test.jpg",
+            image_width: 1,
+            image_height: 1,
+            original_id: false,
+        }));
+        onRpc("ir.attachment", "generate_access_token", () => [
+            "129a52e1-6bf2-470a-830e-8e368b022e13",
+        ]);
+
+        await start();
+        await openFormView("res.partner", serverState.partnerId);
+        await contains("button:contains('Log note')").click();
+        await contains("button[title='Full composer']").click();
+        await waitFor(".odoo-editor-editable");
+        const anchorNode = queryOne(".odoo-editor-editable div.o-paragraph");
+        setSelection({ anchorNode, anchorOffset: 0 });
+        await insertText(htmlEditor, "/image");
+        await press("Enter");
+        await animationFrame();
+        const fileInput = queryOne(".o_select_media_dialog input.d-none.o_file_input");
+        Object.defineProperty(fileInput, "files", {
+            value: [new File([], "test.jpg", { type: "image/jpeg" })],
+        });
+        manuallyDispatchProgrammaticEvent(fileInput, "change");
+        await expect.waitForSteps(["Image Uploaded"]);
+        await waitFor("[name='attachment_ids'] a:contains('test.jpg')");
+        await waitFor(".odoo-editor-editable img[data-attachment-id='1']");
+        await contains("[name='attachment_ids'] button:has(i.fa-times)").click();
+        await waitForNone("[name='attachment_ids'] a:contains('test.jpg')");
+        await waitForNone(".odoo-editor-editable img[data-attachment-id='1']");
+    });
 });

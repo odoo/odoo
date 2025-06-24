@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-06-20 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
@@ -234,6 +234,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"%(tax_account)s (%(account_name)s) should be an account of type "
+"\"%(receivable)s\" or \"%(payable)s\" with both options "
+"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
 
 #. module: account
@@ -4294,7 +4303,7 @@ msgstr "Касс: Үлдэгдэл"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Catalog"
-msgstr ""
+msgstr "Катлог"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__category
@@ -5021,6 +5030,8 @@ msgid "Create Automatic Entries"
 msgstr "Автомат гүйлгээ үүсгэх"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_bill
 msgid "Create Bill"
 msgstr "Нэхэмжлэл үүсгэх"
@@ -15396,6 +15407,13 @@ msgstr ""
 "байна."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr ""
@@ -18201,7 +18219,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "You can't create payments for entries belonging to different branches."
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
 msgstr ""
 
 #. module: account
@@ -18674,6 +18694,14 @@ msgid ""
 msgstr ""
 "Энэ дансанд аль хэдийнээ ялгаатай валютын гүйлгээнүүд бүртгэгдсэн тул та уг "
 "дансанд ямар нэг валют тохируулах боломжгүй."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
 
 #. module: account
 #. odoo-python

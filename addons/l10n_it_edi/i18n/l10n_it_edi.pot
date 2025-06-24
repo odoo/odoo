@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-06 11:37+0000\n"
-"PO-Revision-Date: 2025-01-06 11:37+0000\n"
+"POT-Creation-Date: 2025-06-12 15:48+0000\n"
+"PO-Revision-Date: 2025-06-12 15:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -59,6 +59,14 @@ msgid ""
 "                                Fattura Elettronica mode\n"
 "                            </span>\n"
 "                            <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">\n"
+"                        This branch shares the same VAT number and Codice Fiscale as its parent company. Select the parent company to configure the EDI settings.\n"
+"                    </span>"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -563,6 +571,11 @@ msgid "PEC e-mail"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__company_parent_id
+msgid "Parent Company"
+msgstr ""
+
+#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Partner not found, useful informations from XML file:"
@@ -805,6 +818,14 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The amount_total %(current_total)s is different than PrezzoTotale "
+"%(expected_total)s for '%(move_name)s'"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_config_settings.py:0
 msgid ""
 "The company has already registered with the service as 'Test' or 'Official',"
@@ -1022,6 +1043,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Unknown error"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__use_root_proxy_user
+msgid "Use Root Proxy User"
 msgstr ""
 
 #. module: l10n_it_edi

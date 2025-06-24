@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-06-06 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -24,11 +24,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
-"%s should have a KVK or OIN number: the Peppol e-address (EAS) should be "
-"'0106' or '0190'."
+"%s should have a KVK or OIN number set in Company ID field or as Peppol "
+"e-address (EAS code 0106 or 0190)."
 msgstr ""
-"%s should have a KVK or OIN number: the Peppol e-address (EAS) should be "
-"'0106' or '0190'."
+"%s deve ter um número KVK ou OIN definido no campo ID da empresa ou como "
+"endereço eletrônico da Peppol (código EAS 0106 ou 0190)."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -50,6 +50,11 @@ msgstr "Um pagamento no valor de %s foi detectado."
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
 msgstr "A-NZ BIS Billing 3.0"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__as
+msgid "AS2 exchange"
+msgstr "Troca de AS2"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
@@ -316,6 +321,11 @@ msgid "Each invoice line should have at least one tax."
 msgstr "Cada linha da fatura deve ter pelo menos um imposto."
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__em
+msgid "Electronic mail"
+msgstr "Correio eletrônico"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Errors occurred while creating the EDI document (format: %s):"
@@ -346,6 +356,11 @@ msgstr "Factur-X (CII)"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/XRechnung CII 2.2.0"
 msgstr "Factur-x/XRechnung CII 2.2.0"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__au
+msgid "File Transfer Protocol"
+msgstr "Protocolo de transferência de arquivos"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0037
@@ -583,6 +598,11 @@ msgid "Norway Org.nr."
 msgstr "Org.nr. Noruega"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__an
+msgid "O.F.T.P. (ODETTE File Transfer Protocol)"
+msgstr "O.F.T.P. (Protocolo de Transferência de Arquivos ODETTE)"
+
+#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "Odoo"
 msgstr "Odoo"
@@ -601,7 +621,7 @@ msgstr "Endpoint Peppol"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Peppol ID"
-msgstr "Peppol ID"
+msgstr "ID Peppol"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_eas
@@ -638,7 +658,7 @@ msgstr "VAT Portugal"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
 msgid "Report Action"
-msgstr "Ação de relatório"
+msgstr "Reportar Ação"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
@@ -881,6 +901,11 @@ msgid ""
 msgstr ""
 "Quando se aplica o Imposto Indireto Geral das Ilhas Canárias (IGIC), a taxa "
 "de imposto em cada linha da fatura deve ser maior que 0."
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__aq
+msgid "X.400 address for mail text"
+msgstr "Endereço X.400 para mensagem de e-mail"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

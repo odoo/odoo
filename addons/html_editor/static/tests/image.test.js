@@ -4,7 +4,8 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setContent } from "./_helpers/selection";
-import { undo } from "./_helpers/user_actions";
+import { insertText, undo } from "./_helpers/user_actions";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -102,12 +103,10 @@ test("can undo a shape", async () => {
     await waitFor(".o-we-toolbar");
 
     await click(".o-we-toolbar button[name='shape_rounded']");
-    await animationFrame();
-    expect(".o-we-toolbar button[name='shape_rounded']").toHaveClass("active");
+    await expectElementCount(".o-we-toolbar button[name='shape_rounded'].active", 1);
     expect("img").toHaveClass("rounded");
     undo(editor);
-    await animationFrame();
-    expect(".o-we-toolbar button[name='shape_rounded']").not.toHaveClass("active");
+    await expectElementCount(".o-we-toolbar button[name='shape_rounded'].active", 0);
     expect("img").not.toHaveClass("rounded");
 });
 
@@ -329,6 +328,37 @@ test("Image transformation disappear on escape", async () => {
     expect(transfoContainers.length).toBe(0);
 });
 
+test("Image transformation disappears on backspace/delete", async () => {
+    const { editor } = await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    click("img.test-image");
+    await expectElementCount(".o-we-toolbar", 1);
+    await contains(".o-we-toolbar div[name='image_transform'] button").click();
+    await expectElementCount(".transfo-container", 1);
+    press("backspace");
+    await expectElementCount(".transfo-container", 0);
+    undo(editor);
+    click("img.test-image");
+    await expectElementCount(".o-we-toolbar", 1);
+    await contains(".o-we-toolbar div[name='image_transform'] button").click();
+    await expectElementCount(".transfo-container", 1);
+    press("delete");
+    await expectElementCount(".transfo-container", 0);
+});
+
+test("Image transformation disappears on character key press", async () => {
+    const { editor } = await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    click("img.test-image");
+    await expectElementCount(".o-we-toolbar", 1);
+    await contains(".o-we-toolbar div[name='image_transform'] button").click();
+    await expectElementCount(".transfo-container", 1);
+    insertText(editor, "a");
+    await expectElementCount(".transfo-container", 0);
+});
+
 test("Image transformation scalers position", async () => {
     await setupEditor(`
         <p><img class="img-fluid test-image" src="${base64Img}"></p>
@@ -356,11 +386,10 @@ test("Image transformation scalers position", async () => {
         }
     };
     click("img.test-image");
-    await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar").toHaveCount(1);
+    await expectElementCount(".o-we-toolbar", 1);
     click(".o-we-toolbar div[name='image_transform'] button");
     await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(1);
+    await expectElementCount(".o-we-toolbar", 1);
     expect(".transfo-container").toHaveCount(1);
     checkScalersPositions(queryOne("img"));
     // resize by 25% update the position of the scalers
@@ -506,7 +535,7 @@ test("can remove the link of an image", async () => {
     await click("button[name='unlink']");
     await animationFrame();
     expect(img.parentElement.tagName).toBe("DIV");
-    expect(".o-we-linkpopover").toHaveCount(0);
+    await expectElementCount(".o-we-linkpopover", 0);
 });
 
 test("can undo link removing of an image", async () => {

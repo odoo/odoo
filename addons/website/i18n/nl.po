@@ -7,16 +7,16 @@
 # Martin Trigaux, 2024
 # Jolien De Paepe, 2024
 # Wil Odoo, 2025
-# Manon Rondou, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-06-13 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -270,7 +270,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&amp;lt;head&amp;gt; and &amp;lt;/body&amp;gt;"
-msgstr "&amp;lt;hoofd&amp;gt; en &amp;lt;/lichaam&amp;gt;"
+msgstr "&amp;lt;hoofd&amp;gt; en &amp;lt;/body&amp;gt;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -2714,7 +2714,7 @@ msgstr "Externe websites toevoegen"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Add groups in the \"Access Rights\" tab below."
-msgstr "Voeg groepen toe in het onderstaand tabblad \"Toegangsrechter\"."
+msgstr "Voeg groepen toe in het onderstaand tabblad \"Toegangsrechten\"."
 
 #. module: website
 #. odoo-python
@@ -4641,7 +4641,7 @@ msgstr "Contactinfo"
 #: model_terms:ir.ui.view,arch_db:website.s_image_hexagonal
 #: model_terms:ir.ui.view,arch_db:website.s_text_block_h2_contact
 msgid "Contact Us"
-msgstr "Ons contacteren"
+msgstr "Contact"
 
 #. module: website
 #. odoo-python
@@ -7659,7 +7659,7 @@ msgstr "Hoofdtitels"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 1"
-msgstr "Kop 1"
+msgstr "Koppen 1"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -8305,7 +8305,7 @@ msgstr "In menu"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "In Place"
-msgstr "In situ"
+msgstr "Op zijn plaats"
 
 #. module: website
 #. odoo-javascript
@@ -9532,6 +9532,7 @@ msgstr "Livechat widget"
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
 #: code:addons/website/static/src/components/dialog/seo.xml:0
+#: code:addons/website/static/src/js/editor/html_editor.js:0
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #: code:addons/website/static/src/xml/website.background.video.xml:0
 msgid "Loading..."
@@ -11950,7 +11951,7 @@ msgstr "Pittig beeld"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__domain_punycode
 msgid "Punycode Domain"
-msgstr ""
+msgstr "Punycode-domein"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -12794,12 +12795,12 @@ msgstr "Meer zien <i class=\"fa fa-long-arrow-right\" role=\"img\"/>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references_grid
 msgid "See our case studies"
-msgstr "Bekijk onze casestudies"
+msgstr "Bekijk onze casestudy's"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references
 msgid "See our case studies <i class=\"fa fa-long-arrow-right ms-2\"/>"
-msgstr "Bekijk onze casestudies <i class=\"fa fa-long-arrow-right ms-2\"/>"
+msgstr "Bekijk onze casestudy's <i class=\"fa fa-long-arrow-right ms-2\"/>"
 
 #. module: website
 #. odoo-javascript
@@ -14915,6 +14916,12 @@ msgstr ""
 "   "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/html_editor.xml:0
+msgid "Type your URL"
+msgstr "Typ je URL"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__name_slugified
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -14935,6 +14942,12 @@ msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr ""
 "URL's die overeenkomen met die filters worden herschreven gebruikmakend van "
 "de CDN basis URL"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "URL must not start with '#'."
+msgstr "URL mag niet beginnen met '#'."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
@@ -16760,6 +16773,12 @@ msgid "and"
 msgstr "en"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "base URL of 'URL to' should not be same as 'URL from'."
+msgstr "basis-URL van 'URL naar' mag niet hetzelfde zijn als 'URL van'."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
 msgstr ""
@@ -16971,7 +16990,7 @@ msgid ""
 "customers, clients, sponsors, partners, supporters, case-studies, "
 "collaborators, associations, associates, testimonials, endorsements"
 msgstr ""
-"klanten, klanten, sponsors, partners, supporters, casestudies, medewerkers, "
+"klanten, klanten, sponsors, partners, supporters, casestudy's, medewerkers, "
 "verenigingen, geassocieerden, getuigenissen, goedkeuringen"
 
 #. module: website
@@ -16980,7 +16999,7 @@ msgid ""
 "customers, clients, sponsors, partners, supporters, case-studies, "
 "collaborators, associations, associates, testimonials, endorsements, social"
 msgstr ""
-"klanten, klanten, sponsors, partners, supporters, casestudies, medewerkers, "
+"klanten, klanten, sponsors, partners, supporters, casestudy's, medewerkers, "
 "verenigingen, geassocieerden, getuigenissen, steunbetuigingen, sociale "
 "media, enz"
 

@@ -1135,7 +1135,7 @@ class AccountChartTemplate(models.AbstractModel):
                 "match_partner": True,
             },
             "reconcile_bill": {
-                "name": 'Create Bill',
+                "name": _('Create Bill'),
                 "sequence": 5,
                 "rule_type": 'writeoff_button',
                 'counterpart_type': 'purchase',

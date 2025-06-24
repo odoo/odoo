@@ -91,6 +91,17 @@ export class ReorderDialog extends Component {
     }
 
     async loadProductCombinationInfo(product) {
+        for (const comboItem of product.selected_combo_items) {
+            comboItem.combinationInfo = await rpc("/website_sale/get_combination_info", {
+                product_template_id: comboItem.product_template_id,
+                product_id: comboItem.product_id,
+                combination: comboItem.combination,
+                add_qty: comboItem.qty,
+                context: {
+                    website_sale_no_images: true,
+                },
+            });
+        }
         product.combinationInfo = await rpc("/website_sale/get_combination_info", {
             product_template_id: product.product_template_id,
             product_id: product.product_id,
@@ -155,13 +166,21 @@ export class ReorderDialog extends Component {
             if (!product.add_to_cart_allowed) {
                 continue;
             }
-            await rpc("/shop/cart/update_json", {
-                product_id: product.product_id,
-                add_qty: product.qty,
-                no_variant_attribute_value_ids: product.no_variant_attribute_value_ids,
-                product_custom_attribute_values: JSON.stringify(product.product_custom_attribute_values),
-                display: false,
-            });
+            if (product.selected_combo_items.length) {
+                await rpc("/website_sale/combo_configurator/update_cart", {
+                    combo_product_id: product.product_id,
+                    quantity: product.qty,
+                    selected_combo_items: product.selected_combo_items,
+                });
+            } else {
+                await rpc("/shop/cart/update_json", {
+                    product_id: product.product_id,
+                    add_qty: product.qty,
+                    no_variant_attribute_value_ids: product.no_variant_attribute_value_ids,
+                    product_custom_attribute_values: JSON.stringify(product.product_custom_attribute_values),
+                    display: false,
+                });
+            }
         }
     }
 }
