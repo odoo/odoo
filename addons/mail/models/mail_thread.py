@@ -1365,8 +1365,7 @@ class MailThread(models.AbstractModel):
             # switch to odoobot for all incoming message creation
             # to have a high-privilege archived user so real_author_id is correctly computed
             thread_root = thread.with_user(self.env.ref('base.user_root'))
-            # replies to internal message are considered as notes, but parent message
-            # author is added in recipients to ensure they are notified of a private answer
+            # replies to internal message are considered as notes, otherwise they are comments
             parent_message = False
             if message_dict.get('parent_id'):
                 parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
@@ -1374,10 +1373,17 @@ class MailThread(models.AbstractModel):
             if not subtype_id:
                 if message_dict.get('is_internal'):
                     subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-                    if parent_message and parent_message.author_id:
-                        partner_ids = [parent_message.author_id.id]
                 else:
                     subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+            # additional recipients
+            # - internal: ping parent message author to ensure they are notified of a private answer
+            # - from a customer: ping parent message author to be sure he is notified (will be removed
+            # if already follower or notified through incoming_email_to/cc)
+            if parent_message and parent_message.author_id:
+                if message_dict.get('is_internal'):
+                    partner_ids = [parent_message.author_id.id]
+                elif parent_message.author_id.partner_share:
+                    partner_ids = [parent_message.author_id.id]
 
             post_params = dict(
                 incoming_email_cc=message_dict.pop('cc_filtered', False),
