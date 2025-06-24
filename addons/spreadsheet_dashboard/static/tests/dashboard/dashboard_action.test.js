@@ -359,7 +359,7 @@ test("Global filter with same id is not shared between dashboards", async functi
     expect(".o_searchview_facet").toHaveCount(0);
     await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
 
-    await contains(".o-dashboard-search-dialog a.dropdown-toggle").click();
+    await contains(".o-filters-search-dialog a.dropdown-toggle").click();
     await contains(".o-dropdown-item").click();
 
     await contains(".o-autocomplete--input.o_input").click();
@@ -399,11 +399,11 @@ test("Can add a new global filter from the search bar", async function () {
     await createSpreadsheetDashboard({ serverData });
 
     await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
-    expect(".o-dashboard-search-dialog a.dropdown-toggle").toHaveText("Add filter");
-    await contains(".o-dashboard-search-dialog a.dropdown-toggle").click();
+    expect(".o-filters-search-dialog a.dropdown-toggle").toHaveText("Add filter");
+    await contains(".o-filters-search-dialog a.dropdown-toggle").click();
     await contains(".o-dropdown-item").click();
 
-    expect(".o-dashboard-search-dialog a.dropdown-toggle").toHaveCount(0);
+    expect(".o-filters-search-dialog a.dropdown-toggle").toHaveCount(0);
 
     expect(".o-autocomplete--input.o_input").toHaveCount(1);
     expect(".o-autocomplete--input.o_input").toHaveValue("");
@@ -459,7 +459,7 @@ test("Can open the dialog by clicking on a facet", async function () {
 
     expect(".o_searchview_facet").toHaveCount(1);
     await contains(".o_searchview_facet").click();
-    expect(".o-dashboard-search-dialog").toHaveCount(1);
+    expect(".o-filters-search-dialog").toHaveCount(1);
 });
 
 test("Can open the dialog by clicking on the search bar", async function () {
@@ -478,7 +478,7 @@ test("Can open the dialog by clicking on the search bar", async function () {
     await createSpreadsheetDashboard({ serverData });
 
     await contains(".o_searchview").click();
-    expect(".o-dashboard-search-dialog").toHaveCount(1);
+    expect(".o-filters-search-dialog").toHaveCount(1);
 });
 
 test("Changes of global filters are not dispatched while inside the dialog", async function () {
@@ -498,7 +498,7 @@ test("Changes of global filters are not dispatched while inside the dialog", asy
     expect(model.getters.getGlobalFilterValue("1")).toBe(undefined);
 
     await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
-    await contains(".o-dashboard-search-dialog a.dropdown-toggle").click();
+    await contains(".o-filters-search-dialog a.dropdown-toggle").click();
     await contains(".o-dropdown-item").click();
 
     await contains(".o-autocomplete--input.o_input").click();
