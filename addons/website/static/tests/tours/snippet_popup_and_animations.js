@@ -36,6 +36,22 @@ const setOnScrollAnim = function () {
     ];
 };
 
+const waitForAnimationDelayBelow = function(element, timeout=500, interval=50) {
+    return new Promise((resolve, reject) => {
+        const start = luxon.DateTime.now().toMillis();
+        function check() {
+            const animationDelay = parseFloat(element.style.animationDelay) || 0;
+            if (Math.round(animationDelay) == 0) {
+                return resolve();
+            } else if (luxon.DateTime.now().toMillis() - start > timeout) {
+                return reject(new Error('Timeout: animationDelay did not finish'));
+            }
+            setTimeout(check, interval);
+        }
+        check();
+    });
+}
+
 registerWebsitePreviewTour("snippet_popup_and_animations", {
     url: "/",
     edition: true,
@@ -127,12 +143,12 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Wait until the column is no longer animated/visible.",
-        trigger: ":iframe .s_popup .s_three_columns .row > :last-child:not(.o_animating):hidden",
+        trigger: ":iframe .s_popup .s_three_columns .row > :last-child:not(.o_animating)",
         async run() {
-            // If the column has been animated successfully, the animation delay
-            // should be set to approximately zero when it is not visible.
-            if (Math.round(parseFloat(this.anchor.style.animationDelay)) !== 0) {
-                throw new Error("The scroll animation in the modal did not end properly.");
+            try {
+                await waitForAnimationDelayBelow(this.anchor);
+            } catch (error) {
+                throw new Error(`The scroll animation in the modal did not end properly: ${error.message}`);
             }
         },
     },
