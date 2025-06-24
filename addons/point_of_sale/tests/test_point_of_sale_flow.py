@@ -1293,3 +1293,57 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
         order.action_pos_order_cancel()
         self.assertEqual(order.state, 'cancel')
+
+    def test_order_invoiced_after_session_closed(self):
+        """Test that an order can be invoiced after its session is closed.
+        Scenario:
+            1. Create a POS session and two orders:
+            - Order A: Not to be invoiced immediately.
+            - Order B: To be invoiced immediately.
+            2. Close the POS session.
+            3. Ensure:
+            - Both orders have `reversed_move_ids` unset.
+            4. Assign a partner to Order A and invoice it AFTER the session is closed.
+            - Confirm that `reversed_move_ids` is set accordingly.
+        """
+        order_data = {
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+                {'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 30},
+            ],
+        }
+
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+
+        order_no_invoice, _ = self.create_backend_pos_order({**order_data, 'to_invoice': False, 'partner_id': False})
+        order_invoiced_immediate, _ = self.create_backend_pos_order({**order_data, 'to_invoice': True, 'partner_id': self.partner.id})
+
+        total_cash_payment = sum(
+            current_session.mapped('order_ids.payment_ids')
+            .filtered(lambda p: p.payment_method_id.type == 'cash')
+            .mapped('amount')
+        )
+        current_session.post_closing_cash_details(total_cash_payment)
+        current_session.close_session_from_ui()
+
+        # Ensure the session is closed
+        self.assertEqual(current_session.state, 'closed')
+
+        # Initial state: no reversal moves for both orders
+        self.assertFalse(order_no_invoice.reversed_move_ids,
+                        "Order with 'to_invoice' = False should have no reversal moves after session is closed.")
+        self.assertFalse(order_invoiced_immediate.reversed_move_ids,
+                        "Immediate invoiced order should have no reversal moves after session is closed.")
+
+        # Now, set a partner and invoice the order after the session is closed
+        order_no_invoice.partner_id = self.partner
+        order_no_invoice.action_pos_order_invoice()
+
+        # Confirm that reversal move(s) are now set
+        reversal_moves = self.env['account.move'].search([('reversed_pos_order_id', '=', order_no_invoice.id)])
+        self.assertEqual(order_no_invoice.reversed_move_ids, reversal_moves,
+                        "Reversal move should be set for the order invoiced after the session is closed.")
