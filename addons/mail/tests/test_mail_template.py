@@ -390,7 +390,7 @@ class TestMailTemplateReset(MailCommon):
         # pylint: disable=no-value-for-parameter
         convert_file(self.env, module='mail',
                      filename=filepath,
-                     idref={}, mode='init', noupdate=False, kind='test')
+                     idref={}, mode='init', noupdate=False)
 
     def test_mail_template_reset(self):
         self._load('mail', 'tests/test_mail_template.xml')

@@ -375,7 +375,6 @@ class HrJob(models.Model):
             "data/scenarios/hr_recruitment_scenario.xml",
             None,
             mode="init",
-            kind="data",
         )
 
         return {

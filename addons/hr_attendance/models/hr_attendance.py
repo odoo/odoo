@@ -516,7 +516,7 @@ class HrAttendance(models.Model):
             return
         self.env['hr.employee']._load_scenario()
         # Load employees, schedules, departments and partners
-        convert.convert_file(self.env, 'hr_attendance', 'data/scenarios/hr_attendance_scenario.xml', None, mode='init', kind='data')
+        convert.convert_file(self.env, 'hr_attendance', 'data/scenarios/hr_attendance_scenario.xml', None, mode='init')
 
         employee_sj = self.env.ref('hr.employee_sj')
         employee_mw = self.env.ref('hr.employee_mw')
