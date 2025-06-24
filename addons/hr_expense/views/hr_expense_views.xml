@@ -481,6 +481,7 @@
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}"
                                 groups="base.group_multi_company"/>
                         <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <filter string="Expense Group" name="group" domain="[]" context="{'group_by': 'expense_group_ids'}"/>
                     </group>
                 </search>
             </field>
@@ -651,6 +652,27 @@
             </field>
         </record>
 
+        <record id="hr_expense_group" model="ir.actions.act_window">
+            <field name="name">Expense Groups</field>
+            <field name="res_model">hr.expense.group</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">No expense group found. Let's create one!</p>
+            </field>
+        </record>
+
+        <record id="hr_expense_group_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">list</field>
+            <field name="act_window_id" ref="hr_expense_group"/>
+        </record>
+
+        <record id="hr_expense_group_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="hr_expense_group"/>
+        </record>
+
         <menuitem id="menu_hr_expense_root" name="Expenses" sequence="230" web_icon="hr_expense,static/description/icon.png"/>
 
         <menuitem id="menu_hr_expense_my_expenses" name="My Expenses" sequence="1" parent="menu_hr_expense_root" groups="base.group_user"/>
@@ -668,6 +690,9 @@
             sequence="100"/>
         <menuitem id="menu_hr_product" name="Expense Categories" parent="menu_hr_expense_configuration"
             action="hr_expense_product" groups="hr_expense.group_hr_expense_manager" sequence="10"/>
+
+        <menuitem id="menu_hr_expense_group" name="Expense Groups" parent="menu_hr_expense_configuration"
+            action="hr_expense_group" sequence="11"/>
 
         <menuitem id="menu_hr_expense_account_employee_expenses" name="Employee Expenses" sequence="22"
                   parent="account.menu_finance_payables" groups="hr_expense.group_hr_expense_user"

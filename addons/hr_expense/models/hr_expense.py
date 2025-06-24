@@ -258,6 +258,12 @@ class HrExpense(models.Model):
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
         help="An expense account is expected",
     )
+    expense_group_ids = fields.Many2many(
+        comodel_name='hr.expense.group',
+        string="Expense Groups",
+        help="Groups of expenses",
+    )
+
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
         relation='expense_tax',
