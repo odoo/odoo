@@ -383,8 +383,8 @@ class BaseString(Field[str | typing.Literal[False]]):
         for record, new_translation in zip(records.with_context(prefetch_langs=True), new_translations_list, strict=True):
             self._update_cache(record, new_translation, dirty=True)
 
-    def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
-        sql_field = super().to_sql(model, alias, flush)
+    def to_sql(self, model: BaseModel, alias: str) -> SQL:
+        sql_field = super().to_sql(model, alias)
         if self.translate and not model.env.context.get('prefetch_langs'):
             langs = self.get_translation_fallback_langs(model.env)
             sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]

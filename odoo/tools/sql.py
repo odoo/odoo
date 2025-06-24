@@ -83,10 +83,10 @@ class SQL:
 
     __code: str
     __params: tuple
-    __to_flush: tuple
+    __to_flush: tuple[Field, ...]
 
     # pylint: disable=keyword-arg-before-vararg
-    def __init__(self, code: (str | SQL) = "", /, *args, to_flush: (Field | None) = None, **kwargs):
+    def __init__(self, code: (str | SQL) = "", /, *args, to_flush: (Field | Iterable[Field] | None) = None, **kwargs):
         if isinstance(code, SQL):
             if args or kwargs or to_flush:
                 raise TypeError("SQL() unexpected arguments when code has type SQL")
@@ -105,7 +105,12 @@ class SQL:
             code % ()  # check that code does not contain %s
             self.__code = code
             self.__params = ()
-            self.__to_flush = () if to_flush is None else (to_flush,)
+            if to_flush is None:
+                self.__to_flush = ()
+            elif hasattr(to_flush, '__iter__'):
+                self.__to_flush = tuple(to_flush)
+            else:
+                self.__to_flush = (to_flush,)
             return
 
         code_list = []
@@ -120,7 +125,10 @@ class SQL:
                 code_list.append("%s")
                 params_list.append(arg)
         if to_flush is not None:
-            to_flush_list.append(to_flush)
+            if hasattr(to_flush, '__iter__'):
+                to_flush_list.extend(to_flush)
+            else:
+                to_flush_list.append(to_flush)
 
         self.__code = code.replace('%%', '%%%%') % tuple(code_list)
         self.__params = tuple(params_list)
