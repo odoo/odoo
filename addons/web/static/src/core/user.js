@@ -219,7 +219,7 @@ export function _makeUser(session) {
                 for (const companyId of companyIds) {
                     if (!newCompanyIds.includes(companyId)) {
                         newCompanyIds.push(companyId);
-                        addCompanies(allowedCompanies[companyId].child_ids);
+                        addCompanies(allowedCompanies.find((c) => c.id === companyId).child_ids);
                     }
                 }
             }
