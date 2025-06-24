@@ -12,6 +12,7 @@ class AccountMove(models.Model):
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
     pos_refunded_invoice_ids = fields.Many2many('account.move', 'refunded_invoices', 'refund_account_move', 'original_account_move')
     reversed_pos_order_id = fields.Many2one('pos.order', string="Reversed POS Order",
+        index='btree_not_null',
         help="The pos order that was reverted after closing the session to create an invoice for it.")
     pos_session_ids = fields.One2many("pos.session", "move_id", "POS Sessions")
     pos_order_count = fields.Integer(compute="_compute_origin_pos_count", string='POS Order Count')

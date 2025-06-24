@@ -353,6 +353,12 @@ class PosOrder(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to_invoice', 'To Invoice'),
     ], string='Invoice Status', compute='_compute_invoice_status')
+    reversed_move_ids = fields.One2many(
+        'account.move',
+        'reversed_pos_order_id',
+        string="Reversal Account Moves",
+        help="List of account moves created when this POS order was reversed and invoiced after session close."
+    )
 
     @api.depends('account_move')
     def _compute_invoice_status(self):
@@ -878,6 +884,7 @@ class PosOrder(models.Model):
             aml_vals_list_per_nature['tax'].append({
                 **tax_line,
                 'tax_tag_invert': tax_rep.document_type == 'invoice',
+                'display_type': 'tax',
             })
             total_amount_currency += tax_line['amount_currency']
             total_balance += tax_line['balance']
@@ -969,6 +976,7 @@ class PosOrder(models.Model):
                     'currency_id': self.currency_id.id,
                     'amount_currency': payment_id.amount,
                     'balance': self.session_id._amount_converter(payment_id.amount, self.date_order, False),
+                    'display_type': 'payment_term',
                 })
 
         return aml_vals_list_per_nature
