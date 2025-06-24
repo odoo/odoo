@@ -1,5 +1,4 @@
 import { Editor } from "@html_editor/editor";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 import {
     Component,
     EventBus,
@@ -33,6 +32,7 @@ export class Builder extends Component {
     static props = {
         closeEditor: { type: Function },
         reloadEditor: { type: Function, optional: true },
+        onEditorLoad: { type: Function, optional: true },
         snippetsName: { type: String },
         toggleMobile: { type: Function },
         overlayRef: { type: Function },
@@ -43,6 +43,7 @@ export class Builder extends Component {
         getThemeTab: { type: Function, optional: true },
     };
     static defaultProps = {
+        onEditorLoad: () => {},
         config: {},
     };
 
@@ -114,19 +115,6 @@ export class Builder extends Component {
 
                     // disable the toolbar for images and icons
                 },
-                getRecordInfo: (editableEl) => {
-                    if (!editableEl) {
-                        editableEl = closestElement(
-                            this.editor.shared.selection.getEditableSelection().anchorNode
-                        );
-                    }
-                    return {
-                        resModel: editableEl.dataset["oeModel"],
-                        resId: editableEl.dataset["oeId"],
-                        field: editableEl.dataset["oeField"],
-                        type: editableEl.dataset["oeType"],
-                    };
-                },
                 localOverlayContainers: {
                     key: this.env.localOverlayContainerKey,
                     ref: this.props.overlayRef,
@@ -141,6 +129,7 @@ export class Builder extends Component {
             },
             this.env.services
         );
+        this.props.onEditorLoad(this.editor);
 
         this.snippetModel = useState(useService("html_builder.snippets"));
         this.snippetModel.registerBeforeReload(this.save.bind(this));
