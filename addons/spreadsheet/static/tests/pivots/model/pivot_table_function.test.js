@@ -398,3 +398,20 @@ test("can hide a measure", async function () {
         ["Total",                   32,         null],
     ]);
 });
+
+test("can have a dimension with a field of a relational field", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    updatePivot(model, pivotId, {
+        rows: [{ fieldName: "product_id.display_name", order: "asc" }],
+        columns: [],
+    });
+    await animationFrame();
+    // prettier-ignore
+    expect(getEvaluatedGrid(model, "A1:B5")).toEqual([
+        ["Partner Pivot", "Total"],
+        ["",              "Probability"],
+        ["xpad",          121],
+        ["xphone",        10],
+        ["Total",         131],
+    ]);
+});
