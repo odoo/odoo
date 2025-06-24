@@ -156,7 +156,7 @@ class ResPartner(models.Model):
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 
-    def iap_partner_autocomplete_add_tags(self, unspsc_codes):
+    def iap_partner_autocomplete_get_tag_ids(self, unspsc_codes):
         """Called by JS to create the activity tags from the UNSPSC codes"""
         # If the UNSPSC module is installed, we might have a translation, so let's use it
         if self.env['ir.module.module']._get('product_unspsc').state == 'installed':
