@@ -99,6 +99,24 @@ class TestEventSlotRegistration(TestEventSlotsCommon):
                 expected,
             )
 
+    def test_search_event_end_date(self):
+        """ Searching on the registration 'event_end_date' field should correctly search
+        on the slot end datetime if the registration is linked to a slot,
+        else on the event end date.
+        """
+        for search_to_date, expected in [
+            (self.reference_end, self.test_reg_no_slot + self.test_reg_slot_1 + self.test_reg_slot_2),
+            (self.reference_beg + timedelta(hours=12), self.test_reg_slot_1 + self.test_reg_slot_2),
+            (self.reference_beg + timedelta(hours=6), self.test_reg_slot_1),
+        ]:
+            self.assertEqual(
+                self.env["event.registration"].search([
+                    ('event_id', 'in', [self.test_event_no_slot.id, self.test_event.id]),
+                    ('event_end_date', '<=', search_to_date),
+                ]),
+                expected,
+            )
+
 
 @tagged('event_slot', 'event_seats')
 class TestEventSlotSeats(TestEventSlotsCommon):
