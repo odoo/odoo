@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 
 export class ImageGalleryEdit extends Interaction {
     static selector = ".s_image_gallery";
+    static selectorNotHas = "img, a.o_link_readonly, span.fa.object-fit-cover, div.media_iframe_video";
     dynamicContent = {
         ".o_empty_gallery_alert": {
             "t-on-click": this.onAddImage.bind(this),
