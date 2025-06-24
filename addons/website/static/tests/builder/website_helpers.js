@@ -237,7 +237,7 @@ export async function setupWebsiteBuilder(
 
 async function openBuilderSidebar(editAssetsLoaded) {
     // The next line allow us to await asynchronous fetches and cache them before it is used
-    await Promise.all([getWebsiteSnippets(), loadBundle("html_builder.assets")]);
+    await Promise.all([getWebsiteSnippets(), loadBundle("website.website_builder_assets")]);
 
     await click(".o-website-btn-custo-primary");
     await editAssetsLoaded;

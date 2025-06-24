@@ -153,7 +153,7 @@
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/scss/kanban_record.scss',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_sale/static/src/js/website_sale_form_editor.js',
             'website_sale/static/src/website_builder/**/*',
         ],

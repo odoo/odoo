@@ -50,7 +50,7 @@ The automatic assignment is figured from the weight of partner levels and the ge
         'web.assets_frontend': [
             'website_crm_partner_assign/static/src/interactions/**/*',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_crm_partner_assign/static/src/website_builder/**/*',
         ],
         'web.assets_tests': [

@@ -33,7 +33,7 @@ Finally, the module comes with an option to display an attribute summary table i
         'web.assets_tests': [
             'website_sale_comparison/static/tests/**/*',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_sale_comparison/static/src/website_builder/**/*',
         ],
     },

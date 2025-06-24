@@ -57,7 +57,7 @@
         'web.assets_tests': [
             'website_event_track/static/tests/tours/*.js',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_event_track/static/src/website_builder/**/*',
         ],
     },
