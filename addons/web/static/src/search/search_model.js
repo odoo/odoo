@@ -1430,11 +1430,14 @@ export class SearchModel extends EventBus {
         const searchDomain = this.searchDomain;
         await Promise.all(
             categories.map(async (category) => {
-                const result = await this.orm.call(
-                    this.resModel,
-                    "search_panel_select_range",
-                    [category.fieldName],
-                    {
+                const result = await this.orm
+                    .cached({
+                        onUpdate: (result) => {
+                            this._createCategoryTree(category.id, result);
+                            this.trigger("update");
+                        },
+                    })
+                    .call(this.resModel, "search_panel_select_range", [category.fieldName], {
                         category_domain: this._getCategoryDomain(category.id),
                         context: this.globalContext,
                         enable_counters: category.enableCounters,
@@ -1443,8 +1446,7 @@ export class SearchModel extends EventBus {
                         hierarchize: category.hierarchize,
                         limit: category.limit,
                         search_domain: searchDomain,
-                    }
-                );
+                    });
                 this._createCategoryTree(category.id, result);
             })
         );
@@ -1465,11 +1467,14 @@ export class SearchModel extends EventBus {
         const searchDomain = this.searchDomain;
         await Promise.all(
             filters.map(async (filter) => {
-                const result = await this.orm.call(
-                    this.resModel,
-                    "search_panel_select_multi_range",
-                    [filter.fieldName],
-                    {
+                const result = await this.orm
+                    .cached({
+                        onUpdate: (result) => {
+                            this._createFilterTree(filter.id, result);
+                            this.trigger("update");
+                        },
+                    })
+                    .call(this.resModel, "search_panel_select_multi_range", [filter.fieldName], {
                         category_domain: categoryDomain,
                         comodel_domain: new Domain(filter.domain).toList(evalContext),
                         context: this.globalContext,
@@ -1480,8 +1485,7 @@ export class SearchModel extends EventBus {
                         group_domain: this._getGroupDomain(filter),
                         limit: filter.limit,
                         search_domain: searchDomain,
-                    }
-                );
+                    });
                 this._createFilterTree(filter.id, result);
             })
         );

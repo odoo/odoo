@@ -276,6 +276,125 @@ test("basic rendering of a component with search panel", async () => {
     expect(component.domain).toEqual([]); // initial domain (does not need the sections to be loaded)
 });
 
+test("cache search panel", async () => {
+    let spSelectRangeDef;
+    let spSelectMultiRangeDef;
+    onRpc("search_panel_select_range", () => spSelectRangeDef);
+    onRpc("search_panel_select_multi_range", () => spSelectMultiRangeDef);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(2);
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n2",
+        "agrolait\n2",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "gold\n1",
+        "silver\n3",
+    ]);
+
+    spSelectRangeDef = new Deferred();
+    spSelectMultiRangeDef = new Deferred();
+
+    // Go to a form view
+    await getService("action").doAction(2);
+    expect(`.o_form_view`).toHaveCount(1);
+
+    // Came back to search panel
+    await getService("action").doAction(1);
+    // Search Panel is rendered with cached data !
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(2);
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n2",
+        "agrolait\n2",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "gold\n1",
+        "silver\n3",
+    ]);
+
+    spSelectRangeDef.resolve({
+        parent_field: "parent_id",
+        values: [
+            {
+                id: 3,
+                display_name: "asustek",
+                parent_id: false,
+                __count: 1,
+            },
+            {
+                id: 5,
+                display_name: "agrolait",
+                parent_id: false,
+                __count: 2,
+            },
+            {
+                id: 7,
+                display_name: "plop",
+                parent_id: false,
+                __count: 4,
+            },
+        ],
+    });
+    await animationFrame();
+
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(2);
+
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n1",
+        "agrolait\n2",
+        "plop\n4",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "gold\n1",
+        "silver\n3",
+    ]);
+
+    spSelectMultiRangeDef.resolve({
+        values: [
+            {
+                id: 6,
+                display_name: "gold",
+                __count: 5,
+            },
+            {
+                id: 7,
+                display_name: "silver",
+                __count: 3,
+            },
+            {
+                id: 9,
+                display_name: "plop",
+                __count: 2,
+            },
+        ],
+    });
+    await animationFrame();
+
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_section`).toHaveCount(2);
+
+    expect(queryAllTexts`.o_search_panel_section:eq(0) .o_search_panel_category_value`).toEqual([
+        "All",
+        "asustek\n1",
+        "agrolait\n2",
+        "plop\n4",
+    ]);
+    expect(queryAllTexts`.o_search_panel_section:eq(1) .o_search_panel_filter_value`).toEqual([
+        "gold\n5",
+        "silver\n3",
+        "plop\n2",
+    ]);
+});
+
 test("sections with custom icon and color", async () => {
     Partner._views = {
         search: /* xml */ `
@@ -1722,8 +1841,10 @@ test("search panel filters are kept between switch views", async () => {
         [], // initial search_read
         [["category_id", "in", [6]]], // kanban, after selecting the gold filter
         [["category_id", "in", [6]]], // list
+        [["category_id", "in", [6]]], // Cached
         [["category_id", "in", [6, 7]]], // list, after selecting the silver filter
         [["category_id", "in", [6, 7]]], // kanban
+        [["category_id", "in", [6, 7]]], // Cached
         [["category_id", "in", [6, 7]]], // kanban, after switching back from form view
     ]);
 });
