@@ -443,7 +443,7 @@ class expression(object):
 
         # normalize and prepare the expression for parsing
         domain = orm_domains.Domain(domain)
-        domain = domain.optimize(self.root_model, full=True)
+        domain = domain.optimize_full(self.root_model)
         self.expression = domain
 
         # this object handles all the joins
