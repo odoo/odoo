@@ -29,7 +29,7 @@ import {
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { createElementWithContent, htmlJoin } from "@web/core/utils/html";
+import { createElementWithContent } from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { escape, isEmail } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
@@ -642,9 +642,9 @@ export class Composer extends Component {
      */
     formatDefaultBodyForFullComposer(defaultBody, signature = "") {
         if (signature) {
-            defaultBody = htmlJoin(defaultBody, markup("<br>"), signature);
+            defaultBody = markup`${defaultBody}<br>${signature}`;
         }
-        return htmlJoin(markup("<div>"), defaultBody, markup("</div>")); // as to not wrap in <p> by html_sanitize
+        return markup`<div>${defaultBody}</div>`; // as to not wrap in <p> by html_sanitize
     }
 
     clear() {

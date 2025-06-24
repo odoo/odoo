@@ -1,10 +1,8 @@
-import { htmlEscape as owlHtmlEscape, markup } from "@odoo/owl";
+import { htmlEscape, markup } from "@odoo/owl";
 
 import { formatList } from "../l10n/utils";
 
 const Markup = markup().constructor;
-
-export const htmlEscape = owlHtmlEscape;
 
 /**
  * Safely creates a Document fragment from content. If content was flagged as safe HTML using
@@ -103,9 +101,9 @@ export function htmlReplaceAll(content, search, replacement) {
  * @param {Array<string|ReturnType<markup>>} args
  * @returns {ReturnType<markup>}
  */
-export function htmlJoin(...args) {
-    // markup: args are escaped (or markup), join is considered safe
-    return markup(args.map((arg) => htmlEscape(arg)).join(""));
+export function htmlJoin(list, separator = "") {
+    // markup: args and separator are escaped (or markup), join is considered safe
+    return markup(list.map((arg) => htmlEscape(arg)).join(htmlEscape(separator)));
 }
 
 /**
