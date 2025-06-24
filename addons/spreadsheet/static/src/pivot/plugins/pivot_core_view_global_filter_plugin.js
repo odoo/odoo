@@ -194,7 +194,7 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
                         break;
                     case "text":
                         if (currentValue !== value) {
-                            transformedValue = value;
+                            transformedValue = [value];
                         }
                         break;
                 }
