@@ -414,7 +414,7 @@ function usePrepareAction(getAllActions) {
     return onReady;
 }
 
-function useReloadAction(getAllActions) {
+export function useReloadAction(getAllActions) {
     const env = useEnv();
     const getAction = env.editor.shared.builderActions.getAction;
     let reload = false;
@@ -651,7 +651,7 @@ export function useClickableBuilderComponent() {
         onReady,
     };
 }
-function useOperationWithReload(callApply, reload) {
+export function useOperationWithReload(callApply, reload) {
     const env = useEnv();
     return async (...args) => {
         const { editingElement } = args[0][0];

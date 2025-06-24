@@ -3,6 +3,8 @@
 
 import odoo.tests
 import re
+from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.website_blog.controllers.main import WebsiteBlog
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from datetime import datetime
 
@@ -161,3 +163,37 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         homepage_view_arch_misconfigured = re.sub(r'data-filter-id="\d+"', 'data-filter-id="-1"', homepage_view.arch_db)
         homepage_view.write({'arch': homepage_view_arch_misconfigured})
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_misconfigured', login='admin')
+
+    def test_next_article(self):
+        blog1, blog2 = self.env['blog.blog'].create([
+            {'name': "Blog Test"},
+            {'name': "Blog Test 2", 'website_id': self.env['website'].create({'name': 'Website Test 2'}).id},
+        ])
+        post1, post2, post3, post4, post5, post6 = self.env['blog.post'].create([
+            {'name': "Post Test 1", 'blog_id': blog1.id, 'is_published': True},
+            {'name': "Post Test 2", 'blog_id': blog1.id, 'is_published': True},
+            {'name': "Post Test 3", 'blog_id': blog1.id, 'is_published': False},
+            {'name': "Post Test 4", 'blog_id': blog1.id, 'is_published': True},
+            {'name': "Post Test 5", 'blog_id': blog1.id, 'is_published': True},
+            {'name': "Post Test 6", 'blog_id': blog2.id, 'is_published': True},
+        ])
+        post2.recommended_next_post_id = post4
+        post4.recommended_next_post_id = post3
+        post5.recommended_next_post_id = post6
+
+        website = self.env.ref('website.default_website')
+        controller = WebsiteBlog()
+
+        cases = [(self.env, post1, post5, "Next post should be Post5 according to chronological order"),
+            (self.env, post2, post4, "Next post should be Post4 as it is set manually"),
+            (self.env(user=self.env.ref('base.public_user')), post4, post2, "Fallback to next published post when recommended post is not published"),
+            (self.env, post5, post4, "Next post should be Post4 as Post6 is not in the same blog")]
+
+        for env, current_post, expected_post, message in cases:
+            with MockRequest(env, website=website) as mock_request:
+                def fake_render(_, values):
+                    self.assertEqual(values['next_post'], expected_post, message)
+
+                mock_request.session.touch = lambda: None
+                mock_request.render = fake_render
+                controller.blog_post(blog1, current_post)
