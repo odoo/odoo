@@ -53,11 +53,10 @@ class HrEmployee(models.Model):
     @api.depends('parent_id')
     def _compute_expense_manager(self):
         for employee in self:
-            previous_manager = employee._origin.parent_id.user_id
             new_manager = employee.parent_id.user_id
-            if new_manager and (employee.expense_manager_id == previous_manager or not employee.expense_manager_id):
+            if new_manager:
                 employee.expense_manager_id = new_manager
-            elif not employee.expense_manager_id:
+            else:
                 employee.expense_manager_id = False
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
