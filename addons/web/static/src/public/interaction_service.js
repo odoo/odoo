@@ -119,10 +119,16 @@ class InteractionService {
                 if (I.selectorHas) {
                     targets = [...targets].filter((el) => !!el.querySelector(I.selectorHas));
                 }
+                if (I.selectorNotHas) {
+                    targets = [...targets].filter((el) => !el.querySelector(I.selectorNotHas));
+                }
             } catch {
                 const selectorHasError = I.selectorHas ? ` or selectorHas: '${I.selectorHas}'` : "";
+                const selectorNotHasError = I.selectorNotHas
+                    ? ` or selectorNotHas: '${I.selectorNotHas}'`
+                    : "";
                 const error = new Error(
-                    `Could not start interaction ${I.name} (invalid selector: '${I.selector}'${selectorHasError})`
+                    `Could not start interaction ${I.name} (invalid selector: '${I.selector}'${selectorHasError}${selectorNotHasError})`
                 );
                 proms.push(Promise.reject(error));
                 continue;
