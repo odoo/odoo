@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details
 
-import json
-
 from odoo.http import Controller, request, route
 
 
@@ -65,4 +63,4 @@ class WebsiteSaleVariantController(Controller):
         """Old product configurator logic, only used by frontend configurator, will be deprecated soon"""
         return request.env['product.template'].browse(
             int(product_template_id)
-        ).create_product_variant(json.loads(product_template_attribute_value_ids))
+        ).create_product_variant(product_template_attribute_value_ids)

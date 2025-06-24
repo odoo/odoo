@@ -1,13 +1,9 @@
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { redirect } from "@web/core/utils/urls";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
-// VariantMixin events are overridden on purpose here
-// to avoid registering them more than once since they are already registered
-// in website_sale.js
-publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin, {
+publicWidget.registry.ProductWishlist = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
     events: {
         'click .o_wsale_my_wish': '_onClickMyWish',
@@ -73,11 +69,11 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     /**
      * @private
      */
-    _addNewProducts: function ($el) {
+    _addNewProducts: async function ($el) {
         var self = this;
-        var productID = $el.data('product-product-id');
+        let productId = $el.data('product-product-id');
         if ($el.hasClass('o_add_wishlist_dyn')) {
-            productID = parseInt($el.closest('.js_product').find('.product_id:checked').val());;
+            productId = parseInt($el.closest('.js_product').find('.product_id:checked').val());;
         }
         var $form = $el.closest('form');
         var templateId = $form.find('.product_template_id').val();
@@ -86,47 +82,49 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             templateId = $el.data('product-template-id');
         }
         $el.prop("disabled", true).addClass('disabled');
-        var productReady = this.selectOrCreateProduct(
-            $el.closest('form'),
-            productID,
-            templateId,
-        );
 
-        productReady.then(function (productId) {
-            productId = parseInt(productId, 10);
-
-            if (productId && !self.wishlistProductIDs.includes(productId)) {
-                return rpc('/shop/wishlist/add', {
-                    product_id: productId,
-                }).then(function () {
-                    var $navButton = $('header .o_wsale_my_wish').first();
-                    self.wishlistProductIDs.push(productId);
-                    sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(self.wishlistProductIDs));
-                    self._updateWishlistView();
-                    wSaleUtils.animateClone($navButton, $el.closest('form'), 25, 40);
-                    // It might happen that `onChangeVariant` is called at the same time as this function.
-                    // In this case we need to set the button to disabled again.
-                    // Do this only if the productID is still the same.
-                    let currentProductId = $el.data('product-product-id');
-                    if ($el.hasClass('o_add_wishlist_dyn')) {
-                        currentProductId = parseInt($el.closest('.js_product').find('.product_id:checked').val());
-                    }
-                    if (productId === currentProductId) {
-                        $el.prop("disabled", true).addClass('disabled');
-                    }
-                }).catch(function (e) {
-                    $el.prop("disabled", false).removeClass('disabled');
-                    if (!(e instanceof RPCError)) {
-                        return Promise.reject(e);
-                    }
-                });
+        try {
+            if (!productId) {
+                productId = await this.waitFor(rpc('/sale/create_product_variant', {
+                    product_template_id: parseInt(templateId),
+                    product_template_attribute_value_ids:
+                        wSaleUtils.getSelectedAttributeValues($form[0]),
+                }));
             }
-        }).catch(function (e) {
+        } catch (e) {
             $el.prop("disabled", false).removeClass('disabled');
             if (!(e instanceof RPCError)) {
                 return Promise.reject(e);
             }
-        });
+        }
+        productId = parseInt(productId, 10);
+
+        if (productId && !self.wishlistProductIDs.includes(productId)) {
+            return rpc('/shop/wishlist/add', {
+                product_id: productId,
+            }).then(function () {
+                var $navButton = $('header .o_wsale_my_wish').first();
+                self.wishlistProductIDs.push(productId);
+                sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(self.wishlistProductIDs));
+                self._updateWishlistView();
+                wSaleUtils.animateClone($navButton, $el.closest('form'), 25, 40);
+                // It might happen that `onChangeVariant` is called at the same time as this function.
+                // In this case we need to set the button to disabled again.
+                // Do this only if the productID is still the same.
+                let currentProductId = $el.data('product-product-id');
+                if ($el.hasClass('o_add_wishlist_dyn')) {
+                    currentProductId = parseInt($el.closest('.js_product').find('.product_id:checked').val());
+                }
+                if (productId === currentProductId) {
+                    $el.prop("disabled", true).addClass('disabled');
+                }
+            }).catch(function (e) {
+                $el.prop("disabled", false).removeClass('disabled');
+                if (!(e instanceof RPCError)) {
+                    return Promise.reject(e);
+                }
+            });
+        }
     },
     /**
      * @private

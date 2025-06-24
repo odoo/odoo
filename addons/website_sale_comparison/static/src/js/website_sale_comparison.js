@@ -4,14 +4,9 @@ import { rpc } from "@web/core/network/rpc";
 import { Mutex } from "@web/core/utils/concurrency";
 import { renderToString } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import VariantMixin from "@website_sale/js/sale_variant_mixin";
-import website_sale_utils from "@website_sale/js/website_sale_utils";
+import wSaleUtils from "@website_sale/js/website_sale_utils";
 
-
-// VariantMixin events are overridden on purpose here
-// to avoid registering them more than once since they are already registered
-// in website_sale.js
-var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
+const ProductComparison = publicWidget.Widget.extend({
     template: 'product_comparison_template',
     events: {
         'click .o_product_panel_header': '_onClickPanelHeader',
@@ -86,7 +81,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     /**
      * @param {jQuery} $elem
      */
-    handleCompareAddition: function ($elem) {
+    handleCompareAddition: async function ($elem) {
         var self = this;
         if (this.comparelist_product_ids.length < this.product_compare_limit) {
             var productId = $elem.data('product-product-id');
@@ -99,23 +94,25 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
 
             let $form = $elem.closest('form');
             $form = $form.length ? $form : $('#product_details > form');
-            this.selectOrCreateProduct(
-                $form,
-                productId,
-                $form.find('.product_template_id').val(),
-            ).then(function (productId) {
-                productId = parseInt(productId, 10) || parseInt($elem.data('product-product-id'), 10);
-                if (!productId) {
-                    return;
-                }
-                self._addNewProducts(productId).then(function () {
-                    website_sale_utils.animateClone(
-                        $('#comparelist .o_product_panel_header'),
-                        $elem.closest('form'),
-                        -50,
-                        10
-                    );
-                });
+            if (!productId) {
+                productId = await this.waitFor(rpc('/sale/create_product_variant', {
+                    product_template_id:
+                        parseInt($form[0].querySelector('.product_template_id').value),
+                    product_template_attribute_value_ids:
+                        wSaleUtils.getSelectedAttributeValues($form[0]),
+                }));
+            }
+            productId = parseInt(productId, 10) || parseInt($elem.data('product-product-id'), 10);
+            if (!productId) {
+                return;
+            }
+            self._addNewProducts(productId).then(function () {
+                wSaleUtils.animateClone(
+                    $('#comparelist .o_product_panel_header'),
+                    $elem.closest('form'),
+                    -50,
+                    10
+                );
             });
         } else {
             this.$('.o_comparelist_limit_warning').show();
