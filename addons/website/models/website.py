@@ -1491,7 +1491,7 @@ class Website(models.Model):
         """
             Return True if active, False if not active, None if not found
         """
-        return self.env['ir.ui.view']._get_cached_template_info(key).get('active')
+        return self.env['ir.ui.view'].with_context(active_test=False)._get_cached_template_info(key).get('active')
 
     @api.model
     def get_template(self, template):
