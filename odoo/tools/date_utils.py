@@ -135,6 +135,8 @@ def parse_date(value: str, env: Environment) -> date | datetime:
     weekday := [=+-] ('monday' | ... | 'sunday')
     ```
 
+    An equivalent function is JavaScript is `parseSmartDateInput`.
+
     :param value: The string to parse
     :param env: The environment to get the current date (in user's tz)
     :param naive: Whether to cast the result to a naive datetime.
