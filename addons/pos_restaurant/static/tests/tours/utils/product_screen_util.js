@@ -47,6 +47,7 @@ export function OrderButtonNotContain(data) {
     ];
     return steps;
 }
+<<<<<<< d24c1a6ab0dd156a20c6f454406cad4a2caffc67
 export function setTab(name) {
     return [
         {
@@ -56,5 +57,16 @@ export function setTab(name) {
         },
         TextInputPopup.inputText(name),
         Dialog.confirm(),
+||||||| fba3978f0ff3c635c0d06aa752d1d1cb87a426d0
+=======
+
+export function bookOrReleaseTable() {
+    return [
+        {
+            content: "click book or release table button",
+            trigger: ".table-booking button",
+            run: "click",
+        },
+>>>>>>> 4c6e199ab7877213fb1138599cd05445ebe7a6ea
     ];
 }

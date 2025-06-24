@@ -10,11 +10,21 @@ const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
+<<<<<<< d24c1a6ab0dd156a20c6f454406cad4a2caffc67
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+||||||| fba3978f0ff3c635c0d06aa752d1d1cb87a426d0
+import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
+import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
+=======
+import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
+import { inLeftSide, negateStep, waitForLoading } from "@point_of_sale/../tests/tours/utils/common";
+>>>>>>> 4c6e199ab7877213fb1138599cd05445ebe7a6ea
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { renderToElement } from "@web/core/utils/render";
@@ -681,5 +691,30 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout",
                     }
                 },
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_book_and_release_table", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.bookOrReleaseTable(),
+            waitForLoading(),
+            {
+                content: "Check if order has a server ID",
+                trigger: "body",
+                run: () => {
+                    const order = posmodel.models["pos.order"].getFirst();
+
+                    if (typeof order.id !== "number") {
+                        throw new Error("Order does not have a valid server ID");
+                    }
+                },
+            },
+            FloorScreen.clickTable("5"),
+            ProductScreen.bookOrReleaseTable(),
+            waitForLoading(),
         ].flat(),
 });

@@ -566,7 +566,16 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.pos_config.id}", 'test_combo_preparation_receipt_layout', login="pos_admin")
 
+<<<<<<< d24c1a6ab0dd156a20c6f454406cad4a2caffc67
     def test_tip_after_payment(self):
         self.pos_config.write({'iface_tipproduct': True, 'tip_product_id': self.tip.id})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_tip_after_payment')
+||||||| fba3978f0ff3c635c0d06aa752d1d1cb87a426d0
+=======
+    def test_book_and_release_table(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_book_and_release_table', login="pos_user")
+        order = self.env['pos.order'].search([], limit=1, order='id desc')
+        self.assertEqual(order.state, "cancel", "The order should be in cancel state after releasing the table")
+>>>>>>> 4c6e199ab7877213fb1138599cd05445ebe7a6ea
