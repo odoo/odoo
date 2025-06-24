@@ -79,7 +79,13 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
-    static props = ["productTemplate", "getPayload", "close"];
+    static props = {
+        productTemplate: Object,
+        getPayload: Function,
+        close: Function,
+        hideAlwaysVariants: { type: Boolean, optional: true },
+        forceVariantValue: { type: Object, optional: true },
+    };
 
     setup() {
         this.pos = usePos();
@@ -132,7 +138,12 @@ export class ProductConfiguratorPopup extends Component {
         while ((combination = getNext()) !== null) {
             if (!combination.some((value) => this.pos.doHaveConflictWith(value, combination))) {
                 combination.forEach((value) => {
-                    this.state.attributes[value.attribute_id.id].selected = value;
+                    const forceVariant = this.props.forceVariantValue
+                        ? Object.values(this.props.forceVariantValue).find(
+                              (att) => att.attribute_line_id.id == value.attribute_line_id.id
+                          )
+                        : false;
+                    this.state.attributes[value.attribute_id.id].selected = forceVariant || value;
                 });
                 break;
             }
@@ -225,5 +236,15 @@ export class ProductConfiguratorPopup extends Component {
     confirm() {
         this.props.getPayload(this.computePayload());
         this.props.close();
+    }
+
+    get validAttributeLineIds() {
+        if (this.props.hideAlwaysVariants) {
+            return this.props.productTemplate.attribute_line_ids.filter(
+                (line) => line.attribute_id.create_variant !== "always"
+            );
+        } else {
+            return this.props.productTemplate.attribute_line_ids;
+        }
     }
 }
