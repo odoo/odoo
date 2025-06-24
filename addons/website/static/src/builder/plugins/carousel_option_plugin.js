@@ -71,10 +71,12 @@ export class CarouselOptionPlugin extends Plugin {
             // Restore all the carousels so their first slide is the active one.
             for (const carouselEl of this.editable.querySelectorAll(".carousel")) {
                 const firstItemEl = carouselEl.querySelector(".carousel-item");
-                if (firstItemEl.classList.contains("active")) {
-                    continue;
+                if (firstItemEl) {
+                    if (firstItemEl.classList.contains("active")) {
+                        continue;
+                    }
+                    proms.push(this.slide(carouselEl, 0));
                 }
-                proms.push(this.slide(carouselEl, 0));
             }
             return Promise.all(proms);
         },
