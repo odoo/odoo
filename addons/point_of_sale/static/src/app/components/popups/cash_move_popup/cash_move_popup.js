@@ -9,6 +9,8 @@ import { CashMoveListPopup } from "@point_of_sale/app/components/popups/cash_mov
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 
 const { DateTime } = luxon;
 
@@ -107,5 +109,19 @@ export class CashMovePopup extends Component {
             })),
             partnerId: this.partnerId,
         });
+    }
+    async openNumpadDialog() {
+        if (!this.ui.isSmall) {
+            return;
+        }
+
+        const result = await makeAwaitable(this.dialog, NumberPopup, {
+            title: _t("Amount"),
+            startingValue: this.state.amount,
+        });
+
+        if (result) {
+            this.state.amount = result;
+        }
     }
 }
