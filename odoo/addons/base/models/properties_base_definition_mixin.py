@@ -46,11 +46,11 @@ class PropertiesBaseDefinitionMixin(models.AbstractModel):
             vals["properties_base_definition_id"] = parent
         return super().create(vals_list)
 
-    def _field_to_sql(self, alias, fname, query=None, flush: bool = True):
+    def _field_to_sql(self, alias, fname, query=None):
         if fname == 'properties_base_definition_id':
             # Allow the export to work
             parent = self.env["properties.base.definition"] \
                 ._get_definition_id_for_property_field(self._name, "properties")
             return SQL("%s", parent)
 
-        return super()._field_to_sql(alias, fname, query, flush)
+        return super()._field_to_sql(alias, fname, query)

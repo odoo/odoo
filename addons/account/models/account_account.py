@@ -137,11 +137,11 @@ class AccountAccount(models.Model):
     # Form view: show code mapping tab or not
     display_mapping_tab = fields.Boolean(default=lambda self: len(self.env.user.company_ids) > 1, store=False)
 
-    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None, flush: bool = True) -> SQL:
+    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
         if field_expr == 'internal_group':
-            return SQL("split_part(%s, '_', 1)", self._field_to_sql(alias, 'account_type', query, flush))
+            return SQL("split_part(%s, '_', 1)", self._field_to_sql(alias, 'account_type', query))
         if field_expr == 'code':
-            return self.with_company(self.env.company.root_id).sudo()._field_to_sql(alias, 'code_store', query, flush)
+            return self.with_company(self.env.company.root_id).sudo()._field_to_sql(alias, 'code_store', query)
         if field_expr == 'placeholder_code':
             if 'account_first_company' not in query._joins:
                 # When multiple accounts are selected, ``placeholder_code`` is used for all of them
@@ -189,10 +189,10 @@ class AccountAccount(models.Model):
         if field_expr == 'root_id':
             return SQL(
                 "SUBSTRING(%(placeholder_code)s, 1, 2)",
-                placeholder_code=self._field_to_sql(alias, 'placeholder_code', query, flush),
+                placeholder_code=self._field_to_sql(alias, 'placeholder_code', query),
             )
 
-        return super()._field_to_sql(alias, field_expr, query, flush)
+        return super()._field_to_sql(alias, field_expr, query)
 
     @api.constrains('reconcile', 'account_type', 'tax_ids')
     def _constrains_reconcile(self):
