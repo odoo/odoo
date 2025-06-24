@@ -156,10 +156,8 @@ class ResPartner(models.Model):
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 
-    def iap_partner_autocomplete_add_tags(self, unspsc_codes):
+    def iap_partner_autocomplete_get_tag_ids(self, unspsc_codes):
         """Called by JS to create the activity tags from the UNSPSC codes"""
-        self.ensure_one()
-
         # If the UNSPSC module is installed, we might have a translation, so let's use it
         if self.env['ir.module.module']._get('product_unspsc').state == 'installed':
             tag_names = self.env['product.unspsc.code']\
@@ -176,7 +174,7 @@ class ResPartner(models.Model):
                 tag_ids |= existing_tag
             else:
                 tag_ids |= self.env['res.partner.category'].create({'name': tag_name})
-        self.category_id = tag_ids
+        return tag_ids.ids
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
