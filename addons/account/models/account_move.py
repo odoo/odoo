@@ -1837,6 +1837,15 @@ class AccountMove(models.Model):
                     raise ValidationError(_("This entry contains taxes that are not compatible with your fiscal position. Check the country set in fiscal position and in your tax configuration."))
                 raise ValidationError(_("This entry contains one or more taxes that are incompatible with your fiscal country. Check company fiscal country in the settings and tax country in taxes configuration."))
 
+    @api.constrains('line_ids')
+    def _check_off_balance(self):
+        """Check off-balance account constraints.
+        Ensures that if any line uses an off-balance account, all lines must use off-balance accounts.
+        """
+        for line in self.line_ids:
+            if line.account_id.internal_group == 'off_balance' and any(a.internal_group != line.account_id.internal_group for a in line.move_id.line_ids.account_id):
+                raise UserError(_('If you want to use "Off-Balance Sheet" accounts, all the accounts of the journal entry must be of this type'))
+
     # -------------------------------------------------------------------------
     # BUSINESS MODELS SYNCHRONIZATION
     # -------------------------------------------------------------------------

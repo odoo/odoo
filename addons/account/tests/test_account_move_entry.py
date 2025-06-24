@@ -62,6 +62,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'debit': 0.0,
             'credit': 500.0,
         }
+        cls.off_balance_account = cls.company_data['default_account_assets'].copy({'name': 'Off-Balance Account', 'account_type': 'off_balance'})
 
     def test_out_invoice_auto_post_at_date(self):
         # Create auto-posted (but not recurring) entry
@@ -1203,3 +1204,91 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertRecordValues(line, [
             {'amount_currency': 10.00, 'balance': 10.00},
         ])
+
+    def test_move_check_account_off_balance(self):
+        """ Test that the account move line check off balance is working fine. """
+        move_form = Form(self.env['account.move'])
+        move_form.date = fields.Date.from_string('2016-01-01')
+
+        with move_form.line_ids.new() as line_form:
+            line_form.name = 'debit_line'
+            line_form.account_id = self.off_balance_account
+            line_form.debit = 100.0
+        with move_form.line_ids.new() as line_form:
+            line_form.name = 'credit_line'
+            line_form.account_id = self.company_data['default_account_payable']
+            line_form.credit = 100.0
+
+        with self.assertRaises(UserError):
+            move_form.save()
+
+        # Change line 1 to off_balance account
+        with move_form.line_ids.edit(0) as line_form:
+            line_form.account_id = self.off_balance_account
+
+        # Check that the move is not posted
+        with self.assertRaises(UserError):
+            move_form.save()
+
+        # Change line 2 to off_balance account
+        with move_form.line_ids.edit(1) as line_form:
+            line_form.account_id = self.off_balance_account
+
+        # All lines are off_balance, so the move should be posted
+        move_form.save()
+
+        # Check all lines not off_balance
+        with move_form.line_ids.edit(0) as line_form:
+            line_form.account_id = self.company_data['default_account_expense']
+        with move_form.line_ids.edit(1) as line_form:
+            line_form.account_id = self.company_data['default_account_payable']
+        move_form.save()
+
+    def test_move_check_off_balance_with_tax_error(self):
+        """Test creating off_balance journal entry with taxes"""
+        # Create journal entry with off_balance account and taxes
+        move_form = Form(self.env['account.move'])
+        with move_form.line_ids.new() as line_form:
+            line_form.name = 'debit_line'
+            line_form.account_id = self.off_balance_account
+            line_form.debit = 100.0
+        with move_form.line_ids.new() as line_form:
+            line_form.name = 'credit_line'
+            line_form.account_id = self.off_balance_account
+            line_form.tax_ids.add(self.company_data['default_tax_sale'])
+            line_form.credit = 100.0
+
+        with self.assertRaises(UserError):
+            move_form.save()
+
+        # Change line 1 to off_balance account
+        with move_form.line_ids.edit(1) as line_form:
+            line_form.tax_ids.clear()
+
+        move_form.save()
+
+    def test_move_check_off_balance_reconciled_error(self):
+        """Test creating off_balance journal entry that has been reconciled"""
+        # Create journal entry with off_balance account
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': fields.Date.from_string('2024-01-01'),
+            'line_ids': [
+                Command.create({
+                    'name': 'Off balance line 1',
+                    'account_id': self.off_balance_account.id,
+                    'debit': 1000.0,
+                    'credit': 0.0,
+                }),
+                Command.create({
+                    'name': 'Off balance line 2',
+                    'account_id': self.off_balance_account.id,
+                    'debit': 0.0,
+                    'credit': 1000.0,
+                }),
+            ]
+        })
+
+        # When checking the journal entry, there should be an error because off_balance accounts cannot be reconciled
+        with self.assertRaises(UserError):
+            move.line_ids[0].reconciled = True
