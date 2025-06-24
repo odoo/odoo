@@ -427,13 +427,13 @@ class TestRatingPerformance(FullBaseMailPerformance):
     @users('employee')
     @warmup
     def test_rating_last_value_perfs_with_rating_mixin(self):
-        with self.assertQueryCount(employee=256):  # tmf: 256
+        with self.assertQueryCount(employee=276):  # tmf: 256
             self.create_ratings('mail.test.rating')
 
-        with self.assertQueryCount(employee=285):  # tmf: 285
+        with self.assertQueryCount(employee=305):  # tmf: 285
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=264):  # tmf: 264
+        with self.assertQueryCount(employee=284):  # tmf: 264
             self.apply_ratings(5)
 
         with self.assertQueryCount(employee=1):

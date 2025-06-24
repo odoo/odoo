@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.addons.rating.models import rating_data
@@ -181,3 +182,46 @@ class RatingMixin(models.AbstractModel):
         for rate in data['repartition']:
             result['percent'][rate] = (data['repartition'][rate] * 100) / data['total'] if data['total'] > 0 else 0
         return result
+
+    def _rating_get_stats_per_record(self, domain=None):
+        """
+        Computes rating statistics for each record individually.
+
+        :param domain: Optional domain to apply on the ratings.
+        :return: A dictionary mapping each record ID to its statistics dictionary.
+        :rtype: dict
+        """
+        base_domain = expression.AND([self._rating_domain(), [("rating", ">=", 1)]])
+        if domain:
+            base_domain = expression.AND([base_domain, domain])
+        rg_data = self.env["rating.rating"]._read_group(
+            base_domain,
+            groupby=["res_id", "rating"],
+            aggregates=["__count"],
+        )
+        stats_per_record = defaultdict(
+            lambda: {"total": 0, "weighted_sum": 0.0, "counts": defaultdict(int), "percent": {}}
+        )
+        for res_id, rating, count in rg_data:
+            stats = stats_per_record[res_id]
+            stats["total"] += count
+            stats["weighted_sum"] += rating * count
+            stats["counts"][int(rating)] = count
+        for stats in stats_per_record.values():
+            total = stats["total"]
+            if total > 0:
+                stats["avg"] = stats["weighted_sum"] / total
+                stats["percent"] = {
+                    rate: (stats["counts"].get(rate, 0) * 100) / total for rate in range(1, 6)
+                }
+            else:
+                stats["avg"] = 0
+                stats["percent"] = dict.fromkeys(range(1, 6), 0.0)
+            del stats["weighted_sum"]
+            del stats["counts"]
+        return stats_per_record
+
+    @api.model
+    def _allow_publish_rating_stats(self):
+        """Override to allow the rating stats to be demonstrated."""
+        return False
