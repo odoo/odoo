@@ -51,7 +51,7 @@ registerWebsitePreviewTour("snippet_image_gallery_remove", {
     run: "click",
 }, {
     content: "Click on the second new image",
-    trigger: ".o_select_media_dialog img[title='s_default_image2.jpg']",
+    trigger: ".o_select_media_dialog img[title='s_default_image2.webp']",
     run: "click",
 },
     addMedia(),
