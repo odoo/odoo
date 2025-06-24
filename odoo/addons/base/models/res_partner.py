@@ -1151,7 +1151,8 @@ class ResPartner(models.Model):
         :rtype: string
         '''
         address_format, args = self._prepare_display_address(without_company)
-        return address_format % args
+        raw_address = address_format % args
+        return '\n'.join(line for line in raw_address.splitlines() if line.strip())
 
     def _display_address_depends(self):
         # field dependencies of method _display_address()
