@@ -102,8 +102,10 @@ class SaleOrderLine(models.Model):
     def _check_validity(self):
         if (
             not self.combo_item_id
-            and sum(self._get_lines_with_price().mapped('price_unit')) == 0
-            and self.order_id.website_id.prevent_zero_price_sale
+            and self.order_id.website_id._prevent_product_sale(
+                self.product_template_id,
+                sum(self._get_lines_with_price().mapped('price_unit')) == 0
+            )
             and self.product_template_id.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
         ):
             raise UserError(self.env._(

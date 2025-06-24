@@ -123,7 +123,7 @@
         </template>
 
         <template id="website_sale.price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
-            <t t-if="not data.get('prevent_zero_price_sale') and not data.get('is_sample')">
+            <t t-if="not data.get('prevent_sale') and not data.get('is_sample')">
                 <span t-out="data['price']"
                       class="mb-0 fw-bold"
                       name="product_price"

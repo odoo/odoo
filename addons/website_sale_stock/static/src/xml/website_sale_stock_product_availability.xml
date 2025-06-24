@@ -3,7 +3,7 @@
 <templates>
     <t t-name="website_sale_stock.product_availability">
         <div
-            t-if="is_storable and !prevent_zero_price_sale"
+            t-if="is_storable and !prevent_sale"
             id="product_stock_availability"
         >
             <div t-if="free_qty lte 0 and !cart_qty" t-attf-class="availability_message_#{product_template} d-flex flex-column gap-2">

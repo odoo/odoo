@@ -313,7 +313,7 @@ class ProductFeed(models.Model):
             date=fields.Date.context_today(self),
             website=self.website_id,
         )
-        if combination_info['prevent_zero_price_sale']:
+        if combination_info['prevent_sale']:
             return {}
 
         price_info = {

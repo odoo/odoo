@@ -101,8 +101,8 @@ class Website(models.Model):
         domain=[('model', '=', 'sale.order')],
         default=_default_recovery_mail_template,
     )
-    contact_us_button_url = fields.Char(
-        string="Contact Us Button URL", translate=True, default="/contactus",
+    contact_us_link_url = fields.Char(
+        string="Link URL", translate=True, default='/contactus',
     )
     cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
     send_abandoned_cart_email = fields.Boolean(
@@ -245,7 +245,19 @@ class Website(models.Model):
     )
     product_page_grid_columns = fields.Integer(default=2)
 
-    prevent_zero_price_sale = fields.Boolean(string="Hide 'Add To Cart' when price = 0")
+    prevent_sale = fields.Boolean(string="Hide Add To Cart")
+    prevent_sale_for = fields.Selection(
+        string="For",
+        selection=[
+            ('zero_price', '0 price products'),
+            ('specific_categories', 'Specific categories'),
+        ],
+        default='zero_price',
+    )
+    prevent_sale_for_categories = fields.Many2many(
+        string="Categories",
+        comodel_name='product.public.category',
+    )
 
     currency_id = fields.Many2one(
         string="Default Currency",
@@ -1029,6 +1041,32 @@ class Website(models.Model):
 
     def _get_snippet_defaults(self, snippet):
         return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})
+
+    def _prevent_product_sale(self, product_or_template, is_zero_price_product):
+        """Return whether the product should be allowed to sale online or or not depending on it
+        price and categories.
+
+        :param recordset product_or_template: A record of the product varient or template.
+        :param boolean is_zero_price_product: Wheater product price is zero or not.
+        :return: True if the product sale should be prevented, False otherwise
+        :rtype: boolean
+        """
+        if not self.prevent_sale:
+            return False
+
+        # For zero price products option
+        if self.prevent_sale_for == 'zero_price':
+            return is_zero_price_product
+
+        # For specific categories option
+        elif self.prevent_sale_for == 'specific_categories':
+            if not self.prevent_sale_for_categories:
+                return False
+            return bool(product_or_template.public_categ_ids.filtered_domain([
+                ('id', 'child_of', self.prevent_sale_for_categories.ids),
+            ]))
+
+        return False
 
     def _get_product_image_ratio(self):
         """Get the product image aspect ratio based on the website's design classes.
