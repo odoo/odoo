@@ -1,9 +1,10 @@
-import { Component } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
     useActionInfo,
     useBuilderComponent,
     useInputBuilderComponent,
+    useInputDebouncedCommit,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 
@@ -36,6 +37,9 @@ export class BuilderRange extends Component {
             parseDisplayValue: this.parseDisplayValue.bind(this),
         });
 
+        this.inputRef = useRef("inputRef");
+        this.debouncedCommitValue = useInputDebouncedCommit(this.inputRef);
+
         this.commit = commit;
         this.preview = preview;
         this.state = state;
@@ -67,6 +71,22 @@ export class BuilderRange extends Component {
         if (this.props.displayRangeValue) {
             this.state.value = this.parseDisplayValue(e.target.value);
         }
+    }
+
+    onKeydown(e) {
+        if (!["ArrowLeft", "ArrowUp", "ArrowDown", "ArrowRight"].includes(e.key)) {
+            return;
+        }
+        e.preventDefault();
+        let value = parseInt(e.target.value);
+        if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+            value = Math.max(this.min, value - this.props.step);
+        } else {
+            value = Math.min(this.max, value + this.props.step);
+        }
+        e.target.value = value;
+        this.onInput(e);
+        this.debouncedCommitValue();
     }
 
     get rangeInputValue() {
