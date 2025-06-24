@@ -924,3 +924,7 @@ class ProductTemplate(models.Model):
                 'currency_name': currency.name,
             })
         return data
+
+    @api.model
+    def _allow_publish_rating_stats(self):
+        return True
