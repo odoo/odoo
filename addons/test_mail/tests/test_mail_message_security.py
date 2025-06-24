@@ -778,7 +778,7 @@ class TestMessageSubModelAccess(MessageAccessCommon):
         with self.assertRaises(AccessError):
             notif_own.write({'res_partner_id': self.user_admin.partner_id.id})
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_mail_notification_portal(self):
         """ In any case, portal should not modify notifications """
         with self.assertRaises(AccessError):
@@ -794,3 +794,17 @@ class TestMessageSubModelAccess(MessageAccessCommon):
         self.assertEqual(len(notifications), 2)
         self.assertTrue(bool(notifications.read(['is_read'])), 'Portal can read')
         self.assertEqual(notifications.res_partner_id, self.user_portal_2.partner_id + self.user_employee.partner_id)
+
+        internal_record = self.record_internal.with_user(self.user_admin)
+        message = internal_record.message_post(
+            body='Hello People',
+            message_type='comment',
+            partner_ids=self.user_employee.partner_id.ids,
+            subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+        notifications = message.notification_ids.with_user(self.user_portal)
+        with self.assertRaises(
+            AccessError,
+            msg="Portal cannot read notifications unless they are the recipient or the author"
+        ):
+            notifications.read(['is_read'])
