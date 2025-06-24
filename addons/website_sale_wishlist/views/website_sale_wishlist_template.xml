@@ -319,26 +319,6 @@
                                             </small>
                                         </td>
                                         <td class="text-center td-wish-btn align-middle">
-                                            <input
-                                                name="product_template_id"
-                                                t-att-value="wish.product_id.product_tmpl_id.id"
-                                                type="hidden"
-                                            />
-                                            <input
-                                                name="product_id"
-                                                t-att-value="wish.product_id.id"
-                                                type="hidden"
-                                            />
-                                            <input
-                                                name="product_type"
-                                                t-att-value="wish.product_id.product_tmpl_id.type"
-                                                type="hidden"
-                                            />
-                                            <input
-                                                name="ptav_ids"
-                                                t-att-value="wish.product_id.product_template_attribute_value_ids.ids"
-                                                type="hidden"
-                                            />
                                             <a
                                                 t-if="combination_info['prevent_zero_price_sale']"
                                                 t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
@@ -353,6 +333,10 @@
                                                 role="button"
                                                 class="btn btn-secondary btn-block o_wish_add mb4"
                                                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                                t-att-data-product-template-id="wish.product_id.product_tmpl_id.id"
+                                                t-att-data-product-product-id="wish.product_id.id"
+                                                t-att-data-product-type="wish.product_id.product_tmpl_id.type"
+                                                t-att-data-ptav-ids="json.dumps(wish.product_id.product_template_attribute_value_ids.ids)"
                                             >
                                                 <span class="fa fa-fw fa-shopping-cart o_not-animable"/>
                                                 <span class="d-none d-md-inline">Add</span>

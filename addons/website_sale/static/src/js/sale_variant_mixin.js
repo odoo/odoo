@@ -399,11 +399,9 @@ var VariantMixin = {
                 .html(combination.product_tags);
         }
 
-        $parent
-            .find('.product_id')
-            .first()
-            .val(combination.product_id || 0)
-            .trigger('change');
+        const productIdInput = $parent[0].querySelector('.product_id');
+        productIdInput.value = combination.product_id || 0;
+        productIdInput.dispatchEvent(new Event('change', { bubbles: true }));
 
         this.handleCustomValues($(ev.target));
     },

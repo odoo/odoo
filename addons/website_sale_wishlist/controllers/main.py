@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
 from odoo.http import Controller, request, route
 
 
@@ -35,10 +33,8 @@ class WebsiteSaleWishlist(Controller):
         return wish
 
     @route('/shop/wishlist', type='http', auth='public', website=True, sitemap=False)
-    def get_wishlist(self, count=False, **kw):
+    def get_wishlist(self, **kw):
         wishes = request.env['product.wishlist'].with_context(display_default_code=False).current()
-        if count:
-            return request.make_response(json.dumps(wishes.product_id.ids))
 
         if not wishes:
             return request.redirect('/shop')
@@ -62,3 +58,13 @@ class WebsiteSaleWishlist(Controller):
         else:
             wish.unlink()
         return True
+
+    @route(
+        '/shop/wishlist/get_product_ids',
+        type='jsonrpc',
+        auth='public',
+        website=True,
+        readonly=True,
+    )
+    def shop_wishlist_get_product_ids(self):
+        return request.env['product.wishlist'].current().product_id.ids
