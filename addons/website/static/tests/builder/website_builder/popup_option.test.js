@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-dom";
+import { advanceTime, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -55,6 +55,8 @@ describe("Popup options: popup in page before edit", () => {
     test("closing s_popup with the X button updates the invisible elements panel", async () => {
         await contains(".o_we_invisible_entry .fa-eye-slash").click();
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        // Sometimes bootstrap.js takes a bit of time to display the popup
+        await waitFor(":iframe .s_popup div.js_close_popup", { timeout: 500 });
         await contains(":iframe .s_popup div.js_close_popup").click();
         expect(":iframe .s_popup").not.toBeVisible();
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
