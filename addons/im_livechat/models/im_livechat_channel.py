@@ -58,12 +58,6 @@ class Im_LivechatChannel(models.Model):
     )
     block_assignment_during_call = fields.Boolean("No Chats During Call", help="While on a call, agents will not receive new conversations.")
     review_link = fields.Char("Review Link", help="Visitors who leave a positive review will be redirected to this optional link.")
-    buffer_time = fields.Integer(
-        string="Individual Buffer Time (sec)",
-        help="Time in seconds between two sessions of the same operator."
-            "This will not be enforced if the operator is the best suited for the session"
-            "(e.g. the only one available with the right language or set of skills)"
-    )
 
     # computed fields
     web_page = fields.Char('Web Page', compute='_compute_web_page_link', store=False, readonly=True,
