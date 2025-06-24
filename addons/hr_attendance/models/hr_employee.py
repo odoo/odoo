@@ -15,6 +15,7 @@ class HrEmployee(models.Model):
         'res.users', store=True, readonly=False,
         string="Attendance Approver",
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
+        compute='_compute_attendance_manager',
         groups="hr_attendance.group_hr_attendance_officer",
         help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.")
     attendance_ids = fields.One2many(
@@ -76,6 +77,15 @@ class HrEmployee(models.Model):
         old_officers.sudo()._clean_attendance_officers()
 
         return res
+
+    @api.depends('parent_id')
+    def _compute_attendance_manager(self):
+        for employee in self:
+            manager = employee.parent_id.user_id
+            if manager:
+                employee.attendance_manager_id = manager
+            else:
+                employee.attendance_manager_id = False
 
     @api.depends('overtime_ids.duration', 'attendance_ids', 'attendance_ids.overtime_status')
     def _compute_total_overtime(self):

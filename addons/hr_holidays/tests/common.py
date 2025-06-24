@@ -58,20 +58,6 @@ class TestHrHolidaysCommon(common.TransactionCase):
             'name': 'Research and devlopment',
         })
 
-        cls.employee_responsible = cls.env['hr.employee'].create({
-            'name': 'David Employee',
-            'user_id': cls.user_responsible_id,
-            'department_id': cls.rd_dept.id,
-        })
-
-        cls.employee_emp = cls.env['hr.employee'].create({
-            'name': 'David Employee',
-            'user_id': cls.user_employee_id,
-            'leave_manager_id': cls.user_responsible_id,
-            'department_id': cls.rd_dept.id,
-        })
-        cls.employee_emp_id = cls.employee_emp.id
-
         cls.employee_hruser = cls.env['hr.employee'].create({
             'name': 'Armande HrUser',
             'user_id': cls.user_hruser_id,
@@ -88,6 +74,20 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.employee_hrmanager_id = cls.employee_hrmanager.id
 
         cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
+
+        cls.employee_responsible = cls.env['hr.employee'].create({
+            'name': 'David Employee',
+            'user_id': cls.user_responsible_id,
+            'department_id': cls.rd_dept.id,
+        })
+
+        cls.employee_emp = cls.env['hr.employee'].create({
+            'name': 'David Employee',
+            'user_id': cls.user_employee_id,
+            'leave_manager_id': cls.user_responsible_id,
+            'department_id': cls.rd_dept.id,
+        })
+        cls.employee_emp_id = cls.employee_emp.id
         cls.hours_per_day = cls.employee_emp.resource_id.calendar_id.hours_per_day or 8
 
 

@@ -584,6 +584,16 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         for tz in timezones_to_test:
             self._test_leave_with_tz(tz, local_date_from, local_date_to, 6)
 
+    def test_empty_manager(self):
+        self.employee_emp.write({'parent_id': False})
+        self.assertFalse(self.employee_emp.leave_manager_id)
+        self.employee_emp.write({'parent_id': self.employee_responsible.id})
+        self.assertEqual(self.employee_emp.leave_manager_id, self.user_responsible)
+        self.employee_emp.write({'parent_id': False})
+        self.employee_responsible.write({'user_id': False})
+        self.employee_emp.write({'parent_id': self.employee_responsible.id})
+        self.assertFalse(self.employee_emp.leave_manager_id)
+
     def test_expired_allocation(self):
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Expired Allocation',
