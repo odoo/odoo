@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-06-20 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -226,6 +226,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) doit être un compte de type "
+"\"%(receivable)s\" ou \"%(payable)s\" avec les deux options "
+"\"%(allow_reconciliation)s\" et \"%(non_trade)s\" activées."
 
 #. module: account
 #. odoo-python
@@ -1500,6 +1503,8 @@ msgid ""
 "<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
 "disabled again if there are any existing journal items."
 msgstr ""
+"<strong>Avertissement :</strong> une fois la piste d’audit activée, elle ne "
+"peut plus être désactivée s’il existe des écritures comptables."
 
 #. module: account
 #. odoo-python
@@ -2791,7 +2796,7 @@ msgstr "Toujours"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__mixed
 msgid "Always (upon invoice)"
-msgstr "Toujours (sur base d'une facture)"
+msgstr "Toujours (à la facturation)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__always_tax_exigible
@@ -5097,6 +5102,8 @@ msgid "Create Automatic Entries"
 msgstr "Créer des écritures automatiques"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_bill
 msgid "Create Bill"
 msgstr "Créer une facture fournisseur"
@@ -15567,6 +15574,8 @@ msgstr ""
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr ""
+"Le partenaire commercial a été mis à jour pour toutes les écritures "
+"comptables associées."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18398,10 +18407,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "You can't create payments for entries belonging to different branches."
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
 msgstr ""
-"Vous ne pouvez pas créer de paiements pour des écritures appartenant à des "
-"branches différentes."
 
 #. module: account
 #. odoo-python
@@ -18903,6 +18912,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
+"Vous ne pouvez pas définir un partenaire comme adresse de facturation d’un "
+"autre s’ils ont un %(vat_label)s différent."
 
 #. module: account
 #. odoo-python
@@ -18992,14 +19003,6 @@ msgstr ""
 "Vous ne pouvez pas valider une facture avec un montant total négatif. Vous "
 "devriez plutôt créer un avoir. Utilisez le menu Action pour le transformer "
 "en un avoir ou un remboursement."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid ""
-"You do not have permission to mark this partner as the main commercial "
-"partner."
-msgstr ""
 
 #. module: account
 #. odoo-python

@@ -603,3 +603,4 @@ class RecurrenceRule(models.Model):
         return rrule.rrule(
             freq_to_rrule(freq), **rrule_params
         )
+

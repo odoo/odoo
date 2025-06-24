@@ -85,13 +85,16 @@ class HrAttendance(http.Controller):
         if not company:
             return request.not_found()
         else:
-            department_list = [{'id': dep["id"],
-                                 'name': dep["name"],
-                                 'count': dep["total_employee"]
-                                 } for dep in request.env['hr.department'].sudo().search_read(domain=[('company_id', '=', company.id)],
-                                                                                              fields=["id",
-                                                                                                      "name",
-                                                                                                      "total_employee"])]
+            department_list = [
+                {"id": dep["id"], "name": dep["name"], "count": dep["total_employee"]}
+                for dep in request.env["hr.department"]
+                .with_context(allowed_company_ids=[company.id])
+                .sudo()
+                .search_read(
+                    domain=[("company_id", "=", company.id)],
+                    fields=["id", "name", "total_employee"],
+                )
+            ]
             has_password = self.has_password()
             if not from_trial_mode and has_password:
                 request.session.logout(keep_db=True)

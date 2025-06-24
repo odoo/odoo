@@ -7,6 +7,7 @@ import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { BOLD_TAGS, notStrong, span, strong, em } from "../_helpers/tags";
 import { bold, italic, simulateArrowKeyPress, tripleClick } from "../_helpers/user_actions";
+import { expectElementCount } from "../_helpers/ui_expectations";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -137,7 +138,7 @@ test("should get ready to type in not bold", async () => {
 test("should remove a bold tag that was redondant while performing the command", async () => {
     for (const tag of BOLD_TAGS) {
         await testEditor({
-            contentBefore: `<p>a${tag(`b${tag(`[c]`)}d`)}e</p>`,
+            contentBefore: `<p>a${tag(`b[c]d`)}e</p>`,
             stepFunction: bold,
             contentAfter: `<p>a${tag("b")}[c]${tag("d")}e</p>`,
         });
@@ -222,8 +223,8 @@ test("should make a few characters bold inside table (bold)", async () => {
     });
 });
 
-test("should insert a span zws when toggling a formatting command twice", () => {
-    return testEditor({
+test("should insert a span zws when toggling a formatting command twice", () =>
+    testEditor({
         contentBefore: `<p>[]<br></p>`,
         stepFunction: async (editor) => {
             bold(editor);
@@ -233,8 +234,7 @@ test("should insert a span zws when toggling a formatting command twice", () => 
         // the P could have the "/" hint but that behavior might be
         // complex with the current implementation.
         contentAfterEdit: `<p>${span(`[]\u200B`, "first")}</p>`,
-    });
-});
+    }));
 
 // This test uses execCommand to reproduce as closely as possible the browser's
 // default behaviour when typing in a contenteditable=true zone.
@@ -285,13 +285,13 @@ test("create bold with shortcut + selected with arrow", async () => {
     await simulateArrowKeyPress(editor, ["Shift", "ArrowRight"]);
     await tick(); // await selectionchange
     await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(1);
+    await expectElementCount(".o-we-toolbar", 1);
     expect(getContent(el)).toBe(`<p>ab${strong("[\u200B", "first")}c]d</p>`);
 
     await simulateArrowKeyPress(editor, ["Shift", "ArrowLeft"]);
     await tick(); // await selectionchange
     await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(0);
+    await expectElementCount(".o-we-toolbar", 0);
     expect(getContent(el)).toBe(`<p>ab${strong("[\u200B]", "first")}cd</p>`);
 });
 

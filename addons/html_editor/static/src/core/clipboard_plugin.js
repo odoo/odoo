@@ -334,17 +334,23 @@ export class ClipboardPlugin extends Plugin {
      */
     pasteText(selection, text) {
         const textFragments = text.split(/\r?\n/);
+        const preEl = closestElement(selection.anchorNode, "PRE");
         let textIndex = 1;
         for (const textFragment of textFragments) {
-            // Replace consecutive spaces by alternating nbsp.
-            const modifiedTextFragment = textFragment.replace(/( {2,})/g, (match) => {
-                let alertnateValue = false;
-                return match.replace(/ /g, () => {
-                    alertnateValue = !alertnateValue;
-                    const replaceContent = alertnateValue ? "\u00A0" : " ";
-                    return replaceContent;
+            let modifiedTextFragment = textFragment;
+
+            // <pre> preserves whitespace by default, so no need for &nbsp.
+            if (!preEl) {
+                // Replace consecutive spaces by alternating nbsp.
+                modifiedTextFragment = textFragment.replace(/( {2,})/g, (match) => {
+                    let alternateValue = false;
+                    return match.replace(/ /g, () => {
+                        alternateValue = !alternateValue;
+                        const replaceContent = alternateValue ? "\u00A0" : " ";
+                        return replaceContent;
+                    });
                 });
-            });
+            }
             this.dependencies.dom.insert(modifiedTextFragment);
             // The selection must be updated after calling insert, as the insertion
             // process modifies the selection.
@@ -760,7 +766,7 @@ export function isHtmlContentSupported(node) {
 function prependOriginToImages(doc, origin) {
     doc.querySelectorAll("img").forEach((img) => {
         const src = img.getAttribute("src");
-        if (src && !src.startsWith("http") && !src.startsWith("//")) {
+        if (src && !/^(http|\/\/|data:)/.test(src)) {
             img.src = origin + (src.startsWith("/") ? src : "/" + src);
         }
     });

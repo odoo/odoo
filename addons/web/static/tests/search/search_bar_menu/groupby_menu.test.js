@@ -11,20 +11,19 @@ import {
     toggleMenuItemOption,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { defineSearchBarModels, Foo } from "./models";
+import { defineSearchBarModels } from "./models";
 
-import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
-import { SearchBar } from "@web/search/search_bar/search_bar";
 import { animationFrame } from "@odoo/hoot-mock";
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 
 defineSearchBarModels();
 
 test("simple rendering with neither groupbys nor groupable fields", async () => {
-    Foo._views[["search", false]] = `<search/>`;
-
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",
         searchMenuTypes: ["groupBy"],
+        searchViewArch: `<search />`,
         searchViewId: false,
         searchViewFields: {},
     });

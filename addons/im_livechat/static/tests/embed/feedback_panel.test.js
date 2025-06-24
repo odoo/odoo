@@ -65,7 +65,7 @@ test("Feedback with rating and comment", async () => {
         }
         if (route === "/im_livechat/feedback") {
             step(route);
-            expect(args.reason.includes("Good job!")).toBe(true);
+            expect(args.reason).toInclude("Good job!");
             expect(args.rate).toBe(RATING.GOOD);
         }
     });

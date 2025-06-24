@@ -61,10 +61,9 @@ export class ImageField extends Component {
         const field = this.props.record.fields[this.props.name];
         if (field.related?.includes(".")) {
             this.lastUpdate = DateTime.now();
-            let key = this.props.value;
+            let key = this.props.record.data[this.props.name];
             onWillRender(() => {
-                const nextKey = this.props.value;
-
+                const nextKey = this.props.record.data[this.props.name];
                 if (key !== nextKey) {
                     this.lastUpdate = DateTime.now();
                 }

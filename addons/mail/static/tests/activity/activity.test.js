@@ -23,9 +23,7 @@ defineMailModels();
 test("activity upload document is available", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const activityType = pyEnv["mail.activity.type"]._records.find(
-        (r) => r.name === "Upload Document"
-    );
+    const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Upload Document");
     pyEnv["mail.activity"].create({
         activity_category: "upload_file",
         activity_type_id: activityType.id,
@@ -43,9 +41,7 @@ test("activity upload document is available", async () => {
 test("activity can upload a document", async () => {
     const pyEnv = await startServer();
     const fakeId = pyEnv["res.partner"].create({});
-    const activityType = pyEnv["mail.activity.type"]._records.find(
-        (r) => r.name === "Upload Document"
-    );
+    const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Upload Document");
     pyEnv["mail.activity"].create({
         activity_category: "upload_file",
         activity_type_id: activityType.id,
@@ -253,7 +249,7 @@ test("activity with mail template layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
-    const activityType = pyEnv["mail.activity.type"]._records.find((r) => r.name === "Email");
+    const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Email");
     pyEnv["mail.activity.type"].write(activityType.id, { mail_template_ids: [mailTemplateId] });
     pyEnv["mail.activity"].create({
         activity_type_id: activityType.id,
@@ -274,7 +270,7 @@ test("activity with mail template: preview mail", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
-    const activityType = pyEnv["mail.activity.type"]._records.find((r) => r.name === "Email");
+    const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Email");
     pyEnv["mail.activity.type"].write(activityType.id, { mail_template_ids: [mailTemplateId] });
     pyEnv["mail.activity"].create({
         activity_type_id: activityType.id,
@@ -307,19 +303,18 @@ test("activity with mail template: send mail", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
-    const activityType = pyEnv["mail.activity.type"]._records.find((r) => r.name === "Email");
+    const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Email");
     pyEnv["mail.activity.type"].write(activityType.id, { mail_template_ids: [mailTemplateId] });
     pyEnv["mail.activity"].create({
         activity_type_id: activityType.id,
         res_id: partnerId,
         res_model: "res.partner",
     });
-    onRpc("/web/dataset/call_kw/res.partner/activity_send_mail", async (request) => {
-        step("activity_send_mail");
-        const { params } = await request.json();
-        expect(params.args[0]).toHaveLength(1);
-        expect(params.args[0][0]).toBe(partnerId);
-        expect(params.args[1]).toBe(mailTemplateId);
+    onRpc("res.partner", "activity_send_mail", ({ args, method }) => {
+        step(method);
+        expect(args[0]).toHaveLength(1);
+        expect(args[0][0]).toBe(partnerId);
+        expect(args[1]).toBe(mailTemplateId);
         // random value returned in order for the mock server to know that this route is implemented.
         return true;
     });
@@ -440,11 +435,10 @@ test("activity click on cancel", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    onRpc("/web/dataset/call_kw/mail.activity/unlink", async (request) => {
-        step("unlink");
-        const { params } = await request.json();
-        expect(params.args[0]).toHaveLength(1);
-        expect(params.args[0][0]).toBe(activityId);
+    onRpc("mail.activity", "unlink", ({ args, method }) => {
+        step(method);
+        expect(args[0]).toHaveLength(1);
+        expect(args[0][0]).toBe(activityId);
     });
     await start();
     await openFormView("res.partner", partnerId);

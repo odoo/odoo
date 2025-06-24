@@ -76,7 +76,7 @@
                                    readonly="state != 'pending'"/>
                             <field name="vehicle_no"
                                    invisible="mode not in ('1','4')"
-                                   required="mode == '1'"
+                                   required="mode == '1' and not transportation_doc_no"
                                    readonly="state != 'pending'"/>
                             <label for="distance" readonly="state != 'pending'"/>
                             <div class="o_row" name="distance">

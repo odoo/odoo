@@ -6,6 +6,7 @@ import { Component, xml } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
 
 import { Test } from "../../core/test";
+import { makeLabel } from "../../hoot_utils";
 
 describe(parseUrl(import.meta.url), () => {
     test("makeExpect passing, without a test", () => {
@@ -191,6 +192,7 @@ describe(parseUrl(import.meta.url), () => {
             ["toHaveLength", [], 0],
             ["toInclude", [1], 1],
             ["toMatch", "a", "a"],
+            ["toMatchObject", { a: 1, b: { l: [1, 2] } }, { b: { l: [1, 2] } }],
             [
                 "toThrow",
                 () => {
@@ -365,6 +367,32 @@ describe(parseUrl(import.meta.url), () => {
             expect(new Exception("oui")).toMatch(Error);
             expect(new Exception("oui")).toMatch(Exception);
             expect(new Exception("oui")).toMatch(new Error("oui"));
+        });
+
+        test("toMatchObject", () => {
+            expect({
+                bath: true,
+                bedrooms: 4,
+                kitchen: {
+                    amenities: ["oven", "stove", "washer"],
+                    area: 20,
+                    wallColor: "white",
+                },
+            }).toMatchObject({
+                bath: true,
+                kitchen: {
+                    amenities: ["oven", "stove", "washer"],
+                    wallColor: "white",
+                },
+            });
+            expect([{ tralalero: "tralala" }, { foo: 1 }]).toMatchObject([
+                { tralalero: "tralala" },
+                { foo: 1 },
+            ]);
+            expect([{ tralalero: "tralala" }, { foo: 1, lirili: "larila" }]).toMatchObject([
+                { tralalero: "tralala" },
+                { foo: 1 },
+            ]);
         });
 
         test("toThrow", async () => {
@@ -543,6 +571,54 @@ describe(parseUrl(import.meta.url), () => {
             expect(".div").toHaveStyle("height: 26px ; width : 3rem", { inline: true });
             expect(".div").not.toHaveStyle({ display: "block" }, { inline: true });
             expect(".div").not.toHaveStyle("border-top", { inline: true });
+        });
+
+        test("no elements found messages", async () => {
+            const [customExpect, hooks] = makeExpect({ headless: true });
+            hooks.before();
+
+            await mountForTest(/* xml */ `
+                <div />
+            `);
+
+            const SELECTOR = "#brrbrrpatapim";
+            const DOM_MATCHERS = [
+                ["toBeChecked"],
+                ["toBeDisplayed"],
+                ["toBeEnabled"],
+                ["toBeFocused"],
+                ["toBeVisible"],
+                ["toHaveAttribute", "attr"],
+                ["toHaveClass", "cls"],
+                ["toHaveInnerHTML", "<html></html>"],
+                ["toHaveOuterHTML", "<html></html>"],
+                ["toHaveProperty", "prop"],
+                ["toHaveRect", {}],
+                ["toHaveStyle", {}],
+                ["toHaveText", "abc"],
+                ["toHaveValue", "value"],
+            ];
+
+            for (const [matcher, arg] of DOM_MATCHERS) {
+                customExpect(SELECTOR)[matcher](arg);
+            }
+
+            const results = hooks.after();
+            const assertions = results.getEvents("assertion");
+            for (let i = 0; i < DOM_MATCHERS.length; i++) {
+                const { label, message } = assertions[i];
+                expect.step(label);
+                expect(message).toEqual([
+                    "expected at least",
+                    makeLabel(1),
+                    "element and got",
+                    makeLabel(0),
+                    "elements matching",
+                    makeLabel(SELECTOR),
+                ]);
+            }
+
+            expect.verifySteps(DOM_MATCHERS.map(([matcher]) => matcher));
         });
     });
 });

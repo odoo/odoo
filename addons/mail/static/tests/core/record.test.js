@@ -1053,3 +1053,30 @@ test("insert with id relation keeps existing field values", async () => {
     expect(member2.channel.eq(channel1)).toBe(true);
     expect(member2.is_internal).toBe(true);
 });
+
+test("Can assign new record on Many field with One inverse", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        files = Record.many("File", { inverse: "thread" });
+    }).register(localRegistry);
+    (class File extends Record {
+        static id = "name";
+        name;
+        thread = Record.one("Thread", { inverse: "files" });
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("general");
+    const file1 = store.File.insert("file1.txt");
+    const file2 = store.File.insert("file2.txt");
+    thread.files.push(file1);
+    expect(thread.files.length).toBe(1);
+    expectRecord(thread.files[0]).toEqual(file1);
+    expectRecord(file1.thread).toEqual(thread);
+    expect(file2.thread).toBe(undefined);
+    thread.files[0] = file2;
+    expect(thread.files.length).toBe(1);
+    expectRecord(thread.files[0]).toEqual(file2);
+    expectRecord(file2.thread).toEqual(thread);
+    expect(file1.thread).toBe(undefined);
+});

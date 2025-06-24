@@ -56,6 +56,13 @@ class TestEdiZatca(TestSaEdiCommon):
 
             self.assertXmlTreeEqual(current_tree, expected_tree)
 
+        retention_tax = self.env['account.tax'].create({
+            'l10n_sa_is_retention': True,
+            'name': 'Retention Tax',
+            'amount_type': 'percent',
+            'amount': -5.0,
+        })
+
         with freeze_time(datetime(year=2022, month=9, day=5, hour=8, minute=20, second=2, tzinfo=timezone('Etc/GMT-3'))):
             self.partner_us.vat = 'US12345677'
 
@@ -88,6 +95,7 @@ class TestEdiZatca(TestSaEdiCommon):
             final.invoice_line_ids.filtered('is_downpayment').write({
                 'name': 'Down payment',
             })
+            final.invoice_line_ids.filtered(lambda l: l.product_id == self.product_a).tax_ids = [(Command.link(retention_tax.id))]
 
             for move, test_file in (
                 (downpayment, "downpayment_invoice"),

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-06-20 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -224,6 +224,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) deve essere un conto di tipo "
+"\"%(receivable)s\" o \"%(payable)s\" con entrambe le opzioni "
+"\"%(allow_reconciliation)s\" e \"%(non_trade)s\" attive."
 
 #. module: account
 #. odoo-python
@@ -5079,6 +5082,8 @@ msgid "Create Automatic Entries"
 msgstr "Creazione registrazioni automatiche"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_bill
 msgid "Create Bill"
 msgstr "Crea fattura"
@@ -15519,6 +15524,8 @@ msgstr ""
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
 msgstr ""
+"Il partner commerciale è stato aggiornato per tutte le registrazioni "
+"contabili correlate."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18350,10 +18357,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-msgid "You can't create payments for entries belonging to different branches."
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
 msgstr ""
-"Impossibile creare pagamenti per registrazioni che appartengono a filiali "
-"diverse."
 
 #. module: account
 #. odoo-python
@@ -18849,6 +18856,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
+"Non è possibile configurare un partner come indirizzo di fatturazione di un "
+"altro se hanno una %(vat_label)s differente."
 
 #. module: account
 #. odoo-python
@@ -18937,14 +18946,6 @@ msgstr ""
 "Impossibile validare una fattura con un importo totale negativo. "
 "Trasformarla invece in una nota di credito o un rimborso utilizzando il menù"
 " azione."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid ""
-"You do not have permission to mark this partner as the main commercial "
-"partner."
-msgstr ""
 
 #. module: account
 #. odoo-python

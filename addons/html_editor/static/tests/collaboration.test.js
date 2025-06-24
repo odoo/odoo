@@ -263,9 +263,8 @@ test("wrapInlinesInBlocks should not create impossible mutations in a collaborat
     expect(getContent(e1.editable, { sortAttrs: true })).toBe(
         `<div class="oe_unbreakable"><p>myNode[]</p></div>`
     );
-    // TODO selection in collab should be handled better.
     expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-        `<div class="oe_unbreakable">[]<p>myNode</p></div>`
+        `<div class="oe_unbreakable"><p>myNode[]</p></div>`
     );
 });
 test("should reset from snapshot", async () => {

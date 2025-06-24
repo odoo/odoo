@@ -137,12 +137,24 @@ class SaleOrderLine(models.Model):
     def _compute_analytic_distribution(self):
         super()._compute_analytic_distribution()
         for line in self:
-            if line.display_type or line.analytic_distribution or not line.product_id:
-                continue
             project = line.product_id.project_id or line.order_id.project_id
-            distribution = project._get_analytic_distribution()
-            if distribution:
-                line.analytic_distribution = distribution
+            if line.display_type or not line.product_id or not project:
+                continue
+
+            if line.analytic_distribution:
+                applied_root_plans = self.env['account.analytic.account'].browse(
+                    list({int(account_id) for ids in line.analytic_distribution for account_id in ids.split(",")})
+                ).root_plan_id
+                if accounts_to_add := project._get_analytic_accounts().filtered(
+                    lambda account: account.root_plan_id not in applied_root_plans
+                ):
+                    # project account is added to each analytic distribution line
+                    line.analytic_distribution = {
+                        f"{account_ids},{','.join(map(str, accounts_to_add.ids))}": percentage
+                        for account_ids, percentage in line.analytic_distribution.items()
+                    }
+            else:
+                line.analytic_distribution = project._get_analytic_distribution()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -271,8 +283,15 @@ class SaleOrderLine(models.Model):
             title = self.product_id.name
             description = '<br/>'.join(sale_line_name_parts)
         else:
-            if len(sale_line_name_parts) > 1 and sale_line_name_parts[1]:
-                # if there's multiple lines, skip the product name part
+            default_name = self.with_context(
+                lang=self.order_id._get_lang(),
+            )._get_sale_order_line_multiline_description_sale()
+            if (
+                self.name != default_name
+                and len(sale_line_name_parts) > 1
+                and sale_line_name_parts[1]
+            ):
+                # if there's a custom line description, skip the product name part when possible
                 sale_line_name_parts.pop(0)
             title = sale_line_name_parts[0]
             description = '<br/>'.join(sale_line_name_parts[1:])
@@ -431,7 +450,7 @@ class SaleOrderLine(models.Model):
             to this sale order line, or the analytic account of the project which uses this sale order line, if it exists.
         """
         values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
-        if not values.get('analytic_distribution'):
+        if not values.get('analytic_distribution') and not self.analytic_distribution:
             if self.task_id.project_id.account_id:
                 values['analytic_distribution'] = {self.task_id.project_id.account_id.id: 100}
             elif self.project_id.account_id:

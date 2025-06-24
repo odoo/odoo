@@ -53,8 +53,9 @@ msgid ""
 "%(employee)s has multiple contracts from %(date_start)s to %(date_end)s. A "
 "work entry cannot overlap multiple contracts."
 msgstr ""
-"%(employee)s birden fazla sözleşmesi var %(date_start)s için %(date_end)s. "
-"Bir puantaj birden fazla sözleşme ile çakışamaz."
+"%(employee)s çalışanın şu tarihler aralığında geçerli olan birden fazla "
+"sözleşmesi mevcuttur: %(date_start)s - %(date_end)s. Bir iş girişi birden "
+"fazla sözleşmeyle çakışamaz."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -157,7 +158,7 @@ msgstr "Başlama"
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_contract_view_form_inherit_work_entry
 msgid "Fully Flexible"
-msgstr ""
+msgstr "Tam Esnek"
 
 #. module: hr_work_entry_contract
 #: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
@@ -208,6 +209,8 @@ msgid ""
 "interval defined by date_from and date_to must not contain any validated "
 "work entries."
 msgstr ""
+"Bu günü de kapsayan ayın ücreti zaten onaylanmış. Değişiklik gerekiyorsa "
+"lütfen İK ile iletişime geçin."
 
 #. module: hr_work_entry_contract
 #. odoo-javascript
@@ -297,9 +300,6 @@ msgid ""
 "be <= '%(latest_available_date)s', which correspond to the generated work "
 "entries time interval."
 msgstr ""
-"Başlangıç tarihi >= '%(earliest_available_date)s' ve bitiş tarihi <= "
-"'%(latest_available_date)s' olmalıdır, bu da oluşturulan puantaj zaman "
-"aralığına karşılık gelir."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit

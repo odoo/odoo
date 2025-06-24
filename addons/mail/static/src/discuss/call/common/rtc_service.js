@@ -51,17 +51,12 @@ const SCREEN_CONFIG = {
     },
 };
 const CAMERA_CONFIG = {
-    width: { max: 1280 },
-    height: { max: 720 },
-    aspectRatio: 16 / 9,
-    frameRate: {
-        max: 30,
-    },
+    width: 1280,
 };
 const IS_CLIENT_RTC_COMPATIBLE = Boolean(window.RTCPeerConnection && window.MediaStream);
-const DEFAULT_ICE_SERVERS = [
-    { urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
-];
+function GET_DEFAULT_ICE_SERVERS() {
+    return [{ urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] }];
+}
 
 /**
  * @param {Array<RTCIceServer>} iceServers
@@ -218,7 +213,7 @@ export class Rtc extends Record {
     /** @type {{urls: string[]}[]} */
     iceServers = Record.attr(undefined, {
         compute() {
-            return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
+            return this.iceServers ? this.iceServers : GET_DEFAULT_ICE_SERVERS();
         },
     });
     selfSession = Record.one("RtcSession");
@@ -1577,10 +1572,11 @@ export const rtcService = {
      * @param {Partial<import("services").Services>} services
      */
     start(env, services) {
-        const rtc = env.services["mail.store"].rtc;
+        const store = env.services["mail.store"];
+        const rtc = store.rtc;
         rtc.p2pService = services["discuss.p2p"];
         rtc.p2pService.acceptOffer = async (id, sequence) => {
-            const session = await this.store.RtcSession.getWhenReady(Number(id));
+            const session = await store.RtcSession.getWhenReady(Number(id));
             /**
              * We only accept offers for new connections (higher sequence),
              * or offers that renegotiate an existing connection (same sequence).

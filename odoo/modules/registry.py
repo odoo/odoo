@@ -62,6 +62,8 @@ _CACHES_BY_KEY = {
     'groups': ('groups', 'templates', 'templates.cached_values'),  # The processing of groups is saved in the view
 }
 
+_REPLICA_RETRY_TIME = 20 * 60  # 20 minutes
+
 
 def _unaccent(x):
     if isinstance(x, SQL):
@@ -169,6 +171,7 @@ class Registry(Mapping):
         self.db_name = db_name
         self._db = odoo.sql_db.db_connect(db_name, readonly=False)
         self._db_readonly = None
+        self._db_readonly_failed_time = None
         if config['db_replica_host'] is not False or config['test_enable']:  # by default, only use readonly pool if we have a db_replica_host defined. Allows to have an empty replica host for testing
             self._db_readonly = odoo.sql_db.db_connect(db_name, readonly=True)
 
@@ -995,13 +998,18 @@ class Registry(Mapping):
             return TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled, current_test=odoo.modules.module.current_test)
 
         if readonly and self._db_readonly is not None:
-            try:
-                return self._db_readonly.cursor()
-            except psycopg2.OperationalError:
-                # Setting _db_readonly to None will deactivate the readonly mode until
-                # worker restart / recycling.
-                self._db_readonly = None
-                _logger.warning('Failed to open a readonly cursor, falling back to read-write cursor')
+            if (
+                self._db_readonly_failed_time is None
+                or time.monotonic() > self._db_readonly_failed_time + _REPLICA_RETRY_TIME
+            ):
+                try:
+                    cr = self._db_readonly.cursor()
+                    self._db_readonly_failed_time = None
+                    return cr
+                except psycopg2.OperationalError:
+                    self._db_readonly_failed_time = time.monotonic()
+                    _logger.warning("Failed to open a readonly cursor, falling back to read-write cursor for %dmin %dsec", *divmod(_REPLICA_RETRY_TIME, 60))
+            threading.current_thread().cursor_mode = 'ro->rw'
         return self._db.cursor()
 
 
