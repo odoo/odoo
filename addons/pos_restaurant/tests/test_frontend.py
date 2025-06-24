@@ -620,6 +620,19 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_open_default_register_screen_config')
 
+    def test_fast_payment_validation_from_restaurant_product_screen(self):
+        self.main_pos_config.write({
+            'is_fast_payment': True,
+            'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
+            'printer_ids': False,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen')
+        order = self.main_pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.state, 'paid', "The order should be paid after the fast payment validation")
+        self.assertEqual(len(order.payment_ids), 1, "There should be one payment method used for the fast payment")
+        self.assertEqual(order.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
+
     def test_transfering_orders(self):
         """
         We can now transfer order from one table to another and from floating order to another etc.
