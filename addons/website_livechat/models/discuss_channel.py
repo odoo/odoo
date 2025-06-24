@@ -36,8 +36,8 @@ class DiscussChannel(models.Model):
             ]
         return [field_name]
 
-    def _to_store_defaults(self, for_current_user=True):
-        return super()._to_store_defaults(for_current_user=for_current_user) + [
+    def _get_store_default_fields(self, *, for_current_user):
+        return super()._get_store_default_fields(for_current_user=for_current_user) + [
             Store.One(
                 "livechat_visitor_id",
                 [

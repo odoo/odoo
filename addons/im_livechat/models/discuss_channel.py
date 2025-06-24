@@ -312,7 +312,7 @@ class DiscussChannel(models.Model):
         """Return the standard fields to include in Store for livechat_operator_id."""
         return ["avatar_128", *self.env["res.partner"]._get_store_livechat_username_fields()]
 
-    def _to_store_defaults(self, for_current_user=True):
+    def _get_store_default_fields(self, *, for_current_user):
         fields = [
             "anonymous_name",
             "chatbot_current_step",
@@ -331,7 +331,7 @@ class DiscussChannel(models.Model):
                 Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat"),
                 Store.Attr("livechat_status", predicate=lambda c: c.channel_type == "livechat"),
             ])
-        return super()._to_store_defaults(for_current_user=for_current_user) + fields
+        return super()._get_store_default_fields(for_current_user=for_current_user) + fields
 
     def _to_store(self, store: Store, fields):
         """Extends the channel header by adding the livechat operator and the 'anonymous' profile"""

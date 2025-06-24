@@ -10,7 +10,11 @@ class WebClient(WebclientController):
         if name == "init_livechat" and (
             chat_request_channel := self._link_visitor_to_livechat(params)
         ):
-            store.add(chat_request_channel, extra_fields={"open_chat_window": True})
+            store.add(
+                chat_request_channel,
+                chat_request_channel._to_store_defaults(for_current_user=True)
+                + [{"open_chat_window": True}],
+            )
             chat_request_channel.is_pending_chat_request = False
         super()._process_request_for_all(store, name, params)
 

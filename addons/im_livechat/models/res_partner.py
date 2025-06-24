@@ -31,28 +31,35 @@ class ResPartner(models.Model):
         active_livechat_partners = (
             self.env["im_livechat.channel"].search([]).available_operator_ids.partner_id
         )
-        for partner in self:
-            languages = list(OrderedSet([
+
+        def get_lang_name(partner):
+            return list(OrderedSet([
                 lang_name_by_code[partner.lang],
                 # sudo: res.users.settings - operator can access other operators languages
                 *partner.user_ids.sudo().livechat_lang_ids.mapped("name")
             ]))
-            store.add(
-                partner,
-                {
-                    "invite_by_self_count": invite_by_self_count_by_partner.get(partner, 0),
-                    "is_available": partner in active_livechat_partners,
-                    "lang_name": languages[0],
-                    # sudo: res.users.settings - operator can access other operators expertises
-                    "livechat_expertise": partner.user_ids.sudo().livechat_expertise_ids.mapped("name"),
-                    "livechat_languages": languages[1:],
-                    # sudo: res.users.settings - operator can access other operators livechat usernames
-                    "user_livechat_username": partner.sudo().user_livechat_username,
-                },
+
+        store.add(
+            self,
+            [
+                Store.Attr(
+                    "invite_by_self_count", lambda p: invite_by_self_count_by_partner.get(p, 0)
+                ),
+                Store.Attr("is_available", lambda p: p in active_livechat_partners),
                 # sudo - res.partner: checking if operator is in call for live
                 # chat invitation is acceptable.
-                extra_fields=[Store.Attr("is_in_call", sudo=True)]
-            )
+                Store.Attr("is_in_call", sudo=True),
+                Store.Attr("lang_name", lambda p: get_lang_name(p)[0]),
+                # sudo: res.users.settings - operator can access other operators expertises
+                Store.Attr(
+                    "livechat_expertise",
+                    lambda p: p.user_ids.sudo().livechat_expertise_ids.mapped("name"),
+                ),
+                Store.Attr("livechat_languages", lambda p: get_lang_name(p)[1:]),
+                # sudo: res.users.settings - operator can access other operators livechat usernames
+                Store.Attr("user_livechat_username", sudo=True),
+            ],
+        )
 
     @api.depends('user_ids.livechat_username')
     def _compute_user_livechat_username(self):

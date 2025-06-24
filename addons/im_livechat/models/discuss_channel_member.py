@@ -147,29 +147,32 @@ class DiscussChannelMember(models.Model):
                 },
             )
 
-    def _to_store_defaults(self):
-        return super()._to_store_defaults() + [
+    def _get_store_default_fields(self, *, for_current_user):
+        return super()._get_store_default_fields(for_current_user=for_current_user) + [
             Store.Attr(
                 "livechat_member_type",
                 predicate=lambda member: member.channel_id.channel_type == "livechat",
-            )
+            ),
         ]
 
-    def _get_store_partner_fields(self, fields):
+    def _get_store_partner_fields(self, fields, *, for_current_user):
         self.ensure_one()
-        if self.channel_id.channel_type == 'livechat':
-            new_fields = [
-                "active",
-                "avatar_128",
-                Store.One("country_id", ["code", "name"]),
-                "im_status",
-                "is_public",
-                *self.env["res.partner"]._get_store_livechat_username_fields(),
-            ]
-            if self.livechat_member_type == "visitor":
-                new_fields += ["offline_since"]
-            return new_fields
-        return super()._get_store_partner_fields(fields)
+        res = super()._get_store_partner_fields(fields, for_current_user=for_current_user)
+        if self.channel_id.channel_type != 'livechat':
+            return res
+        if not for_current_user or self.env.user.share:
+            res = []
+        res += [
+            "active",
+            "avatar_128",
+            Store.One("country_id", ["code", "name"]),
+            "im_status",
+            "is_public",
+            *self.env["res.partner"]._get_store_livechat_username_fields(),
+        ]
+        if self.livechat_member_type == "visitor":
+            res.append("offline_since")
+        return res
 
     def _get_store_guest_fields(self, fields):
         self.ensure_one()

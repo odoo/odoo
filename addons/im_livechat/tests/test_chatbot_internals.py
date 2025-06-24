@@ -210,9 +210,10 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data_join = json.loads(
                 json_dump(
                     Store(
-                        discuss_channel, discuss_channel._to_store_defaults(for_current_user=False)
-                    ).get_result()
-                )
+                        discuss_channel,
+                        discuss_channel._get_store_default_fields(for_current_user=False),
+                    ).get_result(),
+                ),
             )
             channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[1].id
