@@ -1,6 +1,8 @@
 import * as PosHr from "@pos_hr/../tests/tours/utils/pos_hr_helpers";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
+import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
@@ -178,5 +180,24 @@ registry.category("web_tour.tours").add("test_change_on_rights_reflected_directl
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
             Utils.negateStep(...SelectionPopup.has("Pos Employee1")),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cashier_changed_in_receipt", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("product_a", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.cashierNameExists("Test Employee 3"),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });

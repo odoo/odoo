@@ -133,3 +133,23 @@ class TestUi(TestPosHrHttpCommon):
             "test_change_on_rights_reflected_directly",
             login="pos_admin",
         )
+
+    def test_cashier_changed_in_receipt(self):
+        """
+        Checks that when the cashier is changed during the order,
+        the receipts displays the employee that concluded the order,
+        meaning the one that was at the register when the customer was paying.
+        Also checks that the order has the right cashier and employee in the same
+        use case.
+        """
+        self.product_a.available_in_pos = True
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_cashier_changed_in_receipt",
+            login="pos_admin",
+        )
+        order = self.main_pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.cashier, "Test Employee 3")
+        self.assertEqual(order.employee_id.display_name, "Test Employee 3")
