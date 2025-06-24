@@ -866,6 +866,13 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             'tax_percentage': './{*}TaxCategory/{*}Percent',
         }
 
+    def _get_invoice_line_xpaths(self, document_type=False, qty_factor=1):
+        return {
+            'deferred_start_date': './{*}InvoicePeriod/{*}StartDate',
+            'deferred_end_date': './{*}InvoicePeriod/{*}EndDate',
+            'date_format': '%Y-%m-%d',
+        }
+
     def _get_line_xpaths(self, document_type=False, qty_factor=1):
         return {
             'basis_qty': './cac:Price/cbc:BaseQuantity',
