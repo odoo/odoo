@@ -10,7 +10,7 @@ import {
 defineWebsiteModels();
 
 test("Drag & drop an 'Image' snippet opens the dialog to select an image", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+    onRpc("ir.attachment", "search_read", () => [
         {
             id: 1,
             name: "logo",

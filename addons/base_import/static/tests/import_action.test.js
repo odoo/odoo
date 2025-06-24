@@ -231,11 +231,11 @@ function executeFailingImport(field, isMultiline, field_path = "") {
     };
 }
 
-onRpc("partner", "get_import_templates", async () => []);
-onRpc("base_import.import", "parse_preview", async ({ args }) => parsePreview(args[1]));
-onRpc("base_import.import", "execute_import", async ({ args }) => executeImport(args));
-onRpc("base_import.import", "create", async () => 11);
-onRpc("base_import.import", "get_fields", async () => Partner._fields);
+onRpc("partner", "get_import_templates", () => []);
+onRpc("base_import.import", "parse_preview", ({ args }) => parsePreview(args[1]));
+onRpc("base_import.import", "execute_import", ({ args }) => executeImport(args));
+onRpc("base_import.import", "create", () => 11);
+onRpc("base_import.import", "get_fields", () => Partner._fields);
 
 before(() => {
     mockService("http", {
@@ -258,11 +258,11 @@ describe("Import view", () => {
 
         redirect("/odoo");
 
-        onRpc("partner", "get_import_templates", async ({ route }) => {
+        onRpc("partner", "get_import_templates", ({ route }) => {
             expect.step(route);
             return [{ label: "Some Import Template", template: templateURL }];
         });
-        onRpc("base_import.import", "create", async ({ route }) => expect.step(route));
+        onRpc("base_import.import", "create", ({ route }) => expect.step(route));
         await mountWebClient();
         await getService("action").doAction(1);
         await animationFrame(); // pushState is debounced
@@ -294,9 +294,9 @@ describe("Import view", () => {
             },
         });
 
-        onRpc("partner", "get_import_templates", async ({ route }) => expect.step(route));
-        onRpc("base_import.import", "parse_preview", async ({ route }) => expect.step(route));
-        onRpc("base_import.import", "create", async ({ route }) => expect.step(route));
+        onRpc("partner", "get_import_templates", ({ route }) => expect.step(route));
+        onRpc("base_import.import", "parse_preview", ({ route }) => expect.step(route));
+        onRpc("base_import.import", "create", ({ route }) => expect.step(route));
 
         await mountWebClient();
         await getService("action").doAction(1);
@@ -378,7 +378,7 @@ describe("Import view", () => {
                 data: fakePreviewData,
             });
         });
-        onRpc("base_import.import", "create", async ({ route }) => expect.step(route));
+        onRpc("base_import.import", "create", ({ route }) => expect.step(route));
         await mountWebClient();
         await getService("action").doAction(1);
         expect.verifySteps([
@@ -540,7 +540,7 @@ describe("Import view", () => {
         serverState.debug = "1";
 
         await mountWebClient();
-        onRpc("base_import.import", "parse_preview", async ({ route, args }) => {
+        onRpc("base_import.import", "parse_preview", ({ route, args }) => {
             expect.step(route);
             expect(args[1].advanced).toBe(true);
         });
@@ -1206,7 +1206,7 @@ describe("Import view", () => {
                 ],
             })
         );
-        onRpc("base_import.import", "execute_import", async ({ args }) =>
+        onRpc("base_import.import", "execute_import", ({ args }) =>
             executeFailingImport(args[1][0], true, ["many2many_field", "id"])
         );
         await getService("action").doAction(1);
@@ -1258,7 +1258,7 @@ describe("Import view", () => {
             }
             return response;
         });
-        onRpc("base_import.import", "execute_import", async ({ args }) => {
+        onRpc("base_import.import", "execute_import", ({ args }) => {
             expect.step("execute_import");
             expect(args[3].date_format).toBe("%Y%m%d", {
                 message: "date is converted to strftime as expected during the import",

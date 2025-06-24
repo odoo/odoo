@@ -1084,11 +1084,9 @@ test("multi level command", async () => {
     const commands = [
         {
             name: "Command1",
-            action: () => {
-                return {
-                    providers: [{ provide: () => [{ name: "Command lvl2", action: () => {} }] }],
-                };
-            },
+            action: () => ({
+                providers: [{ provide: () => [{ name: "Command lvl2", action: () => {} }] }],
+            }),
         },
     ];
     const providers = [
@@ -1282,9 +1280,9 @@ test("bold the searchValue on the commands", async () => {
     await runAllTimers();
     expect(".o_command").toHaveCount(5);
     expect(
-        [...queryAll(".o_command")].map((command) => {
-            return queryAllTexts(".o_command_name b", { root: command });
-        })
+        queryAll(".o_command").map((command) =>
+            queryAllTexts(".o_command_name b", { root: command })
+        )
     ).toEqual([["Test"], ["test"], ["test"], ["Test"], ["TeSt", "Test", "TEST"]]);
 });
 

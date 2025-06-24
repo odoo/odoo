@@ -32,7 +32,7 @@ defineWebsiteModels();
 defineModels([Test, TestBase]);
 
 test("model many2many: find tag, select tag, unselect tag", async () => {
-    onRpc("/web/dataset/call_kw/test/name_search", async (args) => [
+    onRpc("test", "name_search", () => [
         [1, "First"],
         [2, "Second"],
         [3, "Third"],

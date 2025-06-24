@@ -16,8 +16,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
 
-import { rpc } from "@web/core/network/rpc";
 import { press } from "@odoo/hoot-dom";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -34,7 +34,7 @@ test("Can execute help command on livechat channels", async () => {
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-    onRpc("/web/dataset/call_kw/discuss.channel/execute_command_help", () => {
+    onRpc("discuss.channel", "execute_command_help", () => {
         asyncStep("execute_command_help");
         return true;
     });
