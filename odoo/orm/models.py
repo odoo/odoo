@@ -1967,11 +1967,12 @@ class BaseModel(metaclass=MetaModel):
 
         elif field.type == 'many2many':
             alias = self._table
-            if field.related and not field.store:
-                _model, field, alias = field.traverse_related_sql(self, alias, query)
 
             if not field.store:
-                raise ValueError(f"Group by non-stored many2many field: {groupby_spec!r}")
+                if not field.related:
+                    raise ValueError(f"Group by non-stored many2many field: {groupby_spec!r}")
+                _model, field, alias = field.traverse_related_sql(self, alias, query)
+
             # special case for many2many fields: prepare a query on the comodel
             # in order to reuse the mechanism _apply_ir_rules, then inject the
             # query as an extra condition of the left join
@@ -2798,6 +2799,7 @@ class BaseModel(metaclass=MetaModel):
 
         return rows_dict
 
+    @typing.final
     def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
@@ -3760,7 +3762,7 @@ class BaseModel(metaclass=MetaModel):
         for field in fields:
             if field.name == 'id':
                 continue
-            assert field.store
+            assert field.store or field.compute_sql
             (column_fields if field.column_type else other_fields).add(field)
 
         context = self.env.context

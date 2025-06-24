@@ -643,14 +643,13 @@ class Field(typing.Generic[T]):
         self.compute = self._compute_related
         if self.inherited or not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
-        if not self.store:
-            try:
-                # use the method only when it works properly
-                query = model._as_query()
-                self._compute_sql_related(model.sudo(), query.table, query)
-                self.compute_sql = self._compute_sql_related
-            except ValueError:
-                _logger.debug("Related field cannot have compute_sql: %s", self, exc_info=True)
+        if (
+            not self.store
+            and (self.compute_sudo or self.inherited)
+            and all(f.type == 'many2one' for f in field_seq[:-1])
+            and all(f.store or f.compute_sql for f in field_seq)
+        ):
+            self.compute_sql = self._compute_sql_related
         if not self.store and all(f._description_searchable for f in field_seq):
             # allow searching on self only if the related field is searchable
             self.search = self._search_related
@@ -949,10 +948,10 @@ class Field(typing.Generic[T]):
 
     @property
     def _description_searchable(self) -> bool:
-        return bool(self.store or self.search)
+        return bool(self.store or self.search or self.compute_sql)
 
     def _description_sortable(self, env: Environment):
-        if self.column_type and self.store:  # shortcut
+        if self.column_type and (self.store or self.compute_sql):  # shortcut
             return True
 
         model = env[self.model_name]
@@ -964,7 +963,7 @@ class Field(typing.Generic[T]):
             return False
 
     def _description_groupable(self, env: Environment):
-        if self.column_type and self.store:  # shortcut
+        if self.column_type and (self.store or self.compute_sql):  # shortcut
             return True
 
         model = env[self.model_name]
@@ -977,7 +976,7 @@ class Field(typing.Generic[T]):
             return False
 
     def _description_aggregator(self, env: Environment):
-        if not self.aggregator or (self.column_type and self.store):  # shortcut
+        if not self.aggregator or (self.column_type and (self.store or self.compute_sql)):  # shortcut
             return self.aggregator
 
         model = env[self.model_name]
