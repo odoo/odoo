@@ -64,7 +64,7 @@
         ],
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',
-            ('include', 'html_builder.assets'),
+            ('include', 'website.website_builder_assets'),
         ],
     },
     'license': 'LGPL-3',

@@ -40,7 +40,7 @@ This is a bridge module that adds multi-website support for payment providers.
         'web.assets_tests': [
             'website_payment/static/tests/tours/donation.js',
         ],
-        'html_builder.assets': [
+        'website.website_builder_assets': [
             'website_payment/static/src/website_builder/**/*',
         ],
     },
