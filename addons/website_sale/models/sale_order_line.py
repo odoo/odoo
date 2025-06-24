@@ -85,6 +85,12 @@ class SaleOrderLine(models.Model):
             not self.combo_item_id
             and sum(self._get_lines_with_price().mapped('price_unit')) == 0
             and self.order_id.website_id.prevent_zero_price_sale
+            and (
+                not self.product_template_id.public_categ_ids
+                or not (
+                    self.product_template_id.public_categ_ids & self.order_id.website_id.prevent_zero_price_categories
+                )
+            )
             and self.product_template_id.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
         ):
             raise UserError(self.env._(

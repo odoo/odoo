@@ -580,9 +580,9 @@ class ProductTemplate(models.Model):
                 )
 
         combination_info.update({
-            'prevent_zero_price_sale': website.prevent_zero_price_sale and float_is_zero(
+            'prevent_zero_price_sale': bool(self) and self._should_hide_add_to_cart(
+                website,
                 combination_info['price'],
-                precision_rounding=currency.rounding,
             ),
 
             # additional info to simplify overrides
@@ -903,7 +903,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         if not self.filtered_domain(self.env['website']._product_domain()):
             return False
-        return not request.website.prevent_zero_price_sale or self._get_contextual_price()
+        return not self._should_hide_add_to_cart(request.website, self._get_contextual_price())
 
     @api.model
     def _get_configurator_display_price(
@@ -964,3 +964,21 @@ class ProductTemplate(models.Model):
         if self.description_ecommerce:
             markup_data['description'] = text_from_html(self.description_ecommerce)
         return markup_data
+
+    def _should_hide_add_to_cart(self, website, price):
+        """
+            Hides 'Add to Cart' if the product price is zero
+            and the website is configured accordingly.
+        """
+        self.ensure_one()
+
+        if not website.prevent_zero_price_sale:
+            return False
+        if not float_is_zero(price, precision_rounding=website.currency_id.rounding):
+            return False
+
+        selected_categs = website.prevent_zero_price_categories
+        if not selected_categs:
+            return True
+
+        return bool(self.public_categ_ids.filtered_domain([('id', 'child_of', selected_categs.ids)]))
