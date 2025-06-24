@@ -1953,3 +1953,11 @@ class ModelAutovacuumed(models.Model):
     @api.autovacuum
     def _gc(self):
         self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()
+
+class VolatileModel(models.Model):
+    _name = _description = 'test_new_api.volatile.model'
+
+    _auto = False
+    _table_query = "0"
+
+    name = fields.Char()

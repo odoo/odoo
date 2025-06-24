@@ -5141,6 +5141,7 @@ class BaseModel(metaclass=MetaModel):
             ``active`` field set to ``False`` should be applied.
         :return: the query expressing the given domain as provided in domain
         :rtype: Query
+        :raise odoo.exceptions.UserError: in case _table_query is not None
         """
         # if the object has an active field ('active', 'x_active'), filter out all
         # inactive records unless they were explicitly asked for
@@ -5149,6 +5150,9 @@ class BaseModel(metaclass=MetaModel):
             # operators too
             if not any(item[0] == self._active_name for item in domain):
                 domain = [(self._active_name, '=', 1)] + domain
+
+        if self._table_query:
+            raise UserError(f"Unable to use {self._name!r} to perform this action.")
 
         if domain:
             return expression.expression(domain, self).query
