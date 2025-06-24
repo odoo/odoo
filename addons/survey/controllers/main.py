@@ -67,9 +67,9 @@ class Survey(http.Controller):
         if answer_token and not answer_sudo:
             return 'token_wrong'
 
-        if not answer_sudo and ensure_token:
+        if not answer_sudo and ensure_token is True:
             return 'token_required'
-        if not answer_sudo and survey_sudo.access_mode == 'token':
+        if not answer_sudo and ensure_token != 'survey_only' and survey_sudo.access_mode == 'token':
             return 'token_required'
 
         if survey_sudo.users_login_required and request.env.user._is_public():
@@ -117,7 +117,8 @@ class Survey(http.Controller):
                 has_survey_access = True
             can_answer = bool(answer_sudo)
             if not can_answer:
-                can_answer = survey_sudo.access_mode == 'public'
+                can_answer = survey_sudo.access_mode == 'public' or (
+                    has_survey_access and ensure_token == 'survey_only')
 
         return {
             'survey_sudo': survey_sudo,
@@ -599,7 +600,7 @@ class Survey(http.Controller):
     def survey_print(self, survey_token, review=False, answer_token=None, **post):
         '''Display an survey in printable view; if <answer_token> is set, it will
         grab the answers of the user_input_id that has <answer_token>.'''
-        access_data = self._get_access_data(survey_token, answer_token, ensure_token=False, check_partner=False)
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token='survey_only', check_partner=False)
         if access_data['validity_code'] is not True and (
                 access_data['has_survey_access'] or
                 access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void', 'answer_deadline']):
