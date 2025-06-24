@@ -144,7 +144,6 @@ class TestMailFlow(MailCommon, TestRecipients):
             MAIL_TEMPLATE_SHORT, [self.customer_zboing.email_normalized], reply_all=True,
             add_to_lst=[self.test_emails[0]], cc=self.test_emails[1],
         )
-        reply_to_cust = cust_reply.reply_to
         self.assertMailNotifications(
             cust_reply,
             [
@@ -155,8 +154,8 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'author_id': self.customer_zboing,
                         'email_from': self.customer_zboing.email_formatted,
                         'incoming_email_cc': self.test_emails[1],
-                        # FIXME: no catchall.test inside the incoming_email_to !
-                        'incoming_email_to': f'{reply_to_emp},{self.test_emails[0]}',
+                        # be sure to not have catchall.test inside the incoming_email_to !
+                        'incoming_email_to': self.test_emails[0],
                         'notified_partner_ids': self.user_employee.partner_id,
                         # only recognized partners
                         'partner_ids': self.env['res.partner'],
@@ -195,7 +194,8 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'author_id': self.partner_employee,
                         'email_from': self.partner_employee.email_formatted,
                         'incoming_email_cc': self.partner_employee_2.email_formatted,
-                        'incoming_email_to': reply_to_cust,
+                        # be sure not to have catchall reply-to !
+                        'incoming_email_to': False,
                         'notified_partner_ids': self.env['res.partner'],
                         # only recognized partners
                         'partner_ids': self.partner_employee_2,
@@ -241,6 +241,7 @@ class TestMailFlow(MailCommon, TestRecipients):
         # incoming customer email: lead alias + recipients (to + cc)
         # ------------------------------------------------------------
         email_to = f'lead@{self.alias_domain}, {self.test_emails[1]}, {self.partner_employee.email_formatted}'
+        email_to_filtered = f'{self.test_emails[1]}, {self.partner_employee.email_formatted}'
         email_cc = f'{self.test_emails[2]}, {self.test_emails[5]}'
         with self.mock_mail_gateway(), self.mock_mail_app():
             lead = self.format_and_process(
@@ -270,7 +271,7 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'author_id': self.env['res.partner'],
                         'email_from': self.test_emails[0],
                         'incoming_email_cc': email_cc,
-                        'incoming_email_to': email_to,
+                        'incoming_email_to': email_to_filtered,
                         'mail_server_id': self.env['ir.mail_server'],
                         'parent_id': self.env['mail.message'],
                         'notified_partner_ids': self.env['res.partner'],
@@ -436,11 +437,7 @@ class TestMailFlow(MailCommon, TestRecipients):
                         # Cc: received email CC - an email still not partnerized (invoicing) and customer_zboing
                         'incoming_email_cc': f'{self.test_emails[3]}, {self.test_emails[4]}',
                         # To: received email Msg-To - customer who replies + email Reply-To
-                        'incoming_email_to':
-                            ', '.join((external_partners - partner_sylvie - self.customer_zboing).mapped('email_formatted') +
-                            [formataddr((
-                                self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}'
-                            ))]),
+                        'incoming_email_to': ', '.join((external_partners - partner_sylvie - self.customer_zboing).mapped('email_formatted')),
                         'mail_server_id': self.env['ir.mail_server'],
                         # notified: followers - already mailed, aka internal only
                         'notified_partner_ids': internal_partners,
@@ -470,6 +467,7 @@ class TestMailFlow(MailCommon, TestRecipients):
         # incoming customer email: help alias + recipients (to + cc)
         # ------------------------------------------------------------
         email_to = f'help@{self.alias_domain}, {self.test_emails[1]}, {self.partner_employee.email_formatted}'
+        email_to_filtered = f'{self.test_emails[1]}, {self.partner_employee.email_formatted}'
         email_cc = f'{self.test_emails[2]}, {self.test_emails[5]}'
         with self.mock_mail_gateway(), self.mock_mail_app():
             ticket = self.format_and_process(
@@ -514,7 +512,7 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'email_from': self.test_emails[0],
                         # coming from incoming email
                         'incoming_email_cc': email_cc,
-                        'incoming_email_to': email_to,
+                        'incoming_email_to': email_to_filtered,
                         'mail_server_id': self.env['ir.mail_server'],
                         'parent_id': self.env['mail.message'],
                         'notified_partner_ids': self.env['res.partner'],
