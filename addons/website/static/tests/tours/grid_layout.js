@@ -45,12 +45,12 @@ registerWebsitePreviewTour('website_replace_grid_image', {
     },
     {
         content: "Pick new image",
-        trigger: '.o_select_media_dialog img[title="s_banner_default_image2.jpg"]',
+        trigger: '.o_select_media_dialog img[title="s_banner_default_image2.webp"]',
         run: "click",
     },
     {
         content: "Replace new image",
-        trigger: ':iframe .s_text_image img[src*="s_banner_default_image2.jpg"]',
+        trigger: ':iframe .s_text_image img[src*="s_banner_default_image2.webp"]',
         run: 'dblclick',
     },
     {

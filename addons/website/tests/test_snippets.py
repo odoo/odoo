@@ -92,7 +92,7 @@ class TestSnippets(HttpCase):
 
     def test_09_snippet_image_gallery(self):
         create_image_attachment(self.env, '/web/image/website.s_banner_default_image.jpg', 's_default_image.jpg')
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image.jpg', 's_default_image2.jpg')
+        create_image_attachment(self.env, '/web/image/website.s_banner_default_image.jpg', 's_default_image2.webp')
         self.start_tour("/", "snippet_image_gallery_remove", login='admin')
 
     def test_10_parallax(self):

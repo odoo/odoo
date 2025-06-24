@@ -254,12 +254,13 @@ test("animation=onHover should not be visible when the image has a cors protecte
                             attachment: { id: 1 },
                             original: {
                                 id: 1,
-                                image_src: "/website/static/src/img/snippets_demo/s_text_image.jpg",
-                                mimetype: "image/jpeg",
+                                image_src:
+                                    "/website/static/src/img/snippets_demo/s_text_image.webp",
+                                mimetype: "image/webp",
                             },
                         },
                     };
-                case "/website/static/src/img/snippets_demo/s_text_image.jpg":
+                case "/website/static/src/img/snippets_demo/s_text_image.webp":
                     return;
                 default:
                     expect.step(route);
