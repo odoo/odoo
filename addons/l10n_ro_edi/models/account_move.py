@@ -57,8 +57,9 @@ class AccountMove(models.Model):
         self.ensure_one()
         res_model = res_model or self._name
         res_id = res_id or self.id
+        name = self.name or ""
         return {
-            'name': f"ciusro_signature_{self.name.replace('/', '_')}.xml",
+            'name': f"ciusro_signature_{name.replace('/', '_')}.xml",
             'res_model': res_model,
             'res_id': res_id,
             'raw': raw,

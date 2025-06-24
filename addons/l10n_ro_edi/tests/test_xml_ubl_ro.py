@@ -4,9 +4,7 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUBLRO(TestUBLCommon):
-
+class TestUBLROCommon(TestUBLCommon):
     @classmethod
     @TestUBLCommon.setup_country('ro')
     def setUpClass(cls):
@@ -76,6 +74,14 @@ class TestUBLRO(TestUBLCommon):
             ],
             **kwargs
         )
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestUBLRO(TestUBLROCommon):
+
+    ####################################################
+    # Test export - import
+    ####################################################
 
     def get_attachment(self, move):
         self.assertTrue(move.ubl_cii_xml_id)
