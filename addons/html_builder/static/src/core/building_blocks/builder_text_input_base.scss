@@ -1,12 +1,15 @@
 .o-hb-input-base {
+    .popover & {
+        --o-hb-field-input-bg: var(--o-hb-field-input-bg-popover, #{$o-we-fg-lighter});
+    }
     border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
     border-radius: $o-we-sidebar-content-field-border-radius;
-    background-color: $o-we-sidebar-content-field-input-bg;
+    background-color: var(--o-hb-field-input-bg, #{$o-we-sidebar-content-field-input-bg});
     padding: 0.15rem $o-we-sidebar-content-field-clickable-spacing;
     color: inherit;
 
     &:focus, &:focus-within {
         border-color: var(--o-hb-input-active-border, #{$o-we-sidebar-content-field-input-border-color});
-        color: $o-we-fg-lighter;
+        color: var(--o-hb-row-color-active, #{$o-we-fg-lighter});
     }
 }

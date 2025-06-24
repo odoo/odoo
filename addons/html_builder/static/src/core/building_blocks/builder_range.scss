@@ -1,4 +1,7 @@
 .o-hb-range {
+    .popover & {
+        --o-hb-range-thumb-color: var(--o-hb-range-thumb-color-popover, #{$o-we-bg-darkest});
+    }
     &:has(output) {
         .o-hb-rangeInput {
             // Needed because without it the output overflows to the right
@@ -32,7 +35,7 @@
             margin-top: ($o-we-sidebar-content-field-progress-height - $o-we-sidebar-content-field-progress-control-height) / 2;
             border: none;
             border-radius: 10rem;
-            background-color: $o-we-fg-lighter;
+            background-color: var(--o-hb-range-thumb-color, #{$o-we-fg-lighter});
             box-shadow: none;
             appearance: none;
 
@@ -57,7 +60,7 @@
             height: $o-we-sidebar-content-field-progress-control-height;
             border: none;
             border-radius: 10rem;
-            background-color: $o-we-fg-lighter;
+            background-color: var(--o-hb-range-thumb-color, #{$o-we-fg-lighter});
             box-shadow: none;
             appearance: none;
 
@@ -87,7 +90,7 @@
             margin-left: 0;
             border: none;
             border-radius: 10rem;
-            background-color: $o-we-fg-lighter;
+            background-color: var(--o-hb-range-thumb-color, #{$o-we-fg-lighter});
             box-shadow: none;
             appearance: none;
 

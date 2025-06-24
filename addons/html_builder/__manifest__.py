@@ -36,6 +36,10 @@
             'web/static/lib/bootstrap/scss/_maps.scss',
             'web/static/fonts/fonts.scss',
             'html_builder/static/src/**/*',
+            ('remove', 'html_builder/static/src/**/*.dark.scss'),
+        ],
+        'web.assets_web_dark': [
+            'html_builder/static/src/**/*.dark.scss',
         ],
         'html_builder.inside_builder_style': [
             ('include', 'web._assets_helpers'),
