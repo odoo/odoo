@@ -112,6 +112,7 @@ class ImportComplex(models.Model):
     d = fields.Date()
     dt = fields.Datetime()
     parent_id = fields.Many2one('import.complex')
+    html = fields.Html()
 
 
 class ImportPropertiesDefinition(models.Model):
