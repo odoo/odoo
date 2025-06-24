@@ -12,4 +12,5 @@ class StockPickingType(models.Model):
         ('pick', 'Pick'),
         ('pack', 'Pack'),
         ('delivery', 'Delivery Order'),
+        ('returns', 'Returns')
     ], string='Process Type')
