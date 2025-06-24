@@ -1501,6 +1501,64 @@ class TestSubcontractingTracking(TransactionCase):
         picking_receipt.button_validate()
         self.assertEqual(picking_receipt.state, 'done')
 
+    def test_validate_subcontracting_picking(self):
+        self.comp1_sn.route_ids = [(4, self.env.ref('mrp_subcontracting.route_resupply_subcontractor_mto').id)]
+        bom_product = self.env['product.product'].create([{
+            'name': "Demo Product",
+            'type': "product",
+            'tracking': "serial",
+            'route_ids': [Command.link(self.env.ref('purchase_stock.route_warehouse0_buy').id)],
+        }])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': bom_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': "subcontract",
+            'subcontractor_ids': [Command.link(self.subcontractor_partner1.id)],
+            'bom_line_ids': [Command.create({'product_id': self.comp1_sn.id, 'product_qty': 1.0})],
+        })
+        order = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            "order_line": [Command.create({
+                'product_id': bom_product.id,
+                'product_qty': 2.0,
+            })],
+        })
+        lot1, lot2 = self.env['stock.lot'].create([{
+            'name': "SN03",
+            'product_id': bom_product.id,
+        }, {
+            'name': "SN04",
+            'product_id': bom_product.id,
+        }])
+        order.button_confirm()
+        resupply_action = order.action_view_subcontracting_resupply()
+        picking = self.env[resupply_action['res_model']].browse(resupply_action['res_id'])
+        picking.move_ids.lot_ids = [Command.create({'name': 'SN01', 'product_id': self.comp1_sn.id}),
+                                    Command.create({'name': 'SN02', 'product_id': self.comp1_sn.id})]
+        picking.button_validate()
+        sourch_PO_action = picking.action_view_subcontracting_source_purchase()
+        source_PO = self.env[sourch_PO_action['res_model']].browse(sourch_PO_action['res_id'])
+        Receipt_action = source_PO.action_view_picking()
+        final_picking = self.env[Receipt_action['res_model']].browse(Receipt_action['res_id'])
+
+        mo_action1 = final_picking.action_record_components()
+        mo = self.env['mrp.production'].browse(mo_action1['res_id'])
+        mo_form = Form(mo.with_context(**mo_action1['context']), view=mo_action1['view_id'])
+        mo_form.qty_producing = 1
+        mo_form.lot_producing_id = lot1
+        mo = mo_form.save()
+        mo.subcontracting_record_component()
+
+        mo_action2 = final_picking.action_record_components()
+        mo = self.env['mrp.production'].browse(mo_action2['res_id'])
+        mo_form = Form(mo.with_context(mo_action2['context']), view=mo_action2['view_id'])
+        mo_form.lot_producing_id = lot2
+        mo = mo_form.save()
+        mo.subcontracting_record_component()
+
+        final_picking.button_validate()
+        self.assertEqual(final_picking.state, "done", "Picking should be validate.")
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingPortal(TransactionCase):
