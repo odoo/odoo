@@ -1006,7 +1006,8 @@ class ResPartner(models.Model):
                 if partner._context.get('show_email') and partner.email:
                     name = f"{name} <{partner.email}>"
                 if partner._context.get('show_address'):
-                    name = name + "\n" + partner._display_address(without_company=True)
+                    address = name + "\n" + partner._display_address(without_company=True)
+                    name = "\n".join(line for line in address.splitlines() if line.strip())
 
                 if partner._context.get('show_vat') and partner.vat:
                     if partner._context.get('show_address'):

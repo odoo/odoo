@@ -1008,11 +1008,17 @@ class TestPartnerAddressCompany(TransactionCase):
         Check display_name correctly return name with context. """
         test_partner_jetha = self.env['res.partner'].create({'name': 'Jethala', 'street': 'Powder gali', 'street2': 'Gokuldham Society'})
         test_partner_bhide = self.env['res.partner'].create({'name': 'Atmaram Bhide'})
+        test_partner_bagha = self.env['res.partner'].create({'name': 'Bagha', 'street': '', 'street2': '', 'city': 'Mumbai'})
+        test_partner_nattu_kaka = self.env['res.partner'].create({'name': 'Nattu Kaka', 'street': 'Gada Electronics', 'street2': '', 'city': 'Mumbai'})
 
         res_jetha = test_partner_jetha.with_context(show_address=1).display_name
         self.assertEqual(res_jetha, "Jethala\nPowder gali\nGokuldham Society", "name should contain comma separated name and address")
         res_bhide = test_partner_bhide.with_context(show_address=1).display_name
         self.assertEqual(res_bhide, "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
+        res_bagha = test_partner_bagha.with_context(show_address=True).display_name
+        self.assertEqual(res_bagha, 'Bagha\nMumbai')
+        res_nattu_kaka = test_partner_nattu_kaka.with_context(show_address=True).display_name
+        self.assertEqual(res_nattu_kaka, 'Nattu Kaka\nGada Electronics\nMumbai')
 
     def test_accessibility_of_company_partner_from_branch(self):
         """ Check accessibility of company partner from branch. """
