@@ -20,6 +20,18 @@ class PortalTest(http.Controller):
         }
         return request.render("test_mail_full.test_portal_template", values)
 
+    @http.route("/my/test_portal_rating_records/<int:res_id>", type="http", auth="public", website=True)
+    def test_portal_rating_record_page(self, res_id, **kwargs):
+        record = request.env["mail.test.rating"]._get_thread_with_access(res_id, **kwargs)
+        values = {
+            "display_rating": True,
+            "hash": kwargs.get("hash"),
+            "object": record,
+            "pid": kwargs.get("pid"),
+            "token": kwargs.get("token"),
+        }
+        return request.render("test_mail_full.test_portal_template", values)
+
     @http.route('/test_portal/public_type/<int:res_id>', type='http', auth='public', methods=['GET'])
     def test_public_record_view(self, res_id):
         return request.make_response(f'Testing public controller for {res_id}')
