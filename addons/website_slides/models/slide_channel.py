@@ -1287,3 +1287,7 @@ class Channel(models.Model):
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return []
+
+    @api.model
+    def _allow_publish_rating_stats(self):
+        return True
