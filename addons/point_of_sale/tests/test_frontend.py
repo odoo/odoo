@@ -2359,6 +2359,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(load_product_from_pos_stats['items']['orange'], 2, "Orange should have 2 pricelist items")
         self.assertEqual(load_product_from_pos_stats['items']['kiwi'], 1, "Kiwi should have 1 pricelist item")
 
+    def test_pos_order_shipping_date(self):
+        self.main_pos_config.write({'ship_later': True})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f"/pos/ui?config_id={self.main_pos_config.id}",
+            "test_pos_order_shipping_date",
+            login="pos_user",
+        )
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
