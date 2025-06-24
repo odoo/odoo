@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_financial_summary_wizard" model="ir.ui.view">
+        <field name="name">account.financial.summary.wizard.form</field>
+        <field name="model">account.financial.summary.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Financial Summary">
+                <group>
+                    <field name="company_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                <footer>
+                    <button string="Generate" type="object" name="action_generate" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_financial_summary_line_tree" model="ir.ui.view">
+        <field name="name">account.financial.summary.line.tree</field>
+        <field name="model">account.financial.summary.line</field>
+        <field name="arch" type="xml">
+            <tree string="Summary">
+                <field name="account_id"/>
+                <field name="debit"/>
+                <field name="credit"/>
+                <field name="balance"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_account_financial_summary_wizard" model="ir.actions.act_window">
+        <field name="name">Financial Summary</field>
+        <field name="res_model">account.financial.summary.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_action_financial_summary" name="Financial Summary" parent="account.menu_finance_reports" action="action_account_financial_summary_wizard" sequence="100"/>
+</odoo>

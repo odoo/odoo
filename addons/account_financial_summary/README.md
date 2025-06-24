@@ -1,0 +1,1 @@
+This module provides a simple wizard to quickly generate a financial summary of the general ledger. Users select a date range and the wizard aggregates the debit, credit and balance per account in one view.
