@@ -10,6 +10,8 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 from odoo.addons.mail.tools.discuss import Store
 
+BUFFER_TIME = 120  # Time in seconds between two sessions assigned to the same operator. Not enforced if the operator is the best suited.
+
 
 class Im_LivechatChannel(models.Model):
     """ Livechat Channel
@@ -451,12 +453,12 @@ class Im_LivechatChannel(models.Model):
                         (
                             "create_date",
                             ">",
-                            fields.Datetime.now() - timedelta(seconds=self.buffer_time),
+                            fields.Datetime.now() - timedelta(seconds=BUFFER_TIME),
                         ),
                     ],
                     groupby=["partner_id"],
                 )
-            } if self.buffer_time else set()
+            }
 
         def same_language(operator):
             return operator.partner_id.lang == lang or lang in operator.livechat_lang_ids.mapped("code")
