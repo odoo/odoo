@@ -18,9 +18,11 @@
                         iconOnLeftSide="pos.currency.position === 'before'"
                         isValid.bind="env.utils.isValidFloat"
                         autofocus="true"
-                        getRef="(ref) => this.inputRef = ref" />
+                        getRef="(ref) => this.inputRef = ref"
+                        t-on-click="openNumpadDialog"
+                        readonly="ui.isSmall ? true : false" />
                 </div>
-            </div> 
+            </div>
             <div class="form-floating">
                 <textarea class="form-control cash-reason" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
                 <label for="reason">Reason</label>

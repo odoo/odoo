@@ -1,6 +1,7 @@
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 import { waitFor } from "@odoo/hoot-dom";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 const { DateTime } = luxon;
 
 export function confirmPopup() {
@@ -32,12 +33,30 @@ export function isCashMoveButtonHidden() {
     ];
 }
 export function doCashMove(amount, reason) {
+    const numpadWrite = (val) => val.split("").flatMap((key) => Numpad.click(key));
     return [
         ...clickMenuOption("Cash In/Out"),
         fillTextArea(".cash-reason", reason),
         {
-            trigger: ".modal .input-amount input",
+            isActive: ["desktop"],
+            content: "Enter the amount to cash in/out",
+            trigger: ".modal input.o_input",
             run: "edit " + amount,
+        },
+        {
+            isActive: ["mobile"],
+            content: "Enter the amount to cash in/out",
+            trigger: ".modal input.o_input",
+            run: "click",
+        },
+        ...numpadWrite(amount).map((step) => ({
+            isActive: ["mobile"],
+            ...step,
+        })),
+        {
+            isActive: ["mobile"],
+            trigger: ".o-overlay-item:nth-child(2) .modal-footer button:contains('Ok')",
+            run: "click",
         },
         Dialog.confirm(),
     ];

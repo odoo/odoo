@@ -28,6 +28,7 @@ export class Input extends TModelInput {
         class: { type: String, optional: true },
         callback: { type: Function, optional: true },
         isOpenCallback: { type: Function, optional: true },
+        readonly: { type: Boolean, optional: true },
     };
     static defaultProps = {
         class: "",
@@ -39,6 +40,7 @@ export class Input extends TModelInput {
         autofocusMobile: false,
         iconOnLeftSide: true,
         isValid: () => true,
+        readonly: false,
     };
     setup() {
         this.state = useState({ isOpen: false });
