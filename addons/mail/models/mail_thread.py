@@ -41,7 +41,8 @@ from odoo.tools import (
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header,
     email_normalize, email_normalize_all, email_split,
-    email_split_and_format, formataddr, html_sanitize,
+    email_split_and_format, email_split_and_format_normalize,
+    formataddr, html_sanitize,
     generate_tracking_message_id,
     unfold_references,
 )
@@ -3750,15 +3751,29 @@ class MailThread(models.AbstractModel):
         if additional_values:
             base_mail_values.update(additional_values)
 
-        # prepare headers (as sudo as accessing mail.alias.domain, restricted)
+        # prepare headers
         headers = {}
-        # prepare external emails to modify Msg[To] and enable Reply-All including external people
+        # prepare external emails to modify Msg[To] and enable Reply-All by
+        # including external people (aka share partners to notify + emails
+        # notified by incoming email (incoming_email_cc and incoming_email_to)
+        # that were not transformed into partners to notify
         external_emails = [
             formataddr((r['name'], r['email_normalized']))
             for r in recipients_data if r['id'] and r['active'] and r['email_normalized'] and r['share']
         ]
+        external_emails_normalized = [
+            r['email_normalized']
+            for r in recipients_data if r['id'] and r['active'] and r['email_normalized'] and r['share']
+        ]
+        external_emails += list({
+            email for email in email_split_and_format_normalize(
+                f"{message_sudo.incoming_email_to or ''},{message_sudo.incoming_email_cc or ''}"
+            )
+            if email_normalize(email) not in external_emails_normalized
+        })
         if external_emails and len(external_emails) < self._CUSTOMER_HEADERS_LIMIT_COUNT:  # more than threshold = considered as public record (slide, forum, ...) -> do not leak
             headers['X-Msg-To-Add'] = ','.join(external_emails)
+        # sudo: access to mail.alias.domain, restricted
         if message_sudo.record_alias_domain_id.bounce_email:
             headers['Return-Path'] = message_sudo.record_alias_domain_id.bounce_email
         headers = self._notify_by_email_get_headers(headers=headers)
