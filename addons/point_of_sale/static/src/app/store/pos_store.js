@@ -591,6 +591,7 @@ export class PosStore extends Reactive {
             }
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
                 product: product,
+                hideAlwaysVariants: opts.hideAlwaysVariants,
                 defaultValues: defaultValues,
             });
         }

@@ -119,8 +119,16 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
-    static props = ["product", "getPayload", "close", "defaultValues"];
-
+    static props = {
+        product: Object,
+        getPayload: Function,
+        close: Function,
+        defaultValues: { type: Object, optional: true },
+        hideAlwaysVariants: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        hideAlwaysVariants: false,
+    };
     setup() {
         useSubEnv({
             attribute_components: [],
@@ -190,6 +198,15 @@ export class ProductConfiguratorPopup extends Component {
     }
     get unitPrice() {
         return this.env.utils.formatCurrency(this.props.product.lst_price);
+    }
+    get validAttributeLineIds() {
+        if (this.props.hideAlwaysVariants) {
+            return this.props.product.attribute_line_ids.filter(
+                (line) => line.attribute_id.create_variant !== "always"
+            );
+        } else {
+            return this.props.product.attribute_line_ids;
+        }
     }
     close() {
         this.props.close();
