@@ -15,13 +15,15 @@
             <input
             type="range"
             class="o-hb-rangeInput"
+            t-ref="inputRef"
             t-att-class="className"
             t-att-min="min"
             t-att-max="max"
             t-att-step="props.step"
             t-att-value="rangeInputValue"
             t-on-change="onChange"
-            t-on-input="onInput" />
+            t-on-input="onInput"
+            t-on-keydown="onKeydown" />
             <output t-if="props.displayRangeValue" t-out="displayValue" class="ms-1"/>
         </div>
     </BuilderComponent>

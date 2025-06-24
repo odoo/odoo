@@ -749,6 +749,18 @@ export function useVisibilityObserver(contentName, callback) {
     );
 }
 
+export function useInputDebouncedCommit(ref) {
+    const comp = useComponent();
+    return useDebounced(() => {
+        const normalizedDisplayValue = comp.commit(ref.el.value);
+        ref.el.value = normalizedDisplayValue;
+    }, 550);
+    // ↑ 500 is the delay when holding keydown between the 1st and 2nd event
+    // fired. Some additional delay by the browser may add another ~5-10ms.
+    // We debounce above that threshold to keep a single history step when
+    // holding up/down on a number or range input.
+}
+
 export const basicContainerBuilderComponentProps = {
     id: { type: String, optional: true },
     applyTo: { type: String, optional: true },

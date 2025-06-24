@@ -26,6 +26,17 @@
             &::-moz-range-thumb     { box-shadow: none; }
             &::-ms-thumb            { box-shadow: none; }
         }
+        &:focus-visible {
+            &::-webkit-slider-thumb {
+                box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-sidebar-content-field-progress-active-color;
+            }
+            &::-moz-range-thumb {
+                box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-sidebar-content-field-progress-active-color;
+            }
+            &::-ms-thumb {
+                box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-sidebar-content-field-progress-active-color;
+            }
+        }
         &::-moz-focus-outer {
             border: 0;
         }
