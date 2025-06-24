@@ -160,6 +160,62 @@ test("start interactions with selectorHas", async () => {
     expect(core.interactions[0].interaction.el).toBe(queryOne(".test:has(.inner)"));
 });
 
+test("start interactions even if there is a crash when evaluating selectorNotHas", async () => {
+    class Boom extends Interaction {
+        static selector = ".test";
+        static selectorNotHas = "div:invalid(coucou)";
+
+        setup() {
+            expect.step("start boom");
+        }
+        destroy() {
+            expect.step("destroy boom");
+        }
+    }
+    class NotBoom extends Interaction {
+        static selector = ".test";
+
+        setup() {
+            expect.step("start notboom");
+        }
+    }
+
+    const { core } = await startInteraction(
+        [Boom, NotBoom],
+        `<div class="test"><div></div></div>`,
+        {
+            waitForStart: false,
+        }
+    );
+
+    await expect(core.isReady).rejects.toThrow(
+        "Could not start interaction Boom (invalid selector: '.test' or selectorNotHas: 'div:invalid(coucou)')"
+    );
+    expect.verifySteps(["start notboom"]);
+});
+
+test("start interactions with selectorNotHas", async () => {
+    class Test extends Interaction {
+        static selector = ".test";
+        static selectorNotHas = ".inner";
+
+        start() {
+            expect.step("start");
+        }
+    }
+
+    const { core } = await startInteraction(
+        Test,
+        `
+        <div class="test"><div class="inner"></div></div>
+        <div class="test"><div class="not-inner"></div></div>
+    `
+    );
+    expect(core.interactions).toHaveLength(1);
+    expect.verifySteps(["start"]);
+    expect(core.interactions[0].interaction.el).toBe(queryOne(".test:not(:has(.inner))"));
+});
+
 test("recover from error as much as possible when applying dynamiccontent", async () => {
     let a = "a";
     let b = "b";
