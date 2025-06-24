@@ -31,11 +31,11 @@ class Cloc(Command):
         if not opt.database and not opt.path:
             self.parser.print_help()
             sys.exit()
-        if ',' in opt.database:
-            sys.exit("-d/--database has multiple database, please provide a single one")
 
         c = cloc.Cloc()
         if opt.database:
+            if ',' in opt.database:
+                sys.exit("-d/--database has multiple databases, please provide a single one")
             config.parse_config(['-d', opt.database] + unknown)
             c.count_database(config['db_name'][0])
         if opt.path:
