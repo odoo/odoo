@@ -262,8 +262,8 @@ class TestGroupExpand(common.TransactionCase):
             ]
         )
 
-        # 1 for formatted_read_group + 1 to get length + 1 for fetch display_name/fold
-        with self.assertQueryCount(3):
+        # 1 for formatted_read_group + 1 for fetch display_name/fold
+        with self.assertQueryCount(2):
             self.env.invalidate_all()
             self.assertEqual(  # No group_expand limit reached directly
                 Line.formatted_read_group([], ['order_expand_id'], ['value:sum'], limit=2),
