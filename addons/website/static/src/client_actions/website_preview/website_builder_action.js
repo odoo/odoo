@@ -135,7 +135,9 @@ export class WebsiteBuilderClientAction extends Component {
             if (!this.ui.isSmall) {
                 // preload builder and snippets so clicking on "edit" is faster
                 loadBundle("website.website_builder_assets").then(() => {
-                    this.env.services["html_builder.snippets"].load();
+                    this.env.services["html_builder.snippets"].reload({
+                        lang: this.websiteService.currentWebsite?.default_lang_id.code,
+                    });
                 });
             }
         });
