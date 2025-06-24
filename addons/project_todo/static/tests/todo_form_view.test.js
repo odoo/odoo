@@ -1,21 +1,18 @@
-import { expect, test, beforeEach } from "@odoo/hoot";
-import { queryAllTexts, click } from "@odoo/hoot-dom";
+import { beforeEach, expect, test } from "@odoo/hoot";
+import { click, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-
 import {
-    mountView,
-    onRpc,
-    mountWithCleanup,
-    getService,
     contains,
-    MockServer,
     fields,
+    getService,
+    mountView,
+    mountWithCleanup,
+    onRpc,
 } from "@web/../tests/web_test_helpers";
-import { WebClient } from "@web/webclient/webclient";
 import { browser } from "@web/core/browser/browser";
-
-import { defineTodoModels } from "./todo_test_helpers";
+import { WebClient } from "@web/webclient/webclient";
 import { ProjectTask } from "./mock_server/mock_models/project_task";
+import { defineTodoModels } from "./todo_test_helpers";
 
 defineTodoModels();
 
@@ -32,7 +29,7 @@ beforeEach(() => {
                 <field name="priority" invisible="1"/>
                 <field name="date_deadline" widget="remaining_days"/>
             </form>`,
-        "activity, false": `
+        activity: `
             <activity string="MailTestActivity">
                 <field name="name" invisible="1"/>
                 <templates>
@@ -41,8 +38,6 @@ beforeEach(() => {
                     </div>
                 </templates>
             </activity>`,
-        search: `
-            <search/>`,
     };
 
     ProjectTask._fields.activity_state = fields.Selection({
@@ -65,8 +60,7 @@ test("Check that project_task_action_convert_todo_to_task appears in the menu ac
     });
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
-    const menuActions = Array.from(queryAllTexts(".o-dropdown--menu span"));
-    expect(menuActions.includes("Convert to Task")).toBe(true, {
+    expect(queryAllTexts(".o-dropdown--menu span")).toInclude("Convert to Task", {
         message:
             "project_task_action_convert_todo_to_task action should appear in the menu actions",
     });
@@ -83,8 +77,7 @@ test("Check that project_task_action_convert_todo_to_task does not appear in the
     });
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
-    const menuActions = Array.from(queryAllTexts(".o-dropdown--menu span"));
-    expect(menuActions.includes("Convert to Task")).toBe(false, {
+    expect(queryAllTexts(".o-dropdown--menu span")).not.toInclude("Convert to Task", {
         message:
             "project_task_action_convert_todo_to_task action should appear in the menu actions",
     });
@@ -113,27 +106,21 @@ test("Check that todo_form view contains the TodoDoneCheckmark and remaining_day
     });
 });
 test.tags("desktop");
-test("Check if opening form view from activity view does open with chatter visble", async() => {
+test("Check if opening form view from activity view does open with chatter visble", async () => {
     // Basic/Minimum data needed for activity view to be displayed
-    onRpc("web_search_read", (args) => {
+    onRpc("web_search_read", function ({ model }) {
         return {
             length: 1,
-            records: [
-                {
-                    id: 1,
-                    name: "Todo"
-                }
-            ],
+            records: this.env[model].read(1, ["name"]),
         };
     });
-    onRpc("get_activity_data", (args) => {
-        const currentEnv = MockServer.current.env;
+    onRpc("get_activity_data", function () {
         return {
             activity_res_ids: [1],
             grouped_activities: {},
-            activity_types: currentEnv["mail.activity.type"].map((type) => {
+            activity_types: this.env["mail.activity.type"].map((type) => {
                 const templates = (type.mail_template_ids || []).map((template_id) => {
-                    const { id, name } = currentEnv["mail.template"].browse(template_id)[0];
+                    const { id, name } = this.env["mail.template"].browse(template_id)[0];
                     return { id, name };
                 });
                 return {
@@ -142,7 +129,7 @@ test("Check if opening form view from activity view does open with chatter visbl
                     template_ids: templates,
                 };
             }),
-        }
+        };
     });
 
     await mountWithCleanup(WebClient);

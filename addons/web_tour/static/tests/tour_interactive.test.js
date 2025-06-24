@@ -75,17 +75,16 @@ beforeEach(() => {
         log: () => {},
         dir: () => {},
     });
-    onRpc("/web/dataset/call_kw/web_tour.tour/consume", async (request) => {
-        const { params } = await request.json();
-        tourConsumed.push(params.args[0]);
+    onRpc("web_tour.tour", "consume", ({ args }) => {
+        tourConsumed.push(args[0]);
         const nextTour = tourRegistry
             .getEntries()
             .filter(([tourName]) => !tourConsumed.includes(tourName))
             .at(0);
         return (nextTour && { name: nextTour.at(0) }) || false;
     });
-    onRpc("/web/dataset/call_kw/res.users/switch_tour_enabled", async () => true);
-    onRpc("/web/dataset/call_kw/web_tour.tour/get_tour_json_by_name", async () => ({
+    onRpc("res.users", "switch_tour_enabled", () => true);
+    onRpc("web_tour.tour", "get_tour_json_by_name", () => ({
         name: "tour1",
         steps: [
             { trigger: "button.foo", run: "click" },
