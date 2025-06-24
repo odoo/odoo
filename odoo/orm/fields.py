@@ -1182,6 +1182,9 @@ class Field(typing.Generic[T]):
                 field = model._fields[self.name]
                 if not field.required or not field.store:
                     return
+                if field.compute:
+                    records = model.with_context(active_test=False).search([(field.name, "=", False)])
+                    model.env.add_to_compute(field, records)
                 # Flush values before adding NOT NULL constraint.
                 model.flush_model([field.name])
                 model.pool.post_constraint(
