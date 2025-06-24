@@ -13,7 +13,9 @@ import os.path
 import pprint
 import re
 import subprocess
+import warnings
 from datetime import datetime, timedelta
+from typing import Literal, Optional
 
 from dateutil.relativedelta import relativedelta
 from lxml import etree, builder
@@ -30,6 +32,8 @@ from .safe_eval import safe_eval, pytz, time
 
 _logger = logging.getLogger(__name__)
 
+ConvertMode = Literal['init', 'update']
+IdRef = dict[str, int | Literal[False]]
 
 class ParseError(Exception):
     ...
@@ -591,11 +595,11 @@ form: module.record_id""" % (xml_id,)
             value = self._sequences[-1] = value + 10
         return value
 
-    def __init__(self, env, module, idref, mode, noupdate=False, xml_filename=None):
+    def __init__(self, env, module, idref: Optional[IdRef], mode: ConvertMode, noupdate: bool = False, xml_filename: str = ''):
         self.mode = mode
         self.module = module
         self.envs = [env(context=dict(env.context, lang=None))]
-        self.idref = {} if idref is None else idref
+        self.idref: IdRef = {} if idref is None else idref
         self._noupdate = [noupdate]
         self._sequences = []
         self.xml_filename = xml_filename
@@ -614,7 +618,23 @@ form: module.record_id""" % (xml_id,)
         self._tag_root(de)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
-def convert_file(env, module, filename, idref, mode='update', noupdate=False, kind=None, pathname=None):
+
+def convert_file(
+        env,
+        module,
+        filename,
+        idref: Optional[IdRef],
+        mode: ConvertMode = 'update',
+        noupdate=False,
+        kind=None,
+        pathname=None,
+):
+    if kind is not None:
+        warnings.warn(
+            "The `kind` argument is deprecated in Odoo 19.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
     if pathname is None:
         pathname = os.path.join(module, filename)
     ext = os.path.splitext(filename)[1].lower()
@@ -631,11 +651,20 @@ def convert_file(env, module, filename, idref, mode='update', noupdate=False, ki
         else:
             raise ValueError("Can't load unknown file type %s.", filename)
 
+
 def convert_sql_import(env, fp):
     env.cr.execute(fp.read()) # pylint: disable=sql-injection
 
-def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
-        noupdate=False):
+
+def convert_csv_import(
+        env,
+        module,
+        fname,
+        csvcontent,
+        idref: Optional[IdRef] = None,
+        mode: ConvertMode = 'init',
+        noupdate=False,
+):
     '''Import csv file :
         quote: "
         delimiter: ,
@@ -684,7 +713,16 @@ def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
             message=warning_msg,
         ))
 
-def convert_xml_import(env, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
+
+def convert_xml_import(
+        env,
+        module,
+        xmlfile,
+        idref: Optional[IdRef] = None,
+        mode: ConvertMode = 'init',
+        noupdate=False,
+        report=None,
+):
     doc = etree.parse(xmlfile)
     schema = os.path.join(config.root_path, 'import_xml.rng')
     relaxng = etree.RelaxNG(etree.parse(schema))

@@ -17,6 +17,7 @@ import odoo.sql_db
 import odoo.tools.sql
 import odoo.tools.translate
 from odoo import api, tools
+from odoo.tools.convert import convert_file, IdRef, ConvertMode as LoadMode
 
 from . import db as modules_db
 from .migration import MigrationManager
@@ -31,56 +32,35 @@ if typing.TYPE_CHECKING:
     from odoo.tests.result import OdooTestResult
     from .module_graph import ModuleNode
 
+    LoadKind = typing.Literal['data', 'demo']
+
 _logger = logging.getLogger(__name__)
 
 
-def load_data(env: Environment, idref, mode: str, kind: str, package: ModuleNode) -> bool:
+def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, package: ModuleNode) -> bool:
     """
-
-    kind: data, demo, test, init_xml, update_xml, demo_xml.
-
-    noupdate is False, unless it is demo data or it is csv data in
-    init mode.
+    noupdate is False, unless it is demo data
 
     :returns: Whether a file was loaded
-    :rtype: bool
     """
+    keys = ('init_xml', 'data') if kind == 'data' else ('demo',)
 
-    def _get_files_of_kind(kind: str) -> list[str]:
-        if kind == 'demo':
-            keys = ['demo_xml', 'demo']
-        elif kind == 'data':
-            keys = ['init_xml', 'update_xml', 'data']
-        if isinstance(kind, str):
-            keys = [kind]
-        files: list[str] = []
-        for k in keys:
-            for f in package.manifest[k]:
-                if f in files:
-                    _logger.warning("File %s is imported twice in module %s %s", f, package.name, kind)
-                files.append(f)
-                if k.endswith('_xml') and not (k == 'init_xml' and not f.endswith('.xml')):
-                    # init_xml, update_xml and demo_xml are deprecated except
-                    # for the case of init_xml with csv and sql files as
-                    # we can't specify noupdate for those file.
-                    correct_key = 'demo' if k.count('demo') else 'data'
-                    _logger.warning(
-                        "module %s: key '%s' is deprecated in favor of '%s' for file '%s'.",
-                        package.name, k, correct_key, f
-                    )
-        return files
+    files: set[str] = set()
+    for k in keys:
+        if k == 'init_xml' and package.manifest[k]:
+            _logger.warning("module %s: key 'init_xml' is deprecated in Odoo 19.", package.name)
+        for filename in package.manifest[k]:
+            if filename in files:
+                _logger.warning("File %s is imported twice in module %s %s", filename, package.name, kind)
+            files.add(filename)
 
-    filename = None
-    for filename in _get_files_of_kind(kind):
-        _logger.info("loading %s/%s", package.name, filename)
-        noupdate = False
-        if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
-            noupdate = True
-        tools.convert_file(env, package.name, filename, idref, mode, noupdate, kind)
-    return bool(filename)
+            _logger.info("loading %s/%s", package.name, filename)
+            convert_file(env, package.name, filename, idref, mode, noupdate=kind == 'demo')
+
+    return bool(files)
 
 
-def load_demo(env: Environment, package: ModuleNode, idref, mode: str) -> bool:
+def load_demo(env: Environment, package: ModuleNode, idref: IdRef, mode: LoadMode) -> bool:
     """
     Loads demo data for the specified package.
     """
