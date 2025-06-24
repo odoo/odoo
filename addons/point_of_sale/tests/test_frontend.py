@@ -2548,6 +2548,18 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
 
+    def test_fast_payment_validation_from_product_screen(self):
+        self.main_pos_config.write({
+            'is_fast_payment': True,
+            'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_fast_payment_validation_from_product_screen')
+        order = self.main_pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.state, 'paid', "The order should be paid after the fast payment validation")
+        self.assertEqual(len(order.payment_ids), 1, "There should be one payment method used for the fast payment")
+        self.assertEqual(order.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
+
     def test_consistent_refund_process_between_frontend_and_backend(self):
         """
         Ensure that the partial refund process is consistent between the frontend and backend.
