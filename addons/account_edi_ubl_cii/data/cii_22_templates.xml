@@ -66,6 +66,16 @@
                             </ram:ApplicableTradeTax>
                         </t>
 
+                        <!-- Billing Period -->
+                        <ram:BillingSpecifiedPeriod t-if="line_vals.get('billing_start') and line_vals.get('billing_end')"> 
+                            <ram:StartDateTime>
+                                <udt:DateTimeString format="102" t-out="format_date(line_vals['billing_start'])"/>
+                            </ram:StartDateTime>
+                            <ram:EndDateTime>
+                                <udt:DateTimeString format="102" t-out="format_date(line_vals['billing_end'])"/>
+                            </ram:EndDateTime>
+                        </ram:BillingSpecifiedPeriod>
+
                         <!-- Allowance/Charge on the line -->
                         <t t-foreach="line_vals.get('allowance_charge_vals_list')" t-as="allowance_charge_vals">
                             <ram:SpecifiedTradeAllowanceCharge>
