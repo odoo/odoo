@@ -1,7 +1,7 @@
 /* global waitForWebfonts */
 
 import { Mutex } from "@web/core/utils/concurrency";
-import { markRaw, reactive } from "@odoo/owl";
+import { markRaw, reactive, App } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -39,6 +39,8 @@ import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_prin
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { DebugWidget } from "../utils/debug/debug_widget";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
+import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import { getTemplate } from "@web/core/templates";
 
 const { DateTime } = luxon;
 
@@ -156,6 +158,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
+        this.isFastPaymentRunning = false;
 
         if (this.env.debug) {
             registry.category("main_components").add("DebugWidget", {
@@ -2605,6 +2608,59 @@ export class PosStore extends WithLazyGetterTrap {
 
     weighProduct() {
         return makeAwaitable(this.env.services.dialog, ScaleScreen);
+    }
+
+    /**
+     * Performs a faster order validation flow by mounting a lightweight payment screen,
+     * adding a new payment line using the specified payment method, and triggering order validation.
+     *
+     * @param {HTMLElement} paymentScreenEl - The DOM element where the fast payment screen will be mounted.
+     * @param {Object} paymentMethod - The payment method to be used for adding the new payment line.
+     *
+     * This method is typically used to speed up the payment process in scenarios where
+     * full payment screen functionality is not needed.
+     */
+    async validateOrderFast(paymentScreenEl, paymentMethod) {
+        try {
+            const fastPaymentApp = new App(PaymentScreen, {
+                getTemplate,
+                props: { orderUuid: this.getOrder().uuid },
+                translateFn: _t,
+                env: this.env,
+            });
+            const paymentScreen = await fastPaymentApp.mount(paymentScreenEl);
+            await paymentScreen.addNewPaymentLine(paymentMethod);
+            await paymentScreen.validateOrder(false);
+            fastPaymentApp.destroy();
+        } catch (error) {
+            console.error("Error during fast payment validation: ", error);
+        } finally {
+            this.isFastPaymentRunning = false;
+        }
+    }
+
+    async _askForCustomerIfRequired() {
+        const splitPayments = this.getOrder().payment_ids.filter(
+            (payment) => payment.payment_method_id.split_transactions
+        );
+        if (splitPayments.length && !this.getOrder().getPartner()) {
+            const paymentMethod = splitPayments[0].payment_method_id;
+            const confirmed = await ask(this.dialog, {
+                title: _t("Customer Required"),
+                body: _t("Customer is required for %s payment method.", paymentMethod.name),
+            });
+            if (confirmed) {
+                this.pos.selectPartner();
+            }
+            return false;
+        }
+    }
+
+    /**
+     * This method can be overridden to perform checks before starting the order validation process.
+     */
+    async askBeforeValidation() {
+        return true;
     }
 }
 

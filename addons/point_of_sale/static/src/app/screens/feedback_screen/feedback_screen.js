@@ -9,6 +9,7 @@ export class FeedbackScreen extends Component {
     static components = { PriceFormatter };
     static props = {
         orderUuid: String,
+        paymentMethodId: { type: Number, optional: true, default: null },
     };
 
     setup() {
@@ -16,12 +17,24 @@ export class FeedbackScreen extends Component {
         this.pos = usePos();
         this.containerRef = useRef("feedback-screen");
         this.amountRef = useRef("amount");
-        onMounted(() => {
+        onMounted(async () => {
             this.scaleText();
+            if (this.pos.isFastPaymentRunning) {
+                await this.fastValidate();
+            }
         });
-        this.timeout = setTimeout(() => {
-            this.goToNextScreen();
-        }, 2000);
+        if (!this.pos.isFastPaymentRunning) {
+            this.timeout = setTimeout(() => {
+                this.goToNextScreen();
+            }, 2000);
+        }
+        this.virtualPaymentScreen = useRef("virtualPaymentScreen");
+    }
+
+    async fastValidate() {
+        const paymentMethod = this.pos.models["pos.payment.method"].get(this.props.paymentMethodId);
+        await this.pos.validateOrderFast(this.virtualPaymentScreen.el, paymentMethod);
+        this.goToNextScreen();
     }
 
     scaleText() {
