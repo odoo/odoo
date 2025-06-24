@@ -113,10 +113,7 @@ export class ComboConfiguratorPopup extends Component {
     async onClickProduct(product, combo_item) {
         const productTmpl = product.product_tmpl_id;
         const combo = combo_item.combo_id;
-        if (
-            productTmpl.isConfigurable() &&
-            product.product_template_variant_value_ids.length === 0
-        ) {
+        if (productTmpl.needToConfigure()) {
             this.onClickConfigurableProduct(product, combo_item, combo);
         } else {
             this.onClickSimpleProduct(combo_item, combo);
@@ -144,7 +141,10 @@ export class ComboConfiguratorPopup extends Component {
             if (this.state.qty[combo.id][combo_item.id] > 0 && !isSingleQtyChoice) {
                 this.state.qty[combo.id][combo_item.id] += 1;
             } else {
-                const payload = await this.pos.openConfigurator(product.product_tmpl_id);
+                const payload = await this.pos.openConfigurator(product.product_tmpl_id, {
+                    hideAlwaysVariants: true,
+                    forceVariantValue: product.product_template_variant_value_ids,
+                });
                 if (payload) {
                     this.resetSingleQtyMaxCombo(combo);
                     this.state.configuration[combo_item.id] = payload;
