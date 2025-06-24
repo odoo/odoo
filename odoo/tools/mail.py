@@ -614,18 +614,19 @@ def html2plaintext(
 
     return html.strip()
 
-def plaintext2html(text: str, container_tag: str | None = None) -> markupsafe.Markup:
+
+def plaintext2html(text: str, container_tag: str | None = None, with_paragraph: bool = True) -> markupsafe.Markup:
     r"""Convert plaintext into html. Content of the text is escaped to manage
     html entities, using :func:`~odoo.tools.misc.html_escape`.
 
     - all ``\n``, ``\r`` are replaced by ``<br/>``
-    - enclose content into ``<p>``
     - convert url into clickable link
-    - 2 or more consecutive ``<br/>`` are considered as paragraph breaks
 
     :param text: plaintext to convert
     :param container_tag: container of the html; by default the content is
         embedded into a ``<div>``
+    :param with_paragraph: whether or not considering 2 or more consecutive ``<br/>``
+        as paragraph breaks and enclosing content in ``<p>``
     """
     assert isinstance(text, str)
     text = misc.html_escape(text)
@@ -637,13 +638,15 @@ def plaintext2html(text: str, container_tag: str | None = None) -> markupsafe.Ma
     text = html_keep_url(text)
 
     # 3-4: form paragraphs
-    idx = 0
-    final = '<p>'
-    br_tags = re.compile(r'(([<]\s*[bB][rR]\s*/?[>]\s*){2,})')
-    for item in re.finditer(br_tags, text):
-        final += text[idx:item.start()] + '</p><p>'
-        idx = item.end()
-    final += text[idx:] + '</p>'
+    final = text
+    if with_paragraph:
+        idx = 0
+        final = '<p>'
+        br_tags = re.compile(r'(([<]\s*[bB][rR]\s*/?[>]\s*){2,})')
+        for item in re.finditer(br_tags, text):
+            final += text[idx:item.start()] + '</p><p>'
+            idx = item.end()
+        final += text[idx:] + '</p>'
 
     # 5. container
     if container_tag: # FIXME: validate that container_tag is just a simple tag?
