@@ -1,8 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { testEditor, setupEditor } from "../_helpers/editor";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { deleteForward, insertText, tripleClick } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
+import { deleteForward, insertText, tripleClick } from "../_helpers/user_actions";
 
 /**
  * content of the "deleteForward" sub suite in editor.test.js

@@ -54,11 +54,11 @@ test("image should not be draggable", async () => {
     const img = editor.editable.querySelector("img");
 
     const dragdata = new DataTransfer();
-    const ev = await manuallyDispatchProgrammaticEvent(img, "dragstart", {
+    const events = await manuallyDispatchProgrammaticEvent(img, "dragstart", {
         dataTransfer: dragdata,
     });
 
-    expect(ev.defaultPrevented).toBe(true);
+    expect(events.get("dragstart").defaultPrevented).toBe(true);
 });
 
 describe("Image format/optimize", () => {
