@@ -629,7 +629,7 @@ class StockPicking(models.Model):
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
-        required=True, index=True,
+        required=True, index=True, tracking=True,
         default=_default_picking_type_id)
     warehouse_address_id = fields.Many2one('res.partner', related='picking_type_id.warehouse_id.partner_id')
     picking_type_code = fields.Selection(
@@ -640,7 +640,7 @@ class StockPicking(models.Model):
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots')
     partner_id = fields.Many2one(
         'res.partner', 'Contact',
-        check_company=True, index='btree_not_null')
+        check_company=True, index='btree_not_null', tracking=True)
     company_id = fields.Many2one(
         'res.company', string='Company', related='picking_type_id.company_id',
         readonly=True, store=True, index=True)

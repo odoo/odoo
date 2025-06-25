@@ -21,7 +21,8 @@ class StockPicking(models.Model):
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     allowed_carrier_ids = fields.Many2many('delivery.carrier', compute='_compute_allowed_carrier_ids')
-    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="[('id', 'in', allowed_carrier_ids)]", check_company=True)
+    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="[('id', 'in', allowed_carrier_ids)]", check_company=True, tracking=True)
+    is_pickup_carrier = fields.Boolean(related='carrier_id.is_pickup')
     weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.", compute_sudo=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
@@ -55,6 +56,16 @@ class StockPicking(models.Model):
                 picking.return_label_ids = self.env['ir.attachment'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', picking.id), ('name', '=like', '%s%%' % picking.carrier_id.get_return_label_prefix())])
             else:
                 picking.return_label_ids = False
+
+    def action_confirm(self):
+        if not self._context.get('create_delivery_line') and any(picking.is_pickup_carrier and not picking.partner_id.is_pickup_location for picking in self):
+            raise UserError(_("You must select a pickup address with this delivery method."))
+        return super().action_confirm()
+
+    def button_validate(self):
+        if any(picking.is_pickup_carrier and not picking.partner_id.is_pickup_location for picking in self):
+            raise UserError(_("You must select a pickup address with this delivery method."))
+        return super().button_validate()
 
     def get_multiple_carrier_tracking(self):
         self.ensure_one()
@@ -216,3 +227,30 @@ class StockPicking(models.Model):
     def _should_generate_commercial_invoice(self):
         self.ensure_one()
         return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id
+
+    def _get_unavailable_lines(self, wh_id):
+        unavailable_moves = self.env['stock.move']
+        for sm in self.move_ids:
+            if sm.is_storable:
+                product_free_qty = sm.product_id.with_context(warehouse_id=wh_id).free_qty
+                if sm.product_uom_qty > product_free_qty:
+                    unavailable_moves |= sm
+        return unavailable_moves
+
+    def set_pickup_location(self, pickup_location_data):
+        """ Set the pickup location on the current record. """
+        self.ensure_one()
+        if self.carrier_id.is_pickup:
+            pickup_location_data = json.loads(pickup_location_data)
+            parent_location = self.partner_id.parent_id if self.partner_id.is_pickup_location else self.partner_id
+            address = self.env['res.partner']._address_from_json(pickup_location_data, parent_location)
+            self.partner_id = address or self.partner_id
+
+    def _is_in_stock(self, wh_id):
+        """ Check whether all storable products of the cart are in stock in the given warehouse.
+
+        :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
+        :return: Whether all storable products are in stock.
+        :rtype: bool
+        """
+        return not self._get_unavailable_lines(wh_id)
