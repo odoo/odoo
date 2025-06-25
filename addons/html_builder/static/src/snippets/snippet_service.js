@@ -180,6 +180,10 @@ export class SnippetModel extends Reactive {
                     { context }
                 );
                 const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
+                const processors = registry.category("html_builder.snippetsPreprocessor").getAll();
+                for (const processor of Object.values(processors)) {
+                    processor(this.snippetsName, snippetsDocument);
+                }
                 this.computeSnippetTemplates(snippetsDocument);
                 this.setSnippetName(snippetsDocument);
             })();
