@@ -253,6 +253,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             await editInput(target, ".o_progressbar_value .o_input", "69");
+            target.querySelector(".o_progressbar_value .o_input").blur(); // because clickSave does not trigger blur
             await clickSave(target);
             assert.strictEqual(
                 target.querySelector(".o_progressbar").textContent +
@@ -490,6 +491,7 @@ QUnit.module("Fields", (hooks) => {
             assert.ok(target.querySelector(".o_form_view .o_form_editable"), "Form in edit mode");
 
             await editInput(target, ".o_field_widget input", "1#037:9");
+            target.querySelector(".o_progressbar_value .o_input").blur(); // because clickSave does not trigger blur
             await clickSave(target);
 
             assert.strictEqual(
