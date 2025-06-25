@@ -185,6 +185,17 @@ function resolve(value) {
 }
 
 /**
+ * Useful to deal with symbols as primitives
+ * @param {unknown} a
+ * @param {unknown} b
+ */
+function stringSort(a, b) {
+    const strA = String(a).toLowerCase();
+    const strB = String(b).toLowerCase();
+    return strA > strB ? 1 : strA < strB ? -1 : 0;
+}
+
+/**
  * @param {string} value
  * @param {number} [length=MAX_HUMAN_READABLE_SIZE]
  */
@@ -458,10 +469,15 @@ function _formatTechnical(value, depth, isObjectValue, cache) {
     // Non-iterable objects
     const proto = !constructor.name || constructor.name === "Object" ? "" : `${constructor.name} `;
     const content = $ownKeys(value)
-        .sort()
+        .sort(stringSort)
         .map(
             (key) =>
-                `${startIndent}${key}: ${_formatTechnical(value[key], depth + 1, true, cache)},\n`
+                `${startIndent}${String(key)}: ${_formatTechnical(
+                    value[key],
+                    depth + 1,
+                    true,
+                    cache
+                )},\n`
         );
     return `${baseIndent}${proto}{${content.length ? `\n${content.join("")}${endIndent}` : ""}}`;
 }
