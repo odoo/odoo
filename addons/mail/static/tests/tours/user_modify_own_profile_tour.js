@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { contains, insertText } from "@web/../tests/utils";
+import { click, contains } from "@web/../tests/utils";
 
 /**
  * Verify that a user can modify their own profile information.
@@ -17,17 +17,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
             run: "click",
         },
         {
-            content: "Update the email address",
-            trigger: 'div[name="email"] input',
+            content: "Update the notification type",
+            trigger: '.modal div[name="notification_type"] input[data-value="inbox"]',
             async run() {
-                await insertText("div[name='email'] input", "updatedemail@example.com", {
-                    replace: true,
-                });
+                await click('.modal div[name="notification_type"] input[data-value="inbox"]');
                 await contains(".o_form_dirty", { count: 1 });
             },
-        },
-        {
-            trigger: "body.modal-open",
         },
         {
             content: "Save the form",

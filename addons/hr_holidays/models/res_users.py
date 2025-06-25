@@ -8,30 +8,12 @@ from odoo.tools import format_date
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
-    show_leaves = fields.Boolean(related='employee_id.show_leaves')
     leave_date_to = fields.Date(related='employee_id.leave_date_to')
-    is_absent = fields.Boolean(related='employee_id.is_absent')
-    allocation_remaining_display = fields.Char(related='employee_id.allocation_remaining_display')
-    allocation_display = fields.Char(related='employee_id.allocation_display')
-    hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
 
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + [
-            'leave_manager_id',
-            'show_leaves',
             'leave_date_to',
-            'is_absent',
-            'allocation_remaining_display',
-            'allocation_display',
-            'hr_icon_display',
-        ]
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + [
-            'leave_manager_id',
         ]
 
     def _compute_im_status(self):

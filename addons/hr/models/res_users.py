@@ -16,10 +16,6 @@ HR_READABLE_FIELDS = [
     'child_ids',
     'employee_id',
     'employee_ids',
-    'employee_parent_id',
-    'hr_presence_state',
-    'last_activity',
-    'last_activity_time',
     'can_edit',
     'is_hr_user',
     'is_system',
@@ -38,46 +34,20 @@ HR_WRITABLE_FIELDS = [
     'private_country_id',
     'private_phone',
     'private_email',
-    'address_id',
     'barcode',
-    'birthday',
-    'birthday_public_display',
     'category_ids',
-    'children',
-    'coach_id',
-    'country_of_birth',
-    'department_id',
     'display_name',
     'emergency_contact',
     'emergency_phone',
     'employee_bank_account_ids',
-    'employee_country_id',
-    'sex',
-    'identification_id',
-    'ssnid',
     'job_title',
     'km_home_work',
-    'distance_home_work',
-    'distance_home_work_unit',
-    'marital',
     'mobile_phone',
-    'employee_parent_id',
-    'passport_id',
-    'permit_no',
     'pin',
-    'place_of_birth',
-    'spouse_birthdate',
-    'spouse_complete_name',
     'visa_expire',
-    'visa_no',
     'work_email',
     'work_location_id',
     'work_phone',
-    'certificate',
-    'study_field',
-    'study_school',
-    'private_lang',
-    'employee_type',
 ]
 
 
@@ -99,14 +69,10 @@ class ResUsers(models.Model):
     mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False, related_sudo=False)
     work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
-    department_id = fields.Many2one(related='employee_id.department_id')
-    address_id = fields.Many2one(related='employee_id.address_id', readonly=False, related_sudo=False)
     work_contact_id = fields.Many2one(related='employee_id.work_contact_id', readonly=False, related_sudo=False)
     work_location_id = fields.Many2one(related='employee_id.work_location_id')
     work_location_name = fields.Char(related="employee_id.work_location_name")
     work_location_type = fields.Selection(related="employee_id.work_location_type")
-    employee_parent_id = fields.Many2one(related='employee_id.parent_id', readonly=False, related_sudo=False)
-    coach_id = fields.Many2one(related='employee_id.coach_id', readonly=False, related_sudo=False)
     private_street = fields.Char(related='employee_id.private_street', string="Private Street", readonly=False, related_sudo=False)
     private_street2 = fields.Char(related='employee_id.private_street2', string="Private Street2", readonly=False, related_sudo=False)
     private_city = fields.Char(related='employee_id.private_city', string="Private City", readonly=False, related_sudo=False)
@@ -117,41 +83,16 @@ class ResUsers(models.Model):
     private_country_id = fields.Many2one(related='employee_id.private_country_id', string="Private Country", readonly=False, related_sudo=False)
     private_phone = fields.Char(related='employee_id.private_phone', readonly=False, related_sudo=False)
     private_email = fields.Char(related='employee_id.private_email', string="Private Email", readonly=False)
-    private_lang = fields.Selection(related='employee_id.lang', string="Employee Lang", readonly=False)
     km_home_work = fields.Integer(related='employee_id.km_home_work', readonly=False, related_sudo=False)
-    distance_home_work = fields.Integer(related='employee_id.distance_home_work', readonly=False, related_sudo=False)
-    distance_home_work_unit = fields.Selection(related='employee_id.distance_home_work_unit', readonly=False, related_sudo=False)
     # res.users already have a field bank_account_id and country_id from the res.partner inheritance: don't redefine them
     employee_bank_account_ids = fields.Many2many('res.partner.bank', related='employee_id.bank_account_ids', string="Employee's Bank Accounts", related_sudo=False, readonly=False)
-    employee_country_id = fields.Many2one(related='employee_id.country_id', string="Employee's Country", readonly=False, related_sudo=False)
-    identification_id = fields.Char(related='employee_id.identification_id', readonly=False, related_sudo=False)
-    ssnid = fields.Char(related='employee_id.ssnid', readonly=False, related_sudo=False)
-    passport_id = fields.Char(related='employee_id.passport_id', readonly=False, related_sudo=False)
-    sex = fields.Selection(related='employee_id.sex', readonly=False, related_sudo=False)
-    birthday = fields.Date(related='employee_id.birthday', readonly=False, related_sudo=False)
-    birthday_public_display = fields.Boolean(related='employee_id.birthday_public_display', readonly=False, related_sudo=False)
-    place_of_birth = fields.Char(related='employee_id.place_of_birth', readonly=False, related_sudo=False)
-    country_of_birth = fields.Many2one(related='employee_id.country_of_birth', readonly=False, related_sudo=False)
-    marital = fields.Selection(related='employee_id.marital', readonly=False, related_sudo=False)
-    spouse_complete_name = fields.Char(related='employee_id.spouse_complete_name', readonly=False, related_sudo=False)
-    spouse_birthdate = fields.Date(related='employee_id.spouse_birthdate', readonly=False, related_sudo=False)
-    children = fields.Integer(related='employee_id.children', readonly=False, related_sudo=False)
     emergency_contact = fields.Char(related='employee_id.emergency_contact', readonly=False, related_sudo=False)
     emergency_phone = fields.Char(related='employee_id.emergency_phone', readonly=False, related_sudo=False)
-    visa_no = fields.Char(related='employee_id.visa_no', readonly=False, related_sudo=False)
-    permit_no = fields.Char(related='employee_id.permit_no', readonly=False, related_sudo=False)
     visa_expire = fields.Date(related='employee_id.visa_expire', readonly=False, related_sudo=False)
     additional_note = fields.Text(related='employee_id.additional_note', readonly=False, related_sudo=False)
     barcode = fields.Char(related='employee_id.barcode', readonly=False, related_sudo=False)
     pin = fields.Char(related='employee_id.pin', readonly=False, related_sudo=False)
-    certificate = fields.Selection(related='employee_id.certificate', readonly=False, related_sudo=False)
-    study_field = fields.Char(related='employee_id.study_field', readonly=False, related_sudo=False)
-    study_school = fields.Char(related='employee_id.study_school', readonly=False, related_sudo=False)
     employee_count = fields.Integer(compute='_compute_employee_count')
-    hr_presence_state = fields.Selection(related='employee_id.hr_presence_state')
-    last_activity = fields.Date(related='employee_id.last_activity')
-    last_activity_time = fields.Char(related='employee_id.last_activity_time')
-    employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
     bank_account_ids = fields.Many2many(related="employee_id.bank_account_ids")
 

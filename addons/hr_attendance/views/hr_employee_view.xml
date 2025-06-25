@@ -55,44 +55,6 @@
         </field>
     </record>
 
-    <record id="hr_user_view_form" model="ir.ui.view">
-        <field name="name">hr.user.preferences.view.form.attendance.inherit</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
-        <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="employee_ids" invisible="1"/>
-                <button name="action_open_last_month_attendances"
-                        class="oe_stat_button"
-                        icon="fa-clock-o"
-                        type="object"
-                        groups="base.group_user"
-                        help="Worked hours this month">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="hours_last_month" widget="float_time"/>
-                            <span class="o_stat_value text-success" invisible="hours_last_month_overtime &lt;= 0 or not display_extra_hours">
-                                (+<field name="hours_last_month_overtime" widget="float_time"/>)
-                            </span>
-                            <span class="o_stat_value text-danger" invisible="hours_last_month_overtime &gt;= 0 or not display_extra_hours">
-                                (<field name="hours_last_month_overtime" widget="float_time"/>)
-                            </span>
-                        </span>
-                        <span class="o_stat_text">
-                            Monthly Hours
-                        </span>
-                    </div>
-                </button>
-            </xpath>
-            <xpath expr="//group[@name='managers']" position="inside">
-                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" readonly="not can_edit" groups="hr_attendance.group_hr_attendance_user"/>
-            </xpath>
-            <xpath expr="//group[@name='managers']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
-        </field>
-    </record>
-
     <!-- employee kanban view specifically for hr_attendance (to check in/out) -->
     <record id="hr_employees_view_kanban" model="ir.ui.view">
         <field name="name">hr.employee.kanban</field>

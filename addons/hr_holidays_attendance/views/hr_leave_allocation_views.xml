@@ -13,7 +13,7 @@
         </field>
     </record>
 
-    <record id="hr_leave_allocation_overtime_view_form" model="ir.ui.view">
+    <record id="hr_leave_allocation_overtime_manager_view_form" model="ir.ui.view">
         <field name="model">hr.leave.allocation</field>
         <field name="inherit_id" ref="hr_attendance_holidays_hr_leave_allocation_view_form_inherit" />
         <field name="mode">primary</field>
@@ -26,7 +26,7 @@
                 <attribute name="invisible">1</attribute>
             </div>
             <xpath expr="//field[@name='holiday_status_id']" position="attributes">
-                <attribute name="domain">[('overtime_deductible', '=', True), ('requires_allocation', '=', True), ('employee_requests', '=', True)]</attribute>
+                <attribute name="domain">[('overtime_deductible', '=', True), ('requires_allocation', '=', True)]</attribute>
                 <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
             </xpath>
             <xpath expr="//sheet" position="after">
@@ -36,26 +36,6 @@
                 </footer>
             </xpath>
         </field>
-    </record>
-
-    <record id="hr_leave_allocation_overtime_manager_view_form" model="ir.ui.view">
-        <field name="model">hr.leave.allocation</field>
-        <field name="inherit_id" ref="hr_leave_allocation_overtime_view_form" />
-        <field name="mode">primary</field>
-        <field name="priority">70</field>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='holiday_status_id']" position="attributes">
-                <attribute name="domain">[('overtime_deductible', '=', True), ('requires_allocation', '=', True)]</attribute>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="hr_leave_allocation_overtime_action" model="ir.actions.act_window">
-        <field name="name">New Allocation Request</field>
-        <field name="res_model">hr.leave.allocation</field>
-        <field name="view_mode">form</field>
-        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'form', 'view_id': ref('hr_leave_allocation_overtime_view_form')})]"/>
-        <field name="target">new</field>
     </record>
 
     <record id="hr_leave_allocation_overtime_manager_action" model="ir.actions.act_window">

@@ -1,35 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import models
 
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
-
-    hours_last_month = fields.Float(related='employee_id.hours_last_month')
-    hours_last_month_display = fields.Char(related='employee_id.hours_last_month_display')
-    total_overtime = fields.Float(related='employee_id.total_overtime')
-    hours_last_month_overtime = fields.Float(related='employee_id.hours_last_month_overtime')
-    attendance_manager_id = fields.Many2one(related='employee_id.attendance_manager_id', readonly=False)
-    display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
-
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + [
-            'hours_last_month',
-            'hours_last_month_display',
-            'total_overtime',
-            'hours_last_month_overtime',
-            'attendance_manager_id',
-            'display_extra_hours',
-        ]
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + [
-            'attendance_manager_id',
-        ]
 
     def _clean_attendance_officers(self):
         attendance_officers = self.env['hr.employee'].search(
@@ -38,19 +14,3 @@ class ResUsers(models.Model):
         if officers_to_remove_ids:
             self.env.ref('hr_attendance.group_hr_attendance_officer').user_ids = [(3, user.id) for user in
                                                                                officers_to_remove_ids]
-
-    def action_open_last_month_attendances(self):
-        self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Attendances This Month"),
-            "res_model": "hr.attendance",
-            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "list"]],
-            "context": {
-                "create": 0,
-                'employee_id': self.employee_id.id,
-                "search_default_check_in_filter": 1,
-                "display_extra_hours": self.display_extra_hours,
-            },
-            "domain": [('employee_id', '=', self.employee_id.id)]
-        }
