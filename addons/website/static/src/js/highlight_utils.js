@@ -266,9 +266,10 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
             numberOfCharPerWidth,
         });
         svgs.push(svg);
-        const spanOffset = firstRect.x - containerRect.x;
-        svg.style.left = `${(rects.x - containerRect.x - spanOffset) * scale}px`;
-        svg.style.top = `${(rects.y - containerRect.y) * scale}px`;
+        const spanOffsetX = firstRect.x - containerRect.x;
+        const spanOffsetY = firstRect.y - containerRect.y;
+        svg.style.left = `${(rects.x - containerRect.x - spanOffsetX) * scale}px`;
+        svg.style.top = `${(rects.y - containerRect.y - spanOffsetY) * scale}px`;
         svg.style.bottom = `0px`;
         svg.style.right = `0px`;
     }
