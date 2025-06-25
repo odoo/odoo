@@ -30,7 +30,7 @@ class CountdownOptionPlugin extends Plugin {
 function cleanForSave(editingEl) {
     editingEl.classList.remove("s_countdown_enable_preview");
 }
-class BaseCountdownAction extends BuilderAction {
+export class BaseCountdownAction extends BuilderAction {
     static id = "baseCountdown";
     /**
      * Used to preserve modified end messages through end action changes. This
@@ -116,14 +116,14 @@ class BaseCountdownAction extends BuilderAction {
 
 // TODO AGAU: update after merging generalized restart interactions
 //  remove this and xml BuilderContext
-class ReloadCountdownAction extends BaseCountdownAction {
+export class ReloadCountdownAction extends BaseCountdownAction {
     static id = "reloadCountdown";
     apply({ editingElement }) {
         return this.dispatchTo("update_interactions", editingElement);
     }
 }
 
-class SetEndActionAction extends BaseCountdownAction {
+export class SetEndActionAction extends BaseCountdownAction {
     static id = "setEndAction";
     apply(context) {
         return this.setEndAction(context);
@@ -133,7 +133,7 @@ class SetEndActionAction extends BaseCountdownAction {
     }
 }
 
-class PreviewEndMessageAction extends BaseCountdownAction {
+export class PreviewEndMessageAction extends BaseCountdownAction {
     static id = "previewEndMessage";
     apply({ editingElement }) {
         return this.toggleEndMessagePreview(editingElement, true);
@@ -146,7 +146,7 @@ class PreviewEndMessageAction extends BaseCountdownAction {
     }
 }
 
-class SetLayoutAction extends BaseCountdownAction {
+export class SetLayoutAction extends BaseCountdownAction {
     static id = "setLayout";
     apply(context) {
         return this.setLayout(context);

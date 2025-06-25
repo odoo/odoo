@@ -46,7 +46,7 @@ function getColor(color, win, doc) {
         ? color
         : getCSSVariableValue(color, win.getComputedStyle(doc.documentElement));
 }
-class BaseChartAction extends BuilderAction {
+export class BaseChartAction extends BuilderAction {
     static id = "baseChart";
     updateDOMData(editingElement, data) {
         editingElement.dataset.data = JSON.stringify(data);
@@ -85,7 +85,7 @@ class BaseChartAction extends BuilderAction {
     }
 }
 
-class SetChartTypeAction extends BaseChartAction {
+export class SetChartTypeAction extends BaseChartAction {
     static id = "setChartType";
     isApplied({ editingElement, value }) {
         return editingElement.dataset.type === value;
@@ -114,7 +114,7 @@ class SetChartTypeAction extends BaseChartAction {
         this.updateDOMData(editingElement, data);
     }
 }
-class AddColumnAction extends BaseChartAction {
+export class AddColumnAction extends BaseChartAction {
     static id = "addColumn";
     apply({ editingElement }) {
         const data = this.getData(editingElement);
@@ -133,7 +133,7 @@ class AddColumnAction extends BaseChartAction {
         this.updateDOMData(editingElement, data);
     }
 }
-class RemoveColumnAction extends BaseChartAction {
+export class RemoveColumnAction extends BaseChartAction {
     static id = "removeColumn";
     apply({ editingElement, params: { mainParam: key } }) {
         const data = this.getData(editingElement);
@@ -142,7 +142,7 @@ class RemoveColumnAction extends BaseChartAction {
         this.updateDOMData(editingElement, data);
     }
 }
-class AddRowAction extends BaseChartAction {
+export class AddRowAction extends BaseChartAction {
     static id = "addRow";
     apply({ editingElement }) {
         const data = this.getData(editingElement);
@@ -157,7 +157,7 @@ class AddRowAction extends BaseChartAction {
         this.updateDOMData(editingElement, data);
     }
 }
-class RemoveRowAction extends BaseChartAction {
+export class RemoveRowAction extends BaseChartAction {
     static id = "removeRow";
     apply({ editingElement, params: { mainParam: labelIndex } }) {
         const data = this.getData(editingElement);
@@ -172,7 +172,7 @@ class RemoveRowAction extends BaseChartAction {
         this.updateDOMData(editingElement, data);
     }
 }
-class UpdateDatasetValueAction extends BaseChartAction {
+export class UpdateDatasetValueAction extends BaseChartAction {
     static id = "updateDatasetValue";
     getValue({ editingElement, params: { datasetKey, valueIndex } }) {
         const data = this.getData(editingElement);
@@ -186,7 +186,7 @@ class UpdateDatasetValueAction extends BaseChartAction {
         this.updateDOMData(editingElement, data);
     }
 }
-class UpdateDatasetLabelAction extends BaseChartAction {
+export class UpdateDatasetLabelAction extends BaseChartAction {
     static id = "updateDatasetLabel";
     getValue({ editingElement, params: { mainParam: datasetKey } }) {
         const data = this.getData(editingElement);
@@ -201,7 +201,7 @@ class UpdateDatasetLabelAction extends BaseChartAction {
     }
 }
 
-class UpdateLabelNameAction extends BaseChartAction {
+export class UpdateLabelNameAction extends BaseChartAction {
     static id = "updateLabelName";
     getValue({ editingElement, params: { mainParam: labelIndex } }) {
         const data = this.getData(editingElement);
@@ -213,7 +213,7 @@ class UpdateLabelNameAction extends BaseChartAction {
         this.updateDOMData(editingElement, data);
     }
 }
-class setMinMaxAction extends BaseChartAction {
+export class setMinMaxAction extends BaseChartAction {
     static id = "setMinMax";
     getValue({ editingElement, params: { mainParam: type } }) {
         if (type === "min") {
@@ -271,7 +271,7 @@ class setMinMaxAction extends BaseChartAction {
         }
     }
 }
-class ColorChangeAction extends BaseChartAction {
+export class ColorChangeAction extends BaseChartAction {
     static id = "colorChange";
     getValue({ editingElement, params: { type, datasetIndex, dataIndex } }) {
         const data = this.getData(editingElement);

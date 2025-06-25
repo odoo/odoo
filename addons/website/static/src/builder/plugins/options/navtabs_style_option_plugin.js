@@ -88,7 +88,7 @@ class NavTabsStyleOptionPlugin extends Plugin {
 
 const getTabsEl = (editingElement) => editingElement.querySelector(".s_tabs_nav");
 
-class BaseNavtabsStyleOption extends BuilderAction {
+export class BaseNavtabsStyleOption extends BuilderAction {
     static id = "baseNavtabsStyle";
     static dependencies = ["navTabsOptionStyle"];
     setup() {

@@ -316,7 +316,7 @@ class ProductsItemOptionPlugin extends Plugin {
 
 }
 
-class SetItemSizeAction extends BuilderAction {
+export class SetItemSizeAction extends BuilderAction {
     static id = "setItemSize";
     static dependencies = ["productsItemOptionPlugin"];
     setup() {
@@ -348,7 +348,7 @@ class SetItemSizeAction extends BuilderAction {
         });
     }
 }
-class ChangeSequenceAction extends BuilderAction {
+export class ChangeSequenceAction extends BuilderAction {
     static id = "changeSequence";
     static dependencies = ["productsItemOptionPlugin"];
     setup() {
@@ -366,7 +366,7 @@ class ChangeSequenceAction extends BuilderAction {
         });
     }
 }
-class SetRibbonAction extends BuilderAction {
+export class SetRibbonAction extends BuilderAction {
     static id = "setRibbon";
     static dependencies = ["productsItemOptionPlugin"];
     isApplied({ editingElement, value }) {
@@ -395,7 +395,7 @@ class SetRibbonAction extends BuilderAction {
         return this.dependencies.productsItemOptionPlugin._setRibbon(editingElement, ribbon, !isPreviewing);
     }
 }
-class CreateRibbonAction extends BuilderAction {
+export class CreateRibbonAction extends BuilderAction {
     static id = "createRibbon";
     dependencies = ["productsItemOptionPlugin"]
     apply({ editingElement }) {
@@ -421,7 +421,7 @@ class CreateRibbonAction extends BuilderAction {
         return this.dependencies.productsItemOptionPlugin._setRibbon(editingElement, ribbon);
     }
 }
-class ModifyRibbonAction extends BuilderAction {
+export class ModifyRibbonAction extends BuilderAction {
     static id = "modifyRibbon";
     static dependencies = ["productsItemOptionPlugin"];
     setup() {
@@ -461,7 +461,7 @@ class ModifyRibbonAction extends BuilderAction {
         return this.plugin._setRibbon(editingElement, ribbon, !isPreviewing);
     }
 }
-class DeleteRibbonAction extends BuilderAction {
+export class DeleteRibbonAction extends BuilderAction {
     static id = "deleteRibbon";
     static dependencies = ["productsItemOptionPlugin"];
     async apply({ editingElement }) {

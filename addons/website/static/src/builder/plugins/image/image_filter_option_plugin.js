@@ -14,7 +14,7 @@ class ImageFilterOptionPlugin extends Plugin {
     };
 }
 
-class GlFilterAction extends BuilderAction {
+export class GlFilterAction extends BuilderAction {
     static id = "glFilter";
     static dependencies = ["imagePostProcess"];
     isApplied({ editingElement, params: { mainParam: glFilterName } }) {
@@ -36,7 +36,7 @@ class GlFilterAction extends BuilderAction {
         updateImageAttributes();
     }
 }
-class SetCustomFilterAction extends BuilderAction {
+export class SetCustomFilterAction extends BuilderAction {
     static id = "setCustomFilter";
     static dependencies = ["imagePostProcess"];
     getValue({ editingElement, params: { mainParam: filterProperty } }) {

@@ -23,7 +23,7 @@ class CheckoutPageOptionPlugin extends Plugin {
     };
 }
 
-class SetExtraStepAction extends WebsiteConfigAction {
+export class SetExtraStepAction extends WebsiteConfigAction {
     static id = "setExtraStep";
     async apply(context) {
         await Promise.all([

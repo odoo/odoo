@@ -359,13 +359,13 @@ class SocialMediaOptionPlugin extends Plugin {
     }
 }
 
-class DeleteSocialMediaLinkAction extends BuilderAction {
+export class DeleteSocialMediaLinkAction extends BuilderAction {
     static id = "deleteSocialMediaLink";
     apply({ editingElement }) {
         editingElement.remove();
     }
 }
-class ToggleRecordedSocialMediaLinkAction extends BuilderAction {
+export class ToggleRecordedSocialMediaLinkAction extends BuilderAction {
     static id = "toggleRecordedSocialMediaLink";
     static dependencies = ["socialMediaOptionPlugin"];
     isApplied({ editingElement, params: { domPosition } }) {
@@ -386,7 +386,7 @@ class ToggleRecordedSocialMediaLinkAction extends BuilderAction {
         editingElement.querySelector(`a:nth-of-type(${domPosition})`).remove();
     }
 }
-class EditRecordedSocialMediaLinkAction extends BuilderAction {
+export class EditRecordedSocialMediaLinkAction extends BuilderAction {
     static id = "editRecordedSocialMediaLink";
     static dependencies = ["socialMediaOptionPlugin", "history"];
     getValue({ params: { mainParam } }) {
@@ -407,7 +407,7 @@ class EditRecordedSocialMediaLinkAction extends BuilderAction {
         });
     }
 }
-class EditSocialMediaLinkAction extends BuilderAction {
+export class EditSocialMediaLinkAction extends BuilderAction {
     static id = "editSocialMediaLink";
     static dependencies = ["socialMediaOptionPlugin"];
     apply({ editingElement, params: { mainParam }, value }) {
@@ -436,7 +436,7 @@ class EditSocialMediaLinkAction extends BuilderAction {
         }
     }
 }
-class AddSocialMediaLinkAction extends BuilderAction {
+export class AddSocialMediaLinkAction extends BuilderAction {
     static id = "addSocialMediaLink";
     static dependencies = ["socialMediaOptionPlugin"];
     apply({ editingElement }) {

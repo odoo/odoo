@@ -22,7 +22,7 @@ class AlertOptionPlugin extends Plugin {
     };
 }
 
-class AlertIconAction extends BuilderAction {
+export class AlertIconAction extends BuilderAction {
     static id = "alertIcon";
     apply({ editingElement, params: { mainParam: className } }) {
         const icon = editingElement.querySelector(".s_alert_icon");

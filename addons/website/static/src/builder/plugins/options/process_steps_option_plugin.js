@@ -45,7 +45,7 @@ class ProcessStepsOptionPlugin extends Plugin {
     };
 }
 
-class ChangeConnectorAction extends ClassAction {
+export class ChangeConnectorAction extends ClassAction {
     static id = "changeConnector";
     apply({ editingElement, params: { mainParam: className } }) {
         super.apply(...arguments);
@@ -69,7 +69,7 @@ class ChangeConnectorAction extends ClassAction {
     }
 }
 
-class ChangeArrowColorAction extends BuilderAction {
+export class ChangeArrowColorAction extends BuilderAction {
     static id = "changeArrowColor";
     apply({ editingElement, value: colorValue }) {
         const arrowHeadEl = editingElement

@@ -59,7 +59,7 @@ class DynamicSnippetCarouselOptionPlugin extends Plugin {
     }
 }
 
-class SetCarouselSliderSpeedAction extends BuilderAction {
+export class SetCarouselSliderSpeedAction extends BuilderAction {
     static id = "setCarouselSliderSpeed";
     apply({ editingElement, value }) {
         editingElement.dataset.carouselInterval = value * 1000;

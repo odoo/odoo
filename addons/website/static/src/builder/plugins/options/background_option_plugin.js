@@ -83,7 +83,7 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
     }
 }
 
-class ToggleBgVideoAction extends BuilderAction {
+export class ToggleBgVideoAction extends BuilderAction {
     static id = "toggleBgVideo";
     static dependencies = ["websiteBackgroundVideoPlugin"];
     load(context) {
@@ -110,7 +110,7 @@ class ToggleBgVideoAction extends BuilderAction {
     }
 }
 
-class ReplaceBgVideoAction extends BuilderAction {
+export class ReplaceBgVideoAction extends BuilderAction {
     static id = "replaceBgVideo";
     static dependencies = ["websiteBackgroundVideoPlugin"];
     load(context) {

@@ -147,7 +147,7 @@ export function setDatasetIfUndefined(snippetEl, optionName, value) {
     }
 }
 
-class DynamicFilterAction extends BuilderAction {
+export class DynamicFilterAction extends BuilderAction {
     static id = "dynamicFilter";
     static dependencies = ["dynamicSnippetOption"];
     isApplied({ editingElement: el, params }) {
@@ -164,7 +164,7 @@ class DynamicFilterAction extends BuilderAction {
         }
     }
 }
-class DynamicFilterTemplateAction extends BuilderAction {
+export class DynamicFilterTemplateAction extends BuilderAction {
     static id = "dynamicFilterTemplate";
     static dependencies = ["dynamicSnippetOption"];
     isApplied({ editingElement: el, params }) {
@@ -174,7 +174,7 @@ class DynamicFilterTemplateAction extends BuilderAction {
         this.dependencies.dynamicSnippetOption.updateTemplate(el, params);
     }
 }
-class CustomizeTemplateAction extends BuilderAction {
+export class CustomizeTemplateAction extends BuilderAction {
     static id = "customizeTemplate";
     isApplied({ editingElement: el, params: { mainParam: customDataKey } }) {
         const customData = JSON.parse(el.dataset.customTemplateData);

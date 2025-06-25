@@ -84,7 +84,7 @@ class FacebookOptionPlugin extends Plugin {
     }
 }
 
-class DataAttributeListAction extends BuilderAction {
+export class DataAttributeListAction extends BuilderAction {
     static id = "dataAttributeList";
     isApplied({ editingElement, params: { mainParam } = {}, value }) {
         return (editingElement.dataset[mainParam]?.split(",") || []).includes(value);
@@ -101,7 +101,7 @@ class DataAttributeListAction extends BuilderAction {
             .join(",");
     }
 }
-class CheckFacebookLinkAction extends BuilderAction {
+export class CheckFacebookLinkAction extends BuilderAction {
     static id = "checkFacebookLink";
     setup() {
         this.closeNotif = () => {};

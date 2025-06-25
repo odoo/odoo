@@ -98,7 +98,7 @@ class HeaderOptionPlugin extends Plugin {
     };
 }
 
-class StyleActionHeaderAction extends StyleAction {
+export class StyleActionHeaderAction extends StyleAction {
     static id = "styleActionHeader";
     static dependencies = ["customizeWebsite", "color"];
     setup() {
@@ -127,7 +127,7 @@ class StyleActionHeaderAction extends StyleAction {
     }
 }
 
-class SetShadowModeHeaderAction extends SetShadowModeAction {
+export class SetShadowModeHeaderAction extends SetShadowModeAction {
     static id = "setShadowModeHeader";
     static dependencies = ["customizeWebsite"];
     setup() {
@@ -142,7 +142,7 @@ class SetShadowModeHeaderAction extends SetShadowModeAction {
     }
 }
 
-class SetShadowHeaderAction extends SetShadowAction {
+export class SetShadowHeaderAction extends SetShadowAction {
     static id = "setShadowHeader";
     static dependencies = ["customizeWebsite"];
     setup() {

@@ -38,7 +38,7 @@ class EmbedCodeOptionPlugin extends Plugin {
     }
 }
 
-class EditCodeAction extends BuilderAction {
+export class EditCodeAction extends BuilderAction {
     static id = "editCode";
     async load({ editingElement }) {
         let newContent;

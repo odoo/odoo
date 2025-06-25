@@ -55,7 +55,7 @@ const isGrid = (el) => {
     const rowEl = getRow(el);
     return !!(rowEl && rowEl.classList.contains("o_grid_mode"));
 };
-class SetGridLayoutAction extends BuilderAction {
+export class SetGridLayoutAction extends BuilderAction {
     static id = "setGridLayout";
     static dependencies = ["selection"];
     apply({ editingElement }) {
@@ -69,7 +69,7 @@ class SetGridLayoutAction extends BuilderAction {
         return isGrid(editingElement);
     }
 }
-class SetColumnLayoutAction extends BuilderAction {
+export class SetColumnLayoutAction extends BuilderAction {
     static id = "setColumnLayout";
     apply({ editingElement }) {
         const rowEl = getRow(editingElement);
@@ -99,7 +99,7 @@ class SetColumnLayoutAction extends BuilderAction {
         return !isGrid(editingElement);
     }
 }
-class ChangeColumnCountAction extends BuilderAction {
+export class ChangeColumnCountAction extends BuilderAction {
     static id = "changeColumnCount";
     static dependencies = ["selection", "clone"];
     apply({ editingElement, value: nbColumns }) {

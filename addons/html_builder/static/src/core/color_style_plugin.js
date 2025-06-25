@@ -19,7 +19,7 @@ class ColorStylePlugin extends Plugin {
     };
 }
 
-class BackgroundColorAction extends BuilderAction {
+export class BackgroundColorAction extends BuilderAction {
     static id = "background-color";
     static dependencies = ["color"];
     getValue(el) {
@@ -34,7 +34,7 @@ class BackgroundColorAction extends BuilderAction {
     }
 }
 
-class ColorAction extends BuilderAction {
+export class ColorAction extends BuilderAction {
     static id = "color";
     static dependencies = ["color"];
     getValue(el) {

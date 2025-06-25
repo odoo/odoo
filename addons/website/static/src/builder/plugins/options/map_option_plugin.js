@@ -21,7 +21,7 @@ class MapOptionPlugin extends Plugin {
     };
 }
 
-class MapUpdateSrcAction extends BuilderAction {
+export class MapUpdateSrcAction extends BuilderAction {
     static id = "mapUpdateSrc";
     apply({ editingElement }) {
         const embedded = editingElement.querySelector(".s_map_embedded");
@@ -40,7 +40,7 @@ class MapUpdateSrcAction extends BuilderAction {
             .classList.toggle("d-none", !!editingElement.dataset.mapAddress);
     }
 }
-class MapDescriptionAction extends BuilderAction {
+export class MapDescriptionAction extends BuilderAction {
     static id = "mapDescription";
     isApplied({ editingElement }) {
         return editingElement.querySelector(".description") !== null;

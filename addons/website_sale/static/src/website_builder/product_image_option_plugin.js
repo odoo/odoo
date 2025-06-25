@@ -45,7 +45,7 @@ export class ProductImageOptionPlugin extends Plugin {
 /*
 * Change sequence of product page images
 */
-class SetPositionAction extends BuilderAction {
+export class SetPositionAction extends BuilderAction {
     static id = "setPosition";
     setup() {
         this.reload = {};
@@ -63,7 +63,7 @@ class SetPositionAction extends BuilderAction {
 /*
  * Removes the image in the back-end
  */
-class RemoveMediaAction extends BuilderAction {
+export class RemoveMediaAction extends BuilderAction {
     static id = "removeMedia";
     setup() {
         this.reload = {};

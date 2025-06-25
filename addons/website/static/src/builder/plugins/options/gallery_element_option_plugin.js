@@ -21,7 +21,7 @@ export class GalleryElementOptionPlugin extends Plugin {
     };
 }
 
-class SetGalleryElementPositionAction extends BuilderAction {
+export class SetGalleryElementPositionAction extends BuilderAction {
     static id = "setGalleryElementPosition";
     apply({ editingElement: activeItemEl, value: position }) {
         const optionName = activeItemEl.classList.contains("carousel-item")

@@ -65,7 +65,7 @@ class SearchbarOptionPlugin extends Plugin {
     };
 }
 
-class BaseSearchBarAction extends BuilderAction {
+export class BaseSearchBarAction extends BuilderAction {
     id = "baseSearchBar";
     defaultSearchType = "name asc";
 
@@ -80,7 +80,7 @@ class BaseSearchBarAction extends BuilderAction {
         return this.getFormEl(editingElement).querySelector(".o_search_order_by");
     }
 }
-class SetSearchTypeAction extends BaseSearchBarAction {
+export class SetSearchTypeAction extends BaseSearchBarAction {
     static id = "setSearchType";
     apply({ editingElement, value: formAction, dependencyManager }) {
         this.getFormEl(editingElement).action = formAction;
@@ -117,14 +117,14 @@ class SetSearchTypeAction extends BaseSearchBarAction {
         }
     }
 }
-class SetOrderByAction extends BaseSearchBarAction {
+export class SetOrderByAction extends BaseSearchBarAction {
     static id = "setOrderBy";
     apply({ editingElement, value: orderBy }) {
         this.getSearchOrderByInputEl(editingElement).value = orderBy;
     }
 }
 
-class SetSearchbarStyleAction extends BaseSearchBarAction {
+export class SetSearchbarStyleAction extends BaseSearchBarAction {
     static id = "setSearchbarStyle";
     isApplied({ editingElement, params: { mainParam: style } }) {
         const searchInputIsLight = editingElement.matches(".border-0.bg-light");
@@ -151,7 +151,7 @@ class SetSearchbarStyleAction extends BaseSearchBarAction {
 // `with_description = options['displayDescription']`) so we can use
 // the default `dataAttributeAction`. The python should not need a
 // value if it doesn't exist.
-class SetNonEmptyDataAttributeAction extends BuilderAction {
+export class SetNonEmptyDataAttributeAction extends BuilderAction {
     static id = "setNonEmptyDataAttribute";
     getValue({ editingElement, params: { mainParam: attributeName } = {} }) {
         return editingElement.dataset[attributeName];

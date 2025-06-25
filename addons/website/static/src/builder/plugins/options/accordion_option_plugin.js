@@ -25,7 +25,7 @@ class accordionOptionPlugin extends Plugin {
     };
 }
 
-class DefineCustomIconAction extends BuilderAction {
+export class DefineCustomIconAction extends BuilderAction {
     static id = "defineCustomIcon";
     static dependencies = ["media"];
     async load() {
@@ -68,7 +68,7 @@ class DefineCustomIconAction extends BuilderAction {
         }
     }
 }
-class CustomAccordionIconAction extends BuilderAction {
+export class CustomAccordionIconAction extends BuilderAction {
     static id = "customAccordionIcon";
     apply({ editingElement, params, value }) {
         const accordionButtonEls = editingElement.querySelectorAll(".accordion-button");

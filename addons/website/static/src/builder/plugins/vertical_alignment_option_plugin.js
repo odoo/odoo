@@ -34,7 +34,7 @@ class VerticalAlignmentOptionPlugin extends Plugin {
     };
 }
 
-class SetVerticalAlignmentAction extends ClassAction {
+export class SetVerticalAlignmentAction extends ClassAction {
     static id = "setVerticalAlignment";
     getPriority({ params: { mainParam: classNames } = { mainParam: "" } }) {
         return classNames === "align-items-stretch" ? 0 : 1;

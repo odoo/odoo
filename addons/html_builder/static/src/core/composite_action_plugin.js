@@ -18,7 +18,7 @@ export class CompositeActionPlugin extends Plugin {
     };
 }
 
-class CompositeAction extends BuilderAction {
+export class CompositeAction extends BuilderAction {
     static id = "composite";
     static dependencies = ["builderActions"];
     loadOnClean = true;
@@ -189,7 +189,7 @@ class CompositeAction extends BuilderAction {
     }
 }
 
-class ReloadCompositeAction extends CompositeAction {
+export class ReloadCompositeAction extends CompositeAction {
     static id = "reloadComposite";
     setup() {
         this.reload = {};

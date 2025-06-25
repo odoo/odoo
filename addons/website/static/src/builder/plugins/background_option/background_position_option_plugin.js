@@ -24,7 +24,7 @@ class BackgroundPositionOptionPlugin extends Plugin {
     };
 }
 
-class BackgroundTypeAction extends BuilderAction {
+export class BackgroundTypeAction extends BuilderAction {
     static id = "backgroundType";
     apply({ editingElement, value }) {
         editingElement.classList.toggle("o_bg_img_opt_repeat", value === "repeat-pattern");
@@ -40,7 +40,7 @@ class BackgroundTypeAction extends BuilderAction {
     }
 }
 
-class SetBackgroundSizeAction extends BuilderAction {
+export class SetBackgroundSizeAction extends BuilderAction {
     static id = "setBackgroundSize";
     getValue(context) {
         return getBgSizeValue(context);
@@ -64,7 +64,7 @@ class SetBackgroundSizeAction extends BuilderAction {
     }
 }
 
-class BackgroundPositionOverlayAction extends BuilderAction {
+export class BackgroundPositionOverlayAction extends BuilderAction {
     static id = "backgroundPositionOverlay";
     static dependencies = ["overlayButtons", "overlay"];
     async load({ editingElement }) {

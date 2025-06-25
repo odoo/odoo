@@ -19,7 +19,7 @@ class CookiesBarOptionPlugin extends Plugin {
     };
 }
 
-class SelectLayoutAction extends BuilderAction {
+export class SelectLayoutAction extends BuilderAction {
     static id = "selectLayout";
     apply({ editingElement, value: layout }) {
         const templateEl = renderToElement(`website.cookies_bar.${layout}`, {

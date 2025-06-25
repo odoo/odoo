@@ -70,7 +70,7 @@ export class AddElementOptionPlugin extends Plugin {
     }
 }
 
-class AddElTextAction extends BuilderAction {
+export class AddElTextAction extends BuilderAction {
     static id = "addElText";
     static dependencies = ["addElementOption"];
     apply({ editingElement }) {
@@ -89,7 +89,7 @@ class AddElTextAction extends BuilderAction {
         );
     }
 }
-class AddElImageAction extends BuilderAction {
+export class AddElImageAction extends BuilderAction {
     static id = "addElImage";
     static dependencies = ["media", "addElementOption"];
     async load({ editingElement }) {
@@ -131,7 +131,7 @@ class AddElImageAction extends BuilderAction {
         ]);
     }
 }
-class AddElButtonAction extends BuilderAction {
+export class AddElButtonAction extends BuilderAction {
     static id = "addElButton";
     static dependencies = ["addElementOption"];
     apply({ editingElement }) {

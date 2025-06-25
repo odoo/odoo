@@ -12,7 +12,7 @@ class PriceListPlugin extends Plugin {
     };
 }
 
-class TogglePriceListDescriptionAction extends BuilderAction {
+export class TogglePriceListDescriptionAction extends BuilderAction {
     static id = "togglePriceListDescription";
     isApplied({ editingElement, params }) {
         const description = editingElement.querySelector(`.${params.descriptionClass}`);

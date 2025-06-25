@@ -88,7 +88,7 @@ class PopupOptionPlugin extends Plugin {
 // Moves the snippet in #o_shared_blocks to be common to all pages
 // or inside the first editable oe_structure in the main to be on
 // current page only.
-class MoveBlockAction extends BuilderAction {
+export class MoveBlockAction extends BuilderAction {
     static id = "moveBlock";
     isApplied({ editingElement, value }) {
         return editingElement.closest("#o_shared_blocks")
@@ -103,7 +103,7 @@ class MoveBlockAction extends BuilderAction {
         whereEl.insertAdjacentElement("afterbegin", popupEl);
     }
 }
-class SetBackdropAction extends BuilderAction {
+export class SetBackdropAction extends BuilderAction {
     static id = "setBackdrop";
     isApplied({ editingElement }) {
         const hasBackdropColor = !!editingElement.style.getPropertyValue("background-color").trim();
@@ -119,14 +119,14 @@ class SetBackdropAction extends BuilderAction {
         editingElement.style.removeProperty("background-color");
     }
 }
-class CopyAnchorAction extends BuilderAction {
+export class CopyAnchorAction extends BuilderAction {
     static id = "copyAnchor";
     static dependencies = ["anchor"];
     apply({ editingElement }) {
         this.dependencies.anchor.createOrEditAnchorLink(editingElement);
     }
 }
-class SetPopupDelayAction extends BuilderAction {
+export class SetPopupDelayAction extends BuilderAction {
     static id = "setPopupDelay";
     apply({ editingElement, value }) {
         editingElement.dataset.showAfter = value * 1000;

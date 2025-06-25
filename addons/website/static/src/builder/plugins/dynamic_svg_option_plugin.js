@@ -23,7 +23,7 @@ class DynamicSvgOptionPlugin extends Plugin {
     };
 }
 
-class SvgColorAction extends BuilderAction {
+export class SvgColorAction extends BuilderAction {
     static id = "svgColor";
     getValue({ editingElement: imgEl, params: { mainParam: colorName } }) {
         const searchParams = new URL(imgEl.src, window.location.origin).searchParams;

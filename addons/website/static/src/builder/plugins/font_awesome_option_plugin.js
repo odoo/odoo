@@ -20,7 +20,7 @@ class FontAwesomeOptionPlugin extends Plugin {
     };
 }
 
-class FaResizeAction extends ClassAction {
+export class FaResizeAction extends ClassAction {
     static id = "faResize";
     apply(context) {
         const { editingElement } = context;
