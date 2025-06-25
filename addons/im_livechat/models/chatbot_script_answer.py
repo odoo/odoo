@@ -53,5 +53,5 @@ class ChatbotScriptAnswer(models.Model):
 
         return domain
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return ["name", "redirect_link"]

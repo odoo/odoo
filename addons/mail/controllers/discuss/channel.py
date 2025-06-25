@@ -27,7 +27,7 @@ class DiscussChannelWebclientController(WebclientController):
         if request.env.context["add_channels_last_message"]:
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
-            store.add(channels._get_last_messages(), for_current_user=True)
+            store.add(channels._get_last_messages())
 
     @classmethod
     def _process_request_for_all(self, store: Store, name, params):
@@ -74,7 +74,12 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        return channel._load_more_members(known_member_ids)
+        unknown_members = self.env["discuss.channel.member"].search(
+            domain=[("id", "not in", known_member_ids), ("channel_id", "=", channel.id)],
+            limit=100,
+        )
+        store = Store(channel, "member_count").add(unknown_members)
+        return store.get_result()
 
     @http.route("/discuss/channel/update_avatar", methods=["POST"], type="jsonrpc")
     def discuss_channel_avatar_update(self, channel_id, data):
@@ -100,7 +105,7 @@ class ChannelController(http.Controller):
             messages.set_message_done()
         return {
             **res,
-            "data": Store(messages, for_current_user=True).get_result(),
+            "data": Store(messages).get_result(),
             "messages": messages.ids,
         }
 
@@ -111,7 +116,7 @@ class ChannelController(http.Controller):
         if not channel:
             raise NotFound()
         messages = channel.pinned_message_ids.sorted(key="pinned_at", reverse=True)
-        return Store(messages, for_current_user=True).get_result()
+        return Store(messages).get_result()
 
     @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context

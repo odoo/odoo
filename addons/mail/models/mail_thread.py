@@ -3331,14 +3331,13 @@ class MailThread(models.AbstractModel):
                 ]
             )
             for user in users:
-                user._bus_send_store(
+                Store(
                     message.with_user(user).with_context(allowed_company_ids=[]),
+                    bus_channel=user,
                     msg_vals=msg_vals,
-                    for_current_user=True,
                     add_followers=True,
                     followers=followers,
-                    notification_type="mail.message/inbox",
-                )
+                ).bus_send("mail.message/inbox")
 
     def _notify_thread_by_email(self, message, recipients_data, *, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
@@ -4781,7 +4780,7 @@ class MailThread(models.AbstractModel):
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             res.append({"translationValue": False})
-        message._bus_send_store(message, res)
+        Store(message, res, bus_channel=message._bus_channel()).bus_send()
 
     # ------------------------------------------------------
     # STORE

@@ -317,7 +317,9 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
         )
         self.assertEqual(
-            Store(channel.with_context(guest=guest).with_user(self.user_public)).get_result()["discuss.channel"],
+            Store(
+                channel.with_user(self.user_public).with_context(guest=guest),
+            ).get_result()["discuss.channel"],
             self._filter_channels_fields(
                 {
                     "anonymous_name": f"Visitor #{self.visitor.id}",
