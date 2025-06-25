@@ -31,16 +31,16 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
         <field name="arch" type="xml">
-            <page name="page_account_security" position="inside">
-                <group string="Passkeys">
-                    <div colspan="2">
-                        <div class="text-muted mb-3" colspan="2">
-                            Passkeys are a replacement for your username and password, offering a more secure way of logging in.
-                        </div>
-                        <div class="mb-2 gap-1" style="display: flex;" colspan="4">
-                            <button colspan="2" type="object" name="action_create_passkey" class="btn-secondary" string="Add Passkey"/>
-                        </div>
-                        <field colspan="4" name="auth_passkey_key_ids">
+            <xpath expr="//div[@name='api_keys']" position="after">
+                <div class="d-flex mt-3">
+                    <div class="w-sm-25 d-flex flex-column">
+                        <label for="action_create_passkey" string="Passkeys" class="o_form_label"/>
+                        <span class="text-muted">
+                            Recommended for extra security.
+                        </span>
+                    </div>
+                    <div class="w-sm-75 d-flex flex-column">
+                        <field name="auth_passkey_key_ids" invisible="not auth_passkey_key_ids" class="o_auth_passkey_kanban_view w-sm-75">
                             <kanban create="false" can_open="false">
                                 <templates>
                                     <t t-name="menu">
@@ -55,9 +55,12 @@
                                 </templates>
                             </kanban>
                         </field>
+                        <div>
+                            <button type="object" name="action_create_passkey" class="btn btn-secondary h-100" string="Add Passkey"/>
+                        </div>
                     </div>
-                </group>
-            </page>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>

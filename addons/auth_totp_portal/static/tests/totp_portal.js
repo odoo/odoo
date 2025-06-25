@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
     run: "click",
 }, {
     content: "Check the wizard has opened",
-    trigger: 'li:contains("scan the barcode below")',
+    trigger: '.o_auth_totp_enable_2FA',
 }, {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("Cannot scan it?")',

@@ -28,7 +28,7 @@ function openUserProfileAtSecurityTab() {
         run: 'click',
     }, {
         content: "Switch to security tab",
-        trigger: 'a[role=tab]:contains("Account Security")',
+        trigger: 'a[role=tab]:contains("Security")',
         run: 'click',
     }];
 }
@@ -52,7 +52,7 @@ function closeProfileDialog({content, totp_state}) {
     return [{
         content,
         //TODO: remove when PIPU macro PR is merged: https://github.com/odoo/odoo/pull/194508
-        trigger: 'a[role=tab]:contains("Account Security").active',
+        trigger: 'a[role=tab]:contains("Security").active',
         async run(helpers) {
             await waitFor(trigger, { timeout: 5000 });
             const modal = document.querySelector(".o_dialog");
@@ -78,14 +78,14 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     steps: () => [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
     //TODO: remove when PIPU macro PR is merged: https://github.com/odoo/odoo/pull/194508
-    trigger: 'a[role=tab]:contains("Account Security").active',
+    trigger: 'a[role=tab]:contains("Security").active',
     async run(actions) {
         const el = await waitFor('button[name=action_totp_enable_wizard]', { timeout: 5000 });
         await actions.click(el);
     }
 },
 {
-    trigger: ".modal div:contains(entering your password)",
+    trigger: ".modal div:contains(Enter your current password)",
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
@@ -97,7 +97,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     run: "click",
 }, {
     content: "Check the wizard has opened",
-    trigger: '.modal li:contains("When requested to do so")',
+    trigger: '.modal:contains("Two-Factor Authentication Activation")',
 }, {
     content: "Get secret from collapsed div",
     trigger: `.modal a:contains("Cannot scan it?")`,
@@ -286,14 +286,14 @@ registry.category("web_tour.tours").add('totp_login_device', {
 ...openUserProfileAtSecurityTab(),
 {
     content: "Open totp wizard",
-    trigger: 'a[role=tab]:contains("Account Security").active',
+    trigger: 'a[role=tab]:contains("Security").active',
 },
 {
     trigger: "button[name=action_totp_disable]",
     run: "click",
 },
 {
-    trigger: ".modal div:contains(entering your password)",
+    trigger: ".modal div:contains(Enter your current password)",
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
@@ -386,7 +386,7 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     run: "click",
 },
 {
-    trigger: ".modal div:contains(entering your password)",
+    trigger: ".modal div:contains(Enter your current password)",
 },
 { // enhanced security yo
     content: "Check that we have to enter enhanced security mode & input password",
@@ -406,8 +406,8 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     trigger: "td.o_data_cell:contains(test_user)",
     run: "click",
 }, {
-    content: "go to Account security Tab",
-    trigger: "a.nav-link:contains(Account Security)",
+    content: "go to Security Tab",
+    trigger: "a.nav-link:contains(Security)",
     run: "click",
 }, {
     content: "check 2FA button",

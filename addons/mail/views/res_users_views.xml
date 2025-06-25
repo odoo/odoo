@@ -9,11 +9,8 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//group[@name='signature']|//field[@name='signature']" position="before">
-                        <group string="Discuss" name="discuss">
-                            <field name="notification_type" widget="radio" readonly="0"/>
-                            <field name="role_ids" widget="many2many_tags" readonly="not can_edit_role"/>
-                        </group>
+                    <xpath expr="//group[@name='other_preferences']" position="inside">
+                        <field name="notification_type" widget="radio" readonly="0" options="{'horizontal': true}"/>
                     </xpath>
                     <field name="signature" position="attributes">
                         <attribute name="widget">html_mail</attribute>

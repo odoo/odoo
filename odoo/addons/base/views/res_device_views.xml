@@ -65,13 +65,14 @@
                                     <t t-if="record.is_current.raw_value">
                                         <span class="ms-2 text-success o_status o_status_green"></span>
                                     </t>
+                                    <span t-out="luxon.DateTime.fromISO(record.last_activity.raw_value).toRelative()"
+                                       class="ms-2 text-muted"/>
                                 </div>
                                 <field name="ip_address"/>
                                 <field name="country"/>
                                 <field name="city"/>
-                                <t t-out="luxon.DateTime.fromISO(record.last_activity.raw_value).toRelative()"/>
                             </div>
-                            <button name="revoke" type="object" string="Revoke" class="btn btn-secondary ms-auto mt-auto"/>
+                            <button name="revoke" type="object" string="Log out" class="btn btn-secondary ms-auto mb-auto"/>
                         </t>
                     </templates>
                 </kanban>
