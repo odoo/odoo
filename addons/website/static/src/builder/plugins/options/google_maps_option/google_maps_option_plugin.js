@@ -285,13 +285,13 @@ export class GoogleMapsOptionPlugin extends Plugin {
     }
 }
 
-class ResetMapColorAction extends BuilderAction {
+export class ResetMapColorAction extends BuilderAction {
     static id = "resetMapColor";
     apply({ editingElement }) {
         editingElement.dataset.mapColor = "";
     }
 }
-class ShowDescriptionAction extends BuilderAction {
+export class ShowDescriptionAction extends BuilderAction {
     static id = "showDescription";
     isApplied({ editingElement }) {
         return !!editingElement.querySelector(".description");

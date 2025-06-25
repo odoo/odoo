@@ -21,7 +21,7 @@ class ImageGridOptionPlugin extends Plugin {
     };
 }
 
-class SetGridImageModeAction extends BuilderAction {
+export class SetGridImageModeAction extends BuilderAction {
     static id = "setGridImageMode";
     isApplied({ editingElement, value: modeName }) {
         const imageGridItemEl = editingElement.closest(".o_grid_item_image");

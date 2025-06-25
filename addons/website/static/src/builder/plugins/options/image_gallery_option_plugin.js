@@ -391,7 +391,7 @@ class ImageGalleryOption extends Plugin {
     }
 }
 
-class AddImageAction extends BuilderAction {
+export class AddImageAction extends BuilderAction {
     static id = "addImage";
     static dependencies = ["media", "imageGalleryOption"];
     async load({ editingElement }) {
@@ -419,7 +419,7 @@ class AddImageAction extends BuilderAction {
         }
     }
 }
-class RemoveAllImagesAction extends BuilderAction {
+export class RemoveAllImagesAction extends BuilderAction {
     static id = "removeAllImages";
     apply({ editingElement: el }) {
         const containerEl = el.querySelector(".container, .container-fluid, .o_container_small");
@@ -430,7 +430,7 @@ class RemoveAllImagesAction extends BuilderAction {
         }
     }
 }
-class SetImageGalleryLayoutAction extends BuilderAction {
+export class SetImageGalleryLayoutAction extends BuilderAction {
     static id = "setImageGalleryLayout";
     static dependencies = ["imageGalleryOption"];
     load({ editingElement }) {
@@ -449,7 +449,7 @@ class SetImageGalleryLayoutAction extends BuilderAction {
         return mode === this.dependencies.imageGalleryOption.getMode(editingElement);
     }
 }
-class SetImageGalleryColumnsAction extends BuilderAction {
+export class SetImageGalleryColumnsAction extends BuilderAction {
     static id = "setImageGalleryColumns";
     static dependencies = ["imageGalleryOption"];
     load({ editingElement }) {
@@ -474,7 +474,7 @@ class SetImageGalleryColumnsAction extends BuilderAction {
     }
 }
 
-class SetCarouselSpeedAction extends BuilderAction {
+export class SetCarouselSpeedAction extends BuilderAction {
     static id = "setCarouselSpeed";
     apply({ editingElement, value }) {
         editingElement.dataset.bsInterval = value * 1000;

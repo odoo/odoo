@@ -119,14 +119,14 @@ class CoverPropertiesOptionPlugin extends Plugin {
     }
 }
 
-class BaseCoverPropertiesAction extends BuilderAction {
+export class BaseCoverPropertiesAction extends BuilderAction {
     static id = "baseCoverProperties";
     markCoverPropertiesToBeSaved({ editingElement }) {
         editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
     }
 }
 
-class SetCoverBackgroundAction extends BaseCoverPropertiesAction {
+export class SetCoverBackgroundAction extends BaseCoverPropertiesAction {
     static id = "setCoverBackground";
     static dependencies = ["builderActions", "media"];
     setup() {
@@ -180,7 +180,7 @@ class SetCoverBackgroundAction extends BaseCoverPropertiesAction {
         editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
     }
 }
-class MarkCoverPropertiesToBeSavedAction extends BaseCoverPropertiesAction {
+export class MarkCoverPropertiesToBeSavedAction extends BaseCoverPropertiesAction {
     static id = "markCoverPropertiesToBeSaved";
     apply({ editingElement }) {
         editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;

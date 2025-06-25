@@ -230,7 +230,7 @@ class DonationOptionPlugin extends Plugin {
     }
 }
 
-class ToggleDataAttributeAction extends BuilderAction {
+export class ToggleDataAttributeAction extends BuilderAction {
     /**
      * @param {string} dataAttributeName - The data attribute to toggle (without "data-" prefix)
      * @param {Function} toggleFunction - Function to call when applying or cleaning
@@ -298,14 +298,14 @@ class ToggleDataAttributeAction extends BuilderAction {
     }
 }
 
-class ToggleDisplayOptionsAction extends ToggleDataAttributeAction {
+export class ToggleDisplayOptionsAction extends ToggleDataAttributeAction {
     static id = "toggleDisplayOptions";
     setup() {
         super.setup("displayOptions", this.toggleDisplayOptions)
     }
 }
 
-class TogglePrefilledOptionsAction extends ToggleDataAttributeAction {
+export class TogglePrefilledOptionsAction extends ToggleDataAttributeAction {
     static id = "togglePrefilledOptions";
     setup() {
         super.setup("prefilledOptions", this.togglePrefilledOptions)
@@ -313,13 +313,13 @@ class TogglePrefilledOptionsAction extends ToggleDataAttributeAction {
 }
 
 
-class ToggleDescriptionsAction extends ToggleDataAttributeAction {
+export class ToggleDescriptionsAction extends ToggleDataAttributeAction {
     static id = "toggleDescriptions";
     setup() {
         super.setup("descriptions", this.toggleDescriptions)
     }
 }
-class SetPrefilledOptionsAction extends BuilderAction {
+export class SetPrefilledOptionsAction extends BuilderAction {
     static id = "setPrefilledOptions";
     static dependencies = ["donationOption"];
     getValue(context) {
@@ -330,7 +330,7 @@ class SetPrefilledOptionsAction extends BuilderAction {
     }
 }
 
-class SelectAmountInputAction extends BuilderAction {
+export class SelectAmountInputAction extends BuilderAction {
     static id = "selectAmountInput";
     static dependencies = ["donationOption"];
     isApplied(context) {
@@ -341,7 +341,7 @@ class SelectAmountInputAction extends BuilderAction {
     }
 }
 
-class SetMinimumAmountAction extends BuilderAction {
+export class SetMinimumAmountAction extends BuilderAction {
     static id = "setMinimumAmount";
     static dependencies = ["donationOption"];
     getValue(context) {
@@ -351,7 +351,7 @@ class SetMinimumAmountAction extends BuilderAction {
         return this.dependencies.donationOption.setMinimumAmount(context);
     }
 }
-class SetMaximumAmountAction extends BuilderAction {
+export class SetMaximumAmountAction extends BuilderAction {
     static id = "setMaximumAmount";
     static dependencies = ["donationOption"];
     getValue(context) {
@@ -361,7 +361,7 @@ class SetMaximumAmountAction extends BuilderAction {
         return this.dependencies.donationOption.setMaximumAmount(context);
     }
 }
-class SetSliderStepAction extends BuilderAction {
+export class SetSliderStepAction extends BuilderAction {
     static id = "setSliderStep";
     static dependencies = ["donationOption"];
     getValue(context) {

@@ -226,7 +226,7 @@ export class ThemeTabPlugin extends Plugin {
     }
 }
 
-class CustomizeGrayAction extends BuilderAction {
+export class CustomizeGrayAction extends BuilderAction {
     static id = "customizeGray";
     static dependencies = ["customizeWebsite", "themeTab"];
     setup() {
@@ -260,7 +260,7 @@ class CustomizeGrayAction extends BuilderAction {
         );
     }
 }
-class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
+export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
     static id = "changeColorPalette";
     static dependencies = ["customizeWebsite"];
     setup() {
