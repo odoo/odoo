@@ -300,7 +300,7 @@
 
                           <t t-set="current_subtotal" t-value="0"/>
 
-                          <t t-foreach="order.order_line" t-as="line">
+                          <t t-foreach="order.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
 
                               <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
