@@ -491,6 +491,11 @@ patch(Order.prototype, {
             ) {
                 continue;
             }
+
+            //If there is only one possible reward we try to claim the most possible out of it
+            if (claimedReward.reward.reward_product_ids?.length === 1) {
+                delete claimedReward.args["quantity"];
+            }
             this._applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
         }
     },
