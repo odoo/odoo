@@ -642,8 +642,17 @@ class StockWarehouseOrderpoint(models.Model):
                             if global_visibility_days:
                                 date -= relativedelta.relativedelta(days=int(global_visibility_days))
                             values = orderpoint._prepare_procurement_values(date=date)
+                            product_uom, product_qty = orderpoint.product_uom, orderpoint.qty_to_order
+                            if orderpoint.replenishment_uom_id and orderpoint.replenishment_uom_id != product_uom:
+                                product_uom = orderpoint.replenishment_uom_id
+                                product_qty = orderpoint.product_uom._compute_quantity(
+                                    orderpoint.qty_to_order,
+                                    orderpoint.replenishment_uom_id,
+                                )
                             procurements.append(self.env['procurement.group'].Procurement(
-                                orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,
+                                orderpoint.product_id,
+                                product_qty,
+                                product_uom,
                                 orderpoint.location_id, orderpoint.name, origin,
                                 orderpoint.company_id, values))
 

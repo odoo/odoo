@@ -638,7 +638,7 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _compute_packaging_uom_qty(self):
         for move in self:
             if move.packaging_uom_id:
-                move.packaging_uom_qty = move.product_uom._compute_quantity(move.product_uom_qty, move.packaging_uom_id)
+                move.packaging_uom_qty = move.product_uom._compute_quantity(move.product_uom_qty, move.packaging_uom_id, rounding_method='HALF-UP')
 
     @api.depends(
         'has_tracking',
