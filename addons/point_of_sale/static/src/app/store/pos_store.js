@@ -316,9 +316,6 @@ export class PosStore extends Reactive {
         this.deviceSync = deviceSync;
         this.data.deviceSync = deviceSync;
 
-        // Check cashier
-        this.checkPreviousLoggedCashier();
-
         // Add Payment Interface to Payment Method
         for (const pm of this.models["pos.payment.method"].getAll()) {
             const PaymentInterface = this.electronic_payment_interfaces[pm.use_payment_terminal];
@@ -358,8 +355,11 @@ export class PosStore extends Reactive {
         this.computeProductPricelistCache();
         await this.processProductAttributes();
     }
+    async openCashbox(action) {
+        this.hardwareProxy.openCashbox(action);
+    }
     cashMove() {
-        this.hardwareProxy.openCashbox(_t("Cash in / out"));
+        this.openCashbox(_t("Cash in / out"));
         return makeAwaitable(this.dialog, CashMovePopup);
     }
     async closeSession() {
@@ -508,6 +508,9 @@ export class PosStore extends Reactive {
     }
 
     async afterProcessServerData() {
+        // Check cashier
+        this.checkPreviousLoggedCashier();
+
         const paidUnsyncedOrderIds = this.models["pos.order"]
             .filter((order) => order.isUnsyncedPaid)
             .map((order) => order.id);
@@ -1155,8 +1158,10 @@ export class PosStore extends Reactive {
     }
 
     // There for override
-    async preSyncAllOrders(orders) {}
-    postSyncAllOrders(orders) {}
+    async preSyncAllOrders(orders) {
+        return orders;
+    }
+    async postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
         let orders = options.orders || [...orderToCreate, ...orderToUpdate];
@@ -1171,7 +1176,7 @@ export class PosStore extends Reactive {
             }
 
             const context = this.getSyncAllOrdersContext(orders, options);
-            await this.preSyncAllOrders(orders);
+            orders = await this.preSyncAllOrders(orders);
 
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders

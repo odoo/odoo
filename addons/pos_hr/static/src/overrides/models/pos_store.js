@@ -53,9 +53,7 @@ patch(PosStore.prototype, {
 
         return order;
     },
-    set_cashier(employee) {
-        super.set_cashier(employee);
-
+    setCashierUpdateSession(employee) {
         if (this.config.module_pos_hr) {
             if (navigator.onLine) {
                 this.data.write("pos.session", [this.config.current_session_id.id], {
@@ -64,6 +62,13 @@ patch(PosStore.prototype, {
             } else {
                 this.employeeBuffer.push(employee);
             }
+        }
+    },
+    set_cashier(employee) {
+        super.set_cashier(employee);
+
+        if (this.config.module_pos_hr) {
+            this.setCashierUpdateSession(employee);
             const o = this.get_order();
             if (o && !o.get_orderlines().length) {
                 // Order without lines can be considered to be un-owned by any employee.
