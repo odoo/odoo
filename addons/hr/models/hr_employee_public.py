@@ -211,3 +211,6 @@ class HrEmployeePublic(models.Model):
                 ORDER BY employee_id, date_version DESC
             ) v ON v.employee_id = e.id
         )""" % (self._table, self._get_fields()))
+
+    def get_avatar_card_data(self, fields):
+        return self.read(fields)
