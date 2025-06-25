@@ -540,3 +540,13 @@ class TestHrEmployeeWebJson(HttpCase):
         }
         res = self.url_open(url, headers=CSRF_USER_HEADERS)
         self.assertEqual(res.status_code, 200)
+
+    def test_candidate_view_error(self):
+        """Run the hr_candidate_tour UI tour."""
+
+        self.env['hr.candidate'].create({
+            'partner_name': "Extended Test Candidate",
+        })
+
+        # Start the tour
+        self.start_tour("/odoo", 'hr_candidate_tour', login="admin")
