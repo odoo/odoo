@@ -12,6 +12,7 @@
     'depends': ['l10n_my_edi'],
     'data': [
         'views/account_move_view.xml',
+        'views/account_portal_templates.xml',
         'views/report_invoice.xml',
         'views/res_partner_view.xml',
     ],
