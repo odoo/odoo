@@ -43,6 +43,7 @@ export class DataServiceOptions {
             "calendar.event": ["appointment_resource_ids"],
             "res.partner": ["barcode"],
             "product.uom": ["barcode"],
+            "product.template.attribute.exclusion": ["product_template_attribute_value_id"],
         };
 
         for (const model in databaseTable) {
