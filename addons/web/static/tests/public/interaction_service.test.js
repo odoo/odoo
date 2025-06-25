@@ -284,7 +284,7 @@ test("can mount a component", async () => {
     }
     const { core } = await startInteraction(Test, `<div class="test"></div>`);
     expect(".test").toHaveInnerHTML(
-        `<owl-component contenteditable="false" data-oe-protected="true">owl component</owl-component>`
+        `<owl-root contenteditable="false" data-oe-protected="true" style="display: contents;">owl component</owl-root>`
     );
     core.stopInteractions();
     expect(".test").toHaveOuterHTML(`<div class="test"></div>`);

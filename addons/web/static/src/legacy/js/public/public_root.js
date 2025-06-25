@@ -376,7 +376,6 @@ export async function createPublicRoot(RootWidget) {
     });
 
     Component.env = env;
-    await env.services.public_component.mountComponents();
     const publicRoot = new RootWidget(null, env);
     const app = new App(MainComponentsContainer, {
         getTemplate,
