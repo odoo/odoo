@@ -112,7 +112,7 @@ export class HtmlField extends Component {
     }
 
     get value() {
-        const value = this.props.record.data[this.props.name];
+        const value = this.props.record.data[this.props.name] || "";
         let newVal = fixInvalidHTML(value);
         if (this.props.migrateHTML) {
             newVal = this.htmlUpgradeManager.processForUpgrade(newVal, {
