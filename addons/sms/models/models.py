@@ -53,6 +53,8 @@ class BaseModel(models.AbstractModel):
                     'number': record[fname],
                     'partner_store': False,
                     'field_store': fname,
+                    'force_field':force_field,
+                    'tocheck_fields':tocheck_fields,
                 }
             elif all_partners and partner_fallback:
                 partner = self.env['res.partner']
@@ -71,6 +73,9 @@ class BaseModel(models.AbstractModel):
                     'number': partner[fname],
                     'partner_store': True,
                     'field_store': fname,
+                    'force_field':force_field,
+                    'tocheck_fields':tocheck_fields,
+
                 }
             else:
                 # did not find any sanitized number -> take first set value as fallback;
@@ -84,6 +89,8 @@ class BaseModel(models.AbstractModel):
                     'sanitized': False,
                     'number': value,
                     'partner_store': False,
-                    'field_store': fname
+                    'field_store': fname,
+                    'force_field':force_field,
+                    'tocheck_fields':tocheck_fields,
                 }
         return result
