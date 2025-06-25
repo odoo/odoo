@@ -89,6 +89,11 @@ class AccountMoveReversal(models.TransientModel):
             record.currency_id = len(move_ids.currency_id) == 1 and move_ids.currency_id or False
             record.move_type = move_ids.move_type if len(move_ids) == 1 else (any(move.move_type in ('in_invoice', 'out_invoice') for move in move_ids) and 'some_invoice' or False)
 
+    def _get_ref_string(self, move):
+        return (_('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason)
+            if self.reason
+            else _('Reversal of: %s', move.name))
+
     def _prepare_default_reversal(self, move):
         reverse_date = self.date
         mixed_payment_term = move.invoice_payment_term_id.id if move.invoice_payment_term_id.early_pay_discount_computation == 'mixed' else None
