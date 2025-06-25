@@ -27,6 +27,11 @@ class Base(models.AbstractModel):
             or super()._valid_field_parameter(field, name)
         )
 
+    def with_user(self, user):
+        """Override to ensure the guest context is removed as the target user in a with_user should
+        never be considered as being the guest of the outside env."""
+        return super().with_user(user).with_context(guest=None)
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------

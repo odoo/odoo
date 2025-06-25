@@ -75,7 +75,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
         )
         chatbot_message = discuss_channel.chatbot_message_ids.mail_message_id[:1]
         self.assertEqual(
-            Store(chatbot_message, for_current_user=True).get_result()["mail.message"],
+            Store(chatbot_message).get_result()["mail.message"],
             [
                 {
                     "attachment_ids": [],
@@ -92,6 +92,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     "create_date": fields.Datetime.to_string(chatbot_message.create_date),
                     "date": fields.Datetime.to_string(chatbot_message.date),
                     "default_subject": "Testing Bot",
+                    "email_from": False,
                     "id": chatbot_message.id,
                     "incoming_email_cc": False,
                     "incoming_email_to": False,
@@ -153,7 +154,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             rating_id=record_rating.id,
         )
         self.assertEqual(
-            Store(message, for_current_user=True).get_result(),
+            Store(message).get_result(),
             {
                 "mail.message": self._filter_messages_fields(
                     {
@@ -166,6 +167,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "create_date": fields.Datetime.to_string(message.create_date),
                         "id": message.id,
                         "default_subject": "test1 Ernest Employee",
+                        "email_from": '"test1" <test1@example.com>',
                         "incoming_email_cc": False,
                         "incoming_email_to": False,
                         "message_link_preview_ids": [],

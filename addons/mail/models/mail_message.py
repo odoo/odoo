@@ -901,9 +901,9 @@ class MailMessage(models.Model):
         self._bus_send_reaction_group(content)
 
     def _bus_send_reaction_group(self, content):
-        store = Store()
+        store = Store(bus_channel=self._bus_channel())
         self._reaction_group_to_store(store, content)
-        self._bus_send_store(store)
+        store.bus_send()
 
     def _reaction_group_to_store(self, store: Store, content):
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
@@ -940,7 +940,7 @@ class MailMessage(models.Model):
             ]
         return [field_name]
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target: Store.Target):
         field_names = [
             # sudo: mail.message - reading attachments on accessible message is allowed
             Store.Many("attachment_ids", sort="id", sudo=True),
@@ -956,7 +956,11 @@ class MailMessage(models.Model):
             "body",
             "create_date",
             "date",
-            Store.Attr("email_from", predicate=lambda m: m._get_store_email_from_predicate()),
+            Store.Attr(
+                "email_from",
+                predicate=lambda m: target.is_internal(self.env)
+                or (not m.author_id and not m.author_guest_id),
+            ),
             "incoming_email_cc",
             "incoming_email_to",
             # sudo: mail.message - reading link preview on accessible message is allowed
@@ -975,18 +979,17 @@ class MailMessage(models.Model):
             Store.One("subtype_id", ["description"], sudo=True),
             "write_date",
         ]
-        if self.env.user._is_internal():
+        if target.is_internal(self.env):
             # sudo - mail.notification: internal users can access notifications.
             field_names.append(
                 Store.Many(
                     "notification_ids",
                     value=lambda m: m.sudo().notification_ids._filtered_for_web_client(),
-                )
+                ),
             )
         return field_names
 
-    def _to_store(self, store: Store, fields, *, format_reply=True, msg_vals=False,
-                  for_current_user=False, add_followers=False, followers=None):
+    def _to_store(self, store: Store, fields, *, format_reply=True, msg_vals=False, add_followers=False, followers=None):
         """Add the messages to the given store.
 
         :param format_reply: if True, also get data about the parent message if it exists.
@@ -997,11 +1000,8 @@ class MailMessage(models.Model):
           accessing it directly. It lessens query count in some optimized use
           cases by avoiding access message content in db;
 
-        :param for_current_user: if True, get extra fields only relevant to the current user.
-            When this param is set, the result should not be broadcasted to other users!
-
-        :param add_followers: if True, also add followers of the current user for each thread of
-            each message. Only applicable if ``for_current_user`` is also True.
+        :param add_followers: if True, also add followers of the current target for each thread of
+            each message. Only applicable if ``store.target`` is a specific user.
 
         :param followers: if given, use this pre-computed list of followers instead of fetching
             them. It lessen query count in some optimized use cases.
@@ -1027,14 +1027,14 @@ class MailMessage(models.Model):
         record_by_message = self._record_by_message()
         records = record_by_message.values()
         non_channel_records = filter(lambda record: record._name != "discuss.channel", records)
-        current_partner = self.env.user.partner_id
-        if for_current_user and add_followers and non_channel_records:
+        target_user = store.target.get_user(self.env)
+        if target_user and add_followers and non_channel_records:
             if followers is None:
                 domain = Domain.OR(
                     [("res_model", "=", model), ("res_id", "in", [r.id for r in records])]
                     for model, records in groupby(non_channel_records, key=lambda r: r._name)
                 )
-                domain &= Domain("partner_id", "=", current_partner.id)
+                domain &= Domain("partner_id", "=", target_user.partner_id.id)
                 # sudo: mail.followers - reading followers of current partner
                 followers = self.env["mail.followers"].sudo().search(domain)
             follower_by_record_and_partner = {
@@ -1053,17 +1053,17 @@ class MailMessage(models.Model):
                 predicate=lambda record: self.env[record._name]._original_module,
             ),
         ]
-        if for_current_user and add_followers and non_channel_records:
+        if target_user and add_followers and non_channel_records:
             record_fields.append(
                 Store.One(
                     "selfFollower",
                     ["is_active", Store.One("partner_id", [])],
-                    value=lambda r: follower_by_record_and_partner.get((r, current_partner)),
-                )
+                    value=lambda r: follower_by_record_and_partner.get((r, target_user.partner_id)),
+                ),
             )
         for record in records:
             store.add(record, record_fields, as_thread=True)
-        if for_current_user:
+        if store.target.is_current_user(self.env):
             fields.append("starred")
         store.add(self, fields)
         for message in self:
@@ -1090,7 +1090,7 @@ class MailMessage(models.Model):
                 data["incoming_email_cc"] = tools.mail.email_split_tuples(message.incoming_email_cc)
             if message.incoming_email_to:
                 data["incoming_email_to"] = tools.mail.email_split_tuples(message.incoming_email_to)
-            if for_current_user:
+            if store.target.is_current_user(self.env):
                 # sudo: mail.message - filtering allowed tracking values
                 displayed_tracking_ids = message.sudo().tracking_value_ids._filter_has_field_access(
                     self.env
@@ -1104,7 +1104,8 @@ class MailMessage(models.Model):
                     lambda n: not n.is_read
                 ).res_partner_id
                 data["needaction"] = (
-                    not self.env.user._is_public() and current_partner in notifications_partners
+                    not self.env.user._is_public()
+                    and self.env.user.partner_id in notifications_partners
                 )
                 data["trackingValues"] = displayed_tracking_ids._tracking_value_format()
             store.add(message, data)
@@ -1112,10 +1113,6 @@ class MailMessage(models.Model):
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).
         self._extras_to_store(store, format_reply=format_reply)
-
-    def _get_store_email_from_predicate(self):
-        self.ensure_one()
-        return True
 
     def _get_store_partner_name_fields(self):
         self.ensure_one()
@@ -1177,12 +1174,13 @@ class MailMessage(models.Model):
             if message.author_id and not any(user._is_public() for user in message.author_id.with_context(active_test=False).user_ids):
                 messages_per_partner[message.author_id] |= message
         for partner, messages in messages_per_partner.items():
-            store = Store()
-            messages._message_notifications_to_store(store)
-            partner._bus_send_store(store)
+            if user := partner.main_user_id:
+                store = Store(bus_channel=user)
+                messages.with_user(user)._message_notifications_to_store(store)
+                store.bus_send()
 
     def _bus_channel(self):
-        return self.env.user._bus_channel()
+        return self.env.user
 
     # ------------------------------------------------------
     # TOOLS

@@ -79,9 +79,11 @@ class DiscussChannelMember(models.Model):
         members = self.env["discuss.channel.member"].search(domain)
         members.unpin_dt = fields.Datetime.now()
         for member in members:
-            member._bus_send_store(
-                member.channel_id, {"close_chat_window": True, "is_pinned": False}
-            )
+            Store(
+                member.channel_id,
+                {"close_chat_window": True, "is_pinned": False},
+                bus_channel=member._bus_channel(),
+            ).bus_send()
 
     @api.constrains('partner_id')
     def _contrains_no_public_member(self):
@@ -239,25 +241,33 @@ class DiscussChannelMember(models.Model):
         return super().unlink()
 
     def _bus_channel(self):
-        return (self.partner_id or self.guest_id)._bus_channel()
+        return self.partner_id.main_user_id or self.guest_id
 
     def _notify_typing(self, is_typing):
         """ Broadcast the typing notification to channel members
             :param is_typing: (boolean) tells whether the members are typing or not
         """
         for member in self:
-            member.channel_id._bus_send_store(member, extra_fields={"isTyping": is_typing, "is_typing_dt": fields.Datetime.now()})
+            Store(
+                member,
+                extra_fields={"isTyping": is_typing, "is_typing_dt": fields.Datetime.now()},
+                bus_channel=member.channel_id,
+            ).bus_send()
 
     def _notify_mute(self):
         for member in self:
-            member._bus_send_store(member.channel_id, {"mute_until_dt": member.mute_until_dt})
+            Store(
+                member.channel_id,
+                {"mute_until_dt": member.mute_until_dt},
+                bus_channel=member._bus_channel(),
+            ).bus_send()
             if member.mute_until_dt and member.mute_until_dt != -1:
                 self.env.ref("mail.ir_cron_discuss_channel_member_unmute")._trigger(member.mute_until_dt)
 
     def set_custom_notifications(self, custom_notifications):
         self.ensure_one()
         self.custom_notifications = custom_notifications
-        self._bus_send_store(self, "custom_notifications")
+        Store(self, "custom_notifications", bus_channel=self._bus_channel()).bus_send()
 
     @api.model
     def _cleanup_expired_mutes(self):
@@ -286,7 +296,7 @@ class DiscussChannelMember(models.Model):
             ),
         ]
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return [
             Store.One("channel_id", [], as_thread=True),
             "create_date",
@@ -454,11 +464,13 @@ class DiscussChannelMember(models.Model):
         )
         for member in members:
             member.rtc_inviting_session_id = self.rtc_session_ids.id
-            member._bus_send_store(
-                self.channel_id, {"rtcInvitingSession": Store.One(member.rtc_inviting_session_id, extra=True)}
-            )
+            Store(
+                member.channel_id,
+                {"rtcInvitingSession": Store.One(member.rtc_inviting_session_id, extra=True)},
+                bus_channel=member._bus_channel(),
+            ).bus_send()
         if members:
-            self.channel_id._bus_send_store(
+            Store(
                 self.channel_id,
                 {
                     "invited_member_ids": Store.Many(
@@ -470,7 +482,8 @@ class DiscussChannelMember(models.Model):
                         mode="ADD",
                     ),
                 },
-            )
+                bus_channel=self.channel_id,
+            ).bus_send()
             devices, private_key, public_key = self.channel_id._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
                 if self.channel_id.channel_type != 'chat':
@@ -549,17 +562,18 @@ class DiscussChannelMember(models.Model):
         self.last_seen_dt = fields.Datetime.now()
         if not notify:
             return
-        target = self
+        bus_channel = self._bus_channel()
         if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
-            target = self.channel_id
-        target._bus_send_store(
+            bus_channel = self.channel_id
+        Store(
             self,
             [
                 Store.One("channel_id", [], as_thread=True),
                 *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
                 "seen_message_id",
             ],
-        )
+            bus_channel=bus_channel,
+        ).bus_send()
 
     def _set_new_message_separator(self, message_id):
         """
@@ -572,7 +586,7 @@ class DiscussChannelMember(models.Model):
         self.new_message_separator = message_id
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        self._bus_send_store(
+        Store(
             self,
             [
                 Store.One("channel_id", [], as_thread=True),
@@ -581,7 +595,8 @@ class DiscussChannelMember(models.Model):
                 "new_message_separator",
                 *self.env["discuss.channel.member"]._to_store_persona([]),
             ],
-        )
+            bus_channel=self._bus_channel(),
+        ).bus_send()
 
     def _get_html_link_title(self):
         return self.partner_id.name if self.partner_id else self.guest_id.name
