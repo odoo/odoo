@@ -671,7 +671,8 @@ test("range value", async () => {
                     [[23], [24], ["25"], [26], [27], [28], [29]],
                     [[30], [1], [2], [3], [4], [5], [6]],
                 ],
-                daysOfWeek: ["S", "M", "T", "W", "T", "F", "S"],
+                daysOfWeek: ["", "S", "M", "T", "W", "T", "F", "S"],
+                weekNumbers: [13, 14, 15, 16, 17, 18],
             },
         ],
         time: ["17:18", "5:25"],
@@ -686,7 +687,7 @@ test("range value", async () => {
     expect(queryAllTexts(".o_time_picker_option")).toEqual(TIME_OPTIONS);
 
     expect(".o_datetime_picker").toHaveStyle({
-        "--DateTimePicker__Day-template-columns": "7",
+        "--DateTimePicker__Day-template-columns": "8",
     });
 });
 
@@ -715,7 +716,8 @@ test("range value on small device", async () => {
                     [23, 24, ["25"], 26, 27, 28, 29],
                     [30, 1, 2, 3, 4, 5, 6],
                 ],
-                daysOfWeek: ["S", "M", "T", "W", "T", "F", "S"],
+                daysOfWeek: ["", "S", "M", "T", "W", "T", "F", "S"],
+                weekNumbers: [13, 14, 15, 16, 17, 18],
             },
         ],
         time: ["9:30", "21:05"],
@@ -730,7 +732,7 @@ test("range value on small device", async () => {
     expect(queryAllTexts(".o_time_picker_option")).toEqual(TIME_OPTIONS);
 
     expect(".o_datetime_picker").toHaveStyle({
-        "--DateTimePicker__Day-template-columns": "7",
+        "--DateTimePicker__Day-template-columns": "8",
     });
 });
 
@@ -755,7 +757,8 @@ test("range value, previous month", async () => {
                     [23, 24, "25", 26, 27, 28, 29],
                     [30, 1, 2, 3, 4, 5, 6],
                 ],
-                daysOfWeek: ["S", "M", "T", "W", "T", "F", "S"],
+                daysOfWeek: ["", "S", "M", "T", "W", "T", "F", "S"],
+                weekNumbers: [13, 14, 15, 16, 17, 18],
             },
         ],
         time: ["13:00", "14:00"],
@@ -776,7 +779,8 @@ test("range value, previous month", async () => {
                     [26, 27, 28, 29, 30, 31, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                 ],
-                daysOfWeek: ["S", "M", "T", "W", "T", "F", "S"],
+                daysOfWeek: ["", "S", "M", "T", "W", "T", "F", "S"],
+                weekNumbers: [9, 10, 11, 12, 13, 14],
             },
         ],
         time: ["13:00", "14:00"],
