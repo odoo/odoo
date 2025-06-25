@@ -271,8 +271,8 @@ test("Focusing input displays related data color/data border colorpickers", asyn
     const type = "bar";
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
-    expect(".options-container [data-label='Dataset Color']").not.toBeVisible();
-    expect(".options-container [data-label='Dataset Border']").not.toBeVisible();
+    expect(".options-container [data-label='Dataset Color']").not.toHaveCount();
+    expect(".options-container [data-label='Dataset Border']").not.toHaveCount();
     await contains(".options-container table tbody input:eq(1)").click();
     expect(".options-container [data-label='Dataset Color']").toBeVisible();
     expect(".options-container [data-label='Dataset Border']").toBeVisible();
@@ -304,5 +304,5 @@ test("Stacked option is only available with more than 1 dataset", async () => {
     await contains(":iframe .s_chart").click();
     expect(".options-container [data-label='Stacked']").toBeVisible();
     await contains(".options-container table [data-action-id=removeColumn]").click();
-    expect(".options-container [data-label='Stacked']").not.toBeVisible();
+    expect(".options-container [data-label='Stacked']").not.toHaveCount();
 });
