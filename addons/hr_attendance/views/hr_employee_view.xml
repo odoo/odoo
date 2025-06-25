@@ -65,44 +65,6 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="employee_ids" invisible="1"/>
-                <button name="action_open_last_month_attendances"
-                        class="oe_stat_button"
-                        icon="fa-calendar"
-                        type="object"
-                        groups="base.group_user"
-                        help="Worked hours this month">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value">
-                            <field name="hours_last_month" widget="float_time"/> Hours
-                        </span>
-                        <span class="o_stat_text">
-                            This Month
-                        </span>
-                    </div>
-                </button>
-            </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="display_extra_hours" invisible="1"/>
-                <button name="action_open_last_month_overtime"
-                        class="oe_stat_button"
-                        icon="fa-history"
-                        type="object"
-                        invisible="total_overtime == 0.0 or not display_extra_hours"
-                        groups="hr.group_hr_user"
-                        help="Amount of extra hours">
-                    <div class="o_stat_info">
-                        <span class="o_stat_value text-success" invisible="total_overtime &lt; 0">
-                            <field name="total_overtime" widget="float_time"/>
-                        </span>
-                        <span class="o_stat_value text-danger" invisible="total_overtime &gt;= 0">
-                            <field name="total_overtime" widget="float_time"/>
-                        </span>
-                        <span class="o_stat_text">Extra Hours</span>
-                    </div>
-                </button>
-            </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" readonly="not can_edit" groups="hr_attendance.group_hr_attendance_manager"/>
             </xpath>
