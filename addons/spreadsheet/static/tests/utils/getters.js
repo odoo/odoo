@@ -54,7 +54,6 @@ export function getMerges(model, sheetId = model.getters.getActiveSheetId()) {
     return model.exportData().sheets.find((sheet) => sheet.id === sheetId).merges;
 }
 
-
 /**
  * Get the formatted value of the given xc
  */
