@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.HolidaysFormView" t-inherit="web.FormView">
+        <xpath expr="//Layout/t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="isHrUser">this.isHrUser</attribute>
+        </xpath>
+    </t>
+
+</templates>

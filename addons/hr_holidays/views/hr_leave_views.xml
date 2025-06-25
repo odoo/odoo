@@ -283,7 +283,7 @@
         <field name="model">hr.leave</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <form string="Time Off Request" class="o_hr_leave_form" duplicate="false">
+            <form string="Time Off Request" class="o_hr_leave_form" duplicate="false" js_class="hr_holidays_form">
             <field name="employee_id" invisible="1"/> <!-- for the employee's default value-->
             <field name="user_id" invisible="1"/> <!-- for conditional rendering of buttons on card -->
             <header>
@@ -322,8 +322,7 @@
                                                     ('allows_negative', '=', False),
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
-                                options="{'no_create': True, 'request_type': 'leave'}"
-                                readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                                options="{'no_create': True, 'request_type': 'leave'}"/>
                             <!-- half day or custom hours: only show one date -->
                             <label for="request_date_from" invisible="not request_unit_half and not request_unit_hours" string="Date" />
                             <label for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
