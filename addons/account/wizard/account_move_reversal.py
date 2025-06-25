@@ -90,10 +90,11 @@ class AccountMoveReversal(models.TransientModel):
     def _prepare_default_reversal(self, move):
         reverse_date = self.date
         mixed_payment_term = move.invoice_payment_term_id.id if move.invoice_payment_term_id.early_pay_discount_computation == 'mixed' else None
+        lang = move.partner_id.lang or self.env.lang
         return {
-            'ref': _('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason)
+            'ref': self.with_context(lang=lang).env._('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason)
                    if self.reason
-                   else _('Reversal of: %s', move.name),
+                   else self.with_context(lang=lang).env._('Reversal of: %s', move.name),
             'date': reverse_date,
             'invoice_date_due': reverse_date,
             'invoice_date': move.is_invoice(include_receipts=True) and (self.date or move.date) or False,
