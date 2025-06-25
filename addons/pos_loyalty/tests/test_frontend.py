@@ -2541,3 +2541,29 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.assertEqual(loyalty_program.coupon_count, 1)
         self.assertEqual(loyalty_program.total_order_count, 1)
+
+    def test_buy_x_get_y_reward_qty(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Buy 10 whiteboard_pen, Take 3 whiteboard_pen',
+            'program_type': 'buy_x_get_y',
+            'applies_on': 'current',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                'product_ids': self.whiteboard_pen.ids,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 10,
+                'reward_point_amount': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.whiteboard_pen.id,
+                'reward_product_qty': 3,
+                'required_points': 10,
+            })],
+        })
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_buy_x_get_y_reward_qty",
+            login="pos_user"
+        )
