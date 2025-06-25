@@ -402,7 +402,9 @@ class MrpBom(models.Model):
                 product_ids.clear()
             bom = product_boms.get(current_line.product_id)
             if bom:
-                converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
+                converted_line_quantity = current_line.product_uom_id._compute_quantity(
+                    line_quantity / bom.product_qty, bom.product_uom_id, round=False
+                )
                 bom_lines += [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids]
                 for bom_line in bom.bom_line_ids:
                     if not bom_line.product_id in product_boms:
