@@ -1,6 +1,6 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { waitFor, click } from "@odoo/hoot-dom";
-import { defineWebsiteModels } from "../website_helpers";
+import { describe, expect, test, beforeEach } from "@odoo/hoot";
+import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
+import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
@@ -8,6 +8,8 @@ import { patchWithCleanup, mockService, onRpc } from "@web/../tests/web_test_hel
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
 import { MenuDialog } from "@website/components/dialog/edit_menu";
+import { SavePlugin } from "@html_builder/core/save_plugin";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 
 defineWebsiteModels();
 
@@ -23,7 +25,7 @@ describe("NavbarLinkPopover", () => {
             </ul>
             <p>Outside</p>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         await expectElementCount(".o-we-linkpopover", 0);
@@ -48,7 +50,7 @@ describe("NavbarLinkPopover", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(0);
@@ -82,7 +84,7 @@ describe("NavbarLinkPopover", () => {
                 </div>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(0);
@@ -104,7 +106,7 @@ describe("MenuDialog", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         patchWithCleanup(MenuDialog.prototype, {
@@ -128,51 +130,34 @@ describe("MenuDialog", () => {
 });
 
 describe("EditMenuDialog", () => {
-    test("after clicking on edit menu button, an EditMenuDialog should appear", async () => {
-        onRpc(({ method, model, args, kwargs }) => {
-            expect(model).toBe("website.menu");
-            expect(method).toBe("get_tree");
-            expect(args[0]).toBe(1);
-            return {
+    const sampleMenuData = {
+        fields: {
+            id: 4,
+            name: "Top Menu",
+            url: "#",
+            new_window: false,
+            is_mega_menu: false,
+            sequence: 0,
+            parent_id: false,
+        },
+        children: [
+            {
                 fields: {
-                    id: 4,
-                    name: "Top Menu",
+                    id: 5,
+                    name: "Top Menu Item",
                     url: "#",
                     new_window: false,
                     is_mega_menu: false,
-                    sequence: 0,
-                    parent_id: false,
+                    sequence: 10,
+                    parent_id: 4,
                 },
-                children: [
-                    {
-                        fields: {
-                            id: 5,
-                            name: "Top Menu Item",
-                            url: "exists",
-                            new_window: false,
-                            is_mega_menu: false,
-                            sequence: 10,
-                            parent_id: 4,
-                        },
-                        children: [],
-                        is_homepage: true,
-                    },
-                ],
-                is_homepage: false,
-            };
-        });
-        const { el } = await setupEditor(
-            `<ul class="top_menu">
-                <li>
-                    <a class="nav-link" href="exists">
-                        <span>Top Menu Item</span>
-                    </a>
-                </li>
-            </ul>`,
-            {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
-            }
-        );
+                children: [],
+                is_homepage: true,
+            },
+        ],
+        is_homepage: false,
+    };
+    beforeEach(() => {
         mockService("website", {
             get currentWebsite() {
                 return {
@@ -183,6 +168,29 @@ describe("EditMenuDialog", () => {
                 };
             },
         });
+    });
+
+    test("after clicking on edit menu button, an EditMenuDialog should appear", async () => {
+        const { el } = await setupEditor(
+            `<ul class="top_menu">
+                <li>
+                    <a class="nav-link" href="exists">
+                        <span>Top Menu Item</span>
+                    </a>
+                </li>
+            </ul>`,
+            {
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+            }
+        );
+
+        onRpc(({ model, method, args }) => {
+            expect(model).toBe("website.menu");
+            expect(method).toBe("get_tree");
+            expect(args[0]).toBe(1);
+            return sampleMenuData;
+        });
+
         expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(0);
         // open navbar link popover
         setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 0 });
@@ -194,5 +202,52 @@ describe("EditMenuDialog", () => {
         await waitFor(".o_website_dialog");
         expect(".oe_menu_editor").toHaveCount(1);
         expect(".js_menu_label").toHaveText("Top Menu Item");
+    });
+
+    test("clicking save in the EditMenuDialog should not clear the editor changes", async () => {
+        const { getEditor } = await setupWebsiteBuilder(
+            // Using tel: as link to avoid having to mock fetching metadata for link preview
+            // This does not influence the test in any way
+            `<ul class="top_menu">
+                <li>
+                    <a class="nav-link" href="tel: 123" contenteditable="true">
+                        <span>Top Menu Item</span>
+                    </a>
+                </li>
+            </ul>
+            <section>
+                <p>TEXT</p>
+            </section>`,
+            {
+                openEditor: true,
+            }
+        );
+
+        onRpc(({ method, model, args }) => {
+            if (method === "save" && model === "ir.ui.view") {
+                expect(args[1]).toInclude("EDITED TEXT");
+                expect.step("editor_has_saved");
+            }
+            return sampleMenuData;
+        });
+
+        const editor = getEditor();
+
+        // add some text
+        var p = queryOne(":iframe section > p");
+        setSelection({ anchorNode: p, anchorOffset: 0 });
+        await insertText(editor, "EDITED ");
+        expect(p).toHaveInnerHTML("EDITED TEXT");
+
+        // open navbar link popover
+        setSelection({ anchorNode: queryOne(":iframe .nav-link > span"), anchorOffset: 0 });
+
+        // open menu editor and save
+        await waitFor(".o-we-linkpopover");
+        await click(queryOne("i.fa-sitemap"));
+        await waitFor("footer.modal-footer");
+        await click(queryOne("button.btn-primary"));
+        await waitForNone(".modal");
+        expect.verifySteps(["editor_has_saved"]);
     });
 });

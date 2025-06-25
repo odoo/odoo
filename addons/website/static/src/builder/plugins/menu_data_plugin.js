@@ -6,6 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class MenuDataPlugin extends Plugin {
     static id = "menuDataPlugin";
+    static dependencies = ["savePlugin"];
     resources = {
         link_popovers: [
             withSequence(10, {
@@ -45,6 +46,7 @@ export class MenuDataPlugin extends Plugin {
                     onClickEditMenu: () => {
                         this.services.dialog.add(EditMenuDialog, {
                             save: async () => {
+                                await this.dependencies.savePlugin.save();
                                 await this.config.reloadEditor();
                             },
                         });
