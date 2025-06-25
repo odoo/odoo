@@ -582,7 +582,7 @@ class ResUsers(models.Model):
     def write(self, values):
         if values.get('active') and SUPERUSER_ID in self._ids:
             raise UserError(_("You cannot activate the superuser."))
-        if values.get('active') == False and self._uid in self._ids:
+        if values.get('active') == False and self.env.uid in self._ids:  # noqa: E712
             raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
         if values.get('active'):

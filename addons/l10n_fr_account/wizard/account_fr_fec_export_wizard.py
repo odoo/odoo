@@ -325,10 +325,10 @@ class L10n_FrFecExportWizard(models.TransientModel):
             # Write current period's data
             has_more_results = True
             while has_more_results:
-                self._cr.execute(query.select(columns))
+                self.env.cr.execute(query.select(columns))
                 query.offset += query_limit
-                has_more_results = self._cr.rowcount > query_limit # we load one more result than the limit to check if there is more
-                query_results = self._cr.fetchall()
+                has_more_results = self.env.cr.rowcount > query_limit  # we load one more result than the limit to check if there is more
+                query_results = self.env.cr.fetchall()
                 csv_writer.writerows(query_results[:query_limit])
             content = fecfile.getvalue()[:-2].encode()
 

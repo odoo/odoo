@@ -853,12 +853,12 @@ class IrModelFields(models.Model):
 
         if tables_to_drop:
             # drop the relation tables that are not used by other fields
-            self._cr.execute("""SELECT relation_table FROM ir_model_fields
+            self.env.cr.execute("""SELECT relation_table FROM ir_model_fields
                                 WHERE relation_table IN %s AND id NOT IN %s""",
                              (tuple(tables_to_drop), tuple(self.ids)))
-            tables_to_keep = set(row[0] for row in self._cr.fetchall())
+            tables_to_keep = {row[0] for row in self.env.cr.fetchall()}
             for rel_name in tables_to_drop - tables_to_keep:
-                self._cr.execute(SQL('DROP TABLE %s', SQL.identifier(rel_name)))
+                self.env.cr.execute(SQL('DROP TABLE %s', SQL.identifier(rel_name)))
 
         return True
 

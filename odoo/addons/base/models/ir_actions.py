@@ -373,9 +373,8 @@ class IrActionsAct_Window(models.Model):
     @api.model
     @tools.ormcache()
     def _existing(self):
-        self._cr.execute("SELECT id FROM %s" % self._table)
-        return set(row[0] for row in self._cr.fetchall())
-
+        self.env.cr.execute("SELECT id FROM %s" % self._table)
+        return {row[0] for row in self.env.cr.fetchall()}
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
