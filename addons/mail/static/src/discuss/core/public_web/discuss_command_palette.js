@@ -31,16 +31,20 @@ class CreateChatDialog extends Component {
     }
 
     get createText() {
-        if (this.invitePeopleState.selectedPartners.length > 1) {
-            return _t("Create Group Chat");
+        if (this.invitePeopleState.selectedPartners.length === 1) {
+            return _t("Open Chat");
         }
-        return _t("Open Chat");
+        return _t("Create Group Chat");
     }
 
     onClickConfirm() {
         const selectedPartnersId = this.invitePeopleState.selectedPartners.map((p) => p.id);
         const partners_to = [...new Set([this.store.self.id, ...selectedPartnersId])];
-        this.store.startChat(partners_to);
+        if (partners_to.length === 1) {
+            this.store.createGroupChat({ partners_to });
+        } else {
+            this.store.startChat(partners_to);
+        }
         this.props.close();
     }
 }

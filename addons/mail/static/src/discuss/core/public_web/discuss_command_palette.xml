@@ -47,7 +47,7 @@
             <ChannelInvitation state="invitePeopleState"/>
         </div>
         <t t-set-slot="footer">
-            <button class="btn btn-primary me-2" t-att-disabled="invitePeopleState.selectedPartners.length === 0" t-on-click="onClickConfirm" t-esc="createText"/>
+            <button class="btn btn-primary me-2" t-on-click="onClickConfirm" t-esc="createText"/>
             <button class="btn btn-secondary me-2" t-on-click="props.close">Cancel</button>
         </t>
     </Dialog>
