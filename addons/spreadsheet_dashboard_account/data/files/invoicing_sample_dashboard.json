@@ -1,5 +1,5 @@
 {
-  "version": 25,
+  "version": "18.4.14",
   "sheets": [
     {
       "id": "a7cd7db1-9407-4895-82f2-7657102c7688",
@@ -162,8 +162,6 @@
       "figures": [
         {
           "id": "1aeea7b2-900b-4067-b8ad-3e4772c54028",
-          "x": 0,
-          "y": 11,
           "width": 200,
           "height": 109,
           "tag": "chart",
@@ -175,15 +173,16 @@
             "type": "scorecard",
             "background": "#EFF6FF",
             "baseline": "Data!C11",
-            "baselineDescr": "unpaid",
+            "baselineDescr": { "text": "unpaid" },
             "keyValue": "Data!C1",
             "humanize": false
-          }
+          },
+          "offset": { "x": 0, "y": 11 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "bdfb27d0-5902-4a2a-9b7e-514a6625578c",
-          "x": 210,
-          "y": 11,
           "width": 200,
           "height": 109,
           "tag": "chart",
@@ -195,15 +194,16 @@
             "type": "scorecard",
             "background": "#EFF6FF",
             "baseline": "Data!C3",
-            "baselineDescr": "Invoices",
+            "baselineDescr": { "text": "Invoices" },
             "keyValue": "Data!C2",
             "humanize": false
-          }
+          },
+          "offset": { "x": 210, "y": 11 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "b1673523-d139-47fb-b5ea-9e4f969aacb6",
-          "x": 419,
-          "y": 11,
           "width": 200,
           "height": 109,
           "tag": "chart",
@@ -214,15 +214,16 @@
             "title": { "text": "DSO", "color": "#434343", "bold": true },
             "type": "scorecard",
             "background": "#FEF2F2",
-            "baselineDescr": "in current year",
+            "baselineDescr": { "text": "in current year" },
             "keyValue": "Data!C10",
             "humanize": false
-          }
+          },
+          "offset": { "x": 419, "y": 11 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "b181a834-363a-4f35-ac8d-b2edc3bb691a",
-          "x": 0,
-          "y": 178.0390625,
           "width": 1001,
           "height": 350,
           "tag": "chart",
@@ -240,7 +241,10 @@
             "aggregated": false,
             "cumulative": true,
             "fillArea": true
-          }
+          },
+          "offset": { "x": 0, "y": 178.0390625 },
+          "col": 0,
+          "row": 0
         }
       ],
       "tables": [
@@ -414,7 +418,6 @@
   "pivots": {},
   "pivotNextId": 8,
   "customTableStyles": {},
-  "odooVersion": 13,
   "globalFilters": [],
   "lists": {},
   "listNextId": 2,

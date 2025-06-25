@@ -1,5 +1,5 @@
 {
-  "version": 25,
+  "version": "18.4.14",
   "sheets": [
     {
       "id": "sheet1",
@@ -149,8 +149,6 @@
       "figures": [
         {
           "id": "e35856cf-9090-489b-b055-2d441380d954",
-          "x": 0,
-          "y": 178,
           "width": 1000,
           "height": 436,
           "tag": "chart",
@@ -163,7 +161,8 @@
               "measure": "price_subtotal",
               "order": "DESC",
               "resModel": "sale.report",
-              "mode": "bar"
+              "mode": "bar",
+              "cumulatedStart": false
             },
             "searchParams": {
               "comparison": null,
@@ -189,12 +188,13 @@
               "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
               "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
             }
-          }
+          },
+          "offset": { "x": 0, "y": 178 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "d0171069-d2cd-4c2c-a686-cd7515e93bb5",
-          "x": 0,
-          "y": 655,
           "width": 1000,
           "height": 438,
           "tag": "chart",
@@ -207,7 +207,8 @@
               "measure": "product_uom_qty",
               "order": "DESC",
               "resModel": "sale.report",
-              "mode": "bar"
+              "mode": "bar",
+              "cumulatedStart": false
             },
             "searchParams": {
               "comparison": null,
@@ -233,12 +234,13 @@
               "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
               "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
             }
-          }
+          },
+          "offset": { "x": 0, "y": 655 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "5f383918-4073-4f19-9cc9-603216c953ad",
-          "x": 0,
-          "y": 12,
           "width": 450,
           "height": 108,
           "tag": "chart",
@@ -250,15 +252,16 @@
             "type": "scorecard",
             "background": "#FEF2F2",
             "baseline": "Data!C2",
-            "baselineDescr": "sold",
+            "baselineDescr": { "text": "sold" },
             "keyValue": "Data!B2",
             "humanize": false
-          }
+          },
+          "offset": { "x": 0, "y": 12 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "ec57f69b-f2b1-4dfc-990c-91ab61b526bf",
-          "x": 459,
-          "y": 12,
           "width": 450,
           "height": 108,
           "tag": "chart",
@@ -270,10 +273,13 @@
             "type": "scorecard",
             "background": "#FEF2F2",
             "baseline": "Data!C3",
-            "baselineDescr": "sold",
+            "baselineDescr": { "text": "sold" },
             "keyValue": "Data!B3",
             "humanize": false
-          }
+          },
+          "offset": { "x": 459, "y": 12 },
+          "col": 0,
+          "row": 0
         }
       ],
       "tables": [
@@ -475,32 +481,26 @@
   },
   "pivotNextId": 3,
   "customTableStyles": {},
-  "odooVersion": 13,
   "globalFilters": [
     {
       "id": "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52",
       "type": "date",
       "label": "Period",
-      "defaultValue": "last_month",
-      "rangeType": "relative"
+      "defaultValue": "last_30_days"
     },
     {
       "id": "36814ad9-adac-4aba-a5ad-df595a306ef7",
       "type": "relation",
       "label": "Product",
       "modelName": "product.product",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     },
     {
       "id": "edaf4d0c-df4b-48bc-b61a-48a07e8afd91",
       "type": "relation",
       "label": "Category",
       "modelName": "product.category",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     }
   ],
   "lists": {},

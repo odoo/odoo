@@ -1,5 +1,5 @@
 {
-  "version": 25,
+  "version": "18.4.14",
   "sheets": [
     {
       "id": "sheet1",
@@ -154,8 +154,6 @@
       "figures": [
         {
           "id": "833374d1-d09f-4a4e-bb09-2831ceee5465",
-          "x": 246,
-          "y": 9,
           "width": 237,
           "height": 108,
           "tag": "chart",
@@ -174,12 +172,13 @@
             "baseline": "Data!E4",
             "keyValue": "Data!B4",
             "humanize": false
-          }
+          },
+          "offset": { "x": 246, "y": 9 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "de7010e1-2cdc-4e19-a1de-1c7fd4795bf4",
-          "x": 0,
-          "y": 9,
           "width": 237,
           "height": 108,
           "tag": "chart",
@@ -198,12 +197,13 @@
             "baseline": "Data!E3",
             "keyValue": "Data!B3",
             "humanize": false
-          }
+          },
+          "offset": { "x": 0, "y": 9 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "0d527983-ee0f-44cb-af82-f637574a4e1e",
-          "x": 0,
-          "y": 176,
           "width": 499,
           "height": 344,
           "tag": "chart",
@@ -219,12 +219,13 @@
             "title": { "text": "" },
             "stacked": true,
             "aggregated": false
-          }
+          },
+          "offset": { "x": 0, "y": 176 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "e7f90aaf-95ec-4f1d-9b0c-ec7e4465d772",
-          "x": 0,
-          "y": 561,
           "width": 501,
           "height": 355,
           "tag": "chart",
@@ -240,12 +241,13 @@
             "title": { "text": "" },
             "stacked": true,
             "aggregated": false
-          }
+          },
+          "offset": { "x": 0, "y": 561 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "8324b219-c649-4392-9fee-a3e7f396d70c",
-          "x": 540,
-          "y": 176,
           "width": 483,
           "height": 344,
           "tag": "chart",
@@ -261,12 +263,13 @@
             "title": { "text": "" },
             "stacked": true,
             "aggregated": false
-          }
+          },
+          "offset": { "x": 540, "y": 176 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "ebde3556-983a-475a-95f0-4edb2515b3bb",
-          "x": 540,
-          "y": 561,
           "width": 482,
           "height": 358,
           "tag": "chart",
@@ -282,12 +285,13 @@
             "title": { "text": "" },
             "stacked": true,
             "aggregated": false
-          }
+          },
+          "offset": { "x": 540, "y": 561 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "fad86b76-037f-4b7f-8afc-bc028c2536de",
-          "x": 0,
-          "y": 959,
           "width": 500,
           "height": 335,
           "tag": "chart",
@@ -300,7 +304,8 @@
               "measure": "quantity",
               "order": null,
               "resModel": "stock.quant",
-              "mode": "bar"
+              "mode": "bar",
+              "cumulatedStart": false
             },
             "searchParams": {
               "comparison": null,
@@ -327,12 +332,13 @@
               "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
               "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" }
             }
-          }
+          },
+          "offset": { "x": 0, "y": 959 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "73f61914-d895-4484-b3ba-585107daeb44",
-          "x": 541,
-          "y": 959,
           "width": 480,
           "height": 335,
           "tag": "chart",
@@ -345,7 +351,8 @@
               "measure": "value",
               "order": null,
               "resModel": "stock.quant",
-              "mode": "bar"
+              "mode": "bar",
+              "cumulatedStart": false
             },
             "searchParams": {
               "comparison": null,
@@ -372,12 +379,13 @@
               "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
               "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" }
             }
-          }
+          },
+          "offset": { "x": 541, "y": 959 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "639d221d-d74d-4762-984e-9debac4f5a82",
-          "x": 492,
-          "y": 9,
           "width": 237,
           "height": 108,
           "tag": "chart",
@@ -395,7 +403,10 @@
             "background": "#EFF6FF",
             "keyValue": "Data!B5",
             "humanize": true
-          }
+          },
+          "offset": { "x": 492, "y": 9 },
+          "col": 0,
+          "row": 0
         }
       ],
       "tables": [
@@ -1238,13 +1249,11 @@
   },
   "pivotNextId": 25,
   "customTableStyles": {},
-  "odooVersion": 13,
   "globalFilters": [
     {
       "id": "feeb0d08-4596-4e7c-b478-a3c659189cdd",
       "type": "relation",
       "label": "Warehouse",
-      "defaultValue": [],
       "defaultValueDisplayNames": [],
       "modelName": "stock.warehouse",
       "includeChildren": false
@@ -1253,7 +1262,6 @@
       "id": "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df",
       "type": "relation",
       "label": "Location",
-      "defaultValue": [],
       "defaultValueDisplayNames": [],
       "modelName": "stock.location"
     },
@@ -1261,7 +1269,6 @@
       "id": "7ff87378-db1d-4725-bf25-6eee704b15a5",
       "type": "relation",
       "label": "Product Category",
-      "defaultValue": [],
       "defaultValueDisplayNames": [],
       "modelName": "product.category",
       "includeChildren": true
@@ -1270,7 +1277,6 @@
       "id": "8dea5478-ff09-41fc-ada0-cf23c66e4f8b",
       "type": "relation",
       "label": "Product",
-      "defaultValue": [],
       "defaultValueDisplayNames": [],
       "modelName": "product.product"
     },
@@ -1279,9 +1285,7 @@
       "type": "relation",
       "label": "Lot/Serial",
       "modelName": "stock.lot",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     }
   ],
   "lists": {},

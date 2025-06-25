@@ -1,5 +1,5 @@
 {
-  "version": "18.4.10",
+  "version": "18.4.14",
   "sheets": [
     {
       "id": "cf4e83c3-9ba8",
@@ -587,7 +587,12 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "percentage",
-            "title": { "text": "Messages per session", "bold": true, "align": "left", "fontSize": 14 },
+            "title": {
+              "text": "Messages per session",
+              "bold": true,
+              "align": "left",
+              "fontSize": 14
+            },
             "type": "scorecard",
             "background": "#EFF6FF",
             "baseline": "Data!C6",
@@ -607,7 +612,11 @@
           "data": {
             "background": "#EFF6FF",
             "sectionRule": {
-              "colors": { "lowerColor": "#cc0000", "middleColor": "#f1c232", "upperColor": "#6aa84f" },
+              "colors": {
+                "lowerColor": "#cc0000",
+                "middleColor": "#f1c232",
+                "upperColor": "#6aa84f"
+              },
               "rangeMin": "0",
               "rangeMax": "100",
               "lowerInflectionPoint": { "type": "number", "value": "20", "operator": "<=" },
@@ -640,12 +649,14 @@
             "searchParams": {
               "comparison": null,
               "context": { "im_livechat.hide_partner_company": true },
-              "domain": [["partner_id.chatbot_script_ids", "=", false]],
+              "domain": [
+                ["partner_id.chatbot_script_ids", "=", false]
+              ],
               "groupBy": ["partner_id"],
               "orderBy": []
             },
             "type": "odoo_bar",
-            "dataSets": [{}],
+            "dataSets": [],
             "verticalAxisPosition": "left",
             "stacked": false,
             "fieldMatching": {
@@ -852,7 +863,7 @@
             },
             "type": "odoo_bar",
             "actionXmlId": "im_livechat.im_livechat_report_channel_action",
-            "dataSets": [{}],
+            "dataSets": [],
             "verticalAxisPosition": "left",
             "stacked": true,
             "fieldMatching": {
@@ -892,7 +903,7 @@
             },
             "type": "odoo_bar",
             "actionXmlId": "im_livechat.im_livechat_report_channel_action",
-            "dataSets": [{}],
+            "dataSets": [],
             "verticalAxisPosition": "left",
             "stacked": false,
             "fieldMatching": {
@@ -932,7 +943,7 @@
             },
             "type": "odoo_bar",
             "actionXmlId": "im_livechat.im_livechat_report_channel_action",
-            "dataSets": [{}],
+            "dataSets": [],
             "verticalAxisPosition": "left",
             "stacked": false,
             "fieldMatching": {
@@ -946,7 +957,10 @@
       "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
-      "headerGroups": { "ROW": [], "COL": [] },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
       "comments": {}
     },
     {
@@ -1020,7 +1034,10 @@
       "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
-      "headerGroups": { "ROW": [], "COL": [] },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
       "comments": {}
     }
   ],
@@ -1029,9 +1046,19 @@
     "2": { "fontSize": 16, "bold": true, "textColor": "#01666B" },
     "3": { "bold": true, "fontSize": 11, "textColor": "#434343" },
     "4": { "textColor": "#000000" },
-    "5": { "bold": true, "fillColor": "#FFFFFF", "fontSize": 16, "textColor": "#01666B" },
+    "5": {
+      "bold": true,
+      "fillColor": "#FFFFFF",
+      "fontSize": 16,
+      "textColor": "#01666B"
+    },
     "6": { "textColor": "#000000", "align": "right" },
-    "7": { "bold": true, "fontSize": 11, "align": "center", "textColor": "#434343" },
+    "7": {
+      "bold": true,
+      "fontSize": 11,
+      "align": "center",
+      "textColor": "#434343"
+    },
     "8": { "textColor": "#434343" }
   },
   "formats": {
@@ -1043,7 +1070,11 @@
     "6": "0 \"min\"",
     "7": "0%"
   },
-  "borders": { "1": { "bottom": { "style": "thin", "color": "#CCCCCC" } } },
+  "borders": {
+    "1": {
+      "bottom": { "style": "thin", "color": "#CCCCCC" }
+    }
+  },
   "revisionId": "cfb95d8c-0b4f-4637-8a6a-b71fa073f96f",
   "uniqueFigureIds": true,
   "settings": {
@@ -1071,13 +1102,33 @@
       "id": "1",
       "measures": [
         { "id": "duration:avg", "fieldName": "duration", "aggregator": "avg" },
-        { "id": "time_to_answer:avg", "fieldName": "time_to_answer", "aggregator": "avg" },
+        {
+          "id": "time_to_answer:avg",
+          "fieldName": "time_to_answer",
+          "aggregator": "avg"
+        },
         { "id": "rating:avg", "fieldName": "rating", "aggregator": "avg" },
-        { "id": "nbr_message:avg", "fieldName": "nbr_message", "aggregator": "avg" },
+        {
+          "id": "nbr_message:avg",
+          "fieldName": "nbr_message",
+          "aggregator": "avg"
+        },
         { "id": "has_call:sum", "fieldName": "has_call", "aggregator": "sum" },
-        { "id": "call_duration_hour:avg", "fieldName": "call_duration_hour", "aggregator": "avg" },
-        { "id": "handled_by_bot:sum", "fieldName": "handled_by_bot", "aggregator": "sum" },
-        { "id": "handled_by_agent:sum", "fieldName": "handled_by_agent", "aggregator": "sum" }
+        {
+          "id": "call_duration_hour:avg",
+          "fieldName": "call_duration_hour",
+          "aggregator": "avg"
+        },
+        {
+          "id": "handled_by_bot:sum",
+          "fieldName": "handled_by_bot",
+          "aggregator": "sum"
+        },
+        {
+          "id": "handled_by_agent:sum",
+          "fieldName": "handled_by_agent",
+          "aggregator": "sum"
+        }
       ],
       "model": "im_livechat.report.channel",
       "name": "stats 2 - current",
@@ -1098,13 +1149,33 @@
       "id": "2",
       "measures": [
         { "id": "duration:avg", "fieldName": "duration", "aggregator": "avg" },
-        { "id": "time_to_answer:avg", "fieldName": "time_to_answer", "aggregator": "avg" },
+        {
+          "id": "time_to_answer:avg",
+          "fieldName": "time_to_answer",
+          "aggregator": "avg"
+        },
         { "id": "rating:avg", "fieldName": "rating", "aggregator": "avg" },
-        { "id": "nbr_message:avg", "fieldName": "nbr_message", "aggregator": "avg" },
+        {
+          "id": "nbr_message:avg",
+          "fieldName": "nbr_message",
+          "aggregator": "avg"
+        },
         { "id": "has_call:sum", "fieldName": "has_call", "aggregator": "sum" },
-        { "id": "call_duration_hour:avg", "fieldName": "call_duration_hour", "aggregator": "avg" },
-        { "id": "handled_by_agent:sum", "fieldName": "handled_by_agent", "aggregator": "sum" },
-        { "id": "handled_by_bot:sum", "fieldName": "handled_by_bot", "aggregator": "sum" }
+        {
+          "id": "call_duration_hour:avg",
+          "fieldName": "call_duration_hour",
+          "aggregator": "avg"
+        },
+        {
+          "id": "handled_by_agent:sum",
+          "fieldName": "handled_by_agent",
+          "aggregator": "sum"
+        },
+        {
+          "id": "handled_by_bot:sum",
+          "fieldName": "handled_by_bot",
+          "aggregator": "sum"
+        }
       ],
       "model": "im_livechat.report.channel",
       "name": "stats 2 - previous",
@@ -1121,21 +1192,37 @@
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" }
       },
       "context": { "im_livechat.hide_partner_company": true },
-      "domain": [["partner_id.chatbot_script_ids", "=", false]],
+      "domain": [
+        ["partner_id.chatbot_script_ids", "=", false]
+      ],
       "id": "3",
       "measures": [
         { "id": "__count", "fieldName": "__count", "aggregator": "sum" },
-        { "id": "time_to_answer:avg", "fieldName": "time_to_answer", "aggregator": "avg" },
+        {
+          "id": "time_to_answer:avg",
+          "fieldName": "time_to_answer",
+          "aggregator": "avg"
+        },
         { "id": "duration:avg", "fieldName": "duration", "aggregator": "avg" },
         { "id": "rating:avg", "fieldName": "rating", "aggregator": "avg" },
-        { "id": "nbr_message:avg", "fieldName": "nbr_message", "aggregator": "avg" }
+        {
+          "id": "nbr_message:avg",
+          "fieldName": "nbr_message",
+          "aggregator": "avg"
+        }
       ],
       "model": "im_livechat.report.channel",
       "name": "Livechat Support Statistics by Agent",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "__count" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      },
       "formulaId": "3",
       "columns": [],
-      "rows": [{ "fieldName": "partner_id", "order": "asc" }]
+      "rows": [
+        { "fieldName": "partner_id", "order": "asc" }
+      ]
     },
     "4": {
       "type": "ODOO",
@@ -1147,7 +1234,9 @@
       "context": {},
       "domain": [],
       "id": "4",
-      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "sessions count - current",
       "sortedColumn": null,
@@ -1165,7 +1254,9 @@
       "context": {},
       "domain": [],
       "id": "5",
-      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "sessions count - previous",
       "sortedColumn": null,
@@ -1181,19 +1272,36 @@
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" }
       },
       "context": { "im_livechat.hide_partner_company": true },
-      "domain": [["partner_id.chatbot_script_ids", "=", false]],
+      "domain": [
+        ["partner_id.chatbot_script_ids", "=", false]
+      ],
       "id": "6",
       "measures": [
         { "id": "has_call:sum", "fieldName": "has_call", "aggregator": "sum" },
-        { "id": "call_duration_hour:avg", "fieldName": "call_duration_hour", "aggregator": "avg" },
-        { "id": "__count", "fieldName": "__count", "aggregator": "sum", "isHidden": false }
+        {
+          "id": "call_duration_hour:avg",
+          "fieldName": "call_duration_hour",
+          "aggregator": "avg"
+        },
+        {
+          "id": "__count",
+          "fieldName": "__count",
+          "aggregator": "sum",
+          "isHidden": false
+        }
       ],
       "model": "im_livechat.report.channel",
       "name": "Livechat Call Statistics by Agent",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "has_call:sum" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "has_call:sum"
+      },
       "formulaId": "6",
       "columns": [],
-      "rows": [{ "fieldName": "partner_id", "order": "" }]
+      "rows": [
+        { "fieldName": "partner_id", "order": "" }
+      ]
     },
     "a96176e7-d33f": {
       "type": "ODOO",
@@ -1205,13 +1313,17 @@
       "context": {},
       "domain": [],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "current escalated/failure statistics",
       "sortedColumn": null,
       "formulaId": "7",
       "columns": [],
-      "rows": [{ "fieldName": "session_outcome" }]
+      "rows": [
+        { "fieldName": "session_outcome" }
+      ]
     },
     "a22ba739-5135": {
       "type": "ODOO",
@@ -1223,13 +1335,17 @@
       "context": {},
       "domain": [],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "previous escalated/failure statistics",
       "sortedColumn": null,
       "formulaId": "8",
       "columns": [],
-      "rows": [{ "fieldName": "session_outcome" }]
+      "rows": [
+        { "fieldName": "session_outcome" }
+      ]
     },
     "6670ff23-c9c4": {
       "type": "ODOO",
@@ -1239,16 +1355,29 @@
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" }
       },
       "context": {},
-      "domain": [["country_id", "!=", false]],
+      "domain": [
+        ["country_id", "!=", false]
+      ],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "Top countries",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "__count" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      },
       "formulaId": "9",
       "columns": [],
-      "rows": [{ "fieldName": "country_id" }],
-      "collapsedDomains": { "COL": [], "ROW": [] }
+      "rows": [
+        { "fieldName": "country_id" }
+      ],
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
     },
     "b3250c1f-c721": {
       "type": "ODOO",
@@ -1258,16 +1387,29 @@
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" }
       },
       "context": {},
-      "domain": [["lang_id", "!=", false]],
+      "domain": [
+        ["lang_id", "!=", false]
+      ],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "Top Languages",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "__count" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      },
       "formulaId": "10",
       "columns": [],
-      "rows": [{ "fieldName": "lang_id" }],
-      "collapsedDomains": { "COL": [], "ROW": [] }
+      "rows": [
+        { "fieldName": "lang_id" }
+      ],
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
     },
     "21eaa7c7-29bc": {
       "type": "ODOO",
@@ -1277,16 +1419,29 @@
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" }
       },
       "context": {},
-      "domain": [["session_expertise_ids", "!=", false]],
+      "domain": [
+        ["session_expertise_ids", "!=", false]
+      ],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "Top Expertises",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "__count" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      },
       "formulaId": "11",
       "columns": [],
-      "rows": [{ "fieldName": "session_expertises" }],
-      "collapsedDomains": { "COL": [], "ROW": [] }
+      "rows": [
+        { "fieldName": "session_expertises" }
+      ],
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
     },
     "d11c47b1-b913": {
       "type": "ODOO",
@@ -1296,16 +1451,29 @@
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" }
       },
       "context": {},
-      "domain": [["chatbot_answers_path_str", "!=", false]],
+      "domain": [
+        ["chatbot_answers_path_str", "!=", false]
+      ],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "Top Chatbot Answers",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "__count" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      },
       "formulaId": "12",
       "columns": [],
-      "rows": [{ "fieldName": "chatbot_answers_path_str" }],
-      "collapsedDomains": { "COL": [], "ROW": [] }
+      "rows": [
+        { "fieldName": "chatbot_answers_path_str" }
+      ],
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
     }
   },
   "pivotNextId": 13,
@@ -1315,8 +1483,7 @@
       "id": "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac",
       "type": "date",
       "label": "Period",
-      "defaultValue": "last_month",
-      "rangeType": "relative"
+      "defaultValue": "last_30_days"
     },
     {
       "id": "5124b7b1-aa17-46cc-b574-2309708de75b",
@@ -1324,15 +1491,12 @@
       "label": "Agents",
       "modelName": "res.partner",
       "domainOfAllowedValues": "[['partner_share', '=', False]]",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     },
     {
       "id": "5efd6191-32ae",
       "label": "Countries",
       "type": "relation",
-      "defaultValue": [],
       "modelName": "res.country",
       "domainOfAllowedValues": [],
       "includeChildren": false
@@ -1341,7 +1505,6 @@
       "id": "d8c5ec23-6206",
       "label": "Languages",
       "type": "relation",
-      "defaultValue": [],
       "modelName": "res.lang",
       "domainOfAllowedValues": [],
       "includeChildren": false
@@ -1350,7 +1513,6 @@
       "id": "5d0a8551-7ea8",
       "label": "Channels",
       "type": "relation",
-      "defaultValue": [],
       "modelName": "im_livechat.channel",
       "domainOfAllowedValues": [],
       "includeChildren": false
@@ -1359,7 +1521,6 @@
       "id": "ee4a297f-0cc3",
       "label": "Expertises",
       "type": "relation",
-      "defaultValue": [],
       "modelName": "im_livechat.expertise",
       "domainOfAllowedValues": [],
       "includeChildren": false

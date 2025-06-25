@@ -1,5 +1,5 @@
 {
-  "version": 25,
+  "version": "18.4.14",
   "sheets": [
     {
       "id": "sheet1",
@@ -262,8 +262,6 @@
       "figures": [
         {
           "id": "26f09a19-26d7-4d7d-b8d9-9eda7661ef5a",
-          "x": 0,
-          "y": 178,
           "width": 475,
           "height": 344,
           "tag": "chart",
@@ -276,7 +274,8 @@
               "measure": "__count",
               "order": null,
               "resModel": "report.project.task.user",
-              "mode": "bar"
+              "mode": "bar",
+              "cumulatedStart": false
             },
             "searchParams": {
               "comparison": null,
@@ -299,12 +298,13 @@
               "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9": { "chain": "tag_ids", "type": "many2many" },
               "9c9461c3-974d-41c1-8cbd-2fa8e89de148": { "chain": "partner_id", "type": "many2one" }
             }
-          }
+          },
+          "offset": { "x": 0, "y": 178 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "70a88eff-8ce0-4392-8905-156ef2771086",
-          "x": 525,
-          "y": 178,
           "width": 480,
           "height": 344,
           "tag": "chart",
@@ -317,7 +317,8 @@
               "measure": "__count",
               "order": null,
               "resModel": "report.project.task.user",
-              "mode": "pie"
+              "mode": "pie",
+              "cumulatedStart": false
             },
             "searchParams": {
               "comparison": null,
@@ -338,12 +339,13 @@
               "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9": { "chain": "tag_ids", "type": "many2many" },
               "9c9461c3-974d-41c1-8cbd-2fa8e89de148": { "chain": "partner_id", "type": "many2one" }
             }
-          }
+          },
+          "offset": { "x": 525, "y": 178 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "8eae55ae-5435-49ee-ad58-dae822bbd9dd",
-          "x": 0,
-          "y": 10,
           "width": 200,
           "height": 108,
           "tag": "chart",
@@ -356,12 +358,13 @@
             "background": "#EFF6FF",
             "keyValue": "Data!D2",
             "humanize": false
-          }
+          },
+          "offset": { "x": 0, "y": 10 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "746a2799-0dc9-4bce-b309-4cedffa67a3a",
-          "x": 210,
-          "y": 10,
           "width": 200,
           "height": 108,
           "tag": "chart",
@@ -373,15 +376,16 @@
             "type": "scorecard",
             "background": "#FEF2F2",
             "baseline": "Data!E3",
-            "baselineDescr": "since last period",
+            "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D3",
             "humanize": false
-          }
+          },
+          "offset": { "x": 210, "y": 10 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "488da38e-01db-46a0-b4b0-e2fafc4ad390",
-          "x": 420,
-          "y": 10,
           "width": 200,
           "height": 108,
           "tag": "chart",
@@ -393,15 +397,16 @@
             "type": "scorecard",
             "background": "#FEF2F2",
             "baseline": "Data!E4",
-            "baselineDescr": "last period",
+            "baselineDescr": { "text": "last period" },
             "keyValue": "Data!D4",
             "humanize": false
-          }
+          },
+          "offset": { "x": 420, "y": 10 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "ce7e17ea-eed0-493e-9968-5905c0969ca9",
-          "x": 629,
-          "y": 10,
           "width": 200,
           "height": 108,
           "tag": "chart",
@@ -413,10 +418,13 @@
             "type": "scorecard",
             "background": "#FEF2F2",
             "baseline": "Data!E5",
-            "baselineDescr": "last period",
+            "baselineDescr": { "text": "last period" },
             "keyValue": "Data!D5",
             "humanize": false
-          }
+          },
+          "offset": { "x": 629, "y": 10 },
+          "col": 0,
+          "row": 0
         }
       ],
       "tables": [
@@ -802,51 +810,41 @@
   },
   "pivotNextId": 7,
   "customTableStyles": {},
-  "odooVersion": 13,
   "globalFilters": [
     {
       "id": "83b5c62c-1c67-4477-a057-c0ec29edd595",
       "type": "date",
       "label": "Period",
-      "defaultValue": "last_month",
-      "rangeType": "relative"
+      "defaultValue": "last_30_days"
     },
     {
       "id": "fb7f6ae2-e19c-40d5-9976-7a05b1f18c2d",
       "type": "relation",
       "label": "Assignees",
       "modelName": "res.users",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     },
     {
       "id": "3fc9b370-1aae-436e-b77e-6bbc5f10f56c",
       "type": "relation",
       "label": "Project",
       "modelName": "project.project",
-      "defaultValue": [],
       "domainOfAllowedValues": "[['is_template', '=', False]]",
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     },
     {
       "id": "cfccbf2c-c86e-4915-a73d-c1e8ae69abe9",
       "type": "relation",
       "label": "Tags",
       "modelName": "project.tags",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     },
     {
       "id": "9c9461c3-974d-41c1-8cbd-2fa8e89de148",
       "type": "relation",
       "label": "Customer",
       "modelName": "res.partner",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     }
   ],
   "lists": {},

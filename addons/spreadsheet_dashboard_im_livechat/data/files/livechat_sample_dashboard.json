@@ -1,5 +1,5 @@
 {
-  "version": "18.4.2",
+  "version": "18.4.14",
   "sheets": [
     {
       "id": "cf4e83c3-9ba8",
@@ -283,35 +283,23 @@
         "P107:U107": 2,
         "A34:H34": 3,
         "A54:H54": 3,
-        "B64:H64": 3,
         "A128:J128": 3,
         "A137:J137": 3,
-        "J56:L64": 3,
         "P128:Y128": 3,
         "P137:Y137": 3,
-        "A35": 4,
-        "A55": 4,
-        "B35:C44": 4,
-        "D35:H35": 4,
-        "B55:H63": 4,
+        "A35:H35": 4,
+        "A55:H55": 4,
         "A52:D52": 5,
-        "E36:G44": 6,
-        "J35:L35": 6,
-        "N35:P35": 6,
-        "R35:T35": 6,
-        "V35:X35": 6,
-        "J36:L44": 7,
-        "K128:M128": 7,
-        "K137:M137": 7,
-        "N36:P44": 7,
-        "R36:T44": 7,
-        "I54:T54": 7,
-        "V41:X44": 7,
-        "I34:AB34": 7,
-        "Z128:AB128": 7,
-        "Z137:AB137": 7,
-        "I55:L55": 8,
-        "M55:P64": 8
+        "K128:M128": 6,
+        "K137:M137": 6,
+        "I54:T54": 6,
+        "I34:AB34": 6,
+        "Z128:AB128": 6,
+        "Z137:AB137": 6,
+        "I55:L55": 7,
+        "M55:P64": 7,
+        "N35:P35": 8,
+        "R35:T35": 8
       },
       "formats": {
         "B55:B56": 1,
@@ -454,7 +442,12 @@
             "baselineColorDown": "#EA6175",
             "baselineColorUp": "#43C5B1",
             "baselineMode": "percentage",
-            "title": { "text": "Messages per session", "bold": true, "align": "left", "fontSize": 14 },
+            "title": {
+              "text": "Messages per session",
+              "bold": true,
+              "align": "left",
+              "fontSize": 14
+            },
             "type": "scorecard",
             "background": "#EFF6FF",
             "baseline": "Data!C6",
@@ -474,7 +467,11 @@
           "data": {
             "background": "#EFF6FF",
             "sectionRule": {
-              "colors": { "lowerColor": "#cc0000", "middleColor": "#f1c232", "upperColor": "#6aa84f" },
+              "colors": {
+                "lowerColor": "#cc0000",
+                "middleColor": "#f1c232",
+                "upperColor": "#6aa84f"
+              },
               "rangeMin": "0",
               "rangeMax": "100",
               "lowerInflectionPoint": { "type": "number", "value": "20", "operator": "<=" },
@@ -507,12 +504,14 @@
             "searchParams": {
               "comparison": null,
               "context": { "im_livechat.hide_partner_company": true },
-              "domain": [["partner_id.chatbot_script_ids", "=", false]],
+              "domain": [
+                ["partner_id.chatbot_script_ids", "=", false]
+              ],
               "groupBy": ["partner_id"],
               "orderBy": []
             },
             "type": "odoo_bar",
-            "dataSets": [{}],
+            "dataSets": [],
             "verticalAxisPosition": "left",
             "stacked": false,
             "fieldMatching": {
@@ -719,7 +718,7 @@
             },
             "type": "odoo_bar",
             "actionXmlId": "im_livechat.im_livechat_report_channel_action",
-            "dataSets": [{}],
+            "dataSets": [],
             "verticalAxisPosition": "left",
             "stacked": true,
             "fieldMatching": {
@@ -759,7 +758,7 @@
             },
             "type": "odoo_bar",
             "actionXmlId": "im_livechat.im_livechat_report_channel_action",
-            "dataSets": [{}],
+            "dataSets": [],
             "verticalAxisPosition": "left",
             "stacked": false,
             "fieldMatching": {
@@ -799,7 +798,7 @@
             },
             "type": "odoo_bar",
             "actionXmlId": "im_livechat.im_livechat_report_channel_action",
-            "dataSets": [{}],
+            "dataSets": [],
             "verticalAxisPosition": "left",
             "stacked": false,
             "fieldMatching": {
@@ -813,7 +812,10 @@
       "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
-      "headerGroups": { "ROW": [], "COL": [] },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
       "comments": {}
     },
     {
@@ -886,7 +888,10 @@
       "tables": [],
       "areGridLinesVisible": true,
       "isVisible": true,
-      "headerGroups": { "ROW": [], "COL": [] },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
       "comments": {}
     }
   ],
@@ -895,10 +900,20 @@
     "2": { "fontSize": 16, "bold": true, "textColor": "#01666B" },
     "3": { "bold": true, "fontSize": 11, "textColor": "#434343" },
     "4": { "textColor": "#000000" },
-    "5": { "bold": true, "fillColor": "#FFFFFF", "fontSize": 16, "textColor": "#01666B" },
-    "6": { "textColor": "#000000", "align": "right" },
-    "7": { "bold": true, "fontSize": 11, "align": "center", "textColor": "#434343" },
-    "8": { "textColor": "#434343" }
+    "5": {
+      "bold": true,
+      "fillColor": "#FFFFFF",
+      "fontSize": 16,
+      "textColor": "#01666B"
+    },
+    "6": {
+      "bold": true,
+      "fontSize": 11,
+      "align": "center",
+      "textColor": "#434343"
+    },
+    "7": { "textColor": "#434343" },
+    "8": { "textColor": "#000000", "align": "right" }
   },
   "formats": {
     "1": "#,##0",
@@ -909,7 +924,11 @@
     "6": "0 \"min\"",
     "7": "0%"
   },
-  "borders": { "1": { "bottom": { "style": "thin", "color": "#CCCCCC" } } },
+  "borders": {
+    "1": {
+      "bottom": { "style": "thin", "color": "#CCCCCC" }
+    }
+  },
   "revisionId": "91c926fa-bdbd-4f6c-8408-02b608394872",
   "uniqueFigureIds": true,
   "settings": {
@@ -932,8 +951,7 @@
       "id": "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac",
       "type": "date",
       "label": "Period",
-      "defaultValue": "last_month",
-      "rangeType": "relative"
+      "defaultValue": "last_30_days"
     },
     {
       "id": "5124b7b1-aa17-46cc-b574-2309708de75b",
@@ -941,15 +959,12 @@
       "label": "Agents",
       "modelName": "res.partner",
       "domainOfAllowedValues": "[['partner_share', '=', False]]",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     },
     {
       "id": "5efd6191-32ae",
       "label": "Countries",
       "type": "relation",
-      "defaultValue": [],
       "modelName": "res.country",
       "domainOfAllowedValues": [],
       "includeChildren": false
@@ -958,7 +973,6 @@
       "id": "d8c5ec23-6206",
       "label": "Languages",
       "type": "relation",
-      "defaultValue": [],
       "modelName": "res.lang",
       "domainOfAllowedValues": [],
       "includeChildren": false
@@ -967,7 +981,6 @@
       "id": "5d0a8551-7ea8",
       "label": "Channels",
       "type": "relation",
-      "defaultValue": [],
       "modelName": "im_livechat.channel",
       "domainOfAllowedValues": [],
       "includeChildren": false
@@ -976,7 +989,6 @@
       "id": "ee4a297f-0cc3",
       "label": "Expertises",
       "type": "relation",
-      "defaultValue": [],
       "modelName": "im_livechat.expertise",
       "domainOfAllowedValues": [],
       "includeChildren": false
