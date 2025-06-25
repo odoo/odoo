@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="hr_leave_employee_report_view_pivot" model="ir.ui.view">
+        <field name="model">hr.leave.employee.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Time Off Summary" disable_linking="True" sample="1">
+                <field name="employee_id" type="row"/>
+                <field name="working_schedule_aligned_date_from" type="col"/>
+                <field name="number_of_days" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    
+    <record id="hr_leave_employee_report_view_graph" model="ir.ui.view">
+        <field name="model">hr.leave.employee.report</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="color" invisible="1"/>
+                <field name="employee_id"/>
+                <field name="number_of_days" string="Number of Days" type='measure'/>
+                <field name="number_of_hours" string="Number of Hours" widget="float_time"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_leave_employee_report_filter" model="ir.ui.view">
+        <field name="model">hr.leave.employee.report</field>
+        <field name="arch" type="xml">
+            <search string="Search Time Off">
+                <field name="employee_id"/>
+                <field name="holiday_status_id"/>
+                <field name="description"/>
+                <filter domain="[
+                        ('leave_id.state','in',['confirm']),
+                        '|',
+                        ('employee_id.user_id', '!=', uid),
+                        '&amp;',
+                        ('employee_id.user_id', '=', uid),
+                        ('employee_id.leave_manager_id', '=', uid)]"
+                    string="Waiting For Me"
+                    name="waiting_for_me"
+                    groups="hr_holidays.group_hr_holidays_responsible,!hr_holidays.group_hr_holidays_user"/>
+                <filter domain="[
+                        ('leave_id.state','in',['confirm','validate1']),
+                        '|',
+                            ('employee_id.user_id', '!=', uid),
+                            '|',
+                                '&amp;',
+                                    ('leave_id.state','=','confirm'),
+                                    ('holiday_status_id.leave_validation_type','=','hr'),
+                                ('leave_id.state','=','validate1')]"
+                    string="Waiting For Me"
+                    name="waiting_for_me_manager"
+                    groups="hr_holidays.group_hr_holidays_user"/>
+                <separator/>
+                <filter domain="[('leave_id.state', '=', 'confirm')]" string="First Approval" name="approve"/>
+                <filter domain="[('leave_id.state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
+                <filter string="Approved" domain="[('leave_id.state', '=', 'validate')]" name="validated"/>
+                <filter name="refused_leaves" string="Refused" domain="[('leave_id.state', '=', 'refuse')]"/>
+                <separator/>
+                <filter string="My Time Off" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter string="My Team" name="my_team" domain="['|', ('employee_id.leave_manager_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="Time off of people you are manager of"/>
+                <filter string="My Department" name="department"
+                        domain="[('employee_id.member_of_department', '=', True)]"
+                        help="My Department"/>
+                <separator/>
+                <filter name="filter_working_schedule_aligned_date_from" date="working_schedule_aligned_date_from" default_period="year" string="Start Date"/>
+                <separator/>
+                <group name="group_by">
+                    <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'holiday_status_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <separator/>
+                    <filter name="group_date_from" string="Date" context="{'group_by': 'working_schedule_aligned_date_from'}"/>
+                </group>
+                <searchpanel>
+                    <field name="state" string="Status"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_leave_employee_report" model="ir.actions.act_window">
+        <field name="name">Time Off Per Employee Analysis</field>
+        <field name="res_model">hr.leave.employee.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="hr_leave_employee_report_filter"/>
+        <field name="context">{
+            'search_default_filter_working_schedule_aligned_date_from': 1,
+            'search_default_group_employee': 1,
+            'search_default_group_type': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p>
+        </field>
+    </record>
+</odoo>
