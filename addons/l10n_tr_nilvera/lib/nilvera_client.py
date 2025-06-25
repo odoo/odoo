@@ -47,7 +47,7 @@ class NilveraClient:
                 files=files,
             )
         except requests.exceptions.RequestException as e:
-            _logger.error("Network error during request: %s", e)
+            _logger.info("Network error during request: %s", e)
             raise UserError("Network connectivity issue. Please check your internet connection and try again.")
 
         end = datetime.utcnow()
