@@ -1,0 +1,2 @@
+class DataOverflowError(Exception):
+    pass
