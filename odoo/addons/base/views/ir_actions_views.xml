@@ -307,6 +307,28 @@
 
         <!-- ir.actions.server -->
 
+        <record id="server_action_history_wizard_view" model="ir.ui.view">
+            <field name="name">Server Action History Wizard</field>
+            <field name="model">server.action.history.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="revision" required="1" widget="selection"/>
+                        </group>
+                    </group>
+                    <field name="code_diff" invisible="not code_diff"/>
+                    <div class="alert alert-warning my-2" role="alert" invisible="code_diff">
+                        <span>No diff available</span>
+                    </div>
+                    <footer>
+                        <button string="Restore Revision" name="restore_revision" type="object" class="btn-primary" invisible="not code_diff" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
         <record id="view_server_action_form" model="ir.ui.view">
             <field name="name">Server Action</field>
             <field name="model">ir.actions.server</field>
@@ -324,6 +346,9 @@
                                 class="btn-primary"
                                 invisible="model_name != 'ir.actions.server' or state != 'code'"
                                 help="Run this action manually."/>
+                        <button name="history_wizard_action" string="Code History" type="object"
+                                invisible="not show_code_history"
+                                help="View code history and restore a previous version"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -464,6 +489,12 @@
                                         <li>To return an action, assign: <code>action = {...}</code></li>
                                         <li>To notify progress for CRON call and re-trigger a call if there is remaining tasks, use <code>env['ir.cron']._notify_progress(done=task_done_count, remaining=task_remaining_count)</code></li>
                                     </ul>
+                                    <p>
+                                        <widget name="documentation_link"
+                                                path="/developer/reference/backend/orm.html"
+                                                label="ORM API Documentation"
+                                                icon="oi oi-fw oi-arrow-right me-1"/>
+                                    </p>
                                     <div >
                                         <p>Example of Python code:</p>
                                         <pre style='white-space: pre-wrap'>partner_name = record.name + '_code'
