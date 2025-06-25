@@ -432,3 +432,90 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         self.assertEqual(dropship3_layers[0].value, 24)
         dropship3_cogs_line = customer_invoice3.line_ids.filtered(lambda aml: aml.account_id.id == account_output.id)
         self.assertEqual(dropship3_cogs_line.balance, -24)
+
+    def test_dropship_return_backorders_bill_on_order(self):
+        """
+        Dropshipped AVCO billed-on-order product
+        Sell 10
+        Deliver 7 + backorder creation
+        Return 2
+        Process the backorder (3)
+        Re-return 2
+        Ensure all SVL values are correct
+        """
+        self.env.company.anglo_saxon_accounting = True
+        product = self.product1
+        dropshipping_route = self.quick_ref('stock_dropshipping.route_drop_shipping')
+        product.write({'route_ids': [(6, 0, [dropshipping_route.id])]})
+
+        vendor1 = self.env['res.partner'].create({'name': 'vendor1'})
+        product.write({
+            'purchase_method': 'purchase',
+            'seller_ids': [
+                Command.clear(),
+                Command.create({
+                    'partner_id': vendor1.id,
+                    'min_qty': 1.0,
+                    'price': 10
+                }),
+            ],
+            'route_ids': dropshipping_route.ids,
+            'standard_price': 10,
+        })
+        product.product_tmpl_id.categ_id.property_cost_method = 'average'
+        product.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 10.0,
+                'price_unit': 10,
+            })]
+        })
+        sale_order.action_confirm()
+
+        purchase_order = sale_order.order_line.purchase_line_ids.order_id
+        purchase_order.button_confirm()
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = vendor1
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id)
+        move_form.invoice_date = move_form.date
+        for i in range(len(purchase_order.order_line)):
+            with move_form.invoice_line_ids.edit(i) as line_form:
+                line_form.tax_ids.clear()
+        purchase_bill = move_form.save()
+        purchase_bill.action_post()
+
+        dropship = sale_order.picking_ids
+        dropship.move_ids.quantity = 7
+        res_dict = dropship.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(res_dict['context'])).save()
+        backorder_wizard.process()
+        backorder = dropship.backorder_ids
+
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=dropship.id, active_model='stock.picking'))
+        return_wizard = return_form.save()
+        return_wizard.product_return_moves.quantity = 2
+        action = return_wizard.action_create_returns()
+        return_picking = self.env['stock.picking'].browse(action['res_id'])
+        return_picking.move_ids.quantity = 2
+        return_picking.button_validate()
+
+        backorder.button_validate()
+
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=return_picking.id, active_model='stock.picking'))
+        return_wizard = return_form.save()
+        return_wizard.product_return_moves.quantity = 2
+        action = return_wizard.action_create_returns()
+        re_return = self.env['stock.picking'].browse(action['res_id'])
+        re_return.move_ids.quantity = 2
+        re_return.button_validate()
+
+        layers = sale_order.picking_ids.move_ids.stock_valuation_layer_ids.sorted('id')
+        self.assertEqual(layers.mapped('value'), [
+            70.0, -70.0,    # Dropship
+            20.0, -20.0,    # Return
+            30.0, -30.0,    # Backorder
+            20.0, -20.0,    # Re-return
+        ])
