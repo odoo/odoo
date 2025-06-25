@@ -1,5 +1,5 @@
 {
-  "version": 25,
+  "version": "18.4.14",
   "sheets": [
     {
       "id": "sheet1",
@@ -210,8 +210,6 @@
       "figures": [
         {
           "id": "d9898682-9b91-4fe2-9900-a4b2583eb459",
-          "x": 525,
-          "y": 178,
           "width": 475,
           "height": 345,
           "tag": "chart",
@@ -224,7 +222,8 @@
               "measure": "__count",
               "order": null,
               "resModel": "event.registration",
-              "mode": "bar"
+              "mode": "bar",
+              "cumulatedStart": false
             },
             "searchParams": {
               "comparison": null,
@@ -244,12 +243,13 @@
               "43c04fb0-d3b7-47c8-852b-b823c36df0ee": { "chain": "event_id.tag_ids", "type": "many2many" },
               "4a35bef8-8a57-48ae-8dc6-5883d97cc9da": { "chain": "event_organizer_id", "type": "many2one" }
             }
-          }
+          },
+          "offset": { "x": 525, "y": 178 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "092dd971-dc10-41c5-96c4-d760820e9cf2",
-          "x": 0,
-          "y": 178,
           "width": 475,
           "height": 345,
           "tag": "chart",
@@ -262,7 +262,8 @@
               "measure": "__count",
               "order": null,
               "resModel": "event.event",
-              "mode": "bar"
+              "mode": "bar",
+              "cumulatedStart": false
             },
             "searchParams": {
               "comparison": null,
@@ -282,12 +283,13 @@
               "43c04fb0-d3b7-47c8-852b-b823c36df0ee": { "chain": "tag_ids", "type": "many2many" },
               "4a35bef8-8a57-48ae-8dc6-5883d97cc9da": { "chain": "organizer_id", "type": "many2one" }
             }
-          }
+          },
+          "offset": { "x": 0, "y": 178 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "18361546-49c2-4212-88eb-b2ee50127d41",
-          "x": 0,
-          "y": 9,
           "width": 200,
           "height": 105,
           "tag": "chart",
@@ -299,15 +301,16 @@
             "type": "scorecard",
             "background": "#EFF6FF",
             "baseline": "Data!E3",
-            "baselineDescr": "since last period",
+            "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D3",
             "humanize": false
-          }
+          },
+          "offset": { "x": 0, "y": 9 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "98d2b15d-9117-4ecf-9732-dc62df949dc1",
-          "x": 210,
-          "y": 9,
           "width": 200,
           "height": 105,
           "tag": "chart",
@@ -319,15 +322,16 @@
             "type": "scorecard",
             "background": "#FFF7ED",
             "baseline": "Data!E4",
-            "baselineDescr": "since last period",
+            "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D4",
             "humanize": false
-          }
+          },
+          "offset": { "x": 210, "y": 9 },
+          "col": 0,
+          "row": 0
         },
         {
           "id": "6510bff8-7b28-42c6-af4b-c750bed2205c",
-          "x": 420,
-          "y": 9,
           "width": 200,
           "height": 105,
           "tag": "chart",
@@ -339,10 +343,13 @@
             "type": "scorecard",
             "background": "#EFF6FF",
             "baseline": "Data!E2",
-            "baselineDescr": "since last period",
+            "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D2",
             "humanize": false
-          }
+          },
+          "offset": { "x": 420, "y": 9 },
+          "col": 0,
+          "row": 0
         }
       ],
       "tables": [
@@ -775,50 +782,40 @@
   },
   "pivotNextId": 11,
   "customTableStyles": {},
-  "odooVersion": 13,
   "globalFilters": [
     {
       "id": "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae",
       "type": "date",
       "label": "Date",
-      "defaultValue": "last_year",
-      "rangeType": "relative"
+      "defaultValue": "last_12_months"
     },
     {
       "id": "62e15eb2-9410-4803-b189-5fa789a7e94f",
       "type": "relation",
       "label": "Venue",
       "modelName": "res.partner",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     },
     {
       "id": "d9cfb0b0-01a0-45be-996e-723f4283000b",
       "type": "relation",
       "label": "Template",
       "modelName": "event.type",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     },
     {
       "id": "43c04fb0-d3b7-47c8-852b-b823c36df0ee",
       "type": "relation",
       "label": "Tags",
       "modelName": "event.tag",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     },
     {
       "id": "4a35bef8-8a57-48ae-8dc6-5883d97cc9da",
       "type": "relation",
       "label": "Organizer",
       "modelName": "res.partner",
-      "defaultValue": [],
-      "defaultValueDisplayNames": [],
-      "rangeType": "year"
+      "defaultValueDisplayNames": []
     }
   ],
   "lists": {},
