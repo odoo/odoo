@@ -1631,15 +1631,15 @@ class AccountMove(models.Model):
            See ES documentation 2.2
         '''
         a = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-        # Each company should have its own filename sequence. If it does not exist, create it
-        n = self.env['ir.sequence'].with_company(self.company_id).next_by_code('l10n_it_edi.fattura_filename')
+        company = self.company_id._l10n_it_get_edi_company()
+        n = self.env['ir.sequence'].with_company(company).next_by_code('l10n_it_edi.fattura_filename')
         if not n:
             # The offset is used to avoid conflicts with existing filenames
             offset = 62 ** 4
             sequence = self.env['ir.sequence'].sudo().create({
                 'name': 'FatturaPA Filename Sequence',
                 'code': 'l10n_it_edi.fattura_filename',
-                'company_id': self.company_id.id,
+                'company_id': company.id,
                 'number_next': offset,
             })
             n = sequence._next()
@@ -1652,8 +1652,8 @@ class AccountMove(models.Model):
             progressive_number = a[m] + progressive_number
 
         return '%(country_code)s%(codice)s_%(progressive_number)s.xml' % {
-            'country_code': self.company_id.country_id.code,
-            'codice': self.company_id.partner_id._l10n_it_edi_normalized_codice_fiscale(),
+            'country_code': company.country_id.code,
+            'codice': company.partner_id._l10n_it_edi_normalized_codice_fiscale(),
             'progressive_number': progressive_number.zfill(5),
         }
 
