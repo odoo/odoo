@@ -249,8 +249,17 @@ class ImageGalleryOption extends Plugin {
         slideshowEl.querySelectorAll("img").forEach((img, index) => {
             img.setAttribute("data-index", index);
         });
-
-        imageGalleryElement.style.height = window.innerHeight * 0.7 + "px";
+        if (images.length) {
+            imageGalleryElement.style.height = window.innerHeight * 0.7 + "px";
+            slideshowEl
+                .querySelector(".carousel .o_carousel_controllers")
+                ?.classList.remove("d-none");
+            slideshowEl.querySelector(".carousel .carousel-inner")?.classList.remove("d-none");
+        } else {
+            imageGalleryElement.style.removeProperty("height");
+            slideshowEl.querySelector(".carousel .o_carousel_controllers")?.classList.add("d-none");
+            slideshowEl.querySelector(".carousel .carousel-inner")?.classList.add("d-none");
+        }
         this.addDomListener(slideshowEl, "slid.bs.carousel", this.onCarouselSlid);
     }
 
@@ -421,13 +430,10 @@ export class AddImageAction extends BuilderAction {
 }
 export class RemoveAllImagesAction extends BuilderAction {
     static id = "removeAllImages";
+    static dependencies = ["imageGalleryOption"];
     apply({ editingElement: el }) {
-        const containerEl = el.querySelector(".container, .container-fluid, .o_container_small");
-        for (const subEl of containerEl.querySelectorAll(
-            ":scope > *:not(.o_empty_gallery_alert)"
-        )) {
-            subEl.remove();
-        }
+        const mode = this.dependencies.imageGalleryOption.getMode(el);
+        this.dependencies.imageGalleryOption.setImages(el, mode, []);
     }
 }
 export class SetImageGalleryLayoutAction extends BuilderAction {
