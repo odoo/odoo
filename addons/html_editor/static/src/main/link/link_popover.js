@@ -230,7 +230,7 @@ export class LinkPopover extends Component {
         this.updateUrlAndLabel();
     }
     updateUrlAndLabel() {
-        this.state.url = this.props.linkElement.href;
+        this.state.url = this.props.linkElement.getAttribute("href");
 
         const textContent = cleanZWChars(this.props.linkElement.textContent);
         const labelEqualsUrl =
