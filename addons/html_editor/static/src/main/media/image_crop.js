@@ -67,15 +67,16 @@ export class ImageCrop extends Component {
     }
 
     closeCropper() {
-        if (this.isCropperActive) {
-            this.cropper?.destroy?.();
-            this.media.setAttribute("src", this.initialSrc);
-            if (
-                this.hasModifiedImageClass &&
-                !this.media.classList.contains("o_modified_image_to_save")
-            ) {
-                this.media.classList.add("o_modified_image_to_save");
-            }
+        if (!this.isCropperActive && !this.forceClose) {
+            return;
+        }
+        this.cropper?.destroy?.();
+        this.media.setAttribute("src", this.initialSrc);
+        if (
+            this.hasModifiedImageClass &&
+            !this.media.classList.contains("o_modified_image_to_save")
+        ) {
+            this.media.classList.add("o_modified_image_to_save");
         }
         this.props?.onClose?.();
         this.isCropperActive = false;
@@ -131,6 +132,7 @@ export class ImageCrop extends Component {
                     type: "warning",
                 }
             );
+            this.forceClose = true;
             return this.closeCropper();
         }
 
