@@ -5,9 +5,9 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
-import { BOLD_TAGS, notStrong, span, strong, em } from "../_helpers/tags";
-import { bold, italic, simulateArrowKeyPress, tripleClick } from "../_helpers/user_actions";
+import { BOLD_TAGS, em, notStrong, span, strong } from "../_helpers/tags";
 import { expectElementCount } from "../_helpers/ui_expectations";
+import { bold, italic, simulateArrowKeyPress, tripleClick } from "../_helpers/user_actions";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
