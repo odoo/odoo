@@ -3,8 +3,8 @@
 # 	* website_sale
 # 
 # Translators:
-# Manon Rondou, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-20 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,6 +106,9 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"<a href=\"/terms\" class=\"text-muted o_translate_inline\"><u>Algemene voorwaarden</u></a><br/>\n"
+"                30 dagen geld-terug-garantie<br/>\n"
+"                 Verzending: 2-3 werkdagen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -113,6 +116,8 @@ msgid ""
 "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()\" class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
 "                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
+"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()\" class=\"btn btn-primary o_translate_inline\">Meld je aan</a>\n"
+"                    <span class=\"align-middle\"> om je bestelling te volgen.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -134,7 +139,7 @@ msgstr "<b>Communicatie: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "<b>Deliver to pickup point</b>"
-msgstr ""
+msgstr "<b>Afleveren bij afhaalpunt</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
@@ -163,6 +168,8 @@ msgid ""
 "<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
 "                                <span class=\"d-none d-md-inline\">Add to cart</span>"
 msgstr ""
+"<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
+"                                <span class=\"d-none d-md-inline\">Toevoegen aan winkelwagen</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -179,6 +186,8 @@ msgid ""
 "<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
 "                    Continue shopping"
 msgstr ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                     Verder winkelen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -216,7 +225,7 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>Bewerken"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
 msgid "<i class=\"fa fa-pencil me-1\"/>Want an invoice?"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>Factuur nodig?"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -293,11 +302,13 @@ msgid ""
 "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
 "                                        <i class=\"oi oi-close\" role=\"presentation\"/>"
 msgstr ""
+"<small class=\"mx-auto\"><b>Filters wissen</b></small>\n"
+"                                        <i class=\"oi oi-close\" role=\"presentation\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
-msgstr ""
+msgstr "<span class=\"align-middle\">Heb je al een account?</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -401,17 +412,17 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">Search results for </span>'"
-msgstr ""
+msgstr "<span class=\"text-muted\">Zoekresultaten voor </span>'"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">Searching</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Bezig met zoeken</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">in</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">in</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
@@ -457,6 +468,9 @@ msgid ""
 "                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge\">Click here</a>\n"
 "                            </strong> if you want to merge your previous cart into current cart."
 msgstr ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge\">Klik hier</a>\n"
+"                            </strong> als je je vorige winkelwagen wilt samenvoegen met de huidige winkelwagen."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -465,6 +479,9 @@ msgid ""
 "                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash\">Click here</a>\n"
 "                            </strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart."
 msgstr ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash\">Klik hier</a>\n"
+"                            </strong> als je je vorige winkelwagen wilt herstellen. Je huidige winkelwagen wordt vervangen door je vorige winkelwagen."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
@@ -849,7 +866,7 @@ msgstr "Alternatieve producten"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Always Fill the box"
-msgstr ""
+msgstr "Het vakje altijd invullen"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
@@ -918,12 +935,12 @@ msgstr "Gemiddelde score"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__back_button_label
 msgid "Back Button Label"
-msgstr ""
+msgstr "Label terugknop"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_delivery
 msgid "Back to address"
-msgstr ""
+msgstr "Terug naar adres"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_cart
@@ -933,7 +950,7 @@ msgstr "Terug naar winkelmandje"
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
 msgid "Back to extra info"
-msgstr ""
+msgstr "Terug naar extra info"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1142,7 +1159,7 @@ msgstr "E-mail Winkelmandje herstel verstuurd"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Catalog of products"
-msgstr ""
+msgstr "Productcatalogus"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1262,7 +1279,7 @@ msgstr "Klassiek"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Classic Grid"
-msgstr ""
+msgstr "Klassieke Grid"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -1273,12 +1290,12 @@ msgstr "Filters wissen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Clear search for this category"
-msgstr ""
+msgstr "Zoekopdracht wissen voor deze categorie"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_collect
 msgid "Click & Collect"
-msgstr "Klik & Ophalen"
+msgstr "Click & Collect"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1334,7 +1351,7 @@ msgstr "Categorie recursief samenvouwen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Collapse sidebar sections"
-msgstr ""
+msgstr "Zijbalksecties inklappen"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_collapsible
@@ -1369,7 +1386,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Compact List"
-msgstr ""
+msgstr "Compacte lijst"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
@@ -1490,6 +1507,7 @@ msgstr "Bevestigde orders"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Connect your eCommerce to Google Merchant Center via a product file."
 msgstr ""
+"Verbind je E-commerce met Google Merchant Center via een productbestand."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
@@ -1509,7 +1527,7 @@ msgstr "Knop Neem contact met ons op URL"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Contain within the box"
-msgstr ""
+msgstr "Binnen het vakje houden"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1535,7 +1553,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Copy file link"
-msgstr ""
+msgstr "Bestandslink kopiëren"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -1725,7 +1743,7 @@ msgstr "Levering"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "Delivery &amp; Billing"
-msgstr ""
+msgstr "Levering & facturatie"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__amount_delivery
@@ -1751,7 +1769,7 @@ msgstr "Levering en installatie"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "Delivery method"
-msgstr ""
+msgstr "Leveringsmethode"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1800,7 +1818,7 @@ msgstr "Bureaus"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Detailed List"
-msgstr ""
+msgstr "Gedetailleerde lijst"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1968,6 +1986,8 @@ msgid ""
 "Drag building blocks here to customize the header for\n"
 "                                        \""
 msgstr ""
+"Sleep hier bouwstenen om de kop aan te passen voor\n"
+"                                        \""
 
 #. module: website_sale
 #. odoo-python
@@ -2050,7 +2070,7 @@ msgstr "Bewerken"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Edit address"
-msgstr ""
+msgstr "Adres bewerken"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2173,7 +2193,7 @@ msgstr "Dossierladen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Filmstrip - default"
-msgstr ""
+msgstr "Filmstrip - standaard"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -2193,18 +2213,18 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Floating"
-msgstr ""
+msgstr "Zwevend"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Floating sticky Toolbar"
-msgstr ""
+msgstr "Vastgeplakte zwevende werkbalk"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Focused"
-msgstr ""
+msgstr "Gefocust"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_foldable
@@ -2271,7 +2291,7 @@ msgstr "Glazen bureaus"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__gmc_xml_url
 msgid "Gmc Xml Url"
-msgstr ""
+msgstr "Gmc Xml Url"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2284,7 +2304,7 @@ msgstr "Ga naar winkelmandje"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_gmc_src
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_gmc_src
 msgid "Google Merchant Center Data Source"
-msgstr ""
+msgstr "Google Merchant Center Data Source"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__grid
@@ -2333,7 +2353,7 @@ msgstr "Verberg 'Toevoegen aan winkelmandje' wanneer prijs = 0"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Hide all filters"
-msgstr ""
+msgstr "Verberg alle filters"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2343,7 +2363,7 @@ msgstr "Uren."
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
 msgid "Href"
-msgstr ""
+msgstr "Href"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -2473,7 +2493,7 @@ msgstr "Afbeelding 512"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Image Grid"
-msgstr ""
+msgstr "Afbeelding Grid"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2498,7 +2518,7 @@ msgstr "Afbeelding zoomen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Images Fill"
-msgstr ""
+msgstr "Afbeeldingen vullen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2633,7 +2653,7 @@ msgstr "Landschap (4/3)"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Large Image"
-msgstr ""
+msgstr "Grote afbeelding"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2738,7 +2758,7 @@ msgstr "Weergave van de subtotalen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "List of products"
-msgstr ""
+msgstr "Productenlijst"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2783,11 +2803,14 @@ msgid ""
 "Mail only sent to signed in customers with items available for sale in carts"
 " created after the feature activation."
 msgstr ""
+"E-mail wordt alleen verzonden naar ingelogde klanten met artikelen "
+"beschikbaar voor verkoop in winkelwagentjes die zijn aangemaakt na de "
+"activering van de functie."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__main_button_label
 msgid "Main Button Label"
-msgstr ""
+msgstr "Hoofdknoplabel"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2855,7 +2878,7 @@ msgstr "Mobiel"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Modern Showcase"
-msgstr ""
+msgstr "Modern Showcase"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2941,7 +2964,7 @@ msgstr "Nieuw product"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "New address"
-msgstr ""
+msgstr "Nieuw adres"
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.new_ribbon
@@ -3106,7 +3129,7 @@ msgstr "Odoo-menu"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Off-screen Menu"
-msgstr ""
+msgstr "Off-screen Menu"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_office
@@ -3116,7 +3139,7 @@ msgstr "Bureaus"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
 msgid "On the website original price is crossed out."
-msgstr ""
+msgstr "De originele prijs is op de website doorgestreept."
 
 #. module: website_sale
 #. odoo-python
@@ -3149,7 +3172,7 @@ msgstr "Online verkoop analyse"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Online catalog"
-msgstr ""
+msgstr "Online catalogus"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -3225,7 +3248,7 @@ msgstr "Orderregels tonen op website"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Order summary"
-msgstr ""
+msgstr "Besteloverzicht"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -3317,7 +3340,7 @@ msgstr "Telefoonnummer"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Pickup Location"
-msgstr ""
+msgstr "Ophaallocatie"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3726,7 +3749,7 @@ msgstr "Aantal"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Quick Browse Grid"
-msgstr ""
+msgstr "Quick Browse Grid"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3801,7 +3824,7 @@ msgstr "Recent verkochte producten"
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products (per user)"
-msgstr ""
+msgstr "Recent bekeken producten (per gebruiker)"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_recliners
@@ -3861,7 +3884,7 @@ msgstr "Verwijder één"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Render a button to show the Off-screen Menu"
-msgstr ""
+msgstr "Toon een knop om het Off-screen Menu te tonen"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_repair_and_maintenance
@@ -4026,18 +4049,18 @@ msgstr "Zoek producten"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search globally"
-msgstr ""
+msgstr "Globaal zoeken"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search in"
-msgstr ""
+msgstr "Zoeken in"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search {{0}} globally"
-msgstr ""
+msgstr "Zoek {{0}} globaal"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4196,17 +4219,17 @@ msgstr "Toon leeg"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show a filmstrip navigation at the Top"
-msgstr ""
+msgstr "Toon een miniatuurnavigatie bovenaan"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show filters into Sidebar"
-msgstr ""
+msgstr "Toon filters in zijbalk"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show into Sidebar"
-msgstr ""
+msgstr "Toon in zijbalk"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_search
@@ -4232,7 +4255,7 @@ msgstr "Zijbalk"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Sidebar Grid"
-msgstr ""
+msgstr "Zijbalk Grid"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -4440,7 +4463,7 @@ msgstr "Het toegangstoken is ongeldig."
 #: model:website.snippet.filter,help:website_sale.dynamic_filter_latest_viewed_products
 msgid ""
 "The building block will remain empty until the user visits a product page."
-msgstr ""
+msgstr "De bouwsteen blijft leeg totdat je een productpagina bezoekt."
 
 #. module: website_sale
 #. odoo-python
@@ -4677,6 +4700,8 @@ msgstr "Miniaturen"
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email_activation_time
 msgid "Time when the 'Send abandoned cart email' feature was activated."
 msgstr ""
+"Tijdstip waarop de functie 'Verstuur e-mail bij achtergelaten winkelmandje' "
+"is geactiveerd."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4692,7 +4717,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Toolbar"
-msgstr ""
+msgstr "Werkbalk"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4972,7 +4997,7 @@ msgstr "Website Categorie"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_step
 msgid "Website Checkout Step"
-msgstr ""
+msgstr "Website Afrekenstap"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
@@ -5085,6 +5110,12 @@ msgid ""
 "                    In these cases, the calculated/fixed price is set as the unit price with 0% discount\n"
 "                    in the order."
 msgstr ""
+"Wanneer prijzen worden berekend via een formule of vast zijn, wordt de oorspronkelijke prijs\n"
+"                    doorgaans niet weergegeven in de verkooporderregels of bij het afrekenen. Voor\n"
+"                    specifieke formulegebaseerde prijsregels kan de korting wel worden getoond op de winkelpagina\n"
+"                    (bijv. productpagina’s en configurators), maar niet in het winkelwagentje of bij het afrekenen.\n"
+"                    In deze gevallen wordt de berekende/vastgestelde prijs als eenheidsprijs ingesteld met 0% korting\n"
+"                     in de order."
 
 #. module: website_sale
 #. odoo-python
@@ -5118,6 +5149,7 @@ msgstr "Met drie voeten"
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Wrong format: got `pricelist=%s`, expected an integer"
 msgstr ""
+"Fout formaat: `pricelist=%s`, gekregen, er werd een geheel getal verwacht."
 
 #. module: website_sale
 #. odoo-javascript
@@ -5133,6 +5165,10 @@ msgid ""
 "                            If you want to modify your billing address, create a\n"
 "                            <a class=\"o_translate_inline\" href=\"/shop/address?address_type=billing\">new address</a>."
 msgstr ""
+"Je bewerkt zowel je <b>bezorg- als factuuradres</b>\n"
+"                            tegelijkertijd!<br/>\n"
+"                            Als je je factuuradres wilt wijzigen, maak dan een\n"
+"                            <a class=\"o_translate_inline\" href=\"/shop/address?address_type=billing\">een nieuw adres</a> aan."
 
 #. module: website_sale
 #. odoo-python
@@ -5295,6 +5331,8 @@ msgid ""
 "eCommerce must be accessible to all users for Google Merchant Center to "
 "operate properly."
 msgstr ""
+"E-commerce moet voor alle gebruikers toegankelijk zijn zodat Google Merchant"
+" Center goed functioneert."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server

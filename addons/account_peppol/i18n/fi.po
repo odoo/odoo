@@ -1522,6 +1522,8 @@ msgid ""
 "the MSH is not compatible with the expected content, based on the associated"
 " P-Mode."
 msgstr ""
+"ebMS-otsake tai jokin muu otsake (esim. luotettavuus, suojaus), jota MSH "
+"odottaa, ei vastaa odotettua sisältöä P-Mode-määritysten perusteella."
 
 #. module: account_peppol
 #. odoo-python
@@ -1530,6 +1532,8 @@ msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
 msgstr ""
+"Salatun datan viittaus, jota Suojaus-otsake tarkoitti \"ebms\" SOAP-"
+"toimijaluokalle, ei voitu purkaa turvallisuusmoduulin toimesta."
 
 #. module: account_peppol
 #. odoo-python
@@ -1560,18 +1564,21 @@ msgid ""
 "other than the fragment header and a data part are in the message. are added"
 " or the SOAP Body is not empty."
 msgstr ""
+"href-attribuutti ei viittaa kelvolliseen MIME-datakomponenttiin. Muut MIME-"
+"osat kuin osan otsake ja datakomponrntti ovat viestissä, on lisätty tai "
+"SOAP-vartalo ei ole tyhjä."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The incoming message could not be decompressed."
-msgstr ""
+msgstr "Saapuvaa viestiä ei voitu purkaa."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The message does not comply with the AS4 policy."
-msgstr ""
+msgstr "Viestin ei katsota noudattavan AS4-käytäntöä."
 
 #. module: account_peppol
 #. odoo-python
@@ -1587,6 +1594,8 @@ msgid ""
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
 msgstr ""
+"Prosessori totesi, että viestin suojausmenetelmät, -parametrit, laajuus tai "
+"muut turvallisuuskäytännöt tai -sopimukset eivät täyttyneet."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1602,12 +1611,14 @@ msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
 msgstr ""
+"Suojaus-otsakkeessa oleva allekirjoitusta, joka on tarkoitettu \"ebms\" "
+"SOAP-toimijaluokalle, ei validoitu turvallisuusmoduulin tarkistuksessa."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The size of the data part in a fragment message is greater than %s"
-msgstr ""
+msgstr "Osaviestin datakomponentin koko ylittää %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1615,7 +1626,7 @@ msgstr ""
 msgid ""
 "The structure of a received bundle is not in accordance with the bundling "
 "rules."
-msgstr ""
+msgstr "Vastaanotetun paketin rakenne ei noudata niputussääntöjä."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1630,30 +1641,32 @@ msgid ""
 "The use of MIME is not consistent with the required usage in this "
 "specification."
 msgstr ""
+"MIME:n käyttö ei ole yhdenmukainen tässä määrityksessä vaaditun käytön "
+"kanssa."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "There is no message available for pulling from this MPC at this moment."
-msgstr ""
+msgstr "Viestejä ei ole vastaanotettavissa tältä MPC:ltä tällä hetkellä."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "There was an error while sending this invoice via Peppol."
-msgstr ""
+msgstr "Tapahtui virhe tämän laskun lähetyksessä Peppolin kautta."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the Peppol Request"
-msgstr ""
+msgstr "Tapahtui virhe tämän Peppol-pyynnössä."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the incoming message."
-msgstr ""
+msgstr "Tapahtui virhe saapuvassa viestissä."
 
 #. module: account_peppol
 #. odoo-python
@@ -1662,12 +1675,14 @@ msgid ""
 "There was an issue with the Hermes Migration Token Collection Interface "
 "(MTCI)."
 msgstr ""
+"Ongelma Hermes Migration Token Collection Interface (MTCI) -rajapinnan "
+"kanssa."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an issue with the Peppol Participant."
-msgstr ""
+msgstr "Ongelma Peppol-osallistujassa."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1679,6 +1694,7 @@ msgstr "Tämä lasku on myös"
 #: code:addons/account_peppol/exceptions.py:0
 msgid "This user is not registered on our Access Point."
 msgstr ""
+"Tämä käyttäjä ei ole rekisteröity Access Point -palveluumme (päätepiste)."
 
 #. module: account_peppol
 #. odoo-python
@@ -1687,6 +1703,8 @@ msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
+"Tämä käyttäjä ei ole Peppol-käyttäjä. Käyttäjän proxy_type:n tulee olla "
+"\"peppol\", jotta Peppol-osallistuja voidaan luoda."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1706,13 +1724,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unable to verify the digest value."
-msgstr ""
+msgstr "Tiivistearvoa ei voitu vahvistaa."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unexpected end of MIME multipart message."
-msgstr ""
+msgstr "MIME-moniosainen viesti päättyi odottamattomasti."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1729,7 +1747,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unknown Peppol Error: %s"
-msgstr ""
+msgstr "Tuntematon Peppol-virhe: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
@@ -1770,7 +1788,7 @@ msgstr ""
 #. module: account_peppol
 #: model:mail.template,subject:account_peppol.mail_template_peppol_registration
 msgid "Welcome to Peppol"
-msgstr ""
+msgstr "Tervetuloa Peppoliin"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1843,7 +1861,7 @@ msgstr "Voit lähettää laskun sähköisesti Peppolin kautta."
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You don't have enough credit"
-msgstr ""
+msgstr "Sinulla ei ole riittävästi saldoa."
 
 #. module: account_peppol
 #. odoo-python
@@ -1852,6 +1870,8 @@ msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
 msgstr ""
+"Olet saavuttanut tämän päivän lähetysrajan. Yritä myöhemmin uudelleen. Ota "
+"yhteyttä tukeen, jos sinun tarvitsee nostaa rajaa."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1897,6 +1917,7 @@ msgstr "Päätepisteesi"
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
 msgstr ""
+"Tunnistautumistasi ei ole vielä hyväksytty tämän toiminnan suorittamiseksi."
 
 #. module: account_peppol
 #. odoo-python
@@ -1925,7 +1946,7 @@ msgstr "Rekisteröitymisesi pitäisi aktivoitua päivän kuluessa."
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your request is still being processed."
-msgstr ""
+msgstr "Pyyntöäsi käsittellään vielä."
 
 #. module: account_peppol
 #. odoo-python

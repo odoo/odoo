@@ -103,13 +103,13 @@ msgstr "%(author name)s kanavilta %(channel name)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "%(author)s started a call."
-msgstr ""
+msgstr "%(author)s aloitti puhelun."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(caller)s started a call"
-msgstr ""
+msgstr "%(caller)s aloitti puhelun"
 
 #. module: mail
 #. odoo-javascript
@@ -180,13 +180,13 @@ msgstr "%(extraCount)s lisää"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "%(file1)s and %(count)d other attachments"
-msgstr ""
+msgstr "%(file1)s ja %(count)d muuta liitetiedostoa"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(file1)s and %(count)s other attachments"
-msgstr ""
+msgstr "%(file1)s ja %(count)s muuta liitetiedostoa"
 
 #. module: mail
 #. odoo-javascript
@@ -305,7 +305,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
-msgstr ""
+msgstr "%(user)s aloitti viestiketjun: %(goto)s%(thread_name)s%(goto_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -578,7 +578,7 @@ msgstr "<span class=\"d-block w-75 py-2\">Napin väri</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Button Text</span>"
-msgstr ""
+msgstr "<span class=\"d-block w-75 py-2\">Painikkeen teksti</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -760,7 +760,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_role_unique_name
 msgid "A role with the same name already exists."
-msgstr ""
+msgstr "Rooli, jolla on tämä nimi, on jo olemassa."
 
 #. module: mail
 #. odoo-python
@@ -941,7 +941,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_user_id_is_set_if_model
 msgid "Activities must be assigned if not attached to a document."
-msgstr ""
+msgstr "Toiminnot on vastuutettava, ellei niitä ole liitetty asiakirjaan."
 
 #. module: mail
 #. odoo-javascript
@@ -993,7 +993,7 @@ msgstr "Toimintasuunnitelmat"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__activity_schedule_id
 msgid "Activity Schedule"
-msgstr ""
+msgstr "Toimintokalenteri"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -1838,7 +1838,7 @@ msgstr "Taustan sumennuksen voimakkuus"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/badge_selection_icons/badge_selection_icons_field.js:0
 msgid "Badges with Icons"
-msgstr ""
+msgstr "Merkit, joilla on kuvake"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -2033,13 +2033,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring back"
-msgstr ""
+msgstr "Palauta"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring call back"
-msgstr ""
+msgstr "Palauta puhelu"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -2083,7 +2083,7 @@ msgstr "Soitto"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_tree
 msgid "Call History"
-msgstr ""
+msgstr "Puheluhistoria"
 
 #. module: mail
 #. odoo-javascript
@@ -2094,18 +2094,18 @@ msgstr "Puheluasetukset"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_channel_id_not_null_constraint
 msgid "Call history must have a channel"
-msgstr ""
+msgstr "Puheluhistorialla tulee olla kanava"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_start_dt_is_not_null_constraint
 msgid "Call history must have a start date"
-msgstr ""
+msgstr "Puheluhistorialla tulee olla aloituspäivämäärä"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "Call lasted %(duration)s."
-msgstr ""
+msgstr "Puhelun kesto oli %(duration)s."
 
 #. module: mail
 #. odoo-javascript
@@ -2133,7 +2133,7 @@ msgstr "Voi muokata runkoa"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__can_edit_role
 msgid "Can Edit Role"
-msgstr ""
+msgstr "Voi muokata roolia"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
@@ -2161,13 +2161,14 @@ msgstr "Voi lähettää viestejä bus.busin kautta"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Can't launch a plan without a record."
-msgstr ""
+msgstr "Suunnitelmaa ei voi käynnistää ilman kirjausta."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Can't schedule activities without either a record or a user."
 msgstr ""
+"Toimenpiteitä ei voida suunnitella ja ajoittaa ilman kirjausta ja käyttäjää."
 
 #. module: mail
 #. odoo-javascript
@@ -2373,7 +2374,7 @@ msgstr "Kanava"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Channel Actions"
-msgstr ""
+msgstr "Kanavan toiminnot"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_member
@@ -2451,7 +2452,7 @@ msgstr "Chat"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Chat Actions"
-msgstr ""
+msgstr "Chat-toiminnot"
 
 #. module: mail
 #. odoo-javascript
@@ -2593,7 +2594,7 @@ msgstr "Sulje paneeli"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_pip.xml:0
 msgid "Close picture-in-picture"
-msgstr ""
+msgstr "Sulje pienkuvakkeen ikkuna"
 
 #. module: mail
 #. odoo-javascript
@@ -3217,7 +3218,7 @@ msgstr "Päivämäärä"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_date_deadline
 msgid "Date Deadline"
-msgstr ""
+msgstr "Eräpäivän päivämäärä"
 
 #. module: mail
 #. odoo-javascript
@@ -3244,18 +3245,18 @@ msgstr "Päivää"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Deadline"
-msgstr "Määräaika"
+msgstr "Eräpäivä"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Deadline:"
-msgstr "Määräaika:"
+msgstr "Eräpäivä:"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Deadline: %s"
-msgstr "Määräaika: %s"
+msgstr "Eräpäivä: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -3345,7 +3346,7 @@ msgstr "Oletusarvot"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Default deadline for the activities..."
-msgstr "Toiminnan oletusmääräaika..."
+msgstr "Toiminnan oletuseräpäivä..."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
@@ -3823,7 +3824,7 @@ msgstr "Sähköpostin kaksoiskappale"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__duration_hour
 msgid "Duration Hour"
-msgstr ""
+msgstr "Kesto tunteina"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__voice_active_duration
@@ -3960,7 +3961,7 @@ msgstr "Sähköpostin painikkeen väri"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Button Text"
-msgstr ""
+msgstr "Sähköpostipainikkeen teksti"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -4173,7 +4174,7 @@ msgstr "Salli järjestetty seuranta"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__end_dt
 msgid "End Dt"
-msgstr ""
+msgstr "Päättymispäivämäärä"
 
 #. module: mail
 #. odoo-javascript
@@ -4191,7 +4192,7 @@ msgstr "Siirry koko näyttöön"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 msgid "Enter full screen!"
-msgstr ""
+msgstr "Siirry koko näytön tilaan!"
 
 #. module: mail
 #. odoo-javascript
@@ -4318,7 +4319,7 @@ msgstr "Poistu kokoruututilasta"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Exit Picture in Picture"
-msgstr ""
+msgstr "Poistu pienkuvakkeen ikkunasta"
 
 #. module: mail
 #. odoo-javascript
@@ -4989,7 +4990,7 @@ msgstr "Sisältää viestin"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
 msgid "Has Warning"
-msgstr ""
+msgstr "Sisältää varoituksen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_deaf
@@ -5849,7 +5850,7 @@ msgstr "On piilotettu"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_in_call
 msgid "Is In Call"
-msgstr ""
+msgstr "Puhelussa"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
@@ -6025,7 +6026,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
 msgid "Keep the call history"
-msgstr ""
+msgstr "Säilytä puheluhistoria"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -6245,7 +6246,7 @@ msgstr "Eroa kanavalta"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_description
 msgid "Line Description"
-msgstr ""
+msgstr "Rivin kuvaus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__link_field_id
@@ -6256,7 +6257,7 @@ msgstr "Linkitetty kenttä"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_link_preview__link_preview_id
 msgid "Link Preview"
-msgstr ""
+msgstr "Linkin esikatselu"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_link_preview_action
@@ -6269,7 +6270,7 @@ msgstr "Linkin esikatselut"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_link_preview
 msgid "Link between link previews and messages"
-msgstr ""
+msgstr "Yhteys linkin esikatselujen ja viestien välillä"
 
 #. module: mail
 #. odoo-javascript
@@ -6442,7 +6443,7 @@ msgstr "Sähköpostin aktiviteetti"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule_line
 msgid "Mail Activity Schedule Line"
-msgstr ""
+msgstr "Sähköpostitoiminnon aikataulurivi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__mail_activity_type_id
@@ -6668,7 +6669,7 @@ msgstr "Merkitse tehdyksi"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Mark Read"
-msgstr ""
+msgstr "Merkitse luetuksi"
 
 #. module: mail
 #. odoo-javascript
@@ -6837,7 +6838,7 @@ msgstr "Viesti Linkin kopiointi epäonnistui (puuttuvat käyttöoikeudet?)!"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__message_link_preview_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__message_link_preview_ids
 msgid "Message Link Preview"
-msgstr ""
+msgstr "Viestin linkin esikatselu"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
@@ -6990,7 +6991,7 @@ msgstr "Viestien haku"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_message_id_unique_constraint
 msgid "Messages can only be linked to one call history"
-msgstr ""
+msgstr "Viestit voidaan liittää vain yhteen puheluhistoriaan"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
@@ -7175,7 +7176,7 @@ msgstr "Omat toimenpiteeni"
 #: model:ir.model.fields,field_description:mail.field_res_partner__my_activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_res_users__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Toimenpiteeni määräaika"
+msgstr "Toimenpiteeni eräpäivä"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
@@ -7712,12 +7713,14 @@ msgstr "Ilmoita kaikille"
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 msgid "Notify multiple people at once by @-mentioning roles in conversations."
 msgstr ""
+"Ilmoita useille henkilöille kerralla mainitsemalla rooleja keskusteluissa "
+"@-merkillä."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Notify users with this role"
-msgstr ""
+msgstr "Ilmoita käyttäjille, joilla on tämä rooli"
 
 #. module: mail
 #. odoo-javascript
@@ -7755,7 +7758,7 @@ msgid ""
 " action deadline."
 msgstr ""
 "Päivien, viikkojen tai kuukausien määrä ennen toimenpiteen suorittamista. "
-"Tämän avulla voidaan suunnitella toiminnan määräaika."
+"Tämän avulla voidaan suunnitella toiminnan eräpäivä."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error_counter
@@ -12713,7 +12716,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity
 msgid "after previous activity deadline"
-msgstr "edellisen toimenpiteen määräajan jälkeen"
+msgstr "edellisen toimenpiteen eräpäivän jälkeen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
