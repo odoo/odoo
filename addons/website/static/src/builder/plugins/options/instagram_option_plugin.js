@@ -101,7 +101,7 @@ class InstagramOptionPlugin extends Plugin {
     }
 }
 
-class InstagramPageAction extends BuilderAction {
+export class InstagramPageAction extends BuilderAction {
     static id = "instagramPage";
     static dependencies = ["instagramOption"];
     getValue({ editingElement }) {

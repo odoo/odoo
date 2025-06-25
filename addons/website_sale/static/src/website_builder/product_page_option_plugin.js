@@ -118,7 +118,7 @@ class ProductPageOptionPlugin extends Plugin {
     }
 }
 
-class ProductPageImageWidthAction extends WebsiteConfigAction {
+export class ProductPageImageWidthAction extends WebsiteConfigAction {
     static id = "productPageImageWidth";
     static dependencies = ["customizeWebsite", "productPageOption"];
     isApplied({ editingElement: productDetailMainEl, value }) {
@@ -139,7 +139,7 @@ class ProductPageImageWidthAction extends WebsiteConfigAction {
         await rpc("/shop/config/website", { product_page_image_width: value });
     }
 }
-class ProductPageImageLayoutAction extends WebsiteConfigAction {
+export class ProductPageImageLayoutAction extends WebsiteConfigAction {
     static id = "productPageImageLayout";
     static dependencies = ["customizeWebsite", "productPageOption"];
     isApplied({ editingElement: productDetailMainEl, value }) {
@@ -169,7 +169,7 @@ class ProductPageImageLayoutAction extends WebsiteConfigAction {
     }
 }
 
-class BaseProductPageAction extends BuilderAction {
+export class BaseProductPageAction extends BuilderAction {
     static id = "baseProductPage";
     setup() {
         this.reload = {};
@@ -301,7 +301,7 @@ class BaseProductPageAction extends BuilderAction {
         }
     }
 }
-class ProductPageImageGridSpacingAction extends BaseProductPageAction {
+export class ProductPageImageGridSpacingAction extends BaseProductPageAction {
     static id = "productPageImageGridSpacing";
     getValue() {
         if (!this.productPageGrid) {
@@ -331,7 +331,7 @@ class ProductPageImageGridSpacingAction extends BaseProductPageAction {
         this.productPageGrid.dataset.image_spacing = spacing;
     }
 }
-class ProductPageImageGridColumnsAction extends BaseProductPageAction {
+export class ProductPageImageGridColumnsAction extends BaseProductPageAction {
     static id = "productPageImageGridColumns";
 
     isApplied({ value }) {
@@ -347,7 +347,7 @@ class ProductPageImageGridColumnsAction extends BaseProductPageAction {
         });
     }
 }
-class ProductReplaceMainImageAction extends BaseProductPageAction {
+export class ProductReplaceMainImageAction extends BaseProductPageAction {
     static id = "productReplaceMainImage";
     apply({ editingElement: productDetailMainEl }) {
         // Emulate click on the main image of the carousel.
@@ -358,7 +358,7 @@ class ProductReplaceMainImageAction extends BaseProductPageAction {
     }
 }
 
-class ProductAddExtraImageAction extends BaseProductPageAction {
+export class ProductAddExtraImageAction extends BaseProductPageAction {
     static id = "productAddExtraImage";
     static dependencies = ["media"];
     async apply({ editingElement: el }) {
@@ -389,7 +389,7 @@ class ProductAddExtraImageAction extends BaseProductPageAction {
         });
     }
 }
-class ProductRemoveAllExtraImagesAction extends BaseProductPageAction {
+export class ProductRemoveAllExtraImagesAction extends BaseProductPageAction {
     static id = "productRemoveAllExtraImages";
     async apply({ editingElement: el }) {
         // Removes all extra-images from the product.

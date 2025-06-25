@@ -33,7 +33,7 @@ class ProgressBarOptionPlugin extends Plugin {
     }
 }
 
-class DisplayAction extends BuilderAction {
+export class DisplayAction extends BuilderAction {
     static id = "display";
     apply({ editingElement, params: { mainParam: position } }) {
         // retro-compatibility
@@ -73,7 +73,7 @@ class DisplayAction extends BuilderAction {
     }
 }
 
-class ProgressBarValueAction extends BuilderAction {
+export class ProgressBarValueAction extends BuilderAction {
     static id = "progressBarValue";
     apply({ editingElement, value }) {
         value = parseInt(value);

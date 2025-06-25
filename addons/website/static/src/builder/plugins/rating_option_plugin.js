@@ -21,7 +21,7 @@ class RatingOptionPlugin extends Plugin {
     };
 }
 
-class SetIconsAction extends BuilderAction {
+export class SetIconsAction extends BuilderAction {
     static id = "setIcons";
     apply({ editingElement, params: { mainParam: iconParam } }) {
         editingElement.dataset.icon = iconParam;
@@ -33,7 +33,7 @@ class SetIconsAction extends BuilderAction {
         return getIconType(editingElement) === iconParam;
     }
 }
-class CustomIconAction extends BuilderAction {
+export class CustomIconAction extends BuilderAction {
     static id = "customIcon";
     static dependencies = ["media"];
     async load({ editingElement, params: { mainParam: customParam } }) {
@@ -78,7 +78,7 @@ class CustomIconAction extends BuilderAction {
         editingElement.dataset.icon = "custom";
     }
 }
-class ActiveIconsNumberAction extends BuilderAction {
+export class ActiveIconsNumberAction extends BuilderAction {
     static id = "activeIconsNumber";
     apply({ editingElement, value }) {
         const nbActiveIcons = parseInt(value);
@@ -93,7 +93,7 @@ class ActiveIconsNumberAction extends BuilderAction {
         return getActiveIcons(editingElement).length;
     }
 }
-class TotalIconsNumberAction extends BuilderAction {
+export class TotalIconsNumberAction extends BuilderAction {
     static id = "totalIconsNumber";
     apply({ editingElement, value }) {
         const nbTotalIcons = Math.max(parseInt(value), 1);

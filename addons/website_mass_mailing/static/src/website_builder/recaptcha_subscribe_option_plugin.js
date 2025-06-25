@@ -18,7 +18,7 @@ class RecaptchaSubscribeOptionPlugin extends Plugin {
     }
 }
 
-class ToggleRecaptchaLegalAction extends BuilderAction {
+export class ToggleRecaptchaLegalAction extends BuilderAction {
     static id = "toggleRecaptchaLegal";
     apply({ editingElement }) {
         const template = document.createElement("template");

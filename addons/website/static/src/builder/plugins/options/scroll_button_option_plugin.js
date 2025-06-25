@@ -82,7 +82,7 @@ class ScrollButtonManager {
 
 const scrollButtonManager = new ScrollButtonManager();
 
-class AddScrollButtonAction extends BuilderAction {
+export class AddScrollButtonAction extends BuilderAction {
     static id = "addScrollButton";
     setup() {
         this.manager = scrollButtonManager;
@@ -101,7 +101,7 @@ class AddScrollButtonAction extends BuilderAction {
     }
 }
 
-class ScrollButtonSectionHeightClassAction extends ClassAction {
+export class ScrollButtonSectionHeightClassAction extends ClassAction {
     static id = "scrollButtonSectionHeightClass";
     setup() {
         this.manager = scrollButtonManager;

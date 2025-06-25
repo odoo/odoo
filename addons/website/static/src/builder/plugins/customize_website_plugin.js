@@ -329,7 +329,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
 }
 
-class SwitchThemeAction extends BuilderAction {
+export class SwitchThemeAction extends BuilderAction {
     static id = "switchTheme";
     static dependencies = ["savePlugin", "action"];
     setup() {
@@ -355,7 +355,7 @@ class SwitchThemeAction extends BuilderAction {
     }
 }
 
-class AddLanguageAction extends BuilderAction {
+export class AddLanguageAction extends BuilderAction {
     static id = "addLanguage";
     static dependencies = ["savePlugin"];
     setup() {
@@ -394,7 +394,7 @@ class AddLanguageAction extends BuilderAction {
     }
 }
 
-class CustomizeBodyBgTypeAction extends BuilderAction {
+export class CustomizeBodyBgTypeAction extends BuilderAction {
     static id = "customizeBodyBgType";
     static dependencies = ["builderActions", "history", "customizeWebsite"];
     isApplied({ value }) {
@@ -470,7 +470,7 @@ class CustomizeBodyBgTypeAction extends BuilderAction {
     }
 }
 
-class RemoveFontAction extends BuilderAction {
+export class RemoveFontAction extends BuilderAction {
     static id = "removeFont";
     static dependencies = ["builderActions"];
     setup() {
@@ -668,7 +668,7 @@ export class WebsiteConfigAction extends BuilderAction {
     }
 }
 
-class SelectTemplateAction extends BuilderAction {
+export class SelectTemplateAction extends BuilderAction {
     static id = "selectTemplate";
     static dependencies = ["customizeWebsite"];
     async prepare({ actionParam }) {
@@ -713,7 +713,7 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
     }
 }
 
-class CustomizeWebsiteColorAction extends BuilderAction {
+export class CustomizeWebsiteColorAction extends BuilderAction {
     static id = "customizeWebsiteColor";
     static dependencies = ["customizeWebsite"];
     setup() {
@@ -768,7 +768,7 @@ class CustomizeWebsiteColorAction extends BuilderAction {
     }
 }
 
-class CustomizeButtonStyleAction extends BuilderAction {
+export class CustomizeButtonStyleAction extends BuilderAction {
     static id = "customizeButtonStyle";
     static dependencies = ["customizeWebsite"];
     setup() {

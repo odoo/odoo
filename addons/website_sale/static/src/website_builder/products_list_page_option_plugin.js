@@ -29,7 +29,7 @@ class ProductsListPageOptionPlugin extends Plugin {
     };
 }
 
-class SetPpgAction extends BuilderAction {
+export class SetPpgAction extends BuilderAction {
     static id = "setPpg";
     setup() {
         this.reload = {};
@@ -47,7 +47,7 @@ class SetPpgAction extends BuilderAction {
         return rpc("/shop/config/website", { shop_ppg: ppg });
     }
 }
-class SetPprAction extends BuilderAction {
+export class SetPprAction extends BuilderAction {
     static id = "setPpr";
     setup() {
         this.reload = {};
@@ -60,7 +60,7 @@ class SetPprAction extends BuilderAction {
         return rpc("/shop/config/website", { shop_ppr: ppr });
     }
 }
-class SetGapAction extends BuilderAction {
+export class SetGapAction extends BuilderAction {
     static id = "setGap";
     setup() {
         this.reload = {};
@@ -70,7 +70,7 @@ class SetGapAction extends BuilderAction {
     }
 }
 
-class SetDefaultGapAction extends BuilderAction {
+export class SetDefaultGapAction extends BuilderAction {
     static id = "setDefaultGap";
     setup() {
         this.reload = {};
@@ -81,7 +81,7 @@ class SetDefaultGapAction extends BuilderAction {
     }
 }
 
-class SetDefaultSortAction extends BuilderAction {
+export class SetDefaultSortAction extends BuilderAction {
     static id = "setDefaultSort";
     setup() {
         this.reload = {};

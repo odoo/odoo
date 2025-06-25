@@ -25,7 +25,7 @@ class ControllerPageListingLayoutOptionPlugin extends Plugin {
     };
 }
 
-class ListingLayoutAction extends BuilderAction {
+export class ListingLayoutAction extends BuilderAction {
     static id = "listingLayout";
     setup() {
         this.reload = {};
