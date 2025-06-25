@@ -151,7 +151,7 @@ export const mailModels = {
  */
 export function onRpcBefore(route, callback) {
     if (typeof route === "string") {
-        const handler = registry.category("mock_rpc").get(route);
+        const handler = registry.category("mail.mock_rpc").get(route);
         patchWithCleanup(handler, { before: callback });
     } else {
         const onRpcBeforeGlobal = registry.category("mail.on_rpc_before_global").get(true);
@@ -167,7 +167,7 @@ export function onRpcBefore(route, callback) {
  * @param {Function} callback - The function to execute just before the end of RPC call.
  */
 export function onRpcAfter(route, callback) {
-    const handler = registry.category("mock_rpc").get(route);
+    const handler = registry.category("mail.mock_rpc").get(route);
     patchWithCleanup(handler, { after: callback });
 }
 
