@@ -345,8 +345,6 @@ async function discuss_settings_mute(request) {
     const BusBus = this.env["bus.bus"];
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    /** @type {import("mock_models").ResUsersSettings} */
-    const ResUsersSettings = this.env["res.users.settings"];
     /** @type {import("mock_models").DiscussChannelMember} */
     const DiscussChannelMember = this.env["discuss.channel.member"];
     /** @type {import("mock_models").ResPartner} */
@@ -361,21 +359,16 @@ async function discuss_settings_mute(request) {
     } else {
         mute_until_dt = false;
     }
-    if (channel_id) {
-        const member = DiscussChannel._find_or_create_member_for_self(channel_id);
-        DiscussChannelMember.write([member.id], { mute_until_dt });
-        const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(
-            partner,
-            "mail.record/insert",
-            new mailDataHelpers.Store(DiscussChannel.browse(member.channel_id), {
-                mute_until_dt,
-            }).get_result()
-        );
-    } else {
-        const settings = ResUsersSettings._find_or_create_for_user(this.env.user.id);
-        ResUsersSettings.set_res_users_settings(settings.id, { mute_until_dt });
-    }
+    const member = DiscussChannel._find_or_create_member_for_self(channel_id);
+    DiscussChannelMember.write([member.id], { mute_until_dt });
+    const [partner] = ResPartner.read(this.env.user.partner_id);
+    BusBus._sendone(
+        partner,
+        "mail.record/insert",
+        new mailDataHelpers.Store(DiscussChannel.browse(member.channel_id), {
+            mute_until_dt,
+        }).get_result()
+    );
     return "dummy";
 }
 

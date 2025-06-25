@@ -188,7 +188,7 @@ export class ResPartner extends webModels.ResPartner {
         if (partner.id === serverState.odoobotId) {
             return "bot";
         }
-        return partner.im_status;
+        return partner.im_status || "offline";
     }
     /**
      * @param {Array} domain
