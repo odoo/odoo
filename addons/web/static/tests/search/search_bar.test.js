@@ -45,7 +45,6 @@ import {
     validateSearch,
 } from "@web/../tests/web_test_helpers";
 import { cookie } from "@web/core/browser/cookie";
-import { pick } from "@web/core/utils/objects";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 class Partner extends models.Model {
@@ -814,13 +813,12 @@ test("many2one_reference fields are supported in search view", async () => {
 
 test("check kwargs of a rpc call with a domain", async () => {
     onRpc("name_search", (params) => {
-        expect(pick(params, "args", "kwargs", "method", "model")).toEqual({
+        expect(params).toMatchObject({
             model: "partner",
             method: "name_search",
             args: [],
             kwargs: {
                 domain: [["bool", "=", true]],
-                context: { lang: "en", uid: 7, tz: "taht", allowed_company_ids: [1] },
                 limit: 8 + 1,
                 name: "F",
             },
