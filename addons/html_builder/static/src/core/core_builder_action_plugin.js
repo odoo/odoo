@@ -22,7 +22,6 @@ export function withoutTransition(editingElement, callback) {
 
 export class CoreBuilderActionPlugin extends Plugin {
     static id = "coreBuilderAction";
-    static dependencies = ["color"];
     resources = {
         builder_actions: {
             ClassAction,
@@ -258,36 +257,24 @@ export class StyleAction extends BuilderAction {
         return currentValue === value;
     }
     apply({ editingElement, params = {}, value }) {
+        if (!this.delegateTo("apply_custom_css_style", { editingElement, params, value })) {
+            this.applyCssStyle({ editingElement, params, value });
+        }
+    }
+    applyCssStyle({ editingElement, params = {}, value }) {
         params = { ...params };
         const styleName = params.mainParam;
         delete params.mainParam;
-        if (styleName === "background-color") {
-            const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);
-            if (match) {
-                value = `bg-${match[1]}`;
-            }
-            this.dependencies.color.colorElement(editingElement, value, "backgroundColor");
-        } else if (styleName === "color") {
-            const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);
-            if (match) {
-                value = `text-${match[1]}`;
-            }
-            this.dependencies.color.colorElement(editingElement, value, "color");
-        } else {
-            this._setStyle(editingElement, styleName, value, params);
-        }
-    }
-    _getValueWithoutTransition(el, styleName) {
-        return withoutTransition(el, () => getStyleValue(el, styleName));
-    }
-    _setStyle(element, styleName, styleValue, params) {
         // Disable all transitions for the duration of the method as many
         // comparisons will be done on the element to know if applying a
         // property has an effect or not. Also, changing a css property via the
         // editor should not show any transition as previews would not be done
         // immediately, which is not good for the user experience.
-        withoutTransition(element, () => {
-            setStyle(element, styleName, styleValue, params);
+        withoutTransition(editingElement, () => {
+            setStyle(editingElement, styleName, value, params);
         });
+    }
+    _getValueWithoutTransition(el, styleName) {
+        return withoutTransition(el, () => getStyleValue(el, styleName));
     }
 }
