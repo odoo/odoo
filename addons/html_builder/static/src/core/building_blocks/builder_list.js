@@ -136,16 +136,15 @@ export class BuilderList extends Component {
         return nextAvailableId.toString();
     }
 
-    onInput(e) {
-        this.handleValueChange(e.target, false);
+    onInput(e, id) {
+        this.handleValueChange(e.target, id, false);
     }
 
-    onChange(e) {
-        this.handleValueChange(e.target, true);
+    onChange(e, id) {
+        this.handleValueChange(e.target, id, true);
     }
 
-    handleValueChange(targetInputEl, commitToHistory) {
-        const id = targetInputEl.dataset.id;
+    handleValueChange(targetInputEl, id, commitToHistory) {
         const propertyName = targetInputEl.name;
         const value =
             targetInputEl.type === "checkbox" ? targetInputEl.checked : targetInputEl.value;
