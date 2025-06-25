@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import Command, fields, models
 
 
 class JobAddApplicants(models.TransientModel):
@@ -9,7 +9,20 @@ class JobAddApplicants(models.TransientModel):
     job_ids = fields.Many2many("hr.job", string="Job Positions", required=True)
 
     def _add_applicants_to_job(self):
-        applicant_data = self.with_context(no_copy_in_partner_name=True).applicant_ids.copy_data()
+        applicants = self.with_context(no_copy_in_partner_name=True).applicant_ids
+        applicant_data = []
+        for applicant in applicants:
+            applicant_attachments = self.env['ir.attachment']
+            for attachment in applicant.attachment_ids:
+                applicant_attachments |= attachment.copy({
+                    'res_model': applicant._name,
+                    'res_id': applicant.id
+                })
+            applicant_data.append(applicant.copy_data({
+                'attachment_ids': [Command.link(applicant_attachment.id)
+                                   for applicant_attachment in applicant_attachments]
+            })[0])
+
         new_applicants = self.env["hr.applicant"].create(
             [
                 {
