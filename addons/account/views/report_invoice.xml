@@ -149,7 +149,7 @@
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
                         <t t-set="display_taxes" t-value="any(l.tax_ids for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
-                        <table class="o_has_total_table table o_main_table table-borderless" name="invoice_line_table">
+                        <table class="o_has_total_table table o_main_table table-borderless mb-0" name="invoice_line_table">
                             <thead>
                                 <tr>
                                     <th name="th_description" class="text-start"><span>Description</span></th>
@@ -230,9 +230,9 @@
                                 </t>
                             </tbody>
                         </table>
-                        <div>
+                        <div class="overflow-hidden">
                             <div id="right-elements" t-attf-class="#{'col-5 mt-5' if report_type == 'pdf' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
-                                <div id="total" class="clearfix row mt-n3">
+                                <div id="total" class="clearfix row">
                                     <div class="ms-auto">
                                         <table class="o_total_table table table-borderless avoid-page-break-inside">
 
@@ -285,7 +285,7 @@
                                     <div class="oe_structure"/>
                                 </t>
                             </div>
-                            <div id="payment_term" class="clearfix">
+                            <div id="payment_term" class="clearfix mt-3">
                                 <div class="justify-text">
                                     <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note" class="mb-2">
                                         <span t-field="o.fiscal_position_id.note"/>
