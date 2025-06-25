@@ -1,0 +1,54 @@
+name: CI/CD Workflows
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  auto-review:
+    name: Auto Review Pull Requests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto Review PR
+        uses: pullreminders/pull-reminders-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          message: "Thank you for your contribution! A reviewer will take a look at this soon."
+
+  auto-assign:
+    name: Auto Assign Reviewers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto assign reviewers
+        uses: kentaro-m/auto-assign-action@v1.0.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          assignees: '["username1", "username2"]' # Replace with actual GitHub usernames of contributors
+
+  dependabot:
+    name: Dependency Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for Dependency Updates
+        uses: dependabot/fetch-metadata@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  # Optionally, you can add a job for testing your code
+  run-tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16' # Use the version you need
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test # Update this command based on your testing framework
