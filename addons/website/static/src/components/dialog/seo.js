@@ -108,6 +108,24 @@ const getSeo = async (self, onlyKeywords = false) => {
         return sortedKeywords;
     };
 
+    const extractTitle = () => {
+        let h1Els = Array.from(pageTextContentEl.querySelectorAll("h1")).filter(
+            (el) => isVisible(el) && el.innerText.trim()
+        );
+        if (h1Els.length) {
+            return h1Els[0].innerText.trim().replace(/\s+/g, " ");
+        }
+
+        let h2Els = Array.from(pageTextContentEl.querySelectorAll("h2")).filter(
+            (el) => isVisible(el) && el.innerText.trim()
+        );
+        if (h2Els.length) {
+            return h2Els[0].innerText.trim().replace(/\s+/g, " ");
+        }
+
+        return htmlToTextContentInline(self.seoContext.defaultTitle);
+    };
+
     const extractDescription = () => {
         let subtitlesEls = pageTextContentEl.querySelectorAll(
             "[class*='subtitle'],[class*='lead'],[data-oe-field*='subtitle'],[data-oe-field*='description']"
@@ -133,7 +151,7 @@ const getSeo = async (self, onlyKeywords = false) => {
         self.seoContext.keywords = keywords;
     }
     if (!onlyKeywords) {
-        self.seoContext.title = htmlToTextContentInline(self.seoContext.defaultTitle);
+        self.seoContext.title = extractTitle();
         self.seoContext.description = extractDescription();
     }
 };
@@ -841,7 +859,7 @@ export class OptimizeSEODialog extends Component {
             this.seoNameDefault = this.canEditUrl && this.data.seo_name_default;
 
             seoContext.description = this.getMeta({ name: 'description' });
-            this.previewDescription = _t("Your page description should be between 50 and 160 characters long.");
+            this.previewDescription = _t("Add your own description or leave empty to use 'This is the homepage of the website'.");
             this.defaultTitle = this.getMeta({ name: "default_title" }) || "";
             seoContext.defaultTitle = this.defaultTitle;
             this.url = path;
