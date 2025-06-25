@@ -19,12 +19,14 @@
                         widget="radio"
                         options="{'horizontal': True}"
                         readonly="create_variant != 'always' or display_type == 'multi'"
+                        force_save="1"
                     />
                     <field
                         name="is_thumbnail_visible"
                         widget="boolean_toggle"
                         readonly="create_variant != 'always' or display_type == 'multi'"
                         invisible="preview_variants == 'hidden'"
+                        force_save="1"
                     />
                 </group>
             </group>
