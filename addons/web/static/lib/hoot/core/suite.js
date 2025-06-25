@@ -9,6 +9,32 @@ import { Job } from "./job";
  * @typedef {import("./test").Test} Test
  */
 
+//-----------------------------------------------------------------------------
+// Global
+//-----------------------------------------------------------------------------
+
+const {
+    Object: { freeze: $freeze },
+} = globalThis;
+
+//-----------------------------------------------------------------------------
+// Internal
+//-----------------------------------------------------------------------------
+
+class MinimalCallbacks extends Callbacks {
+    add() {}
+    call() {}
+    callSync() {}
+    clear() {}
+}
+
+const SHARED_CALLBACKS = new MinimalCallbacks();
+const SHARED_CURRENT_JOBS = $freeze([]);
+
+//-----------------------------------------------------------------------------
+// Exports
+//-----------------------------------------------------------------------------
+
 /**
  * @param {Pick<Suite, "name" | "parent">} suite
  * @param {...string} message
@@ -49,7 +75,16 @@ export class Suite extends Job {
 
     cleanup() {
         this.parent?.reporting.add({ suites: +1 });
+        this.minimize();
+    }
+
+    minimize() {
+        super.minimize();
+
         this.callbacks.clear();
+
+        this.callbacks = SHARED_CALLBACKS;
+        this.currentJobs = SHARED_CURRENT_JOBS;
     }
 
     increaseSuiteCount() {
