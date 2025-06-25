@@ -14,7 +14,7 @@ class CardWidthOptionPlugin extends Plugin {
 
 registry.category("website-plugins").add(CardWidthOptionPlugin.id, CardWidthOptionPlugin);
 
-class SetCardAlignmentAction extends ClassAction {
+export class SetCardAlignmentAction extends ClassAction {
     static id = "setCardAlignment";
     isApplied({ editingElement: el, params: { mainParam: classNames } }) {
         if (classNames === "me-auto") {
@@ -24,7 +24,7 @@ class SetCardAlignmentAction extends ClassAction {
     }
 }
 
-class SetCardWidthAction extends StyleAction {
+export class SetCardWidthAction extends StyleAction {
     static id = "setCardWidth";
     getValue(...args) {
         const value = super.getValue(...args);

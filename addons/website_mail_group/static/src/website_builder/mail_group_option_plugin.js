@@ -63,7 +63,7 @@ class MailGroupOptionPlugin extends Plugin {
     }
 }
 
-class MailGroupAction extends BuilderAction {
+export class MailGroupAction extends BuilderAction {
     static id = "mailGroupAction"
     static dependencies = ["builderActions"];
     apply({ editingElement, value }) {
@@ -90,7 +90,7 @@ class MailGroupAction extends BuilderAction {
         return JSON.stringify(value);
     }
 }
-class CreateMailGroupAction extends BuilderAction {
+export class CreateMailGroupAction extends BuilderAction {
     static id = "createMailGroup";
     static dependencies = ["builderActions", "mailGroupOption"];
     load({ editingElement, value }) {

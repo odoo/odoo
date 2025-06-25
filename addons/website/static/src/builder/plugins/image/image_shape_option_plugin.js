@@ -365,7 +365,7 @@ export class ImageShapeOptionPlugin extends Plugin {
     }
 }
 
-class SetImageShapeAction extends BuilderAction {
+export class SetImageShapeAction extends BuilderAction {
     static id = "setImageShape";
     static dependencies = ["imageShapeOption"];
     async load({ editingElement: img, value: shapeId }) {
@@ -379,7 +379,7 @@ class SetImageShapeAction extends BuilderAction {
         img.dataset.fileName = `${imgFilename}.svg`;
     }
 }
-class SetImgShapeColorAction extends BuilderAction {
+export class SetImgShapeColorAction extends BuilderAction {
     static id = "setImgShapeColor";
     static dependencies = ["imageShapeOption"];
     getValue({ editingElement: img, params: { index: colorIndex } }) {
@@ -401,7 +401,7 @@ class SetImgShapeColorAction extends BuilderAction {
         updateImageAttributes();
     }
 }
-class FlipImageShapeAction extends BuilderAction {
+export class FlipImageShapeAction extends BuilderAction {
     static id = "flipImageShape";
     static dependencies = ["imageShapeOption"];
     async load({ editingElement: img, params: { axis } }) {
@@ -418,7 +418,7 @@ class FlipImageShapeAction extends BuilderAction {
     }
 }
 
-class RotateImageShapeAction extends BuilderAction {
+export class RotateImageShapeAction extends BuilderAction {
     static id = "rotateImageShape";
     static dependencies = ["imageShapeOption"];
     async load({ editingElement: img, params: { side } }) {
@@ -431,7 +431,7 @@ class RotateImageShapeAction extends BuilderAction {
         updateImageAttributes();
     }
 }
-class SetImageShapeSpeedAction extends BuilderAction {
+export class SetImageShapeSpeedAction extends BuilderAction {
     static id = "setImageShapeSpeed";
     static dependencies = ["imageShapeOption"];
     getValue({ editingElement: img }) {
@@ -446,7 +446,7 @@ class SetImageShapeSpeedAction extends BuilderAction {
         updateImageAttributes();
     }
 }
-class ToggleImageShapeRatioAction extends BuilderAction {
+export class ToggleImageShapeRatioAction extends BuilderAction {
     static id = "toggleImageShapeRatio";
     static dependencies = ["imageShapeOption"];
 

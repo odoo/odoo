@@ -116,7 +116,7 @@ class WebsitePageConfigOptionPlugin extends Plugin {
         }
     }
 }
-class BaseWebsitePageConfigAction extends BuilderAction {
+export class BaseWebsitePageConfigAction extends BuilderAction {
     static id = "baseWebsitePageConfig";
     static dependencies = ["websitePageConfigOptionPlugin", "history", "visibility"];
     setup() {
@@ -174,7 +174,7 @@ class BaseWebsitePageConfigAction extends BuilderAction {
         });
     }
 }
-class SetWebsiteHeaderVisibilityAction extends BaseWebsitePageConfigAction {
+export class SetWebsiteHeaderVisibilityAction extends BaseWebsitePageConfigAction {
     static id = "setWebsiteHeaderVisibility";
     apply({ editingElement, value: headerPositionValue }) {
         const lastValue = this.websitePageConfig.getVisibilityItem();
@@ -189,7 +189,7 @@ class SetWebsiteHeaderVisibilityAction extends BaseWebsitePageConfigAction {
         return this.websitePageConfig.getVisibilityItem() === value;
     }
 }
-class SetWebsiteFooterVisibleAction extends BaseWebsitePageConfigAction {
+export class SetWebsiteFooterVisibleAction extends BaseWebsitePageConfigAction {
     static id = "setWebsiteFooterVisible";
     isApplied({ editingElement }) {
         return !this.websitePageConfig.getFooterVisibility();
@@ -204,7 +204,7 @@ class SetWebsiteFooterVisibleAction extends BaseWebsitePageConfigAction {
     }
 }
 
-class SetPageWebsiteDirtyAction extends BaseWebsitePageConfigAction {
+export class SetPageWebsiteDirtyAction extends BaseWebsitePageConfigAction {
     static id = "setPageWebsiteDirty";
     apply({ editingElement }) {
         this.websitePageConfig.setDirty();

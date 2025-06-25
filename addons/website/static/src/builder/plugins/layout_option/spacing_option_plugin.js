@@ -48,7 +48,7 @@ class SpacingOptionPlugin extends Plugin {
 
 registry.category("website-plugins").add(SpacingOptionPlugin.id, SpacingOptionPlugin);
 
-class SetGridSpacingAction extends StyleAction {
+export class SetGridSpacingAction extends StyleAction {
     static id = "setGridSpacing";
     apply({ editingElement: rowEl }) {
         // Remove the grid preview if any.

@@ -23,7 +23,7 @@ export class NewsletterLayoutOptionPlugin extends Plugin {
         },
     };
 }
-class SelectNewsletterTemplateAction extends BuilderAction {
+export class SelectNewsletterTemplateAction extends BuilderAction {
     static id = "selectNewsletterTemplate";
     static dependencies = ["builderActions"];
     setup() {

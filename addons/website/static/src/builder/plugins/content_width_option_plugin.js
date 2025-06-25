@@ -24,7 +24,7 @@ class ContentWidthOptionPlugin extends Plugin {
     };
 }
 
-class SetContainerWidthAction extends ClassAction {
+export class SetContainerWidthAction extends ClassAction {
     static id = "setContainerWidth";
     static dependencies = ["history"];
     apply({ editingElement }) {

@@ -30,7 +30,7 @@ class AddToCartOptionPlugin extends Plugin {
     }
 }
 
-class ProductToCartAction extends BuilderAction {
+export class ProductToCartAction extends BuilderAction {
     static id = "productToCart";
     static dependencies = ["builderActions", "addToCartOption"];
     apply({ editingElement, value }) {
@@ -96,7 +96,7 @@ class ProductToCartAction extends BuilderAction {
         return JSON.stringify(value);
     }
 }
-class VariantToCartAction extends BuilderAction {
+export class VariantToCartAction extends BuilderAction {
     static id = "variantToCart";
     static dependencies = ["addToCartOption"];
     apply({ editingElement, value }) {
@@ -118,7 +118,7 @@ class VariantToCartAction extends BuilderAction {
         }
     }
 }
-class AddToCartAction extends BuilderAction {
+export class AddToCartAction extends BuilderAction {
     static id = "addToCart";
     static dependencies = ["builderActions"];
     apply({ editingElement, params: { action, icon, label } }) {

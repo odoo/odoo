@@ -31,7 +31,7 @@ class EventPageOption extends Plugin {
     };
 }
 
-class DisplaySubMenuAction extends BuilderAction {
+export class DisplaySubMenuAction extends BuilderAction {
     static id = "displaySubMenu";
     setup() {
         this.orm = this.services.orm;

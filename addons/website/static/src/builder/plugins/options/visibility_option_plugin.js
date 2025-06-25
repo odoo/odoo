@@ -212,7 +212,7 @@ class VisibilityOptionPlugin extends Plugin {
     }
 }
 
-class ForceVisibleAction extends BuilderAction {
+export class ForceVisibleAction extends BuilderAction {
     static id = "forceVisible";
     static dependencies = ["visibility"];
     apply({ editingElement }) {
@@ -222,7 +222,7 @@ class ForceVisibleAction extends BuilderAction {
         return true;
     }
 }
-class ToggleDeviceVisibilityAction extends BuilderAction {
+export class ToggleDeviceVisibilityAction extends BuilderAction {
     static id = "toggleDeviceVisibility";
     static dependencies = ["visibility", "visibilityOption"];
     apply({ editingElement, params: { mainParam: visibility } }) {

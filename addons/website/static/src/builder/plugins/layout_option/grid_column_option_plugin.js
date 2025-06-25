@@ -28,7 +28,7 @@ const removePaddingPreview = (event) => {
     editingElement.classList.remove("o_we_padding_highlight");
     editingElement.removeEventListener("animationend", removePaddingPreview);
 };
-class SetGridColumnsPaddingAction extends StyleAction {
+export class SetGridColumnsPaddingAction extends StyleAction {
     static id = "setGridColumnsPadding";
     apply(...args) {
         const { editingElement } = args[0];

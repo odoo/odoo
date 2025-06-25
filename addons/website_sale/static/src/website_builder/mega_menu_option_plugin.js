@@ -35,7 +35,7 @@ class WebsiteSaleMegaMenuOptionPlugin extends Plugin {
     };
 }
 
-class ToggleFetchEcomCategoriesAction extends BuilderAction {
+export class ToggleFetchEcomCategoriesAction extends BuilderAction {
     static id = "toggleFetchEcomCategories";
     static dependencies = ["megaMenuOptionPlugin", "customizeWebsite"];
     async load({ editingElement }) {

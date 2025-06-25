@@ -59,7 +59,7 @@ class ImageFormatOptionPlugin extends Plugin {
     }
 }
 
-class SetImageFormatAction extends BuilderAction {
+export class SetImageFormatAction extends BuilderAction {
     static id = "setImageFormat";
     static dependencies = ["imagePostProcess"];
     isApplied({ editingElement, params: { width, mimetype, isOriginal } }) {
@@ -85,7 +85,7 @@ class SetImageFormatAction extends BuilderAction {
         updateImageAttributes();
     }
 }
-class SetImageQualityAction extends BuilderAction {
+export class SetImageQualityAction extends BuilderAction {
     static id = "setImageQuality";
     static dependencies = ["imagePostProcess"];
     getValue({ editingElement: img }) {

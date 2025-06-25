@@ -300,7 +300,7 @@ export function updateCarouselIndicators(carouselEl, newPosition) {
         }
     });
 }
-class AddSlideAction extends BuilderAction {
+export class AddSlideAction extends BuilderAction {
     static id = "addSlide";
     static dependencies = ["carouselOption"];
     setup() {
@@ -310,7 +310,7 @@ class AddSlideAction extends BuilderAction {
         return this.dependencies.carouselOption.addSlide(editingElement);
     }
 }
-class SlideCarouselAction extends BuilderAction {
+export class SlideCarouselAction extends BuilderAction {
     static id = "slideCarousel";
     static dependencies = ["carouselOption"];
     setup() {
@@ -322,7 +322,7 @@ class SlideCarouselAction extends BuilderAction {
     }
 }
 
-class ToggleControllersAction extends BuilderAction {
+export class ToggleControllersAction extends BuilderAction {
     static id = "toggleControllers";
     apply({ editingElement }) {
         const carouselEl = editingElement.closest(".carousel");
@@ -333,7 +333,7 @@ class ToggleControllersAction extends BuilderAction {
         carouselEl.classList.toggle("s_carousel_controllers_hidden", areControllersHidden);
     }
 }
-class ToggleCardImgAction extends BuilderAction {
+export class ToggleCardImgAction extends BuilderAction {
     static id = "toggleCardImg";
     apply({ editingElement }) {
         const carouselEl = editingElement.closest(".carousel");
