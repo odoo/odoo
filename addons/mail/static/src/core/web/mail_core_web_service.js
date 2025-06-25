@@ -15,12 +15,18 @@ export class MailCoreWeb {
 
     setup() {
         this.busService.subscribe("mail.activity/updated", (payload, { id: notifId }) => {
-            if (payload.activity_created && notifId > this.store.activity_counter_bus_id) {
-                this.store.activityCounter++;
+            if (notifId <= this.store.activity_counter_bus_id) {
+                return;
             }
-            if (payload.activity_deleted && notifId > this.store.activity_counter_bus_id) {
-                this.store.activityCounter--;
+            let countDiff = 0;
+            if ("count_diff" in payload) {
+                countDiff = payload.count_diff;
+            } else if (payload.activity_created) {
+                countDiff = 1;
+            } else if (payload.activity_deleted) {
+                countDiff = -1;
             }
+            this.store.activityCounter += countDiff;
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
             if (message.needaction && notifId > this.store.inbox.counter_bus_id) {
