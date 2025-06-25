@@ -983,8 +983,8 @@ class MailingMailing(models.Model):
         join_domain, where_domain = self._get_seen_list_extra()
         query = query % {'target': target._table, 'join_domain': join_domain, 'where_domain': where_domain}
         params = {'mailing_id': self.id, 'mailing_campaign_id': self.campaign_id.id, 'target_model': self.mailing_model_real}
-        self._cr.execute(query, params)
-        seen_list = set(m[0] for m in self._cr.fetchall())
+        self.env.cr.execute(query, params)
+        seen_list = {m[0] for m in self.env.cr.fetchall()}
         _logger.info(
             "Mass-mailing %s has already reached %s %s emails", self, len(seen_list), target._name)
         return seen_list

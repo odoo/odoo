@@ -683,9 +683,9 @@ class IrFieldsConverter(models.AbstractModel):
             ids.append(id)
             warnings.extend(ws)
 
-        if field.name in self._context.get('import_set_empty_fields', []) and any([id is None for id in ids]):
+        if field.name in self.env.context.get('import_set_empty_fields', []) and any(id is None for id in ids):
             ids = [id for id in ids if id]
-        elif field.name in self._context.get('import_skip_records', []) and any([id is None for id in ids]):
+        elif field.name in self.env.context.get('import_skip_records', []) and any(id is None for id in ids):
             return None, warnings
 
         if self._context.get('update_many2many'):

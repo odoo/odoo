@@ -5,6 +5,7 @@ from operator import itemgetter
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import float_compare, groupby
 from odoo.tools.image import is_image_size_above
@@ -519,9 +520,8 @@ class ProductProduct(models.Model):
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None):
         # TDE FIXME: strange
-        if self._context.get('search_default_categ_id'):
-            domain = list(domain)
-            domain.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
+        if self.env.context.get('search_default_categ_id'):
+            domain = Domain(domain) & Domain('categ_id', 'child_of', self.env.context['search_default_categ_id'])
         return super()._search(domain, offset, limit, order)
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
