@@ -5,6 +5,7 @@ from odoo import Command
 
 from odoo.tests import common, tagged, Form
 from odoo.tools import mute_logger
+from datetime import datetime
 
 
 class TestDropship(common.TransactionCase):
@@ -297,6 +298,54 @@ class TestDropship(common.TransactionCase):
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         self.assertTrue((purchase.date_planned - purchase.date_order).days == 10, "The first supplier has a delay of 10 days")
         self.assertTrue(purchase.amount_untaxed == 8, "The price should be 4 * 2")
+
+    def test_dropship_backorder_svl(self):
+        """
+        check when the backorder of the delivery (with a bill) of a dropshipped fifo/avco product is validated,
+        the svl created have the right values
+        """
+        product = self.dropship_product
+        product.purchase_method = 'purchase'
+        product.write({
+            'seller_ids': [
+                Command.clear(),
+                Command.create({
+                    'partner_id': self.supplier.id,
+                    'min_qty': 1.0,
+                    'price': 10
+                }),
+            ],
+            'standard_price': 10,
+        })
+        product.categ_id.property_cost_method = 'average'
+        product.route_ids = self.dropshipping_route
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 10.0,
+                'price_unit': 10,
+            })]
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order.order_line.purchase_line_ids.order_id
+        purchase_order.button_confirm()
+
+        purchase_order.action_create_invoice()
+        purchase_bill = purchase_order.invoice_ids  # get the bill from the purchase
+        purchase_bill.invoice_date = datetime.today()
+        purchase_bill.action_post()
+
+        picking_dropship = sale_order.picking_ids
+        picking_dropship.move_ids.quantity = 6
+        res_dict = picking_dropship.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(res_dict['context'])).save()
+        backorder_wizard.process()
+        backorder = picking_dropship.backorder_ids
+
+        backorder.button_validate()
+        layers = sale_order.picking_ids.move_ids.stock_valuation_layer_ids
+        self.assertEqual(layers.mapped('value'), [40.0, -40.0, 60.0, -60.0])
 
 
 @tagged('post_install', '-at_install')
