@@ -1880,12 +1880,13 @@ Please change the quantity done or the rounding precision of your unit of measur
                         qty_added = min(missing_reserved_quantity, quantity)
                         move_line_vals = move._prepare_move_line_vals(qty_added)
                         move_line_vals.update({
-                            'location_id': location_id.id,
                             'lot_id': lot_id.id,
                             'lot_name': lot_id.name,
                             'owner_id': owner_id.id,
                             'package_id': package_id.id,
                         })
+                        if 'location_id' not in move_line_vals:
+                            move_line_vals['location_id'] = location_id.id
                         move_line_vals_list.append(move_line_vals)
                         missing_reserved_quantity -= qty_added
                         if float_is_zero(missing_reserved_quantity, precision_rounding=move.product_id.uom_id.rounding):

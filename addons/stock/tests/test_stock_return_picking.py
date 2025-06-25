@@ -231,6 +231,47 @@ class TestReturnPicking(TestStockCommon):
         self.assertEqual(exchange_picking.picking_type_id.id, self.picking_type_in)
         self.assertEqual(len(exchange_picking.move_line_ids), 1)
 
+    def test_product_quantities_in_return_for_exchange(self):
+        original_picking = self.PickingObj.create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'move_ids': [(0, 0, {
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'location_id': self.supplier_location,
+                'location_dest_id': self.stock_location,
+                'product_uom_qty': 10,
+                'product_uom': self.uom_unit.id,
+            })],
+        })
+        original_picking.button_validate()
+
+        # Product received: both on-hand and forecasted quantities should be 10
+        self.assertEqual(self.productA.qty_available, 10)
+        self.assertEqual(self.productA.virtual_available, 10)
+
+        return_picking_wizard = self.env['stock.return.picking'].with_context(
+            active_id=original_picking.id, active_ids=original_picking.ids, active_model='stock.picking'
+        ).create({})
+        return_picking_wizard.product_return_moves.quantity = 2
+        return_picking_wizard.action_create_exchanges()
+
+        return_picking = original_picking.return_ids
+        exchange_picking = return_picking.return_ids
+
+        return_picking.button_validate()
+
+        # 2 products returned: on-hand = 8, forecasted = 10
+        self.assertEqual(self.productA.qty_available, 8)
+        self.assertEqual(self.productA.virtual_available, 10)
+
+        exchange_picking.button_validate()
+
+        # 2 exchanged products received: both on-hand and forecasted quantities should be 10
+        self.assertEqual(self.productA.qty_available, 10)
+        self.assertEqual(self.productA.virtual_available, 10)
+
     def test_stock_picking_report_has_return(self):
         """
         Ensures that only returned serialized products are marked as returned.
