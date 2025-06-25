@@ -47,9 +47,9 @@ class HrEmployee(models.Model):
     def _create_future_public_holidays_timesheets(self, employees):
         lines_vals = []
         today = fields.Datetime.today()
-        global_leaves_wo_calendar = defaultdict(lambda: self.env["resource.calendar.leaves"])
-        global_leaves_wo_calendar.update(dict(self.env['resource.calendar.leaves']._read_group(
-            [('calendar_id', '=', False), ('date_from', '>=', today)],
+        global_leaves_wo_calendar = defaultdict(lambda: self.env["hr.leave.public.holiday"])
+        global_leaves_wo_calendar.update(dict(self.env['hr.leave.public.holiday']._read_group(
+            [('resource_calendar_ids', '=', False), ('date_from', '>=', today)],
             groupby=['company_id'],
             aggregates=['id:recordset'],
         )))

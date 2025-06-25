@@ -521,8 +521,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'name': 'Christmas Time Off',
                 'date_from': fields.Datetime.from_string('2019-12-25 00:00:00'),
                 'date_to': fields.Datetime.from_string('2019-12-26 23:59:59'),
-                'resource_id': False,
-                'time_type': 'leave',
             })]
         })
         employee = self.employee_emp
@@ -1166,7 +1164,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Winter Holidays',
             'date_from': '2019-12-25 00:00:00',
             'date_to': '2019-12-26 23:59:59',
-            'time_type': 'leave',
         })]
 
         msg = "hr_holidays: duration_display should update after adding an overlapping holiday"
