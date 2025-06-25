@@ -63,11 +63,6 @@ class ProductLabelLayout(models.TransientModel):
         if self.move_quantity == 'custom':
             return xml_id, data
 
-        packagings = self.env['product.uom'].search([
-            ('product_id', 'in', self.move_ids.product_id.ids),
-            ('uom_id', 'in', self.move_ids.product_uom.ids),
-        ]) if self.print_packaging_labels else self.env['product.uom']
-
         data_by_product_id = defaultdict(list)
         uom_unit = self.env.ref('uom.product_uom_unit', raise_if_not_found=False)
         if self.move_ids and all(ml.product_uom_id.is_zero(ml.quantity) for ml in self.move_ids.move_line_ids):
@@ -75,35 +70,7 @@ class ProductLabelLayout(models.TransientModel):
                 product = move.product_id
                 use_reserved = move.product_uom.compare(move.quantity, 0) > 0
                 useable_qty = move.quantity if use_reserved else move.product_uom_qty
-                label_data = {
-                    'barcode': product.barcode or '',
-                    'quantity': floor(useable_qty),
-                }
-                if self.print_packaging_labels:
-                    packaging = packagings.filtered(
-                        lambda puom: puom.product_id == product and puom.uom_id == move.product_uom
-                    )[:1]
-                    if packaging:
-                        integer_qty = floor(useable_qty)
-                        remaining_qty = useable_qty - integer_qty
-                        label_data.update(
-                            packaging_id=packaging.id,
-                            barcode=(packaging.barcode or ''),
-                            uom_id=packaging.uom_id.id,
-                            quantity=integer_qty,
-                        )
-                        if remaining_qty:
-                            uom_qty = floor(move.packaging_uom_id._compute_quantity(
-                                remaining_qty,
-                                move.product_id.uom_id
-                            ))
-                            if uom_qty > 0:
-                                data_by_product_id[product.id].append({
-                                    'barcode': product.barcode or '',
-                                    'quantity': floor(uom_qty),
-                                })
-                if not move.product_uom.is_zero(label_data['quantity']):
-                    data_by_product_id[product.id].append(label_data)
+                data_by_product_id[product.id] += self._get_labels_data_for(move.product_id, useable_qty, move.product_uom)
         elif self.move_ids.move_line_ids:
             custom_barcodes = defaultdict(list)
             for line in self.move_ids.move_line_ids:
@@ -113,38 +80,39 @@ class ProductLabelLayout(models.TransientModel):
                     if (line.lot_id or line.lot_name) and int(line.quantity):
                         custom_barcodes[product.id].append((line.lot_id.name or line.lot_name, int(line.quantity)))
                         continue
-                    qty = line.quantity_product_uom
-                    if self.print_packaging_labels:
-                        integer_qty = floor(line.quantity)
-                        remaining_qty = line.quantity - integer_qty
-                        if remaining_qty:
-                            uom_qty = floor(line.packaging_uom_id._compute_quantity(
-                                remaining_qty,
-                                line.product_id.uom_id
-                            ))
-                            if uom_qty > 0:
-                                data_by_product_id[product.id].append({
-                                    'barcode': product.barcode or '',
-                                    'quantity': floor(uom_qty),
-                                })
-                        qty = integer_qty
-                label_data = {
-                    'barcode': product.barcode or '',
-                    'quantity': floor(qty),
-                }
-                if self.print_packaging_labels:
-                    packaging = packagings.filtered(
-                        lambda puom: puom.product_id == product and puom.uom_id == line.move_id.product_uom
-                    )[:1]
-                    if packaging:
-                        label_data.update(
-                            packaging_id=packaging.id,
-                            barcode=(packaging.barcode or ''),
-                            uom_id=packaging.uom_id.id,
-                        )
-                # Pass only products with some quantity done to the report
-                if not line.product_uom.is_zero(label_data['quantity']):
-                    data_by_product_id[product.id].append(label_data)
+                    qty = line.packaging_uom_qty
+                data_by_product_id[product.id] += self._get_labels_data_for(product, qty, line.move_id.packaging_uom_id)
             data['custom_barcodes'] = custom_barcodes
         data['data_by_product_id'] = data_by_product_id
         return xml_id, data
+
+    def _get_labels_data_for(self, product, quantity=0, uom=False):
+        labels = []
+        if (uom or product.uom_id).is_zero(quantity):
+            return []
+        label_data = {
+            'barcode': product.barcode or '',
+            'quantity': floor(quantity),
+        }
+        # Adapt label data if we want to print package barcode instead of product barcode.
+        if self.print_packaging_labels and uom:
+            packaging = uom.product_uom_ids.filtered(lambda p_uom: p_uom.product_id == product)[:1]
+            if packaging:
+                integer_qty = floor(quantity)
+                remaining_qty = quantity - integer_qty
+                label_data.update(
+                    packaging_id=packaging.id,
+                    barcode=(packaging.barcode or ''),
+                    uom_id=packaging.uom_id.id,
+                    quantity=integer_qty,
+                )
+                # If packaging qty is a float, try to convert its float part into product's UoM.
+                if remaining_qty:
+                    product_uom_qty = floor(uom._compute_quantity(
+                        remaining_qty,
+                        product.uom_id
+                    ))
+                    if not product.uom_id.is_zero(remaining_qty):
+                        labels += self._get_labels_data_for(product, product_uom_qty)
+        labels.append(label_data)
+        return labels
