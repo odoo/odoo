@@ -25,17 +25,22 @@
                 <field name="remaining_hours_available" column_invisible="True"/>
                 <field name="remaining_hours_so" optional="hide" widget="timesheet_uom" column_invisible="not parent.allow_timesheets"/>
             </xpath>
-            <xpath expr="//field[@name='remaining_hours']" position="after">
-                <field name="allow_billable" invisible="1" />
-                <field name="remaining_hours_available" invisible="1"/>
-                <field name="sale_order_id" invisible="1"/>
-                <span id="remaining_hours_so_label" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available" class="o_td_label float-start">
-                    <label class="fw-bold" for="remaining_hours_so"
+            <xpath expr="//div[@id='remaining_hours_div']" position="after">
+                <div class="row align-items-center mb-2" 
+                    invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available">
+                    <field name="allow_billable" invisible="1" />
+                    <field name="remaining_hours_available" invisible="1"/>
+                    <field name="sale_order_id" invisible="1"/>
+                    <div id="remaining_hours_so_label" class="col-8">
+                        <label class="fw-bold" for="remaining_hours_so"
                             invisible="remaining_hours_so &lt; 0"/>
-                    <label class="fw-bold text-danger" for="remaining_hours_so"
+                        <label class="fw-bold text-danger" for="remaining_hours_so"
                             invisible="remaining_hours_so &gt;= 0"/>
-                </span>
-                <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available" decoration-danger="remaining_hours_so &lt; 0"></field>
+                    </div>
+                    <div class="col-4">
+                        <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" decoration-danger="remaining_hours_so &lt; 0"/>
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>
