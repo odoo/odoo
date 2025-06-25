@@ -522,6 +522,8 @@ msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
+"אם תכונת \"אצוות אוטומטיות\"  מופעלת, יש לבחור לפחות אפשרות אחת תחת \"קיבוץ "
+"לפי\"."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -574,6 +576,8 @@ msgid ""
 "Launch picking orders by aisle or area and regroup at packing zone. Ideal "
 "for large warehouses."
 msgstr ""
+"הפעל הוראות ליקוט לפי מעבר או אזור, ואחד אותן באזור האריזה. אידיאלי למחסנים "
+"גדולים."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
@@ -593,12 +597,12 @@ msgstr "מיקום"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Location From Name"
-msgstr ""
+msgstr "שם מיקום מקור"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Location To Name"
-msgstr ""
+msgstr "שם מיקום יעד"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_location_ids
@@ -713,6 +717,8 @@ msgid ""
 "Pick multiple orders in one trip and prepare orders as you pick. This "
 "reduces packing time and is ideal for small products."
 msgstr ""
+"ליקוט מספר הזמנות בסבב אחד והכנת ההזמנות תוך כדי ליקוט.  שיטה זו מקצרת את "
+"זמן האריזה ומתאימה במיוחד למוצרים קטנים."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
@@ -729,7 +735,7 @@ msgstr "סוג ליקוט"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid ""
 "Please add 'Done' quantities to the batch picking to create a new pack."
-msgstr ""
+msgstr "אנא הוסף כמויות \"בוצע\" לאיסוף האצווה כדי ליצור חבילה חדשה."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -764,7 +770,7 @@ msgstr "מוצר"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Product Barcode"
-msgstr ""
+msgstr "ברקוד מוצר"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_group_by_category
@@ -812,7 +818,7 @@ msgstr "דירוגים"
 msgid ""
 "Regroup multiple orders into one picking and consolidate at the packing "
 "zone."
-msgstr ""
+msgstr "אחד מספר הזמנות לאיסוף אחד ואחד אותן באזור האריזה."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
@@ -860,12 +866,12 @@ msgstr "חפש העברת אצווה"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Select locations you want to group"
-msgstr ""
+msgstr "בחר מיקומים שתרצה לקבץ"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Select product categories you want to group"
-msgstr ""
+msgstr "בחר אילו קטגוריות אתה רוצה לקבץ"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_sequence
@@ -875,7 +881,7 @@ msgstr "רצף"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
 msgid "Show Allocation Button"
-msgstr ""
+msgstr "הצגת כפתור הקצאה"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
@@ -902,7 +908,7 @@ msgstr "מיקום מוצא"
 msgid ""
 "Split transfers by defined locations, then group transfers with the same "
 "location."
-msgstr ""
+msgstr "פצל העברות לפי מיקומים מוגדרים, ולאחר מכן קבץ העברות עם אותו מיקום."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
@@ -910,12 +916,14 @@ msgid ""
 "Split transfers by product category, then group transfers that have the same"
 " product category."
 msgstr ""
+"פצל העברות לפי קטגוריית מוצר, ולאחר מכן קבץ העברות שיש להן את אותה קטגוריית "
+"מוצר."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_product
 msgid ""
 "Split transfers by product then group transfers that have the same product."
-msgstr ""
+msgstr "פצל העברות לפי מוצר, ולאחר מכן קבץ העברות שיש להן את אותו מוצר."
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -966,7 +974,7 @@ msgstr "איתור אריזת מלאי"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
 msgid "Stock move lines"
-msgstr ""
+msgstr "שורות תנועות מלאי"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
@@ -986,6 +994,9 @@ msgid ""
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
+"ההעברות הבאות אינן ניתנות להוספה להעברת אצווה %(batch)s.                                  אנא בדוק את מצבן ואת סוגי הפעולות שלהן.\n"
+"\n"
+"אי-תאימויות:%(incompatible_transfers)s"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1009,7 +1020,7 @@ msgstr "ההעברות הנבחרות צריכות להיות שייכות לח�
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 msgid "The selected transfers should belong to the same operation type"
-msgstr ""
+msgstr "ההעברות שנבחרו צריכות להיות מאותו סוג פעולה."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
@@ -1035,7 +1046,7 @@ msgstr "העברה"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer Display Name"
-msgstr ""
+msgstr "שם תצוגה של העברה"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -1137,7 +1148,7 @@ msgstr "כאשר מסומן, צור את האצווה בסטטוס טיוטה"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "You cannot delete Done batch transfers."
-msgstr ""
+msgstr "לא ניתן למחוק העברות אצווה שבוצעו."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1158,7 +1169,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr ""
+msgstr "העברת אצווה קיימת"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
