@@ -72,18 +72,19 @@ class InteractionService {
             this.owlApp = new App(null, appConfig);
         }
         const root = this.owlApp.createRoot(C, { props, env: this.env });
-        const compElem = document.createElement("owl-component");
-        compElem.setAttribute("contenteditable", "false");
-        compElem.dataset.oeProtected = "true";
-        el.appendChild(compElem);
+        const rootEl = document.createElement("owl-root");
+        rootEl.setAttribute("contenteditable", "false");
+        rootEl.style.display = "contents";
+        rootEl.dataset.oeProtected = "true";
+        el.appendChild(rootEl);
         return {
             C,
             root,
-            el: compElem,
-            mount: () => root.mount(compElem),
+            el: rootEl,
+            mount: () => root.mount(rootEl),
             destroy: () => {
                 root.destroy();
-                compElem.remove();
+                rootEl.remove();
             },
         };
     }
