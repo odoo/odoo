@@ -26,7 +26,7 @@ const { DateTime, Info } = luxon;
  *
  * @typedef DateTimePickerProps
  * @property {number} [focusedDateIndex=0]
- * @property {boolean} [showWeekNumbers]
+ * @property {boolean} [showWeekNumbers=true]
  * @property {DaysOfWeekFormat} [daysOfWeekFormat="narrow"]
  * @property {DateLimit} [maxDate]
  * @property {PrecisionLevel} [maxPrecision="decades"]
@@ -324,6 +324,7 @@ export class DateTimePicker extends Component {
         maxPrecision: "decades",
         minPrecision: "days",
         rounding: 5,
+        showWeekNumbers: true,
         type: "datetime",
     };
 
