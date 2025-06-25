@@ -1,5 +1,6 @@
 import { SnippetModel } from "@html_builder/snippets/snippet_service";
 import { applyTextHighlight } from "@website/js/highlight_utils";
+import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
 patch(SnippetModel.prototype, {
@@ -14,3 +15,11 @@ patch(SnippetModel.prototype, {
         }
     },
 });
+
+registry
+    .category("html_builder.snippetsPreprocessor")
+    .add("website_snippets", (namespace, snippets) => {
+        if (namespace === "website.snippets") {
+            // This should be empty in master, it is used to fix snippets in stable.
+        }
+    });
