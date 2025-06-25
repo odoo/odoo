@@ -946,15 +946,9 @@ test("execute_action of type object are handled", async () => {
     serverState.userContext = { some_key: 2 };
 
     onRpc("partner", "object", function ({ args, kwargs }) {
-        expect(kwargs).toEqual(
+        expect(kwargs).toMatchObject(
             {
-                context: {
-                    lang: "en",
-                    uid: 7,
-                    tz: "taht",
-                    allowed_company_ids: [1],
-                    some_key: 2,
-                },
+                context: { some_key: 2 },
             },
             { message: "should call route with correct arguments" }
         );

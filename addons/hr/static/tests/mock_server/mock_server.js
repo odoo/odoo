@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
-function _mockGetAvatarCardData({ args }) {
+onRpc("get_avatar_card_data", function getAvatarCardData({ args }) {
     const resourceId = args[0][0];
     const resources = this.env["hr.employee.public"].search_read([["id", "=", resourceId]]);
     return resources.map((resource) => ({
@@ -9,6 +9,4 @@ function _mockGetAvatarCardData({ args }) {
         phone: resource.phone,
         user_id: resource.user_id,
     }));
-}
-
-registry.category("mock_rpc").add("get_avatar_card_data", _mockGetAvatarCardData);
+});

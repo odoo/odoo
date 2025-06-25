@@ -1,3 +1,5 @@
-import { registry } from "@web/core/registry";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
-registry.category("mock_rpc").add("/bus/has_missed_notifications", () => false);
+onRpc("/bus/has_missed_notifications", function hasMissedNotifications() {
+    return false;
+});
