@@ -8,6 +8,7 @@ patch(helpers, {
         ...helpers.SUPPORTED_M2X_AVATAR_MODELS,
         "hr.employee",
         "hr.employee.public",
+        "hr.candidate", // Just to avoid the traceback
     ],
     buildOpenChatParams(resModel, id) {
         if (["hr.employee", "hr.employee.public"].includes(resModel)) {
