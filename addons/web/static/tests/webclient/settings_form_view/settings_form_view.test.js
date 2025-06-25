@@ -138,7 +138,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     });
 
     expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
-    expect(".settings .app_settings_block").toBeDisplayed({
+    expect(".settings .app_settings_block").toBeVisible({
         message: "res.config.settings settings show",
     });
     expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual([
@@ -223,7 +223,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
 
     await editSearch("bx");
     await animationFrame();
-    expect(".o_nocontent_help").toBeDisplayed({ message: "record not found message shown" });
+    expect(".o_nocontent_help").toBeVisible({ message: "record not found message shown" });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("Fo");
@@ -287,7 +287,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     });
 
     expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
-    expect(".settings .app_settings_block").toBeDisplayed({
+    expect(".settings .app_settings_block").toBeVisible({
         message: "res.config.settings settings show",
     });
     expect(queryAllTexts(".settings .o_settings_container .o_form_label")).toEqual([
@@ -371,7 +371,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
 
     await editSearch("bx");
     await animationFrame();
-    expect(".o_nocontent_help").toBeDisplayed({ message: "record not found message shown" });
+    expect(".o_nocontent_help").toBeVisible({ message: "record not found message shown" });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(0);
 
     await editSearch("Fo");
@@ -499,7 +499,7 @@ test("don't show noContentHelper if no search is done", async () => {
                 </app>
             </form>`,
     });
-    expect(".o_nocontent_help").not.toBeVisible({ message: "record not found message shown" });
+    expect(".o_nocontent_help").not.toHaveCount();
 });
 
 test("unhighlight section not matching anymore", async () => {
@@ -517,7 +517,7 @@ test("unhighlight section not matching anymore", async () => {
         `,
     });
     expect(".selected").toHaveAttribute("data-key", "crm", { message: "crm setting selected" });
-    expect(".settings .app_settings_block").toBeDisplayed({ message: "project settings show" });
+    expect(".settings .app_settings_block").toBeVisible({ message: "project settings show" });
 
     await editSearch("trea");
     await runAllTimers();

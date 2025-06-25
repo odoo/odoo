@@ -220,7 +220,7 @@ test("file name field is not defined", async () => {
     expect(`.o_field_binary`).toHaveText("", {
         message: "there should be no text since the name field is not in the view",
     });
-    expect(`.o_field_binary .fa-download`).toBeDisplayed({
+    expect(`.o_field_binary .fa-download`).toBeVisible({
         message: "download icon should be visible",
     });
 });
@@ -456,11 +456,13 @@ test("should accept file with allowed MIME type and reject others", async () => 
 
     await click(`.o_select_file_button`);
     await animationFrame();
-    const textFile = new File(["test"], "text_file.txt", { type: "text/plain"});
+    const textFile = new File(["test"], "text_file.txt", { type: "text/plain" });
     await setInputFiles([textFile]);
     await animationFrame();
 
     expect(".o_notification").toHaveCount(1);
-    expect(".o_notification_content").toHaveText("Oops! 'text_file.txt' didn’t upload since its format isn’t allowed.");
+    expect(".o_notification_content").toHaveText(
+        "Oops! 'text_file.txt' didn’t upload since its format isn’t allowed."
+    );
     expect(".o_notification_bar").toHaveClass("bg-danger");
 });

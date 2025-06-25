@@ -154,7 +154,7 @@ test("test so_line_create_button widget: visibility conditions", async () => {
     await click(".ui-sortable .o_data_row:nth-child(1) div[name='sale_line_id']");
     await animationFrame();
     await focus("[name='sale_line_id'] input");
-    expect("a[aria-label='Create Sales Order']").not.toBeVisible({
+    expect("a[aria-label='Create Sales Order']").toHaveCount(0, {
         message:
             "The so_line_create_button widget should not appear as there is already a value in sale_line_id field.",
     });

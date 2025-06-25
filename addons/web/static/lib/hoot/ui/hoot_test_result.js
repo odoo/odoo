@@ -14,6 +14,7 @@ import {
     Markup,
     ordinal,
 } from "../hoot_utils";
+import { HootCopyButton } from "./hoot_copy_button";
 import { HootLink } from "./hoot_link";
 import { HootTechnicalValue } from "./hoot_technical_value";
 
@@ -161,9 +162,15 @@ const EVENT_TEMPLATE = /* xml */ `
         </span>
     </div>
     <t t-set="timestamp" t-value="formatTime(event.ts - (result.ts || 0), 'ms')" />
-    <small class="text-gray flex items-center" t-att-title="timestamp">
+    <small class="flex items-center text-gray" t-att-title="timestamp">
         <t t-esc="'@' + timestamp" />
     </small>
+    <t t-if="event.additionalMessage">
+        <div class="flex items-center ms-4 px-2 gap-1 truncate col-span-2">
+            <em class="text-blue" t-esc="event.additionalMessage" />
+            <HootCopyButton text="event.additionalMessage" />
+        </div>
+    </t>
     <t t-if="!event.pass">
         <t t-if="event.failedDetails">
             <div class="hoot-info grid col-span-2 gap-x-2 px-2">
@@ -207,7 +214,7 @@ const R_STACK_LINE_START = isFirefox()
 
 /** @extends {Component<TestResultProps, import("../hoot").Environment>} */
 export class HootTestResult extends Component {
-    static components = { HootLink, HootTechnicalValue };
+    static components = { HootCopyButton, HootLink, HootTechnicalValue };
 
     static props = {
         open: [{ type: Boolean }, { value: "always" }],

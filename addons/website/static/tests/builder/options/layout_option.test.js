@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "../website_helpers";
-import { waitFor, animationFrame } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -11,7 +11,7 @@ test("switch grid layout to column layout", async () => {
     await waitFor("[data-action-id='setGridLayout']");
     expect("[data-action-id='setGridLayout']").toHaveClass("active");
     expect("[data-action-id='setColumnLayout']").not.toHaveClass("active");
-    expect("[data-label='Layout'] .dropdown-toggle").not.toBeVisible();
+    expect("[data-label='Layout'] .dropdown-toggle").not.toHaveCount();
 
     await contains("[data-action-id='setColumnLayout']").click();
     expect("[data-action-id='setGridLayout']").not.toHaveClass("active");

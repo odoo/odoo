@@ -1,11 +1,11 @@
-import { describe, expect, test, beforeEach } from "@odoo/hoot";
-import { queryOne, click, edit, runAllTimers } from "@odoo/hoot-dom";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { click, edit, queryOne, runAllTimers } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
-import { mountView, onRpc, contains, defineModels } from "@web/../tests/web_test_helpers";
-import { ProjectTask, ProductProduct, SaleOrder, SaleOrderLine } from "./project_task_model";
-import { projectModels } from "@project/../tests/project_models";
 import { focus, mailModels } from "@mail/../tests/mail_test_helpers";
+import { projectModels } from "@project/../tests/project_models";
+import { contains, defineModels, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import { ProductProduct, ProjectTask, SaleOrder, SaleOrderLine } from "./project_task_model";
 
 describe.current.tags("desktop");
 
@@ -147,7 +147,7 @@ test("test so_line_create_button widget: visibility conditions", async () => {
     });
 
     await click("div[name='sale_line_id'] input");
-    expect("div[name='sale_line_id'] a[aria-label='Create Sales Order']").not.toBeVisible({
+    expect("div[name='sale_line_id'] a[aria-label='Create Sales Order']").toHaveCount(0, {
         message:
             "The so_line_create_button widget should not appear as there is already a value in sale_line_id field.",
     });

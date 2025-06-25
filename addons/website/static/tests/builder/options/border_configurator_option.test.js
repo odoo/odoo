@@ -1,9 +1,9 @@
-import { expect, test } from "@odoo/hoot";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
-import { xml } from "@odoo/owl";
+import { expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
+import { xml } from "@odoo/owl";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
 defineWebsiteModels();
 
@@ -46,7 +46,7 @@ test("hasBorder is true when multiple-value border starts by 0", async () => {
     await contains(":iframe section").click();
     await waitFor(".options-container [data-label=Border]");
     expect(".options-container [data-label=Border] input").toHaveValue("0");
-    expect(".options-container [data-label=Border] .o_we_color_preview").not.toBeVisible();
+    expect(".options-container [data-label=Border] .o_we_color_preview").not.toHaveCount();
     await contains(".options-container [data-label=Border] input").edit("0 3 4 4", {
         confirm: "enter",
     });

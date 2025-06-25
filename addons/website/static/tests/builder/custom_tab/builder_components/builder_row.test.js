@@ -1,9 +1,9 @@
+import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, hover, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
-import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 
 describe("website tests", () => {
     defineWebsiteModels();
@@ -15,7 +15,7 @@ describe("website tests", () => {
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".options-container").toBeVisible();
         expect(".hb-row .text-nowrap").toHaveText("my label");
     });
     test("show row tooltip", async () => {
@@ -25,14 +25,14 @@ describe("website tests", () => {
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".options-container").toBeVisible();
         expect(".hb-row .text-nowrap").toHaveText("my label");
-        expect(".o-tooltip").not.toBeDisplayed();
+        expect(".o-tooltip").not.toHaveCount();
         await hover(".hb-row .text-nowrap");
         await waitFor(".o-tooltip", { timeout: 1000 });
         expect(".o-tooltip").toHaveText("my tooltip");
         await contains(":iframe .test-options-target").hover();
-        expect(".o-tooltip").not.toBeDisplayed();
+        expect(".o-tooltip").not.toHaveCount();
     });
     test("hide empty row and display row with content", async () => {
         addOption({
@@ -87,7 +87,7 @@ describe("website tests", () => {
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
-            expect(".options-container").toBeDisplayed();
+            expect(".options-container").toBeVisible();
             expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
         });
 
@@ -98,7 +98,7 @@ describe("website tests", () => {
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
-            expect(".options-container").toBeDisplayed();
+            expect(".options-container").toBeVisible();
             await animationFrame();
             expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
         });
@@ -110,7 +110,7 @@ describe("website tests", () => {
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
-            expect(".options-container").toBeDisplayed();
+            expect(".options-container").toBeVisible();
             expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(0);
         });
 
@@ -121,7 +121,7 @@ describe("website tests", () => {
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
-            expect(".options-container").toBeDisplayed();
+            expect(".options-container").toBeVisible();
             await contains(".options-container button[data-class-action='a']").click();
             await animationFrame();
             expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(1);
@@ -150,19 +150,19 @@ describe("website tests", () => {
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
-            expect(".options-container").toBeDisplayed();
+            expect(".options-container").toBeVisible();
             expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(0);
             await contains(".options-container .dropdown-toggle").click();
             await contains(".dropdown-menu [data-class-action='a']").click();
             await animationFrame();
             expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(1);
             expect(".options-container button[data-class-action='b']").toBeVisible();
-            expect(".options-container button[data-class-action='d']").not.toBeVisible();
+            expect(".options-container button[data-class-action='d']").not.toHaveCount();
             await contains(".options-container .dropdown-toggle").click();
             await contains(".dropdown-menu [data-class-action='c']").click();
             await animationFrame();
             expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(1);
-            expect(".options-container button[data-class-action='b']").not.toBeVisible();
+            expect(".options-container button[data-class-action='b']").not.toHaveCount();
             expect(".options-container button[data-class-action='d']").toBeVisible();
         });
 
@@ -173,7 +173,7 @@ describe("website tests", () => {
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
-            expect(".options-container").toBeDisplayed();
+            expect(".options-container").toBeVisible();
             expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
             await contains(".o_hb_collapse_toggler:not(.d-none)").click();
@@ -191,7 +191,7 @@ describe("website tests", () => {
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
-            expect(".options-container").toBeDisplayed();
+            expect(".options-container").toBeVisible();
             expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
             await contains("[data-label='Test Collapse'] span:contains('Test Collapse')").click();
@@ -213,7 +213,7 @@ describe("website tests", () => {
             });
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
-            expect(".options-container").toBeDisplayed();
+            expect(".options-container").toBeVisible();
             await animationFrame();
             expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(1);
             await contains(".options-container [data-class-action='a']:first").click();

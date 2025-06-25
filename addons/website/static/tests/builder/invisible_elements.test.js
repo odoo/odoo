@@ -114,11 +114,11 @@ test("mobile and desktop option container", async () => {
         <section class="o_snippet_desktop_invisible"></section>
     `);
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
     await contains("button[data-action='mobile']").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
     await contains("button[data-action='mobile']").click();
-    expect(".options-container").not.toBeDisplayed();
+    expect(".options-container").not.toHaveCount();
 });
 
 test("keep the option container of a visible snippet even if there are hidden snippet on the page", async () => {
@@ -129,9 +129,9 @@ test("keep the option container of a visible snippet even if there are hidden sn
         <section class="o_snippet_mobile_invisible"></section>
     `);
     await contains(":iframe #my_el").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
     await contains("button[data-action='mobile']").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
 });
 
 test("invisible elements efficiency", async () => {

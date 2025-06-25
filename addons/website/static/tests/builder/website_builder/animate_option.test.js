@@ -26,11 +26,11 @@ test("visibility of animation animation=none", async () => {
     await contains(":iframe .test-options-target img").click();
 
     expect(".options-container [data-label='Effect']").not.toBeVisible();
-    expect(".options-container [data-label='Direction']").not.toBeVisible();
+    expect(".options-container [data-label='Direction']").not.toHaveCount();
     expect(".options-container [data-label='Trigger']").not.toBeVisible();
-    expect(".options-container [data-label='Intensity']").not.toBeVisible();
-    expect(".options-container [data-label='Start After']").not.toBeVisible();
-    expect(".options-container [data-label='Duration']").not.toBeVisible();
+    expect(".options-container [data-label='Intensity']").not.toHaveCount();
+    expect(".options-container [data-label='Start After']").not.toHaveCount();
+    expect(".options-container [data-label='Duration']").not.toHaveCount();
 });
 describe("onAppearance", () => {
     test("visibility of animation animation=onAppearance", async () => {
@@ -55,8 +55,8 @@ describe("onAppearance", () => {
         expect(".options-container [data-label='Trigger'] .o-dropdown").toHaveText(
             "First Time Only"
         );
-        expect(".options-container [data-label='Intensity']").not.toBeVisible();
-        expect(".options-container [data-label='Scroll Zone']").not.toBeVisible();
+        expect(".options-container [data-label='Intensity']").not.toHaveCount();
+        expect(".options-container [data-label='Scroll Zone']").not.toHaveCount();
         expect(".options-container [data-label='Start After'] input").toHaveValue("0");
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
@@ -83,7 +83,7 @@ describe("onAppearance", () => {
             "First Time Only"
         );
         expect(".options-container [data-label='Intensity'] input").toHaveValue(50);
-        expect(".options-container [data-label='Scroll Zone']").not.toBeVisible();
+        expect(".options-container [data-label='Scroll Zone']").not.toHaveCount();
         expect(".options-container [data-label='Start After'] input").toHaveValue("0");
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
@@ -110,7 +110,7 @@ describe("onAppearance", () => {
             "First Time Only"
         );
         expect(".options-container [data-label='Intensity'] input").toHaveValue(50);
-        expect(".options-container [data-label='Scroll Zone']").not.toBeVisible();
+        expect(".options-container [data-label='Scroll Zone']").not.toHaveCount();
         expect(".options-container [data-label='Start After'] input").toHaveValue("0");
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
@@ -132,12 +132,12 @@ describe("onAppearance", () => {
         await contains(".o-dropdown--menu [data-action-value='o_anim_flash']").click();
         expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Flash");
 
-        expect(".options-container [data-label='Direction']").not.toBeVisible();
+        expect(".options-container [data-label='Direction']").not.toHaveCount();
         expect(".options-container [data-label='Trigger'] .o-dropdown").toHaveText(
             "First Time Only"
         );
         expect(".options-container [data-label='Intensity'] input").toHaveValue(50);
-        expect(".options-container [data-label='Scroll Zone']").not.toBeVisible();
+        expect(".options-container [data-label='Scroll Zone']").not.toHaveCount();
         expect(".options-container [data-label='Start After'] input").toHaveValue("0");
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
@@ -158,9 +158,9 @@ test("visibility of animation animation=onScroll", async () => {
     expect(".options-container [data-label='Direction'] .o-dropdown").toHaveText("In place");
 
     expect(".options-container [data-label='Trigger']").not.toBeVisible();
-    expect(".options-container [data-label='Intensity']").not.toBeVisible();
-    expect(".options-container [data-label='Start After']").not.toBeVisible();
-    expect(".options-container [data-label='Duration']").not.toBeVisible();
+    expect(".options-container [data-label='Intensity']").not.toHaveCount();
+    expect(".options-container [data-label='Start After']").not.toHaveCount();
+    expect(".options-container [data-label='Duration']").not.toHaveCount();
 
     expect(".options-container [data-label='Scroll Zone']").toBeVisible();
 });
@@ -183,7 +183,7 @@ test("animation=onScroll should not be visible when the animation is limited", a
     expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Flash");
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
-    expect(".o-dropdown--menu [data-action-value='onScroll']").not.toBeVisible();
+    expect(".o-dropdown--menu [data-action-value='onScroll']").not.toHaveCount();
 });
 test("visibility of animation animation=onHover", async () => {
     await setupWebsiteBuilder(`
@@ -198,12 +198,12 @@ test("visibility of animation animation=onHover", async () => {
     expect(".options-container [data-label='Animation'] .o-dropdown").toHaveText("On Hover");
 
     expect(".options-container [data-label='Effect']").not.toBeVisible();
-    expect(".options-container [data-label='Direction']").not.toBeVisible();
+    expect(".options-container [data-label='Direction']").not.toHaveCount();
     expect(".options-container [data-label='Trigger']").not.toBeVisible();
-    expect(".options-container [data-label='Intensity']").not.toBeVisible();
-    expect(".options-container [data-label='Scroll Zone']").not.toBeVisible();
-    expect(".options-container [data-label='Start After']").not.toBeVisible();
-    expect(".options-container [data-label='Duration']").not.toBeVisible();
+    expect(".options-container [data-label='Intensity']").not.toHaveCount();
+    expect(".options-container [data-label='Scroll Zone']").not.toHaveCount();
+    expect(".options-container [data-label='Start After']").not.toHaveCount();
+    expect(".options-container [data-label='Duration']").not.toHaveCount();
 
     // todo: check all the hover options
 });
@@ -216,7 +216,7 @@ test("animation=onHover should not be visible when the image is a device shape",
     await contains(":iframe .test-options-target img").click();
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
-    expect(".o-dropdown--menu [data-action-value='onHover']").not.toBeVisible();
+    expect(".o-dropdown--menu [data-action-value='onHover']").not.toHaveCount();
 });
 test("animation=onHover should not be visible when the image has a wrong mimetype", async () => {
     await setupWebsiteBuilder(`
@@ -227,7 +227,7 @@ test("animation=onHover should not be visible when the image has a wrong mimetyp
     await contains(":iframe .test-options-target img").click();
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
-    expect(".o-dropdown--menu [data-action-value='onHover']").not.toBeVisible();
+    expect(".o-dropdown--menu [data-action-value='onHover']").not.toHaveCount();
 });
 test("animation=onHover should not be visible when the image has a cors protected image", async () => {
     await setupWebsiteBuilder(`
@@ -265,7 +265,7 @@ test("animation=onHover should not be visible when the image has a cors protecte
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     expect.verifySteps(["/web/image/0-redirect/foo.jpg"]);
-    expect(".o-dropdown--menu [data-action-value='onHover']").not.toBeVisible();
+    expect(".o-dropdown--menu [data-action-value='onHover']").not.toHaveCount();
 });
 
 test("image should not be lazy onAppearance", async () => {
@@ -304,7 +304,7 @@ test("should not show the animation options if the image has a parent [data-oe-t
     optionTarget.setAttribute("data-oe-type", "image");
     editor.shared.history.addStep();
     await animationFrame();
-    expect(".options-container [data-label='Animation'] .dropdown-toggle").not.toBeVisible();
+    expect(".options-container [data-label='Animation'] .dropdown-toggle").not.toHaveCount();
 });
 
 test("should not show the animation options if the image has is [data-oe-xpath]", async () => {
@@ -322,7 +322,7 @@ test("should not show the animation options if the image has is [data-oe-xpath]"
     optionTarget.setAttribute("data-oe-xpath", "/foo/bar");
     editor.shared.history.addStep();
     await animationFrame();
-    expect(".options-container [data-label='Animation'] .dropdown-toggle").not.toBeVisible();
+    expect(".options-container [data-label='Animation'] .dropdown-toggle").not.toHaveCount();
 });
 
 test("o_animate should be normalized with loading=eager", async () => {

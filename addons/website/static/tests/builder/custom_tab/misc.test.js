@@ -26,7 +26,7 @@ test("Open custom tab with template option", async () => {
     });
     await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
     expect(queryAllTexts(".options-container > div")).toEqual(["Yop", "Row 1\nTest"]);
 });
 
@@ -44,7 +44,7 @@ test("Open custom tab with Component option", async () => {
     });
     await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
     expect(queryAllTexts(".options-container > div")).toEqual(["Yop", "Row 1\nTest"]);
 });
 
@@ -59,7 +59,7 @@ test("OptionContainer should display custom title", async () => {
     });
     await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
     expect(queryAllTexts(".options-container > div")).toEqual(["My custom title", "Row 1\nTest"]);
 });
 
@@ -185,7 +185,7 @@ test("Snippets options respect sequencing", async () => {
     });
     await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
     expect(queryAllTexts(".options-container .we-bg-options-container > div > div")).toEqual([
         "Row 1",
         "Test",
@@ -313,10 +313,10 @@ test("hide/display option base on selector", async () => {
 
     await setupWebsiteBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target").click();
-    expect("[data-class-action='test']").not.toBeDisplayed();
+    expect("[data-class-action='test']").not.toHaveCount();
 
     await contains("[data-class-action='my-custom-class']").click();
-    expect("[data-class-action='test']").toBeDisplayed();
+    expect("[data-class-action='test']").toBeVisible();
 });
 
 test("hide/display option container base on selector", async () => {
@@ -347,12 +347,12 @@ test("hide/display option container base on selector", async () => {
             </div>
         </div>`);
     await contains(":iframe .sub-child-target").click();
-    expect("[data-class-action='test']").not.toBeDisplayed();
+    expect("[data-class-action='test']").not.toHaveCount();
     const selectorRowLabel = ".options-container .hb-row:not(.d-none) .hb-row-label";
     expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 3"]);
 
     await contains("[data-class-action='my-custom-class']").click();
-    expect("[data-class-action='test']").toBeDisplayed();
+    expect("[data-class-action='test']").toBeVisible();
     expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 2", "Row 3"]);
 });
 
@@ -380,7 +380,7 @@ test("don't rerender the OptionsContainer every time you click on the same eleme
             </div>
         </div>`);
     await contains(":iframe .sub-child-target").click();
-    expect("[data-class-action='test']").not.toBeDisplayed();
+    expect("[data-class-action='test']").not.toHaveCount();
     expect.verifySteps(["onWillStart"]);
 
     await contains(":iframe .sub-child-target").click();
@@ -548,48 +548,48 @@ describe("isActiveItem", () => {
             anchorOffset: 0,
         });
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".options-container").toBeVisible();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
-        ).not.toBeDisplayed();
+        ).not.toHaveCount();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
-        ).not.toBeDisplayed();
+        ).not.toHaveCount();
         await contains(
             "[data-attribute-action='my-attribute1'][data-attribute-action-value='x']"
         ).click();
         expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "x");
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
-        ).toBeDisplayed();
+        ).toBeVisible();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
-        ).not.toBeDisplayed();
+        ).not.toHaveCount();
         await contains(
             "[data-attribute-action='my-attribute1'][data-attribute-action-value='y']"
         ).click();
         expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "y");
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
-        ).not.toBeDisplayed();
+        ).not.toHaveCount();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
-        ).toBeDisplayed();
+        ).toBeVisible();
         await contains(".fa-undo").click();
         expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "x");
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
-        ).toBeDisplayed();
+        ).toBeVisible();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
-        ).not.toBeDisplayed();
+        ).not.toHaveCount();
         await contains(".fa-undo").click();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
-        ).not.toBeDisplayed();
+        ).not.toHaveCount();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
-        ).not.toBeDisplayed();
+        ).not.toHaveCount();
     });
     test("a button should not be visible if its dependency isn't (in a BuilderSelect with priority)", async () => {
         addOption({
@@ -610,17 +610,17 @@ describe("isActiveItem", () => {
         });
         await contains(":iframe .test-options-target").click();
         await animationFrame();
-        expect(".options-container").toBeDisplayed();
+        expect(".options-container").toBeVisible();
 
         expect(".we-bg-options-container .dropdown").toHaveText("x");
-        expect("[data-class-action='b1']").toBeDisplayed();
-        expect("[data-class-action='b2']").not.toBeDisplayed();
+        expect("[data-class-action='b1']").toBeVisible();
+        expect("[data-class-action='b2']").not.toHaveCount();
 
         await contains(".we-bg-options-container .dropdown").click();
         await contains("[data-class-action='a b']").click();
         expect(".we-bg-options-container .dropdown").toHaveText("y");
-        expect("[data-class-action='b1']").not.toBeDisplayed();
-        expect("[data-class-action='b2']").toBeDisplayed();
+        expect("[data-class-action='b1']").not.toHaveCount();
+        expect("[data-class-action='b2']").toBeVisible();
     });
     test("a button should not be visible if the dependency is active", async () => {
         addOption({
@@ -632,17 +632,17 @@ describe("isActiveItem", () => {
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".options-container").toBeVisible();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
-        ).toBeDisplayed();
+        ).toBeVisible();
         await contains(
             "[data-attribute-action='my-attribute1'][data-attribute-action-value='x']"
         ).click();
         expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "x");
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
-        ).not.toBeDisplayed();
+        ).not.toHaveCount();
     });
     test("a button should not be visible if the dependency is active (when a dependency is added after a dependent)", async () => {
         addOption({
@@ -657,22 +657,22 @@ describe("isActiveItem", () => {
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".options-container").toBeVisible();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
-        ).not.toBeDisplayed();
+        ).not.toHaveCount();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
-        ).toBeDisplayed();
+        ).toBeVisible();
         await contains(
             "[data-attribute-action='my-attribute1'][data-attribute-action-value='x']"
         ).click();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
-        ).toBeDisplayed();
+        ).toBeVisible();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
-        ).not.toBeDisplayed();
+        ).not.toHaveCount();
     });
     test("a button should not be visible if its dependency is removed from the DOM", async () => {
         addOption({
@@ -689,6 +689,6 @@ describe("isActiveItem", () => {
         // Wait 2 animation frames: one for id2 to be removed and another for
         // id3 to be removed.
         await animationFrame();
-        expect("[data-class-action='my-class3']").not.toBeVisible();
+        expect("[data-class-action='my-class3']").not.toHaveCount();
     });
 });

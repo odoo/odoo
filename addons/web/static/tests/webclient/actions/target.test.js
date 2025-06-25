@@ -330,16 +330,14 @@ describe("new", () => {
             </form>`;
         Partner._views["form,1000"] = `<form>Another action</form>`;
 
-        onRpc("method", () => {
-            return {
-                id: 1000,
-                name: "Another window action",
-                res_model: "partner",
-                target: "new",
-                type: "ir.actions.act_window",
-                views: [[1000, "form"]],
-            };
-        });
+        onRpc("method", () => ({
+            id: 1000,
+            name: "Another window action",
+            res_model: "partner",
+            target: "new",
+            type: "ir.actions.act_window",
+            views: [[1000, "form"]],
+        }));
 
         await mountWithCleanup(WebClient);
         await getService("action").doAction(999);
@@ -620,15 +618,15 @@ describe("fullscreen", () => {
         await mountWithCleanup(WebClient);
         await getService("action").doAction(6);
         await animationFrame(); // for the webclient to react and remove the navbar
-        expect(".o_main_navbar").not.toBeVisible();
+        expect(".o_main_navbar").not.toHaveCount();
 
         await contains("button[name='15']").click();
         await animationFrame();
-        expect(".o_main_navbar").not.toBeVisible();
+        expect(".o_main_navbar").not.toHaveCount();
 
         await contains(".breadcrumb li a").click();
         await animationFrame();
-        expect(".o_main_navbar").not.toBeVisible();
+        expect(".o_main_navbar").not.toHaveCount();
     });
 
     test.tags("desktop");

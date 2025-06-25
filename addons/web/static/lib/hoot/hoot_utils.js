@@ -132,42 +132,6 @@ const $writeText = $clipboard?.writeText.bind($clipboard);
 //-----------------------------------------------------------------------------
 
 /**
- * Returns the constructor of the given value, and if it is "Object": tries to
- * infer the actual constructor name from the string representation of the object.
- *
- * This is needed for cursed JavaScript objects such as "Arguments", which is an
- * array-like object without a proper constructor.
- *
- * @param {any} value
- */
-function getConstructor(value) {
-    const { constructor } = value;
-    if (constructor !== Object) {
-        return constructor || { name: null };
-    }
-    const str = value.toString();
-    const match = str.match(R_OBJECT);
-    if (!match || match[1] === "Object") {
-        return constructor;
-    }
-
-    // Custom constructor
-    const className = match[1];
-    if (!objectConstructors.has(className)) {
-        objectConstructors.set(
-            className,
-            class {
-                static name = className;
-                constructor(...values) {
-                    $assign(this, ...values);
-                }
-            }
-        );
-    }
-    return objectConstructors.get(className);
-}
-
-/**
  * @param {(...args: any[]) => any} fn
  */
 function getFunctionString(fn) {
@@ -969,6 +933,42 @@ export function generateHash(...strings) {
     // Convert the possibly negative number hash code into an 8 character
     // hexadecimal string
     return (hash + 16 ** 8).toString(16).slice(-8);
+}
+
+/**
+ * Returns the constructor of the given value, and if it is "Object": tries to
+ * infer the actual constructor name from the string representation of the object.
+ *
+ * This is needed for cursed JavaScript objects such as "Arguments", which is an
+ * array-like object without a proper constructor.
+ *
+ * @param {unknown} value
+ */
+export function getConstructor(value) {
+    const { constructor } = value;
+    if (constructor !== Object) {
+        return constructor || { name: null };
+    }
+    const str = value.toString();
+    const match = str.match(R_OBJECT);
+    if (!match || match[1] === "Object") {
+        return constructor;
+    }
+
+    // Custom constructor
+    const className = match[1];
+    if (!objectConstructors.has(className)) {
+        objectConstructors.set(
+            className,
+            class {
+                static name = className;
+                constructor(...values) {
+                    $assign(this, ...values);
+                }
+            }
+        );
+    }
+    return objectConstructors.get(className);
 }
 
 /**
