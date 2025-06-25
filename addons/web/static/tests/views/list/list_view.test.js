@@ -47,6 +47,7 @@ import {
     getPagerValue,
     getService,
     installLanguages,
+    makeKwArgs,
     makeServerError,
     MockServer,
     mockService,
@@ -10023,7 +10024,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     }
     defineModels([MyFoo]);
 
-    const kwargs = {
+    const kwargs = makeKwArgs({
         context: {
             lang: "en",
             tz: "taht",
@@ -10032,7 +10033,7 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
         },
         specification: { int_field: {} },
         field_name: "int_field",
-    };
+    });
 
     onRpc("my.foo", "web_resequence", ({ args, kwargs }) => {
         expect.step({ args, kwargs });
