@@ -56,50 +56,48 @@ class ProductTemplate(models.Model):
         return domain
 
     @api.model
+    def _process_load_product(self, data):
+        for model in data:
+            if data[model] != 'pos.config':
+                data[model] = self.env[model].with_context(config_id=data['pos.config'][0]['id'])._post_read_pos_data(data[model])
+
+    @api.model
     def load_product_from_pos(self, config_id, domain, offset=0, limit=0):
+        """
+        Load product data for the Point of Sale interface.
+        The data loaded includes all related models to the product needed for the POS UI.
+        The data is loaded in the same order as in _load_pos_data_models in 'pos.session'.
+        Some models are needed for other to be loaded correctly and then deleted at the end.
+        """
+
+        def read_records(model, data):
+            return self.env[model].search_read(self.env[model]._load_pos_data_domain(data), self.env[model]._load_pos_data_fields(config_id), load=False)
+
         domain_obj = Domain(domain)
         config = self.env['pos.config'].browse(config_id)
         product_tmpls = self._load_product_with_domain(domain_obj, False, offset, limit)
 
-        # product.combo and product.combo.item loading
+        # add child products
         for product_tmpl in product_tmpls:
             if product_tmpl.type == 'combo':
                 product_tmpls += product_tmpl.combo_ids.combo_item_ids.product_id.product_tmpl_id
 
-        combo_domain = [('id', 'in', product_tmpls.combo_ids.ids)]
-        combo_fields = self.env['product.combo']._load_pos_data_fields(config.id)
-        combo_read = self.env['product.combo'].search_read(combo_domain, combo_fields, load=False)
-        combo_item_domain = [('combo_id', 'in', product_tmpls.combo_ids.ids)]
-        combo_item_fields = self.env['product.combo.item']._load_pos_data_fields(config.id)
-        combo_item_read = self.env['product.combo.item'].search_read(combo_item_domain, combo_item_fields, load=False)
+        product_data = {
+            'pos.config': config.read(config._load_pos_data_fields(config.id), load=False),
+            'account.tax': read_records('account.tax', []),
+            'product.template': product_tmpls.read(self._load_pos_data_fields(config.id), load=False),
+        }
 
-        products = product_tmpls.product_variant_ids
-
-        # product.pricelist_item & product.pricelist loading
-        pricelists = config.current_session_id.get_pos_ui_product_pricelist_item_by_product(
-            product_tmpls.ids,
-            products.ids,
-            config.id
-        )
-
-        # product.template.attribute.value & product.template.attribute.line loading
-        product_tmpl_attr_value = products.product_template_attribute_value_ids
-        product_tmpl_attr_line = products.product_template_variant_value_ids
-        product_tmpl_attr_value_fields = product_tmpl_attr_value._load_pos_data_fields(config.id)
-        product_tmpl_attr_line_fields = product_tmpl_attr_line._load_pos_data_fields(config.id)
-        product_tmpl_attr_value_read = product_tmpl_attr_value.read(product_tmpl_attr_value_fields, load=False)
-        product_tmpl_attr_line_read = product_tmpl_attr_line.read(product_tmpl_attr_line_fields, load=False)
-
-        # product.product loading
-        product_fields = products._load_pos_data_fields(config.id)
-        product_read = products.with_context(display_default_code=False).read(product_fields, load=False)
-
-        # product.template loading
-        product_tmpl_fields = self._load_pos_data_fields(config.id)
-        product_tmpl_read = product_tmpls.read(product_tmpl_fields, load=False)
+        product_data.update({'product.product': read_records('product.product', product_data)})
+        product_data.update({'product.attribute': read_records('product.attribute', product_data)})
+        product_data.update({'product.template.attribute.line': read_records('product.template.attribute.line', product_data)})
+        product_data.update({'product.template.attribute.value': read_records('product.template.attribute.value', product_data)})
+        product_data.update({'product.template.attribute.exclusion': read_records('product.template.attribute.exclusion', product_data)})
+        product_data.update({'product.combo': read_records('product.combo', product_data)})
+        product_data.update({'product.combo.item': read_records('product.combo.item', product_data)})
 
         # product.uom loading
-        packaging_domain = Domain([('product_id', 'in', products.ids)])
+        packaging_domain = Domain([('product_id', 'in', [p['id'] for p in product_data['product.product']])])
         conditions = list(domain_obj.iter_conditions())
         barcode_in_domain = any('barcode' in condition.field_expr for condition in conditions)
 
@@ -112,23 +110,21 @@ class ProductTemplate(models.Model):
         packaging = self.env['product.uom'].search(packaging_domain)
         condition = packaging and packaging.product_id
 
-        # account.tax loading
-        tax_domain = self.env['account.tax']._check_company_domain(config.company_id.id)
-        tax_domain = expression.AND([tax_domain, [['id', 'in', product_tmpls.taxes_id.ids]]])
-        tax_fields = self.env['account.tax']._load_pos_data_fields(config.id)
-        tax_read = self.env['account.tax'].search_read(tax_domain, tax_fields, load=False)
+        product_data.update({'product.uom': packaging.read(packaging_fields, load=False) if condition else []})
+        product_data.update({'product.category': read_records('product.category', product_data)})
 
-        return {
-            **pricelists,
-            'account.tax': tax_read,
-            'product.product': products.with_context(config_id=config_id)._post_read_pos_data(product_read),
-            'product.template': self.with_context(config_id=config.id)._post_read_pos_data(product_tmpl_read),
-            'product.uom': packaging.read(packaging_fields, load=False) if condition else [],
-            'product.combo': combo_read,
-            'product.combo.item': combo_item_read,
-            'product.template.attribute.value': product_tmpl_attr_value_read,
-            'product.template.attribute.line': product_tmpl_attr_line_read,
-        }
+        # product.pricelist_item & product.pricelist loading
+        pricelists = config.current_session_id.get_pos_ui_product_pricelist_item_by_product(
+            product_tmpls.ids,
+            [p['id'] for p in product_data['product.product']],
+            config.id
+        )
+        product_data.update(pricelists)
+
+        self._process_load_product(product_data)
+        del product_data['pos.config']  # Remove pos.config from the final data as it is not needed in the UI
+
+        return product_data
 
     @api.model
     def _load_pos_data_fields(self, config_id):
