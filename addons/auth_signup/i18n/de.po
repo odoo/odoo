@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -108,13 +108,13 @@ msgstr ""
 "                        Sie haben folgende(n) Benutzer zu Ihrer Datenbank hinzugefügt, aber eine Registrierung hat noch nicht stattgefunden:\n"
 "                        <ul>\n"
 "                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
-"                                <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"                                <li t-out=\"invited_user or ''\">demo@beispiel.com</li>\n"
 "                            </t>\n"
 "                        </ul>\n"
 "                        Setzen Sie sich mit ihnen in Verbindung, damit sie Zugang zu Ihrer Datenbank erhalten und mit Ihnen zusammenarbeiten können.\n"
 "                        <br/><br/>\n"
 "                        Einen schönen Tag!<br/>\n"
-"                        --<br/>Das <t t-out=\"object.company_id.name or ''\">YourCompany</t>-Team\n"
+"                        --<br/>Das <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t>-Team\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -880,7 +880,7 @@ msgstr "Ihr Name"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "YourCompany"
-msgstr "YourCompany"
+msgstr "IhrUnternehmen"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -895,12 +895,12 @@ msgstr "Stunden:<br/>"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "http://www.example.com"
-msgstr "http://www.example.com"
+msgstr "http://www.beispiel.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "info@yourcompany.com"
-msgstr "info@yourcompany.com"
+msgstr "info@ihrunternehmen.com"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email

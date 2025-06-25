@@ -318,7 +318,7 @@ msgstr ""
 "            Sinut on kutsuttu uuteen sertifiointiin.\n"
 "       </t>\n"
 "       <t t-else=\"\">\n"
-"            Teemme parhaillaan kyselyä, ja vastauksesi olisi tervetullut.\n"
+"            Luomme parhaillamme kyselyä ja arvostaisimme vastaustasi.\n"
 "       </t>\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
@@ -326,12 +326,12 @@ msgstr ""
 "                    Aloita sertifiointi\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    Aloita kyselytutkimus\n"
+"                    Aloita kysely\n"
 "                </t>\n"
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Vastaa kyselyyn <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Vastaa kyselyyn <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t> mennessä.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Toivotamme sinulle onnea!\n"
@@ -1832,7 +1832,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
 msgid "Deadline"
-msgstr "Määräaika"
+msgstr "Eräpäivä"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_speed_rating_time_limit
@@ -3120,7 +3120,7 @@ msgstr "Useita valintoja riviä kohden"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__my_activity_date_deadline
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Toimenpiteeni määräaika"
+msgstr "Toimenpiteeni eräpäivä"
 
 #. module: survey
 #: model:gamification.badge,name:survey.vendor_certification_badge

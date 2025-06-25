@@ -340,7 +340,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Liidisi / myyntimahdollisuutesi</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Liidisi/Myyntimahdollisuutesi</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Kiinnostus tuotteitasi kohtaan</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
@@ -1302,7 +1302,7 @@ msgstr "Päivää sulkemiseen"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Deadline: %s"
-msgstr "Määräaika: %s"
+msgstr "Eräpäivä: %s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_defaults
@@ -1606,7 +1606,7 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Kenttä, jota käytetään siistityn puhelinnumeron tallentamiseen. Auttaa "
+"Kenttä, jota käytetään tarkistetun puhelinnumeron tallentamiseen. Auttaa "
 "nopeuttamaan hakuja ja vertailuja."
 
 #. module: crm
@@ -1830,8 +1830,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Jos siistitty puhelinnumero on markkinointikiellossa, yhteyshenkilö ei enää "
-"saa massatekstiviestejä miltään listalta"
+"Jos tarkistettu puhelinnumero on mustalla listalla, yhteyshenkilö ei enää "
+"saa joukkotekstiviestejä miltään listalta"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1862,8 +1862,8 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Ilmaisee, onko markkinointikieltoon asetettu siistitty puhelinnumero "
-"puhelinnumero. Auttaa erottamaan, mikä numero on markkinointikiellossa, kun "
+"Ilmaisee, onko mustalle listalle merkitty tarkistettu puhelinnumero "
+"puhelinnumero. Auttaa erottamaan, mikä numero on mustalla listalla, kun "
 "mallissa on sekä matkapuhelin- että puhelinkenttä."
 
 #. module: crm
@@ -2553,12 +2553,12 @@ msgstr "Omat toimenpiteeni"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Toimenpiteeni määräaika"
+msgstr "Toimenpiteeni eräpäivä"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "My Deadline"
-msgstr "Määräaikani"
+msgstr "Eräpäiväni"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2606,7 +2606,7 @@ msgstr "Seuraavan toimenpiteen kalenterimerkintä"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Seuraavan toimenpiteen määräaika"
+msgstr "Seuraavan toimenpiteen eräpäivä"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_summary
@@ -3393,7 +3393,7 @@ msgstr "Myyjät"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized
 msgid "Sanitized Number"
-msgstr "Siistitty numero"
+msgstr "Tarkistettu numero"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
