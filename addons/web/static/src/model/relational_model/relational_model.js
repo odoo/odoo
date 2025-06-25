@@ -21,6 +21,7 @@ import {
     getBasicEvalContext,
     getFieldsSpec,
     getGroupServerValue,
+    getId,
     makeActiveField,
 } from "./utils";
 import { FetchRecordError } from "./errors";
@@ -50,6 +51,7 @@ import { FetchRecordError } from "./errors";
  *  isRoot: boolean;
  *  resIds?: number[];
  *  mode?: "edit" | "readonly";
+ *  loadId?: string;
  *  limit?: number;
  *  offset?: number;
  *  countLimit?: number;
@@ -199,7 +201,7 @@ export class RelationalModel extends Model {
         const cached = this._getCacheParams(config, rootLoadDef);
         const data = await this.keepLast.add(this._loadData(config, cached));
         this.root = this._createRoot(config, data);
-        rootLoadDef.resolve(this.root);
+        rootLoadDef.resolve({ root: this.root, loadId: config.loadId });
         this.config = config;
         await this.hooks.onRootLoaded(this.root);
     }
@@ -283,7 +285,7 @@ export class RelationalModel extends Model {
         ) {
             return {
                 onUpdate: async (result) => {
-                    const root = await rootLoadDef;
+                    const { root, loadId } = await rootLoadDef;
                     if (root.id !== this.root.id) {
                         // The root that we want to update is not the current one. It may happen
                         // we displayed sample data from the cache, but the rpc returned records. In
@@ -293,6 +295,11 @@ export class RelationalModel extends Model {
                             this.useSampleModel = false;
                             this.root._setData(result);
                         }
+                        return;
+                    }
+                    if (loadId !== this.root.config.loadId) {
+                        // Avoid updating if another load was already done.
+                        // For instance a sort in a list.
                         return;
                     }
                     if (root.config.isMonoRecord) {
@@ -397,6 +404,7 @@ export class RelationalModel extends Model {
      * @param {Object} [cached]
      */
     async _loadData(config, cached) {
+        config.loadId = getId("load");
         if (config.isMonoRecord) {
             const evalContext = getBasicEvalContext(config);
             if (!config.resId) {

@@ -18565,3 +18565,59 @@ test(`cache web_search_read`, async () => {
     expect(`tbody tr`).toHaveCount(5);
     expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "gnap11", "blip", "plop", "plop2"]);
 });
+
+test(`cache web_search_read (onUpdate called after anoter load)`, async () => {
+    const searchReadDefs = [null, new Deferred(), new Deferred()];
+    let webSearchReadCount = 0;
+    onRpc("web_search_read", () => searchReadDefs[webSearchReadCount++]);
+
+    Foo._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "form,false": `<form><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "foo",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_data_row`).toHaveCount(4);
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
+
+    // create a record and go back to the form => will display data from the cache
+    await contains(`.o_list_button_add`).click();
+    await contains(`.o_field_widget[name=foo] input`).edit("new record");
+    await contains(`.breadcrumb-item a, .o_back_button`).click();
+    // cached values
+    expect(`.o_data_row`).toHaveCount(4);
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
+
+    // sort data
+    await contains(".o_column_sortable").click();
+    // still cached values
+    expect(`.o_data_row`).toHaveCount(4);
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
+
+    // resolve third web_search_read (with the orderby)
+    searchReadDefs[2].resolve();
+    await animationFrame();
+    expect(`.o_data_row`).toHaveCount(5);
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "blip", "gnap", "new record", "yop"]);
+
+    // resolve second web_search_read (without filter, when coming back to list) => must be ignored
+    searchReadDefs[1].resolve();
+    await animationFrame();
+    expect(`.o_data_row`).toHaveCount(5);
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "blip", "gnap", "new record", "yop"]);
+});
