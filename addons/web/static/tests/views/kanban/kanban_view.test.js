@@ -1608,7 +1608,9 @@ test("create in grouped on m2o", async () => {
 
     expect(".o_kanban_group.o_group_draggable").toHaveCount(2);
     expect(".o_control_panel_main_buttons button.o-kanban-button-new").toHaveCount(1);
-    expect(".o_column_quick_create").toHaveCount(1);
+    expect(".o_column_quick_create").toHaveCount(0, {
+        message: "no quick create since no default groupby",
+    });
 
     await createKanbanRecord();
 
@@ -4065,14 +4067,13 @@ test("quick create record while adding a new column", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban on_create="quick_create">
+            <kanban default_group_by="product_id" on_create="quick_create">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_kanban_group").toHaveCount(2);
@@ -4660,14 +4661,13 @@ test("drag and drop outside of a column", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban on_create="quick_create">
+            <kanban default_group_by="product_id" on_create="quick_create">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
@@ -5392,7 +5392,7 @@ test("environment is updated when (un)folding groups", async () => {
 });
 
 test.tags("desktop");
-test("create a column in grouped on m2o", async () => {
+test("create a column in default grouped on m2o", async () => {
     onRpc("web_resequence", ({ args, method }) => {
         expect.step([method, args[0]]);
     });
@@ -5404,14 +5404,13 @@ test("create a column in grouped on m2o", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban on_create="quick_create">
+            <kanban default_group_by="product_id" on_create="quick_create">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_kanban_group").toHaveCount(2);
@@ -5493,14 +5492,13 @@ test("create a column in grouped on m2o without sequence field on view model", a
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban on_create="quick_create">
+            <kanban default_group_by="product_id" on_create="quick_create">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_kanban_group").toHaveCount(2);
@@ -5533,14 +5531,13 @@ test("delete a column in grouped on m2o", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban class="o_kanban_test" on_create="quick_create">
+            <kanban default_group_by="product_id" class="o_kanban_test" on_create="quick_create">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     // check the initial rendering
@@ -5672,14 +5669,13 @@ test("create a column, delete it and create another one", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban on_create="quick_create">
+            <kanban default_group_by="product_id" on_create="quick_create">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_kanban_group").toHaveCount(2);
@@ -5880,14 +5876,13 @@ test("quick create column should be opened if there is no column", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
         domain: [["foo", "=", "norecord"]],
     });
 
@@ -5903,14 +5898,13 @@ test("quick create column should close on window click if there is no column", a
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
         domain: [["foo", "=", "norecord"]],
     });
 
@@ -5931,14 +5925,13 @@ test("quick create several columns in a row", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_kanban_group").toHaveCount(2, { message: "should have two columns" });
@@ -5982,14 +5975,13 @@ test("quick create column with enter", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     await quickCreateKanbanColumn();
@@ -6026,14 +6018,13 @@ test("empty stages kanban examples", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban examples="test">
+            <kanban default_group_by="product_id" examples="test">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_kanban_stages_nocontent").toHaveCount(1, {
@@ -6094,14 +6085,13 @@ test("quick create column with x_name as _rec_name", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
     await quickCreateKanbanColumn();
     await editKanbanColumnName("New Column 1");
@@ -6180,14 +6170,13 @@ test("empty stages kanban examples: with folded columns", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban examples="test">
+            <kanban default_group_by="product_id" examples="test">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     // click to see the examples
@@ -6233,14 +6222,13 @@ test("empty stages kanban examples: apply button's display text", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban examples="test">
+            <kanban default_group_by="product_id" examples="test">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     // click to see the examples
@@ -6416,14 +6404,13 @@ test("stages nocontent helper for grouped kanban with no records", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
         noContentHelp: "No content helper",
     });
 
@@ -6440,14 +6427,13 @@ test("basic nocontent helper is shown when no longer creating column", async () 
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
         noContentHelp: "No content helper",
     });
 
@@ -6488,14 +6474,13 @@ test("no nocontent helper is hidden when quick creating a column", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
         noContentHelp: "No content helper",
     });
 
@@ -6635,14 +6620,13 @@ test("nocontent helper for grouped kanban (on m2o field) with no records with no
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban group_create="false">
+            <kanban default_group_by="product_id" group_create="false">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
         noContentHelp: "No content helper",
     });
 
@@ -6663,14 +6647,13 @@ test("nocontent helper for grouped kanban (on date field) with no records with n
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban group_create="false">
+            <kanban default_group_by="date" group_create="false">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["date"],
         noContentHelp: "No content helper",
     });
 
@@ -6686,14 +6669,13 @@ test("empty grouped kanban with sample data and no columns", async () => {
 
     await mountView({
         arch: `
-            <kanban sample="1">
+            <kanban default_group_by="product_id" sample="1">
                 <templates>
                     <div t-name="card">
                         <field name="foo"/>
                     </div>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
         resModel: "partner",
         type: "kanban",
         noContentHelp: "No content helper",
@@ -7100,14 +7082,13 @@ test("empty grouped kanban with sample data: add a column", async () => {
 
     await mountView({
         arch: `
-            <kanban sample="1">
+            <kanban default_group_by="product_id" sample="1">
                 <templates>
                     <div t-name="card">
                         <field name="foo"/>
                     </div>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
         resModel: "partner",
         type: "kanban",
     });
@@ -7192,14 +7173,13 @@ test("empty grouped kanban with sample data: delete a column", async () => {
         resModel: "partner",
         type: "kanban",
         arch: `
-            <kanban sample="1">
+            <kanban default_group_by="product_id" sample="1">
                 <templates>
                     <div t-name="card">
                         <field name="foo"/>
                     </div>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_content").toHaveClass("o_view_sample_data");
@@ -7235,14 +7215,13 @@ test("empty grouped kanban with sample data: add a column and delete it right aw
         resModel: "partner",
         type: "kanban",
         arch: `
-            <kanban sample="1">
+            <kanban default_group_by="product_id" sample="1">
                 <templates>
                     <div t-name="card">
                         <field name="foo"/>
                     </div>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_content").toHaveClass("o_view_sample_data");
@@ -7731,14 +7710,13 @@ test("resequence all when creating new record + partial resequencing", async () 
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="id"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     await quickCreateKanbanColumn();
@@ -8089,7 +8067,7 @@ test("update buttons after column creation", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
@@ -8266,14 +8244,13 @@ test("move a record then put it again in the same column", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     await editKanbanColumnName("column1");
@@ -8317,14 +8294,13 @@ test("resequence a record twice", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     await editKanbanColumnName("column1");
@@ -8473,7 +8449,7 @@ test("filter on progressbar in new groups", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban on_create="quick_create" quick_create_view="some_view_ref">
+            <kanban default_group_by="product_id" on_create="quick_create" quick_create_view="some_view_ref">
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
                     <t t-name="card">
@@ -8481,7 +8457,6 @@ test("filter on progressbar in new groups", async () => {
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_kanban_group").toHaveCount(2);
@@ -8650,7 +8625,7 @@ test("column progressbars: creating a new column should create a new progressbar
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
                 <templates>
                     <t t-name="card">
@@ -8658,7 +8633,6 @@ test("column progressbars: creating a new column should create a new progressbar
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_kanban_counter").toHaveCount(2);
@@ -11707,7 +11681,7 @@ test("click on the progressBar of a new column", async () => {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban on_create="quick_create">
+            <kanban default_group_by="product_id" on_create="quick_create">
                 <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
                 <templates>
                     <div t-name="card">
@@ -11716,7 +11690,6 @@ test("click on the progressBar of a new column", async () => {
                     </div>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
         domain: [["id", ">", 0]],
     });
 
@@ -11745,9 +11718,8 @@ test("keep focus in cp when pressing arrowdown and no kanban card", async () => 
     await mountView({
         type: "kanban",
         resModel: "partner",
-        groupBy: ["product_id"],
         arch: `
-            <kanban on_create="quick_create">
+            <kanban default_group_by="product_id" on_create="quick_create">
                 <templates>
                     <t t-name="card">
                         <field name="display_name"/>
@@ -11995,14 +11967,13 @@ test("column quick create - title and placeholder", async function (assert) {
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="int_field"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
 
     expect(".o_column_quick_create.o_quick_create_folded").toHaveProperty(
@@ -13146,7 +13117,7 @@ test("quick create a column by pressing enter when input is focused", async () =
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
@@ -13652,14 +13623,13 @@ test("groups will be scrolled to on unfold if outside of viewport", async () => 
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban default_group_by="product_id">
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
-        groupBy: ["product_id"],
     });
     disableAnimations();
     expect(".o_content").toHaveProperty("scrollLeft", 0);
