@@ -258,21 +258,18 @@ class ResPartner(models.Model):
             ]
         return [field_name]
 
-    def _to_store_defaults(self, target):
-        return [
+    def _to_store_defaults(self, target: Store.Target):
+        res = [
             "active",
             "avatar_128",
-            "email",
             "im_status",
             "is_company",
             Store.One("main_user_id", ["share"]),
             "name",
         ]
-
-    def _to_store(self, store: Store, fields, /):
-        if not store.target.is_internal(self.env) and "email" in fields:
-            fields.remove("email")
-        store.add_records_fields(self, fields)
+        if target.is_internal(self.env):
+            res.append("email")
+        return res
 
     @api.readonly
     @api.model
