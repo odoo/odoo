@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.fields import Domain
 from odoo.tests import Form, tagged, TransactionCase
 from odoo.exceptions import ValidationError
@@ -185,6 +186,12 @@ class TestRecruitmentTalentPool(TransactionCase):
         """
         Test that a talent is duplicated when added to a job
         """
+        self.t_applicant_1.attachment_ids = [Command.link(attachment_id) for attachment_id in self.env['ir.attachment'].create([{
+            'name': 'Test',
+            'res_model': self.t_applicant_1._name,
+            'res_id': self.t_applicant_1.id
+        }] * 2).ids]
+
         pool_wizard = Form(self.env["talent.pool.add.applicants"])
         pool_wizard.talent_pool_ids = self.t_talent_pool_1
         pool_wizard.applicant_ids = self.t_applicant_1
@@ -199,6 +206,10 @@ class TestRecruitmentTalentPool(TransactionCase):
 
         self.assertEqual(
             len(talent_pool_applicant), 1, "Exactly one 'talent' should be created when adding an applicant to a pool"
+        )
+        self.assertEqual(
+            len(talent_pool_applicant.attachment_ids), len(self.t_applicant_1.attachment_ids),
+            "Talent Pool Applicant should have the same attachments then the original one."
         )
 
         job_wizard = Form(
@@ -333,6 +344,25 @@ class TestRecruitmentTalentPool(TransactionCase):
         talent = wizard.save()._add_applicants_to_pool()
         with self.assertRaises(ValidationError):
             talent.write({"talent_pool_ids": [(5, 0, 0)]})
+
+    def test_attachment_following_applicant_from_pool(self):
+        self.t_applicant_1.attachment_ids = [Command.link(attachment_id) for attachment_id in self.env['ir.attachment'].create([{
+            'name': 'Test %s' % i,
+            'res_model': self.t_applicant_1._name,
+            'res_id': self.t_applicant_1.id
+        } for i in range(2)]).ids]
+        job_wizard = Form(
+            self.env["job.add.applicants"].with_context({"default_applicant_ids": self.t_applicant_1.ids})
+        )
+        job_wizard.job_ids = self.t_job_2
+        job_2_applicant = job_wizard.save()._add_applicants_to_job()
+        # last attachment from origin applicant should be copied on the target applicant
+        self.assertEqual(len(job_2_applicant.attachment_ids), 1)
+        self.assertEqual(self.t_applicant_1.attachment_ids[0].name, job_2_applicant.attachment_ids.name)
+        self.assertEqual(job_2_applicant.attachment_ids[0].res_id, job_2_applicant.id)
+        # Just ensure that attachment from origin applicant still exists
+        self.assertEqual(len(self.t_applicant_1.attachment_ids), 2)
+        self.assertEqual(self.t_applicant_1.attachment_ids[0].res_id, self.t_applicant_1.id)
 
     def flush_tracking(self):
         """ Force the creation of tracking values. """
