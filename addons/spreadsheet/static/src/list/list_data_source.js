@@ -234,8 +234,12 @@ export class ListDataSource extends OdooViewsDataSource {
             }
             case "json":
                 return new EvaluationError(_t('Fields of type "%s" are not supported', "json"));
-            default:
+            case "monetary":
+            case "float":
+            case "integer":
                 return fieldName in record ? record[fieldName] : "";
+            default:
+                return record[fieldName] || "";
         }
     }
 
