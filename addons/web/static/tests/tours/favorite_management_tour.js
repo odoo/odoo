@@ -65,10 +65,6 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             run: "click",
         },
         {
-            trigger: ".o_tree_editor_row .o_tree_editor_editor input",
-            run: "edit 1",
-        },
-        {
             trigger: ".o_form_button_save",
             run: "click",
         },

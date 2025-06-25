@@ -207,6 +207,8 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "in":
         case "not in": {
             switch (fieldDef.type) {
+                case "tags":
+                    return STRING_EDITOR;
                 case "many2one":
                 case "many2many":
                 case "one2many":
