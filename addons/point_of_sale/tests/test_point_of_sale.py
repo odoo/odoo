@@ -125,7 +125,7 @@ class TestPointOfSale(TransactionCase):
         products_to_display = [product3.id, product4.id]
         models_to_filter = {'product.template': products_to_display}
         products_to_display = list(set(products_to_display) - set(session.filter_local_data(models_to_filter)['product.template']))
-        self.assertEqual(products_to_display, [product3.id, product4.id])
+        self.assertEqual(sorted(products_to_display), sorted([product3.id, product4.id]))
 
         # Delete all products
         products_to_display = [product3.id, product4.id]
