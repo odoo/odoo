@@ -204,6 +204,9 @@ export class ListArchParser {
                 treeAttr.openFormView = treeAttr.editable
                     ? exprToBoolean(xmlDoc.getAttribute("open_form_view") || "")
                     : false;
+                treeAttr.defaultGroupBy = xmlDoc.hasAttribute("default_group_by")
+                    ? xmlDoc.getAttribute("default_group_by").split(",")
+                    : null;
 
                 const limitAttr = node.getAttribute("limit");
                 treeAttr.limit = limitAttr && parseInt(limitAttr, 10);

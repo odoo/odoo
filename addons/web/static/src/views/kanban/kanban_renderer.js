@@ -429,8 +429,12 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
 
     canCreateGroup() {
-        const { activeActions } = this.props.archInfo;
-        return activeActions.createGroup && this.props.list.groupByField.type === "many2one";
+        const { activeActions, defaultGroupBy } = this.props.archInfo;
+        return (
+            activeActions.createGroup &&
+            this.props.list.groupByField.type === "many2one" &&
+            this.props.list.groupByField.name === defaultGroupBy?.[0]
+        );
     }
 
     canQuickCreate() {
