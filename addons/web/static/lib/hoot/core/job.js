@@ -22,6 +22,7 @@ import { applyTags } from "./tag";
 
 const {
     Object: { assign: $assign, entries: $entries },
+    Symbol,
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -49,6 +50,8 @@ const CONFIG_TAG_SCHEMA = {
     todo: "boolean",
 };
 
+const S_MINIMIZED = Symbol("minimized");
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -61,6 +64,10 @@ export class Job {
     runCount = 0;
     /** @type {Tag[]} */
     tags = [];
+
+    get isMinimized() {
+        return S_MINIMIZED in this;
+    }
 
     /**
      * @param {import("./suite").Suite | null} parent
@@ -111,6 +118,10 @@ export class Job {
 
         // Add tags
         applyTags(this, tags);
+    }
+
+    minimize() {
+        this[S_MINIMIZED] = true;
     }
 
     /**
