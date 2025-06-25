@@ -18,6 +18,7 @@ import {
     getCellValue,
     getEvaluatedCell,
     getEvaluatedGrid,
+    getFormattedValueGrid,
 } from "@spreadsheet/../tests/helpers/getters";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 import { createSpreadsheetWithList } from "@spreadsheet/../tests/helpers/list";
@@ -99,21 +100,24 @@ test("Numeric/monetary fields are correctly loaded and displayed", async () => {
     const { model } = await createSpreadsheetWithList({
         columns: ["pognon", "probability", "field_with_array_agg"],
     });
-    expect(getCellFormattedValue(model, "A2")).toBe("74.40€");
-    expect(getCellFormattedValue(model, "A3")).toBe("$74.80");
-    expect(getCellFormattedValue(model, "A4")).toBe("4.00€");
-    expect(getCellFormattedValue(model, "A5")).toBe("$1,000.00");
-    expect(getCellFormattedValue(model, "A6")).toBe("$0.00");
-    expect(getCellFormattedValue(model, "B2")).toBe("10.00");
-    expect(getCellFormattedValue(model, "B3")).toBe("11.00");
-    expect(getCellFormattedValue(model, "B4")).toBe("95.00");
-    expect(getCellFormattedValue(model, "B5")).toBe("15.00");
-    expect(getCellFormattedValue(model, "B6")).toBe("0.00");
-    expect(getCellFormattedValue(model, "C2")).toBe("1");
-    expect(getCellFormattedValue(model, "C3")).toBe("2");
-    expect(getCellFormattedValue(model, "C4")).toBe("3");
-    expect(getCellFormattedValue(model, "C5")).toBe("4");
-    expect(getCellFormattedValue(model, "C6")).toBe("0");
+
+    // prettier-ignore
+    expect(getFormattedValueGrid(model, "A2:C6")).toEqual({
+        A2: "74.40€",    B2: "10.00",  C2: "1",
+        A3: "$74.80",    B3: "11.00",  C3: "2",
+        A4: "4.00€",     B4: "95.00",  C4: "3",      
+        A5: "$1,000.00", B5: "15.00",  C5: "4",
+        A6: "$0.00",     B6: "0.00",   C6: "0",
+    });
+});
+
+test("Text fields are correctly loaded and displayed", async () => {
+    Partner._records = [{ name: "Record 1" }, { name: false }];
+    const { model } = await createSpreadsheetWithList({
+        columns: ["name"],
+    });
+    expect(getCellFormattedValue(model, "A2")).toBe("Record 1");
+    expect(getCellFormattedValue(model, "A3")).toBe("");
 });
 
 test("properties field displays property display names", async () => {
