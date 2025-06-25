@@ -11,7 +11,7 @@ const openUserPreferenceSecurity = () => [{
     run: 'click',
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
+    trigger: 'a[role=tab]:contains("Security")',
     run: 'click',
 }]
 
@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
     steps: () => [
     ...openUserPreferenceSecurity(), {
     content: "Open API keys wizard",
-    trigger: 'button:contains("New API Key")',
+    trigger: 'button:contains("Add API Key")',
     run: "click",
 }, {
     content: "Check that we have to enter enhanced security mode",
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 ...openUserPreferenceSecurity(),
 {
     content: "check that our key is present",
-    trigger: '[name=api_key_ids] td:contains("my key")',
+    trigger: '[name=api_key_ids] .o_kanban_record:contains("my key")',
 }]});
 
 // deletes the previously created key
@@ -78,11 +78,11 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: "click",
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
+    trigger: 'a[role=tab]:contains("Security")',
     run: 'click',
 }, {
-    content: "delete key",
-    trigger: '[name=api_key_ids] i.fa-trash',
+    content: "Open kanban dropdown menu of the key",
+    trigger: '[name=api_key_ids] .o_kanban_record:contains("my key") .oe_kanban_action[name="remove"]',
     run: 'click',
 }, {
     content: "Input password for security mode again",
@@ -105,7 +105,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: "click",
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
+    trigger: 'a[role=tab]:contains("Security")',
     run: 'click',
 }, {
     content: "Check that there's no more keys",

@@ -29,10 +29,10 @@ function openUserProfileAtSecurityTab() {
         run: 'click',
     }, {
         content: "wait for security tab",
-        trigger: 'a[role=tab]:contains("Account Security")',
+        trigger: 'a[role=tab]:contains("Security")',
     }, {
         content: "Switch to security tab",
-        trigger: 'a[role=tab]:contains("Account Security")',
+        trigger: 'a[role=tab]:contains("Security")',
         run: 'click',
     }];
 }
@@ -49,13 +49,13 @@ function closeProfileDialog({content, totp_state}) {
     switch (totp_state) {
     case true: trigger = 'button[name=action_totp_disable]'; break;
     case false: trigger = 'button[name=action_totp_enable_wizard]'; break;
-    case undefined: trigger = 'button.o_auth_2fa_btn'; break;
+    case undefined: trigger = 'div:contains("Two-factor Authentication") + button'; break;
     default: throw new Error(`Invalid totp state ${totp_state}`)
     }
 
     return [{
         content,
-        trigger: 'a[role=tab]:contains("Account Security").active',
+        trigger: 'a[role=tab]:contains("Security").active',
     }, 
     {
         trigger,
@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     url: '/odoo',
     steps: () => [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
-    trigger: 'a[role=tab]:contains("Account Security").active',
+    trigger: 'a[role=tab]:contains("Security").active',
 },
 {
     trigger: "button[name=action_totp_enable_wizard]",
@@ -305,7 +305,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 ...openUserProfileAtSecurityTab(),
 {
     content: "Open totp wizard",
-    trigger: 'a[role=tab]:contains("Account Security").active',
+    trigger: 'a[role=tab]:contains("Security").active',
 },
 {
     trigger: "button[name=action_totp_disable]",
@@ -426,19 +426,19 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     trigger: "td.o_data_cell:contains(test_user)",
     run: "click",
 }, {
-    content: "wait for Account security Tab to appear",
-    trigger: "a.nav-link:contains(Account Security)",
+    content: "wait for Security Tab to appear",
+    trigger: "a.nav-link:contains(Security)",
 },{
-    content: "go to Account security Tab",
-    trigger: "a.nav-link:contains(Account Security)",
+    content: "go to Security Tab",
+    trigger: "a.nav-link:contains(Security)",
     run: "click",
 }, {
-    content: "check 2FA button",
+    content: "check that the button to disable 2FA is absent",
     trigger: 'body',
     run: () => {
-        const button = document.querySelector('button[name=action_totp_enable_wizard]').disabled
-        if (!button) {
-            console.error("2FA button should be disabled.");
+        const button = document.querySelector('button[name=action_totp_enable_wizard]');
+        if (button) {
+            console.error("2FA button should be absent.");
         }
     },
 }

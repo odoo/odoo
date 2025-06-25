@@ -295,7 +295,7 @@ class TestUsers2(UsersCommonCase):
         """ Check that partner email is updated when changing user's login """
 
         User = self.env['res.users']
-        with Form(User, view='base.view_users_form') as UserForm:
+        with Form(User, view='base.view_users_simple_form') as UserForm:
             UserForm.name = "Test User"
             UserForm.login = "test-user1"
             self.assertFalse(UserForm.email)
@@ -475,14 +475,14 @@ class TestUsers2(UsersCommonCase):
         but part of the `SELF_WRITEABLE_FIELDS` is shown in the user profile preferences form and is editable"""
         my_user = self.env['res.users'].browse(self.env.user.id)
         self.assertIn(
-            'email',
+            'name',
             my_user.SELF_WRITEABLE_FIELDS,
             "This test doesn't make sense if not tested on a field part of the SELF_WRITEABLE_FIELDS"
         )
-        self.patch(self.env.registry['res.users']._fields['email'], 'groups', 'base.group_system')
+        self.patch(self.env.registry['res.users']._fields['name'], 'groups', 'base.group_system')
         with Form(my_user, view='base.view_users_form_simple_modif') as UserForm:
-            UserForm.email = "foo@bar.com"
-        self.assertEqual(my_user.email, "foo@bar.com")
+            UserForm.name = "Raoulette Poiluchette"
+        self.assertEqual(my_user.name, "Raoulette Poiluchette")
 
     @warmup
     def test_write_group_ids_performance(self):
