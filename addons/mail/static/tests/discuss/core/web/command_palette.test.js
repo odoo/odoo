@@ -164,3 +164,12 @@ test("Ctrl-K opens @ command palette in discuss app", async () => {
     triggerHotkey("control+k");
     await contains(".o_command_palette_search", { text: "@" });
 });
+
+test("Can create group chat from ctrl-k without any user selected", async () => {
+    await start();
+    await openDiscuss();
+    triggerHotkey("control+k");
+    await click(".o_command_name:contains(Create Chat)");
+    await click(".modal-footer > .btn:contains(Create Group Chat)");
+    await contains(".o-mail-DiscussSidebarChannel-itemName", { text: "Mitchell Admin" });
+});
