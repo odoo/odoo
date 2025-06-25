@@ -8,6 +8,7 @@ import { patchWithCleanup, mockService, onRpc } from "@web/../tests/web_test_hel
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
 import { MenuDialog } from "@website/components/dialog/edit_menu";
+import { SavePlugin } from "@html_builder/core/save_plugin";
 
 defineWebsiteModels();
 
@@ -23,7 +24,7 @@ describe("NavbarLinkPopover", () => {
             </ul>
             <p>Outside</p>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         await expectElementCount(".o-we-linkpopover", 0);
@@ -48,7 +49,7 @@ describe("NavbarLinkPopover", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(0);
@@ -82,7 +83,7 @@ describe("NavbarLinkPopover", () => {
                 </div>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(0);
@@ -104,7 +105,7 @@ describe("MenuDialog", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         patchWithCleanup(MenuDialog.prototype, {
@@ -170,7 +171,7 @@ describe("EditMenuDialog", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         mockService("website", {
