@@ -178,7 +178,7 @@ class ResUsers(models.Model):
                 )
         if "notification_type" in vals:
             for user in user_notification_type_modified:
-                user._bus_send_store(user, "notification_type")
+                Store(user, "notification_type", bus_channel=user).bus_send()
 
         return write_res
 

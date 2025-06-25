@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 from odoo import api, models, fields, tools
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.tools.link_preview import get_link_preview_from_url
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailLinkPreview(models.Model):
@@ -96,7 +97,7 @@ class MailLinkPreview(models.Model):
             ]
         )
         (message.sudo().message_link_preview_ids - message_link_previews_ok)._unlink_and_notify()
-        message._bus_send_store(message, "message_link_preview_ids")
+        Store(message, "message_link_preview_ids", bus_channel=message._bus_channel()).bus_send()
 
     @api.model
     def _is_link_preview_enabled(self):
@@ -127,7 +128,7 @@ class MailLinkPreview(models.Model):
             preview = self.env['mail.link.preview'].create(preview_values)
         return preview
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return [
             "image_mimetype",
             "og_description",

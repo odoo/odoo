@@ -12,16 +12,16 @@ class IrAttachment(models.Model):
     def _bus_channel(self):
         self.ensure_one()
         if self.res_model == "discuss.channel" and self.res_id:
-            return self.env["discuss.channel"].browse(self.res_id)._bus_channel()
+            return self.env["discuss.channel"].browse(self.res_id)
         guest = self.env["mail.guest"]._get_guest_from_context()
         if self.env.user._is_public() and guest:
-            return guest._bus_channel()
+            return guest
         return super()._bus_channel()
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible
         # attachments is fine
-        return super()._to_store_defaults() + [
+        return super()._to_store_defaults(target) + [
             Store.Attr("voice", lambda a: bool(a.sudo().voice_ids))
         ]
 

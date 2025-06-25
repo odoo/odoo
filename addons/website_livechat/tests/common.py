@@ -10,6 +10,7 @@ from odoo.addons.mail.tests.common import MailCommon
 class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
     def setUp(self):
         super().setUp()
+        self.maxDiff = None
         self.env.company.email = "test@test.example.com"
         self.base_datetime = fields.Datetime.from_string("2019-11-11 21:30:00")
 
