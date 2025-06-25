@@ -1,7 +1,7 @@
+import { onRpc } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
 
-function _mockGetRainbowmanMessage({ args, model }) {
+onRpc("get_rainbowman_message", function getRainbowmanMessage({ args, model }) {
     let message = false;
     if (model !== "crm.lead") {
         return message;
@@ -67,6 +67,4 @@ function _mockGetRainbowmanMessage({ args, model }) {
         }
     }
     return message;
-}
-
-registry.category("mock_rpc").add("get_rainbowman_message", _mockGetRainbowmanMessage);
+});

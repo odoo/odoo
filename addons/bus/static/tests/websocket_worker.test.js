@@ -88,7 +88,7 @@ test("notification event is broadcasted", async () => {
         }
     });
     await waitForSteps(["broadcast connect"]);
-    for (const serverWs of MockServer.current.websockets) {
+    for (const serverWs of MockServer.current._websockets) {
         serverWs.send(JSON.stringify(notifications));
     }
     await waitForSteps(["broadcast notification"]);
