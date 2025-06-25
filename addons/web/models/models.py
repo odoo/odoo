@@ -490,7 +490,7 @@ class Base(models.AbstractModel):
             current_groups = [
                 subgroup
                 for group in current_groups
-                for subgroup in group.get('__groups', ())
+                for subgroup in group.get('__groups', {}).get('groups', ())
             ]
 
     def _get_read_group_order(self, dict_order: dict[str, str], groupby: list[str], aggregates: Sequence[str]) -> str:
