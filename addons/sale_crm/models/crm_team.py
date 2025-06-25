@@ -20,9 +20,9 @@ class CrmTeam(models.Model):
         return super(CrmTeam,self).action_primary_channel_button()
 
     def _graph_get_model(self):
-        if self.use_opportunities and self._context.get('in_sales_app') :
+        if self.use_opportunities and self.env.context.get('in_sales_app'):
             return 'sale.report'
-        return super(CrmTeam,self)._graph_get_model()
+        return super()._graph_get_model()
 
     def _graph_date_column(self):
         if self.use_opportunities and self._context.get('in_sales_app'):

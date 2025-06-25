@@ -682,7 +682,7 @@ class AccountPayment(models.Model):
             pay.reconciled_invoices_count = len(pay.reconciled_invoice_ids)
             pay.reconciled_bills_count = len(pay.reconciled_bill_ids)
 
-        self._cr.execute('''
+        query_res = dict(self.env.execute_query(SQL('''
             SELECT
                 payment.id,
                 ARRAY_AGG(DISTINCT counterpart_line.statement_line_id) AS statement_line_ids
@@ -703,10 +703,8 @@ class AccountPayment(models.Model):
                 AND line.id != counterpart_line.id
                 AND counterpart_line.statement_line_id IS NOT NULL
             GROUP BY payment.id
-        ''', {
-            'payment_ids': tuple(stored_payments.ids)
-        })
-        query_res = dict((payment_id, statement_line_ids) for payment_id, statement_line_ids in self._cr.fetchall())
+        ''', payment_ids=tuple(stored_payments.ids)
+        )))
 
         for pay in self:
             statement_line_ids = query_res.get(pay.id, [])

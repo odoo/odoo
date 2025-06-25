@@ -125,7 +125,7 @@ class FormatAddressMixin(models.AbstractModel):
         makes the view cache dependent on the company.
         Different companies could use each a different address view"""
         key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env.company, self._context.get('no_address_format'),)
+        return key + (self.env.company, self.env.context.get('no_address_format'))
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
