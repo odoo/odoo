@@ -295,7 +295,7 @@ class ProductTemplate(models.Model):
                 if len(previewed_ptavs) > 1:
                     previewed_ptavs_data = []
                     for ptav in previewed_ptavs[:show_count]:
-                        matching_variant = ptav.ptav_product_variant_ids[0]
+                        matching_variant = ptav.ptav_product_variant_ids.sorted('id')[0]
                         previewed_ptavs_data.append({
                             'ptav': ptav,
                             'variant_image_url': self.env['website'].image_url(matching_variant, 'image_512'),
