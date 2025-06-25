@@ -72,9 +72,6 @@ export class MassMailingIframe extends Component {
 
     async setupIframe() {
         // TODO EGGMAIL: issue: the component is mounted twice, why?
-        const iframeDoc = this.iframeRef.el.contentDocument;
-        iframeDoc.head.append(this.renderHeadContent());
-        iframeDoc.body.append(this.renderBodyContent());
         await this.loadAssetsEditBundle();
         if (status(this) === "destroyed") {
             return;
@@ -91,6 +88,8 @@ export class MassMailingIframe extends Component {
         this.iframeRef.el.contentWindow.addEventListener("beforeUnload", () => {
             this.iframeRef.el.removeAttribute("is-ready");
         });
+        this.iframeRef.el.contentDocument.head.appendChild(this.renderHeadContent());
+        this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());
         this.iframeLoaded.resolve(this.iframeRef.el);
         this.props.onIframeLoad(this.iframeLoaded);
         this.state.ready = true;
