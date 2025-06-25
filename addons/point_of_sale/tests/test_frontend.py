@@ -2289,6 +2289,37 @@ class TestUi(TestPointOfSaleHttpCommon):
         load_product_from_pos_stats = {'count': 0, 'items': {}}
         product_template = self.env.registry.models['product.template']
 
+        # Test product exclusion
+        cherry = generate_product_template_with_attributes('cherry', 2.00)
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'sequence': 5,
+            'value_ids': [(0, 0, {
+                'name': 'RED',
+                'sequence': 1,
+            }), (0, 0, {
+                'name': 'GREEN',
+                'sequence': 2,
+            }), (0, 0, {
+                'name': 'BLUE',
+                'sequence': 3,
+            })],
+        })
+        cherry.attribute_line_ids = [(0, 0, {
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
+        })]
+        color_attribute = cherry.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Color')
+        first_color_value = color_attribute.product_template_value_ids.filtered(lambda v: v.attribute_id.name == 'Color' and v.name == 'RED')
+        first_size_value = cherry.product_variant_ids.product_template_attribute_value_ids.filtered(lambda v: v.attribute_id.name == 'Size' and v.name == 'BIG')
+        first_color_value.exclude_for = [(0, 0, {
+            'product_tmpl_id': cherry.id,
+            'value_ids': first_size_value.ids,
+            'product_template_attribute_value_id': first_size_value.id
+        })]
+        for index, variant in enumerate(cherry.product_variant_ids):
+            variant.write({'barcode': f'cherry_{index}'})
+
         @api.model
         def load_product_from_pos_patch(self, config_id, domain, offset=0, limit=0):
             load_product_from_pos_stats['count'] += 1
@@ -2301,7 +2332,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.start_pos_tour('test_pricelists_in_pos')
 
         # Should load 6 different products, since 6 products were created
-        self.assertEqual(load_product_from_pos_stats['count'], 6)
+        self.assertEqual(load_product_from_pos_stats['count'], 7)
 
         # Length of loaded pricelist items should correspond to the number of items linked
         # to the product template or product variant
