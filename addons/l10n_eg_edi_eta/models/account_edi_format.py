@@ -68,7 +68,18 @@ class AccountEdiFormat(models.Model):
                     'error': response_data.get('error'),
                     'blocking_level': 'error'
                 }
-        return {'response': request_response}
+
+        try:
+            response_data = request_response.json()
+        except JSONDecodeError:
+            response_data = {}
+
+        return {
+            'response': str(request_response),
+            'ok': request_response.ok,
+            'content': request_response.content,
+            'data': response_data,
+        }
 
     @api.model
     def _l10n_eg_edi_round(self, amount, precision_digits=5):
@@ -92,7 +103,7 @@ class AccountEdiFormat(models.Model):
         response_data = self._l10n_eg_eta_connect_to_server(request_data, request_url, 'POST', production_enviroment=invoice.company_id.l10n_eg_production_env)
         if response_data.get('error'):
             return response_data
-        response_data = response_data.get('response').json()
+        response_data = response_data.get('data')
         if response_data.get('rejectedDocuments', False) and isinstance(response_data.get('rejectedDocuments'), list):
             return {
                 'error': str(response_data.get('rejectedDocuments')[0].get('error')),
@@ -137,7 +148,7 @@ class AccountEdiFormat(models.Model):
         response_data = self._l10n_eg_eta_connect_to_server(request_data, request_url, 'PUT', production_enviroment=invoice.company_id.l10n_eg_production_env)
         if response_data.get('error'):
             return response_data
-        if response_data.get('response').ok:
+        if response_data.get('ok'):
             return {'success': True}
         return {
             'error': _('an Unknown error has occurred'),
@@ -157,7 +168,7 @@ class AccountEdiFormat(models.Model):
         response_data = self._l10n_eg_eta_connect_to_server(request_data, request_url, 'GET', production_enviroment=invoice.company_id.l10n_eg_production_env)
         if response_data.get('error'):
             return response_data
-        response_data = response_data.get('response').json()
+        response_data = response_data.get('data')
         document_summary = [doc for doc in response_data.get('documentSummary', []) if doc.get('uuid') == invoice.l10n_eg_uuid]
         return {'doc_data': document_summary}
 
@@ -190,7 +201,7 @@ class AccountEdiFormat(models.Model):
         response_data = self._l10n_eg_eta_connect_to_server(request_data, request_url, 'POST', is_access_token_req=True, production_enviroment=invoice.company_id.l10n_eg_production_env)
         if response_data.get('error'):
             return response_data
-        return {'access_token' : response_data.get('response').json().get('access_token')}
+        return {'access_token': response_data.get('data').get('access_token')}
 
     @api.model
     def _l10n_eg_get_eta_invoice_pdf(self, invoice):
@@ -202,12 +213,10 @@ class AccountEdiFormat(models.Model):
         response_data = self._l10n_eg_eta_connect_to_server(request_data, request_url, 'GET', production_enviroment=invoice.company_id.l10n_eg_production_env)
         if response_data.get('error'):
             return response_data
-        response_data = response_data.get('response')
-        _logger.warning('PDF Function Response %s.', response_data)
-        if response_data.ok:
-            return {'data': response_data.content}
-        else:
-            return {'error': _('PDF Document is not available')}
+        _logger.warning('PDF Function Response %s.', response_data.get('response'))
+        if response_data.get('ok'):
+            return {'data': response_data.get('content')}
+        return {'error': _('PDF Document is not available')}
 
     @api.model
     def _l10n_eg_validate_info_address(self, partner_id, issuer=False, invoice=False):
