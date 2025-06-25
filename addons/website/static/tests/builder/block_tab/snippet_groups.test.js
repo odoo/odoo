@@ -112,11 +112,7 @@ test("install an app from snippet structure", async () => {
             ),
         },
     });
-    await click(
-        queryFirst(
-            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
-        )
-    );
+    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     expect(
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap"
@@ -176,11 +172,7 @@ test("open add snippet dialog + switch snippet category", async () => {
         },
     });
     expect(queryAllTexts(".o-snippets-menu #snippet_groups .o_snippet")).toEqual(["A", "B"]);
-    await click(
-        queryFirst(
-            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
-        )
-    );
+    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     expect(queryAllTexts(".o_add_snippet_dialog aside .list-group .list-group-item")).toEqual([
         "A",
@@ -253,11 +245,7 @@ test("search snippet in add snippet dialog", async () => {
             ),
         },
     });
-    await click(
-        queryFirst(
-            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
-        )
-    );
+    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     expect("aside .list-group .list-group-item").toHaveCount(2);
     const snippetsDescriptionProcessed = snippetsDescription(true);
@@ -346,11 +334,7 @@ test("search snippet by class", async () => {
             ),
         },
     });
-    await click(
-        queryFirst(
-            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
-        )
-    );
+    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
 
     // Search among classes of root node
@@ -404,11 +388,7 @@ test("add snippet dialog with imagePreview", async () => {
             ),
         },
     });
-    await click(
-        queryFirst(
-            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
-        )
-    );
+    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     const previewSnippetIframeSelector =
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
     await waitForSnippetDialog();
@@ -452,11 +432,7 @@ test("insert snippet structure", async () => {
         `<section class="o_colored_level"><p>Text</p></section>`
     );
 
-    await click(
-        queryFirst(
-            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
-        )
-    );
+    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     const previewSelector =
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";

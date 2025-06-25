@@ -61,7 +61,7 @@ test("remove background shape", async () => {
     await contains(":iframe section").click();
     await contains("button[data-action-id='setBackgroundShape']").click();
     expect(":iframe section").not.toHaveAttribute("data-oe-shape-data");
-    expect("button[data-action-id='setBackgroundShape']").not.toBeVisible();
+    expect("button[data-action-id='setBackgroundShape']").not.toHaveCount();
 });
 
 test("toggle Show/Hide on mobile of the shape background", async () => {
