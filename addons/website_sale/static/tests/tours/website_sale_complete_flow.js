@@ -202,7 +202,7 @@ import { pay } from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "Submit login",
-        trigger: `.oe_signup_form button[type="submit"]`,
+        trigger: ".s_website_form_send",
         run: "click",
         expectUnloadPage: true,
     },
