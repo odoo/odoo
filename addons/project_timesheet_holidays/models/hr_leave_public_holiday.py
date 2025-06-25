@@ -1,20 +1,20 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+
 from pytz import timezone, utc
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = "resource.calendar.leaves"
+class HrLeavePublicHoliday(models.Model):
+    _inherit = "hr.leave.public.holiday"
 
     timesheet_ids = fields.One2many('account.analytic.line', 'global_leave_id', string="Analytic Lines", export_string_translation=False)
 
     def _get_resource_calendars(self):
-        leaves_with_calendar = self.filtered('calendar_id')
-        calendars = leaves_with_calendar.calendar_id
+        leaves_with_calendar = self.filtered('resource_calendar_ids')
+        calendars = leaves_with_calendar.resource_calendar_ids
         leaves_wo_calendar = self - leaves_with_calendar
         if leaves_wo_calendar:
             calendars += self.env['resource.calendar'].search([('company_id', 'in', leaves_wo_calendar.company_id.ids)])
@@ -44,29 +44,28 @@ class ResourceCalendarLeaves(models.Model):
         # to easily find the calendar with its id.
         calendars_dict = {calendar.id: calendar for calendar in resource_calendars}
 
-        leaves_read_group = self.env['resource.calendar.leaves']._read_group(
-            [('id', 'in', self.ids), ('calendar_id', '!=', False)],
-            ['calendar_id'],
-            ['id:recordset', 'resource_id:recordset', 'date_from:min', 'date_to:max'],
+        leaves_read_group = self.env['hr.leave.public.holiday']._read_group(
+            [('id', 'in', self.ids), ('resource_calendar_ids', '!=', False)],
+            ['resource_calendar_ids'],
+            ['id:recordset', 'date_from:min', 'date_to:max'],
         )
         # dict of keys: calendar_id
-        #   and values : { 'date_from': datetime, 'date_to': datetime, resources: self.env['resource.resource'] }
+        #   and values : { 'date_from': datetime, 'date_to': datetime }
         cal_attendance_intervals_dict = {}
-        for calendar, leaves, resources, date_from_min, date_to_max in leaves_read_group:
+        for calendar, leaves, date_from_min, date_to_max in leaves_read_group:
             calendar_data = {
                 'date_from': utc.localize(date_from_min),
                 'date_to': utc.localize(date_to_max),
-                'resources': resources,
                 'leaves': leaves,
             }
             cal_attendance_intervals_dict[calendar.id] = calendar_data
 
-        comp_leaves_read_group = self.env['resource.calendar.leaves']._read_group(
-            [('id', 'in', self.ids), ('calendar_id', '=', False)],
+        comp_leaves_read_group = self.env['hr.leave.public.holiday']._read_group(
+            [('id', 'in', self.ids), ('resource_calendar_ids', '=', False)],
             ['company_id'],
-            ['id:recordset', 'resource_id:recordset', 'date_from:min', 'date_to:max'],
+            ['id:recordset', 'date_from:min', 'date_to:max'],
         )
-        for company, leaves, resources, date_from_min, date_to_max in comp_leaves_read_group:
+        for company, leaves, date_from_min, date_to_max in comp_leaves_read_group:
             for calendar_id in resource_calendars.ids:
                 if calendars_dict[calendar_id].company_id != company:
                     continue  # only consider global leaves of the same company as the calendar
@@ -75,7 +74,6 @@ class ResourceCalendarLeaves(models.Model):
                     calendar_data = {
                         'date_from': utc.localize(date_from_min),
                         'date_to': utc.localize(date_to_max),
-                        'resources': resources,
                         'leaves': leaves,
                     }
                     cal_attendance_intervals_dict[calendar_id] = calendar_data
@@ -83,7 +81,6 @@ class ResourceCalendarLeaves(models.Model):
                     calendar_data.update(
                         date_from=min(utc.localize(date_from_min), calendar_data['date_from']),
                         date_to=max(utc.localize(date_to_max), calendar_data['date_to']),
-                        resources=resources | calendar_data['resources'],
                         leaves=leaves | calendar_data['leaves'],
                     )
 
@@ -98,7 +95,7 @@ class ResourceCalendarLeaves(models.Model):
                 cal_attendance_intervals_params_entry['date_from'],
                 cal_attendance_intervals_params_entry['date_to'],
                 cal_attendance_intervals_params_entry['resources'],
-                tz=timezone(calendar.tz)
+                tz=timezone(calendar.tz),
             )
             for leave in cal_attendance_intervals_params_entry['leaves']:
                 work_hours_data = work_hours_intervals[leave.resource_id.id]
@@ -162,9 +159,8 @@ class ResourceCalendarLeaves(models.Model):
                                 employee,
                                 work_hours_list,
                                 day_date,
-                                work_hours_count
-                            )
-                        )
+                                work_hours_count,
+                            ))
             return vals_list
 
         for leave in self:
@@ -182,7 +178,7 @@ class ResourceCalendarLeaves(models.Model):
     def _timesheet_prepare_line_values(self, index, employee_id, work_hours_data, day_date, work_hours_count):
         self.ensure_one()
         return {
-            'name': _("Time Off (%(index)s/%(total)s)", index=index + 1, total=len(work_hours_data)),
+            'name': self.env._("Time Off (%(index)s/%(total)s)", index=index + 1, total=len(work_hours_data)),
             'project_id': employee_id.company_id.internal_project_id.id,
             'task_id': employee_id.company_id.leave_timesheet_task_id.id,
             'account_id': employee_id.company_id.internal_project_id.account_id.id,
@@ -195,7 +191,7 @@ class ResourceCalendarLeaves(models.Model):
         }
 
     def _generate_timesheeets(self):
-        results_with_leave_timesheet = self.filtered(lambda r: not r.resource_id and r.company_id.internal_project_id and r.company_id.leave_timesheet_task_id)
+        results_with_leave_timesheet = self.filtered(lambda r: r.company_id.internal_project_id and r.company_id.leave_timesheet_task_id)
         if results_with_leave_timesheet:
             results_with_leave_timesheet._timesheet_create_lines()
 
@@ -214,9 +210,9 @@ class ResourceCalendarLeaves(models.Model):
         }
         for leave in self:
             for employee in employees:
-                if leave.calendar_id and employee.resource_calendar_id != leave.calendar_id:
+                if leave.resource_calendar_ids and employee.resource_calendar_id not in leave.resource_calendar_ids:
                     continue
-                calendar = leave.calendar_id or employee.resource_calendar_id
+                calendar = employee.resource_calendar_id or leave.resource_calendar_ids
                 work_hours_list = work_hours_data[calendar.id][leave.id]
                 timesheet_dates = timesheet_dates_per_employee_id.get(employee.id, [])
                 for index, (day_date, work_hours_count) in enumerate(work_hours_list):
@@ -228,7 +224,7 @@ class ResourceCalendarLeaves(models.Model):
                         employee,
                         work_hours_list,
                         day_date,
-                        work_hours_count
+                        work_hours_count,
                     )
                     timesheet_vals_list.append(timesheet_vals)
         return self.env['account.analytic.line'].sudo().create(timesheet_vals_list)
@@ -240,10 +236,10 @@ class ResourceCalendarLeaves(models.Model):
         return results
 
     def write(self, vals):
-        date_from, date_to, calendar_id = vals.get('date_from'), vals.get('date_to'), vals.get('calendar_id')
-        global_time_off_updated = self.env['resource.calendar.leaves']
-        if date_from or date_to or 'calendar_id' in vals:
-            global_time_off_updated = self.filtered(lambda r: (date_from is not None and r.date_from != date_from) or (date_to is not None and r.date_to != date_to) or (calendar_id is None or r.calendar_id.id != calendar_id))
+        date_from, date_to, calendar_id = vals.get('date_from'), vals.get('date_to'), vals.get('resource_calendar_ids')
+        global_time_off_updated = self.env['hr.leave.public.holiday']
+        if date_from or date_to or 'resource_calendar_ids' in vals:
+            global_time_off_updated = self.filtered(lambda r: (date_from is not None and r.date_from != date_from) or (date_to is not None and r.date_to != date_to) or (calendar_id is None or calendar_id not in r.resource_calendar_ids.ids))
             timesheets = global_time_off_updated.sudo().timesheet_ids
             if timesheets:
                 timesheets.write({'global_leave_id': False})

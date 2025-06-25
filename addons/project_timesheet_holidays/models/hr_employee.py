@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
 from collections import defaultdict
+
+from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
@@ -67,7 +67,6 @@ class HrEmployee(models.Model):
                             employee,
                             work_hours_data[global_time_off.id],
                             day_date,
-                            work_hours_count
-                        )
-                    )
+                            work_hours_count,
+                        ))
         return self.env['account.analytic.line'].sudo().create(lines_vals)

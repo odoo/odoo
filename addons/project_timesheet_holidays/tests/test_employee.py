@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from freezegun import freeze_time
 
+from odoo.fields import Command
 from odoo.tests import TransactionCase, tagged
 
 
@@ -14,11 +14,11 @@ class TestEmployee(TransactionCase):
         cls.company = cls.env['res.company'].create({
             'name': 'Test Company',
         })
-        cls.global_leave = cls.env['resource.calendar.leaves'].create({
+        cls.global_leave = cls.env['hr.leave.public.holiday'].create({
             'name': 'Test Global Leave',
             'date_from': '2020-01-01 00:00:00',
             'date_to': '2020-01-01 23:59:59',
-            'calendar_id': cls.company.resource_calendar_id.id,
+            'resource_calendar_ids': [Command.link(cls.company.resource_calendar_id.id)],
             'company_id': cls.company.id,
         })
 
