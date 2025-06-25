@@ -3435,7 +3435,7 @@ test("kanban grouped by stage_id: move record from to the None column", async ()
     // Set up a record with no stage initially
     Partner._records = [
         { id: 1, foo: "Task A", stage_id: false },
-        { id: 2, foo: "Task B", stage_id: 10},
+        { id: 2, foo: "Task B", stage_id: 10 },
     ];
     Partner._fields.stage_id = fields.Many2one({ relation: "partner.stage" });
 
@@ -3456,9 +3456,9 @@ test("kanban grouped by stage_id: move record from to the None column", async ()
     expect(queryAll(".o_kanban_group")).toHaveCount(2); // None and New
 
     await click(".o_kanban_group:first .o_kanban_header");
-    
+
     // Drag a record to the "None" column
-    let dragActions = await contains(".o_kanban_record:contains(Task B)").drag();
+    const dragActions = await contains(".o_kanban_record:contains(Task B)").drag();
     await dragActions.moveTo(".o_kanban_group:nth-child(1) .o_kanban_header");
     await dragActions.drop();
 
@@ -5220,7 +5220,7 @@ test("edit a favorite: group by = default_group_by", async () => {
     await contains(".o_searchview_facet_label").click();
     await addNewRule();
     await contains("button:contains('Search')").click();
-    expect(getFacetTexts()).toEqual(["Id = ( )"]);
+    expect(getFacetTexts()).toEqual(["Id = 1"]);
 });
 
 test.tags("desktop");
@@ -5263,7 +5263,7 @@ test("edit a favorite: group by != default_group_by", async () => {
     await contains(".o_searchview_facet_label").click();
     await addNewRule();
     await contains("button:contains('Search')").click();
-    expect(getFacetTexts()).toEqual(["Id = ( )", "Product"]);
+    expect(getFacetTexts()).toEqual(["Id = 1", "Product"]);
 });
 
 test.tags("desktop");
