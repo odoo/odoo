@@ -1027,7 +1027,7 @@ export class SearchModel extends EventBus {
                         relatedPropertyField: field,
                     };
 
-                    if (!searchItemsNames.includes(fullName)) {
+                    if (!searchItemsNames.includes(fullName) && definition.type !== "separator") {
                         const groupByItem = {
                             description: definition.string,
                             definitionRecordId,
