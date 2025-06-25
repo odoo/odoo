@@ -9,7 +9,7 @@ export class BuilderAction {
         this.config = plugin.config;
         this.getResource = plugin.getResource.bind(plugin);
         this.dispatchTo = plugin.dispatchTo.bind(plugin);
-        this.delegateTo = plugin.delegateTo.bind(this);
+        this.delegateTo = plugin.delegateTo.bind(plugin);
 
         this.preview = true;
         this.withLoadingEffect = true;
