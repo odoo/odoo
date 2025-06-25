@@ -186,8 +186,8 @@ test("Should not show transform action on shape that cannot bet transformed", as
     await editor.shared.operation.next(() => {});
     await animationFrame();
 
-    expect(`[data-action-id="flipImageShape"]`).not.toBeVisible();
-    expect(`[data-action-id="rotateImageShape"]`).not.toBeVisible();
+    expect(`[data-action-id="flipImageShape"]`).not.toHaveCount();
+    expect(`[data-action-id="rotateImageShape"]`).not.toHaveCount();
 });
 describe("flip shape axis", () => {
     test("Should flip the shape X axis", async () => {
@@ -400,7 +400,7 @@ test("Should not show animate speed if the shape is not animated", async () => {
     await editor.shared.operation.next(() => {});
     await animationFrame();
 
-    expect(`[data-action-id="setImageShapeSpeed"]`).not.toBeVisible();
+    expect(`[data-action-id="setImageShapeSpeed"]`).not.toHaveCount();
 });
 test("Should change the speed of an animated shape", async () => {
     const { getEditor } = await setupWebsiteBuilder(`
@@ -448,7 +448,7 @@ describe("toggle ratio", () => {
         await editor.shared.operation.next(() => {});
         await animationFrame();
 
-        expect(`[data-action-id="toggleImageShapeRatio"]`).not.toBeVisible();
+        expect(`[data-action-id="toggleImageShapeRatio"]`).not.toHaveCount();
     });
     test("A shape with togglable ratio should be added cropped and crop when clicked", async () => {
         const { getEditor } = await setupWebsiteBuilder(`

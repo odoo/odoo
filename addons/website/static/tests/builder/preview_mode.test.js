@@ -32,7 +32,7 @@ test("do not update builder if in preview mode", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-id='customAction']").hover();
-    expect("[data-class-action='b2_class']").not.toBeVisible();
+    expect("[data-class-action='b2_class']").not.toHaveCount();
     expect(".o-snippets-top-actions .fa-undo").not.toBeEnabled();
 });
 

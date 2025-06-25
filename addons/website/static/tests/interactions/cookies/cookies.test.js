@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { click, queryOne, waitFor } from "@odoo/hoot-dom";
@@ -9,7 +6,11 @@ import { advanceTime } from "@odoo/hoot-mock";
 
 import { cookie } from "@web/core/browser/cookie";
 
-setupInteractionWhiteList(["website.cookies_bar", "website.cookies_approval", "website.cookies_warning"]);
+setupInteractionWhiteList([
+    "website.cookies_bar",
+    "website.cookies_approval",
+    "website.cookies_warning",
+]);
 
 describe.current.tags("interaction_dev");
 
@@ -54,7 +55,9 @@ test("consent for optional cookies not given if click on #cookies-consent-essent
     await waitFor(cookiesBarEl, { visible: true });
     await click("#cookies-consent-essential");
     expect(cookiesBarEl).not.toBeVisible();
-    expect(cookie.get("website_cookies_bar")).toMatch(/^\{"required": true, "optional": false, "ts": \d+\}$/);
+    expect(cookie.get("website_cookies_bar")).toMatch(
+        /^\{"required": true, "optional": false, "ts": \d+\}$/
+    );
 });
 
 test("consent for optional cookies not given if no click", async () => {
@@ -79,7 +82,9 @@ test("consent for optional cookies given if click on #cookies-consent-all", asyn
     expect(cookiesBarEl).toBeVisible();
     await click("#cookies-consent-all");
     expect(cookiesBarEl).not.toBeVisible();
-    expect(cookie.get("website_cookies_bar")).toMatch(/^\{"required": true, "optional": true, "ts": \d+\}$/);
+    expect(cookie.get("website_cookies_bar")).toMatch(
+        /^\{"required": true, "optional": true, "ts": \d+\}$/
+    );
 });
 
 test("show warning instead of iframe if no consent", async () => {
@@ -124,9 +129,9 @@ test("remove warning, show and update iframe src after accepting cookies", async
     expect(core.interactions).toHaveLength(3);
     expect("iframe").toHaveAttribute("src", "about:blank");
     expect("iframe").toHaveAttribute("data-nocookie-src", "/");
-    await waitFor("#website_cookies_bar .modal", { visible: true });
+    await waitFor("#website_cookies_bar .modal:visible");
     await click("#cookies-consent-all");
-    expect(".o_no_optional_cookie").not.toBeVisible();
+    expect(".o_no_optional_cookie").not.toHaveCount();
     expect("iframe").toBeVisible();
     expect("iframe").toHaveAttribute("src", "/");
     expect("iframe").not.toHaveAttribute("data-nocookie-src");
