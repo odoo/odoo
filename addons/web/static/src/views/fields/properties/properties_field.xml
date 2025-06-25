@@ -36,7 +36,7 @@
                         t-att-property-name="propertyConfiguration.name">
                         <t t-set="domId" t-value="generateUniqueDomID()"/>
                         <label
-                            class="o_field_property_label o_form_label text-break d-flex align-items-baseline mb-0"
+                            class="o_field_property_label o_form_label text-break d-flex align-items-baseline mb-0 pe-2"
                             t-att-class="{'w-auto': env.isSmall}"
                             t-att-for="domId">
                             <span
@@ -44,7 +44,7 @@
                                 t-out="propertyConfiguration.string"
                                 t-att-class="{'o_property_field_highlight': state.movedPropertyName === propertyConfiguration.name}"/>
                             <i
-                                t-else="" class="o_field_property_empty_label">
+                                t-else="" class="o_field_property_empty_label mt-1">
                                 New Property
                             </i>
                             <i
@@ -52,7 +52,7 @@
                                 class="o_field_property_open_popover fa fa-pencil ms-2"
                                 t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
                             <i t-if="state.isInEditMode"
-                                class="oi oi-draggable ms-1 d-none d-sm-block"/>
+                                class="oi oi-draggable ms-1 d-none d-sm-block mt-1"/>
                         </label>
                         <div class="o_property_field_value w-100">
                             <PropertyValue
