@@ -105,6 +105,12 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "click",
     },
     {
+        content: "Ensure the comparator popover is visible. Click too fast can toggle it",
+        isActive: ["body:not(:has(.comparator-popover))"],
+        trigger: ".o_add_compare_dyn",
+        run: "click",
+    },
+    {
         content: "check limit is reached",
         trigger: '.o_comparelist_limit_warning',
     },
