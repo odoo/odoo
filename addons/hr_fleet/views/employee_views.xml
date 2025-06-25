@@ -34,18 +34,4 @@
         </field>
     </record>
 
-    <record id="res_users_view_form_preferences" model="ir.ui.view">
-        <field name="name">hr.user.preferences.form.inherit.hr.fleet</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="hr.res_users_view_form_profile" />
-        <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_open_employee_cars" type="object"
-                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
-                        invisible="employee_cars_count == 0 or not context.get('fleet.fleet_group_manager')">
-                    <field name="employee_cars_count" widget="statinfo" string="Cars History" />
-                </button>
-            </xpath>
-        </field>
-    </record>
 </odoo>
