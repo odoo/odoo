@@ -547,3 +547,21 @@ test("No date buttons are displayed if there is no date filter", async function 
     await createSpreadsheetDashboard({ serverData });
     expect(".o_sp_date_filter_button").toHaveCount(0);
 });
+
+test("Unknown value for relation filter is displayed as inaccessible", async function () {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+                defaultValue: [9999], // unknown product
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    await createSpreadsheetDashboard({ serverData });
+    expect(".o_searchview_facet").toHaveCount(1);
+    expect(".o_searchview_facet .o_facet_value").toHaveText("Inaccessible/missing record ID");
+});
