@@ -9,7 +9,6 @@
             <field name="email_to" eval="False"/>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Invitation email to new attendees</field>
             <field name="body_html" type="html">
 <div>
@@ -120,7 +119,6 @@
     </t>
 </div>
             </field>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -132,7 +130,6 @@
             <field name="email_to" eval="False"/>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Sent to all attendees if the schedule change</field>
             <field name="body_html" type="html">
 <div>
@@ -252,7 +249,6 @@
     </t>
 </div>
             </field>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -264,7 +260,6 @@
             <field name="email_to" eval="False"/>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Sent to all attendees if a reminder is set</field>
             <field name="body_html" type="html">
 <div>
@@ -360,7 +355,6 @@
     </t>
 </div>
             </field>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -371,8 +365,7 @@
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
-            <field name="description">Used to manually notifiy attendees</field>
+            <field name="description">Used to manually notify attendees</field>
             <field name="body_html" type="html">
 <div>
     <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}" />
@@ -465,7 +458,6 @@
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
-            <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Used to manually notify attendees</field>
             <field name="body_html" type="html">
                 <div>

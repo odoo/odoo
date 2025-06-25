@@ -893,7 +893,6 @@ class MailComposeMessage(models.TransientModel):
         model_id = self.env['ir.model']._get_id(self.model)
         values = {
             'name': self.template_name,
-            'subject': self.subject,
             'body_html': self.body,
             'model_id': model_id,
             'use_default_to': True,
@@ -1100,7 +1099,7 @@ class MailComposeMessage(models.TransientModel):
 
         # langs, used currently only to propagate in comment mode for notification
         # layout translation
-        langs = self._render_field('lang', res_ids)
+        langs = self._render_lang(res_ids)
         subjects = self._render_field('subject', res_ids, compute_lang=True)
         bodies = self._render_field(
             'body', res_ids, compute_lang=True,

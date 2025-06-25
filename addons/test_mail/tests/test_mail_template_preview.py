@@ -4,8 +4,10 @@
 from odoo.addons.test_mail.tests.test_mail_template import TestMailTemplateCommon
 from odoo.tests import Form, tagged, users
 
+
 @tagged('mail_template', 'multi_lang')
 class TestMailTemplateTools(TestMailTemplateCommon):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -18,6 +20,24 @@ class TestMailTemplateTools(TestMailTemplateCommon):
         self.assertTrue(self.test_template.email_cc)
         self.assertEqual(len(self.test_template.partner_to.split(',')), 2)
         self.assertTrue(self.test_record.email_from)
+
+    @users('employee')
+    def test_mail_template_preview_fields(self):
+        test_record = self.test_record.with_user(self.env.user)
+        test_record_ref = f'{test_record._name},{test_record.id}'
+        test_template = self.test_template.with_user(self.env.user)
+
+        # resource_ref: should not crash if no template (hence no model)
+        preview = Form(self.env['mail.template.preview'])
+        self.assertFalse(preview.has_attachments)
+        self.assertTrue(preview.has_several_languages_installed)
+        self.assertFalse(preview.resource_ref)
+
+        # mail_template_id being invisible, create a new one for template check
+        preview = Form(self.env['mail.template.preview'].with_context(default_mail_template_id=test_template.id))
+        self.assertTrue(preview.has_attachments)
+        self.assertTrue(preview.has_several_languages_installed)
+        self.assertEqual(preview.resource_ref, test_record_ref, 'Should take first (only) record by default')
 
     def test_mail_template_preview_empty_database(self):
         """Check behaviour of the wizard when there is no record for the target model."""

@@ -14,7 +14,6 @@
                 <p><t t-out="object.mail_group_id.moderation_guidelines_msg or ''"></t></p>
             </div>
         </field>
-        <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="auto_delete" eval="True"/>
     </record>
 
