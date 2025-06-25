@@ -5,9 +5,6 @@
         <div class="pos-receipt m-0 p-0 pt-5">
             <!-- Receipt Header -->
             <div class="receipt-header text-center">
-                <div class="pos-receipt-title" t-if="data.reprint">
-                    DUPLICATA !
-                </div>
                 <div class="pos-receipt-title preset-name" t-if="data.preset_name">
                     <t t-esc="data.preset_name"/> <t t-if="data.preset_time">(<t t-esc="data.preset_time"/>)</t>
                 </div>
@@ -30,6 +27,9 @@
                 <div t-if="hasDataChanges" class="new-changes w-100">
                     <div class="pos-receipt-title text-center w-100">
                         <strong t-esc="data.changes.title" />
+                        <t t-if="data.reprint">
+                            (DUPLICATE !)
+                        </t>
                     </div>
                     <t t-if="data.changes.groupedData">
                         <div t-foreach="data.changes.groupedData" t-as="group" t-key="group_index">
