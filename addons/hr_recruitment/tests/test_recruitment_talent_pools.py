@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.fields import Domain
 from odoo.tests import Form, tagged, TransactionCase
 
@@ -287,3 +288,21 @@ class TestRecruitmentTalentPool(TransactionCase):
             new_email,
             "The email_from field should be updated successfully",
         )
+
+    def test_attachment_following_applicant_from_pool(self):
+        self.t_applicant_1.attachment_ids = [Command.link(attachment_id) for attachment_id in self.env['ir.attachment'].create([{
+            'name': 'Test',
+            'res_model': self.t_applicant_1._name,
+            'res_id': self.t_applicant_1.id
+        }] * 2).ids]
+        job_wizard = Form(
+            self.env["job.add.applicants"].with_context({"default_applicant_ids": self.t_applicant_1.ids})
+        )
+        job_wizard.job_ids = self.t_job_2
+        job_2_applicant = job_wizard.save()._add_applicants_to_job()
+        # attachment from origin applicant should be copied on the target applicant
+        self.assertEqual(len(job_2_applicant.attachment_ids), 2)
+        self.assertEqual(job_2_applicant.attachment_ids[0].res_id, job_2_applicant.id)
+        # Just ensure that attachment from origin applicant still exists
+        self.assertEqual(len(self.t_applicant_1.attachment_ids), 2)
+        self.assertEqual(self.t_applicant_1.attachment_ids[0].res_id, self.t_applicant_1.id)
