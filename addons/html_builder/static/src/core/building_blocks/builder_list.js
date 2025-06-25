@@ -100,8 +100,7 @@ export class BuilderList extends Component {
         this.commit(items);
     }
 
-    deleteItem(e) {
-        const itemId = e.target.dataset.id;
+    deleteItem(itemId) {
         const items = this.formatRawValue(this.state.value);
         this.commit(items.filter((item) => item._id !== itemId));
     }
