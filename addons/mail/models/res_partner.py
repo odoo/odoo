@@ -258,7 +258,7 @@ class ResPartner(models.Model):
             ]
         return [field_name]
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return [
             "active",
             "avatar_128",
@@ -269,8 +269,8 @@ class ResPartner(models.Model):
             "name",
         ]
 
-    def _to_store(self, store: Store, fields):
-        if not self.env.user._is_internal() and "email" in fields:
+    def _to_store(self, store: Store, fields, /):
+        if not store.target.is_internal(self.env) and "email" in fields:
             fields.remove("email")
         store.add_records_fields(self, fields)
 

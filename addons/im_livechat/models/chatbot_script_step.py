@@ -416,18 +416,15 @@ class ChatbotScriptStep(models.Model):
                 if m.script_step_id == self
                 and m.mail_message_id.author_id == self.chatbot_script_id.operator_partner_id
             ), self.env["mail.message"])
-            store = Store()
-            discuss_channel._bus_send_store(
-                store.add_model_values(
-                    "ChatbotStep",
-                    {
-                        "id": (self.id, step_message.id),
-                        "scriptStep": self.id,
-                        "message": step_message.id,
-                        "operatorFound": True,
-                    },
-                )
-            )
+            Store(bus_channel=discuss_channel).add_model_values(
+                "ChatbotStep",
+                {
+                    "id": (self.id, step_message.id),
+                    "scriptStep": self.id,
+                    "message": step_message.id,
+                    "operatorFound": True,
+                },
+            ).bus_send()
             channel_sudo._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)
         else:
@@ -436,7 +433,7 @@ class ChatbotScriptStep(models.Model):
 
         return posted_message
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return [
             Store.Many("answer_ids"),
             Store.Attr("is_last", lambda step: step._is_last_step()),

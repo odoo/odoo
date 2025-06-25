@@ -323,7 +323,7 @@ class DiscussChannel(models.Model):
         """Return the standard fields to include in Store for livechat_operator_id."""
         return ["avatar_128", *self.env["res.partner"]._get_store_livechat_username_fields()]
 
-    def _to_store_defaults(self, for_current_user=True):
+    def _to_store_defaults(self, target: Store.Target):
         fields = [
             "anonymous_name",
             "chatbot_current_step",
@@ -336,7 +336,7 @@ class DiscussChannel(models.Model):
                 sudo=True,
             ),
         ]
-        if for_current_user and self.env.user._is_internal():
+        if target.is_internal(self.env):
             fields.append(Store.One("livechat_channel_id", ["name"], sudo=True))
             fields.extend([
                 Store.Attr("livechat_note", predicate=lambda c: c.channel_type == "livechat"),
@@ -344,7 +344,7 @@ class DiscussChannel(models.Model):
                 Store.Attr("livechat_status", predicate=lambda c: c.channel_type == "livechat"),
                 Store.Many("livechat_expertise_ids", ["name"], predicate=lambda c: c.channel_type == "livechat"),
             ])
-        return super()._to_store_defaults(for_current_user=for_current_user) + fields
+        return super()._to_store_defaults(target) + fields
 
     def _to_store(self, store: Store, fields):
         """Extends the channel header by adding the livechat operator and the 'anonymous' profile"""
@@ -412,7 +412,7 @@ class DiscussChannel(models.Model):
                 member.sudo()._rtc_leave_call()
             # sudo: discuss.channel - visitor left the conversation, state must be updated
             self.sudo().livechat_end_dt = fields.Datetime.now()
-            self._bus_send_store(self, "livechat_end_dt")
+            Store(self, "livechat_end_dt", bus_channel=self).bus_send()
             # avoid useless notification if the channel is empty
             if not self.message_ids:
                 return
@@ -560,7 +560,7 @@ class DiscussChannel(models.Model):
                 question_msg.user_script_answer_id = selected_answer
                 question_msg.user_raw_script_answer_id = selected_answer.id
                 if store := self.env.context.get("message_post_store"):
-                    store.add(message, for_current_user=True).add(question_msg.mail_message_id)
+                    store.add(message).add(question_msg.mail_message_id)
 
             self.env["chatbot.message"].sudo().create(
                 {
@@ -633,4 +633,4 @@ class DiscussChannel(models.Model):
         ):
             # sudo: discuss.channel - last operator left the conversation, state must be updated.
             channel_sudo.livechat_end_dt = fields.Datetime.now()
-            self._bus_send_store(channel_sudo, "livechat_end_dt")
+            Store(channel_sudo, "livechat_end_dt", bus_channel=self).bus_send()
