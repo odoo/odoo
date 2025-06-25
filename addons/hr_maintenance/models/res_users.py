@@ -1,17 +1,6 @@
 from odoo import api, models, fields
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
-
-    equipment_ids = fields.One2many('maintenance.equipment', 'owner_user_id', string="Managed Equipment")
-    equipment_count = fields.Integer(related='employee_id.equipment_count', string="Assigned Equipment")
-
-    @property
-    def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['equipment_count']
-
-
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
