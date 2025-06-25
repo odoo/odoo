@@ -52,7 +52,7 @@ class ProductDocument(models.Model):
         # Empty the linked form fields as we want all and only those from the current datas
         self.form_field_ids = [Command.clear()]
         document_to_parse = self.filtered(
-            lambda doc: doc.attached_on_sale == 'inside' and doc.datas
+            lambda doc: doc.attached_on_sale == 'inside' and doc.datas and doc.mimetype and doc.mimetype.endswith('pdf')
         )
         if document_to_parse:
             doc_type = 'product_document'
