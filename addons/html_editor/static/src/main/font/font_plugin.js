@@ -208,6 +208,7 @@ export class FontPlugin extends Plugin {
                         });
                         this.updateFontSizeSelectorParams();
                     },
+                    document: this.document,
                 },
             },
         ],
