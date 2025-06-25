@@ -1,12 +1,12 @@
-import sys
-import optparse
 import logging
-
+import optparse
+import sys
 from collections import defaultdict
 
-from . import Command
 from odoo.modules.registry import Registry
 from odoo.tools import SQL, config
+
+from . import Command
 
 _logger = logging.getLogger(__name__)
 

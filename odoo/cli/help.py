@@ -1,10 +1,16 @@
 import textwrap
 
-import odoo.addons
 import odoo.modules
 import odoo.release
+from odoo.cli.command import (
+    PROG_NAME,
+    Command,
+    commands,
+    load_addons_commands,
+    load_internal_commands,
+)
 
-from .command import PROG_NAME, Command, commands, load_addons_commands, load_internal_commands
+import odoo.addons
 
 
 class Help(Command):
