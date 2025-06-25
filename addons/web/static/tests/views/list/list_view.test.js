@@ -2341,6 +2341,9 @@ test(`grouped list rendering with groupby m2o and m2m field`, async () => {
         `,
         groupBy: ["m2o", "m2m"],
     });
+    expect(`.o_list_footer td > button`).toHaveCount(0, {
+        message: "no quick create since no default groupby",
+    });
     expect(queryAllTexts(`tbody > tr`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
 
     await contains(`th.o_group_name`).click();
@@ -2365,7 +2368,7 @@ test(`grouped list rendering with groupby m2o and m2m field`, async () => {
     ]);
 });
 
-test(`grouped list rendering with groupby m2o field: add group`, async () => {
+test(`grouped list rendering with default_group_by m2o field: add group`, async () => {
     onRpc("name_create", ({ args }) => {
         expect(args[0]).toBe("New group");
         expect.step("name_create");
@@ -2373,8 +2376,7 @@ test(`grouped list rendering with groupby m2o field: add group`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<list><field name="foo"/></list>`,
-        groupBy: ["m2o"],
+        arch: `<list default_group_by="m2o"><field name="foo"/></list>`,
     });
     expect(`.o_group_header:eq(0) th`).toHaveCount(1);
     expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 (3)", "Value 2 (1)"]);
