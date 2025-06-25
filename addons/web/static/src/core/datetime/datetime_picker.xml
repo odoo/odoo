@@ -16,7 +16,7 @@
                         </div>
                     </t>
                     <t t-foreach="month.weeks" t-as="week" t-key="week.number">
-                        <t t-if="props.showWeekNumbers ?? !props.range">
+                        <t t-if="props.showWeekNumbers">
                             <div
                                 class="o_week_number_cell d-flex align-items-center ps-2 text-muted fst-italic"
                                 t-esc="week.number"
@@ -95,7 +95,7 @@
     <t t-name="web.DateTimePicker">
         <div
             class="o_datetime_picker d-flex flex-column gap-2 user-select-none p-2"
-            t-attf-style="--DateTimePicker__Day-template-columns: {{ props.showWeekNumbers ?? !props.range ? 8 : 7 }}"
+            t-attf-style="--DateTimePicker__Day-template-columns: {{ props.showWeekNumbers ? 8 : 7 }}"
         >
             <nav class="o_datetime_picker_header">
                 <button
