@@ -1,5 +1,13 @@
 import { parseHTML } from "@html_editor/utils/html";
-import { Component, onMounted, status, useRef, useState, useSubEnv } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    status,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";
 import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
@@ -7,6 +15,7 @@ import { useChildRef, useService } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { registry } from "@web/core/registry";
+import { Editor } from "@html_editor/editor";
 
 export class MassMailingIframe extends Component {
     static template = "mass_mailing_egg.MassMailingIframe";
@@ -17,7 +26,7 @@ export class MassMailingIframe extends Component {
     static props = {
         config: { type: Object },
         themeOptions: { type: Object },
-        readonly: { type: Boolean },
+        readonly: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -35,10 +44,29 @@ export class MassMailingIframe extends Component {
         });
         this.state = useState({
             ready: false,
-            showFullscreen: false,
         });
         this.iframeLoaded = new Deferred();
-        onMounted(() => this.setupIframe());
+        onMounted(() => {
+            if (this.iframeRef.el.contentDocument.readyState === "complete") {
+                this.setupIframe();
+            } else {
+                // Browsers like Firefox only make iframe document available after dispatching "load"
+                this.iframeRef.el.addEventListener("load", () => this.setupIframe(), {
+                    once: true,
+                });
+            }
+        });
+        if (this.props.readonly) {
+            return;
+        } else if (this.props.themeOptions.withBuilder) {
+            this.state.showFullscreen = false;
+        } else {
+            this.editor = new Editor(this.props.config, this.env.services);
+            onWillDestroy(() => {
+                this.editor.destroy(true);
+            });
+            this.setupBasicEditor();
+        }
     }
 
     async setupIframe() {
@@ -57,6 +85,16 @@ export class MassMailingIframe extends Component {
         });
         this.iframeLoaded.resolve(this.iframeRef.el);
         this.state.ready = true;
+    }
+
+    async setupBasicEditor() {
+        await this.iframeLoaded;
+        if (status(this) === "destroyed") {
+            return;
+        }
+        this.editor.attachTo(
+            this.iframeRef.el.contentDocument.body.querySelector(".note-editable")
+        );
     }
 
     async loadAssetsEditBundle() {

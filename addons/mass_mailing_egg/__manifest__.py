@@ -33,13 +33,15 @@
             # TODO EGGMAIL: recreate a scss bundle that is strictly used in relation with convert_inline
             # if there is "editor style" to include, put it in `mass_mailing_egg.assets_iframe_edit``
             ### CSS part of wysiwyg_iframe_editor_assets
-            ('include', 'web_editor.wysiwyg_iframe_editor_assets'),
 
             ### iframe_css_assets_edit fast selection
             ('include', 'mass_mailing.iframe_css_assets_edit'),
+            ('include', 'web_editor.wysiwyg_iframe_editor_assets'),
+            ('include', 'html_builder.inside_builder_style'),
         ],
         'mass_mailing_egg.assets_iframe_edit': [  # equivalent html_builder.assets_edit_frontend in website_builder_action.js
             # JS and style assets required to edit the mail content
+            ('include', 'html_builder.assets_edit_frontend'),
         ],
         'mass_mailing_egg.assets_iframe_dark': [  # separated complement of assets_iframe_style for dark mode
             # style assets for dark mode. Not used by convert_inline.

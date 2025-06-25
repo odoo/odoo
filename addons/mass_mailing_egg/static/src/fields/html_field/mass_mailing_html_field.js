@@ -157,7 +157,11 @@ export const massMailingHtmlField = {
     // TODO EGGMAIL decide which options we want in extractProps?
     extractProps({ attrs, options }) {
         const props = htmlField.extractProps(...arguments);
-        props.filterTemplates = options.filterTemplates;
+        Object.assign(props, {
+            filterTemplates: options.filterTemplates,
+            migrateHTML: false,
+            embeddedComponents: false,
+        });
         return props;
     },
     fieldDependencies: [{ name: "body_html", type: "html", readonly: "false" }],
