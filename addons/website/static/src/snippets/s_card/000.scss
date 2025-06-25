@@ -16,7 +16,11 @@
         width: 100%;
         object-fit: cover;
 
-        &[data-shape] {
+        // Apply `object-fit: contain` only when some aspect ratio is applied.
+        // This ensures the cropped area is displayed correctly inside its container.
+        // If the aspect ratio is (`0/0`), the image should behave normally and
+        // follow default layout (such as `object-fit: cover` when stretched).
+        &[data-shape]:not([data-aspect-ratio="0/0"]) {
             object-fit: contain;
         }
 
