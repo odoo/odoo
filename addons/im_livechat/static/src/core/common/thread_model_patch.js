@@ -45,6 +45,51 @@ patch(Thread.prototype, {
             super.autoOpenChatWindowOnNewMessage
         );
     },
+    get avatarUrl() {
+        if (this.channel_type === "livechat") {
+            if (!["agent", "bot"].includes(this.selfMember?.livechat_member_type)) {
+                return this.livechat_operator_id?.avatarUrl;
+            } else if (this.correspondent.persona?.avatarUrl) {
+                return this.correspondent.persona.avatarUrl;
+            }
+        }
+        return super.avatarUrl;
+    },
+    get displayName() {
+        if (
+            this.channel_type !== "livechat" ||
+            (this.channel_type === "livechat" &&
+                this.selfMember?.livechat_member_type === "visitor") ||
+            this.selfMember?.custom_channel_name
+        ) {
+            return super.displayName;
+        }
+        if (!this.correspondent.persona.is_public && this.correspondent.persona.country) {
+            return `${this.correspondent.name} (${this.correspondent.persona.country.name})`;
+        }
+        if (this.country_id) {
+            return `${this.correspondent.name} (${this.country_id.name})`;
+        }
+        return this.correspondent.name;
+    },
+    get hasMemberList() {
+        if (
+            this.channel_type === "livechat" &&
+            ["agent", "bot"].includes(this.selfMember?.livechat_member_type)
+        ) {
+            return true;
+        }
+        return super.hasMemberList;
+    },
+    get hasAttachmentPanel() {
+        if (
+            this.channel_type === "livechat" &&
+            !["agent", "bot"].includes(this.selfMember?.livechat_member_type)
+        ) {
+            return false;
+        }
+        return super.hasAttachmentPanel;
+    },
     get showCorrespondentCountry() {
         if (this.channel_type === "livechat") {
             return (
@@ -69,6 +114,16 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" && this.livechat_end_dt
             ? _t("This livechat conversation has ended")
             : "";
+    },
+    computeCorrespondent() {
+        const correspondent = super.computeCorrespondent();
+        if (
+            this.channel_type === "livechat" &&
+            this.selfMember?.livechat_member_type !== "visitor"
+        ) {
+            return this.livechatVisitorMember;
+        }
+        return correspondent;
     },
     /**
      * @override

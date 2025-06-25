@@ -23,9 +23,6 @@ patch(Thread.prototype, {
             this.livechat_channel_id?.appCategory ?? this.appAsLivechats?.defaultLivechatCategory
         );
     },
-    get hasMemberList() {
-        return this.channel_type === "livechat" || super.hasMemberList;
-    },
     get allowedToLeaveChannelTypes() {
         return [...super.allowedToLeaveChannelTypes, "livechat"];
     },
@@ -33,38 +30,6 @@ patch(Thread.prototype, {
         return super.correspondents.filter(
             (correspondent) => correspondent.livechat_member_type !== "bot"
         );
-    },
-
-    computeCorrespondent() {
-        const correspondent = super.computeCorrespondent();
-        if (this.channel_type === "livechat" && !correspondent) {
-            return this.livechatVisitorMember;
-        }
-        return correspondent;
-    },
-
-    get displayName() {
-        if (
-            this.channel_type !== "livechat" ||
-            !this.correspondent ||
-            this.selfMember?.custom_channel_name
-        ) {
-            return super.displayName;
-        }
-        if (!this.correspondent.persona.is_public && this.correspondent.persona.country) {
-            return `${this.correspondent.name} (${this.correspondent.persona.country.name})`;
-        }
-        if (this.country_id) {
-            return `${this.correspondent.name} (${this.country_id.name})`;
-        }
-        return this.correspondent.name;
-    },
-
-    get avatarUrl() {
-        if (this.channel_type === "livechat" && this.correspondent) {
-            return this.correspondent.persona.avatarUrl;
-        }
-        return super.avatarUrl;
     },
 
     /**

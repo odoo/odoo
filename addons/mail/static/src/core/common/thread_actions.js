@@ -3,6 +3,7 @@ import { useSubEnv, useComponent, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
+import { useService } from "@web/core/utils/hooks";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
@@ -83,6 +84,36 @@ threadActionsRegistry
             });
         },
         toggle: true,
+    })
+    .add("mark-all-read", {
+        condition(component) {
+            return component.thread?.id === "inbox";
+        },
+        disabledCondition(component) {
+            return component.thread.isEmpty;
+        },
+        open(component) {
+            component.orm.silent.call("mail.message", "mark_all_as_read");
+        },
+        sequence: 1,
+        text: _t("Mark all read"),
+    })
+    .add("unstar-all", {
+        condition(component) {
+            return component.thread?.id === "starred";
+        },
+        disabledCondition(component) {
+            return component.thread.isEmpty;
+        },
+        open(component) {
+            component.store.unstarAll();
+        },
+        sequence: 2,
+        setup() {
+            const component = useComponent();
+            component.store = useService("mail.store");
+        },
+        text: _t("Unstar all"),
     });
 
 function transformAction(component, id, action) {
@@ -106,7 +137,10 @@ function transformAction(component, id, action) {
         },
         /** Condition to display this action. */
         get condition() {
-            return threadActionsInternal.condition(component, id, action);
+            return (
+                threadActionsInternal.precondition(component, id, action) &&
+                threadActionsInternal.condition(component, id, action)
+            );
         },
         /** Condition to disable the button of this action (but still display it). */
         get disabledCondition() {
@@ -232,6 +266,17 @@ function transformAction(component, id, action) {
 }
 
 export const threadActionsInternal = {
+    /**
+     * Same as condition but happens before condition.
+     * Useful to enforce a whitelist and ensure this has precedence over condition with patches,
+     * for guaranteed showing of available features in all cases.
+     */
+    precondition(component, id, action) {
+        if (action.precondition === undefined) {
+            return true;
+        }
+        return action.precondition(component);
+    },
     condition(component, id, action) {
         if (action.condition === undefined) {
             return true;

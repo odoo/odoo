@@ -22,7 +22,8 @@ threadActionsRegistry.add("restart", {
 const callSettingsAction = threadActionsRegistry.get("call-settings");
 patch(callSettingsAction, {
     condition(component) {
-        return component.thread?.channel_type === "livechat"
+        return component.thread?.channel_type === "livechat" &&
+            !["agent", "bot"].includes(component.thread?.selfMember?.livechat_member_type)
             ? component.env.services["discuss.rtc"].state.channel?.eq(component.thread)
             : super.condition(...arguments);
     },

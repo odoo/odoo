@@ -7,35 +7,53 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
-messageActionsRegistry.add("set-new-message-separator", {
-    /** @param {import("@mail/core/common/message").Message} component */
-    condition: (component) => {
-        const thread = component.props.thread;
-        return (
-            thread &&
-            thread.selfMember &&
-            thread.eq(component.message.thread) &&
-            !component.message.hasNewMessageSeparator
-        );
-    },
-    icon: "fa fa-eye-slash",
-    title: _t("Mark as Unread"),
-    /** @param {import("@mail/core/common/message").Message} component */
-    onClick: (component) => {
-        const message = toRaw(component.message);
-        const selfMember = message.thread?.selfMember;
-        if (selfMember) {
-            selfMember.new_message_separator = message.id;
-            selfMember.new_message_separator_ui = selfMember.new_message_separator;
-        }
-        message.thread.markedAsUnread = true;
-        rpc("/discuss/channel/set_new_message_separator", {
-            channel_id: message.thread.id,
-            message_id: message.id,
-        });
-    },
-    sequence: 70,
-});
+messageActionsRegistry
+    .add("set-new-message-separator", {
+        /** @param {import("@mail/core/common/message").Message} component */
+        condition: (component) => {
+            const thread = component.props.thread;
+            return (
+                thread &&
+                thread.selfMember &&
+                thread.eq(component.message.thread) &&
+                !component.message.hasNewMessageSeparator
+            );
+        },
+        icon: "fa fa-eye-slash",
+        title: _t("Mark as Unread"),
+        /** @param {import("@mail/core/common/message").Message} component */
+        onClick: (component) => {
+            const message = toRaw(component.message);
+            const selfMember = message.thread?.selfMember;
+            if (selfMember) {
+                selfMember.new_message_separator = message.id;
+                selfMember.new_message_separator_ui = selfMember.new_message_separator;
+            }
+            message.thread.markedAsUnread = true;
+            rpc("/discuss/channel/set_new_message_separator", {
+                channel_id: message.thread.id,
+                message_id: message.id,
+            });
+        },
+        sequence: 70,
+    })
+    .add("create-or-view-thread", {
+        condition: (component) =>
+            component.message.thread?.eq(component.props.thread) &&
+            component.message.thread.hasSubChannelFeature &&
+            component.store.self.main_user_id?.share === false,
+        icon: "fa fa-comments-o",
+        onClick: (component) => {
+            if (component.message.linkedSubChannel) {
+                component.message.linkedSubChannel.open({ focus: true });
+            } else {
+                component.message.thread.createSubChannel({ initialMessage: component.message });
+            }
+        },
+        title: (component) =>
+            component.message.linkedSubChannel ? _t("View Thread") : _t("Create Thread"),
+        sequence: 75,
+    });
 
 const editAction = messageActionsRegistry.get("edit");
 

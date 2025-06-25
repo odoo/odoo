@@ -165,6 +165,15 @@ messageActionsRegistry
         title: _t("Copy Link"),
         onClick: (component) => component.message.copyLink(),
         sequence: 110,
+    })
+    .add("pin", {
+        condition: (component) =>
+            component.store.self?.main_user_id &&
+            component.props.thread?.model === "discuss.channel",
+        icon: "fa fa-thumb-tack",
+        title: (component) => (component.props.message.pinned_at ? _t("Unpin") : _t("Pin")),
+        onClick: (component) => component.props.message.pin(),
+        sequence: 65,
     });
 
 function transformAction(component, id, action) {
