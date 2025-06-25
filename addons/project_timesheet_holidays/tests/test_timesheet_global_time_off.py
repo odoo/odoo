@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from datetime import datetime, timedelta
+
 from freezegun import freeze_time
 
-from odoo import Command
-from odoo.tests import common
 from odoo.exceptions import UserError
+from odoo.fields import Command
+from odoo.tests import common
+
 
 class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
@@ -87,9 +87,9 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_start_datetime = datetime(2021, 1, 4, 7, 0, 0, 0)  # This is a monday
         leave_end_datetime = datetime(2021, 1, 8, 18, 0, 0, 0)  # This is a friday
 
-        global_time_off = self.env['resource.calendar.leaves'].create({
+        global_time_off = self.env['hr.leave.public.holiday'].create({
             'name': 'Test',
-            'calendar_id': self.test_company.resource_calendar_id.id,
+            'resource_calendar_ids': [Command.link(self.test_company.resource_calendar_id.id)],
             'date_from': leave_start_datetime,
             'date_to': leave_end_datetime,
         })
@@ -119,27 +119,27 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_start_datetime = today + timedelta(days=-today.weekday(), weeks=1)  # Next monday
         leave_end_datetime = leave_start_datetime + timedelta(days=5)  # Next friday
 
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.leave.public.holiday'].create({
             'name': 'Test',
-            'calendar_id': self.test_company.resource_calendar_id.id,
+            'resource_calendar_ids': [Command.link(self.test_company.resource_calendar_id.id)],
             'date_from': leave_start_datetime,
             'date_to': leave_end_datetime,
         })
 
         # Create a global time-off in the same company (not specific a to calendar)
         # this should be added to calendar's leaves
-        self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+        self.env['hr.leave.public.holiday'].with_company(self.test_company).create({
             'name': 'Global leave',
-            'calendar_id': False,
+            'resource_calendar_ids': [Command.clear()],
             'date_from': (leave_start_datetime + timedelta(weeks=1)).replace(hour=0, minute=0, second=0),
             'date_to': (leave_start_datetime + timedelta(weeks=1, days=1)).replace(hour=23, minute=59, second=59),
         })
 
         # Create a global time-off in another company which should not be
         # taken into account when creating/unarchiving employee
-        self.env['resource.calendar.leaves'].with_company(self.test_company_2).create({
+        self.env['hr.leave.public.holiday'].with_company(self.test_company_2).create({
             'name': 'Global leave in another company',
-            'calendar_id': False,
+            'resource_calendar_ids': [Command.clear()],
             # Monday in two weeks
             'date_from': (leave_start_datetime + timedelta(weeks=2)).replace(hour=0, minute=0, second=0),
             'date_to': (leave_start_datetime + timedelta(weeks=2)).replace(hour=23, minute=59, second=59),
@@ -165,9 +165,9 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_end_datetime = datetime(2021, 1, 8, 18, 0, 0, 0)  # This is a friday
         day_off = datetime(2021, 1, 6, 0, 0, 0)  # part_time_employee does not work on wednesday
 
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.leave.public.holiday'].create({
             'name': 'Test',
-            'calendar_id': self.part_time_calendar.id,
+            'resource_calendar_ids': [Command.link(self.part_time_calendar.id)],
             'date_from': leave_start_datetime,
             'date_to': leave_end_datetime,
         })
@@ -187,9 +187,9 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_start_datetime = datetime(2021, 1, 4, 7, 0, 0, 0)  # This is a monday
         leave_end_datetime = datetime(2021, 1, 8, 18, 0, 0, 0)  # This is a friday
 
-        global_time_off = self.env['resource.calendar.leaves'].create({
+        global_time_off = self.env['hr.leave.public.holiday'].create({
             'name': 'Test',
-            'calendar_id': self.test_company.resource_calendar_id.id,
+            'resource_calendar_ids': [Command.link(self.test_company.resource_calendar_id.id)],
             'date_from': leave_start_datetime,
             'date_to': leave_end_datetime,
         })
@@ -199,12 +199,12 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_task = self.test_company.leave_timesheet_task_id
 
         # Now we delete the calendar_id. The timesheets should be deleted too.
-        global_time_off.calendar_id = False
+        global_time_off.resource_calendar_ids = [Command.clear()]
 
         self.assertFalse(leave_task.timesheet_ids.ids)
 
         # Now we reset the calendar_id. The timesheets should be created and have the right value.
-        global_time_off.calendar_id = self.test_company.resource_calendar_id.id
+        global_time_off.resource_calendar_ids = [Command.link(self.test_company.resource_calendar_id.id)]
 
         timesheets_by_employee = self._get_timesheets_by_employee(leave_task)
         self.assertFalse(timesheets_by_employee.get(self.part_time_employee.id, False))
@@ -220,9 +220,9 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
 
         # Create a leave and validate it
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.leave.public.holiday'].create({
             'name': 'Test',
-            'calendar_id': self.test_company.resource_calendar_id.id,
+            'resource_calendar_ids': self.test_company.resource_calendar_id.id,
             'date_from': datetime(2021, 1, 4, 7, 0, 0, 0),
             'date_to': datetime(2021, 1, 8, 18, 0, 0, 0),
         })
@@ -234,9 +234,9 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_start_datetime = datetime(2021, 1, 4, 7, 0)  # This is a monday
         leave_end_datetime = datetime(2021, 1, 8, 18, 0)  # This is a friday
 
-        global_time_off = self.env['resource.calendar.leaves'].with_company(self.test_company).create({
+        global_time_off = self.env['hr.leave.public.holiday'].with_company(self.test_company).create({
             'name': 'Test',
-            'calendar_id': False,
+            'resource_calendar_ids': [Command.clear()],
             'date_from': leave_start_datetime,
             'date_to': leave_end_datetime,
         })
@@ -252,9 +252,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # So it should add to 2(full time employees)*5(leave days)*8(hours per day) + 2(part time employees)*4(leave days)*6(hours per day).
         self.assertEqual(leave_task.effective_hours, 128)
 
-
         # Now we set the calendar_id. The timesheets should be deleted from other calendars.
-        global_time_off.calendar_id = self.test_company.resource_calendar_id.id
+        global_time_off.resource_calendar_ids = self.test_company.resource_calendar_id.id
         timesheets_by_employee = self._get_timesheets_by_employee(leave_task)
 
         self.assertFalse(timesheets_by_employee.get(self.part_time_employee.id, False))
@@ -271,9 +270,9 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             'name': 'Winterfell',
         })
 
-        self.env['resource.calendar.leaves'].with_company(new_company).create({
+        self.env['hr.leave.public.holiday'].with_company(new_company).create({
             'name': 'Test',
-            'calendar_id': False,
+            'resource_calendar_ids': [Command.clear()],
             'date_from': leave_start_datetime,
             'date_to': leave_end_datetime,
         })
@@ -287,16 +286,14 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.assertEqual(leave_task.effective_hours, 0)
 
     def test_timesheet_creation_for_global_time_off_wo_calendar_in_batch(self):
-        self.env['resource.calendar.leaves'].with_company(self.test_company).create([{
+        self.env['hr.leave.public.holiday'].with_company(self.test_company).create([{
             'name': "Easter Monday",
-            'calendar_id': False,
+            'resource_calendar_ids': [Command.clear()],
             'date_from': datetime(2022, 4, 18, 5, 0, 0),
             'date_to': datetime(2022, 4, 18, 18, 0, 0),
-            'resource_id': False,
-            'time_type': "leave",
         }, {
             'name': "Ascension Day",
-            'calendar_id': False,
+            'resource_calendar_ids': [Command.clear()],
             'date_from': datetime(2022, 4, 26, 5, 0, 0),
             'date_to': datetime(2022, 4, 26, 18, 0, 0),
         }])
@@ -355,30 +352,30 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
                 'attendance_ids': attendance_ids_35h,
             }
         ])
-        gto_09_04, gto_09_11, gto_11_06, gto_11_13 = self.env['resource.calendar.leaves'].create([
+        gto_09_04, gto_09_11, gto_11_06, gto_11_13 = self.env['hr.leave.public.holiday'].create([
             {
                 'name': 'Global Time Off 4 Setpember',
                 'date_from': datetime(2023, 9, 4, 7, 0, 0, 0),
                 'date_to': datetime(2023, 9, 4, 18, 0, 0, 0),
-                'calendar_id': calendar_40h.id,
+                'resource_calendar_ids': [Command.link(calendar_40h.id)],
             },
             {
                 'name': 'Global Time Off 11 Setpember',
                 'date_from': datetime(2023, 9, 11, 7, 0, 0, 0),
                 'date_to': datetime(2023, 9, 11, 18, 0, 0, 0),
-                'calendar_id': calendar_35h.id,
+                'resource_calendar_ids': [Command.link(calendar_35h.id)],
             },
             {
                 'name': 'Global Time Off 6 November',
                 'date_from': datetime(2023, 11, 6, 7, 0, 0, 0),
                 'date_to': datetime(2023, 11, 6, 18, 0, 0, 0),
-                'calendar_id': calendar_40h.id,
+                'resource_calendar_ids': [Command.link(calendar_40h.id)],
             },
             {
                 'name': 'Global Time Off 13 November',
                 'date_from': datetime(2023, 11, 13, 7, 0, 0, 0),
                 'date_to': datetime(2023, 11, 13, 18, 0, 0, 0),
-                'calendar_id': calendar_35h.id,
+                'resource_calendar_ids': [Command.link(calendar_35h.id)],
             }
         ])
 
@@ -452,13 +449,13 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         global_leave_start_datetime = hr_leave_start_datetime + timedelta(days=2)
         global_leave_end_datetime = global_leave_start_datetime + timedelta(hours=9)
 
-        global_time_off = self.env['resource.calendar.leaves'].create({
+        global_time_off = self.env['hr.leave.public.holiday'].create({
             'name': 'Public Holiday',
-            'calendar_id': self.test_company.resource_calendar_id.id,
+            'resource_calendar_ids': [Command.link(self.test_company.resource_calendar_id.id)],
             'date_from': global_leave_start_datetime,
             'date_to': global_leave_end_datetime,
         })
-        gto_without_calendar = self.env['resource.calendar.leaves'].create({
+        gto_without_calendar = self.env['hr.leave.public.holiday'].create({
             'name': 'Public Holiday without calendar',
             'date_from': global_leave_start_datetime + timedelta(days=1), # still within the hr.leave being refused
             'date_to': global_leave_end_datetime + timedelta(days=1),
@@ -491,13 +488,13 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         holiday2.sudo().action_approve()
 
         # recreate the global time off
-        global_time_off = self.env['resource.calendar.leaves'].create({
+        global_time_off = self.env['hr.leave.public.holiday'].create({
             'name': 'Public Holiday',
-            'calendar_id': self.test_company.resource_calendar_id.id,
+            'resource_calendar_ids': [Command.link(self.test_company.resource_calendar_id.id)],
             'date_from': global_leave_start_datetime,
             'date_to': global_leave_end_datetime,
         })
-        gto_without_calendar = self.env['resource.calendar.leaves'].create({
+        gto_without_calendar = self.env['hr.leave.public.holiday'].create({
             'name': 'Public Holiday without calendar',
             'date_from': global_leave_start_datetime + timedelta(days=1), # still within the hr.leave being cancelled
             'date_to': global_leave_end_datetime + timedelta(days=1),
@@ -518,9 +515,9 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         leave_start = datetime(2025, 1, 1, 7, 0)
         leave_end = datetime(2025, 1, 1, 18, 0)
 
-        global_time_off = self.env['resource.calendar.leaves'].create({
+        global_time_off = self.env['hr.leave.public.holiday'].create({
             'name': 'Public Holiday',
-            'calendar_id': self.test_company.resource_calendar_id.id,
+            'resource_calendar_ids': [Command.link(self.test_company.resource_calendar_id.id)],
             'date_from': leave_start,
             'date_to': leave_end,
         })

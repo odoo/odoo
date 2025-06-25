@@ -6,7 +6,8 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from pytz import timezone
 
-from odoo import fields, Command
+from odoo import fields
+from odoo.fields import Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import date_utils, mute_logger
 from odoo.tests import Form, tagged
@@ -520,8 +521,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'name': 'Christmas Time Off',
                 'date_from': fields.Datetime.from_string('2019-12-25 00:00:00'),
                 'date_to': fields.Datetime.from_string('2019-12-26 23:59:59'),
-                'resource_id': False,
-                'time_type': 'leave',
             })]
         })
         employee = self.employee_emp
@@ -676,11 +675,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Test Company 2',
         })
         # Create a public holiday for the second company
-        p_leave = self.env['resource.calendar.leaves'].create({
+        self.env['hr.leave.public.holiday'].create({
+            'name': 'Public Holiday',
             'date_from': datetime(2022, 3, 11),
             'date_to': datetime(2022, 3, 11, 23, 59, 59),
+            'company_id': other_company.id,
         })
-        p_leave.company_id = other_company
 
         leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Holiday Request',
@@ -792,7 +792,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         ])
         self.assertEqual(time_off[0].number_of_days, 5)
         self.assertEqual(time_off[1].number_of_days, 5)
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.leave.public.holiday'].create({
             'name': 'Global Time Off',
             'date_from': '2021-12-07 00:00:00',
             'date_to': '2021-12-07 23:59:59',
@@ -801,7 +801,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(time_off[1].number_of_days, 4)
 
     def test_time_off_recovery_on_write(self):
-        global_time_off = self.env['resource.calendar.leaves'].create({
+        global_time_off = self.env['hr.leave.public.holiday'].create({
             'name': 'Global Time Off',
             'date_from': '2021-12-07 00:00:00',
             'date_to': '2021-12-07 23:59:59',
@@ -840,7 +840,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(time_off_2.number_of_days, 4)
 
     def test_time_off_recovery_on_unlink(self):
-        global_time_off = self.env['resource.calendar.leaves'].create({
+        global_time_off = self.env['hr.leave.public.holiday'].create({
             'name': 'Global Time Off',
             'date_from': '2021-12-07 00:00:00',
             'date_to': '2021-12-07 23:59:59',
@@ -865,7 +865,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': '2021-11-19',
         })
         self.assertEqual(time_off.number_of_days, 5)
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.leave.public.holiday'].create({
             'name': 'Global Time Off',
             'date_from': '2021-11-15 00:00:00',
             'date_to': '2021-11-19 23:59:59',
@@ -1164,7 +1164,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Winter Holidays',
             'date_from': '2019-12-25 00:00:00',
             'date_to': '2019-12-26 23:59:59',
-            'time_type': 'leave',
         })]
 
         msg = "hr_holidays: duration_display should update after adding an overlapping holiday"
@@ -1194,12 +1193,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(sick_leave.duration_display, '3 days')
 
-        calendar.global_leave_ids = [(0, 0, {
+        self.env['hr.leave.public.holiday'].create({
             'name': 'Autumn Holidays',
             'date_from': '2021-11-16 00:00:00',
             'date_to': '2021-11-16 23:59:59',
-            'time_type': 'leave',
-        })]
+            'resource_calendar_ids': [Command.link(calendar.id)],
+        })
 
         self.assertEqual(sick_leave.duration_display, '2 days', "hr_holidays: duration_display should not count public holiday")
 
@@ -1396,10 +1395,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
         self.employee_emp.resource_calendar_id = calendar
         # Create a public holiday for the flexible calendar
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.leave.public.holiday'].create({
+            'name': 'Public Holiday',
             'date_from': datetime(2022, 3, 11),
             'date_to': datetime(2022, 3, 11, 23, 59, 59),
-            'calendar_id': calendar.id,
+            'resource_calendar_ids': [Command.link(calendar.id)],
         })
 
         leave = self.env['hr.leave'].with_user(self.user_employee_id).create({

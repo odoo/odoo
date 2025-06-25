@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
 from collections import defaultdict
+
+from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
@@ -47,9 +47,9 @@ class HrEmployee(models.Model):
     def _create_future_public_holidays_timesheets(self, employees):
         lines_vals = []
         today = fields.Datetime.today()
-        global_leaves_wo_calendar = defaultdict(lambda: self.env["resource.calendar.leaves"])
-        global_leaves_wo_calendar.update(dict(self.env['resource.calendar.leaves']._read_group(
-            [('calendar_id', '=', False), ('date_from', '>=', today)],
+        global_leaves_wo_calendar = defaultdict(lambda: self.env["hr.leave.public.holiday"])
+        global_leaves_wo_calendar.update(dict(self.env['hr.leave.public.holiday']._read_group(
+            [('resource_calendar_ids', '=', False), ('date_from', '>=', today)],
             groupby=['company_id'],
             aggregates=['id:recordset'],
         )))
@@ -67,7 +67,6 @@ class HrEmployee(models.Model):
                             employee,
                             work_hours_data[global_time_off.id],
                             day_date,
-                            work_hours_count
-                        )
-                    )
+                            work_hours_count,
+                        ))
         return self.env['account.analytic.line'].sudo().create(lines_vals)

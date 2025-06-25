@@ -93,11 +93,6 @@ class ResourceCalendar(models.Model):
         compute='_compute_attendance_ids', store=True, readonly=False, copy=True)
     leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Time Off')
-    global_leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', 'Global Time Off',
-        compute='_compute_global_leave_ids', store=True, readonly=False,
-        domain=[('resource_id', '=', False)], copy=True,
-    )
     hours_per_day = fields.Float("Average Hour per Day", store=True, compute="_compute_hours_per_day", digits=(2, 2), readonly=False,
                                  help="Average hours per day a resource is supposed to work with this calendar.")
     tz = fields.Selection(
@@ -181,14 +176,6 @@ class ResourceCalendar(models.Model):
                 'tz': company_calendar.tz,
                 'attendance_ids': [(5, 0, 0)] + [
                     (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids if not attendance.resource_id]
-            })
-
-    @api.depends('company_id')
-    def _compute_global_leave_ids(self):
-        for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
-            calendar.update({
-                'global_leave_ids': [(5, 0, 0)] + [
-                    (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
             })
 
     @api.depends('tz')
