@@ -554,7 +554,7 @@ export class Composer extends Component {
             // Reset signature when recovering an empty body.
             composer.emailAddSignature = true;
         }
-        let signature = this.store.self.signature;
+        let signature = this.thread.effectiveSelf.signature;
         if (signature) {
             const doc = createDocumentFragmentFromContent(signature);
             const divElement = document.createElement("div");
