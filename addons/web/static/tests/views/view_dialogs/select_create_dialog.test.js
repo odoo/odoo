@@ -1,7 +1,7 @@
 import { renderToMarkup } from "@web/core/utils/render";
 import { useSetupAction } from "@web/search/action_hook";
-import { listView } from "@web/views/list/list_view";
 import { kanbanView } from "@web/views/kanban/kanban_view";
+import { listView } from "@web/views/list/list_view";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -99,15 +99,8 @@ test("SelectCreateDialog use domain, group_by and search default on desktop", as
     `;
     let search = 0;
     onRpc("web_read_group", ({ kwargs }) => {
-        expect(kwargs).toEqual(
+        expect(kwargs).toMatchObject(
             {
-                context: {
-                    allowed_company_ids: [1],
-                    lang: "en",
-                    read_group_expand: true,
-                    tz: "taht",
-                    uid: 7,
-                }, // not part of the test, may change
                 domain: [
                     "&",
                     ["name", "like", "a"],
@@ -129,15 +122,8 @@ test("SelectCreateDialog use domain, group_by and search default on desktop", as
     });
     onRpc("web_search_read", ({ kwargs }) => {
         if (search === 0) {
-            expect(kwargs).toEqual(
+            expect(kwargs).toMatchObject(
                 {
-                    context: {
-                        allowed_company_ids: [1],
-                        bin_size: true,
-                        lang: "en",
-                        tz: "taht",
-                        uid: 7,
-                    }, // not part of the test, may change
                     domain: [
                         "&",
                         ["name", "like", "a"],
@@ -156,15 +142,8 @@ test("SelectCreateDialog use domain, group_by and search default on desktop", as
                 }
             );
         } else if (search === 1) {
-            expect(kwargs).toEqual(
+            expect(kwargs).toMatchObject(
                 {
-                    context: {
-                        allowed_company_ids: [1],
-                        bin_size: true,
-                        lang: "en",
-                        tz: "taht",
-                        uid: 7,
-                    }, // not part of the test, may change
                     domain: [["name", "like", "a"]],
                     specification: { name: {}, foo: {} },
                     limit: 80,
@@ -210,15 +189,11 @@ test("SelectCreateDialog use domain, group_by and search default on mobile", asy
     ] = /* xml */ `<kanban><templates><t t-name="card"><field name="name"/><field name="foo"/></t></templates></kanban>`;
     let search = 0;
     onRpc("web_read_group", ({ kwargs }) => {
-        expect(kwargs).toEqual(
+        expect(kwargs).toMatchObject(
             {
                 context: {
-                    allowed_company_ids: [1],
-                    lang: "en",
-                    tz: "taht",
-                    uid: 7,
                     read_group_expand: true,
-                }, // not part of the test, may change
+                },
                 domain: [
                     "&",
                     ["name", "like", "a"],
@@ -239,15 +214,8 @@ test("SelectCreateDialog use domain, group_by and search default on mobile", asy
     });
     onRpc("web_search_read", ({ kwargs }) => {
         if (search === 0) {
-            expect(kwargs).toEqual(
+            expect(kwargs).toMatchObject(
                 {
-                    context: {
-                        allowed_company_ids: [1],
-                        bin_size: true,
-                        lang: "en",
-                        tz: "taht",
-                        uid: 7,
-                    }, // not part of the test, may change
                     domain: [
                         "&",
                         ["name", "like", "a"],
@@ -261,20 +229,11 @@ test("SelectCreateDialog use domain, group_by and search default on mobile", asy
                     order: "",
                     count_limit: 10001,
                 },
-                {
-                    message: "should search with the complete domain (domain + search)",
-                }
+                { message: "should search with the complete domain (domain + search)" }
             );
         } else if (search === 1) {
-            expect(kwargs).toEqual(
+            expect(kwargs).toMatchObject(
                 {
-                    context: {
-                        allowed_company_ids: [1],
-                        bin_size: true,
-                        lang: "en",
-                        tz: "taht",
-                        uid: 7,
-                    }, // not part of the test, may change
                     domain: [["name", "like", "a"]],
                     specification: { name: {}, foo: {} },
                     limit: 40,
@@ -282,9 +241,7 @@ test("SelectCreateDialog use domain, group_by and search default on mobile", asy
                     order: "",
                     count_limit: 10001,
                 },
-                {
-                    message: "should search with the domain",
-                }
+                { message: "should search with the domain" }
             );
         }
         search++;
