@@ -15,6 +15,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_income_categ_id': 'base_venta_de_mercaderia',
             'name': _('Generic Chart of Accounts Argentina Single Taxpayer / Basis'),
             'code_digits': '12',
+            'sequence': 1,
         }
 
     @template('ar_base', 'res.company')
