@@ -592,7 +592,9 @@ export async function getFacetInfo(filter, filterValues, nameService) {
         }
         case "relation":
             values = await nameService.loadDisplayNames(filter.modelName, filterValues);
-            values = Object.values(values);
+            values = Object.values(values).map((value) =>
+                typeof value === "string" ? value : _t("Inaccessible/missing record ID")
+            );
             break;
     }
     return {
