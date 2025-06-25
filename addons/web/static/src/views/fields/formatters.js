@@ -429,7 +429,7 @@ export function formatText(value) {
  * @returns {html}
  */
 export function formatHtml(value) {
-    return value;
+    return value || "";
 }
 
 export function formatJson(value) {

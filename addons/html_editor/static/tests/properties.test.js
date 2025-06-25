@@ -5,6 +5,7 @@ import {
     models,
     mountView,
     patchWithCleanup,
+    contains,
 } from "@web/../tests/web_test_helpers";
 import { user } from "@web/core/user";
 import { htmlEditorVersions } from "@html_editor/html_migrations/html_migrations_utils";
@@ -34,6 +35,11 @@ class Partner extends models.Model {
             properties: {
                 bd6404492c244cff_html: `<p>Hello World</p><div data-embedded="draw" data-embedded-props='{"source": "https://excalidraw.com"}'/>`,
             },
+        },
+        {
+            id: 3,
+            user_id: 1,
+            properties: {}, // Property not set
         },
     ];
 }
@@ -118,4 +124,25 @@ test("properties: html readonly", async () => {
     expect(".odoo-editor-editable").toHaveCount(0);
     expect(`[name="properties"] .o_readonly`).toHaveCount(1);
     expect(`[name="properties"] iframe`).toHaveCount(1);
+});
+
+test("properties: html in list view", async () => {
+    patchWithCleanup(user, { hasGroup: (group) => false });
+    await mountView({
+        resModel: "res.partner",
+        type: "list",
+        arch: `
+            <list>
+                <field name="user_id"/>
+                <field name="properties"/>
+            </list>
+        `,
+    });
+    await contains(".o_optional_columns_dropdown_toggle").click();
+    await contains(".o-dropdown--menu input[type='checkbox']").click();
+    expect("div[name='properties.bd6404492c244cff_html']").toHaveCount(3);
+    const elements = document.querySelectorAll("div[name='properties.bd6404492c244cff_html']");
+    expect(elements[0].innerText).toBe("test");
+    expect(elements[1].innerText).toBe("Hello World\n\nhttps://excalidraw.com");
+    expect(elements[2].innerText).toBe("");
 });
