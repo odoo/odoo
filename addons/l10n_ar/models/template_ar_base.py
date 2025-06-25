@@ -13,6 +13,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'base_proveedores',
             'name': _('Generic Chart of Accounts Argentina Single Taxpayer / Basis'),
             'code_digits': '12',
+            'sequence': 1,
         }
 
     @template('ar_base', 'res.company')
