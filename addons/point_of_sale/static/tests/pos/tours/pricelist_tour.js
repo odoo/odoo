@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import { registry } from "@web/core/registry";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
@@ -6,6 +8,7 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Pricelist from "@point_of_sale/../tests/pos/tours/utils/pricelist_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
+import * as ProductConfigurator from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("pos_pricelist", {
@@ -120,5 +123,25 @@ registry.category("web_tour.tours").add("test_pricelists_in_pos", {
             ProductScreen.selectedOrderlineHas("Kiwi", "1", "5.0", "MEDIUM"),
             scan_barcode("kiwi_2"),
             ProductScreen.selectedOrderlineHas("Kiwi", "1", "5.0", "SMALL"),
+
+            // Test if post-loaded product with attribute open the configrator
+            scan_barcode("cherry_3"),
+            Chrome.waitRequest(),
+            {
+                content: "Click hided product with attribute",
+                trigger: "body",
+                run: () => {
+                    const productTemplate = posmodel.models["product.template"].find(
+                        (p) => p.name === "Cherry"
+                    );
+
+                    posmodel.addLineToCurrentOrder({
+                        product_tmpl_id: productTemplate,
+                    });
+                },
+            },
+            ProductConfigurator.pickRadio("BIG"),
+            ProductConfigurator.isUnavailable("RED"),
+            Dialog.confirm(),
         ].flat(),
 });
