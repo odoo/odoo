@@ -71,7 +71,7 @@
         <record model="ir.actions.act_window" id="mrp_workcenter_productivity_report_oee">
             <field name="name">Overall Equipment Effectiveness</field>
             <field name="res_model">mrp.workcenter.productivity</field>
-            <field name="view_id" eval="oee_pie_view"/>
+            <field name="view_id" ref="oee_pie_view"/>
             <field name="view_mode">graph,pivot,list,form</field>
             <field name="domain">[('workcenter_id','=',active_id)]</field>
             <field name="context">{'search_default_thismonth':True}</field>
