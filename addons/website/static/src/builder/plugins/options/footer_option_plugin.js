@@ -87,7 +87,7 @@ class FooterOptionPlugin extends Plugin {
     }
 }
 
-class WebsiteConfigFooterAction extends BuilderAction {
+export class WebsiteConfigFooterAction extends BuilderAction {
     static id = "websiteConfigFooter";
     static dependencies = ["builderActions", "customizeWebsite"];
     setup() {

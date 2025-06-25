@@ -19,7 +19,7 @@ class ProductAttributeOptionPlugin extends Plugin {
 
 }
 
-class ProductAttributeDisplayAction extends BuilderAction {
+export class ProductAttributeDisplayAction extends BuilderAction {
     static id = "productAttributeDisplay";
 
     setup() {

@@ -64,7 +64,7 @@ class CardImageOptionPlugin extends Plugin {
     }
 }
 
-class SetCoverImagePositionAction extends BuilderAction {
+export class SetCoverImagePositionAction extends BuilderAction {
     static id = "setCoverImagePosition";
     static dependencies = ["cardImageOption"];
     apply({ editingElement, params: { mainParam: className } }) {
@@ -77,7 +77,7 @@ class SetCoverImagePositionAction extends BuilderAction {
         imageEl.classList.remove(className);
     }
 }
-class RemoveCoverImageAction extends BuilderAction {
+export class RemoveCoverImageAction extends BuilderAction {
     static id = "removeCoverImage";
     static dependencies = ["history", "builderOptions", "remove"];
     apply({ editingElement }) {
@@ -89,7 +89,7 @@ class RemoveCoverImageAction extends BuilderAction {
         this.dependencies["builderOptions"].updateContainers(elementToSelect);
     }
 }
-class AddCoverImageAction extends BuilderAction {
+export class AddCoverImageAction extends BuilderAction {
     static id = "addCoverImage";
     apply({ editingElement }) {
         const imageWrapper = renderToElement("website.s_card.imageWrapper");
@@ -97,7 +97,7 @@ class AddCoverImageAction extends BuilderAction {
         editingElement.classList.add("o_card_img_top");
     }
 }
-class AlignCoverImageAction extends BuilderAction {
+export class AlignCoverImageAction extends BuilderAction {
     static id = "alignCoverImage";
     apply({ editingElement, params: { mainParam: direction } }) {
         const imgWrapper = editingElement.querySelector(".o_card_img_wrapper");

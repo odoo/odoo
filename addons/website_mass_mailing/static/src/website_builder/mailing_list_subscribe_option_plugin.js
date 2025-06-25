@@ -105,7 +105,7 @@ class MailingListSubscribeOptionPlugin extends Plugin {
     }
 }
 
-class ToggleThanksMessageAction extends BuilderAction {
+export class ToggleThanksMessageAction extends BuilderAction {
     static id = "toggleThanksMessage";
     apply({ editingElement }) {
         this.setThanksMessageVisibility(editingElement, true);

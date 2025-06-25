@@ -28,7 +28,7 @@ class MediaListOptionPlugin extends Plugin {
     };
 }
 
-class SetMediaLayoutAction extends BuilderAction {
+export class SetMediaLayoutAction extends BuilderAction {
     static id = "setMediaLayout";
     isApplied({ editingElement, value }) {
         const image = editingElement.querySelector(".s_media_list_img_wrapper");

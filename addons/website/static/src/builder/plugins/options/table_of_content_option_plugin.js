@@ -146,7 +146,7 @@ class TableOfContentOptionPlugin extends Plugin {
     }
 }
 
-class NavbarPositionAction extends BuilderAction {
+export class NavbarPositionAction extends BuilderAction {
     static id = "navbarPosition";
     isApplied({ editingElement: navbarWrapEl, params: { mainParam: position } }) {
         if (navbarWrapEl.classList.contains("s_table_of_content_horizontal_navbar")) {

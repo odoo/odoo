@@ -86,7 +86,7 @@ class WebsiteParallaxPlugin extends Plugin {
         }
     }
 }
-class SetParallaxTypeAction extends BuilderAction {
+export class SetParallaxTypeAction extends BuilderAction {
     static id = "setParallaxType";
     static dependencies = ["websiteParallaxPlugin"];
     apply(context) {

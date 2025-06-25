@@ -111,7 +111,7 @@ export class ClonePlugin extends Plugin {
     }
 }
 
-class CloneItemAction extends BuilderAction {
+export class CloneItemAction extends BuilderAction {
     static id = "addItem";
     static dependencies = ["clone", "history"];
     apply({ editingElement, params: { mainParam: itemSelector }, value: position }) {

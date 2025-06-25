@@ -136,7 +136,7 @@ class ImageToolOptionPlugin extends Plugin {
     }
 }
 
-class CropImageAction extends BuilderAction {
+export class CropImageAction extends BuilderAction {
     static id = "cropImage";
     static dependencies = ["imageCrop", "imagePostProcess"];
     isApplied({ editingElement }) {
@@ -157,7 +157,7 @@ class CropImageAction extends BuilderAction {
     }
 }
 
-class ResetCropAction extends BuilderAction {
+export class ResetCropAction extends BuilderAction {
     static id = "resetCrop";
     static dependencies = ["imagePostProcess"];
     async load({ editingElement: img }) {
@@ -171,7 +171,7 @@ class ResetCropAction extends BuilderAction {
     }
 }
 
-class TransformImageAction extends BuilderAction {
+export class TransformImageAction extends BuilderAction {
     static id = "transformImage";
     static dependencies = ["userCommand"];
     isApplied({ editingElement }) {
@@ -181,7 +181,7 @@ class TransformImageAction extends BuilderAction {
         return this.dependencies.userCommand.getCommand("transformImage").run(editingElement);
     }
 }
-class ResetTransformImageAction extends BuilderAction {
+export class ResetTransformImageAction extends BuilderAction {
     static id = "resetTransformImage";
     apply({ editingElement }) {
         editingElement.setAttribute(
@@ -190,7 +190,7 @@ class ResetTransformImageAction extends BuilderAction {
         );
     }
 }
-class ReplaceMediaAction extends BuilderAction {
+export class ReplaceMediaAction extends BuilderAction {
     static id = "replaceMedia";
     static dependencies = ["media", "history", "builderOptions"];
     async load({ editingElement }) {
@@ -212,7 +212,7 @@ class ReplaceMediaAction extends BuilderAction {
         this.dependencies["builderOptions"].updateContainers(newImage);
     }
 }
-class SetLinkAction extends BuilderAction {
+export class SetLinkAction extends BuilderAction {
     static id = "setLink";
     setup() {
         this.preview = false;
@@ -235,7 +235,7 @@ class SetLinkAction extends BuilderAction {
     }
 }
 
-class SetUrlAction extends BuilderAction {
+export class SetUrlAction extends BuilderAction {
     static id = "setUrl";
     setup() {
         this.preview = false;
@@ -261,7 +261,7 @@ class SetUrlAction extends BuilderAction {
     }
 }
 
-class SetNewWindowAction extends BuilderAction {
+export class SetNewWindowAction extends BuilderAction {
     static id = "setNewWindow";
     setup() {
         this.preview = false;
@@ -280,7 +280,7 @@ class SetNewWindowAction extends BuilderAction {
     }
 }
 
-class AltAction extends BuilderAction {
+export class AltAction extends BuilderAction {
     static id = "alt";
     getValue({ editingElement: imgEl }) {
         return imgEl.alt;

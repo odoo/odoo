@@ -19,7 +19,7 @@ export class Many2OneOptionPlugin extends Plugin {
     };
 }
 
-class Many2OneAction extends BuilderAction {
+export class Many2OneAction extends BuilderAction {
     static id = "many2One";
     async load({ editingElement, value }) {
         const { id } = JSON.parse(value);
