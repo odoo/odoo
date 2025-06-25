@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import babel
 import base64
 import contextlib
 import json
 import logging
+import pytz
 import re
 from collections import defaultdict
 from functools import reduce
@@ -14,9 +16,10 @@ from pytz import timezone
 from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import _, frozendict
+from odoo.http import request
+from odoo.tools import _, frozendict, get_lang
 from odoo.tools.float_utils import float_compare
-from odoo.tools.misc import unquote
+from odoo.tools.misc import get_diff, unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 
 _logger = logging.getLogger(__name__)
@@ -457,6 +460,85 @@ class IrActionsAct_Url(models.Model):
             "target", "url", "close",
         }
 
+
+class ServerActionHistoryWizard(models.TransientModel):
+    """ A wizard to compare and reset server action code. """
+    _name = 'server.action.history.wizard'
+    _description = "Server Action History Wizard"
+
+    @api.model
+    def _default_revision(self):
+        action_id = self.env['ir.actions.server'].browse(self._context.get('default_action_id', False))
+        return self.env["ir.actions.server.history"].search([
+            ("action_id", "=", action_id.id),
+            ('code', '!=', action_id.code),
+        ], limit=1)
+
+    action_id = fields.Many2one('ir.actions.server')
+    code_diff = fields.Html(compute='_compute_code_diff', sanitize_tags=False)
+    current_code = fields.Text(related='action_id.code', readonly=True)
+    revision = fields.Many2one("ir.actions.server.history",
+        domain="[('action_id', '=', action_id), ('code', '!=', current_code)]",
+        default=_default_revision,
+        required=True,
+    )
+
+    @api.depends("revision")
+    def _compute_code_diff(self):
+        for wizard in self:
+            rev_code = wizard.revision.code
+            actual_code = wizard.action_id.code
+            has_diff = actual_code != rev_code
+            wizard.code_diff = get_diff(
+                    (actual_code or "", _("Actual Code")),
+                    (rev_code or "", _("Revision Code")),
+                    dark_color_scheme=request and request.cookies.get("color_scheme") == "dark",
+            ) if has_diff else False
+
+    def restore_revision(self):
+        self.ensure_one()
+        self.action_id.code = self.revision.code
+
+
+class IrActionsServerHistory(models.Model):
+    _name = 'ir.actions.server.history'
+    _description = 'Server Action History'
+    _order = 'create_date desc, id desc'
+    _max_entries_per_action = 100
+
+    action_id = fields.Many2one('ir.actions.server', required=True, ondelete='cascade')
+    code = fields.Text()
+
+    def _compute_display_name(self):
+        self.display_name = False
+        for history in self.filtered('create_date'):
+            locale = get_lang(self.env).code
+            tzinfo = pytz.timezone(self.env.user.tz)
+            datetime = history.create_date.replace(microsecond=0)
+            datetime = pytz.utc.localize(datetime, is_dst=False)
+            datetime = datetime.astimezone(tzinfo) if tzinfo else datetime
+            date_label = babel.dates.format_datetime(
+                datetime,
+                tzinfo=tzinfo,
+                locale=locale,
+            )
+            author = history.create_uid.name
+            history.display_name = _("%(date_label)s - %(author)s", date_label=date_label, author=author)
+
+    @api.autovacuum
+    def _gc_histories(self):
+        result = self._read_group(
+            domain=[],
+            groupby=["action_id"],
+            aggregates=["id:recordset"],
+            having=[("__count", ">", self._max_entries_per_action)],
+        )
+        to_clean = self
+        for _action_id, history_ids in result:
+            to_clean |= history_ids.sorted()[self._max_entries_per_action:]
+        to_clean.unlink()
+
+
 WEBHOOK_SAMPLE_VALUES = {
     "integer": 42,
     "float": 42.42,
@@ -507,20 +589,6 @@ class IrActionsServer(models.Model):
     _inherit = ['ir.actions.actions']
     _order = 'sequence,name,id'
     _allow_sudo_commands = False
-
-    DEFAULT_PYTHON_CODE = """# Available variables:
-#  - env: environment on which the action is triggered
-#  - model: model of the record on which the action is triggered; is a void recordset
-#  - record: record on which the action is triggered; may be void
-#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
-#  - time, datetime, dateutil, timezone: useful Python libraries
-#  - float_compare: utility function to compare floats based on specific precision
-#  - b64encode, b64decode: functions to encode/decode binary data
-#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
-#  - _logger: _logger.info(message): logger to emit messages in server logs
-#  - UserError: exception class for raising user-facing warning messages
-#  - Command: x2many commands namespace
-# To return an action, assign: action = {...}\n\n\n\n"""
 
     @api.model
     def _default_update_path(self):
@@ -573,9 +641,9 @@ class IrActionsServer(models.Model):
     ir_cron_ids = fields.One2many('ir.cron', 'ir_actions_server_id', 'Scheduled Action', context={'active_test': False})
     # Python code
     code = fields.Text(string='Python Code', groups='base.group_system',
-                       default=DEFAULT_PYTHON_CODE,
                        help="Write Python code that the action will execute. Some variables are "
                             "available for use; help about python expression is given in the help tab.")
+    show_code_history = fields.Boolean(compute='_compute_show_code_history')
     # Multi
     parent_id = fields.Many2one('ir.actions.server', string='Parent Action', index=True, ondelete='cascade')
     child_ids = fields.One2many('ir.actions.server', 'parent_id', copy=True, domain=lambda self: str(self._get_children_domain()),
@@ -647,7 +715,32 @@ class IrActionsServer(models.Model):
                 parent = self.browse(parent_id)
                 vals['model_id'] = parent.model_id.id
                 vals['group_ids'] = parent.group_ids.ids
-        return super().create(vals_list)
+        actions = super().create(vals_list)
+
+        # create first history entries
+        history_vals = []
+        for action, vals in zip(actions, vals_list):
+            if "code" in vals:
+                history_vals.append({"action_id": action.id, "code": vals.get("code")})
+        if history_vals:
+            self.env["ir.actions.server.history"].create(history_vals)
+
+        return actions
+
+    def write(self, vals):
+        if (new_code := vals.get("code")) and new_code != self.code:
+            self.env["ir.actions.server.history"].create({"action_id": self.id, "code": new_code})
+        return super().write(vals)
+
+    @api.depends("state", "code")
+    def _compute_show_code_history(self):
+        self.show_code_history = False
+        History = self.env["ir.actions.server.history"]
+        for action in self.filtered(lambda a: a.state == "code"):
+            action.show_code_history = History.search_count([
+                ("action_id", "=", action.id),
+                ("code", "!=", action.code),
+            ]) > 0
 
     @api.model
     def _warning_depends(self):
@@ -905,7 +998,20 @@ class IrActionsServer(models.Model):
         self.filtered('binding_model_id').write({'binding_model_id': False})
         return True
 
+    def history_wizard_action(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Code History"),
+            "target": "new",
+            "views": [(False, "form")],
+            "res_model": "server.action.history.wizard",
+            "context": {"default_action_id": self.id},
+        }
+
     def _run_action_code_multi(self, eval_context):
+        if not self.code:
+            return
         safe_eval(self.code.strip(), eval_context, mode="exec", filename=str(self))
         return eval_context.get('action')
 
