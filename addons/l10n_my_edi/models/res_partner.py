@@ -139,3 +139,9 @@ class ResPartner(models.Model):
     @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_my_identification_type', 'l10n_my_identification_number', 'l10n_my_edi_industrial_classification', 'l10n_my_edi_malaysian_tin']
+
+    def _get_frontend_writable_fields(self):
+        frontend_writable_fields = super()._get_frontend_writable_fields()
+        frontend_writable_fields.update({'l10n_my_identification_type', 'l10n_my_identification_number', 'l10n_my_edi_industrial_classification'})
+
+        return frontend_writable_fields
