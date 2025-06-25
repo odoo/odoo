@@ -6,7 +6,6 @@ from . import mail_alias_domain
 from . import models
 
 # mixin
-from . import bus_listener_mixin
 from . import mail_activity_mixin
 from . import mail_alias_mixin_optional
 from . import mail_alias_mixin

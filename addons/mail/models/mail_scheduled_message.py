@@ -279,7 +279,7 @@ class MailScheduledMessage(models.Model):
         if self.search_count(domain, limit=1):
             self.env.ref('mail.ir_cron_post_scheduled_message')._trigger()
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return [
             Store.Many("attachment_ids"),
             Store.One("author_id"),

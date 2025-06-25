@@ -34,8 +34,8 @@ class ResPartner(models.Model):
     def _get_on_leave_ids(self):
         return self.env['res.users']._get_on_leave_ids(partner=True)
 
-    def _to_store_defaults(self):
-        return super()._to_store_defaults() + [
+    def _to_store_defaults(self, target):
+        return super()._to_store_defaults(target) + [
             Store.One(
                 "main_user_id",
                 [Store.Attr("leave_date_to", lambda u: u.leave_date_to if u.active else False)],

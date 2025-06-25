@@ -8,4 +8,4 @@ class ResUsers(models.Model):
     _inherit = ["res.users", "bus.listener.mixin"]
 
     def _bus_channel(self):
-        return self.partner_id._bus_channel()
+        return self.partner_id

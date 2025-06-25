@@ -18,8 +18,8 @@ class MailMessage(models.Model):
             else:
                 message.channel_id = False
 
-    def _to_store_defaults(self):
-        return super()._to_store_defaults() + [
+    def _to_store_defaults(self, target):
+        return super()._to_store_defaults(target) + [
             Store.Many(
                 "call_history_ids",
                 ["duration_hour", "end_dt"],
@@ -39,8 +39,8 @@ class MailMessage(models.Model):
     def _bus_channel(self):
         self.ensure_one()
         if self.channel_id:
-            return self.channel_id._bus_channel()
+            return self.channel_id
         guest = self.env["mail.guest"]._get_guest_from_context()
         if self.env.user._is_public() and guest:
-            return guest._bus_channel()
+            return guest
         return super()._bus_channel()

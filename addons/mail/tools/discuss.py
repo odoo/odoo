@@ -79,11 +79,21 @@ class Store:
     The keys of data are the name of models as defined in mail JS code, and the values are any
     format supported by store.insert() method (single dict or list of dict for each model name)."""
 
-    def __init__(self, records=None, fields=None, extra_fields=None, as_thread=False, **kwargs):
+    def __init__(
+        self,
+        records=None,
+        fields=None,
+        extra_fields=None,
+        as_thread=False,
+        bus_channel=None,
+        bus_subchannel=None,
+        **kwargs,
+    ):
         self.data = {}
         self.data_id = None
+        self.target = Store.Target(bus_channel, bus_subchannel)
         if records:
-            self.add(records, fields, extra_fields, as_thread=as_thread, **kwargs)
+            self.add(records, fields, extra_fields=extra_fields, as_thread=as_thread, **kwargs)
 
     def add(self, records, fields=None, extra_fields=None, as_thread=False, **kwargs):
         """Add records to the store. Data is coming from _to_store() method of the model if it is
@@ -99,7 +109,11 @@ class Store:
             if as_thread:
                 fields = []
             else:
-                fields = records._to_store_defaults() if hasattr(records, "_to_store_defaults") else []
+                fields = (
+                    records._to_store_defaults(self.target)
+                    if hasattr(records, "_to_store_defaults")
+                    else []
+                )
         fields = self._format_fields(records, fields) + self._format_fields(records, extra_fields)
         if as_thread:
             if hasattr(records, "_thread_to_store"):
@@ -198,6 +212,13 @@ class Store:
                 res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
 
+    def bus_send(self, notification_type="mail.record/insert", /):
+        assert self.target.channel is not None, (
+            "Missing `bus_channel`. Pass it to the `Store` constructor to use `bus_send`."
+        )
+        if res := self.get_result():
+            self.target.channel._bus_send(notification_type, res, subchannel=self.target.subchannel)
+
     def resolve_data_request(self, **values):
         """Add values to the store for the current data request.
 
@@ -261,6 +282,71 @@ class Store:
         for i in ids:
             assert values.get(i), f"missing id {i} in {model_name}: {values}"
         return tuple(values[i] for i in ids)
+
+    class Target:
+        """Target of the current store. Useful when information have to be added contextually
+        depending on who is going to receive it."""
+
+        def __init__(self, channel=None, subchannel=None):
+            assert channel is None or isinstance(channel, models.Model), (
+                f"channel should be None or a record: {channel}"
+            )
+            assert channel is None or len(channel) <= 1, (
+                f"channel should be empty or should be a single record: {channel}"
+            )
+            self.channel = channel
+            self.subchannel = subchannel
+
+        def is_current_user(self, env):
+            """Return whether the current target is the current user or guest of the given env.
+            If there is no target at all, this is always True."""
+            user = self.get_user(env)
+            guest = self.get_guest(env)
+            return self.subchannel is None and (
+                (user and user == env.user and not env.user._is_public())
+                or (guest and guest == env["mail.guest"]._get_guest_from_context())
+            )
+
+        def is_internal(self, env):
+            """Return whether the current target implies the information will only be sent to
+            internal users. If there is no target at all, the check is based on the current
+            user of the env."""
+            bus_record = self.channel
+            if bus_record is None and self.subchannel is None:
+                bus_record = env.user
+            return (
+                isinstance(bus_record, env.registry["res.users"])
+                and self.subchannel is None
+                and bus_record._is_internal()
+            ) or (
+                isinstance(bus_record, env.registry["discuss.channel"])
+                and (
+                    self.subchannel == "internal_users"
+                    or (
+                        bus_record.channel_type == "channel"
+                        and env.ref("base.group_user") in bus_record.group_public_id.all_implied_ids
+                    )
+                )
+            )
+
+        def get_guest(self, env):
+            """Return target guest (if any). Target guest is either the current bus target if the
+            bus is actually targetting a guest, or the current guest from env if there is no bus
+            target at all but there is a guest in the env.
+            """
+            records = self.channel
+            if self.channel is None and self.subchannel is None:
+                records = env["mail.guest"]._get_guest_from_context()
+            return records if isinstance(records, env.registry["mail.guest"]) else env["mail.guest"]
+
+        def get_user(self, env):
+            """Return target user (if any). Target user is either the current bus target if the
+            bus is actually targetting a user, or the current user from env if there is no bus
+            target at all but there is a user in the env."""
+            records = self.channel
+            if self.channel is None and self.subchannel is None:
+                records = env.user
+            return records if isinstance(records, env.registry["res.users"]) else env["res.users"]
 
     class Attr:
         """Attribute to be added for each record. The value can be a static value or a function

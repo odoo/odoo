@@ -58,7 +58,7 @@ class ThreadController(http.Controller):
             messages.set_message_done()
         return {
             **res,
-            "data": Store(messages, for_current_user=True).get_result(),
+            "data": Store(messages).get_result(),
             "messages": messages.ids,
         }
 
@@ -202,7 +202,7 @@ class ThreadController(http.Controller):
             }
         # sudo: mail.thread - users can post on accessible threads
         message = thread.sudo().message_post(**self._prepare_post_data(post_data, thread, **kwargs))
-        return store.add(message, for_current_user=True).get_result()
+        return store.add(message).get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -230,7 +230,7 @@ class ThreadController(http.Controller):
                 if key in thread._get_allowed_message_update_params()
             }
         )
-        return Store(message, for_current_user=True).get_result()
+        return Store(message).get_result()
 
     # side check for access
     # ------------------------------------------------------------

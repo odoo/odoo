@@ -573,7 +573,7 @@ GROUP BY fol.id%s%s""" % (
     # Misc discuss
     # --------------------------------------------------
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return [
             "display_name",
             "email",

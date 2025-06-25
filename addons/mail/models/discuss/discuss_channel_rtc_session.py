@@ -44,7 +44,11 @@ class DiscussChannelRtcSession(models.Model):
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            channel._bus_send_store(channel, {"rtc_session_ids": Store.Many(rtc_sessions, mode="ADD")})
+            Store(
+                channel,
+                {"rtc_session_ids": Store.Many(rtc_sessions, mode="ADD")},
+                bus_channel=channel,
+            ).bus_send()
         for channel in rtc_sessions.channel_id.filtered(lambda c: len(c.rtc_session_ids) == 1):
             body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
             message = channel.message_post(body=body, message_type="notification")
@@ -56,7 +60,7 @@ class DiscussChannelRtcSession(models.Model):
                     "start_call_message_id": message.id,
                 },
             )
-            channel._bus_send_store(message, [Store.Many("call_history_ids", [])])
+            Store(message, [Store.Many("call_history_ids", [])], bus_channel=channel).bus_send()
         return rtc_sessions
 
     def unlink(self):
@@ -75,9 +79,11 @@ class DiscussChannelRtcSession(models.Model):
         for rtc_session in self:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            channel._bus_send_store(
-                channel, {"rtc_session_ids": Store.Many(rtc_sessions, [], mode="DELETE")}
-            )
+            Store(
+                channel,
+                {"rtc_session_ids": Store.Many(rtc_sessions, [], mode="DELETE")},
+                bus_channel=channel,
+            ).bus_send()
         for rtc_session in self:
             rtc_session._bus_send(
                 "discuss.channel.rtc.session/ended", {"sessionId": rtc_session.id}
@@ -90,7 +96,7 @@ class DiscussChannelRtcSession(models.Model):
             .search([("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)])
         ):
             history.end_dt = fields.Datetime.now()
-            history.channel_id._bus_send_store(history, ["duration_hour", "end_dt"])
+            Store(history, ["duration_hour", "end_dt"], bus_channel=history.channel_id).bus_send()
         return super().unlink()
 
     def _bus_channel(self):
@@ -157,7 +163,7 @@ class DiscussChannelRtcSession(models.Model):
         for target, payload in payload_by_target.items():
             target._bus_send("discuss.channel.rtc.session/peer_notification", payload)
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return Store.One(
             "channel_member_id",
             [

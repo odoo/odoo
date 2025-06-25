@@ -62,6 +62,7 @@ class MailGuest(models.Model):
         """Returns the current guest record from the context, if applicable."""
         guest = self.env.context.get('guest')
         if isinstance(guest, self.pool['mail.guest']):
+            assert len(guest) <= 1, "Context guest should be empty or a single record."
             return guest.sudo(False).with_context(guest=guest)
         return self.env['mail.guest']
 
@@ -77,9 +78,8 @@ class MailGuest(models.Model):
         if len(name) > 512:
             raise UserError(_("Guest's name is too long."))
         self.name = name
-        store = Store(self, ["avatar_128", "name"])
-        self.channel_ids._bus_send_store(store)
-        self._bus_send_store(store)
+        Store(self, ["avatar_128", "name"], bus_channel=self.channel_ids).bus_send()
+        Store(self, ["avatar_128", "name"], bus_channel=self).bus_send()
 
     def _update_timezone(self, timezone):
         query = """
@@ -114,7 +114,7 @@ class MailGuest(models.Model):
             ]
         return [field_name]
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return ["avatar_128", "im_status", "name"]
 
     def _set_auth_cookie(self):

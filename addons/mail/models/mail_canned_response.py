@@ -66,15 +66,17 @@ class MailCannedResponse(models.Model):
 
     def _broadcast(self, /, *, delete=False):
         for canned_response in self:
-            store = Store()
-            if delete:
-                store.delete(canned_response)
-            else:
-                store.add(canned_response)
-            user = self.env.user | canned_response.create_uid
-            if not (user.all_group_ids & canned_response.group_ids):
-                user._bus_send_store(store)
-            canned_response.group_ids._bus_send_store(store)
+            stores = [Store(bus_channel=group) for group in canned_response.group_ids]
+            for user in self.env.user | canned_response.create_uid:
+                if not user.all_group_ids & canned_response.group_ids:
+                    stores.append(Store(bus_channel=user))
+            for store in stores:
+                if delete:
+                    store.delete(canned_response)
+                else:
+                    store.add(canned_response)
+            for store in stores:
+                store.bus_send()
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return ["source", "substitution"]

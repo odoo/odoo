@@ -24,10 +24,12 @@ class TestChannelInternals(MailCommon, HttpCase):
         super().setUpClass()
         cls.maxDiff = None
         cls.test_channel = cls.env['discuss.channel'].with_context(cls._test_context)._create_channel(name='Channel', group_id=None)
-        cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
-            'name': 'Test Partner',
-            'email': 'test_customer@example.com',
-        })
+        cls.test_user = (
+            cls.env["res.users"]
+            .with_context(cls._test_context)
+            .create({"name": "Test Partner", "email": "test_customer@example.com", "login": "fndz"})
+        )
+        cls.test_partner = cls.test_user.partner_id
         cls.user_employee_nomail = mail_new_test_user(
             cls.env, login='employee_nomail',
             email=False,
@@ -101,14 +103,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         ),
                                         "date": "2020-03-22 10:42:06",
                                         "default_subject": "Channel",
-                                        "email_from": '"Ernest Employee" <e.e@example.com>',
                                         "id": message.id,
                                         "incoming_email_cc": False,
                                         "incoming_email_to": False,
                                         "message_link_preview_ids": [],
                                         "message_type": "notification",
                                         "model": "discuss.channel",
-                                        "notification_ids": [],
                                         "parent_id": False,
                                         "partner_ids": [],
                                         "pinned_at": False,
@@ -159,28 +159,30 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "discuss.channel": [{"id": channel.id, "member_count": 2}],
                             "discuss.channel.member": [
                                 {
+                                    "channel_id": {"id": channel.id, "model": "discuss.channel"},
                                     "create_date": fields.Datetime.to_string(member.create_date),
                                     "fetched_message_id": False,
                                     "id": member.id,
                                     "last_seen_dt": False,
                                     "partner_id": {"id": self.test_partner.id, "type": "partner"},
                                     "seen_message_id": False,
-                                    "channel_id": {"id": channel.id, "model": "discuss.channel"},
                                 },
                             ],
                             "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
                                     "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
-                                    "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
-                                    "im_status": "im_partner",
+                                    "im_status": "offline",
                                     "im_status_access_token": self.test_partner._get_im_status_access_token(),
                                     "is_company": False,
-                                    "main_user_id": False,
+                                    "main_user_id": self.test_user.id,
                                     "name": "Test Partner",
                                     "write_date": test_partner_write_date,
                                 },
+                            ),
+                            "res.users": self._filter_users_fields(
+                                {"id": self.test_user.id, "leave_date_to": False, "share": False},
                             ),
                         },
                     },
@@ -218,13 +220,16 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
-                                    "im_status": "im_partner",
+                                    "im_status": "offline",
                                     "im_status_access_token": self.test_partner._get_im_status_access_token(),
                                     "is_company": False,
-                                    "main_user_id": False,
+                                    "main_user_id": self.test_user.id,
                                     "name": "Test Partner",
                                     "write_date": test_partner_write_date,
-                                }
+                                },
+                            ),
+                            "res.users": self._filter_users_fields(
+                                {"id": self.test_user.id, "leave_date_to": False, "share": False},
                             ),
                         },
                     },

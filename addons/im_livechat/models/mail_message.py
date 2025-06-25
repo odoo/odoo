@@ -21,8 +21,8 @@ class MailMessage(models.Model):
         for message in self:
             message.parent_body = message.parent_id.body if message.parent_id else False
 
-    def _to_store_defaults(self):
-        return super()._to_store_defaults() + ["chatbot_current_step"]
+    def _to_store_defaults(self, target):
+        return super()._to_store_defaults(target) + ["chatbot_current_step"]
 
     def _to_store(self, store: Store, fields, **kwargs):
         """If we are currently running a chatbot.script, we include the information about
@@ -84,13 +84,6 @@ class MailMessage(models.Model):
                     store.add(
                         message, {"chatbotStep": {"scriptStep": step.id, "message": message.id}}
                     )
-
-    def _get_store_email_from_predicate(self):
-        """Override to ensure that email_from is not set for live chat messages unless necessary."""
-        return super()._get_store_email_from_predicate() and (
-            (not self.author_id and not self.author_guest_id)
-            or self.channel_id.channel_type != "livechat"
-        )
 
     def _get_store_partner_name_fields(self):
         if self.channel_id.channel_type == "livechat":

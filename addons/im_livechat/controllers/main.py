@@ -162,7 +162,6 @@ class LivechatController(http.Controller):
             if guest:
                 store.add_global_values(guest_token=guest.sudo()._format_auth_cookie())
         request.env["res.users"].with_context(guest=guest)._init_store_data(store)
-        guest._bus_send_store(store)
         # Make sure not to send "isLoaded" value on the guest bus, otherwise it
         # could be overwritten.
         if channel:

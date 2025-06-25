@@ -76,7 +76,7 @@ class IrAttachment(models.Model):
             )
         self.unlink()
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return [
             "checksum",
             "create_date",

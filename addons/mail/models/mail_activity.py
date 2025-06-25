@@ -606,7 +606,7 @@ class MailActivity(models.Model):
     def activity_format(self):
         return Store(self).get_result()
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return [
             "activity_category",
             Store.One("activity_type_id", "name"),

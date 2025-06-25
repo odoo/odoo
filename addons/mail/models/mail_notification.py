@@ -118,7 +118,7 @@ class MailNotification(models.Model):
 
         return self.filtered(_filter_unimportant_notifications)
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return [
             "failure_type",
             "mail_message_id",

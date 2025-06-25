@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from freezegun import freeze_time
-import json
 
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.tests.common import JsonRpcException, new_test_user, tagged
 from odoo.tools.misc import mute_logger
-from odoo.addons.bus.models.bus import json_dump
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 
@@ -175,7 +173,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         def get_forward_op_bus_params():
             messages = self.env["mail.message"].search([], order="id desc", limit=3)
             # only data relevant to the test are asserted for simplicity
-            transfer_message_data = Store(messages[1]).get_result()
+            transfer_message_data = Store(messages[1], bus_channel=discuss_channel).get_result()
             transfer_message_data["mail.message"][0].update(
                 {
                     "author_id": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
@@ -186,7 +184,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 }
             )
             transfer_message_data["mail.thread"][0]["display_name"] = "Testing Bot"
-            joined_message_data = Store(messages[0]).get_result()
+            joined_message_data = Store(messages[0], bus_channel=discuss_channel).get_result()
             joined_message_data["mail.message"][0].update(
                 {
                     "author_id": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
@@ -207,13 +205,13 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 lambda m: m.partner_id == self.partner_employee
             )
             # data in-between join and leave
-            channel_data_join = json.loads(
-                json_dump(
-                    Store(
-                        discuss_channel, discuss_channel._to_store_defaults(for_current_user=False)
-                    ).get_result()
-                )
-            )
+            channel_data_join = Store(
+                discuss_channel,
+                bus_channel=member_emp._bus_channel(),
+            ).get_result()
+            channel_data_join["discuss.channel"][0]["invited_member_ids"] = [["ADD", []]]
+            channel_data_join["discuss.channel"][0]["rtc_session_ids"] = [["ADD", []]]
+            channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_agent"
             channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["is_pinned"] = True
@@ -260,7 +258,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
-                    (self.cr.dbname, "res.partner", self.chatbot_script.operator_partner_id.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
@@ -357,19 +354,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         "payload": {
                             "discuss.channel": [
                                 {
-                                    "close_chat_window": True,
-                                    "id": discuss_channel.id,
-                                    "isLocallyPinned": False,
-                                    "is_pinned": False,
-                                }
-                            ]
-                        },
-                    },
-                    {
-                        "type": "mail.record/insert",
-                        "payload": {
-                            "discuss.channel": [
-                                {
                                     "channel_member_ids": [["DELETE", [member_bot.id]]],
                                     "id": discuss_channel.id,
                                     "member_count": 2,
@@ -415,6 +399,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             )
         self.assertEqual(discuss_channel.name, "OdooBot Ernest Employee")
         self.assertEqual(discuss_channel.livechat_operator_id, self.partner_employee)
+        self.assertEqual(discuss_channel.livechat_outcome, "no_answer")
         self.assertTrue(
             discuss_channel.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.partner_employee

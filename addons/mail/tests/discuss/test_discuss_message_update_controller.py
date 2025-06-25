@@ -11,10 +11,10 @@ class TestDiscussMessageUpdateController(MailControllerUpdateCommon):
             {"group_public_id": None, "name": "public channel"}
         )
         channel._add_members(guests=self.guest)
-        channel = channel.with_context(guest=self.guest)
-        message = channel.with_user(self.user_public).message_post(
-            body=self.message_body,
-            message_type="comment",
+        message = (
+            channel.with_user(self.user_public)
+            .with_context(guest=self.guest)
+            .message_post(body=self.message_body, message_type="comment")
         )
         self._execute_subtests(
             message,

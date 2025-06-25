@@ -27,19 +27,19 @@ class MessageMailLinkPreview(models.Model):
 
     def _hide_and_notify(self):
         if not self:
-            return True
+            return
         self.is_hidden = True
         for message_link_preview in self:
-            self._bus_send_store(Store().delete(message_link_preview))
+            Store(bus_channel=self._bus_channel()).delete(message_link_preview).bus_send()
 
     def _unlink_and_notify(self):
         if not self:
-            return True
+            return
         for message_link_preview in self:
-            self._bus_send_store(Store().delete(message_link_preview))
+            Store(bus_channel=self._bus_channel()).delete(message_link_preview).bus_send()
         self.unlink()
 
-    def _to_store_defaults(self):
+    def _to_store_defaults(self, target):
         return [
             Store.One("link_preview_id", sudo=True),
             Store.One("message_id", [], sudo=True),
