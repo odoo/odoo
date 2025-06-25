@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { setupEditor, testEditor } from "../_helpers/editor";
-import { unformat } from "../_helpers/format";
 import { manuallyDispatchProgrammaticEvent, microTick, press } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
-import { getContent, setSelection } from "../_helpers/selection";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { setupEditor, testEditor } from "../_helpers/editor";
+import { unformat } from "../_helpers/format";
+import { getContent, setSelection } from "../_helpers/selection";
+import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
 
 /**
  * content of the "deleteBackward" sub suite in editor.test.js

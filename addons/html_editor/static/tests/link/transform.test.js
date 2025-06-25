@@ -14,7 +14,7 @@ async function insertSpace(editor) {
         return;
     }
     // InputEvent is required to simulate the insert text.
-    const beforeinputEvent = await manuallyDispatchProgrammaticEvent(
+    const [beforeinputEvent] = await manuallyDispatchProgrammaticEvent(
         editor.editable,
         "beforeinput",
         {
@@ -53,7 +53,7 @@ async function insertSpace(editor) {
         anchorOffset: offset,
     });
 
-    const inputEvent = await manuallyDispatchProgrammaticEvent(editor.editable, "input", {
+    const [inputEvent] = await manuallyDispatchProgrammaticEvent(editor.editable, "input", {
         inputType: "insertText",
         data: " ",
     });
