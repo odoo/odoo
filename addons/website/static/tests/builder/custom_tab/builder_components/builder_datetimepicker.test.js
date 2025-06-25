@@ -18,7 +18,7 @@ test("opens DateTimePicker on focus, closes on blur", async () => {
     await contains(".we-bg-options-container input").click();
     expect(".o_datetime_picker").toBeDisplayed();
     await contains(".options-container").click();
-    expect(".o_datetime_picker").not.toBeDisplayed();
+    expect(".o_datetime_picker").not.toHaveCount();
 });
 
 test("defaults to now if undefined", async () => {

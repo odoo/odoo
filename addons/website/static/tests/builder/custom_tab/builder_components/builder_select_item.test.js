@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expect, test } from "@odoo/hoot";
 import {
@@ -17,7 +18,6 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../website_helpers";
-import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -39,7 +39,7 @@ test("call a specific action with some params and value (BuilderSelectItem)", as
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
     await click(".we-bg-options-container .dropdown");
     await animationFrame();
     expect(".popover [data-action-id='customAction']").toHaveText("MyAction");
@@ -64,13 +64,13 @@ test("set the label of the select from the active select item and be updated on 
         anchorOffset: 0,
     });
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
     expect(".we-bg-options-container .dropdown").toHaveText("A");
     await contains(".we-bg-options-container .dropdown").click();
     await contains(".o-overlay-item [data-attribute-action-value='b']").click();
     expect(".we-bg-options-container .dropdown").toHaveText("B");
     await animationFrame();
-    expect(".o-overlay-item [data-attribute-action-value='b']").not.toBeDisplayed();
+    expect(".o-overlay-item [data-attribute-action-value='b']").not.toHaveCount();
     await contains(".o-snippets-top-actions .fa-undo").click();
     expect(".we-bg-options-container .dropdown").toHaveText("A");
     await contains(".o-snippets-top-actions .fa-repeat").click();
@@ -88,7 +88,7 @@ test("consider the priority of the select item", async () => {
     });
     await setupWebsiteBuilder(`<div class="test-options-target a">x</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".options-container").toBeVisible();
 
     expect(".we-bg-options-container .dropdown").toHaveText("A");
     await contains(".we-bg-options-container .dropdown").click();

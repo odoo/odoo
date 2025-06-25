@@ -42,7 +42,7 @@ describe("Cookies bar popup options", () => {
     test("Position option is not visible for discrete layout", async () => {
         await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
         await waitFor(".options-container");
-        expect("[data-label='Position']").not.toBeVisible();
+        expect("[data-label='Position']").not.toHaveCount();
     });
     test("Position option is not visible for popup layout", async () => {
         await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
