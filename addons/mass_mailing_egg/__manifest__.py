@@ -20,7 +20,7 @@
         'mass_mailing_egg.assets_builder': [  # equivalent html_builder.assets in website_builder_action.xml
             # lazy builder assets NOT applied in iframe
             ('include', 'html_builder.assets'),
-            'mass_mailing_egg/static/src/html_builder/**/*',
+            'mass_mailing_egg/static/src/builder/**/*',
         ],
         # TODO EGGMAIL: evaluate if necessary to have interactions for mass_mailing
         # 'mass_mailing_egg.assets_iframe_core': [  # web.assets_frontend lite, minimal env to spawn interactions

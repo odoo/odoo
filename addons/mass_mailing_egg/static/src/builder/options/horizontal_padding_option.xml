@@ -1,0 +1,13 @@
+<templates>
+    <t t-name="mass_mailing.PaddingOption">
+        <BuilderRow label.translate="Padding ↔">
+            <BuilderNumberInput title.translate="Left" styleAction="'padding-left'" unit="'px'"/>
+            <BuilderNumberInput title.translate="Right" styleAction="'padding-right'" unit="'px'"/>
+        </BuilderRow>
+        <t t-log="this"/>
+        <BuilderRow label.translate="Padding ↔">
+            <BuilderNumberInput title.translate="Left" styleAction="'padding-top'" unit="'px'"/>
+            <BuilderNumberInput title.translate="Right" styleAction="'padding-bottom'" unit="'px'"/>
+        </BuilderRow>
+    </t>
+</templates>

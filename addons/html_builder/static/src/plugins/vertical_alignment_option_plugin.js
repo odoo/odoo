@@ -5,14 +5,13 @@ import { VerticalAlignmentOption } from "@html_builder/plugins/vertical_alignmen
 import { withSequence } from "@html_editor/utils/resource";
 import { VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
 
-class VerticalAlignmentOptionPlugin extends Plugin {
+export class VerticalAlignmentOptionPlugin extends Plugin {
     static id = "verticalAlignmentOption";
     resources = {
         builder_options: [
             withSequence(VERTICAL_ALIGNMENT, {
                 OptionComponent: VerticalAlignmentOption,
-                selector:
-                    ".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image",
+                selector: this.selector,
                 applyTo: ".row",
                 props: {
                     level: 1,
@@ -23,6 +22,9 @@ class VerticalAlignmentOptionPlugin extends Plugin {
             SetVerticalAlignmentAction,
         },
     };
+    get selector() {
+        return ".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image";
+    }
 }
 
 export class SetVerticalAlignmentAction extends ClassAction {

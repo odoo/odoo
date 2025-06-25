@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mass_mailing.BlockquoteOption">
+    <BuilderRow label.translate="Height">
+        <BuilderButtonGroup>
+            <BuilderButton classAction="''">Auto</BuilderButton>
+            <BuilderButton classAction="'o_height_400'">50%</BuilderButton>
+            <BuilderButton classAction="'o_height_800'">100%</BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+<t t-name="mass_mailing.ColorPickerOption">
+     <BuilderRow label.translate="Background Color">
+        <BuilderColorPicker styleAction="'background-color'" noTransparency="true" enabledTabs="['solid', 'custom']"/>
+    </BuilderRow>
+</t>
+</templates>

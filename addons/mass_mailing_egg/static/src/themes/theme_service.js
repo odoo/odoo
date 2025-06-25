@@ -33,6 +33,7 @@ export class ThemeModel extends Reactive {
         // TODO EGGMAIL: do we have to use database records for themes? Why not
         // use assets? Do users have to be able to modify their DB to add templates?
         for (const theme of children(themesEl)) {
+            this.preProcessImages(theme)
             const themeOptions = {
                 className: getClassName(theme.dataset.name),
                 hideFromMobile: hasDataOption(theme, "hide-from-mobile"),
@@ -69,6 +70,15 @@ export class ThemeModel extends Reactive {
             this.loadedThemes.set(themeOptions.name, themeOptions);
         }
         this.loadedAssets.add(asset);
+    }
+
+    preProcessImages(theme) {
+        const images = theme.querySelectorAll("img[src]");
+        for (const image of images) {
+            if (!image.dataset.originalSrc) {
+                image.dataset.originalSrc = image.getAttribute("src");
+            }
+        }
     }
 
     getThemeOptions(html) {

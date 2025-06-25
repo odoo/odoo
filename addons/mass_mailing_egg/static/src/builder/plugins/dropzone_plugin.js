@@ -1,0 +1,46 @@
+import { Plugin } from "@html_editor/plugin";
+import { registry } from "@web/core/registry";
+
+class DropzonePlugin extends Plugin {
+    static id = "mass_mailing.DropzonePlugin";
+
+    resources = {
+        dropzone_selector: [
+            {
+                selector: ".o_mail_snippet_general",
+                dropIn: ":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"
+            }, {
+                selector: ".s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight",
+                dropNear: "p, h1, h2, h3, ul, ol, .row > div > img, .s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight",
+                dropIn: ".content, nav",
+            }, { // table_column
+                selector: ".col>td, .col>th",
+                exclude: this.noOptionsSelector,
+                dropNear: ".col>td, .col>th",
+            }, { // table_column_mv
+                selector: ".col_mv, td, th",
+                exclude: this.noOptionsSelector,
+                dropNear: ".col_mv, td, th"
+            }, { // table_row
+                selector: "tr:has(> .row), tr:has(> .col_mv)",
+                exclude: this.noOptionsSelector,
+                dropNear: "tr:has(> .row), tr:has(> .col_mv)",
+            }, { // content
+                selector: ".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body",
+                exclude: this.noOptionsSelector,
+                dropNear: "[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *",
+                dropIn: "[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure",
+            }, { // sizing_x
+                selector: ".row > div",
+                exclude: ".o_mail_no_resize, .o_mail_no_options, .s_col_no_resize.row > div, .s_col_no_resize",
+                dropNear: ".row:not(.s_col_no_resize) > div",
+            }
+        ]
+    }
+
+    get noOptionsSelector() {
+        return ".o_mail_no_options";
+    }
+}
+
+registry.category("builder-plugins").add(DropzonePlugin.id, DropzonePlugin);
