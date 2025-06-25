@@ -4,7 +4,7 @@
 
 <t t-name="html_builder.InvisibleElementsPanel">
     <div class="o_we_invisible_el_panel mt-auto flex-grow-0 flex-shrink-0">
-        <div class="o_panel_header">
+        <div class="o_panel_header" t-if="state.invisibleEntries.length">
             Invisible Elements
         </div>
         <t t-foreach="state.invisibleEntries" t-as="invisibleEntry" t-key="invisibleEntry_index">
