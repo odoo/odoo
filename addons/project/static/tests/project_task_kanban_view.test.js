@@ -12,7 +12,7 @@ const viewParams = {
     resModel: "project.task",
     type: "kanban",
     arch: `
-        <kanban js_class="project_task_kanban">
+        <kanban default_group_by="stage_id" js_class="project_task_kanban">
             <templates>
                 <t t-name="card">
                     <field name="name"/>
@@ -23,7 +23,6 @@ const viewParams = {
         active_model: "project.project",
         default_project_id: 1,
     },
-    groupBy: ["stage_id"],
 };
 
 test("stages nocontent helper should be displayed in the project Kanban", async () => {
