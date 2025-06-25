@@ -25,6 +25,9 @@ export class KanbanArchParser {
         activeActions.editGroup = exprToBoolean(xmlDoc.getAttribute("group_edit"), true);
         activeActions.quickCreate =
             activeActions.create && exprToBoolean(xmlDoc.getAttribute("quick_create"), true);
+        const defaultGroupBy = xmlDoc.hasAttribute("default_group_by")
+            ? xmlDoc.getAttribute("default_group_by").split(",")
+            : null;
         const onCreate = xmlDoc.getAttribute("on_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltipInfo = {};
@@ -151,6 +154,7 @@ export class KanbanArchParser {
             cardColorField: xmlDoc.getAttribute("highlight_color"),
             className,
             controls,
+            defaultGroupBy,
             fieldNodes,
             widgetNodes,
             handleField,
