@@ -569,7 +569,8 @@ Versions:
                   # When searching for resource leave intervals, we exclude the one that
                   # is related to the leave we're currently trying to compute for.
                   '|', ('holiday_id', '=', False), ('holiday_id', 'not in', employee_leaves.ids)]
-        domain = expression.AND([domain, additional_domain])
+        if additional_domain:
+            domain = Domain.AND([domain, additional_domain])
         # Precompute values in batch for performance purposes
         work_time_per_day_mapped = {
             (date_from, date_to, include_public_holidays_in_duration, calendar): employees.with_context(
