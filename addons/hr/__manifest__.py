@@ -52,7 +52,7 @@
     ],
     'installable': True,
     'application': True,
-    'post_init_hook': '_install_hr_localization',
+    'post_init_hook': '_post_init_hook',
     'assets': {
         'web.assets_backend': [
             'hr/static/src/**/*',
