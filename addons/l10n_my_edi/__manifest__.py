@@ -25,6 +25,7 @@
         'views/res_company_view.xml',
         'views/res_config_settings_view.xml',
         'views/res_partner_view.xml',
+        'views/account_portal_templates.xml',
 
         'wizard/l10n_my_edi_status_update_wizard.xml',
     ],
