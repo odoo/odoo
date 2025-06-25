@@ -14,7 +14,6 @@ HR_READABLE_FIELDS = [
     'employee_id',
     'employee_ids',
     'employee_parent_id',
-    'hr_presence_state',
     'last_activity',
     'last_activity_time',
     'can_edit',
@@ -145,7 +144,6 @@ class ResUsers(models.Model):
     study_field = fields.Char(related='employee_id.study_field', readonly=False, related_sudo=False)
     study_school = fields.Char(related='employee_id.study_school', readonly=False, related_sudo=False)
     employee_count = fields.Integer(compute='_compute_employee_count')
-    hr_presence_state = fields.Selection(related='employee_id.hr_presence_state')
     last_activity = fields.Date(related='employee_id.last_activity')
     last_activity_time = fields.Char(related='employee_id.last_activity_time')
     employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
