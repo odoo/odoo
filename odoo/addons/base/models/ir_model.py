@@ -1364,7 +1364,7 @@ class IrModelFields(models.Model):
             }
             for field in fields
         }
-        for field in fields.filtered(lambda field: field.ttype == 'selection'):
+        for field in fields.filtered(lambda field: field.ttype in ('selection', 'reference')):
             result[field.name]['selection'] = [
                 (sel.value, sel.name) for sel in field.selection_ids
             ]
