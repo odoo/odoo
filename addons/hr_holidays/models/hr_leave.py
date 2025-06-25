@@ -625,7 +625,7 @@ class HrLeave(models.Model):
         if self.env.context.get('leave_skip_state_check'):
             return
         for holiday in self:
-            if holiday.state in ['validate1', 'validate'] and not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            if holiday.state in ['validate1', 'validate']:
                 raise ValidationError(_("This modification is not allowed in the current state."))
 
     def _check_validity(self):
