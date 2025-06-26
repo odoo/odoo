@@ -6,12 +6,11 @@
         <field name="inherit_id" ref="account.view_company_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='company_registry']" position="attributes">
-                <attribute name="nolabel">1</attribute>
+                <attribute name="invisible" add="country_code == 'MA'" separator=" or "/>
             </xpath>
-            <field name="company_registry" position="before">
-                <label for="company_registry" invisible="country_code == 'MA'" />
-                <label for="company_registry" string="ICE" invisible="country_code != 'MA'" />
-            </field>
+            <xpath expr="//field[@name='company_registry']" position="after">
+                <field name="company_registry" string="ICE" invisible="country_code != 'MA'"/>
+            </xpath>
         </field>
     </record>
 </odoo>
