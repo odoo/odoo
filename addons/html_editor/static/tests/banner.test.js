@@ -34,7 +34,6 @@ test("should insert a banner with focus inside followed by a paragraph", async (
     await insertText(editor, "banner");
     await animationFrame();
     await expectElementCount(".o-we-powerbox", 0);
-
 });
 
 test("press 'ctrl+a' inside a banner should select all the banner content", async () => {
@@ -55,7 +54,7 @@ test("press 'ctrl+a' inside a banner should select all the banner content", asyn
             `<p><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
                     <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
                     <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
-                        <p>[Test</p><p>Test1</p><p>Test2]<br></p>
+                        <p>[Test</p><p>Test1</p><p>Test2]</p>
                     </div>
                 </div><p><br></p>`
         )
@@ -80,7 +79,7 @@ test("remove all content should preserve the first paragraph tag inside the bann
             `<p><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
                     <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
                     <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
-                        <p>[Test</p><p>Test1</p><p>Test2]<br></p>
+                        <p>[Test</p><p>Test1</p><p>Test2]</p>
                     </div>
                 </div><p><br></p>`
         )
@@ -154,7 +153,7 @@ test("Everything gets selected with ctrl+a, including a banner", async () => {
                 <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                     <p>test</p>
                 </div>
-            </div><p>Test1</p><p>Test2]<br></p>`,
+            </div><p>Test1</p><p>Test2]</p>`,
         { message: "should select everything" }
     );
     await press("Backspace");

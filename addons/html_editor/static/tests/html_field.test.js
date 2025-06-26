@@ -9,14 +9,7 @@ import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_component
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import {
-    click,
-    press,
-    queryAll,
-    queryAllTexts,
-    queryOne,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { click, press, queryAll, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
 import {
@@ -1876,7 +1869,7 @@ describe("save image", () => {
                 if (route === "/web/dataset/call_kw/partner/web_save" && model === "partner") {
                     if (writeCount === 0) {
                         // Save normal value without image.
-                        expect(args[1].txt).toBe(`<p class="test_target">a<br></p>`);
+                        expect(args[1].txt).toBe(`<p class="test_target">a</p>`);
                     } else if (writeCount === 1) {
                         // Save image with unfinished modification changes.
                         expect(args[1].txt).toBe(imageContainerHTML);
