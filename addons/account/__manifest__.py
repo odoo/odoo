@@ -119,8 +119,6 @@ You could use this simplified accounting in case you work with an (external) acc
         # Unit test files
         'web.assets_unit_tests': [
             'account/static/tests/**/*',
-            ('remove', 'account/static/tests/legacy/**/*'),  # to remove when all legacy tests are ported
-            ('remove', 'account/static/tests/helpers/**/*'),
             ('remove', 'account/static/tests/tours/**/*'),
         ],
         'web.assets_frontend': [
@@ -130,10 +128,6 @@ You could use this simplified accounting in case you work with an (external) acc
         ],
         'web.assets_tests': [
             'account/static/tests/tours/**/*',
-        ],
-        'web.qunit_suite_tests': [
-            'account/static/tests/helpers/*.js',
-            'account/static/tests/legacy/*.js',
         ],
         'web.report_assets_common': [
             'account/static/src/css/report_invoice.css',
