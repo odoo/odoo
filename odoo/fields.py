@@ -3122,8 +3122,10 @@ class Many2one(_Relational):
             except MissingError:
                 # Should not happen, unless the foreign key is missing.
                 return False
-        else:
+        elif value:
             return value.id
+        else:
+            return False
 
     def convert_to_write(self, value, record):
         if type(value) in IdType:
