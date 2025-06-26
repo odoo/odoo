@@ -264,13 +264,6 @@ export class Thread extends Record {
     canPostOnReadonly;
     /** @type {Boolean} */
     is_editable;
-    /**
-     * This field is used for channels only.
-     * false means using the custom_notifications from user settings.
-     *
-     * @type {false|"all"|"mentions"|"no_notif"}
-     */
-    custom_notifications = false;
     mute_until_dt = fields.Datetime();
     /** @type {Boolean} */
     isLocallyPinned = fields.Attr(false, {

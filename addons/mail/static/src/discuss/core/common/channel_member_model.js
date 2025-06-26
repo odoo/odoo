@@ -15,6 +15,12 @@ export class ChannelMember extends Record {
     create_date;
     /** @type {string} */
     custom_channel_name;
+    /**
+     * false means using the custom_notifications from user settings.
+     *
+     * @type {false|"all"|"mentions"|"no_notif"}
+     */
+    custom_notifications;
     /** @type {number} */
     id;
     last_interest_dt = fields.Datetime();
