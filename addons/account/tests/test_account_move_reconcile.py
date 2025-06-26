@@ -5487,3 +5487,23 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         # Cannot change other fields
         with self.assertRaisesRegex(UserError, "You can just change some non legal fields"):
             receivable_lines.currency_id = self.other_currency
+
+    def test_reconciliation_currency_exchange_matching_number(self):
+        """
+        Test that reconciliation assigns the same matching number to
+        invoice, payment, and currency exchange lines when those lines
+        are directly reconciled (in the case of an import, for instance).
+        """
+        currency_chf = self.env.ref('base.CHF')
+
+        account_receivable = self.company_data['default_account_receivable']
+        invoice_line = self.create_line_for_reconciliation(1000.0, 1000.0, currency_chf, '2025-01-01', account_receivable)
+        payment_line = self.create_line_for_reconciliation(-500.0, -1000.0, currency_chf, '2025-02-01')
+        currency_exchange_line = self.create_line_for_reconciliation(-500.0, -0.0, currency_chf, '2025-02-01', account_receivable)
+
+        lines = invoice_line + payment_line + currency_exchange_line
+        lines.with_context(no_exchange_difference=True, no_exchange_difference_no_recursive=True).reconcile()
+
+        self.assertEqual(invoice_line.matching_number, payment_line.matching_number)
+        self.assertEqual(payment_line.matching_number, currency_exchange_line.matching_number)
+        self.assertEqual(currency_exchange_line.amount_residual, 0)
