@@ -86,6 +86,7 @@ export async function setupWebsiteBuilder(
         headerContent = "",
         beforeWrapwrapContent = "",
         translateMode = false,
+        onIframeLoaded = () => {},
     } = {}
 ) {
     // TODO: fix when the iframe is reloaded and become empty (e.g. discard button)
@@ -115,6 +116,7 @@ export async function setupWebsiteBuilder(
             iframe.contentDocument.body.innerHTML = `
                 ${beforeWrapwrapContent}
                 <div id="wrapwrap">${headerContent} <div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div></div>`;
+            onIframeLoaded(iframe);
             resolve(el);
         };
     });
@@ -232,7 +234,6 @@ export async function setupWebsiteBuilder(
         getEditor: () => editor,
         getEditableContent: () => editableContent,
         openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
-        getIframeEl: () => iframe,
     };
 }
 
