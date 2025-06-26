@@ -71,7 +71,7 @@ export class BuilderMany2Many extends Component {
         const proms = [];
         for (const applySpec of applySpecs) {
             proms.push(
-                applySpec.apply({
+                applySpec.action.apply({
                     editingElement: applySpec.editingElement,
                     params: applySpec.actionParam,
                     value: applySpec.actionValue,

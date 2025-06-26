@@ -65,15 +65,15 @@ export class BuilderMany2One extends Component {
     callApply(applySpecs) {
         const proms = [];
         for (const applySpec of applySpecs) {
-            if (applySpec.clean && applySpec.actionValue === undefined) {
-                applySpec.clean({
+            if (applySpec.actionValue === undefined) {
+                applySpec.action.clean({
                     editingElement: applySpec.editingElement,
                     params: applySpec.actionParam,
                     dependencyManager: this.env.dependencyManager,
                 });
             } else {
                 proms.push(
-                    applySpec.apply({
+                    applySpec.action.apply({
                         editingElement: applySpec.editingElement,
                         params: applySpec.actionParam,
                         value: applySpec.actionValue,
