@@ -460,7 +460,7 @@ class AccountMoveSend(models.TransientModel):
             if allow_raising:
                 raise UserError(self._format_error_text(error))
 
-            move.with_context(no_new_invoice=True).message_post(body=self._format_error_html(error))
+            move.with_context(no_document=True, no_new_invoice=True).message_post(body=self._format_error_html(error))
 
     @api.model
     def _hook_if_success(self, moves_data, from_cron=False, allow_fallback_pdf=False):
@@ -481,6 +481,7 @@ class AccountMoveSend(models.TransientModel):
 
         new_message = move\
             .with_context(
+                no_document=True,
                 no_new_invoice=True,
                 mail_notify_author=author_id in partner_ids,
             ).message_post(
