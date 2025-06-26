@@ -4,7 +4,7 @@
     <!-- Display of /pos/pay (the order of the if conditions matters)-->
     <template id="pay">
         <t t-call="portal.frontend_layout">
-            <t t-set="page_title" t-value="'Payment'" />
+            <t t-set="page_title">Payment</t>
             <t t-set="additional_title">
                 <t t-esc="page_title" />
             </t>
@@ -54,7 +54,7 @@
     <!-- Display of /pos/pay/confirmation -->
     <template id="pay_confirmation">
         <t t-call="portal.frontend_layout">
-            <t t-set="page_title" t-value="'Payment Confirmation'" />
+            <t t-set="page_title">Payment Confirmation</t>
             <t t-set="additional_title">
                 <t t-esc="page_title" />
             </t>
