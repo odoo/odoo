@@ -12,23 +12,26 @@ from odoo.addons.iot_drivers import main
 from odoo.addons.iot_drivers.tools import helpers
 from odoo.addons.iot_drivers.server_logger import close_server_log_sender_handler
 from odoo.addons.iot_base.tools.payload_signature import verify_hmac_signature
+from odoo.addons.iot_drivers.webrtc_client import webrtc_client
 
 _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
 
 
 @helpers.require_db
-def send_to_controller(params, server_url=None):
+def send_to_controller(params, method="send_websocket", server_url=None):
     """Confirm the operation's completion by sending a response back to the Odoo server
 
     :param params: the parameters to send back to the server
+    :param method: method to call on the IoT box controller
     :param server_url: URL of the Odoo server (provided by decorator).
     """
+    request_path = f"{server_url}/iot/box/{method}"
     try:
-        response = requests.post(server_url + "/iot/box/send_websocket", json={'params': params}, timeout=5)
+        response = requests.post(request_path, json={'params': params}, timeout=5)
         response.raise_for_status()
     except requests.exceptions.RequestException:
-        _logger.exception('Could not reach confirmation status URL: %s', server_url)
+        _logger.exception('Could not reach database URL: %s', request_path)
 
 
 def on_error(ws, error):
@@ -87,6 +90,12 @@ class WebsocketClient(Thread):
                 case 'restart_odoo':
                     ws.close()
                     helpers.odoo_restart()
+                case 'webrtc_offer':
+                    answer = webrtc_client.offer(payload['offer'])
+                    send_to_controller({
+                        'iot_box_identifier': helpers.get_identifier(),
+                        'answer': answer,
+                    }, method="webrtc_answer")
                 case _:
                     continue
 
