@@ -29,6 +29,8 @@ class SmsComposer(models.TransientModel):
         return result
 
     # documents
+    recipient_info_string = fields.Char(string="Computed String", compute='_compute_recipient_single_stored', compute_sudo=False, store=True)
+
     composition_mode = fields.Selection([
         ('numbers', 'Send to numbers'),
         ('comment', 'Post on a document'),
@@ -125,6 +127,9 @@ class SmsComposer(models.TransientModel):
                 composer.recipient_single_number_itf = res[records.id]['sanitized'] or res[records.id]['number'] or ''
             if not composer.number_field_name:
                 composer.number_field_name = res[records.id]['field_store']
+            recipient_dict = res.get(records.id, {})
+            string_repr = ", ".join(f"{k}: {v}" for k, v in recipient_dict.items())
+            composer.recipient_info_string = string_repr
 
     @api.depends('res_model', 'number_field_name')
     def _compute_recipient_single_non_stored(self):
