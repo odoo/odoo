@@ -1,6 +1,5 @@
 import datetime
 import logging
-import platform
 import requests
 from cryptography import x509
 from cryptography.x509.oid import NameOID
@@ -16,6 +15,7 @@ from odoo.addons.iot_drivers.tools.helpers import (
     update_conf,
     writable,
 )
+from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_WINDOWS
 
 _logger = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ def get_certificate_end_date():
     :return: End date of the certificate if it is valid, None otherwise
     :rtype: str
     """
-    base_path = [get_path_nginx(), 'conf'] if platform.system() == 'Windows' else ['/etc/ssl/certs']
+    base_path = [get_path_nginx(), 'conf'] if IS_WINDOWS else ['/etc/ssl/certs']
     path = Path(*base_path, 'nginx-cert.crt')
     if not path.exists():
         return None
@@ -99,7 +99,7 @@ def download_odoo_certificate():
 
     certificate = result['x509_pem']
     private_key = result['private_key_pem']
-    if platform.system() == 'Linux':
+    if IS_RPI:
         with writable():
             Path('/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')
             Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')

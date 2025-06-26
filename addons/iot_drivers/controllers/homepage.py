@@ -3,7 +3,6 @@
 import json
 import logging
 import netifaces
-import platform
 import re
 import requests
 import subprocess
@@ -15,6 +14,7 @@ from pathlib import Path
 
 from odoo import http
 from odoo.addons.iot_drivers.tools import certificate, helpers, route, upgrade, wifi
+from odoo.addons.iot_drivers.tools.system import IOT_SYSTEM, IS_RPI
 from odoo.addons.iot_drivers.main import iot_devices, unsupported_devices
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.tools.misc import file_path
@@ -73,7 +73,7 @@ class IotBoxOwlHomePage(http.Controller):
 
     @route.iot_route('/iot_drivers/iot_logs', type='http', cors='*')
     def get_iot_logs(self):
-        logs_path = "/var/log/odoo/odoo-server.log" if platform.system() == 'Linux' else Path().absolute().parent.joinpath('odoo.log')
+        logs_path = "/var/log/odoo/odoo-server.log" if IS_RPI else Path().absolute().parent.joinpath('odoo.log')
         with open(logs_path, encoding="utf-8") as file:
             return json.dumps({
                 'status': 'success',
@@ -128,7 +128,7 @@ class IotBoxOwlHomePage(http.Controller):
     @route.iot_route('/iot_drivers/data', type="http", cors='*')
     def get_homepage_data(self):
         network_interfaces = []
-        if platform.system() == 'Linux':
+        if IS_RPI:
             ssid = wifi.get_current() or wifi.get_access_point_ssid()
             for iface_id in netifaces.interfaces():
                 if iface_id == 'lo':
@@ -160,7 +160,7 @@ class IotBoxOwlHomePage(http.Controller):
         }
 
         six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
-        network_qr_codes = wifi.generate_network_qr_codes() if platform.system() == 'Linux' else {}
+        network_qr_codes = wifi.generate_network_qr_codes() if IS_RPI else {}
         odoo_server_url = helpers.get_odoo_server_url() or ''
 
         return json.dumps({
@@ -175,10 +175,10 @@ class IotBoxOwlHomePage(http.Controller):
             'new_database_url': connection_manager.new_database_url,
             'pairing_code_expired': connection_manager.pairing_code_expired and not odoo_server_url,
             'six_terminal': six_terminal,
-            'is_access_point_up': platform.system() == 'Linux' and wifi.is_access_point(),
+            'is_access_point_up': IS_RPI and wifi.is_access_point(),
             'network_interfaces': network_interfaces,
             'version': helpers.get_version(),
-            'system': platform.system(),
+            'system': IOT_SYSTEM,
             'certificate_end_date': certificate.get_certificate_end_date(),
             'wifi_ssid': helpers.get_conf('wifi_ssid'),
             'qr_code_wifi': network_qr_codes.get('qr_wifi'),
@@ -216,15 +216,15 @@ class IotBoxOwlHomePage(http.Controller):
             'status': 'success',
             # Checkout requires db to align with its version (=branch)
             'odooIsUpToDate': current_commit == last_available_commit or not bool(helpers.get_odoo_server_url()),
-            'imageIsUpToDate': platform.system() == "Linux" and not bool(helpers.check_image()),
+            'imageIsUpToDate': IS_RPI and not bool(helpers.check_image()),
             'currentCommitHash': current_commit,
         })
 
     @route.iot_route('/iot_drivers/log_levels', type="http", cors='*')
     def log_levels(self):
-        drivers_list = helpers.list_file_by_os(
+        drivers_list = helpers.get_handlers_files_to_load(
             file_path('iot_drivers/iot_handlers/drivers'))
-        interfaces_list = helpers.list_file_by_os(
+        interfaces_list = helpers.get_handlers_files_to_load(
             file_path('iot_drivers/iot_handlers/interfaces'))
         return json.dumps({
             'title': "Odoo's IoT Box - Handlers list",
@@ -363,7 +363,7 @@ class IotBoxOwlHomePage(http.Controller):
         :param hostname: new hostname to set
         """
         current_hostname = helpers.get_hostname()
-        if not hostname or platform.system() != 'Linux' or hostname == current_hostname:
+        if not hostname or not IS_RPI or hostname == current_hostname:
             return {
                 'status': 'failure',
                 'message': 'Hostname is not valid or already set.',
