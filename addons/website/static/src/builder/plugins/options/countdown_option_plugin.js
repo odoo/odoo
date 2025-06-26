@@ -7,6 +7,7 @@ import { renderToElement } from "@web/core/utils/render";
 
 class CountdownOptionPlugin extends Plugin {
     static id = "CountdownOption";
+    static shared = ["isEndMessagePreviewed", "toggleEndMessagePreview"];
     resources = {
         builder_options: [
             withSequence(before(SNIPPET_SPECIFIC_END), {
@@ -18,13 +19,21 @@ class CountdownOptionPlugin extends Plugin {
         so_content_addition_selector: [".s_countdown"],
         builder_actions: {
             // TODO AGAU: update after merging generalized restart interactions
-            //  remove this and xml BuilderContext
+            //  remove this and xml BuilderContext (countdownInlineOption as well)
             ReloadCountdownAction,
             SetEndActionAction,
             PreviewEndMessageAction,
             SetLayoutAction,
         },
     };
+
+    isEndMessagePreviewed({ editingElement }) {
+        return !!editingElement?.classList.contains("s_countdown_enable_preview");
+    }
+
+    toggleEndMessagePreview(editingElement, doShow) {
+        editingElement?.classList.toggle("s_countdown_enable_preview", doShow === true);
+    }
 }
 
 function cleanForSave(editingEl) {
@@ -32,6 +41,7 @@ function cleanForSave(editingEl) {
 }
 class BaseCountdownAction extends BuilderAction {
     static id = "baseCountdown";
+    static dependencies = ["CountdownOption"];
     /**
      * Used to preserve modified end messages through end action changes. This
      * allows the user to test options without losing their progress while in
@@ -106,16 +116,16 @@ class BaseCountdownAction extends BuilderAction {
     }
 
     isEndMessagePreviewed({ editingElement }) {
-        return !!editingElement?.classList.contains("s_countdown_enable_preview");
+        return this.dependencies.CountdownOption.isEndMessagePreviewed({ editingElement });
     }
 
     toggleEndMessagePreview(editingElement, doShow) {
-        editingElement?.classList.toggle("s_countdown_enable_preview", doShow === true);
+        return this.dependencies.CountdownOption.toggleEndMessagePreview(editingElement, doShow);
     }
 }
 
 // TODO AGAU: update after merging generalized restart interactions
-//  remove this and xml BuilderContext
+//  remove this and xml BuilderContext (ReloadCountdownInlineAction as well)
 class ReloadCountdownAction extends BaseCountdownAction {
     static id = "reloadCountdown";
     apply({ editingElement }) {

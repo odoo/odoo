@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CountdownInlineOption">
+    <BuilderRow label.translate="Template">
+        <BuilderSelect
+            id="'countdown_inline_template_opt'"
+            action="'selectCountdownInlineTemplate'"
+            applyTo="'.s_countdown_inline_wrapper'">
+            <BuilderSelectItem
+                title.translate="Default"
+                actionParam="{
+                    view: 'website.s_countdown_inline_default_template',
+                    templateClass: 'o_template_default',
+                }"
+                >
+                Default
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                id="'template_dominoes_opt'"
+                title.translate="Dominoes"
+                actionParam="{
+                    view: 'website.s_countdown_inline_dominoes_template',
+                    templateClass: 'o_template_dominoes',
+                }">
+                Dominoes
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                id="'template_wrapped_numbers_opt'"
+                title.translate="Wrapped Numbers"
+                actionParam="{
+                    view: 'website.s_countdown_inline_wrapped_numbers_template',
+                    templateClass: 'o_template_wrapped_numbers',
+                }">
+                Wrapped Numbers
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                id="'template_text_opt'"
+                title.translate="Text"
+                actionParam="{
+                    view: 'website.s_countdown_inline_text_template',
+                    templateClass: 'o_template_text',
+                }">
+                Text
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                id="'template_big_numbers_opt'"
+                title.translate="Big Numbers"
+                actionParam="{
+                    view: 'website.s_countdown_inline_big_numbers_template',
+                    templateClass: 'o_template_big_numbers',
+                }">
+                Big Numbers
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow
+        label.translate="Round Corners"
+        level="1"
+        applyTo="'.o_count_item_nbs'"
+        t-if="isActiveItem('template_wrapped_numbers_opt')">
+        <BuilderNumberInput styleAction="'border-radius'" unit="'px'" min="0"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Color">
+        <BuilderSelect>
+            <BuilderSelectItem
+                id="'color_default_opt'"
+                title.translate="Default"
+                classAction="'o_countdown_default'">
+                Default
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Primary"
+                classAction="'o_countdown_primary'">
+                Primary
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Secondary"
+                classAction="'o_countdown_secondary'">
+                Secondary
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Info"
+                classAction="'o_countdown_info'">
+                Info
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Success"
+                classAction="'o_countdown_success'">
+                Success
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Warning"
+                classAction="'o_countdown_warning'">
+                Warning
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Danger"
+                classAction="'o_countdown_danger'">
+                Danger
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Light"
+                classAction="'o_countdown_light'">
+                Light
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Dark"
+                classAction="'o_countdown_dark'">
+                Dark
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Subtle colors">
+        <BuilderCheckbox
+            id="'subtle_colors_opt'"
+            classAction="'o_countdown_subtle'"
+            level="1"
+            t-if="!this.isActiveItem('color_default_opt') and !this.isActiveItem('template_text_opt')"
+            />
+    </BuilderRow>
+    <BuilderRow label.translate="Label">
+        <BuilderSelect>
+            <BuilderSelectItem
+                title.translate="Default"
+                classAction="''">
+                Default
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Compact"
+                classAction="'o_label_compact'">
+                Compact
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="None"
+                classAction="'o_label_none'">
+                None
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Alignment">
+        <BuilderButtonGroup applyTo="'.s_countdown_inline_wrapper'">
+            <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="''"/>
+            <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'align-self-center text-center'"/>
+            <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'align-self-end text-end'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Font Monospace">
+        <BuilderCheckbox
+            id="'subtle_colors_opt'"
+            classAction="'o_count_monospace'"
+            level="1"
+            t-if="this.isActiveItem('template_dominoes_opt') or this.isActiveItem('template_wrapped_numbers_opt') or this.isActiveItem('template_big_numbers_opt')"
+            />
+    </BuilderRow>
+
+    <!-- TODO AGAU: remove after merging generalized restart interactions -->
+    <BuilderContext action="'reloadCountdownInline'">
+        <BuilderRow label.translate="Due Date">
+            <BuilderDateTimePicker dataAttributeAction="'endTime'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="At The End">
+            <BuilderSelect preview="false" action="'countdownInlineSetEndAction'">
+                <BuilderSelectItem actionValue="'nothing'" id="'no_end_action_opt'">Nothing</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'redirect'" id="'redirect_end_action_opt'">Redirect</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'message_no_countdown'">Message Only</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'message'">Message + Timer</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderButton
+                title.translate="The message will be visible once the countdown ends"
+                t-if="!this.isActiveItem('no_end_action_opt') and !this.isActiveItem('redirect_end_action_opt')"
+                action="'countdownInlinePreviewEndMessage'"
+                preview="false"
+                icon="'fa-eye'"
+            />
+        </BuilderRow>
+        <BuilderRow
+            t-if="this.isActiveItem('redirect_end_action_opt')"
+            label.translate="URL">
+            <BuilderUrlPicker placeholder.translate="e.g. /my-awesome-page" dataAttributeAction="'redirectUrl'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Display">
+            <BuilderSelect dataAttributeAction="'display'">
+                <BuilderSelectItem dataAttributeActionValue="'d'">D</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'dhm'">D - H - M</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'dhms'">D - H - M - S</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
+    <hr class="mx-3"/>
+</t>
+
+<t t-name="website.CountdownInlineOptionStyle">
+    <BuilderRow label.translate="Edge Spacing">
+        <BuilderRange
+            title.translate="Adjust edge Spacing"
+            styleAction="'padding'"
+            min="0"
+            max="200"
+            step="1"
+            displayRangeValue="true"
+            unit="'px'"/>
+    </BuilderRow>
+    <BorderConfigurator label.translate="Border"/>
+</t>
+
+<t t-name="website.s_countdown_inline.end_message">
+    <div class="s_countdown_inline_end_message d-none">
+        <div class="oe_structure">
+            <div class="s_text_highlight o_colored_level o_cc o_cc2 w-100 my-3">
+                <div class="container">
+                    <h5>Congratulations!</h5>
+                    <p>Your patience and anticipation have paid off—thank you for waiting, and now it's time to enjoy the exciting surprise we've been building up to!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.s_countdown_inline.end_redirect_message">
+    <p class="s_countdown_inline_end_redirect_message w-100 mt-2 mb-0">Time's up! You can now visit <a class="s_countdown_end_redirect_url" t-attf-href="#{redirectUrl}">this page</a>.</p>
+</t>
+
+</templates>

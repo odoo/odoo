@@ -10,15 +10,14 @@
         <BuilderSelect preview="false" action="'setEndAction'">
             <BuilderSelectItem actionValue="'nothing'" id="'no_end_action_opt'">Nothing</BuilderSelectItem>
             <BuilderSelectItem actionValue="'redirect'" id="'redirect_end_action_opt'">Redirect</BuilderSelectItem>
-            <BuilderSelectItem actionValue="'message_no_countdown'">Show Message and hide countdown</BuilderSelectItem>
-            <BuilderSelectItem actionValue="'message'">Show Message and keep countdown</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'message_no_countdown'">Message only</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'message'">Message + Timer</BuilderSelectItem>
         </BuilderSelect>
         <BuilderButton title.translate="The message will be visible once the countdown ends"
                        t-if="!this.isActiveItem('no_end_action_opt') and !this.isActiveItem('redirect_end_action_opt')"
                        action="'previewEndMessage'"
                        preview="false"
                        icon="'fa-eye'"
-                       classActive="'text-primary'"
         />
     </BuilderRow>
     <BuilderRow t-if="this.isActiveItem('redirect_end_action_opt')"
