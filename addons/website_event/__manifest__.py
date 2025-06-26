@@ -29,6 +29,7 @@
         'views/event_templates_page_misc.xml',
         'views/event_templates_widgets.xml',
         'views/event_event_views.xml',
+        'views/event_visit_views.xml',
         'views/event_registration_views.xml',
         'views/event_tag_category_views.xml',
         'views/event_tag_views.xml',
