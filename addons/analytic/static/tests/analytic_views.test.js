@@ -102,6 +102,8 @@ test("Analytic hierachy in pivot view", async () => {
     await contains(".o_pivot tbody .o_pivot_header_cell_closed").click()
     await contains(".o_popover .o-dropdown-caret").hover()
     expect(".o_popover.o-dropdown--menu-submenu span.o-dropdown-item").toHaveCount(3);
+    await contains(".o_popover.o-dropdown--menu-submenu span.o-dropdown-item").click();
+    expect(".o_pivot tbody .o_value").toHaveCount(6); // 3 groups + 2 subgroups of group 1 + 1 total
 });
 
 test.tags("desktop");
