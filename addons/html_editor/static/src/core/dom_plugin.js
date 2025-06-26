@@ -567,7 +567,11 @@ export class DomPlugin extends Plugin {
         const cursors = this.dependencies.selection.preserveSelection();
         const newEls = [];
         for (const block of this.getBlocksToTag()) {
-            if (isParagraphRelatedElement(block) || isListItemElement(block)) {
+            if (
+                isParagraphRelatedElement(block) ||
+                isListItemElement(block) ||
+                block.nodeName === "BLOCKQUOTE"
+            ) {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }

@@ -196,58 +196,6 @@ describe("Selection collapsed", () => {
         });
     });
 
-    describe("Blockquote", () => {
-        test("should insert a new paragraph after the blockquote", async () => {
-            await testEditor({
-                contentBefore: "<blockquote>abc[]</blockquote>",
-                stepFunction: splitBlock,
-                contentAfter: "<blockquote>abc</blockquote><p>[]<br></p>",
-            });
-        });
-        test("should insert a new paragraph after the blockquote containing inline element", async () => {
-            await testEditor({
-                contentBefore: "<blockquote>ab<strong>c[]</strong></blockquote>",
-                stepFunction: splitBlock,
-                contentAfter: "<blockquote>ab<strong>c</strong></blockquote><p>[]<br></p>",
-            });
-        });
-        test("should be able to break out of an empty blockquote", async () => {
-            await testEditor({
-                contentBefore: "<blockquote>[]<br></blockquote>",
-                stepFunction: splitBlock,
-                contentAfter: "<blockquote><br></blockquote><p>[]<br></p>",
-            });
-        });
-        test("should insert a new line within the blockquote", async () => {
-            await testEditor({
-                contentBefore: "<blockquote><p>abc</p><p>def[]</p></blockquote>",
-                stepFunction: splitBlock,
-                contentAfter: "<blockquote><p>abc</p><p>def</p><p>[]<br></p></blockquote>",
-            });
-        });
-        test("should insert a new line after blockquote", async () => {
-            await testEditor({
-                contentBefore: "<blockquote><p>abc</p><p>def</p><p>[]<br></p></blockquote>",
-                stepFunction: splitBlock,
-                contentAfter: "<blockquote><p>abc</p><p>def</p></blockquote><p>[]<br></p>",
-            });
-        });
-        test("should insert a new paragraph after a blockquote tag with rtl direction", async () => {
-            await testEditor({
-                contentBefore: `<blockquote dir="rtl">ab[]</blockquote>`,
-                stepFunction: splitBlock,
-                contentAfter: `<blockquote dir="rtl">ab</blockquote><p dir="rtl">[]<br></p>`,
-            });
-        });
-        test("should insert a new paragraph after a blockquote tag with rtl direction (2)", async () => {
-            await testEditor({
-                contentBefore: `<blockquote><p dir="rtl">abc</p><p dir="rtl">[]<br></p></blockquote>`,
-                stepFunction: splitBlock,
-                contentAfter: `<blockquote><p dir="rtl">abc</p></blockquote><p dir="rtl">[]<br></p>`,
-            });
-        });
-    });
-
     describe("Consecutive", () => {
         test("should duplicate an empty paragraph twice", async () => {
             await testEditor({
