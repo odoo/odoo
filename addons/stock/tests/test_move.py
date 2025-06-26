@@ -34,6 +34,7 @@ class TestStockMove(TestStockCommon):
             'type': 'consu',
         })
         cls.partner_2 = cls.env['res.partner'].create({'name': 'Partner 2'})
+        cls.picking_type_out.reservation_method = 'at_confirm'
 
     def gather_relevant(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
@@ -4803,7 +4804,6 @@ class TestStockMove(TestStockCommon):
             'picking_id': picking.id,
         })
         picking.action_confirm()
-        picking.action_assign()
 
         self.assertEqual(move.quantity, 10)
         move.move_line_ids.location_id = self.scrap_location
@@ -5497,7 +5497,6 @@ class TestStockMove(TestStockCommon):
             move.product_uom_qty = 10
         delivery = delivery_form.save()
         delivery.action_confirm()
-        delivery.action_assign()
 
         # Delivers a part of the quantity, creates a backorder for the remaining qty.
         delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).quantity = 6
@@ -5508,6 +5507,7 @@ class TestStockMove(TestStockCommon):
         backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
         backorder_wizard_form.save().process()  # Creates the backorder.
 
+        first_backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)], limit=1)
         # Checks the values.
         aggregate_values = delivery.move_line_ids._get_aggregated_product_quantities()
         self.assertEqual(len(aggregate_values), 3)
@@ -5524,9 +5524,6 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(aggregate_val_3['qty_ordered'], 10)
         self.assertEqual(aggregate_val_3['quantity'], 2)
 
-        first_backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)], limit=1)
-        first_backorder.action_assign()
-
         # Delivers a part of the BO's qty., and creates an another backorder.
         first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).quantity = 4
         first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2).quantity = 6
@@ -5537,6 +5534,7 @@ class TestStockMove(TestStockCommon):
         backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
         backorder_wizard_form.save().process()  # Creates the backorder.
 
+        second_backorder = self.env['stock.picking'].search([('backorder_id', '=', first_backorder.id)], limit=1)
         # Checks the values for the original delivery.
         aggregate_values = delivery.move_line_ids._get_aggregated_product_quantities()
         self.assertEqual(len(aggregate_values), 3)
@@ -5576,9 +5574,6 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(aggregate_val_2['description'], "Description2")
         self.assertEqual(aggregate_val_3['description'], "Description3")
         self.assertFalse(aggregate_val_4['description'])
-
-        second_backorder = self.env['stock.picking'].search([('backorder_id', '=', first_backorder.id)], limit=1)
-        second_backorder.action_assign()
 
         # Delivers a part of the second BO's qty. but doesn't create a backorder this time.
         second_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2).unlink()
