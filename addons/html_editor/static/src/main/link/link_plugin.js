@@ -768,16 +768,14 @@ export class LinkPlugin extends Plugin {
             }
         } else {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
+            const isLinkEditable = this.delegateTo(
+                "is_link_editable_predicates",
+                closestLinkElement) || false;
             if (closestLinkElement && closestLinkElement.isContentEditable) {
                 if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
                     this.openLinkTools(closestLinkElement);
                 }
-            } else if (
-                closestLinkElement &&
-                (closestLinkElement.getAttribute("role") === "menuitem" ||
-                    closestLinkElement.classList.contains("nav-link")) &&
-                !closestLinkElement.dataset.bsToggle
-            ) {
+            } else if (isLinkEditable) {
                 this.openLinkTools(closestLinkElement);
             } else {
                 this.linkInDocument = null;

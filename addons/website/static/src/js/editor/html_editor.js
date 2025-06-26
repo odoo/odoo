@@ -6,6 +6,7 @@ import { patch } from "@web/core/utils/patch";
 import { useChildRef } from "@web/core/utils/hooks";
 import wUtils from "@website/js/utils";
 import { useEffect } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 
 /**
  * The goal of this patch is to handle the URL autocomplete in the LinkPopover
@@ -134,5 +135,20 @@ patch(LinkPopover.prototype, {
     updateValue(val) {
         this.state.url = val;
         this.onChange();
+    },
+    onClickForcePreviewMode(ev) {
+        if (this.props.linkElement.href) {
+            const currentUrl = new URL(this.props.linkElement.href);
+            if (
+                browser.location.hostname === currentUrl.hostname &&
+                !currentUrl.pathname.startsWith("/odoo") &&
+                !currentUrl.pathname.startsWith("/web") &&
+                !currentUrl.pathname.startsWith("/@/")
+            ) {
+                ev.preventDefault();
+                currentUrl.pathname = `/@${currentUrl.pathname}`;
+                browser.open(currentUrl);
+            }
+        }
     },
 });

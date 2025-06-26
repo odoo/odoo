@@ -291,20 +291,6 @@ export class LinkPopover extends Component {
         this.onClickApply();
     }
 
-    onClickForceEditMode(ev) {
-        if (this.props.linkElement.href) {
-            const currentUrl = new URL(this.props.linkElement.href);
-            if (
-                browser.location.hostname === currentUrl.hostname &&
-                !currentUrl.pathname.startsWith("/@/")
-            ) {
-                ev.preventDefault();
-                currentUrl.pathname = `/@${currentUrl.pathname}`;
-                browser.open(currentUrl);
-            }
-        }
-    }
-
     onClickDirectDownload(checked) {
         this.state.directDownload = checked;
         this.state.url = this.state.url.replace("&download=true", "");
