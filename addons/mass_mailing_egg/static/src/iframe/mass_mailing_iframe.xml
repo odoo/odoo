@@ -8,7 +8,7 @@
                         <iframe class="h-100" t-ref="iframeRef"/>
                     </div>
                 </div>
-                <div t-if="props.themeOptions.withBuilder"
+                <div t-if="!props.readonly and props.themeOptions.withBuilder"
                     class="o_mass_mailing_egg-builder_sidebar border-start border-dark o_builder_sidebar_open">
                     <LazyComponent t-if="state.ready" Component="'website.Builder'"
                         props="() => this.getBuilderProps()" bundle="'mass_mailing_egg.assets_builder'"/>
@@ -22,6 +22,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     </t>
     <t t-name="mass_mailing_egg.IframeBody">
-        <div class="note-editable"/>
+        <div class="o_mass_mailing_value" t-att-class="{
+            'note-editable': !props.readonly,
+            'o_readonly': props.readonly,
+        }">
+            <t t-if="props.readonly">
+                <t t-out="props.config.value"/>
+            </t>
+        </div>
     </t>
 </templates>

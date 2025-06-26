@@ -17,6 +17,8 @@ import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { registry } from "@web/core/registry";
 import { Editor } from "@html_editor/editor";
 
+const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
+
 export class MassMailingIframe extends Component {
     static template = "mass_mailing_egg.MassMailingIframe";
     static components = {
@@ -56,11 +58,9 @@ export class MassMailingIframe extends Component {
                 });
             }
         });
-        if (this.props.readonly) {
-            return;
-        } else if (this.props.themeOptions.withBuilder) {
+        if (!this.props.readonly && this.props.themeOptions.withBuilder) {
             this.state.showFullscreen = false;
-        } else {
+        } else if (!this.props.readonly) {
             this.editor = new Editor(this.props.config, this.env.services);
             onWillDestroy(() => {
                 this.editor.destroy(true);
@@ -79,6 +79,13 @@ export class MassMailingIframe extends Component {
             return;
         }
         // Set `ready` symbol for tours
+        this.iframeRef.el.contentDocument.head.appendChild(this.renderHeadContent());
+        this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());
+        if (this.props.readonly) {
+            this.retargetLinks(
+                this.iframeRef.el.contentDocument.querySelector(IFRAME_VALUE_SELECTOR)
+            );
+        }
         this.iframeRef.el.setAttribute("is-ready", "true");
         this.iframeRef.el.contentWindow.addEventListener("beforeUnload", () => {
             this.iframeRef.el.removeAttribute("is-ready");
@@ -93,7 +100,7 @@ export class MassMailingIframe extends Component {
             return;
         }
         this.editor.attachTo(
-            this.iframeRef.el.contentDocument.body.querySelector(".note-editable")
+            this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
         );
     }
 
@@ -130,11 +137,10 @@ export class MassMailingIframe extends Component {
      * document).
      *
      * @param {String} template
-     * @param {Object} context
      * @returns {DocumentFragment}
      */
-    renderToIframeRealmFragment(template, context = {}) {
-        return parseHTML(this.iframeRef.el.contentDocument, renderToString(template, context));
+    renderToIframeRealmFragment(template) {
+        return parseHTML(this.iframeRef.el.contentDocument, renderToString(template, this));
     }
 
     renderHeadContent() {
@@ -161,10 +167,24 @@ export class MassMailingIframe extends Component {
             isMobile: false, // TODO EGGMAIL: investigate, is it the mobile display feature or the current page state
             isTranslation: false, // TODO EGGMAIL: investigate, do we need that for mass_mailing?
             toggleMobile: () => {}, // TODO EGGMAIL: is it the mobile display feature?
-            editableSelector: ".note-editable",
+            editableSelector: IFRAME_VALUE_SELECTOR,
             toggleFullscreen: () => {
                 this.state.showFullscreen = !this.state.showFullscreen;
             },
         };
+    }
+
+    /**
+     * Ensure all links are opened in a new tab.
+     */
+    retargetLinks(container) {
+        for (const link of container.querySelectorAll("a")) {
+            this.retargetLink(link);
+        }
+    }
+
+    retargetLink(link) {
+        link.setAttribute("target", "_blank");
+        link.setAttribute("rel", "noreferrer");
     }
 }
