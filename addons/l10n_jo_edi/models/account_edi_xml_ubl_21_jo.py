@@ -38,7 +38,6 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return self._round_max_dp(result)
         return wrapper
 
-    @approximate
     def _get_line_amount_before_discount_jod(self, base_line):
         line = base_line['record']
         if line.discount < 100:

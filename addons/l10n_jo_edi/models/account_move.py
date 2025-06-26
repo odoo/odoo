@@ -232,6 +232,9 @@ class AccountMove(models.Model):
             elif self.currency_id != self.reversed_entry_id.currency_id:
                 error_msgs.append(_("Please make sure the currency of the credit note is the same as the related invoice"))
 
+            if not self.ref:
+                error_msgs.append(_('Please make sure the "Customer Reference" contains the reason for the return'))
+
         if any(
             line.display_type not in ('line_note', 'line_section')
             and (line.quantity < 0 or line.price_unit < 0)

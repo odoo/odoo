@@ -904,3 +904,45 @@ class TestSaleMrpKitBom(TransactionCase):
         aggr_prod_qty = so.picking_ids.move_ids.move_line_ids[0]._get_aggregated_product_quantities(kit_name='Kit')
         key = f"{comp_product.id}_{comp_product.display_name}__{comp_product.uom_id.id}_{packaging_comp}_{kit_product.bom_ids.id}"
         self.assertEqual(aggr_prod_qty[key]['packaging_quantity'], 2)
+
+    def test_product_packaging_qty_no_packaging(self):
+        """Check ZeroDivisionError when packaging is missing on kit component."""
+        stock_location = self.env.ref('stock.stock_location_stock')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        kit_product = self._create_product('Kit Product', True, price=1.0)
+        comp_A = self._create_product('Component A', True, 1.0)
+        comp_B = self._create_product('Component B', True, 1.0)
+        kit_product_packaging = self.env['product.packaging'].create({
+            'name': 'kit product packaging',
+            'product_id': kit_product.id,
+            'qty': 2.0,
+        })
+        self.env['mrp.bom'].create({
+            'product_id': kit_product.id,
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': comp_A.id, 'product_qty': 2.0}),
+                Command.create({'product_id': comp_B.id, 'product_qty': 2.0}),
+            ],
+        })
+        for product in (comp_A, comp_B):
+            self.env['stock.quant']._update_available_quantity(product, stock_location, quantity=4)
+        delivery_picking = self.env['stock.picking'].create({
+            'name': 'TPPQNP delivery picking',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'move_ids': [Command.create({
+                'name': 'TPPQNP move',
+                'product_id': kit_product.id,
+                'product_uom_qty': 1.0,
+                'product_packaging_id': kit_product_packaging.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery_picking.action_confirm()
+        move = delivery_picking.move_ids[0]
+        move.product_packaging_id = False
+        self.assertEqual(move.move_line_ids.product_packaging_qty, 0.0)

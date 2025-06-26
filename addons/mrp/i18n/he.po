@@ -31,8 +31,8 @@
 # דודי מלכה <Dudimalka6@gmail.com>, 2024
 # Uri Segman, 2024
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2025
-# or balmas, 2025
 # Yoram Lavi, 2025
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-13 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Yoram Lavi, 2025\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -306,7 +306,7 @@ msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
@@ -1732,7 +1732,7 @@ msgstr "עלויות"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__production_count
 msgid "Count of MO generated"
-msgstr ""
+msgstr "ספירת הוראות ייצור שנוצרו"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
@@ -2357,7 +2357,7 @@ msgstr "מיקום המוצרים המוגמרים"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__lot_name
 msgid "First Lot/SN"
-msgstr ""
+msgstr "אצווה\\מספר סידורי ראשון"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
@@ -2585,7 +2585,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__has_worksheet
 msgid "Has Worksheet"
-msgstr ""
+msgstr "בעל גיליון עבודה"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
@@ -3710,6 +3710,9 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
+"שים לב שתחנת\\ות עבודה בארכיון: '%s' עדיין מקושר/ים לעצי מוצרים פעילים, "
+"כלומר עדיין ניתן לתכנן עליו/עליהם הוראות עבודה.כדי למנוע זאת, מומלץ למחוק את"
+" תחנת העבודה במקום לארכב אותו."
 
 #. module: mrp
 #. odoo-python
@@ -3718,6 +3721,8 @@ msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
 "which means that the product can still be used on it/them."
 msgstr ""
+"שים לב שהמוצר/ים: '%s' עדיין מקושר/ים לעצץ מוצר פעיל, כלומר ניתן עדיין "
+"להשתמש במוצר/ים זה/אלו בהן."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3888,6 +3893,8 @@ msgid ""
 "Operation define that need to be done to realize a Work Order.\n"
 "                Each operation is done at a specific Work Center and has a specific duration."
 msgstr ""
+"הפעולה מגדירה את מה שצריך לבצע על מנת לממש פקודת עבודה.\n"
+"                    כל פעולה מתבצעת בתחנת עבודה מסוימת ולה משך זמן מוגדר."
 
 #. module: mrp
 #. odoo-python
@@ -3940,12 +3947,12 @@ msgstr "מסנני חיפוש פעולות"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 msgid "Operations that cannot start before this operation is completed."
-msgstr ""
+msgstr "פעולות שלא ניתן להתחיל בהן לפני שסיום פעולה זו הושלם."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
 msgid "Operations that need to be completed before this operation can start."
-msgstr ""
+msgstr "פעולות שיש להשלים לפני שניתן להתחיל בפעולה זו."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
@@ -3970,7 +3977,7 @@ msgstr "עץ מוצר מיושן"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
 msgid "Overall Effective Efficiency Target in percentage"
-msgstr ""
+msgstr "יעד יעילות כוללת אפקטיבית באחוזים"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
@@ -4868,7 +4875,7 @@ msgstr "משתמש אחראי"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Resupply lead time."
-msgstr ""
+msgstr "זמן הובלה לאספקה מחדש"
 
 #. module: mrp
 #. odoo-javascript
@@ -5673,6 +5680,9 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"שדה זה משמש לחישוב משך הזמן הצפוי של הוראת עבודה בתחנת עבודה זו. לדוגמה, אם "
+"הוראת העבודה אורכת שעה אחת ופקטור היעילות הוא 100%, משך הזמן הצפוי יהיה שעה "
+"אחת. עם זאת, אם פקטור היעילות הוא 200%, משך הזמן הצפוי יהיה 30 דקות."
 
 #. module: mrp
 #. odoo-javascript
@@ -5702,6 +5712,8 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                You can filter on the product to see all the past movements for the product."
 msgstr ""
+"תפריט זה מספק מעקב מלא אחר פעולות המלאי של מוצר מסוים.\n"
+"           באפשרותך לסנן לפי המוצר כדי לראות את כל תנועות המלאי שבוצעו עבורו בעבר."
 
 #. module: mrp
 #. odoo-python

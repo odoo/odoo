@@ -132,7 +132,7 @@ class AccountEdiFormat(models.Model):
         cancel_json = {
             "ewbNo": ewaybill_response_json.get("ewayBillNo") or ewaybill_response_json.get("EwbNo"),
             "cancelRsnCode": int(invoices.l10n_in_edi_cancel_reason),
-            "CnlRem": invoices.l10n_in_edi_cancel_remarks,
+            "cancelRmrk": invoices.l10n_in_edi_cancel_remarks,
         }
         response = self._l10n_in_edi_ewaybill_cancel(invoices.company_id, cancel_json)
         if response.get("error"):

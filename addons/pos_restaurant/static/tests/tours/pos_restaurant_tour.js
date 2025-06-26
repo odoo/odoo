@@ -13,7 +13,7 @@ import * as ProductScreenPos from "@point_of_sale/../tests/tours/utils/product_s
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
-import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
+import { inLeftSide, negateStep, waitForLoading } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import { delay } from "@odoo/hoot-dom";
@@ -730,5 +730,30 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout",
                     }
                 },
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_book_and_release_table", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.bookOrReleaseTable(),
+            waitForLoading(),
+            {
+                content: "Check if order has a server ID",
+                trigger: "body",
+                run: () => {
+                    const order = posmodel.models["pos.order"].getFirst();
+
+                    if (typeof order.id !== "number") {
+                        throw new Error("Order does not have a valid server ID");
+                    }
+                },
+            },
+            FloorScreen.clickTable("5"),
+            ProductScreen.bookOrReleaseTable(),
+            waitForLoading(),
         ].flat(),
 });

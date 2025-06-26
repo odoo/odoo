@@ -230,8 +230,11 @@
                 </xpath>
                 <xpath expr="//sheet" position="before">
                     <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-warning" role="alert"
-                         invisible="duplicated_bank_account_partners_count == 0">
-                        One or more Bank Accounts set on this partner are also used by other <bold><button class="alert-link" type="object" name="action_view_partner_with_same_bank" role="button" string="Partners" style="padding: 0;vertical-align: baseline;"/></bold>. Please make sure that this is a wanted behavior.
+                         invisible="not duplicate_bank_partner_ids">
+                        <span>One or more Bank Accounts set on this partner are also used by others:</span>
+                        <field name="duplicate_bank_partner_ids" widget="x2many_buttons" string="Partners with same bank"/>
+                        <br/>
+                        <span>Please make sure that this is a wanted behavior.</span>
                     </div>
                 </xpath>
                 <page name="sales_purchases" position="after">

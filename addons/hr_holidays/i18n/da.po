@@ -4226,6 +4226,10 @@ msgid ""
 "to zero), All accrued time carried over to the next period; or Carryover "
 "with a maximum)."
 msgstr ""
+"Når overførselstidspunktet nås, vælger du, hvad der skal ske med den ubrugte"
+" tid afhængigt af planens indstillinger: Ingen overførsel (tiden "
+"nulstilles), al opsparet tid overføres til næste periode eller overførsel "
+"med en fastsat maksimumgrænse."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
@@ -4233,6 +4237,8 @@ msgid ""
 "When the field is checked the balance of an allocation using this accrual "
 "plan will never exceed the specified amount."
 msgstr ""
+"Når feltet er markeret, vil saldoen for en ferieanmodning, der følger denne "
+"optjeningsplan, aldrig kunne overstige den angivne grænse."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
@@ -4276,7 +4282,7 @@ msgstr "Årlig måned"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__maximum_leave_yearly
 msgid "Yearly limit to"
-msgstr ""
+msgstr "Årligt begrænset til"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__year
@@ -4303,7 +4309,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You are not allowed to request time off on a Mandatory Day"
-msgstr ""
+msgstr "Det er ikke tilladt at anmode om fri på en obligatorisk dag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
@@ -4311,6 +4317,7 @@ msgid ""
 "You can define a period of time where the days carried over will be "
 "available"
 msgstr ""
+"Du kan angive, i hvilken periode de overførte dage skal være tilgængelige"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4388,6 +4395,9 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
+"Indstillingen \"Inklusive helligdage\" kan ikke ændres, da én eller flere "
+"feriedage under denne                         fraværstype falder sammen med "
+"helligdage. Ændringen vil påvirke saldoen for de berørte medarbejdere."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4396,6 +4406,8 @@ msgid ""
 "You cannot reduce the duration below the duration of leaves already taken by"
 " the employee."
 msgstr ""
+"Du kan ikke forkorte varigheden til mindre end den ferie, medarbejderen "
+"allerede har afholdt."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4404,6 +4416,8 @@ msgid ""
 "You cannot refuse this allocation request since the employee has already "
 "taken leaves for it. Please refuse or delete those leaves first."
 msgstr ""
+"Du kan ikke afvise denne ferieansøgning, fordi medarbejderen allerede har "
+"afholdt ferien. Afvis eller slet først de pågældende feriedage."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4487,18 +4501,18 @@ msgstr "Din %(leave_type)s planlagt til den %(date)s er blevet afvist"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Your Time Off"
-msgstr ""
+msgstr "Dit fravær"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 msgid "Your time off has been cancelled."
-msgstr ""
+msgstr "Dit fravær er blevet annulleret"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "after"
-msgstr ""
+msgstr "efter"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4580,12 +4594,12 @@ msgstr "dage i månederne"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 msgid "days)"
-msgstr ""
+msgstr "dage)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "e.g. Extra recuperation, Company unavailability, ..."
-msgstr ""
+msgstr "f.eks. ekstra restitution, virksomhedens utilgængelighed osv."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -4624,7 +4638,7 @@ msgstr "i"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "initially"
-msgstr ""
+msgstr "oprindeligt"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4692,7 +4706,7 @@ msgstr "brugt"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "the accruated amount is insufficient for that duration."
-msgstr ""
+msgstr "den optjente mængde er ikke tilstrækkelig til denne periode."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -4707,7 +4721,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "up to"
-msgstr ""
+msgstr "op til"
 
 #. module: hr_holidays
 #. odoo-javascript
