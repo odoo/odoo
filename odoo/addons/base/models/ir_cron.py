@@ -466,13 +466,13 @@ class IrCron(models.Model):
                         status = CompletionStatus.FAILED
                 else:
                     if not progress.remaining:
-                        status = CompletionStatus.FULLY_DONE
-                    elif not progress.done:
                         # assume the server action doesn't use the progress API
                         # and that there is nothing left to process
                         status = CompletionStatus.FULLY_DONE
                     else:
                         status = CompletionStatus.PARTIALLY_DONE
+                        if not progress.done:
+                            break
 
                     if status == CompletionStatus.FULLY_DONE and progress.deactivate:
                         job['active'] = False
