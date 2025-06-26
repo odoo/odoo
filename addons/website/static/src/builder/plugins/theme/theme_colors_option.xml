@@ -50,15 +50,15 @@
                     </div>
                     <div class="d-flex flex-column h-100">
                         <div class="d-flex flex-column h-100 justify-content-center">
-                            <BuilderSelect action="'changeColorPalette'" actionParam="'color-palettes-name'">
+                            <BuilderSelect action="'changeColorPalette'" actionParam="'color-palettes-name'" dropdownContainerClass="'o-color-palette-dropdown'">
                                 <t t-set-slot="fixedButton">
                                     <Img class="'h-100'" src="'/website/static/src/img/snippets_options/palette.svg'"/>
                                 </t>
                                 <t t-foreach="palettes" t-as="palette" t-key="palette.name">
                                     <BuilderSelectItem actionValue="palette.name">
-                                        <div class="d-flex flex-row" style="min-width: 60px">
+                                        <div class="o-color-palette-pill d-flex flex-row border rounded-pill overflow-hidden">
                                             <t t-foreach="palette.colors" t-as="color" t-key="color">
-                                                <span class="w-100" t-attf-style="background-color: {{color}}; height: 25px"></span>
+                                                <span class="w-100" t-attf-style="background-color: {{color}};"></span>
                                             </t>
                                         </div>
                                     </BuilderSelectItem>
