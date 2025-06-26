@@ -19,9 +19,8 @@ This module has been built with the help of Caudigef.
     'data': [
         'data/account_tax_report_data.xml',
         'views/portal_address_templates.xml',
-        "views/res_partner_views.xml",
-        "views/res_company_views.xml",
-        'views/report_invoice.xml',
+        'views/res_partner_views.xml',
+        'views/res_company_views.xml',
     ],
     'assets': {
         'web.assets_frontend': [
