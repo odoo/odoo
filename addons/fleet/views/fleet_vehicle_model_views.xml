@@ -42,18 +42,24 @@
                         <page string="Information" name="information">
                             <group>
                                 <group string="Model" invisible="vehicle_type != 'car'">
+                                    <field name="model_year"/>
                                     <field name="seats"/>
                                     <field name="doors"/>
-                                    <field name="model_year"/>
-                                    <field name="trailer_hook"/>
                                     <field name="color"/>
-                                    <field name="drive_type"/>
+                                    <field name="trailer_hook"/>
                                 </group>
                                 <group id="vehicle_information" string="Vehicle Information" invisible="vehicle_type != 'bike'">
                                     <field name="electric_assistance"/>
                                 </group>
                                 <group string="Engine" invisible="vehicle_type != 'car'" name="group_engine">
                                     <field name="default_fuel_type" required="1"/>
+                                    <field name="transmission"/>
+                                    <field name="drive_type"/>
+                                    <label for="power" invisible="power_unit != 'power'"/>
+                                    <div class="o_row" invisible="power_unit != 'power'">
+                                        <field name="power"/>
+                                        <field name="power_unit"/>
+                                    </div>
                                     <label for="vehicle_range"/>
                                     <div class="o_row">
                                         <field name="vehicle_range"/>
@@ -65,19 +71,12 @@
                                         <field name="co2_emission_unit"/>
                                     </div>
                                     <field name="co2_standard" placeholder="eg. WLTP, Euro 6, or EPA, ..."/>
-                                    <field name="transmission"/>
-                                    <label for="power" invisible="power_unit != 'power'"/>
-                                    <div class="o_row" invisible="power_unit != 'power'">
-                                        <field name="power"/>
-                                        <field name="power_unit"/>
-                                    </div>
                                     <label for="horsepower" invisible="power_unit != 'horsepower'"/>
                                     <div class="o_row" invisible="power_unit != 'horsepower'">
                                         <field name="horsepower"/>
                                         <field name="power_unit"/>
                                     </div>
                                     <field name="horsepower_tax" invisible="power_unit != 'horsepower'"/>
-
                                 </group>
                             </group>
                         </page>
