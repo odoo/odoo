@@ -7,6 +7,8 @@ import {
     dateFilterValueToString,
     getNextDateFilterValue,
     getPreviousDateFilterValue,
+    getFacetInfo,
+    RELATIVE_PERIODS,
 } from "@spreadsheet/global_filters/helpers";
 import {
     getDateDomainDurationInDays,
@@ -444,5 +446,127 @@ describe("getPreviousDateFilterValue", () => {
         expect(
             getPreviousDateFilterValue({ type: "range", from: "2022-01-11", to: "2022-01-20" })
         ).toEqual({ type: "range", from: "2022-01-01", to: "2022-01-10" });
+    });
+});
+
+test("getFacetInfo for boolean values", async () => {
+    const filter = {
+        type: "boolean",
+        label: "Boolean Filter",
+        id: "1",
+    };
+    const nameService = {};
+    expect(await getFacetInfo(filter, [true], nameService)).toEqual({
+        title: "Boolean Filter",
+        id: "1",
+        separator: "or",
+        values: ["Is set"],
+    });
+    expect(await getFacetInfo(filter, [true, false], nameService)).toEqual({
+        title: "Boolean Filter",
+        id: "1",
+        separator: "or",
+        values: ["Is set", "Is not set"],
+    });
+});
+
+test("getFacetInfo for text values", async () => {
+    const filter = {
+        type: "text",
+        label: "Text Filter",
+        id: "1",
+    };
+    const nameService = {};
+    expect(await getFacetInfo(filter, ["hello"], nameService)).toEqual({
+        title: "Text Filter",
+        id: "1",
+        separator: "or",
+        values: ["hello"],
+    });
+});
+
+test("getFacetInfo for date values", async () => {
+    const filter = {
+        type: "date",
+        label: "Date Filter",
+        id: "1",
+    };
+    const nameService = {};
+    for (const [period, label] of Object.entries(RELATIVE_PERIODS)) {
+        expect(await getFacetInfo(filter, { type: "relative", period }, nameService)).toEqual({
+            title: "Date Filter",
+            id: "1",
+            separator: "or",
+            values: [label],
+        });
+    }
+    expect(
+        await getFacetInfo(
+            filter,
+            { type: "range", from: "2022-01-01", to: "2022-12-31" },
+            nameService
+        )
+    ).toEqual({
+        title: "Date Filter",
+        id: "1",
+        separator: "or",
+        values: ["January 1 – December 31, 2022"],
+    });
+    expect(await getFacetInfo(filter, { type: "range", from: "2022-01-01" }, nameService)).toEqual({
+        title: "Date Filter",
+        id: "1",
+        separator: "or",
+        values: ["Since January 1, 2022"],
+    });
+    expect(await getFacetInfo(filter, { type: "range", to: "2022-12-31" }, nameService)).toEqual({
+        title: "Date Filter",
+        id: "1",
+        separator: "or",
+        values: ["Until December 31, 2022"],
+    });
+    expect(
+        await getFacetInfo(filter, { type: "month", month: 1, year: 2022 }, nameService)
+    ).toEqual({
+        title: "Date Filter",
+        id: "1",
+        separator: "or",
+        values: ["January 2022"],
+    });
+    expect(
+        await getFacetInfo(filter, { type: "quarter", quarter: 1, year: 2022 }, nameService)
+    ).toEqual({
+        title: "Date Filter",
+        id: "1",
+        separator: "or",
+        values: ["Q1 2022"],
+    });
+    expect(await getFacetInfo(filter, { type: "year", year: 2022 }, nameService)).toEqual({
+        title: "Date Filter",
+        id: "1",
+        separator: "or",
+        values: ["2022"],
+    });
+});
+
+test("getFacetInfo for relation values", async () => {
+    const filter = {
+        type: "relation",
+        label: "Relation Filter",
+        id: "1",
+    };
+    const nameService = {
+        loadDisplayNames: (resModel, ids) => ids.map((id) => `Name ${id}`),
+    };
+    expect(await getFacetInfo(filter, [1], nameService)).toEqual({
+        title: "Relation Filter",
+        id: "1",
+        separator: "or",
+        values: ["Name 1"],
+    });
+    expect(await getFacetInfo(filter, [1, 2], nameService)).toEqual({
+        title: "Relation Filter",
+        id: "1",
+        separator: "or",
+        values: ["Name 1", "Name 2"],
     });
 });
