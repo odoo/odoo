@@ -24,24 +24,30 @@ export class OverlayButtonsPlugin extends Plugin {
     setup() {
         // TODO find how to not overflow the mobile preview.
         this.iframe = this.editable.ownerDocument.defaultView.frameElement;
-        this.overlay = this.dependencies.overlay.createOverlay(OverlayButtons, {
-            positionOptions: {
-                position: "top-middle",
-                onPositioned: (overlayEl, position) => {
-                    const iframeRect = this.iframe.getBoundingClientRect();
-                    if (this.target && position.top < iframeRect.top) {
-                        const targetRect = this.target.getBoundingClientRect();
-                        const newTop = iframeRect.top + targetRect.bottom + 15;
-                        position.top = newTop;
-                        overlayEl.style.top = `${newTop}px`;
-                    }
-                    return;
+        this.overlay = this.dependencies.overlay.createOverlay(
+            OverlayButtons,
+            {
+                positionOptions: {
+                    position: "top-middle",
+                    onPositioned: (overlayEl, position) => {
+                        const iframeRect = this.iframe.getBoundingClientRect();
+                        if (this.target && position.top < iframeRect.top) {
+                            const targetRect = this.target.getBoundingClientRect();
+                            const newTop = iframeRect.top + targetRect.bottom + 15;
+                            position.top = newTop;
+                            overlayEl.style.top = `${newTop}px`;
+                        }
+                        return;
+                    },
+                    margin: 15,
+                    flip: false,
                 },
-                margin: 15,
-                flip: false,
+                closeOnPointerdown: false,
             },
-            closeOnPointerdown: false,
-        });
+            // The buttons should appear under other overlays, like the link
+            // popover. The default sequence is 50.
+            { sequence: 49 }
+        );
         this.target = null;
         this.state = reactive({
             isVisible: true,
