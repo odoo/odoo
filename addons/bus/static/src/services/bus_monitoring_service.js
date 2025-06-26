@@ -33,9 +33,6 @@ export class BusMonitoringService {
      * @param {WORKER_STATE[keyof WORKER_STATE]} state
      */
     workerStateOnChange(state) {
-        if (!navigator.onLine) {
-            return;
-        }
         switch (state) {
             case WORKER_STATE.CONNECTING: {
                 this.isReconnecting = true;
