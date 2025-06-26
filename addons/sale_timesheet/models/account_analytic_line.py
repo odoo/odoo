@@ -8,7 +8,6 @@ from odoo.tools.misc import unquote
 
 TIMESHEET_BILLABLE_TYPES = [
     ('02_billable_fixed', 'Timesheets (Fixed Price)'),
-    ('03_timesheet_revenues', 'Revenues (Time & Material)'),
     ('04_billable_time', 'Timesheets (Time & Materials)'),
     ('06_billable_milestones', 'Timesheets (Milestones)'),
     ('08_billable_manual', 'Timesheets (Manual) '),
@@ -56,7 +55,7 @@ class AccountAnalyticLine(models.Model):
             elif timesheet.so_line.product_id.type == 'service':
                 if timesheet.so_line.product_id.invoice_policy == 'delivery':
                     if timesheet.so_line.product_id.service_type == 'timesheet':
-                        invoice_type = '03_timesheet_revenues' if timesheet.amount > 0 and timesheet.unit_amount > 0 else '04_billable_time'
+                        invoice_type = '04_billable_time'
                     else:
                         service_type = timesheet.so_line.product_id.service_type
                         if service_type == 'milestones':
@@ -74,10 +73,7 @@ class AccountAnalyticLine(models.Model):
     def _compute_category_report(self):
         timesheets = self.filtered(lambda t: t.project_id)
         for timesheet in timesheets:
-            if timesheet.billable_type == '03_timesheet_revenues':
-                timesheet.category_report = 'revenues'
-            else:
-                timesheet.category_report = 'costs'
+            timesheet.category_report = 'costs'
         super(AccountAnalyticLine, self - timesheets)._compute_category_report()
 
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
