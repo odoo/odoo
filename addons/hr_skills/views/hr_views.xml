@@ -506,7 +506,7 @@
                     domain="[
                         '|',
                             ('valid_to', '=', False),
-                            ('valid_to', '&gt;', context_today().strftime('%Y-%m-%d'))
+                            ('valid_to', '&gt;', 'today')
                     ]"/>
                 <filter string='Certification' name="group_by_certification"  context="{'group_by': 'skill_id'}"/>
                 <filter string='Type' name="group_by_type"  context="{'group_by': 'skill_type_id'}"/>

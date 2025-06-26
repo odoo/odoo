@@ -231,12 +231,13 @@
                 <field name="country_id"/>
                 <field name="visit_count"/>
                 <field name="page_ids"/>
-                <filter string="Last 7 Days" name="filter_last_7_days" domain="[('last_connection_datetime', '&gt;', datetime.datetime.now() - datetime.timedelta(days=7))]"/>
+                <filter string="Last 7 Days" name="filter_last_7_days" domain="[('last_connection_datetime', '&gt;', '-7d')]"/>
                 <separator/>
                 <filter string="Unregistered" name="filter_type_visitor" domain="[('partner_id', '=', False)]"/>
                 <filter string="Contacts" name="filter_type_customer" domain="[('partner_id', '!=', False)]"/>
                 <separator/>
-                <filter string="Connected" name="filter_is_connected" domain="[('last_connection_datetime', '&gt;', datetime.datetime.now() - datetime.timedelta(minutes=5))]"/>
+                <!-- connected in the last 5 minutes -->
+                <filter string="Connected" name="filter_is_connected" domain="[('last_connection_datetime', '&gt;', '-5M')]"/>
                 <separator/>
                 <group string="Group By">
                     <filter string="Country" name="group_by_country" context="{'group_by': 'country_id'}"/>

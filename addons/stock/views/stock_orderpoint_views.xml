@@ -78,7 +78,7 @@
                 <separator/>
                 <filter string="To Reorder" name="filter_to_reorder" domain="[('qty_to_order', '&gt;', 0.0)]"/>
                 <separator/>
-                <filter string="Not Snoozed" name="filter_not_snoozed" domain="['|', ('snoozed_until', '=', False), ('snoozed_until', '&lt;=', datetime.date.today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Not Snoozed" name="filter_not_snoozed" domain="['|', ('snoozed_until', '=', False), ('snoozed_until', '&lt;=', 'today')]"/>
                 <group string="Group By">
                     <filter string="Warehouse" name="groupby_warehouse" domain="[]"  context="{'group_by': 'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
                     <filter string="Location" name="groupby_location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>

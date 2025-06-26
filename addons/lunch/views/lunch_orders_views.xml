@@ -14,7 +14,7 @@
                 <filter name="confirmed" string="Received" domain="[('state', '=', 'confirmed')]"/>
                 <filter name="cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
                 <separator/>
-                <filter name="date_filter" string="Today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]" />
+                <filter name="date_filter" string="Today" domain="[('date', '=', 'today')]" />
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group string="Group By">

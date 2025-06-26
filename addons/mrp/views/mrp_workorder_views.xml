@@ -288,7 +288,7 @@
                 <filter string="Finished" name="finish" domain="[('state', '=', 'done')]"/>
                 <filter string="Cancelled" name="cancel" domain="[('state', '=', 'cancel')]"/>
                 <separator/>
-                <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', datetime.datetime.now()), ('state', '=', 'ready')]"
+                <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', 'now'), ('state', '=', 'ready')]"
                     help="Production started late"/>
                 <group string="Group By">
                     <filter string="Work Center" name="work_center" domain="[]" context="{'group_by': 'workcenter_id'}"/>

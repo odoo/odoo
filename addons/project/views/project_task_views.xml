@@ -25,8 +25,8 @@
                     <filter string="Closed" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
                     <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update"
                         invisible="context.get('default_is_template')">
-                        <filter name="create_date_last_30_days" string="Last 30 Days" domain="[('date_last_stage_update', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=30), datetime.time(23, 59, 59)).to_utc())]"/>
-                        <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
+                        <filter name="create_date_last_30_days" string="Last 30 Days" domain="[('date_last_stage_update', '&gt;=', 'today -30d +1d')]"/>
+                        <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;=', 'today -365d +1d')]"/>
                     </filter>
                     <group string="Group By">
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
@@ -81,16 +81,16 @@
                     <field name="activity_user_id" string="Activities of"/>
                     <field name="activity_type_id" string="Activity type"/>
                     <filter string="Deadline" name="date_deadline" date="date_deadline">
-                        <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;', datetime.datetime.combine(context_today(), datetime.time(23,59,59)).to_utc())]"/>
+                        <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;=', 'today +1d')]"/>
                         <filter name="deadline_this_week" string="This Week" domain="[
-                            ('date_deadline', '&gt;=', datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc()),
-                            ('date_deadline', '&lt;', datetime.datetime.combine(context_today() + relativedelta(days=1,weekday=0), datetime.time(0,0,0)).to_utc()),
+                            ('date_deadline', '&gt;=', '=monday'),
+                            ('date_deadline', '&lt;', '=monday +1w'),
                         ]"/>
                         <filter name="deadline_today" string="Today" domain="[
-                            ('date_deadline', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()),
-                            ('date_deadline', '&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)).to_utc()),
+                            ('date_deadline', '&gt;=', 'today'),
+                            ('date_deadline', '&lt;', 'today +1d'),
                         ]"/>
-                        <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc())]"/>
+                        <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', 'today')]"/>
                     </filter>
                 </filter>
                 <filter name="create_date" position="after">
@@ -119,12 +119,12 @@
                         domain="[('activity_user_id', '=', uid)]"/>
                     <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('activity_date_deadline', '&lt;', 'today')]"
                         help="Show all records whose next activity date is past"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '=', 'today')]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '&gt;', 'today')]"/>
                 </filter>
                 <filter name="unassigned" position="after">
                     <filter string="Private Tasks" name="private_tasks" domain="[('project_id', '=', False)]" invisible="context.get('default_project_id')"/>

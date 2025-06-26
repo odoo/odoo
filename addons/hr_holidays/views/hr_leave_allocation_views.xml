@@ -44,10 +44,10 @@
                 <separator/>
                 <filter name="year" string="Currently Valid"
                     domain="[
-                        ('date_from', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                        ('date_from', '&lt;=', 'today'),
                         '|',
                         ('date_to', '=', False),
-                        ('date_to', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                        ('date_to', '&gt;=', 'today'),
                     ]"
                     help="Active Allocations"/>
                 <separator/>
@@ -63,12 +63,12 @@
                     domain="[('activity_user_id', '=', uid)]"/>
                 <separator invisible="1"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    domain="[('activity_date_deadline', '&lt;', 'today')]"
                     help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('activity_date_deadline', '&gt;', 'today')
                         ]"/>
                 <separator/>
                 <filter name="approved_state" string="To Approve or Approved Allocations" invisible="1"
@@ -155,7 +155,7 @@
                                     invisible="not id or date_to or state != 'confirm'">No limit</div>
                             </div>
                             <div colspan="2" class="oe_row alert alert-warning my-2" role="alert"
-                                 invisible="id or not date_to or not (date_to &lt; context_today().strftime('%Y-%m-%d')) or (date_from and (date_to &lt; date_from))">
+                                 invisible="id or not date_to or not (date_to &lt; 'today') or (date_from and (date_to &lt; date_from))">
                                 <span>The allocated days cannot be used, because the allocation is set to finish in the past.</span>
                             </div>
                             <field name="number_of_days" invisible="1"/>

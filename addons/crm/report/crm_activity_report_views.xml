@@ -57,8 +57,8 @@
                     <filter string="Lost" name="lost" domain="[('won_status', '=', 'lost')]" context="{'active_test': False}"/>
                     <separator/>
                     <filter string="Trailing 12 months" name="completion_date" domain="[
-                        ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(days=-365), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
-                        ('date', '&lt;=', (datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                        ('date', '>=', '-1y'),
+                        ('date', '&lt;', '+1d =0H')]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>
                     <separator/>

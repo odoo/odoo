@@ -651,7 +651,7 @@
                     <filter invisible="1" name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
                     <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
                     <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
-                    <filter string="Late" name="filter_late_mo" help="Late" domain="[('date_start', '&lt;', context_today()), ('state', '=', 'confirmed')]"/>
+                    <filter string="Late" name="filter_late_mo" help="Late" domain="[('date_start', '&lt;', 'now'), ('state', '=', 'confirmed')]"/>
                     <filter string="Delayed Productions" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), ('is_delayed', '=', True)]"/>
                     <filter string="Components Available" name="available" domain="[('components_availability_state', '=', 'available')]"/>
@@ -663,14 +663,14 @@
                         domain="[('activity_user_id', '=', uid)]"/>
                     <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('activity_date_deadline', '&lt;', 'today')]"
                         help="Show all records whose next activity date is past"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '=', 'today')]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '&gt;', 'today')]"/>
                     <filter name="filter_date_start" string="Date" date="date_start"/>
-                    <filter name="filter_plan_date" invisible="1" string="Date: Last 365 Days" domain="[('date_start', '>', (datetime.datetime.now() + relativedelta(days=-365)).to_utc().strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                    <filter name="filter_plan_date" invisible="1" string="Date: Last 365 Days" domain="[('date_start', '>', '-365d')]"/>
                     <separator/>
                     <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>

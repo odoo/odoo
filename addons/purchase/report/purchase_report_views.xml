@@ -53,7 +53,7 @@
             <search string="Purchase Orders">
                 <filter string="Requests for Quotation" name="quotes" domain="[('state','in',('draft','sent'))]"/>
                 <filter string="Purchase Orders" name="orders" domain="[('state','!=','draft'), ('state','!=','sent'), ('state','!=','cancel')]"/>
-                <filter string="Confirmation Date Last Year" name="later_than_a_year_ago" domain="[('date_approve', '&gt;=', ((context_today()-relativedelta(years=1)).strftime('%Y-%m-%d')))]"/>
+                <filter string="Confirmation Date Last Year" name="later_than_a_year_ago" domain="[('date_approve', '&gt;=', 'today -1y')]"/>
                 <filter name="filter_date_order" date="date_order"/>
                 <filter name="filter_date_approve" date="date_approve" default_period="month"/>
                 <field name="partner_id"/>
