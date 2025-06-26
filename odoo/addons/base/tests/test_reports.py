@@ -7,6 +7,8 @@ from unittest import skipIf
 
 import odoo
 import odoo.tests
+from odoo import tools
+from odoo.exceptions import UserError
 
 try:
     from pdfminer.converter import PDFPageAggregator
@@ -111,6 +113,43 @@ class TestReports(odoo.tests.TransactionCase):
 
         self.assertEqual(b64decode(attach_1.datas), b"1")
         self.assertEqual(pdf[0], b"2")
+
+    def test_merge_pdfs(self):
+        report = self.env['ir.actions.report'].create({
+            'name': 'Test Merge PDFs',
+            'report_name': 'test_report.test_merge_pdfs',
+            'model': 'res.partner',
+        })
+
+        minimal_pdf_content = io.BytesIO(tools.file_open('base/tests/minimal.pdf', 'rb').read())
+        malformed_pdf_content = io.BytesIO(b'not a pdf')
+
+        with self.assertRaises(UserError, msg="Odoo is unable to merge the generated PDFs."):
+            report._merge_pdfs([malformed_pdf_content])
+
+        with self.assertRaises(UserError, msg="Odoo is unable to merge the generated PDFs."):
+            report._merge_pdfs([minimal_pdf_content, malformed_pdf_content])
+
+        failed_streams = []
+
+        # The reason we have the merge_pdf is to allows merging pdfs even if some of them fail.
+        # Bellow we test that the failed streams are correctly handled.
+        def handled_failed_streams(self, error=None, error_stream=None):
+            failed_streams.append((error, error_stream))
+
+        merged_pdf = report._merge_pdfs([minimal_pdf_content, malformed_pdf_content, minimal_pdf_content], handle_error=handled_failed_streams)
+
+        self.assertEqual(len(failed_streams), 1, "Expecting one failed stream")
+        self.assertEqual(failed_streams[0][1], malformed_pdf_content, "Expecting the failed stream to be the malformed pdf")
+
+        minimal_file = tools.pdf.OdooPdfFileReader(minimal_pdf_content)
+        merged_file = tools.pdf.OdooPdfFileReader(merged_pdf)
+
+        self.assertEqual(
+            minimal_file.getNumPages() * 2,
+            merged_file.getNumPages(),
+            "Expecting the merged pdf to have twice the number of pages as the original pdf"
+        )
 
 
 # Some paper format examples
