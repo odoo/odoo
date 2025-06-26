@@ -663,15 +663,6 @@ test("retrieving a stored action should remove 'allowed_company_ids' from its co
     // Check the current action context
     expect(getService("action").currentController.action.context).toEqual({
         // action context
-        params: {
-            action: 1,
-            actionStack: [
-                {
-                    action: 1,
-                },
-            ],
-            view_type: "kanban",
-        },
         someKey: 44,
         lang: "not_en",
         tz: "not_taht",

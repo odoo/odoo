@@ -253,13 +253,11 @@ export const websiteService = {
                 }
                 action.doAction("website.website_preview", {
                     clearBreadcrumbs: true,
-                    additionalContext: {
-                        params: {
-                            website_id: websiteId || currentWebsiteId,
-                            path: path || (contentWindow && contentWindow.location.href) || '/',
-                            enable_editor: edition,
-                            edit_translations: translation,
-                        },
+                    props: {
+                        websiteId: websiteId || currentWebsiteId,
+                        path: path || (contentWindow && contentWindow.location.href) || '/',
+                        enableEditor: edition,
+                        editTranslations: translation,
                     },
                 });
             },
