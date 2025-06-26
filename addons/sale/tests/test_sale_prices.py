@@ -832,6 +832,50 @@ class TestSalePrices(SaleCommon):
             100, order.order_line[0].price_unit,
             "The included tax must be subtracted to the price")
 
+    def test_so_tax_mapping_multicompany(self):
+        tax_group = self.env['account.tax.group'].create({'name': "10%"})
+        tax_include, tax_exclude = self.env['account.tax'].create([{
+            'name': "10% Tax Inc.",
+            'amount': 10.0,
+            'price_include': True,
+            'type_tax_use': 'sale',
+            'tax_group_id': tax_group.id,
+        }, {
+            'name': "10% Tax Exc.",
+            'amount': 0.0,
+            'type_tax_use': 'sale',
+            'tax_group_id': tax_group.id,
+        }])
+        fpos = self.env['account.fiscal.position'].create({
+            'name': "B2B",
+            'tax_ids': [Command.create({
+                'tax_src_id': tax_include.id,
+                'tax_dest_id': tax_exclude.id,
+            })],
+        })
+        self.product.write({
+            'list_price': 110.0,
+            'taxes_id': tax_include.ids,
+        })
+        branch_company = self.env['res.company'].create({
+            'name': "Branch Co.",
+            'parent_id': self.env.company.id,
+            'country_id': self.env.company.country_id.id,
+        })
+        order = self.empty_order.with_company(branch_company)
+        order.sudo().write({
+            'company_id': branch_company.id,
+            'fiscal_position_id': fpos.id,
+            'user_id': False,
+            'team_id': False,
+            'order_line': [Command.create({'product_id': self.product.id})],
+        })
+        self.assertEqual(order.order_line.tax_id, tax_exclude, "Line tax should be mapped")
+        self.assertAlmostEqual(
+            order.order_line.price_unit, 100.0,
+            msg="Tax should not be included in unit price",
+        )
+
     def test_free_product_and_price_include_fixed_tax(self):
         """ Check that fixed tax include are correctly computed while the price_unit is 0 """
         taxes = self.env['account.tax'].create([{
