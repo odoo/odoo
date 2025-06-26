@@ -21,11 +21,14 @@ test("preprocess modifies the snippet", async () => {
             }
         });
 
-    const { getIframeEl } = await setupWebsiteBuilder();
+    let iframeEl;
+    await setupWebsiteBuilder("", {
+        onIframeLoaded: (iframe) => (iframeEl = iframe),
+    });
     const { moveTo, drop } = await contains(
         ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
-    await moveTo(getIframeEl());
+    await moveTo(iframeEl);
     await drop(getDragHelper());
     await confirmAddSnippet();
     await waitForEndOfOperation();
