@@ -592,3 +592,39 @@ def _get_raspberry_pi_model():
 raspberry_pi_model = _get_raspberry_pi_model()
 odoo_start_time = time.monotonic()
 system_start_time = odoo_start_time - _get_system_uptime()
+
+
+def is_ngrok_enabled():
+    """Check if a ngrok tunnel is active on the IoT Box"""
+    try:
+        response = requests.get("http://localhost:4040/api/tunnels", timeout=5)
+        response.raise_for_status()
+        response.json()
+        return True
+    except (requests.exceptions.RequestException, ValueError):
+        # if the request fails or the response is not valid JSON,
+        # it means ngrok is not enabled or not running
+        _logger.debug("Ngrok isn't running.", exc_info=True)
+        return False
+
+
+def toggle_remote_connection(token=""):
+    """Enable/disable remote connection to the IoT Box using ngrok.
+    If the token is provided, it will set up ngrok with the
+    given authtoken, else it will disable the ngrok service.
+
+    :param str token: The ngrok authtoken to use for the connection"""
+    _logger.info("Toggling remote connection with token: %s...", token[:5] if token else "<No Token>")
+    p = subprocess.run(
+        ['sudo', 'ngrok', 'config', 'add-authtoken', token, '--config', '/home/pi/ngrok.yml'],
+        check=False,
+    )
+    if p.returncode == 0:
+        subprocess.run(
+            ['sudo', 'systemctl', 'restart' if token else "stop", 'odoo-ngrok.service'],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        return True
+    return False

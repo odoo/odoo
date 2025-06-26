@@ -1,5 +1,6 @@
 import json
 import logging
+import platform
 import pprint
 import requests
 import time
@@ -95,6 +96,19 @@ class WebsocketClient(Thread):
                         'iot_box_identifier': helpers.get_identifier(),
                         'answer': answer,
                     }, method="webrtc_answer")
+                case 'remote_debug':
+                    if platform.system() == 'Windows':
+                        continue
+                    if not payload.get("status"):
+                        helpers.toggle_remote_connection(payload.get("token", ""))
+                        time.sleep(1)
+                    send_to_controller({
+                        'session_id': 0,
+                        'iot_box_identifier': helpers.get_identifier(),
+                        'device_identifier': None,
+                        'status': 'success',
+                        'result': {'enabled': helpers.is_ngrok_enabled()}
+                    })
                 case _:
                     continue
 
