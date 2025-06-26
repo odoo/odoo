@@ -46,6 +46,9 @@
     <xpath expr="//input[@name='o_linkpopover_url_img']" position="replace">
         <t t-call="website.InputURLAutoComplete"/>
     </xpath>
+    <xpath expr="//a[hasclass('o_we_url_link')]" position="attributes">
+        <attribute name="t-on-click">onClickForcePreviewMode</attribute>
+    </xpath>
 </t>
 
 </templates>
