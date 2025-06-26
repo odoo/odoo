@@ -155,6 +155,7 @@ echo "pi:${password}" | chpasswd
 echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config
 
 PKGS_TO_INSTALL="
+    arp-scan \
     chromium-browser \
     console-data \
     cups \
@@ -171,6 +172,7 @@ PKGS_TO_INSTALL="
     libpq-dev \
     libffi-dev \
     localepurge \
+    mtr \
     nginx-full \
     printer-driver-all \
     python3 \
