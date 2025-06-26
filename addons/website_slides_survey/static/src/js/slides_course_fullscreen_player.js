@@ -13,7 +13,7 @@ Fullscreen.include({
         var def = this._super.apply(this, arguments);
         const contentEl = this.el.querySelector(".o_wslides_fs_content");
         if (this._slideValue.category === "certification") {
-            contentEl.innerHTML = "";
+            contentEl.textContent = "";
             contentEl.append(
                 renderToElement("website.slides.fullscreen.certification", { widget: this })
             );

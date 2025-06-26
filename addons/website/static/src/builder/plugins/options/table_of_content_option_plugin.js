@@ -116,7 +116,7 @@ class TableOfContentOptionPlugin extends Plugin {
         const headingIds = currentHeadingItems.map(({ el }) => getTocAndHeadingId(el).headingId);
         let maxHeadingIds = Math.max(0, ...headingIds);
 
-        tableOfContentNavbar.innerHTML = "";
+        tableOfContentNavbar.textContent = "";
         const uniqueHeadingIds = new Set();
         for (const { title, el } of currentHeadingItems) {
             let { headingId } = getTocAndHeadingId(el);

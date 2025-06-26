@@ -274,7 +274,7 @@ export class AddSnippetDialog extends Component {
                     const previewImgEl = document.createElement("img");
                     previewImgEl.src = imagePreview;
                     previewImgDivEl.appendChild(previewImgEl);
-                    clonedSnippetEl.innerHTML = "";
+                    clonedSnippetEl.textContent = "";
                     clonedSnippetEl.appendChild(previewImgDivEl);
                 }
 
