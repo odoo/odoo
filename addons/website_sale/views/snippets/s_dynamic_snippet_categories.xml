@@ -1,144 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <template id="s_dynamic_category" name="Category List">
-        <section
-            class="s_dynamic_category s_dynamic_category_clickable_items pt32 pb32"
-            data-snippet="s_dynamic_category"
-            data-all-products-item="true"
-            data-columns="4"
-            data-size="medium"
-            data-is-clickable="true"
-            data-button="Explore Now"
-            data-alignment="left"
-        >
+    <template id="website_sale.s_dynamic_snippet_template" inherit_id="website.s_dynamic_snippet_template" primary="True">
+        <xpath expr="//section[hasclass('s_dynamic_snippet_title')]/*" position="replace">
             <div class="container">
-                <div>
-                    <section
-                        class="s_dynamic_snippet_title oe_unremovable oe_unmovable"
-                        data-name="Intro text"
-                        role="heading"
-                    >
-                        <div class="container">
-                            <h2 class="h4">Crafting Beautiful Spaces</h2>
-                            <p>Designing elegant, inviting environments that inspire and delight.</p>
-                        </div>
-                    </section>
-                    <div
-                        class="s_category_container d-grid gap-2"
-                        contenteditable="false"
-                        style="--DynamicCategory-columns: 4; grid-auto-rows: minmax(15vh, auto);"
-                    >
-                        <div
-                            class="all_products s_dynamic_category_item position-relative bg-black overflow-hidden oe_unremovable"
-                            role="article"
-                            style="grid-column: span 2;"
-                        >
-                            <img
-                                src="/website_sale/static/src/img/all_products.jpg"
-                                alt="All Products"
-                                class="s_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
-                            />
-                            <div class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column oe_unremovable oe_unmovable">
-                                <span
-                                    class="s_category_filter position-absolute start-0 top-0 end-0 bottom-0 d-none bg-black-25 transition-base z-n1"
-                                    aria-hidden="true"
-                                />
-                                <h3 class="all_products_heading h4">All Collections</h3>
-                                <a
-                                    role="button"
-                                    href="/shop"
-                                    class="s_dynamic_category_button btn btn-primary stretched-link align-self-start h-0 p-0 opacity-0 o_not-animable oe_unremovable"
-                                >
-                                    Explore Now
-                                </a>
-                                <p class="s_dynamic_category_arrow position-absolute end-0 bottom-0 mb-3 me-3 transition-base">
-                                    <i class="oi oi-arrow-right fa-lg"/>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="s_dynamic_category_wrapper d-contents rounded-2">
-                            <div class="s_dynamic_category_wrapper_demo d-contents o_not_editable" contenteditable="false">
-                                <div
-                                    class="s_dynamic_category_item bg-black category_item position-relative overflow-hidden"
-                                    role="article"
-                                    style="grid-row: span 2;"
-                                >
-                                    <img
-                                        alt="Desks"
-                                        class="s_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
-                                        src="/web/image/product.public.category/1/image_1920"
-                                    />
-                                    <div
-                                        class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between"
-                                    >
-                                        <h4>Desks</h4>
-                                        <p class="s_dynamic_category_arrow position-absolute end-0 bottom-0 mb-3 me-3 transition-base">
-                                            <i class="oi oi-arrow-right fa-lg"/>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    class="s_dynamic_category_item bg-black category_item position-relative overflow-hidden"
-                                    role="article"
-                                    style="grid-row: span 2;"
-                                >
-                                    <img
-                                        alt="Furnitures"
-                                        class="s_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
-                                        src="/web/image/product.public.category/2/image_1920"
-                                    />
-                                    <div
-                                        class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between"
-                                    >
-                                        <h4>Furnitures</h4>
-                                        <p class="s_dynamic_category_arrow position-absolute end-0 bottom-0 mb-3 me-3 transition-base">
-                                            <i class="oi oi-arrow-right fa-lg"/>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    class="s_dynamic_category_item bg-black category_item position-relative overflow-hidden"
-                                    role="article"
-                                    style="grid-row: span 2;"
-                                >
-                                    <img
-                                        alt="Boxes"
-                                        class="s_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
-                                        src="/web/image/product.public.category/3/image_1920"
-                                    />
-                                    <div
-                                        class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between"
-                                    >
-                                        <h4>Boxes</h4>
-                                        <p class="s_dynamic_category_arrow position-absolute end-0 bottom-0 mb-3 me-3 transition-base">
-                                            <i class="oi oi-arrow-right fa-lg"/>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    class="s_dynamic_category_item bg-black category_item position-relative overflow-hidden"
-                                    role="article"
-                                    style="grid-row: span 2;"
-                                >
-                                    <img
-                                        alt="Drawers"
-                                        class="s_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
-                                        src="/web/image/product.public.category/4/image_1920"
-                                    />
-                                    <div
-                                        class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between"
-                                    >
-                                        <h4>Drawers</h4>
-                                        <p class="s_dynamic_category_arrow position-absolute end-0 bottom-0 mb-3 me-3">
-                                            <i class="oi oi-arrow-right fa-lg"/>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h2 class="h4">Crafting Beautiful Spaces</h2>
+                <p>Designing elegant, inviting environments that inspire and delight.</p>
             </div>
-        </section>
+        </xpath>
+    </template>
+    <template id="s_dynamic_snippet_category" name="Category List">
+        <t t-call="website_sale.s_dynamic_snippet_template">
+            <t t-set="snippet_name" t-value="'s_dynamic_snippet_category'"/>
+            <!--
+                TODO: `.oe_website_sale` is used as a selector in `website_sale_tracking.js`. This
+                is a temporary solution to load the tracking utilities and will be removed once
+                tracking utilities will be fully integrated into a service.
+            -->
+            <t t-set="snippet_classes" t-value="'oe_website_sale s_dynamic_category_clickable_items'"/>
+            <t t-set="main_page_url" t-value="'/shop'"/>
+            <t t-call="website_sale.s_dynamic_snippet_category_preview_data"/>
+        </t>
     </template>
 </odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale.s_dynamic_snippet_category.grid">
+        <div
+            class="s_category_container d-grid gap-2 rounded-2"
+            contenteditable="false"
+            t-attf-style="--DynamicCategory-columns: 2; grid-auto-rows: minmax(15vh, auto);"
+        >
+        <t t-foreach="data" t-as="category" t-key="category_index">
+            <t t-out="category"/>
+        </t>
+        </div>
+    </t>
+</templates>

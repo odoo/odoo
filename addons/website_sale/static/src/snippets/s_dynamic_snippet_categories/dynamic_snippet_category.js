@@ -1,10 +1,9 @@
+import { markup } from "@odoo/owl";
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { utils as uiUtils } from '@web/core/ui/ui_service';
-import { renderToFragment } from '@web/core/utils/render';
-import { Interaction } from '@web/public/interaction';
-import { session } from '@web/session';
+import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/dynamic_snippet";
 
 
 const SIZE_CONFIG = {
@@ -13,120 +12,83 @@ const SIZE_CONFIG = {
     large: { span: 4, row: '15vh' },
 };
 const  ALIGNMENT_CLASSES_MAPPING = {
-    left: ['justify-content-between'],
-    center: ['align_category_center'],
-    right: ['justify-content-between', 'align_category_right'],
+    left: 'justify-content-between',
+    center: 'align_category_center',
+    right: 'justify-content-between align_category_right'
 };
-const CATEGORY_TEMPLATE = {
-    default: 'website_sale.dynamic_filter_template_categories',
-    clickable: 'website_sale.dynamic_filter_template_categories_clickable_items',
-}
-const  ALIGNMENT_CLASSES = [
-    'justify-content-between', 'align_category_right', 'align_category_center',
-];
-const BUTTON_CLASSES = ['oe_unremovable', 'stretched-link', 'opacity-0', 'p-0', 'h-0'];
+export const CATEGORY_TEMPLATE = {
+    default: 'website_sale.dynamic_filter_template_product_public_category_default',
+    clickable: 'website_sale.dynamic_filter_template_product_public_category_clickable_items',
+};
+const GAP = ['gap-0','gap-1','gap-2','gap-3','gap-4','gap-5'];
 
-export class dynamicSnippetCategory extends Interaction {
-    static selector = '.s_dynamic_category';
-    dynamicContent = {
-        _window: { "t-on-resize": this.throttled(this.render) },
-    };
+export class dynamicSnippetCategory extends DynamicSnippet {
+    static selector = '.s_dynamic_snippet_category';
 
-    async willStart() {
-        if(!session.has_ecommerce_access){
-            this.el.querySelector('.all_products').classList.add('d-none');
-            this.data = [];
-            return;
-        }
-        const categoryId = this.el.dataset.categoryId;
-        this.data = categoryId != ''
-            ? await this.waitFor(rpc('/shop/get_categories', { category_id: parseInt(categoryId) }))
-            : await this.waitFor(rpc('/shop/get_categories'));
+    setup(){
+        super.setup();
+        this.templateKey = 'website_sale.s_dynamic_snippet_category.grid';
     }
 
-    start() {
-        this.render();
+    isConfigComplete() {
+        return true;
     }
 
-    destroy() {
-        const categoryWrapperEl = this.el.querySelector('.s_dynamic_category_wrapper');
-        categoryWrapperEl.replaceChildren();
-        this.el.querySelector('.all_products').classList.add('d-none');
-    }
-
-    render() {
+    async fetchData() {
+        // Unlike dynamic_snippet this snippet does not rely on a website.snippet.filters record
+        // for filtering the dynamic records. Here the the record to be displayed on the snippet
+        // are selected by an editor option and categories are filtered based on the selected
+        // option on the fly.
         const nodeData = this.el.dataset;
-
-        // Setup mappings
-        const alignmentClass =  ALIGNMENT_CLASSES_MAPPING[nodeData.alignment];
-        const categoryGrid = this.el.querySelector('.s_category_container');
-        const categoryWrapperEl = this.el.querySelector('.s_dynamic_category_wrapper');
-        const sizeConfig = SIZE_CONFIG[nodeData.size]
-
-        // Clear existing categories and render with new values
-        const categoryTemplate = nodeData.isClickable
+        const templateKey = nodeData.isClickable
             ? CATEGORY_TEMPLATE.clickable
             : CATEGORY_TEMPLATE.default;
-        categoryWrapperEl.replaceChildren(renderToFragment(categoryTemplate, {
-            data: this.data,
+        const filterFragments = await this.waitFor(rpc(
+            '/shop/get_categories',
+            Object.assign({
+                'category_id': parseInt(nodeData.filterId),
+                'template_key': templateKey,
+            },
+                this.getRpcParameters(),
+            )
+        ));
+        this.data = filterFragments.map(markup);
+    }
+
+    getRpcParameters(){
+        const res = super.getRpcParameters();
+        const nodeData = this.el.dataset;
+        const sizeConfig = SIZE_CONFIG[nodeData.size]
+        const alignmentClass =  ALIGNMENT_CLASSES_MAPPING[nodeData.alignment];
+        const columns = uiUtils.isSmall() ? 1 : parseInt(nodeData.columns)
+        const shouldParentSpanTwo = columns !== 1 &&
+            (['large', 'medium'].includes(nodeData.size) || columns === 5);
+
+        Object.assign(res, {
             size: sizeConfig.span,
-            alignmentClass: alignmentClass.join(' '),
+            alignmentClass: alignmentClass,
             buttonText: _t(nodeData.button),
-        }))
-        // Apply styling to category grid layout
-        const columns = uiUtils.isSmall() ? 1 : parseInt(nodeData.columns);
-        categoryGrid.style.setProperty('--DynamicCategory-columns', `${columns}`);
+            row: sizeConfig.row,
+            show_parent: nodeData.filterId && nodeData.showParent,
+            should_parent_span_two: shouldParentSpanTwo,
+        });
+        return res;
+    }
+
+    async render() {
+        await super.render();
+        const nodeData = this.el.dataset;
+        const categoryGrid = this.el.querySelector('.s_category_container');
+
+        // Apply styling to front end components (e.g. grid)
         categoryGrid.style.setProperty(
-            'grid-auto-rows', `minmax(${sizeConfig.row}, auto)`,
+            '--DynamicCategory-columns',
+            `${uiUtils.isSmall() ? 1 : parseInt(this.el.dataset.columns)}`
         );
-
-        // Setup 'All Products' item visibility and styling
-        this.adaptAllProductsItem(nodeData, columns, alignmentClass);
-    }
-
-    adaptAllProductsItem(nodeData, columns, alignmentClass){
-        const allProductsItem = this.el.querySelector('.all_products');
-        if (nodeData.allProductsItem === 'true' && session.has_ecommerce_access) {
-            allProductsItem.classList.remove('d-none');
-
-            // Update 'All Products' item overlay alignment
-            const overlay = allProductsItem.querySelector('.s_category_overlay');
-            overlay.classList.remove(... ALIGNMENT_CLASSES);
-            overlay.classList.add(...alignmentClass);
-
-            // Set heading and button text for 'All Products' item
-            allProductsItem.querySelector('a').textContent = nodeData.button;
-
-            // Adjust 'All Product' number of columns
-            const shouldSpanTwo = columns !== 1 &&
-                (['large', 'medium'].includes(nodeData.size) || columns === 5);
-            allProductsItem.style.setProperty('grid-column', `span ${shouldSpanTwo ? 2 : 1}`);
-
-            // Toggle related elements and styles for interactivity
-            const allProductsButtonEl = allProductsItem.querySelector('.s_dynamic_category_button');
-            const allProductsArrowEl = allProductsItem.querySelector('.s_dynamic_category_arrow');
-            const allProductsImgEl = allProductsItem.querySelector('.s_category_image');
-            const allProductsFilterEl = allProductsItem.querySelector('.s_category_filter');
-            const allProductsOverlayEl = allProductsItem.querySelector('.s_category_overlay');
-            const allProductsTitleEl = allProductsItem.querySelector('h3');
-
-            const isClickable = Boolean(nodeData.isClickable);
-            this.toggleClass(allProductsItem, 'opacity-trigger-hover', isClickable);
-            BUTTON_CLASSES.forEach(
-                className => this.toggleClass(allProductsButtonEl, className, isClickable)
-            );
-            this.toggleClass(allProductsArrowEl, 'd-none', !isClickable);
-            this.toggleClass(allProductsImgEl, 'transition-base', isClickable);
-            this.toggleClass(allProductsFilterEl, 'd-none', !isClickable);
-            this.toggleClass(allProductsOverlayEl, 'z-0', isClickable);
-            this.toggleClass(allProductsTitleEl, 'mb-0', isClickable);
-        } else {
-            allProductsItem.classList.add('d-none');
-        }
-    }
-
-    toggleClass(el, className, condition){
-        el.classList.toggle(className, condition);
+        categoryGrid.style.setProperty(
+            'grid-auto-rows', `minmax(${SIZE_CONFIG[nodeData.size].row}, auto)`,
+        );
+        categoryGrid.classList.add(GAP[parseInt(nodeData.gap)]);
     }
 }
 

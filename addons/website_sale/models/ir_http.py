@@ -20,7 +20,6 @@ class IrHttp(models.AbstractModel):
         session_info = super().get_frontend_session_info()
         session_info.update({
             'add_to_cart_action': request.website.add_to_cart_action,
-            'has_ecommerce_access': request.website.has_ecommerce_access(),
         })
         return session_info
 

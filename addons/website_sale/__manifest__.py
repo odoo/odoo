@@ -20,6 +20,7 @@
         'data/data.xml',
         'data/mail_template_data.xml',
         'data/product_snippet_template_data.xml',
+        'data/snippet_category_template_data.xml',
         'data/digest_data.xml',
         'data/ir_cron_data.xml',
         'data/tour.xml',
@@ -61,6 +62,7 @@
         'views/snippets/s_dynamic_snippet_products.xml',
         'views/snippets/s_dynamic_snippet_categories.xml',
         'views/snippets/s_dynamic_snippet_products_preview_data.xml',
+        'views/snippets/s_dynamic_snippet_category_preview_data.xml',
         'views/snippets/s_mega_menu/big_icons_subtitles.xml',
         'views/snippets/s_mega_menu/cards.xml',
         'views/snippets/s_mega_menu/image_menu.xml',
@@ -80,7 +82,6 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'website_sale/static/src/xml/snippet_category_templates.xml',
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/**/*.js',
             ('remove', 'website_sale/static/src/snippets/**/000.js'),
@@ -90,6 +91,7 @@
             'website_sale/static/src/scss/website_sale_frontend.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss',
+            'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.xml',
             'website/static/lib/multirange/multirange_custom.scss',
             'sale/static/src/scss/sale_portal.scss',
 
