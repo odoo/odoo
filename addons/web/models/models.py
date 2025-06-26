@@ -537,7 +537,7 @@ class Base(models.AbstractModel):
             for info_opening in parent_opening_info or ()
         }
         groupby_spec = groupby[0]
-        field = self._fields[groupby_spec.split(':')[0]]
+        field = self._fields[groupby_spec.split(':')[0].split('.')[0]]
         nb_opened_group = 0
 
         last_level = len(groupby) == 1
