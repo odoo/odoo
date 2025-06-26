@@ -137,10 +137,9 @@
                             <group>
                                 <group string="Model" name="group_model">
                                     <field name="model_year"/>
-                                    <field name="transmission" invisible="vehicle_type != 'car'"/>
-                                    <field name="color"/>
                                     <field name="seats" invisible="vehicle_type != 'car'"/>
                                     <field name="doors" invisible="vehicle_type != 'car'"/>
+                                    <field name="color"/>
                                     <field name="trailer_hook" invisible="vehicle_type != 'car'"/>
                                     <field name="frame_type" invisible="vehicle_type != 'bike'"/>
                                     <label for="frame_size" invisible="vehicle_type != 'bike'"/>
@@ -150,6 +149,8 @@
                                     <field name="electric_assistance" invisible="vehicle_type != 'bike'"/>
                                 </group>
                                 <group string="Engine" invisible="vehicle_type != 'car'">
+                                    <field name="fuel_type"/>
+                                    <field name="transmission" invisible="vehicle_type != 'car'"/>
                                     <label for="power" invisible="power_unit != 'power'"/>
                                     <div class="o_row" invisible="power_unit != 'power'">
                                         <field name="power"/>
@@ -165,7 +166,6 @@
                                         <field name="vehicle_range"/>
                                         <field name="range_unit"/>
                                     </div>
-                                    <field name="fuel_type"/>
                                     <label for="co2"/>
                                     <div class="o_row">
                                         <field name="co2"/>
