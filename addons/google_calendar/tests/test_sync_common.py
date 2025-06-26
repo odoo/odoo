@@ -13,6 +13,7 @@ from freezegun import freeze_time
 from contextlib import contextmanager
 
 
+
 def patch_api(func):
     def patched(self, *args, **kwargs):
         with self.mock_google_sync():
