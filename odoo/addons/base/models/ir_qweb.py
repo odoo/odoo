@@ -633,23 +633,24 @@ class IrQweb(models.AbstractModel):
         return self.env['ir.ui.view']._get_cached_template_info(template)
 
     def _compile(self, template):
-        if not self.env.context.get('profile'):
-            return self.__compile(template)
+        template_functions, def_name, options = self.__compile(template)
 
-        template_functions, def_name = self.__compile(template)
-        render_template = template_functions[def_name]
+        if self.env.context.get('profile'):
+            render_template = template_functions[def_name]
+            ref = None
+            with contextlib.suppress(ValueError, TypeError):
+                ref = int(options.get('ref'))
+            ref_xml = str(val) if (val := options.get('ref_xml')) else None
 
-        def profiled_method_compile(self, values):
-            options = template_functions['options']
-            ref = options.get('ref')
-            ref_xml = options.get('ref_xml')
-            qweb_tracker = QwebTracker(ref, ref_xml, self.env.cr)
-            self = self.with_context(qweb_tracker=qweb_tracker)
-            if qweb_tracker.execution_context_enabled:
-                with ExecutionContext(template=ref):
-                    return render_template(self, values)
-            return render_template(self, values)
-        template_functions[def_name] = profiled_method_compile
+            def profiled_method_compile(self, values):
+                qweb_tracker = QwebTracker(ref, ref_xml, self.env.cr)
+                self = self.with_context(qweb_tracker=qweb_tracker)
+                if qweb_tracker.execution_context_enabled:
+                    with ExecutionContext(template=ref):
+                        return render_template(self, values)
+                return render_template(self, values)
+
+            template_functions[def_name] = profiled_method_compile
 
         return (template_functions, def_name)
 
@@ -676,21 +677,10 @@ class IrQweb(models.AbstractModel):
         # generate the template functions and the root function name
         def generate_functions():
             code, options, def_name = self._generate_code(template)
-            if self.env.context.get('profile'):
-                ref_value = None
-                with contextlib.suppress(ValueError, TypeError):
-                    ref_value = int(options.get('ref'))
-                profile_options = {
-                    'ref': ref_value,
-                    'ref_xml': options.get('ref_xml') and str(options['ref_xml']) or None,
-                }
-            else:
-                profile_options = None
             code = '\n'.join([
                 "def generate_functions():",
                 "    template_functions = {}",
                 indent_code(code, 1),
-                f"    template_functions['options'] = {profile_options!r}",
                 "    return template_functions",
             ])
 
@@ -699,7 +689,7 @@ class IrQweb(models.AbstractModel):
                 globals_dict = self.__prepare_globals()
                 globals_dict['__builtins__'] = globals_dict # So that unknown/unsafe builtins are never added.
                 unsafe_eval(compiled, globals_dict)
-                return globals_dict['generate_functions'](), def_name
+                return globals_dict['generate_functions'](), def_name, options
             except QWebException:
                 raise
             except Exception as e:
@@ -789,7 +779,10 @@ class IrQweb(models.AbstractModel):
         # dictionary is only there for logs, performance or test information.
         # The values of these `options` cannot be changed and must always be
         # identical in `context` and `self.env.context`.
-        options = {k: compile_context.get(k) for k in self._get_template_cache_keys() + ['ref', 'ref_name', 'ref_xml']}
+        options = {
+            key: compile_context.get(key, False)
+            for key in self._get_template_cache_keys() + ['ref', 'ref_name', 'ref_xml']
+        }
 
         # generate code
         ref_name = compile_context['ref_name'] or ''
@@ -850,6 +843,9 @@ class IrQweb(models.AbstractModel):
 
         code = '\n'.join(code_lines)
         code += f'\n\ncode = {code!r}'
+
+        if options.get('profile'):
+            options['ref_xml'] = compile_context['ref_xml']
 
         return (code, options, def_name)
 
