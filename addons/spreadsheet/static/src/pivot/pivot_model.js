@@ -503,7 +503,7 @@ export class OdooPivotModel extends PivotModel {
 
         rows.push({
             fields: rowGroupBys.slice(0, indent),
-            values: group.values.map((val) => val.toString()),
+            values: group.values.map((val) => val),
             indent,
         });
 
@@ -536,7 +536,7 @@ export class OdooPivotModel extends PivotModel {
                 const leafCount = leafCounts[JSON.stringify(tree.root.values)];
                 const cell = {
                     fields: colGroupBys.slice(0, rowIndex),
-                    values: group.values.map((val) => val.toString()),
+                    values: group.values.map((val) => val),
                     width: leafCount * measureCount,
                 };
                 row.push(cell);
