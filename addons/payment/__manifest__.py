@@ -45,8 +45,8 @@
             'payment/static/src/scss/payment_provider.scss',
             'payment/static/src/js/payment_wizard_copy_clipboard_field.js',
         ],
-        'web.qunit_suite_tests': [
-            'payment/static/tests/payment_wizard_copy_clipboard_field_tests.js',
+        'web.assets_unit_tests': [
+            'payment/static/tests/**/*.test.js',
         ],
     },
     'author': 'Odoo S.A.',
