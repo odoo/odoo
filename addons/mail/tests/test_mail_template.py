@@ -315,6 +315,11 @@ class TestMailTemplate(MailCommon):
             self.assertEqual(rendered, "&lt;b&gt; test &lt;/b&gt;")
             self.assertTrue(render.called)
 
+        # Check that the environment is the evaluation context
+        mail_template.with_user(self.user_admin).email_to = '{{ env.user.name }}'
+        rendered = mail_template._render_field('email_to', record.ids)[record.id]
+        self.assertIn(self.user_admin.name, rendered)
+
     def test_mail_template_acl_translation(self):
         ''' Test that a user that doesn't have the group_mail_template_editor cannot create / edit
         translation with dynamic code if he cannot write dynamic code on the related record itself.
