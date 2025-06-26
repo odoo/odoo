@@ -96,10 +96,9 @@
             </xpath>
             <xpath expr="//filter[@name='my_transfers']" position="after">
                 <filter name="scheduled_date" date="scheduled_date" string="Scheduled Date"/>
-                <filter string="Today" name="filter_today" domain="[('scheduled_date', '&gt;=', datetime.datetime.combine(context_today(),
-                    datetime.time(0,0,0))), ('scheduled_date', '&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
-                <filter string="Tomorrow" name="filter_tomorrow" domain="[('scheduled_date','&gt;=', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d'))]" />
-                <filter string="Next 7 Days" name="filter_next_7_days" domain="[('scheduled_date','&gt;=', (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Today" name="filter_today" domain="[('scheduled_date', '&gt;=', 'today'), ('scheduled_date', '&lt;', 'today +1d')]"/>
+                <filter string="Tomorrow" name="filter_tomorrow" domain="[('scheduled_date','&gt;=', 'today +1d')]" /><!-- wrong -->
+                <filter string="Next 7 Days" name="filter_next_7_days" domain="[('scheduled_date','&gt;=', 'today +7d')]"/><!-- wrong -->
             </xpath>
         </field>
     </record>

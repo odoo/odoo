@@ -243,19 +243,19 @@
                 <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
                 <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
                 <filter string="Ready" name="ready" domain="[('state', '=', 'confirmed'), ('is_parts_available', '=', True)]" invisible="True"/>
-                <filter string="Late" name="filter_late" domain="[('state', '=', 'confirmed'), ('schedule_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Late" name="filter_late" domain="[('state', '=', 'confirmed'), ('schedule_date', '&lt;', 'today')]"/>
                 <filter name="filter_create_date" date="create_date"/>
                 <separator/>
                 <filter invisible="1" string="My Activities" name="filter_activities_my"
                     domain="[('activity_user_id', '=', uid)]"/>
                 <separator invisible="1"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    domain="[('activity_date_deadline', '&lt;', 'today')]"
                     help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '&gt;', 'today')]"/>
                 <group string="Group By">
                     <filter string="Customer" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>

@@ -288,16 +288,16 @@
         <field name="arch" type="xml">
             <filter name="creation_date_filter" position="after">
                 <filter string="Deadline" name="date_deadline" date="date_deadline">
-                    <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;', datetime.datetime.combine(context_today(), datetime.time(23,59,59)).to_utc())]"/>
+                    <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;=', 'today +1d')]"/>
                     <filter name="deadline_this_week" string="This Week" domain="[
-                        ('date_deadline', '&gt;=', datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc()),
-                        ('date_deadline', '&lt;', datetime.datetime.combine(context_today() + relativedelta(days=1,weekday=0), datetime.time(0,0,0)).to_utc()),
+                        ('date_deadline', '&gt;=', '=monday'),
+                        ('date_deadline', '&lt;', '=monday +1w'),
                     ]"/>
                     <filter name="deadline_today" string="Today" domain="[
-                        ('date_deadline', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()),
-                        ('date_deadline', '&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)).to_utc()),
+                        ('date_deadline', '&gt;=', 'today'),
+                        ('date_deadline', '&lt;', 'today +1d'),
                     ]"/>
-                    <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc())]"/>
+                    <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', 'today')]"/>
                 </filter>
             </filter>
             <filter name="create_date" position="after">

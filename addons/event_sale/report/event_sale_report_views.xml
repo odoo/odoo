@@ -105,9 +105,9 @@
                 <filter string="Registration Date" name="event_registration_create_date" date="event_registration_create_date" default_period="year"/>
                 <separator/>
                 <filter string="Upcoming/Running" name="upcoming" help="Upcoming events from today"
-                        domain="[('event_date_end', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                        domain="[('event_date_end', '&gt;=', 'now')]"/>
                 <filter string="Past Events" name="past" help="Events that have ended"
-                        domain="[('event_date_end', '&lt;', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                        domain="[('event_date_end', '&lt;', 'now')]"/>
                 <filter string="Event Start Date" name="event_date_start" date="event_date_begin" default_period="year"/>
                 <filter string="Event End Date" name="event_date_end" date="event_date_end"/>
                 <group string="Group By">

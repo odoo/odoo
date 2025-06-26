@@ -63,20 +63,20 @@
                             '&amp;',
                                 '|',
                                     ('contract_date_start', '=', False),
-                                    ('contract_date_start', '&lt;', context_today().strftime('%Y-%m-%d')),
+                                    ('contract_date_start', '&lt;', 'today'),
                                 '|',
                                     ('contract_date_end', '=', False),
-                                    ('contract_date_end', '>=', context_today().strftime('%Y-%m-%d'))
+                                    ('contract_date_end', '>=', 'today')
                         ]"/>
                 <filter string="Expired Contracts" name="expired_contracts"
                         domain="[
                             ('contract_date_end', '!=', False),
-                            ('contract_date_end', '&lt;', context_today().strftime('%Y-%m-%d'))
+                            ('contract_date_end', '&lt;', 'today')
                         ]"/>
                 <filter string="Future Contracts" name="future_contracts"
                         domain="[
                             ('contract_date_start', '!=', False),
-                            ('contract_date_start', '>', context_today().strftime('%Y-%m-%d')),
+                            ('contract_date_start', '>', 'today'),
                         ]"/>
                 <separator />
                 <filter string="Contract Start Date" name="contract_date_start" date="contract_date_start"/>

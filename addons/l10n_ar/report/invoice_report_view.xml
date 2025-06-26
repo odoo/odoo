@@ -9,7 +9,7 @@
             <search>
                 <field name="l10n_ar_state_id"/>
                 <filter name="with_document" string="With Document" domain="[('l10n_latam_document_type_id', '!=', False)]"/>
-                <filter name="filter_accounting_date_this_year" invisible="1" string="Accounting Date: This Year" domain="[('date', '&lt;', (context_today() + relativedelta(years=1, month=1, day=1)).strftime('%Y-%m-%d')), ('date', '&gt;=', (context_today() + relativedelta(month=1, day=1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_accounting_date_this_year" invisible="1" string="Accounting Date: This Year" domain="[('date', '&lt;', '=1m =1d +1y'), ('date', '&gt;=', '=1m =1d')]"/>
             </search>
             <filter name="user" position="after">
                 <filter string="State" name="groupby_l10n_ar_state_id" context="{'group_by': 'l10n_ar_state_id'}"/>

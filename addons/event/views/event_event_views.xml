@@ -321,7 +321,7 @@
                 <filter string="My Events" name="myevents" help="My Events" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Upcoming/Running" name="upcoming"
-                    domain="[('date_end', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
+                    domain="[('date_end', '&gt;=', 'now')]" help="Upcoming events from today" />
                 <separator/>
                 <filter string="Start Date" name="start_date" date="date_begin"/>
                 <separator/>
@@ -331,12 +331,12 @@
                     domain="[('activity_user_id', '=', uid)]"/>
                 <separator invisible="1"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    domain="[('activity_date_deadline', '&lt;', 'today')]"
                     help="Show all records whose next activity date is past"/>
                 <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '=', 'today')]"/>
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_date_deadline', '&gt;', 'today')]"/>
                 <filter string="Online" name="filter_online" domain="[('address_id', '=', False)]"/>
                 <group string="Group By">
                     <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
