@@ -814,7 +814,7 @@ class PosOrder(models.Model):
             'partner_bank_id': self._get_partner_bank_id(),
             'currency_id': self.currency_id.id,
             'invoice_date': invoice_date.astimezone(timezone).date(),
-            'invoice_user_id': self.user_id.id,
+            'invoice_user_id': self.env.user.id,
             'fiscal_position_id': fiscal_position.id,
             'invoice_line_ids': self._prepare_invoice_lines(move_type),
             'invoice_payment_term_id': False,
