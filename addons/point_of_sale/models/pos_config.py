@@ -5,6 +5,7 @@ from datetime import datetime
 from uuid import uuid4
 import pytz
 import secrets
+from collections import defaultdict
 
 from odoo import api, fields, models, _, Command, tools, SUPERUSER_ID
 from odoo.http import request
@@ -207,6 +208,7 @@ class PosConfig(models.Model):
     fast_payment_method_ids = fields.Many2many(
         'pos.payment.method', string='Fast Payment Methods', compute="_compute_fast_payment_method_ids", relation='pos_payment_method_config_fast_validation_relation',
         store=True, help="These payment methods will be available for fast payment", readonly=False)
+    statistics_for_current_session = fields.Json(string="Session Statistics", compute="_compute_statistics_for_session")
 
     def notify_synchronisation(self, session_id, login_number, records={}):
         self.ensure_one()
@@ -322,6 +324,70 @@ class PosConfig(models.Model):
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
             pos_config.number_of_rescue_session = len(rescue_sessions)
+
+    def _compute_statistics_for_session(self):
+        for config in self:
+            session = config.session_ids.filtered(lambda s: s.state != 'closed' and not s.rescue)
+            session_record = session[0] if session else None
+            if not session_record or not session_record.exists():
+                config.statistics_for_current_session = False
+                continue
+            config.statistics_for_current_session = config.get_statistics_for_session(session_record)
+
+    def get_statistics_for_session(self, session):
+        self.ensure_one()
+        currency = self.currency_id
+        timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
+        statistics = {
+            'cash': {
+                'raw_opening_cash': session.cash_register_balance_start,
+                'opening_cash': currency.format(session.cash_register_balance_start)
+            },
+            'date': {
+                'is_started': bool(session.start_at),
+                'start_date': session.start_at.astimezone(timezone).strftime('%b %d') if session.start_at else False,
+            },
+            'orders': {
+                'paid': False,
+                'draft': False,
+            },
+        }
+
+        all_paid_orders = session.order_ids.filtered(lambda o: o.state == 'paid')
+        refund_orders = all_paid_orders.filtered(lambda o: o.is_refund)
+        draft_orders = session.order_ids.filtered(lambda o: o.state == 'draft')
+        non_refund_orders = all_paid_orders - refund_orders
+
+        # calculate total refunded amount per original order for refund count check
+        refund_totals = defaultdict(float)
+        for refund in refund_orders:
+            if refund.refunded_order_id:
+                refund_totals[refund.refunded_order_id.id] += abs(refund.amount_total)
+
+        # count paid orders that are not completely refunded
+        paid_order_count = sum(
+            1 for order in non_refund_orders
+            if refund_totals.get(order.id, 0.0) != order.amount_total
+        )
+
+        if paid_order_count:
+            total_paid = sum(all_paid_orders.mapped('amount_total'))
+            statistics['orders']['paid'] = {
+                'amount': total_paid,
+                'count': paid_order_count,
+                'display': f"{currency.format(total_paid)} ({paid_order_count} {'order' if paid_order_count == 1 else 'orders'})"
+            }
+
+        if draft_orders:
+            total_draft = sum(draft_orders.mapped('amount_total'))
+            count_draft = len(draft_orders)
+            statistics['orders']['draft'] = {
+                'amount': total_draft,
+                'count': count_draft,
+                'display': f"{currency.format(total_draft)} ({count_draft} {'order' if count_draft == 1 else 'orders'})"
+            }
+
+        return statistics
 
     @api.depends('session_ids')
     def _compute_last_session(self):

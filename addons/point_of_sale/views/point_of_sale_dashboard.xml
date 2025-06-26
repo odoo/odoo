@@ -63,6 +63,7 @@
                 <field name="pos_session_state"/>
                 <field name="pos_session_duration"/>
                 <field name="currency_id"/>
+                <field name="statistics_for_current_session" />
                 <templates>
                     <t t-name="menu">
                         <div class="container dropdown-pos-config">
@@ -107,28 +108,57 @@
                             </div>
                         </div>
                         <div class="row g-0 pb-4 ms-2 mt-auto">
-                            <div name="card_left" class="col-6 d-flex flex-wrap align-items-center gap-2">
+                            <div name="card_left" class="col-12 col-md-6 d-flex flex-wrap align-items-center gap-2 mb-2 mb-md-0">
                                 <button t-if="record.current_session_state.raw_value != 'closing_control'" class="btn btn-primary" name="open_ui" type="object">
                                     <t t-if="record.current_session_state.raw_value === 'opened'">Continue Selling</t>
                                     <t t-else="">Open Register</t>
                                 </button>
                                 <button t-else="" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
                             </div>
-                            <div class="col-6">
-                                <div t-if="record.last_session_closing_date.value" class="row">
-                                    <div class="col-6">
-                                        <span>Closing</span>
+                            <div class="col-12 col-md-6">
+                                <t t-set="statistics" t-value="record.statistics_for_current_session.raw_value" />
+                                <t t-if="statistics">
+                                    <div t-if="statistics.date.is_started" class="row">
+                                        <div class="col-5">
+                                            <span>Date</span>
+                                        </div>
+                                        <span t-esc="statistics.date.start_date" class="col-7"/>
                                     </div>
-                                    <field name="last_session_closing_date" class="col-6"/>
-                                </div>
-
-                                <div t-if="record.last_session_closing_date.value" invisible="not cash_control" class="row">
-                                    <div class="col-6">
-                                        <span>Balance</span>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Opening</span>
+                                        </div>
+                                        <span name="opening_cash" t-esc="statistics.cash.opening_cash" class="col-7"/>
                                     </div>
-                                    <field name="last_session_closing_cash" widget="monetary" class="col-6"/>
-                                </div>
+                                    <div t-if="statistics.orders.paid.display" class="row">
+                                        <div class="col-5">
+                                            <span>Sold</span>
+                                        </div>
+                                        <span name="paid_orders" t-esc="statistics.orders.paid.display" class="col-7"/>
+                                    </div>
+                                    <div t-if="statistics.orders.draft.display" class="row">
+                                        <div class="col-5">
+                                            <span>Ongoing</span>
+                                        </div>
+                                        <span name="draft_orders" t-esc="statistics.orders.draft.display" class="col-7"/>
+                                    </div>
+                                </t>
 
+                                <t t-elif="record.last_session_closing_date.value">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span>Closing</span>
+                                        </div>
+                                        <field name="last_session_closing_date" class="col-6"/>
+                                    </div>
+                                    <div class="row" invisible="not cash_control">
+                                        <div class="col-6">
+                                            <span>Balance</span>
+                                        </div>
+                                        <field name="last_session_closing_cash" widget="monetary" class="col-6"/>
+                                    </div>
+                                </t>
+                                
                                 <a t-if="record.number_of_rescue_session.value &gt; 0" class="col-12" name="open_opened_rescue_session_form" type="object">
                                     <field name="number_of_rescue_session" /> outstanding rescue session
                                 </a>
