@@ -14,6 +14,7 @@ class SaleOrderDiscount(models.TransientModel):
 
     sale_order_id = fields.Many2one(
         'sale.order', default=lambda self: self.env.context.get('active_id'), required=True)
+    order_line_ids = fields.Many2many('sale.order.line', compute='_compute_order_line_ids', store=True)
     company_id = fields.Many2one(related='sale_order_id.company_id')
     currency_id = fields.Many2one(related='sale_order_id.currency_id')
     discount_amount = fields.Monetary(string="Amount")
@@ -27,16 +28,12 @@ class SaleOrderDiscount(models.TransientModel):
         default='sol_discount',
     )
 
-    # CONSTRAINT METHODS #
-
-    @api.constrains('discount_type', 'discount_percentage')
-    def _check_discount_amount(self):
-        for wizard in self:
-            if (
-                wizard.discount_type in ('sol_discount', 'so_discount')
-                and wizard.discount_percentage > 1.0
-            ):
-                raise ValidationError(_("Invalid discount amount"))
+    @api.depends('sale_order_id')
+    def _compute_order_line_ids(self):
+        for wiz in self:
+            if wiz.order_line_ids:
+                continue
+            wiz.order_line_ids = wiz.sale_order_id.order_line
 
     def _prepare_discount_product_values(self):
         self.ensure_one()
@@ -136,7 +133,7 @@ class SaleOrderDiscount(models.TransientModel):
 
         order = self.sale_order_id
         AccountTax = self.env['account.tax']
-        order_lines = order.order_line.filtered(lambda x: not x.display_type)
+        order_lines = self.order_line_ids.filtered(lambda x: not x.display_type)
         base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
         AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
