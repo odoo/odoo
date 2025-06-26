@@ -28,6 +28,7 @@ export class BuilderSelect extends Component {
     static props = {
         ...basicContainerBuilderComponentProps,
         className: { type: String, optional: true },
+        dropdownContainerClass: { type: String, optional: true },
         slots: {
             type: Object,
             shape: {
