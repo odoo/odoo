@@ -2002,7 +2002,7 @@ describe("save image", () => {
                 if (route === "/web/dataset/call_kw/partner/web_save" && model === "partner") {
                     if (writeCount === 0) {
                         // Save normal value without image.
-                        expect(args[1].txt).toBe(`<p class="test_target">a<br></p>`);
+                        expect(args[1].txt).toBe(`<p class="test_target">a</p>`);
                     } else if (writeCount === 1) {
                         // Save image with unfinished modification changes.
                         expect(args[1].txt).toBe(imageContainerHTML);
