@@ -13,6 +13,7 @@ import { localization } from "@web/core/l10n/localization";
  * @typedef {{
  *  top: number,
  *  left: number,
+ *  maxHeight?: number;
  *  direction: Direction,
  *  variant: Variant,
  *  variantOffset?: number,
@@ -26,6 +27,8 @@ import { localization } from "@web/core/l10n/localization";
  *  position of the popper relative to the target
  * @property {boolean} [flip=true]
  *  allow the popper to try a flipped direction when it overflows the container
+ * @property {boolean} [shrink=false]
+ *  reduce the popper's height when it overflows the container
  */
 
 /** @type {ComputePositionOptions} */
@@ -96,7 +99,7 @@ export function reverseForRTL(direction, variant = "middle") {
  *                                the containing block of the popper.
  *                                => can be applied to popper.style.(top|left)
  */
-function computePosition(popper, target, { container, flip, margin, position }) {
+function computePosition(popper, target, { container, flip, margin, position, shrink }) {
     // Retrieve directions and variants
     const [direction, variant = "middle"] = reverseForRTL(...position.split("-"));
     const directions = flip ? DIRECTION_FLIP_ORDER[direction] : [direction.at(0)];
@@ -210,6 +213,18 @@ function computePosition(popper, target, { container, flip, margin, position }) 
         // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
         result.top = positioning.top - popBox.top;
         result.left = positioning.left - popBox.left;
+        if (shrink && malus && v !== "f") {
+            const minTop = Math.floor(!vertical && v === "s" ? targetBox.top : contBox.top);
+            result.top = Math.max(minTop, result.top);
+            const height = {
+                vt: targetBox.top - directionMin,
+                vb: directionMax - targetBox.bottom,
+                hs: variantMax - targetBox.top,
+                hm: variantMax - variantMin,
+                he: targetBox.bottom - variantMin,
+            }[variantPrefix + (vertical ? d : v)];
+            result.maxHeight = Math.floor(height);
+        }
         return { result, malus };
     }
 
@@ -264,9 +279,12 @@ export function reposition(popper, target, options) {
     const solution = computePosition(popper, target, { ...DEFAULTS, ...options });
 
     // Apply it
-    const { top, left, direction, variant } = solution;
+    const { top, left, maxHeight, direction, variant } = solution;
     popper.style.top = `${top}px`;
     popper.style.left = `${left}px`;
+    if (maxHeight) {
+        popper.style.maxHeight = `${maxHeight}px`;
+    }
     if (variant === "fit") {
         const styleProperty = ["top", "bottom"].includes(direction) ? "width" : "height";
         popper.style[styleProperty] = target.getBoundingClientRect()[styleProperty] + "px";
