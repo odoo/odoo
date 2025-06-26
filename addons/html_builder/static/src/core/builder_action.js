@@ -9,16 +9,12 @@ export class BuilderAction {
         this.config = plugin.config;
         this.getResource = plugin.getResource.bind(plugin);
         this.dispatchTo = plugin.dispatchTo.bind(plugin);
-        this.preview = true;
+        this.delegateTo = plugin.delegateTo.bind(this);
 
-        this.apply = this.apply.bind(this);
-        this.isApplied = this.isApplied.bind(this);
-        this.getPriority = this.getPriority.bind(this);
-        this.setup = this.setup.bind(this);
-        this.getValue = this.getValue.bind(this);
-        this.clean = this.clean.bind(this);
-        this.load = this.load.bind(this);
-        this.prepare = this.prepare.bind(this);
+        this.preview = true;
+        this.withLoadingEffect = true;
+        this.loadOnClean = false;
+
         this.setup();
     }
     /**
