@@ -2267,9 +2267,15 @@ class AccountMoveLine(models.Model):
         credit_values['amount_residual'] = remaining_credit_amount
         credit_values['amount_residual_currency'] = remaining_credit_amount_curr
 
-        if debit_fully_matched:
+        if (
+            debit_currency.is_zero(debit_values['amount_residual_currency'])
+            and company_currency.is_zero(debit_values['amount_residual'])
+        ):
             res['debit_values'] = None
-        if credit_fully_matched:
+        if (
+            credit_currency.is_zero(credit_values['amount_residual_currency'])
+            and company_currency.is_zero(credit_values['amount_residual'])
+        ):
             res['credit_values'] = None
         return res
 
