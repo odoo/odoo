@@ -1717,12 +1717,10 @@ class Website(models.Model):
 
     def get_client_action(self, url, mode_edit=False, website_id=False):
         action = self.env["ir.actions.actions"]._for_xml_id("website.website_preview")
-        action['context'] = {
-            'params': {
-                'path': url,
-                'enable_editor': mode_edit,
-                'website_id': website_id,
-            }
+        action['params'] = {
+            'path': url,
+            'enable_editor': mode_edit,
+            'website_id': website_id,
         }
         return action
 

@@ -284,12 +284,16 @@ async function setupSidebarBuilderForTranslation(options) {
             this.websiteContext = this.websiteService.context;
         },
     });
-    const { getEditor, getEditableContent, getIframeEl, openBuilderSidebar } =
-        await setupWebsiteBuilder(websiteContent, {
+    const { getEditor, getEditableContent, openBuilderSidebar } = await setupWebsiteBuilder(
+        websiteContent,
+        {
             openEditor: false,
             translateMode: true,
-        });
-    websiteServiceInTranslateMode.pageDocument = getIframeEl().contentDocument;
+            onIframeLoaded: (iframe) => {
+                websiteServiceInTranslateMode.pageDocument = iframe.contentDocument;
+            },
+        }
+    );
     await openBuilderSidebar();
     return { getEditor, getEditableContent };
 }

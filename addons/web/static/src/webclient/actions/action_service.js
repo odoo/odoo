@@ -509,7 +509,6 @@ export function makeActionManager(env, router = _router) {
                 }
             } else {
                 // The action to load isn't the current one => executes it
-                context.params = state;
                 Object.assign(options, {
                     additionalContext: context,
                     viewType: state.resId ? "form" : state.view_type,
@@ -1265,10 +1264,11 @@ export function makeActionManager(env, router = _router) {
                     action.target = clientAction.target;
                 }
             }
+            const props = clientAction.extractProps?.(action) || {};
             const controller = _makeController({
                 Component: clientAction,
                 action,
-                ..._getActionInfo(action, options.props),
+                ..._getActionInfo(action, { ...props, ...options.props }),
             });
             controller.displayName ||= clientAction.displayName?.toString() || "";
             return _updateUI(controller, options);
