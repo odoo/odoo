@@ -162,6 +162,25 @@ async function get_emoji_bundle(request) {
     return new Response();
 }
 
+registerRoute("/im_livechat/session/update_status", session_update_status);
+/** @type {RouteCallback} */
+async function session_update_status(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    const { channel_id, livechat_status } = await parseRequestParams(request);
+    if (this.env.user.share) {
+        return false;
+    }
+    const [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
+    if (!channel) {
+        return false;
+    }
+    DiscussChannel.write([channel_id], {
+        livechat_status: livechat_status,
+    });
+    return true;
+}
+
 registerRoute("/im_livechat/session/update_note", session_update_note);
 /** @type {RouteCallback} */
 async function session_update_note(request) {

@@ -108,3 +108,31 @@ class TestDiscussChannel(TestImLivechatCommon, MailCase):
             ],
         ):
             channel.livechat_note = "This is a note for the internal user."
+
+    def test_livechat_status_sync_to_internal_user_bus(self):
+        """Test that a livechat status is sent to the internal user bus."""
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "channel_id": self.livechat_channel.id,
+                "anonymous_name": "Visitor",
+            },
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        with self.assertBus(
+            [(self.cr.dbname, "discuss.channel", channel.id, "internal_users")],
+            [
+                {
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "discuss.channel": [
+                            {
+                                "id": channel.id,
+                                "livechat_status": "waiting",
+                            }
+                        ]
+                    },
+                }
+            ],
+        ):
+            channel.livechat_status = "waiting"
