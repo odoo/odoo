@@ -42,8 +42,8 @@ class HrLeaveReportCalendar(models.Model):
     is_manager = fields.Boolean("Manager", compute="_compute_is_manager")
 
     def init(self):
-        tools.drop_view_if_exists(self._cr, 'hr_leave_report_calendar')
-        self._cr.execute("""CREATE OR REPLACE VIEW hr_leave_report_calendar AS
+        tools.drop_view_if_exists(self.env.cr, 'hr_leave_report_calendar')
+        self.env.cr.execute("""CREATE OR REPLACE VIEW hr_leave_report_calendar AS
         (SELECT
             hl.id AS id,
             hl.id AS leave_id,

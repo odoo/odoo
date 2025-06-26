@@ -22,7 +22,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
         # EXTENDS 'base'
         results = super().default_get(fields_list)
         if 'move_ids' in fields_list and 'move_ids' not in results:
-            move_ids = self._context.get('active_ids', [])
+            move_ids = self.env.context.get('active_ids', [])
             results['move_ids'] = [Command.set(move_ids)]
         return results
 

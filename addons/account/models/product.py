@@ -115,7 +115,7 @@ class ProductTemplate(models.Model):
     @api.constrains('uom_id')
     def _check_uom_not_in_invoice(self):
         self.env['product.template'].flush_model(['uom_id'])
-        self._cr.execute("""
+        self.env.cr.execute("""
             SELECT prod_template.id
               FROM account_move_line line
               JOIN product_product prod_variant ON line.product_id = prod_variant.id
@@ -127,7 +127,7 @@ class ProductTemplate(models.Model):
                AND template_uom.id != line_uom.id
              LIMIT 1
         """, [tuple(self.ids)])
-        if self._cr.fetchall():
+        if self.env.cr.fetchall():
             raise ValidationError(_(
                 "This product is already being used in posted Journal Entries.\n"
                 "If you want to change its Unit of Measure, please archive this product and create a new one."

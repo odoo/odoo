@@ -35,7 +35,7 @@ class ResUsers(models.Model):
                 """
         self.env.cr.execute(query, {
             'user_id': self.env.uid,
-            'active': self._context.get('active_test', True),
+            'active': self.env.context.get('active_test', True),
         })
         activity_data = self.env.cr.dictfetchall()
         view_type = self.env['project.task']._systray_view

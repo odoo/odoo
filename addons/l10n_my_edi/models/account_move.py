@@ -371,7 +371,7 @@ Customs form No. 1, 9, etc for Vendor Bills""",
                     move.write(updated_values)
 
             if self._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
         # For successful moves, we log the sending here. Any errors will be handled by the send & print wizard.
         if success_messages:
@@ -437,7 +437,7 @@ Customs form No. 1, 9, etc for Vendor Bills""",
                     move._update_validation_fields(status_info)
 
             if self._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
         # We don't consider these errors per-say. From my understanding an invalid invoice is considered as cancelled,
         # so a new one must be issued.
@@ -493,7 +493,7 @@ Customs form No. 1, 9, etc for Vendor Bills""",
             )
 
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
 
     @api.model
     def _cron_l10n_my_edi_synchronize_myinvois(self):
@@ -803,7 +803,7 @@ Customs form No. 1, 9, etc for Vendor Bills""",
 
             # At this point we will need to commit as we reached the api, and we could have a mix of failed and valid invoice.
             if moves._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
             # We already logged the details on the invoice(s) and saved the api results. If we send a single invoice, we can safely raise now.
             if errors and len(moves) == 1:
@@ -829,7 +829,7 @@ Customs form No. 1, 9, etc for Vendor Bills""",
             }))
         # We commit again if possible, to ensure that the invoice status is set in the database in case of errors later.
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
 
     def _generate_myinvois_qr_code(self):
         """ Generate the qr code which should be embedded into the invoices PDF """

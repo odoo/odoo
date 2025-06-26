@@ -59,4 +59,4 @@ class AccountMoveSend(models.AbstractModel):
                         'errors': [error] if not isinstance(error, list) else error,
                     }
                 if self._can_commit():
-                    self._cr.commit()
+                    self.env.cr.commit()

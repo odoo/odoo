@@ -616,7 +616,7 @@ class MailMessage(models.Model):
                 values['attachment_ids'] = []
             # extract base64 images
             if 'body' in values:
-                Attachments = self.env['ir.attachment'].with_context(clean_context(self._context))
+                Attachments = self.env['ir.attachment'].with_context(clean_context(self.env.context))
                 data_to_url = {}
                 def base64_to_boundary(match):
                     key = match.group(2)
@@ -1212,8 +1212,8 @@ class MailMessage(models.Model):
     def _get_reply_to(self, values):
         """ Return a specific reply_to for the document """
         author_id = values.get('author_id')
-        model = values.get('model', self._context.get('default_model'))
-        res_id = values.get('res_id', self._context.get('default_res_id')) or False
+        model = values.get('model', self.env.context.get('default_model'))
+        res_id = values.get('res_id', self.env.context.get('default_res_id')) or False
         email_from = values.get('email_from')
         message_type = values.get('message_type')
         records = None

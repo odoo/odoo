@@ -637,7 +637,7 @@ class SlideSlide(models.Model):
         """Sets the sequence to zero so that it always lands at the beginning
         of the newly selected course as an uncategorized slide"""
         default = dict(default or {})
-        if 'slide.channel' not in self._context.get('__copy_data_seen', {}) and 'sequence' not in default:
+        if 'slide.channel' not in self.env.context.get('__copy_data_seen', {}) and 'sequence' not in default:
             default['sequence'] = 0
         return super().copy_data(default=default)
 

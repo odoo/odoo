@@ -72,7 +72,7 @@ class Base(models.AbstractModel):
             }
         current_length = len(records) + offset
         limit_reached = len(records) == limit
-        force_search_count = self._context.get('force_search_count')
+        force_search_count = self.env.context.get('force_search_count')
         count_limit_reached = count_limit and count_limit <= current_length
         if limit and ((limit_reached and not count_limit_reached) or force_search_count):
             length = self.search_count(domain, limit=count_limit)
@@ -919,8 +919,8 @@ class Base(models.AbstractModel):
             first_week_day = int(get_lang(self.env).week_start) - 1
             days_offset = first_week_day and 7 - first_week_day
         tz = False
-        if field.type == 'datetime' and self._context.get('tz') in pytz.all_timezones_set:
-            tz = pytz.timezone(self._context['tz'])
+        if field.type == 'datetime' and self.env.context.get('tz') in pytz.all_timezones_set:
+            tz = pytz.timezone(self.env.context['tz'])
 
         # existing non null date(time)
         existing = sorted(group_value for group in groups if (group_value := group[0])) or [None]
@@ -1066,7 +1066,7 @@ class Base(models.AbstractModel):
                     if field.type == 'datetime':
                         tzinfo = None
                         if self.env.context.get('tz') in pytz.all_timezones_set:
-                            tzinfo = pytz.timezone(self._context['tz'])
+                            tzinfo = pytz.timezone(self.env.context['tz'])
                             range_start = tzinfo.localize(range_start).astimezone(pytz.utc)
                             # take into account possible hour change between start and end
                             range_end = tzinfo.localize(range_end).astimezone(pytz.utc)

@@ -26,7 +26,7 @@ class Im_LivechatChannel(models.Model):
     _rating_satisfaction_days = 14  # include only last 14 days to compute satisfaction
 
     def _default_user_ids(self):
-        return [(6, 0, [self._uid])]
+        return [(6, 0, [self.env.uid])]
 
     def _default_button_text(self):
         return _('Have a Question? Chat with us.')
@@ -197,7 +197,7 @@ class Im_LivechatChannel(models.Model):
 
     def _compute_script_external(self):
         values = {
-            "dbname": self._cr.dbname,
+            "dbname": self.env.cr.dbname,
         }
         for record in self:
             values["channel_id"] = record.id

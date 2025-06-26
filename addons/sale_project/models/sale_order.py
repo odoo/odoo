@@ -251,7 +251,7 @@ class SaleOrder(models.Model):
             'views': [(False, 'kanban'), (False, 'list'), (False, 'form')],
             'view_mode': 'kanban,list,form',
             'context': {
-                **self._context,
+                **self.env.context,
                 'default_partner_id': self.partner_id.id,
                 'default_sale_line_id': default_sale_line.id,
                 'default_allow_billable': 1,

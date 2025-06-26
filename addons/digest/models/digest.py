@@ -342,7 +342,7 @@ class DigestDigest(models.Model):
         :rtype: str
         """
         preferences = []
-        if self._context.get('digest_slowdown'):
+        if self.env.context.get('digest_slowdown'):
             _dummy, new_perioridicy_str = self._get_next_periodicity()
             preferences.append(
                 _("We have noticed you did not connect these last few days. We have automatically switched your preference to %(new_perioridicy_str)s Digests.",

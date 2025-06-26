@@ -79,8 +79,8 @@ class SaleOrderLine(models.Model):
     def _timesheet_compute_delivered_quantity_domain(self):
         """ Hook for validated timesheet in addionnal module """
         domain = [('project_id', '!=', False)]
-        if self._context.get('accrual_entry_date'):
-            domain += [('date', '<=', self._context['accrual_entry_date'])]
+        if self.env.context.get('accrual_entry_date'):
+            domain += [('date', '<=', self.env.context['accrual_entry_date'])]
         return domain
 
     ###########################################
