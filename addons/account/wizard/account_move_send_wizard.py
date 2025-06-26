@@ -98,7 +98,7 @@ class AccountMoveSendWizard(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('sending_methods', 'extra_edis')
+    @api.depends('sending_methods', 'extra_edis', 'mail_partner_ids')
     def _compute_alerts(self):
         for wizard in self:
             move_data = {
@@ -106,6 +106,7 @@ class AccountMoveSendWizard(models.TransientModel):
                     'sending_methods': wizard.sending_methods or {},
                     'invoice_edi_format': wizard.invoice_edi_format,
                     'extra_edis': wizard.extra_edis or {},
+                    'mail_partner_ids': wizard.mail_partner_ids
                 }
             }
             wizard.alerts = self._get_alerts(wizard.move_id, move_data)
