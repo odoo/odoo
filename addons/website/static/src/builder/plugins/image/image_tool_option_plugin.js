@@ -15,6 +15,7 @@ import {
 } from "@html_builder/utils/option_sequence";
 import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media_option";
 import { computeMaxDisplayWidth } from "./image_format_option";
+import { ImageWeightHeaderInfo } from "./image_weight_header_info";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
@@ -61,6 +62,13 @@ class ImageToolOptionPlugin extends Plugin {
             SetUrlAction,
             SetNewWindowAction,
             AltAction,
+        },
+        builder_header_middle_buttons: {
+            Component: ImageWeightHeaderInfo,
+            selector: "img",
+            props: {
+                isImageSupportedForProcessing,
+            },
         },
         on_media_dialog_saved_handlers: async (elements, { node }) => {
             for (const image of elements) {
