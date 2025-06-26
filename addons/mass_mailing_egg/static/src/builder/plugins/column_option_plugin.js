@@ -1,8 +1,7 @@
-import { after, before, WIDTH } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { withSequence } from "@html_editor/utils/resource";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+import { _t } from "@web/core/l10n/translation";
 
 class ColumnOptionPlugin extends Plugin {
     static id = "columnPlugin";
@@ -14,7 +13,7 @@ class ColumnOptionPlugin extends Plugin {
                 OptionComponent: BorderConfigurator,
                 selector: this.selector,
                 props: {
-                    label: "Border"
+                    label: _t("Border")
                 }
             }
         ],

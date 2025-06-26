@@ -1,0 +1,20 @@
+<templates>
+    <t t-name="mass_mailing.ImageAndFaOption">
+        <BuilderRow label.translate="Alignment">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'float-start'">Left</BuilderSelectItem>
+                <BuilderSelectItem classAction="'mx-auto'">Center</BuilderSelectItem>
+                <BuilderSelectItem classAction="'float-end'">Right</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <t t-call="mass_mailing.BorderOptionNoRoundedCorners"/>
+        <t t-call="mass_mailing.HorizontalPaddingOption"/>
+        <t t-call="mass_mailing.VerticalPaddingOption"/>
+    </t>
+    <t t-name="mass_mailing.ImageToolOption" t-inherit="html_builder.ImageToolOption">
+        <xpath expr="//ImageShapeOption" position="attributes">
+            <attribute name="withoutAnimatedShapes">true</attribute>
+        </xpath>
+        <xpath expr="//BuilderButton[@id='&quot;Transform the picture&quot;']" position="replace"/>
+    </t>
+</templates>

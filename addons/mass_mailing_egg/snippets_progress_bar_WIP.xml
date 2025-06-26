@@ -40,26 +40,26 @@
             t-att-data-variable="radius_variable"/>
 </template>
 
-<template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options" primary="True">
+<!-- <template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options" primary="True">
     <xpath expr="//div[@data-js='BackgroundImage']" position="attributes">
         <attribute name="data-js">MassMailingBackgroundImage</attribute>
     </xpath>
-</template>
+</template> -->
 
 <!-- Mass Mailing Snippet Options -->
     <!-- =================================================================== -->
     <!-- Modify generic snippet options                                      -->
     <!-- =================================================================== -->
 
-    <xpath expr="//t[@t-set='no_animations']" position="attributes">
+    <!-- <xpath expr="//t[@t-set='no_animations']" position="attributes">
         <attribute name="t-value">True</attribute>
-    </xpath>
+    </xpath> -->
 
     <!-- Image styles -->
     <!-- TODO review to only modify what's really necessary and potentially -->
     <!-- make the changes in web_editor directly so that website can benefit -->
     <!-- from it. -->
-    <xpath expr="//div[hasclass('o_we_image_options')]" position="replace">
+    <!-- <xpath expr="//div[hasclass('o_we_image_options')]" position="replace">
         <div data-selector="span.fa, i.fa, img">
             <we-select id="o_we_image_alignment_option" string="Alignment" data-state-to-first-class="true">
                 <we-button data-select-class="float-start" title="Align Left">Left</we-button>
@@ -86,14 +86,10 @@
                 <we-input data-select-style="" data-unit="px" data-css-property="padding-bottom"/>
             </we-row>
         </div>
-    </xpath>
+    </xpath> -->
 
     <!-- Transform is _very_ badly supported in mail clients -->
-    <xpath expr="//we-button[@data-name='image_transform_opt']" position="replace" />
-
-    <xpath expr="//div[@data-js='ImageTools']" position="attributes">
-        <attribute name="data-js">MassMailingImageTools</attribute>
-    </xpath>
+    <!-- <xpath expr="//we-button[@data-name='image_transform_opt']" position="replace" /> -->
 
     <!-- =================================================================== -->
     <!-- Adding mass_mailing specific snippet options                        -->
@@ -102,11 +98,11 @@
     <xpath expr="." position="inside">
 
     <!-- Border | Columns -->
-    <div data-js="Box"
+    <!-- <div data-js="Box"
          data-selector=".row > div"
          data-exclude=".o_mail_wrapper_td, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div">
         <t t-call="mass_mailing.snippet_options_border_widgets"/>
-    </div>
+    </div> -->
 
     <!-- Move snippets around -->
     <!-- <div data-js="SnippetMove" data-selector=".o_mail_snippet_general">
@@ -121,72 +117,72 @@
         <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true" data-name="move_right_opt"/>
     </div> -->
 
-    <div id="so_width" data-selector=".s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight">
+    <!-- <div id="so_width" data-selector=".s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight">
         <we-select string="Width">
             <we-button data-select-class="w-25">25%</we-button>
             <we-button data-select-class="w-50">50%</we-button>
             <we-button data-select-class="w-75">75%</we-button>
             <we-button data-select-class="w-100" data-name="so_width_100">100%</we-button>
         </we-select>
-    </div>
+    </div> -->
 
-    <div id="so_block_align" data-selector=".s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight">
+    <!-- <div id="so_block_align" data-selector=".s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight">
         <we-button-group string="Alignment" data-dependencies="!so_width_100">
             <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="me-auto"/>
             <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
             <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ms-auto"/>
         </we-button-group>
-    </div>
+    </div> -->
 
-    <div data-selector=".o_mail_snippet_general" data-exclude=".o_mail_snippet_general .row > div *">
+    <!-- <div data-selector=".o_mail_snippet_general" data-exclude=".o_mail_snippet_general .row > div *">
         <we-button-group string="Height">
             <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
             <we-button data-select-class="o_height_400" title="400px">50%</we-button>
             <we-button data-select-class="o_height_800" title="800px">100%</we-button>
         </we-button-group>
-    </div>
+    </div> -->
 
-    <div data-js="table_row"
+    <!-- <div data-js="table_row"
         data-selector="tr:has(> .row), tr:has(> .col_mv)"
         data-exclude=".o_mail_no_options"
-        data-drop-near="tr:has(> .row), tr:has(> .col_mv)"/>
+        data-drop-near="tr:has(> .row), tr:has(> .col_mv)"/> -->
 
     <!-- <div data-js="table_column"
         data-selector=".col>td, .col>th"
         data-exclude=".o_mail_no_options"
         data-drop-near=".col>td, .col>th"/> -->
 
-    <div data-js="table_column_mv"
+    <!-- <div data-js="table_column_mv"
         data-selector=".col_mv, td, th"
         data-exclude=".o_mail_no_options"
-        data-drop-near=".col_mv, td, th"/>
+        data-drop-near=".col_mv, td, th"/> -->
 
-    <t t-set="mailing_content_selector" t-translation="off">.note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body</t>
-    <div data-js="content"
+    <!-- <t t-set="mailing_content_selector" t-translation="off">.note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body</t> -->
+    <!-- <div data-js="content"
         t-att-data-selector="mailing_content_selector"
         data-exclude=".o_mail_no_options"
         data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
-        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
+        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/> -->
 
-    <t t-set="so_snippet_addition_selector" t-translation="off">.o_mail_snippet_general</t>
+    <!-- <t t-set="so_snippet_addition_selector" t-translation="off">.o_mail_snippet_general</t> -->
     <!-- <div id="so_snippet_addition"
         t-att-data-selector="so_snippet_addition_selector"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/> -->
 
-    <t t-set="so_content_addition_selector" t-translation="off">.s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight</t>
+    <!-- <t t-set="so_content_addition_selector" t-translation="off">.s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight</t> -->
     <!-- <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
         data-drop-in=".content, nav"/> -->
 
-    <div data-js="sizing_y"
+    <!-- <div data-js="sizing_y"
         data-selector=".o_mail_snippet_general, .o_mail_snippet_general .row > div"
-        data-exclude=".o_mail_no_resize, .o_mail_no_options, .s_col_no_resize.row > div, .s_col_no_resize"/>
+        data-exclude=".o_mail_no_resize, .o_mail_no_options, .s_col_no_resize.row > div, .s_col_no_resize"/> -->
 
-    <div data-js="sizing_x"
+    <!-- <div data-js="sizing_x"
         data-selector=".row > div"
         data-drop-near=".row:not(.s_col_no_resize) > div"
-        data-exclude=".o_mail_no_resize, .o_mail_no_options, .s_col_no_resize.row > div, .s_col_no_resize"/>
+        data-exclude=".o_mail_no_resize, .o_mail_no_options, .s_col_no_resize.row > div, .s_col_no_resize"/> -->
 
     <!-- <div data-selector=".note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)),
         .note-editable .oe_structure > div.o_mail_snippet_general,
@@ -208,15 +204,15 @@
     </div> -->
 
     <!-- Allow changing background images in Masonry and Cover -->
-    <t t-call="mass_mailing.snippet_options_background_options">
+    <!-- <t t-call="mass_mailing.snippet_options_background_options">
         <t t-set="selector" t-value="'.s_masonry_block .row > div, .s_cover .oe_img_bg'"/>
         <t t-set="with_images" t-value="True"/>
         <t t-set="with_videos" t-value="false"/>
         <t t-set="with_shapes" t-value="false"/>
-    </t>
+    </t> -->
 
     <!-- COLOR | .s_three_columns | .s_comparisons | .s_event  -->
-    <div data-js="Box"
+    <!-- <div data-js="Box"
          data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
          data-target=".card-body">
         <we-colorpicker string="Background Color"
@@ -224,20 +220,71 @@
             data-no-transparency="true"
             data-css-property="background-color"
             data-color-prefix="bg-"/>
-    </div>
+    </div> -->
     <!-- BORDER | .s_three_columns | .s_comparisons | .s_event  -->
-    <div data-js="Box"
+    <!-- <div data-js="Box"
          data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
          data-target=".card">
         <t t-call="mass_mailing.snippet_options_border_widgets">
             <t t-set="so_rounded_no_dependencies" t-value="True"/>
         </t>
-    </div>
+    </div> -->
     <!-- COLOR, BORDER | .o_mail_block_discount2 -->
-    <div data-js="Box"
+    <!-- <div data-js="Box"
          data-selector=".o_mail_block_discount2"
          data-target="table">
         <t t-call="mass_mailing.snippet_options_border_widgets">
         </t>
-    </div>
-</template>
+    </div> -->
+<!-- </template> -->
+<!-- <template id="s_masonry_block_options" inherit_id="mass_mailing.snippet_options">
+    <xpath expr="//div[@data-js='layout_column']" position="after">
+        <div data-js="MasonryLayout" data-selector=".s_masonry_block">
+            <we-select string="Template"
+                data-name="masonry_template_opt"
+                data-attribute-name="masonryTemplate"
+                data-attribute-default-value="default">
+                <we-button title="Default"
+                    data-select-template="mass_mailing.s_masonry_block_default_template"
+                    data-select-data-attribute="default"
+                    data-img="/mass_mailing/static/src/img/snippets_options/masonry_template_default.svg"/>
+                <we-button title="Default Reversed"
+                    data-select-template="mass_mailing.s_masonry_block_reversed_template"
+                    data-select-data-attribute="default_reversed"
+                    data-img="/mass_mailing/static/src/img/snippets_options/masonry_template_reversed.svg"/>
+                <we-button title="Images"
+                    data-select-template="mass_mailing.s_masonry_block_images_template"
+                    data-select-data-attribute="images"
+                    data-img="/mass_mailing/static/src/img/snippets_options/masonry_template_images.svg"/>
+                <we-button title="Image Text Image"
+                    data-select-template="mass_mailing.s_masonry_block_image_texts_image_template"
+                    data-select-data-attribute="image_text_image"
+                    data-img="/mass_mailing/static/src/img/snippets_options/masonry_template_image_texts_image.svg"/>
+                <we-button title="Mosaic"
+                    data-select-template="mass_mailing.s_masonry_block_mosaic_template"
+                    data-select-data-attribute="mosaic"
+                    data-img="/mass_mailing/static/src/img/snippets_options/masonry_template_mosaic.svg"/>
+                <we-button title="Text Image Text"
+                    data-select-template="mass_mailing.s_masonry_block_texts_image_texts_template"
+                    data-select-data-attribute="text_image_text"
+                    data-img="/mass_mailing/static/src/img/snippets_options/masonry_template_texts_image_texts.svg"/>
+                <we-button title="Alternate Text"
+                    data-select-template="mass_mailing.s_masonry_block_alternation_text_template"
+                    data-select-data-attribute="alternate_text"
+                    data-img="/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_texts.svg"/>
+                <we-button title="Alternate Text Image"
+                    data-select-template="mass_mailing.s_masonry_block_alternation_text_image_template"
+                    data-select-data-attribute="alternate_text_image"
+                    data-img="/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_text_image.svg"/>
+                <we-button title="Alternate Image Text"
+                    data-select-template="mass_mailing.s_masonry_block_alternation_image_text_template"
+                    data-select-data-attribute="alternate_image_text"
+                    data-img="/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_image_text.svg"/>
+                <we-button title="Alternate Text Image Text"
+                    data-select-template="mass_mailing.s_masonry_block_alternation_text_image_text_template"
+                    data-select-data-attribute="alternate_text_image_text"
+                    data-img="/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_text_image_text.svg"/>
+            </we-select>
+        </div>
+    </xpath>
+</template> -->

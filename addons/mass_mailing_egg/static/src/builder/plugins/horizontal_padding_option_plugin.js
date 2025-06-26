@@ -10,7 +10,7 @@ class HorizontalPaddingOptionPlugin extends Plugin {
         mark_color_level_selector_params: [{ selector: this.selector }],
         builder_options: [
             withSequence(after(WIDTH)), {
-                template: "mass_mailing.PaddingOption",
+                template: "mass_mailing.HorizontalPaddingOption",
                 selector: this.selector,
                 exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
             },

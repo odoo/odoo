@@ -352,7 +352,7 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     patchBuilderOptions({ target_name, target_element, method, value }) {
-        if (!target_name || !target_element || !method || !value) {
+        if (!target_name || !target_element || !method || (!value && method !== "remove")) {
             throw new Error(
                 `Missing patch_builder_options required parameters: target_name, target_element, method, value`
             );
@@ -366,6 +366,9 @@ export class BuilderOptionsPlugin extends Plugin {
         switch (method) {
             case "replace":
                 builderOption[target_element] = value;
+                break;
+            case "remove":
+                delete builderOption[target_element];
                 break;
             case "add":
                 if (!builderOption[target_element]) {

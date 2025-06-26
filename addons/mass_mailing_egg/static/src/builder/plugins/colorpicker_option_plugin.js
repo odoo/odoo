@@ -1,0 +1,27 @@
+import { Plugin } from "@html_editor/plugin";
+import { registry } from "@web/core/registry";
+
+class ColorPickerOptionPlugin extends Plugin {
+    static id = "mass_mailing.ColorPicker";
+    colorPickerSelector = `.note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)),
+        .note-editable .oe_structure > div.o_mail_snippet_general,
+        .note-editable .oe_structure > div.o_mail_snippet_general .o_cc,
+        .s_mail_color_blocks_2 .row > div`;
+
+    resources = {
+        builder_options: [
+            { // Generic option
+                template: "mass_mailing.ColorPickerOption",
+                selector: this.colorPickerSelector,
+                exclude: ".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2"
+            },
+            {
+                template: "mass_mailing.ColorPickerOption",
+                selector: ".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div",
+                applyTo: ".card-body"
+            }
+        ]
+    }
+}
+
+registry.category("builder-plugins").add(ColorPickerOptionPlugin.id, ColorPickerOptionPlugin);
