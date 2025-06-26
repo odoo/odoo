@@ -516,7 +516,6 @@ export function setBuilderCSSVariables() {
             // Gradient values are recovered within a string.
             value = value.substring(1, value.length - 1);
         }
-        const builderEl = editableWindow.top.document.querySelector(".o-snippets-menu");
-        builderEl.style.setProperty(`--hb-cp-${style}`, value);
+        editableWindow.top.document.documentElement.style.setProperty(`--hb-cp-${style}`, value);
     }
 }
