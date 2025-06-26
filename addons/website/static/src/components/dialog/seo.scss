@@ -78,11 +78,11 @@
         }
     }
 
-    div.oe_seo_preview_g {
+    div.o_seo_preview_g {
         list-style: none;
         font-family: arial, sans-serif;
 
-        .r {
+        .o_seo_preview_r {
             cursor: pointer;
             color:var(--seo__preview-title-color);
             font-size: 18px;
@@ -92,11 +92,11 @@
             white-space: nowrap;
         }
 
-        .s {
+        .o_seo_preview_s {
             font-size: 13px;
             line-height: 18px;
             color: #545454;
-            .kv {
+            .o_seo_preview_kv {
                 display: block;
                 max-width: 300px;
                 font-size: 12px;
@@ -107,13 +107,13 @@
             }
         }
 
-        .i {
+        .o_seo_preview_i {
             height: 100%;
             width: 100%;
             object-fit: cover;
         }
 
-        .l {
+        .o_seo_preview_l {
             height: 26px;
             width: 26px;
         }
@@ -124,10 +124,15 @@
     }
 
     .oe_seo_checks {
-        .i {
+        .o_seo_preview_i {
             height: 100%;
             width: 100%;
             object-fit: cover;
+        }
+        .accordion-button > .badge {
+            position: absolute;
+            right: calc(var(--accordion-btn-icon-width) * 3);
+            color: white !important; // Necessary in CSS for dark mode
         }
     }
     .oe_remove:hover {
@@ -143,7 +148,6 @@
         width: 70px;
         height: 70px;
         object-fit: cover;
-        margin: 15px;
-        border: 2px solid #ced4da;
+        border: 1px solid map-get($grays, '300');
     }
 }
