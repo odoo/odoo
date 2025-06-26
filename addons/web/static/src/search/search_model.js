@@ -6,11 +6,9 @@ import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_se
 import { _t } from "@web/core/l10n/translation";
 import { rpcBus } from "@web/core/network/rpc";
 import { evaluateExpr } from "@web/core/py_js/py";
-import {
-    constructTree,
-    domainFromTree,
-    treeFromDomain,
-} from "@web/core/tree_editor/condition_tree";
+import { constructTreeFromDomain } from "@web/core/tree_editor/construct_tree_from_domain";
+import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
+import { treeFromDomain } from "@web/core/tree_editor/tree_from_domain";
 import {
     useGetTreeDescription,
     useGetTreeTooltip,
@@ -728,7 +726,10 @@ export class SearchModel extends EventBus {
             context = makeContext(contexts);
         }
 
-        const getFieldDef = await this.makeGetFieldDef(this.resModel, constructTree(domain));
+        const getFieldDef = await this.makeGetFieldDef(
+            this.resModel,
+            constructTreeFromDomain(domain)
+        );
         const tree = treeFromDomain(domain, { distributeNot: !this.isDebugMode, getFieldDef });
         const trees =
             !tree.negate && tree.value === "&" && tree.children.length > 0 ? tree.children : [tree];

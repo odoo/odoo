@@ -1,21 +1,18 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
-import { Domain } from "@web/core/domain";
-import { TreeEditor } from "@web/core/tree_editor/tree_editor";
-import {
-    domainFromTree,
-    treeFromDomain,
-    formatValue,
-    condition,
-    constructTree,
-} from "@web/core/tree_editor/condition_tree";
 import { CheckBox } from "@web/core/checkbox/checkbox";
-import { deepEqual } from "@web/core/utils/objects";
+import { Domain } from "@web/core/domain";
 import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_selector_operator_editor";
-import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
-import { useService } from "@web/core/utils/hooks";
+import { condition, formatValue } from "@web/core/tree_editor/condition_tree";
+import { constructTreeFromDomain } from "@web/core/tree_editor/construct_tree_from_domain";
+import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
+import { TreeEditor } from "@web/core/tree_editor/tree_editor";
+import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operator_editor";
+import { treeFromDomain } from "@web/core/tree_editor/tree_from_domain";
 import { useMakeGetFieldDef } from "@web/core/tree_editor/utils";
+import { useService } from "@web/core/utils/hooks";
+import { deepEqual } from "@web/core/utils/objects";
 import { getDefaultCondition } from "./utils";
 
 const ARCHIVED_CONDITION = condition("active", "in", [true, false]);
@@ -69,9 +66,11 @@ export class DomainSelector extends Component {
             return;
         }
 
-        const getFieldDef = await this.makeGetFieldDef(p.resModel, constructTree(domain), [
-            "active",
-        ]);
+        const getFieldDef = await this.makeGetFieldDef(
+            p.resModel,
+            constructTreeFromDomain(domain),
+            ["active"]
+        );
 
         this.tree = treeFromDomain(domain, {
             getFieldDef,

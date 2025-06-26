@@ -1,16 +1,14 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { getExpressionDisplayedOperators } from "@web/core/expression_editor/expression_editor_operator_editor";
-import {
-    condition,
-    expressionFromTree,
-    treeFromExpression,
-} from "@web/core/tree_editor/condition_tree";
+import { _t } from "@web/core/l10n/translation";
+import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { condition } from "@web/core/tree_editor/condition_tree";
+import { expressionFromTree } from "@web/core/tree_editor/expression_from_tree";
 import { TreeEditor } from "@web/core/tree_editor/tree_editor";
 import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { getDefaultValue } from "@web/core/tree_editor/tree_editor_value_editors";
+import { treeFromExpression } from "@web/core/tree_editor/tree_from_expression";
 import { getDefaultPath } from "@web/core/tree_editor/utils";
-import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
-import { _t } from "@web/core/l10n/translation";
 
 export class ExpressionEditor extends Component {
     static template = "web.ExpressionEditor";
