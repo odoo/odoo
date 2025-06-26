@@ -289,6 +289,10 @@ export class PeerToPeer extends EventTarget {
     removeALlPeers() {
         for (const peer of this.peers.values()) {
             this.removePeer(peer.id);
+            this._emitUpdate({
+                name: UPDATE_EVENT.CONNECTION_CHANGE,
+                payload: { id: peer.id, state: "closed" },
+            });
         }
         this.peers.clear();
     }
