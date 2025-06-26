@@ -46,21 +46,20 @@ registry.category('web_tour.tours').add('shop_update_cart', {
             trigger: '#cart_products a[name="o_cart_line_product_link"]>h6:contains("Storage Box")',
         },
         {
-            content: "add one more",
-            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Conference Chair")) a.js_add_cart_json:eq(1)',
-            run: "click",
-        },
-        {
-            trigger: '#cart_products div:has(div>a>h6:contains("Conference Chair")) input.js_quantity:value(2)',
-        },
-        {
             content: "remove Storage Box",
-            trigger:
-                '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Storage Box")) a.js_add_cart_json:first',
+            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Storage Box")) a:has(i.oi-minus)',
             run: "click",
         },
         {
             trigger: '#wrap:not(:has(#cart_products a[name="o_cart_line_product_link"]>h6:contains("Storage Box")))',
+        },
+        {
+            content: "add one more",
+            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Conference Chair")) a:has(i.oi-plus)',
+            run: "click",
+        },
+        {
+            trigger: '#cart_products div:has(div>a>h6:contains("Conference Chair")) input.js_quantity:value(2)',
         },
         {
             content: "set one",

@@ -2843,7 +2843,7 @@
             <t t-if="should_show_quantity_selector and line._is_sellable()">
                 <a
                     href="#"
-                    class="js_add_cart_json btn btn-link d-inline-block border-end-0"
+                    class="btn btn-link d-inline-block border-end-0"
                     aria-label="Remove one"
                     title="Remove one"
                 >
@@ -2869,7 +2869,7 @@
                 <a
                     t-else=""
                     href="#"
-                    class="js_add_cart_json d-inline-block btn btn-link border-start-0"
+                    class="btn btn-link d-inline-block border-start-0"
                     aria-label="Add one"
                     title="Add one"
                 >
@@ -3013,13 +3013,14 @@
                     t-as="product"
                     t-attf-class="d-flex gap-3 py-4 #{not product_last and 'border-bottom'}"
                     t-att-data-publish="product.website_published and 'on' or 'off'"
+                    name="suggested_product"
                 >
                     <div class="o_cart_product_image">
                         <a t-att-href="product.website_url">
                             <div t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'border rounded'}"/>
                         </a>
                     </div>
-                    <div class="o_cart_suggested_product_name flex-grow-1">
+                    <div class="flex-grow-1">
                         <div class="d-flex justify-content-between">
                             <div>
                                 <a t-att-href="product.website_url">
