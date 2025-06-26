@@ -196,7 +196,7 @@ class Manifest(Mapping[str, typing.Any]):
     @functools.cached_property
     def description(self):
         """The description of the module defaulting to the README file."""
-        if (desc := self.manifest_cached.get('description')):
+        if desc := self.manifest_cached.get('description'):
             return desc
         for file_name in README:
             try:
@@ -261,6 +261,14 @@ class Manifest(Mapping[str, typing.Any]):
     def __bool__(self):
         return True
 
+    def __hash__(self):
+        return hash(self.name)
+
+    def __eq__(self, other):
+        if isinstance(other, Manifest):
+            return self.name == other.name
+        return NotImplemented
+
     def __len__(self):
         return sum(1 for _ in self)
 
@@ -316,15 +324,15 @@ class Manifest(Mapping[str, typing.Any]):
     @staticmethod
     def all_addon_manifests() -> list[Manifest]:
         """Read all manifests in the addons paths."""
-        modules: list[Manifest] = []
+        modules: set[Manifest] = set()
         for adp in odoo.addons.__path__:
             if not os.path.isdir(adp):
                 _logger.warning("addons path is not a directory: %s", adp)
                 continue
-            modules.extend(
+            modules.update(
                 mod
-                for file_name in os.listdir(adp)
-                if (mod := Manifest._from_path(opj(adp, file_name)))
+                for entry in os.scandir(adp)
+                if (mod := Manifest._from_path(entry.path))
             )
         return sorted(modules, key=lambda m: m.name)
 
