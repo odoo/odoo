@@ -197,7 +197,7 @@ class AccountBankStatementLine(models.Model):
 
             # Find the oldest index for each journal.
             self.env['account.bank.statement'].flush_model(['first_line_index', 'journal_id', 'balance_start'])
-            self._cr.execute(
+            self.env.cr.execute(
                 """
                     SELECT first_line_index, COALESCE(balance_start, 0.0)
                     FROM account_bank_statement
@@ -211,7 +211,7 @@ class AccountBankStatementLine(models.Model):
             )
             current_running_balance = 0.0
             extra_clause = SQL()
-            row = self._cr.fetchone()
+            row = self.env.cr.fetchone()
             if row:
                 starting_index, current_running_balance = row
                 extra_clause = SQL("AND st_line.internal_index >= %s", starting_index)
@@ -219,7 +219,7 @@ class AccountBankStatementLine(models.Model):
             self.flush_model(['amount', 'move_id', 'statement_id', 'journal_id', 'internal_index'])
             self.env['account.bank.statement'].flush_model(['first_line_index', 'balance_start'])
             self.env['account.move'].flush_model(['state'])
-            self._cr.execute(SQL(
+            self.env.cr.execute(SQL(
                 """
                     SELECT
                         st_line.id,
@@ -243,7 +243,7 @@ class AccountBankStatementLine(models.Model):
                 extra_clause,
             ))
             pending_items = self
-            for st_line_id, amount, is_anchor, balance_start, state in self._cr.fetchall():
+            for st_line_id, amount, is_anchor, balance_start, state in self.env.cr.fetchall():
                 if is_anchor:
                     current_running_balance = balance_start
                 if state == 'posted':
@@ -709,7 +709,7 @@ class AccountBankStatementLine(models.Model):
         Also, check both models are still consistent.
         :param changed_fields: A set containing all modified fields on account.move.
         """
-        if self._context.get('skip_account_move_synchronization'):
+        if self.env.context.get('skip_account_move_synchronization'):
             return
 
         for st_line in self.with_context(skip_account_move_synchronization=True):
@@ -793,7 +793,7 @@ class AccountBankStatementLine(models.Model):
         """ Update the account.move regarding the modified account.bank.statement.line.
         :param changed_fields: A list containing all modified fields on account.bank.statement.line.
         """
-        if self._context.get('skip_account_move_synchronization'):
+        if self.env.context.get('skip_account_move_synchronization'):
             return
 
         if not any(field_name in changed_fields for field_name in (

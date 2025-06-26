@@ -79,10 +79,10 @@ class BlogBlog(models.Model):
             ORDER BY
                 count(*) DESC
         """
-        self._cr.execute(req, [tuple(self.ids)])
+        self.env.cr.execute(req, [tuple(self.ids)])
         tag_by_blog = {i.id: [] for i in self}
         all_tags = set()
-        for blog_id, freq, tag_id in self._cr.fetchall():
+        for blog_id, freq, tag_id in self.env.cr.fetchall():
             if freq >= min_limit:
                 if join:
                     all_tags.add(tag_id)

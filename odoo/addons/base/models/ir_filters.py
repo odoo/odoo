@@ -43,11 +43,11 @@ class IrFilters(models.Model):
     @api.model
     def _list_all_models(self):
         lang = self.env.lang or 'en_US'
-        self._cr.execute(
+        self.env.cr.execute(
             "SELECT model, COALESCE(name->>%s, name->>'en_US') FROM ir_model ORDER BY 2",
             [lang],
         )
-        return self._cr.fetchall()
+        return self.env.cr.fetchall()
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
@@ -99,7 +99,7 @@ class IrFilters(models.Model):
         user_context = self.env['res.users'].context_get()
         action_domain = self._get_action_domain(action_id, embedded_action_id, embedded_parent_res_id)
         return self.with_context(user_context).search_read(
-            action_domain + [('model_id', '=', model), ('user_ids', 'in', [self._uid, False])],
+            action_domain + [('model_id', '=', model), ('user_ids', 'in', [self.env.uid, False])],
             ['name', 'is_default', 'domain', 'context', 'user_ids', 'sort', 'embedded_action_id', 'embedded_parent_res_id'],
         )
 

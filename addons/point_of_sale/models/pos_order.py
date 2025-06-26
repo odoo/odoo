@@ -788,7 +788,7 @@ class PosOrder(models.Model):
         """We have orders filtered by company > config > partners > fiscal_positions so it won't make any issue
         when we access user, partner, bank or similar directly.
         """
-        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
         invoice_date = fields.Datetime.now()
         is_single_order = len(self) == 1
 
@@ -1605,7 +1605,7 @@ class PosOrderLine(models.Model):
             # get timezone from user
             # and convert to UTC to avoid any timezone issue
             # because shipping_date is date and date_planned is datetime
-            from_zone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+            from_zone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
             shipping_date = fields.Datetime.to_datetime(self.order_id.shipping_date)
             shipping_date = from_zone.localize(shipping_date)
             date_deadline = shipping_date.astimezone(pytz.UTC).replace(tzinfo=None)

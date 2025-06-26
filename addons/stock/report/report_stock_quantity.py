@@ -46,7 +46,7 @@ class ReportStockQuantity(models.Model):
             - the dest warehouse is kept if the SM is not the duplicated one and is not an interwarehouse
                 OR the SM is the duplicated one and is an interwarehouse
         """
-        tools.drop_view_if_exists(self._cr, 'report_stock_quantity')
+        tools.drop_view_if_exists(self.env.cr, 'report_stock_quantity')
         query = f"""
 CREATE or REPLACE VIEW report_stock_quantity AS (
 WITH

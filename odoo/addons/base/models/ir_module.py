@@ -514,8 +514,8 @@ class IrModuleModule(models.Model):
                         d.name IN (SELECT name from ir_module_module where id in %s) AND
                         m.state NOT IN %s AND
                         m.id NOT IN %s """
-        self._cr.execute(query, (tuple(self.ids), tuple(exclude_states), tuple(known_deps.ids or self.ids)))
-        new_deps = self.browse([row[0] for row in self._cr.fetchall()])
+        self.env.cr.execute(query, (tuple(self.ids), tuple(exclude_states), tuple(known_deps.ids or self.ids)))
+        new_deps = self.browse([row[0] for row in self.env.cr.fetchall()])
         missing_mods = new_deps - known_deps
         known_deps |= new_deps
         if missing_mods:
@@ -539,8 +539,8 @@ class IrModuleModule(models.Model):
                         m.name IN (SELECT name from ir_module_module_dependency where module_id in %s) AND
                         m.state NOT IN %s AND
                         m.id NOT IN %s """
-        self._cr.execute(query, (tuple(self.ids), tuple(exclude_states), tuple(known_deps.ids or self.ids)))
-        new_deps = self.browse([row[0] for row in self._cr.fetchall()])
+        self.env.cr.execute(query, (tuple(self.ids), tuple(exclude_states), tuple(known_deps.ids or self.ids)))
+        new_deps = self.browse([row[0] for row in self.env.cr.fetchall()])
         missing_mods = new_deps - known_deps
         known_deps |= new_deps
         if missing_mods:
@@ -598,14 +598,14 @@ class IrModuleModule(models.Model):
                               "please try again later or contact your system administrator."))
         function(self)
 
-        self._cr.commit()
-        registry = modules.registry.Registry.new(self._cr.dbname, update_module=True)
-        self._cr.commit()
+        self.env.cr.commit()
+        registry = modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
+        self.env.cr.commit()
         if request and request.registry is self.env.registry:
             request.env.cr.reset()
             request.registry = request.env.registry
             assert request.env.registry is registry
-        self._cr.reset()
+        self.env.cr.reset()
         assert self.env.registry is registry
 
         # pylint: disable=next-method-called
@@ -804,10 +804,10 @@ class IrModuleModule(models.Model):
         existing = set(dep.name for dep in self.dependencies_id)
         needed = set(depends or [])
         for dep in (needed - existing):
-            self._cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (self.id, dep))
+            self.env.cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (self.id, dep))
         for dep in (existing - needed):
-            self._cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
-        self._cr.execute('UPDATE ir_module_module_dependency SET auto_install_required = (name = any(%s)) WHERE module_id = %s',
+            self.env.cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
+        self.env.cr.execute('UPDATE ir_module_module_dependency SET auto_install_required = (name = any(%s)) WHERE module_id = %s',
                          (list(auto_install_requirements or ()), self.id))
         self.env['ir.module.module.dependency'].invalidate_model(['auto_install_required'])
         self.invalidate_recordset(['dependencies_id'])
@@ -816,9 +816,9 @@ class IrModuleModule(models.Model):
         existing = set(self.country_ids.ids)
         needed = set(self.env['res.country'].search([('code', 'in', [c.upper() for c in countries])]).ids)
         for dep in (needed - existing):
-            self._cr.execute('INSERT INTO module_country (module_id, country_id) values (%s, %s)', (self.id, dep))
+            self.env.cr.execute('INSERT INTO module_country (module_id, country_id) values (%s, %s)', (self.id, dep))
         for dep in (existing - needed):
-            self._cr.execute('DELETE FROM module_country WHERE module_id = %s and country_id = %s', (self.id, dep))
+            self.env.cr.execute('DELETE FROM module_country WHERE module_id = %s and country_id = %s', (self.id, dep))
         self.invalidate_recordset(['country_ids'])
         self.env['res.company'].invalidate_model(['uninstalled_l10n_module_ids'])
 
@@ -827,9 +827,9 @@ class IrModuleModule(models.Model):
         existing = set(excl.name for excl in self.exclusion_ids)
         needed = set(excludes or [])
         for name in (needed - existing):
-            self._cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
+            self.env.cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
         for name in (existing - needed):
-            self._cr.execute('DELETE FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
+            self.env.cr.execute('DELETE FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
         self.invalidate_recordset(['exclusion_ids'])
 
     def _update_category(self, category='Uncategorized'):
@@ -846,7 +846,7 @@ class IrModuleModule(models.Model):
 
         categs = category.split('/')
         if categs != current_category_path:
-            cat_id = modules.db.create_categories(self._cr, categs)
+            cat_id = modules.db.create_categories(self.env.cr, categs)
             self.write({'category_id': cat_id})
 
     def _update_translations(self, filter_lang=None, overwrite=False):

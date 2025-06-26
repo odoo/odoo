@@ -504,7 +504,7 @@ class ProductTemplate(models.Model):
     def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         templates = super(ProductTemplate, self).create(vals_list)
-        if self._context.get("create_product_product", True):
+        if self.env.context.get("create_product_product", True):
             templates._create_variant_ids()
 
         # This is needed to set given values to first variant after creation
@@ -523,7 +523,7 @@ class ProductTemplate(models.Model):
             products = self.filtered(lambda template: template.uom_id.id != vals['uom_id']).product_variant_ids
             products.with_context(skip_uom_conversion=True)._update_uom(vals['uom_id'])
         res = super(ProductTemplate, self).write(vals)
-        if self._context.get("create_product_product", True) and 'attribute_line_ids' in vals or (vals.get('active') and len(self.product_variant_ids) == 0):
+        if self.env.context.get("create_product_product", True) and 'attribute_line_ids' in vals or (vals.get('active') and len(self.product_variant_ids) == 0):
             self._create_variant_ids()
         if 'active' in vals and not vals.get('active'):
             self.with_context(active_test=False).mapped('product_variant_ids').write({'active': vals.get('active')})

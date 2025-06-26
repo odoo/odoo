@@ -859,7 +859,7 @@ class AccountMove(models.Model):
         # the currency is not a hard dependence, it triggers via manual add_to_compute
         # avoid computing the currency before all it's dependences are set (like the journal...)
         if self.env.cache.contains(self, self._fields['currency_id']):
-            currency_id = self.currency_id.id or self._context.get('default_currency_id')
+            currency_id = self.currency_id.id or self.env.context.get('default_currency_id')
             if currency_id and currency_id != company.currency_id.id:
                 currency_domain = domain + [('currency_id', '=', currency_id)]
                 journal = self.env['account.journal'].search(currency_domain, limit=1)
@@ -2650,7 +2650,7 @@ class AccountMove(models.Model):
 
         :param changed_fields: A set containing all modified fields on account.move.
         '''
-        if self._context.get('skip_account_move_synchronization'):
+        if self.env.context.get('skip_account_move_synchronization'):
             return
 
         self_sudo = self.sudo()
@@ -3497,7 +3497,7 @@ class AccountMove(models.Model):
                 'invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id',
                 'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
             readonly_fields = [val for val in vals if val in unmodifiable_fields]
-            if not self._context.get('skip_readonly_check') and move_state == "posted" and readonly_fields:
+            if not self.env.context.get('skip_readonly_check') and move_state == "posted" and readonly_fields:
                 raise UserError(_("You cannot modify the following readonly fields on a posted move: %s", ', '.join(readonly_fields)))
 
             if move.journal_id.sequence_override_regex and vals.get('name') and vals['name'] != '/' and not re.match(move.journal_id.sequence_override_regex, vals['name']):
@@ -3555,7 +3555,7 @@ class AccountMove(models.Model):
     def _get_unlink_logger_message(self):
         """ Before unlink, get a log message for audit trail if restricted.
         Logger is added here because in api ondelete, account.move.line is deleted, and we can't get total amount """
-        if not self._context.get('force_delete'):
+        if not self.env.context.get('force_delete'):
             pass
 
         moves_details = []
@@ -3589,7 +3589,7 @@ class AccountMove(models.Model):
         if not (
             self.env.user.has_group('account.group_account_manager')
             or any(self.company_id.mapped('quick_edit_mode'))
-            or self._context.get('force_delete')
+            or self.env.context.get('force_delete')
             or self.check_move_sequence_chain()
         ):
             raise UserError(_(
@@ -3599,7 +3599,7 @@ class AccountMove(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_account_audit_trail_except_once_post(self):
-        if not self._context.get('force_delete') and any(
+        if not self.env.context.get('force_delete') and any(
                 move.posted_before and move.company_id.restrictive_audit_trail
                 for move in self
         ):
@@ -4087,7 +4087,7 @@ class AccountMove(models.Model):
 
     def _get_integrity_hash_fields(self):
         # Use the latest hash version by default, but keep the old one for backward compatibility when generating the integrity report.
-        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        hash_version = self.env.context.get('hash_version', MAX_HASH_VERSION)
         if hash_version == 1:
             return ['date', 'journal_id', 'company_id']
         elif hash_version in (2, 3, 4):
@@ -4247,7 +4247,7 @@ class AccountMove(models.Model):
         """
         :return: dict of move_id: hash
         """
-        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        hash_version = self.env.context.get('hash_version', MAX_HASH_VERSION)
 
         def _getattrstring(obj, field_name):
             field_value = obj[field_name]
@@ -5054,7 +5054,7 @@ class AccountMove(models.Model):
                     move.currency_id.name
                 ))
 
-            if move.line_ids.account_id.filtered(lambda account: not account.active) and not self._context.get('skip_account_deprecation_check'):
+            if move.line_ids.account_id.filtered(lambda account: not account.active) and not self.env.context.get('skip_account_deprecation_check'):
                 validation_msgs.add(_("A line of this move is using a archived account, you cannot post it."))
 
         if validation_msgs:
@@ -5140,7 +5140,7 @@ class AccountMove(models.Model):
                     else _('%s - private part (taxes)', line.move_id.name)
                 )
 
-        draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, self._context.get('move_reverse_cancel', False))
+        draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, self.env.context.get('move_reverse_cancel', False))
         to_post.line_ids._reconcile_marked()
 
         customer_count, supplier_count = defaultdict(int), defaultdict(int)

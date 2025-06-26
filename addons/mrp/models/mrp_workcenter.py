@@ -83,7 +83,7 @@ class MrpWorkcenter(models.Model):
         super()._compute_display_name()
         for workcenter in self:
             # Show the red icon(workcenter is blocked) only when the Gantt view is accessed from MRP > Planning > Planning by Workcenter.
-            if self._context.get('group_by') and self._context.get('show_workcenter_status') and workcenter.working_state == 'blocked':
+            if self.env.context.get('group_by') and self.env.context.get('show_workcenter_status') and workcenter.working_state == 'blocked':
                 workcenter.display_name = f"{workcenter.display_name}\u00A0\u00A0🔴"
 
     @api.constrains('alternative_workcenter_ids')

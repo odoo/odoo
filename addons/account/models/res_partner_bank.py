@@ -350,7 +350,7 @@ class ResPartnerBank(models.Model):
         # When create & edit, `name` could be used to pass (in the context) the
         # value input by the user. However, we want to set the default value of
         # `acc_number` variable instead.
-        default_acc_number = self._context.get('default_acc_number', False) or self._context.get('default_name', False)
+        default_acc_number = self.env.context.get('default_acc_number', False) or self.env.context.get('default_name', False)
         return super(ResPartnerBank, self.with_context(default_acc_number=default_acc_number)).default_get(fields_list)
 
     @api.depends('allow_out_payment', 'acc_number', 'bank_id')

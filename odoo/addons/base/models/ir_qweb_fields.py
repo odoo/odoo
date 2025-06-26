@@ -549,9 +549,9 @@ class IrQwebFieldMonetary(models.AbstractModel):
             if currency_fields:
                 options['display_currency'] = record[currency_fields[0]]
         if 'date' not in options:
-            options['date'] = record._context.get('date')
+            options['date'] = record.env.context.get('date')
         if 'company_id' not in options:
-            options['company_id'] = record._context.get('company_id')
+            options['company_id'] = record.env.context.get('company_id')
 
         return super().record_to_html(record, field_name, options)
 

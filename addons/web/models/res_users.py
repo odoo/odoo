@@ -15,7 +15,7 @@ class ResUsers(models.Model):
         # if we have a search with a limit, move current user as the first result
         domain = Domain(domain or Domain.TRUE)
         user_list = super().name_search(name, domain, operator, limit)
-        uid = self._uid
+        uid = self.env.uid
         # index 0 is correct not Falsy in this case, use None to avoid ignoring it
         if (index := next((i for i, (user_id, _name) in enumerate(user_list) if user_id == uid), None)) is not None:
             # move found user first

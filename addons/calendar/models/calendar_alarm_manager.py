@@ -76,7 +76,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
             tuple_params += (seconds,)
 
         self.env.flush_all()
-        self._cr.execute("""
+        self.env.cr.execute("""
             WITH calcul_delta AS (%s)
             SELECT *
                 FROM ( %s WHERE cal.active = True ) AS ALL_EVENTS
@@ -84,7 +84,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
                  AND ALL_EVENTS.last_event_date > (now() at time zone 'utc')
         """ % (delta_request, base_request, first_alarm_max_value), tuple_params)
 
-        for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration, rule in self._cr.fetchall():
+        for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration, rule in self.env.cr.fetchall():
             result[event_id] = {
                 'event_id': event_id,
                 'first_alarm': first_alarm,

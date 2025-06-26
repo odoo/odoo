@@ -216,8 +216,8 @@ class MailingMailing(models.Model):
             'join_add_query': join_add_query,
         }
         params = {'mailing_id': self.id, 'target_model': self.mailing_model_real}
-        self._cr.execute(query, params)
-        query_res = self._cr.fetchall()
+        self.env.cr.execute(query, params)
+        query_res = self.env.cr.fetchall()
         seen_list = set(number for item in query_res for number in item[1:] if number)
         seen_ids = set(item[0] for item in query_res)
         _logger.info("Mass SMS %s targets %s: already reached %s SMS", self, target._name, len(seen_list))

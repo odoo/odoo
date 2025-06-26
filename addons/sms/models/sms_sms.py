@@ -201,5 +201,5 @@ class SmsSms(models.Model):
 
     @api.autovacuum
     def _gc_device(self):
-        self._cr.execute("DELETE FROM sms_sms WHERE to_delete = TRUE")
-        _logger.info("GC'd %d sms marked for deletion", self._cr.rowcount)
+        self.env.cr.execute("DELETE FROM sms_sms WHERE to_delete = TRUE")
+        _logger.info("GC'd %d sms marked for deletion", self.env.cr.rowcount)

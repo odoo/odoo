@@ -906,7 +906,7 @@ class MailComposeMessage(models.TransientModel):
 
         if self.attachment_ids:
             attachments = self.env['ir.attachment'].sudo().browse(self.attachment_ids.ids).filtered(
-                lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
+                lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self.env.uid)
             if attachments:
                 attachments.write({'res_model': template._name, 'res_id': template.id})
                 template.attachment_ids = self.attachment_ids
@@ -1444,8 +1444,8 @@ class MailComposeMessage(models.TransientModel):
             return blacklisted_rec_ids
         if self.composition_mode == 'mass_mail':
             self.env['mail.blacklist'].flush_model(['email', 'active'])
-            self._cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
-            blacklist = {x[0] for x in self._cr.fetchall()}
+            self.env.cr.execute("SELECT email FROM mail_blacklist WHERE active=true")
+            blacklist = {x[0] for x in self.env.cr.fetchall()}
             if not blacklist:
                 return blacklisted_rec_ids
             if isinstance(self.env[self.model], self.pool['mail.thread.blacklist']):

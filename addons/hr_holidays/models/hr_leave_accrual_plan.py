@@ -132,7 +132,7 @@ class HrLeaveAccrualPlan(models.Model):
             'view_id': self.env.ref('hr_holidays.hr_accrual_level_view_form').id,
             'target': 'new',
             'context': dict(
-                self._context,
+                self.env.context,
                 new=True,
                 default_can_be_carryover=self.can_be_carryover,
                 default_accrued_gain_time=self.accrued_gain_time,

@@ -110,7 +110,7 @@ class ProductTemplateAttributeLine(models.Model):
             else:
                 create_values.append(value)
         res = activated_lines + super().create(create_values)
-        if self._context.get("create_product_product", True):
+        if self.env.context.get("create_product_product", True):
             res._update_product_template_attribute_values()
         return res
 

@@ -546,8 +546,8 @@ class ProjectProject(models.Model):
                 if 'label_tasks' in vals and not vals['label_tasks']:
                     vals['label_tasks'] = task_label
         if self.env.user.has_group('project.group_project_stages'):
-            if 'default_stage_id' in self._context:
-                stage = self.env['project.project.stage'].browse(self._context['default_stage_id'])
+            if 'default_stage_id' in self.env.context:
+                stage = self.env['project.project.stage'].browse(self.env.context['default_stage_id'])
                 # The project's company_id must be the same as the stage's company_id
                 if stage.company_id:
                     for vals in vals_list:
@@ -839,7 +839,7 @@ class ProjectProject(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('project.rating_rating_action_view_project_rating')
         action['display_name'] = _("%(name)s's Rating", name=self.name)
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
-        action_context.update(self._context)
+        action_context.update(self.env.context)
         action_context['search_default_filter_write_date'] = 'custom_write_date_last_30_days'
         action_context.pop('group_by', None)
         action['domain'] = [('consumed', '=', True), ('parent_res_model', '=', 'project.project'), ('parent_res_id', '=', self.id)]

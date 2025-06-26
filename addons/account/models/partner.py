@@ -411,7 +411,7 @@ class ResPartner(models.Model):
         sign = 1
         if account_type == 'liability_payable':
             sign = -1
-        res = self._cr.execute(f'''
+        res = self.env.cr.execute(f'''
             SELECT aml.partner_id
               FROM res_partner partner
          LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
@@ -426,7 +426,7 @@ class ResPartner(models.Model):
             HAVING %s * COALESCE(SUM(aml.amount_residual), 0) {operator} %s''',
             (account_type, self.env.company.root_id.id, sign, operand)
         )
-        res = self._cr.fetchall()
+        res = self.env.cr.fetchall()
         if not res:
             return [('id', '=', '0')]
         return [('id', 'in', [r[0] for r in res])]

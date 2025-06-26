@@ -150,10 +150,10 @@ class AccountAnalyticAccount(models.Model):
             )
 
         domain = [('company_id', 'in', [False] + self.env.companies.ids)]
-        if self._context.get('from_date', False):
-            domain.append(('date', '>=', self._context['from_date']))
-        if self._context.get('to_date', False):
-            domain.append(('date', '<=', self._context['to_date']))
+        if self.env.context.get('from_date', False):
+            domain.append(('date', '>=', self.env.context['from_date']))
+        if self.env.context.get('to_date', False):
+            domain.append(('date', '<=', self.env.context['to_date']))
 
         for plan, accounts in self.grouped('plan_id').items():
             if not plan:

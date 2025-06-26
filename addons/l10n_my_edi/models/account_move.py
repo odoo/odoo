@@ -498,7 +498,7 @@ Customs form No. 1, 9, etc for Vendor Bills""",
             )
 
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
 
     @api.model
     def _cron_l10n_my_edi_synchronize_myinvois(self):

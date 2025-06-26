@@ -273,7 +273,7 @@ will update the cost of every lot/serial number in stock."),
     # -------------------------------------------------------------------------
     def action_revaluation(self):
         self.ensure_one()
-        ctx = dict(self._context, default_product_id=self.id, default_company_id=self.env.company.id)
+        ctx = dict(self.env.context, default_product_id=self.id, default_company_id=self.env.company.id)
         return {
             'name': _('Product Revaluation - %s', self.display_name),
             'view_mode': 'form',
@@ -640,7 +640,7 @@ will update the cost of every lot/serial number in stock."),
             account_move_vals.append({
                 'journal_id': accounts['stock_journal'].id,
                 'line_ids': move_lines,
-                'date': self._context.get('force_period_date', fields.Date.context_today(self)),
+                'date': self.env.context.get('force_period_date', fields.Date.context_today(self)),
                 'ref': description,
                 'stock_move_id': vacuum_svl.stock_move_id.id,
                 'move_type': 'entry',
@@ -699,7 +699,7 @@ will update the cost of every lot/serial number in stock."),
         new_account_move = AccountMove.sudo().create({
             'journal_id': accounts['stock_journal'].id,
             'line_ids': move_lines,
-            'date': self._context.get('force_period_date', fields.Date.context_today(self)),
+            'date': self.env.context.get('force_period_date', fields.Date.context_today(self)),
             'ref': description,
             'stock_move_id': vacuum_svl.stock_move_id.id,
             'move_type': 'entry',

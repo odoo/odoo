@@ -145,7 +145,7 @@ class AccountMove(models.Model):
             ))
 
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
         return None
 
     def _l10n_ro_edi_fetch_invoice_sent_documents(self):
@@ -225,7 +225,7 @@ class AccountMove(models.Model):
         self.env['l10n_ro_edi.document'].sudo().browse(document_ids_to_delete).unlink()
         self.env['l10n_ro_edi.document'].sudo().create(documents_to_create)
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
 
     @api.model
     def _l10n_ro_edi_fetch_invoices(self):
@@ -277,7 +277,7 @@ class AccountMove(models.Model):
         self.env['l10n_ro_edi.document'].sudo().browse(document_ids_to_delete).unlink()
 
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
 
     @api.model
     def _l10n_ro_edi_process_invoice_accepted_messages(self, sent_invoices_accepted_messages):

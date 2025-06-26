@@ -7,7 +7,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
 
     def _default_role_to_users_ids(self):
         res = []
-        template = self.env['project.project'].browse(self._context.get('template_id'))
+        template = self.env['project.project'].browse(self.env.context.get('template_id'))
         if template:
             res = [Command.create({'role_id': role.id}) for role in template.task_ids.role_ids]
         return res
@@ -17,7 +17,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     date = fields.Date(string='Expiration Date')
     alias_name = fields.Char(string="Alias Name")
     alias_domain_id = fields.Many2one("mail.alias.domain", string="Alias Domain")
-    template_id = fields.Many2one("project.project", default=lambda self: self._context.get('template_id'))
+    template_id = fields.Many2one("project.project", default=lambda self: self.env.context.get('template_id'))
     role_to_users_ids = fields.One2many('project.template.role.to.users.map', 'wizard_id', default=_default_role_to_users_ids)
 
     def _get_template_whitelist_fields(self):
@@ -46,7 +46,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
         if not view:
             return {}
         return {
-            'name': self.env._('Create a Project from Template %s', self._context.get('template_name')),
+            'name': self.env._('Create a Project from Template %s', self.env.context.get('template_name')),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'views': [(view.id, 'form')],

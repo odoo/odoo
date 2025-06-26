@@ -361,7 +361,7 @@ class AccountChartTemplate(models.AbstractModel):
                         if not force_create:
                             skip_update.add((model_name, xmlid))
                             continue
-                        if self._context.get('force_new_tax_active'):
+                        if self.env.context.get('force_new_tax_active'):
                             values['active'] = True
                         if xmlid in xmlid2tax:
                             obsolete_xmlid.add(xmlid)
@@ -1210,7 +1210,7 @@ class AccountChartTemplate(models.AbstractModel):
                         message = self.env._(
                             'Error while loading the localization: missing tax tag %(tag_name)s for country %(country_name)s. You should probably update your localization app first.',
                             tag_name=format_tag, country_name=country.name)
-                        if not self._context.get('ignore_missing_tags'):
+                        if not self.env.context.get('ignore_missing_tags'):
                             raise UserError(message)
                         else:
                             _logger.error(message)
@@ -1377,8 +1377,8 @@ class AccountChartTemplate(models.AbstractModel):
         # the queried models have been flushed already as part of the loop building the queries per model
         self.env['ir.model.data'].flush_model(['res_id', 'model', 'name'])
 
-        self._cr.execute(query)
-        return self._cr.fetchall()
+        self.env.cr.execute(query)
+        return self.env.cr.fetchall()
 
     def _get_field_translation(self, record, fname, lang):
         """Return the value for language lang for field with fname from record (or None if none exists).

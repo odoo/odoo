@@ -448,7 +448,7 @@ class CrmTeam(models.Model):
         # and the first commit occur at the end of the bundle,
         # the first transaction can be long which we want to avoid
         if auto_commit:
-            self._cr.commit()
+            self.env.cr.commit()
 
         # assignment process data
         global_data = dict(assigned=set(), merged=set(), duplicates=set())
@@ -480,13 +480,13 @@ class CrmTeam(models.Model):
                 # unlink duplicates once
                 self.env['crm.lead'].browse(lead_unlink_ids).unlink()
                 lead_unlink_ids = set()
-                self._cr.commit()
+                self.env.cr.commit()
 
         # unlink duplicates once
         self.env['crm.lead'].browse(lead_unlink_ids).unlink()
 
         if auto_commit:
-            self._cr.commit()
+            self.env.cr.commit()
 
         # some final log
         _logger.info('## Assigned %s leads', (len(global_data['assigned']) + len(global_data['merged'])))

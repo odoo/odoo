@@ -135,7 +135,7 @@ class StockMove(models.Model):
         subcontract order to the new quantity.
         """
         self._check_access_if_subcontractor(values)
-        if 'product_uom_qty' in values and self.env.context.get('cancel_backorder') is not False and not self._context.get('extra_move_mode'):
+        if 'product_uom_qty' in values and self.env.context.get('cancel_backorder') is not False and not self.env.context.get('extra_move_mode'):
             self.filtered(
                 lambda m: m.is_subcontract and m.state not in ['draft', 'cancel', 'done']
                 and m.product_uom.compare(m.product_uom_qty, values['product_uom_qty']) != 0
@@ -180,7 +180,7 @@ class StockMove(models.Model):
         moves = self._get_subcontract_production().move_raw_ids.filtered(lambda m: m.state != 'cancel')
         list_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_move_tree_view')
         form_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_move_form_view')
-        ctx = dict(self._context, search_default_by_product=True)
+        ctx = dict(self.env.context, search_default_by_product=True)
         if self.env.user._is_portal():
             form_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_portal_move_form_view')
             ctx.update(no_breadcrumbs=False)
@@ -246,7 +246,7 @@ class StockMove(models.Model):
         view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_form_view')
         if self.env.user._is_portal():
             view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_portal_form_view')
-        context = dict(self._context)
+        context = dict(self.env.context)
         context.pop('skip_consumption', False)
         return {
             'name': _('Subcontract'),
@@ -317,7 +317,7 @@ class StockMove(models.Model):
     def _reduce_subcontract_order_qty(self, quantity_to_remove):
         self.ensure_one()
         productions = self.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))[::-1]
-        wip_production = productions[0] if self._context.get('transfer_qty') and len(productions) > 1 else self.env['mrp.production']
+        wip_production = productions[0] if self.env.context.get('transfer_qty') and len(productions) > 1 else self.env['mrp.production']
 
         # Transfer removed qty to WIP production
         if wip_production:

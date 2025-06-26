@@ -11,7 +11,7 @@ class BaseLanguageInstall(models.TransientModel):
     @api.model
     def default_get(self, fields):
         defaults = super(BaseLanguageInstall, self).default_get(fields)
-        website_id = self._context.get('params', {}).get('website_id')
+        website_id = self.env.context.get('params', {}).get('website_id')
         if website_id:
             if 'website_ids' not in defaults:
                 defaults['website_ids'] = []
@@ -22,7 +22,7 @@ class BaseLanguageInstall(models.TransientModel):
         action = super(BaseLanguageInstall, self).lang_install()
         if self.website_ids and self.lang_ids:
             self.website_ids.language_ids |= self.lang_ids
-        params = self._context.get('params', {})
+        params = self.env.context.get('params', {})
         if 'url_return' in params:
             url = params['url_return'].replace('[lang]', self.first_lang_id.code)
             return self.env['website'].get_client_action(url)

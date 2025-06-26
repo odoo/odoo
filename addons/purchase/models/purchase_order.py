@@ -420,7 +420,7 @@ class PurchaseOrder(models.Model):
         # are taken with the company of the order
         # if not defined, with_company doesn't change anything.
         self = self.with_company(self.company_id)
-        default_currency = self._context.get("default_currency_id")
+        default_currency = self.env.context.get("default_currency_id")
         if not self.partner_id:
             self.fiscal_position_id = False
             self.currency_id = default_currency or self.env.company.currency_id.id
@@ -884,7 +884,7 @@ class PurchaseOrder(models.Model):
         """Prepare the dict of values to create the new invoice for a purchase order.
         """
         self.ensure_one()
-        move_type = self._context.get('default_move_type', 'in_invoice')
+        move_type = self.env.context.get('default_move_type', 'in_invoice')
 
         partner_invoice = self.env['res.partner'].browse(self.partner_id.address_get(['invoice'])['invoice'])
         partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]

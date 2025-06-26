@@ -334,7 +334,7 @@ class StockLocation(models.Model):
             if locations.storage_category_id:
                 if package and package.package_type_id:
                     move_line_data = self.env['stock.move.line']._read_group([
-                        ('id', 'not in', list(self._context.get('exclude_sml_ids', set()))),
+                        ('id', 'not in', list(self.env.context.get('exclude_sml_ids', set()))),
                         ('result_package_id.package_type_id', '=', package_type.id),
                         ('state', 'not in', ['draft', 'cancel', 'done']),
                     ], ['location_dest_id'], ['result_package_id:count_distinct'])
@@ -347,7 +347,7 @@ class StockLocation(models.Model):
                         qty_by_location[location.id] += count
                 else:
                     move_line_data = self.env['stock.move.line']._read_group([
-                        ('id', 'not in', list(self._context.get('exclude_sml_ids', set()))),
+                        ('id', 'not in', list(self.env.context.get('exclude_sml_ids', set()))),
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
@@ -443,7 +443,7 @@ class StockLocation(models.Model):
             if self.storage_category_id.allow_new_product == "same":
                 # In case it's a package, `product` is not defined, so try to get
                 # the package products from the context
-                product = product or self._context.get('products')
+                product = product or self.env.context.get('products')
                 if (positive_quant and positive_quant.product_id != product) or len(product) > 1:
                     return False
                 if self.env['stock.move.line'].search_count([

@@ -15,11 +15,11 @@ class ProjectShareWizard(models.TransientModel):
         # The project share action could be called in `project.collaborator`
         # and so we have to check the active_model and active_id to use
         # the right project.
-        active_model = self._context.get('active_model', '')
-        active_id = self._context.get('active_id', False)
+        active_model = self.env.context.get('active_model', '')
+        active_id = self.env.context.get('active_id', False)
         if active_model == 'project.collaborator':
             active_model = 'project.project'
-            active_id = self._context.get('default_project_id', False)
+            active_id = self.env.context.get('default_project_id', False)
         result = super(ProjectShareWizard, self.with_context(active_model=active_model, active_id=active_id)).default_get(fields)
         if result['res_model'] and result['res_id']:
             project = self.env[result['res_model']].browse(result['res_id'])

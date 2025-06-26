@@ -147,7 +147,7 @@ class CrmLead2opportunityPartner(models.TransientModel):
 
     def _action_convert(self):
         """ """
-        result_opportunities = self.env['crm.lead'].browse(self._context.get('active_ids', []))
+        result_opportunities = self.env['crm.lead'].browse(self.env.context.get('active_ids', []))
         self._convert_and_allocate(result_opportunities, [self.user_id.id], team_id=self.team_id.id)
         return result_opportunities[0]
 

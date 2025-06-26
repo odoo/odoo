@@ -921,10 +921,10 @@ class AccountPaymentRegister(models.TransientModel):
 
             # Retrieve moves to pay from the context.
 
-            if self._context.get('active_model') == 'account.move':
-                lines = self.env['account.move'].browse(self._context.get('active_ids', [])).line_ids
-            elif self._context.get('active_model') == 'account.move.line':
-                lines = self.env['account.move.line'].browse(self._context.get('active_ids', []))
+            if self.env.context.get('active_model') == 'account.move':
+                lines = self.env['account.move'].browse(self.env.context.get('active_ids', [])).line_ids
+            elif self.env.context.get('active_model') == 'account.move.line':
+                lines = self.env['account.move.line'].browse(self.env.context.get('active_ids', []))
             else:
                 raise UserError(_(
                     "The register payment wizard should only be called on account.move or account.move.line records."
@@ -1282,7 +1282,7 @@ class AccountPaymentRegister(models.TransientModel):
             self.payment_difference_handling = 'open'
         payments = self._create_payments()
 
-        if self._context.get('dont_redirect_to_payments'):
+        if self.env.context.get('dont_redirect_to_payments'):
             return True
 
         action = {

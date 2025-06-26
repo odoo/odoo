@@ -34,10 +34,10 @@ class L10n_ChQr_InvoiceWizard(models.TransientModel):
                 return _("One invoice could be printed in the %s format.", inv_format)
             return _("%(amount)s invoices could be printed in the %(format)s format.", amount=nb_inv, format=inv_format)
 
-        if not self._context.get('active_ids'):
+        if not self.env.context.get('active_ids'):
             raise UserError(_("No invoice was found to be printed."))
 
-        invoices = self.env['account.move'].browse(self._context['active_ids'])
+        invoices = self.env['account.move'].browse(self.env.context['active_ids'])
         companies = invoices.company_id
         if len(companies) != 1 or companies[0].country_code != 'CH':
             raise UserError(_("All selected invoices must belong to the same Switzerland company"))
@@ -64,7 +64,7 @@ class L10n_ChQr_InvoiceWizard(models.TransientModel):
         Open a list view of all the invoices that could not be printed in the QR format.
         '''
         # Prints the error stopping the invoice from being QR-printed in the invoice's chatter.
-        invoices = self.env['account.move'].browse(self._context['active_ids'])
+        invoices = self.env['account.move'].browse(self.env.context['active_ids'])
         dispatched_invoices = invoices._l10n_ch_dispatch_invoices_to_print()
         faulty_invoices = dispatched_invoices['classic']
 

@@ -166,7 +166,7 @@ class CrmLead(models.Model):
                 # 6. sixth way: closest partner whatsoever, just to have at least one result
                 if not partner_ids:
                     # warning: point() type takes (longitude, latitude) as parameters in this order!
-                    self._cr.execute("""SELECT id, distance
+                    self.env.cr.execute("""SELECT id, distance
                                   FROM  (select id, (point(partner_longitude, partner_latitude) <-> point(%s,%s)) AS distance FROM res_partner
                                   WHERE active
                                         AND partner_longitude is not null
@@ -175,7 +175,7 @@ class CrmLead(models.Model):
                                         AND id not in (select partner_id from crm_lead_declined_partner where lead_id = %s)
                                         ) AS d
                                   ORDER BY distance LIMIT 1""", (longitude, latitude, lead.id))
-                    res = self._cr.dictfetchone()
+                    res = self.env.cr.dictfetchone()
                     if res:
                         partner_ids = Partner.browse([res['id']])
 

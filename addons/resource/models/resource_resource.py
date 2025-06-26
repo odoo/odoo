@@ -48,7 +48,7 @@ class ResourceResource(models.Model):
         help="Define the working schedule of the resource. If not set, the resource will have fully flexible working hours.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC')
+        default=lambda self: self.env.context.get('tz') or self.env.user.tz or 'UTC')
 
     _check_time_efficiency = models.Constraint(
         'CHECK(time_efficiency>0)',

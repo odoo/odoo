@@ -140,14 +140,14 @@ class ResUsersLog(models.Model):
 
     @api.autovacuum
     def _gc_user_logs(self):
-        self._cr.execute("""
+        self.env.cr.execute("""
             DELETE FROM res_users_log log1 WHERE EXISTS (
                 SELECT 1 FROM res_users_log log2
                 WHERE log1.create_uid = log2.create_uid
                 AND log1.create_date < log2.create_date
             )
         """)
-        _logger.info("GC'd %d user log entries", self._cr.rowcount)
+        _logger.info("GC'd %d user log entries", self.env.cr.rowcount)
 
 
 class ResUsers(models.Model):
@@ -675,7 +675,7 @@ class ResUsers(models.Model):
         return vals_list
 
     @api.model
-    @tools.ormcache('self._uid')
+    @tools.ormcache('self.env.uid')
     def context_get(self):
         # use read() to not read other fields: this must work while modifying
         # the schema of models res.users or res.partner
@@ -1421,7 +1421,7 @@ class ChangePasswordWizard(models.TransientModel):
     _transient_max_hours = 0.2
 
     def _default_user_ids(self):
-        user_ids = self._context.get('active_model') == 'res.users' and self._context.get('active_ids') or []
+        user_ids = self.env.context.get('active_model') == 'res.users' and self.env.context.get('active_ids') or []
         return [
             Command.create({'user_id': user.id, 'user_login': user.login})
             for user in self.env['res.users'].browse(user_ids)

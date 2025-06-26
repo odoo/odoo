@@ -8,14 +8,14 @@ class ProjectMilestone(models.Model):
     _inherit = 'project.milestone'
 
     def _default_sale_line_id(self):
-        sale_line_id = self._context.get('default_sale_line_id')
+        sale_line_id = self.env.context.get('default_sale_line_id')
         if sale_line_id:
             return self.env['sale.order.line'].search([
                 ('id', '=', sale_line_id),
                 ('qty_delivered_method', '=', 'milestones'),
             ], limit=1)
 
-        project_id = self._context.get('default_project_id')
+        project_id = self.env.context.get('default_project_id')
         if not project_id:
             return []
         project = self.env['project.project'].browse(project_id)

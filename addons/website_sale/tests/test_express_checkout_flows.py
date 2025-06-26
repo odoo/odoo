@@ -425,7 +425,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             delivery_carrier_mock, self.sale_order, is_express_checkout_flow=True
         )
         sale_order = delivery_carrier_mock.rate_shipment.call_args[0][0]
-        self.assertTrue(sale_order._context.get('express_checkout_partial_delivery_address'))
+        self.assertTrue(sale_order.env.context.get('express_checkout_partial_delivery_address'))
 
     def test_express_checkout_registered_user_with_shipping_option(self):
         """ Test that when you use the express checkout as a registered user and the shipping

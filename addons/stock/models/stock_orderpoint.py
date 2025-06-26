@@ -628,8 +628,8 @@ class StockWarehouseOrderpoint(models.Model):
 
         for orderpoints_batch_ids in split_every(1000, self.ids):
             if use_new_cursor:
-                assert isinstance(self._cr, BaseCursor)
-                cr = Registry(self._cr.dbname).cursor()
+                assert isinstance(self.env.cr, BaseCursor)
+                cr = Registry(self.env.cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
             try:
                 orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch_ids)

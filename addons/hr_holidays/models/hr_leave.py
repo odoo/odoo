@@ -115,7 +115,7 @@ class HrLeave(models.Model):
         # Note:
         # Without the application of the timezone, days based on UTC datetimes
         # will be returned (and will therefore not be correct for the client).
-        client_tz = timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        client_tz = timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
         if values.get('date_from'):
             if not values.get('request_date_from'):
                 values['request_date_from'] = pytz.utc.localize(values['date_from']).astimezone(client_tz)
@@ -659,7 +659,7 @@ Contracts:
 
     @api.depends('employee_id', 'holiday_status_id')
     def _compute_leaves(self):
-        date_from = fields.Date.from_string(self._context['default_request_date_from']) if 'default_request_date_from' in self._context else fields.Date.today()
+        date_from = fields.Date.from_string(self.env.context['default_request_date_from']) if 'default_request_date_from' in self.env.context else fields.Date.today()
         employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id, date_from)[0]
         for leave in self:
             virtual_remaining_leaves = 0
@@ -771,8 +771,8 @@ Contracts:
         # Try to force the leave_type display_name when creating new records
         # This is called right after pressing create and returns the display_name for
         # most fields in the view.
-        if values and 'employee_id' in fields_spec and 'employee_id' not in self._context:
-            employee_id = get_employee_from_context(values, self._context, self.env.user.employee_id.id)
+        if values and 'employee_id' in fields_spec and 'employee_id' not in self.env.context:
+            employee_id = get_employee_from_context(values, self.env.context, self.env.user.employee_id.id)
             self = self.with_context(employee_id=employee_id)
         return super().onchange(values, field_names, fields_spec)
 
@@ -797,7 +797,7 @@ Contracts:
     @api.model_create_multi
     def create(self, vals_list):
         # Override to avoid automatic logging of creation
-        if not self._context.get('leave_fast_create'):
+        if not self.env.context.get('leave_fast_create'):
             leave_types = self.env['hr.leave.type'].browse([values.get('holiday_status_id') for values in vals_list if values.get('holiday_status_id')])
             mapped_validation_type = {leave_type.id: leave_type.leave_validation_type for leave_type in leave_types}
 
@@ -816,7 +816,7 @@ Contracts:
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
 
         for holiday in holidays:
-            if not self._context.get('leave_fast_create'):
+            if not self.env.context.get('leave_fast_create'):
                 # Everything that is done here must be done using sudo because we might
                 # have different create and write rights
                 # eg : holidays_user can create a leave request with validation_type = 'manager' for someone else
@@ -830,7 +830,7 @@ Contracts:
                     holiday_sudo.action_approve()
                     holiday_sudo.message_subscribe(partner_ids=holiday._get_responsible_for_approval().partner_id.ids)
                     holiday_sudo.message_post(body=_("The time off has been automatically approved"), subtype_xmlid="mail.mt_comment") # Message from OdooBot (sudo)
-                elif not self._context.get('import_file'):
+                elif not self.env.context.get('import_file'):
                     holiday_sudo.activity_update()
         return holidays
 

@@ -11,7 +11,7 @@ class ForumPostVote(models.Model):
     _order = 'create_date desc, id desc'
 
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True, index=True)
-    user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid, ondelete='cascade')
+    user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self.env.uid, ondelete='cascade')
     vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
     create_date = fields.Datetime('Create Date', index=True, readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True, readonly=False, index='btree_not_null')
@@ -83,10 +83,10 @@ class ForumPostVote(models.Model):
             post = self.env['forum.post'].browse(vals.get('post_id'))
         if not self.env.is_admin():
             # own post check
-            if self._uid == post.create_uid.id:
+            if self.env.uid == post.create_uid.id:
                 raise UserError(_('It is not allowed to vote for its own post.'))
             # own vote check
-            if self._uid != self.user_id.id:
+            if self.env.uid != self.user_id.id:
                 raise UserError(_('It is not allowed to modify someone else\'s vote.'))
 
     def _check_karma_rights(self, upvote=False):

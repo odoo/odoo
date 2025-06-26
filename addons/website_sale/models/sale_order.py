@@ -241,7 +241,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _get_note_url(self):
-        website_id = self._context.get('website_id')
+        website_id = self.env.context.get('website_id')
         if website_id:
             return self.env['website'].browse(website_id).get_base_url()
         return super()._get_note_url()
@@ -662,7 +662,7 @@ class SaleOrder(models.Model):
         customer_portal_group = next((group for group in groups if group[0] == 'portal_customer'), None)
         if customer_portal_group:
             access_opt = customer_portal_group[2].setdefault('button_access', {})
-            if self._context.get('website_sale_send_recovery_email'):
+            if self.env.context.get('website_sale_send_recovery_email'):
                 access_opt['title'] = _('Resume Order')
                 access_opt['url'] = f'{self.get_base_url()}/shop/cart?id={self.id}&access_token={self.access_token}'
         return groups

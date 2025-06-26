@@ -131,7 +131,7 @@ class AccountMove(models.Model):
     @api.ondelete(at_uninstall=False)
     def _l10n_es_tbai_unlink_except_in_chain(self):
         # Prevent deleting moves that are part of the TicketBAI chain
-        if not self._context.get('force_delete') and any(m.l10n_es_tbai_chain_index for m in self):
+        if not self.env.context.get('force_delete') and any(m.l10n_es_tbai_chain_index for m in self):
             raise UserError(_('You cannot delete a move that has a TicketBAI chain id.'))
 
     # -------------------------------------------------------------------------
@@ -189,7 +189,7 @@ class AccountMove(models.Model):
         for bill in self:
             error = bill._l10n_es_tbai_post()
             if self.env['account.move.send']._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
             if error:
                 raise UserError(error)
 
@@ -214,7 +214,7 @@ class AccountMove(models.Model):
                 invoice._l10n_es_tbai_post_document_in_chatter(edi_document.response_message, cancel=True)
 
             if self.env['account.move.send']._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
             if edi_document.state != 'accepted':
                 raise UserError(edi_document.response_message)

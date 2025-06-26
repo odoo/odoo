@@ -28,7 +28,7 @@ class AccountMove(models.Model):
         # Don't keep anglo-saxon lines when copying a journal entry.
         vals_list = super().copy_data(default=default)
 
-        if not self._context.get('move_reverse_cancel'):
+        if not self.env.context.get('move_reverse_cancel'):
             for vals in vals_list:
                 if 'line_ids' in vals:
                     vals['line_ids'] = [line_vals for line_vals in vals['line_ids']
@@ -39,7 +39,7 @@ class AccountMove(models.Model):
         # OVERRIDE
 
         # Don't change anything on moves used to cancel another ones.
-        if self._context.get('move_reverse_cancel'):
+        if self.env.context.get('move_reverse_cancel'):
             return super()._post(soft)
 
         # Create additional COGS lines for customer invoices.

@@ -274,7 +274,7 @@ class AccountEdiDocument(models.Model):
         if not (attachment_sudo.res_model and attachment_sudo.res_id):
             # do not return system attachment not linked to a record
             return {}
-        if len(self._context.get('active_ids', [])) > 1:
+        if len(self.env.context.get('active_ids', [])) > 1:
             # In mass mail mode 'attachments_ids' is removed from template values
             # as they should not be rendered
             return {'attachments': [(attachment_sudo.name, attachment_sudo.datas)]}

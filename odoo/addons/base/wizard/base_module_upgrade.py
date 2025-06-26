@@ -56,15 +56,15 @@ class BaseModuleUpgrade(models.TransientModel):
                         JOIN ir_module_module_dependency d ON (m.id = d.module_id)
                         LEFT JOIN ir_module_module m2 ON (d.name = m2.name)
                         WHERE m.id = any(%s) and (m2.state IS NULL or m2.state = %s) """
-            self._cr.execute(query, (mods.ids, 'uninstalled'))
-            unmet_packages = [row[0] for row in self._cr.fetchall()]
+            self.env.cr.execute(query, (mods.ids, 'uninstalled'))
+            unmet_packages = [row[0] for row in self.env.cr.fetchall()]
             if unmet_packages:
                 raise UserError(self.env._('The following modules are not installed or unknown: %s', '\n\n' + '\n'.join(unmet_packages)))
 
         # terminate transaction before re-creating cursor below
-        self._cr.commit()
-        odoo.modules.registry.Registry.new(self._cr.dbname, update_module=True)
-        self._cr.reset()
+        self.env.cr.commit()
+        odoo.modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
+        self.env.cr.reset()
 
         return {'type': 'ir.actions.act_window_close'}
 

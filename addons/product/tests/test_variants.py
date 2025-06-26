@@ -266,8 +266,8 @@ class TestVariants(ProductVariantsCommon):
         self.assertEqual(template_dyn.name, 'Test Dynamical')
 
         variant_dyn = template_dyn._create_product_variant(template_dyn._get_first_possible_combination())
-        if 'create_product_product' in variant_dyn._context:
-            new_context = dict(variant_dyn._context)
+        if 'create_product_product' in variant_dyn.env.context:
+            new_context = dict(variant_dyn.env.context)
             new_context.pop('create_product_product')
             variant_dyn = variant_dyn.with_context(new_context)
         self.assertEqual(len(template_dyn.product_variant_ids), 1)

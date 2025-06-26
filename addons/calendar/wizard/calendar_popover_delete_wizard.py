@@ -68,7 +68,7 @@ class CalendarPopoverDeleteWizard(models.TransientModel):
         """
         self.ensure_one()
         event = self.calendar_event_id
-        deletion_type = self._context.get('default_recurrence')
+        deletion_type = self.env.context.get('default_recurrence')
 
         # Unlink recurrent events.
         if event.recurrency:

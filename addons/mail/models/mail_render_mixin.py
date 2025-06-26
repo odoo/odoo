@@ -261,7 +261,7 @@ class MailRenderMixin(models.AbstractModel):
           * various formatting tools;
         """
         render_context = {
-            'ctx': self._context,
+            'ctx': self.env.context,
             'format_addr': tools.formataddr,
             'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
             'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
@@ -723,7 +723,7 @@ class MailRenderMixin(models.AbstractModel):
         elif set_lang:
             templates_res_ids = {set_lang: (self.with_context(lang=set_lang), res_ids)}
         else:
-            templates_res_ids = {self._context.get('lang'): (self, res_ids)}
+            templates_res_ids = {self.env.context.get('lang'): (self, res_ids)}
 
         # rendering options (update default defined on field by asked options)
         f = self._fields[field]

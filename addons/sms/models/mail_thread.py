@@ -33,7 +33,7 @@ class MailThread(models.AbstractModel):
                        AND msg.message_type != 'user_notification'
                   GROUP BY msg.res_id
             """, {'author_id': self.env.user.partner_id.id, 'model_name': self._name, 'res_ids': tuple(self.ids)})
-            res.update(self._cr.fetchall())
+            res.update(self.env.cr.fetchall())
 
         for record in self:
             record.message_has_sms_error = bool(res.get(record._origin.id, 0))

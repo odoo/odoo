@@ -22,9 +22,9 @@ class LunchCashmoveReport(models.Model):
             cashmove.display_name = '{} {}'.format(_('Lunch Cashmove'), '#%d' % cashmove.id)
 
     def init(self):
-        tools.drop_view_if_exists(self._cr, self._table)
+        tools.drop_view_if_exists(self.env.cr, self._table)
 
-        self._cr.execute("""
+        self.env.cr.execute("""
             CREATE or REPLACE view %s as (
                 SELECT
                     lc.id as id,

@@ -125,8 +125,8 @@ class EventSlot(models.Model):
                         GROUP BY event_slot_id, state
                     """
             self.env['event.registration'].flush_model(['event_slot_id', 'state', 'active'])
-            self._cr.execute(query, (tuple(self.ids),))
-            res = self._cr.fetchall()
+            self.env.cr.execute(query, (tuple(self.ids),))
+            res = self.env.cr.fetchall()
             for slot_id, state, num in res:
                 results[slot_id][state_field[state]] = num
         # compute seats_available

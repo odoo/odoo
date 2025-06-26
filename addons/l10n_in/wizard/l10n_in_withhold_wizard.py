@@ -13,8 +13,8 @@ class L10n_InWithholdWizard(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         result = super().default_get(fields_list)
-        active_model = self._context.get('active_model')
-        active_ids = self._context.get('active_ids', [])
+        active_model = self.env.context.get('active_model')
+        active_ids = self.env.context.get('active_ids', [])
         if len(active_ids) > 1:
             raise UserError(_("You can only create a withhold for only one record at a time."))
         if active_model not in ('account.move', 'account.payment') or not active_ids:

@@ -166,7 +166,7 @@ class ProductSupplierinfo(models.Model):
     @api.depends('partner_id', 'min_qty', 'product_uom_id', 'currency_id', 'price')
     @api.depends_context('use_simplified_supplier_name')
     def _compute_display_name(self):
-        if self._context.get('use_simplified_supplier_name'):
+        if self.env.context.get('use_simplified_supplier_name'):
             super()._compute_display_name()
         else:
             for supplier in self:
@@ -185,8 +185,8 @@ class ProductSupplierinfo(models.Model):
         supplier_min_qty = self.product_uom_id._compute_quantity(self.min_qty, orderpoint.product_id.uom_id)
         if orderpoint.qty_to_order < supplier_min_qty:
             orderpoint.qty_to_order = supplier_min_qty
-        if self._context.get('replenish_id'):
-            replenish = self.env['product.replenish'].browse(self._context.get('replenish_id'))
+        if self.env.context.get('replenish_id'):
+            replenish = self.env['product.replenish'].browse(self.env.context.get('replenish_id'))
             replenish.supplier_id = self
             return {
                 'type': 'ir.actions.act_window',

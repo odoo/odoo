@@ -39,10 +39,10 @@ class ValidateAccountMove(models.TransientModel):
     def default_get(self, fields_list):
         result = super().default_get(fields_list)
         if 'move_ids' in fields_list and not result.get('move_ids'):
-            if self._context.get('active_model') == 'account.move':
-                domain = [('id', 'in', self._context.get('active_ids', [])), ('state', '=', 'draft')]
-            elif self._context.get('active_model') == 'account.journal':
-                domain = [('journal_id', '=', self._context.get('active_id')), ('state', '=', 'draft')]
+            if self.env.context.get('active_model') == 'account.move':
+                domain = [('id', 'in', self.env.context.get('active_ids', [])), ('state', '=', 'draft')]
+            elif self.env.context.get('active_model') == 'account.journal':
+                domain = [('journal_id', '=', self.env.context.get('active_id')), ('state', '=', 'draft')]
             else:
                 raise UserError(_("Missing 'active_model' in context."))
 
