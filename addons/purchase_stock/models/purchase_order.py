@@ -127,23 +127,22 @@ class PurchaseOrder(models.Model):
         order_lines_ids = OrderedSet()
         pickings_to_cancel_ids = OrderedSet()
 
-        purchase_orders_with_receipt = self.filtered(lambda po: any(move.state == 'done' for move in po.order_line.move_ids))
-        if purchase_orders_with_receipt:
-            raise UserError(_("Unable to cancel purchase order(s): %s since they have receipts that are already done.", purchase_orders_with_receipt.mapped('display_name')))
         for order in self:
             # If the product is MTO, change the procure_method of the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
             if order.state in ('draft', 'sent', 'to approve', 'purchase'):
                 order_lines_ids.update(order.order_line.ids)
-
-            pickings_to_cancel_ids.update(order.picking_ids.filtered(lambda r: r.state != 'cancel').ids)
+            pickings_to_cancel_ids.update(order.picking_ids.filtered(lambda r: r.state not in ('cancel', 'done')).ids)
+            # We can't cancel pickings that are already done, so we leave them untouched but log a note about it.
+            for picking in order.picking_ids:
+                if picking.state == 'done':
+                    picking.message_post(body=self.env._("The purchase order %s this receipt is linked to was cancelled.", order._get_html_link()))
 
         order_lines = self.env['purchase.order.line'].browse(order_lines_ids)
-
         moves_to_cancel_ids = OrderedSet()
         moves_to_recompute_ids = OrderedSet()
         for order_line in order_lines:
-            moves_to_cancel_ids.update(order_line.move_ids.ids)
+            moves_to_cancel_ids.update(order_line.move_ids.filtered(lambda move: move.state != 'done').ids)
             if order_line.move_dest_ids:
                 move_dest_ids = order_line.move_dest_ids.filtered(lambda move: move.state != 'done' and not move.scrapped)
                 moves_to_mts = move_dest_ids.filtered(lambda move: move.rule_id.route_id != move.location_dest_id.warehouse_id.reception_route_id)
