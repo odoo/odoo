@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 from functools import cache
 
-from .helpers import get_ip, get_identifier, writable, get_conf
+from .helpers import get_ip, get_identifier, get_conf
 
 _logger = logging.getLogger(__name__)
 
@@ -195,13 +195,12 @@ def _validate_configuration(ssid):
 
     destination_path = Path('/root_bypass_ramdisks') / source_path.relative_to('/')
 
-    with writable():
-        # Copy the configuration file to the root filesystem
-        if subprocess.run(['sudo', 'cp', source_path, destination_path], check=False).returncode == 0:
-            return True
-        else:
-            _logger.error('Failed to apply the network configuration to /root_bypass_ramdisks.')
-            return False
+    # Copy the configuration file to the root filesystem
+    if subprocess.run(['sudo', 'cp', source_path, destination_path], check=False).returncode == 0:
+        return True
+    else:
+        _logger.error('Failed to apply the network configuration to /root_bypass_ramdisks.')
+        return False
 
 
 # -------------------------- #
@@ -232,7 +231,7 @@ def _configure_access_point(on=True):
 
     _logger.info("Configuring access point with SSID %s", ssid)
     if on:
-        with writable(), open('/etc/hostapd/hostapd.conf', 'w', encoding='utf-8') as f:
+        with open('/etc/hostapd/hostapd.conf', 'w', encoding='utf-8') as f:
             f.write(f"interface=wlan0\nssid={ssid}\nchannel=1\n")
     mode = 'add' if on else 'del'
     return (

@@ -323,11 +323,10 @@ class IotBoxOwlHomePage(http.Controller):
 
     @route.iot_route('/iot_drivers/enable_ngrok', type="jsonrpc", methods=['POST'], linux_only=True)
     def enable_remote_connection(self, auth_token):
-        with helpers.writable():
-            p = subprocess.run(
-                ['ngrok', 'config', 'add-authtoken', auth_token, '--config', '/home/pi/ngrok.yml'],
-                check=False,
-            )
+        p = subprocess.run(
+            ['ngrok', 'config', 'add-authtoken', auth_token, '--config', '/home/pi/ngrok.yml'],
+            check=False,
+        )
         if p.returncode == 0:
             subprocess.run(
                 ['sudo', 'systemctl', 'restart', 'odoo-ngrok.service'],
@@ -341,10 +340,9 @@ class IotBoxOwlHomePage(http.Controller):
 
     @route.iot_route('/iot_drivers/disable_ngrok', type="jsonrpc", methods=['POST'], linux_only=True)
     def disable_remote_connection(self):
-        with helpers.writable():
-            p = subprocess.run(
-                ['ngrok', 'config', 'add-authtoken', '""', '--config', '/home/pi/ngrok.yml'], check=False
-            )
+        p = subprocess.run(
+            ['ngrok', 'config', 'add-authtoken', '""', '--config', '/home/pi/ngrok.yml'], check=False
+        )
         if p.returncode == 0:
             subprocess.run(
                 ['sudo', 'systemctl', 'stop', 'odoo-ngrok.service'],
@@ -372,22 +370,21 @@ class IotBoxOwlHomePage(http.Controller):
         # Sanitize the hostname
         hostname = re.sub(r'[^a-zA-Z0-9-]', '', hostname).encode('ascii')
 
-        with helpers.writable():
-            try:
-                subprocess.run(
-                    ['sudo', 'tee', '/root_bypass_ramdisks/etc/hostname'], input=hostname, check=True
-                )  # this is used exclusively for an elevated-privileges write to a file
-                subprocess.run(
-                    ['sudo', 'sed', '-i', f's/\\b{current_hostname}/{hostname.decode("ascii")}/g', '/root_bypass_ramdisks/etc/hosts'],
-                    check=True,
-                )
-                subprocess.run(['sudo', 'reboot'], check=False)  # Reboot to apply the new hostname
-            except subprocess.CalledProcessError:
-                _logger.exception("Failed to update hostname")
-                return {
-                    'status': 'failure',
-                    'message': 'Failed to update hostname, please try again.',
-                }
+        try:
+            subprocess.run(
+                ['sudo', 'tee', '/root_bypass_ramdisks/etc/hostname'], input=hostname, check=True
+            )  # this is used exclusively for an elevated-privileges write to a file
+            subprocess.run(
+                ['sudo', 'sed', '-i', f's/\\b{current_hostname}/{hostname.decode("ascii")}/g', '/root_bypass_ramdisks/etc/hosts'],
+                check=True,
+            )
+            subprocess.run(['sudo', 'reboot'], check=False)  # Reboot to apply the new hostname
+        except subprocess.CalledProcessError:
+            _logger.exception("Failed to update hostname")
+            return {
+                'status': 'failure',
+                'message': 'Failed to update hostname, please try again.',
+            }
 
     @route.iot_route('/iot_drivers/connect_to_server', type="jsonrpc", methods=['POST'], cors='*')
     def connect_to_odoo_server(self, token):
