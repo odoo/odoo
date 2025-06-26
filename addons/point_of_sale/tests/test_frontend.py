@@ -844,6 +844,47 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'OrderPaidInCash', login="pos_user")
 
+    def test_pos_session_statistics_display(self):
+        """Test that POS session statistics are properly displayed in the UI."""
+        # For testing `opening_cash` and `paid_orders` in dashboard
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'SessionStatisticsDisplay', login="pos_user")
+
+        # For testing `draft_orders`
+        self.env['pos.order'].create({
+            'config_id': self.main_pos_config.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.main_pos_config.company_id.id,
+            'amount_total': 10.0,
+            'amount_paid': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'partner_id': False,
+            'pricelist_id': self.main_pos_config.pricelist_id.id,
+            'pos_reference': '1000-004-00001',
+            'name': 'Order 1001',
+            'state': 'draft',
+            'lines': [(0, 0, {
+                'product_id': self.desk_pad.product_variant_id.id,
+                'price_unit': 10.00,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': False,
+                'price_subtotal': 10.00,
+                'price_subtotal_incl': 10.00,
+            })],
+        })
+
+        dashboard_statistics = self.main_pos_config.statistics_for_current_session
+
+        self.assertTrue(dashboard_statistics['date']['is_started'])
+        self.assertEqual(dashboard_statistics['cash']['raw_opening_cash'], 100.0)
+        self.assertEqual(dashboard_statistics['orders']['paid']['amount'], 45.0)
+        self.assertEqual(dashboard_statistics['orders']['paid']['count'], 2)
+        self.assertEqual(dashboard_statistics['orders']['draft']['amount'], 10.0)
+        self.assertEqual(dashboard_statistics['orders']['draft']['count'], 1)
+
     def test_fiscal_position_no_tax(self):
         #create a tax of 15% with price included
         tax = self.env['account.tax'].create({
