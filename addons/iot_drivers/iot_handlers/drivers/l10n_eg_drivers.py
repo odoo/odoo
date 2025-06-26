@@ -2,7 +2,6 @@
 import base64
 import json
 import logging
-import platform
 import PyKCS11
 
 from passlib.context import CryptContext
@@ -10,6 +9,7 @@ from passlib.context import CryptContext
 from odoo import http
 from odoo.tools.config import config
 from odoo.addons.iot_drivers.tools import route
+from odoo.addons.iot_drivers.tools.system import IOT_SYSTEM, IS_RPI, IS_WINDOWS
 
 _logger = logging.getLogger(__name__)
 
@@ -118,13 +118,12 @@ class EtaUsbController(http.Controller):
 
     def get_crypto_lib(self):
         error = lib = False
-        system = platform.system()
-        if system == 'Linux':
-            lib = '/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so'
-        elif system == 'Windows':
-            lib = 'C:/Windows/System32/eps2003csp11.dll'
-        elif system == 'Darwin':
+        if IOT_SYSTEM == 'Darwin':
             lib = '/Library/OpenSC/lib/onepin-opensc-pkcs11.so'
+        elif IS_RPI:
+            lib = '/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so'
+        elif IS_WINDOWS:
+            lib = 'C:/Windows/System32/eps2003csp11.dll'
         else:
             error = self._get_error_template('unsupported_system')
         return lib, error

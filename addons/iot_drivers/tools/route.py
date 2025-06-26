@@ -1,9 +1,9 @@
 import functools
 import logging
-import platform
 
 from odoo.addons.iot_base.tools.payload_signature import verify_hmac_signature
 from odoo.addons.iot_drivers.tools import helpers
+from odoo.addons.iot_drivers.tools.system import IS_RPI
 from odoo.http import request
 from odoo import http
 from werkzeug.exceptions import Forbidden
@@ -53,7 +53,7 @@ def iot_route(route=None, sign=False, linux_only=False, **kwargs):
     http_decorator = http.route(route, **kwargs)
 
     def decorator(endpoint):
-        if linux_only and platform.system() != 'Linux':
+        if linux_only and not IS_RPI:
             return None  # Remove the route if not Linux (will return 404)
         return protect(http_decorator(endpoint)) if sign else http_decorator(endpoint)
 

@@ -1,15 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import platform
 import requests
 import schedule
 from threading import Thread
 import time
 
 from odoo.addons.iot_drivers.tools import certificate, helpers, upgrade, wifi
+from odoo.addons.iot_drivers.tools.system import IS_RPI
 from odoo.addons.iot_drivers.websocket_client import WebsocketClient
 
-if platform.system() == 'Linux':
+if IS_RPI:
     from dbus.mainloop.glib import DBusGMainLoop
     DBusGMainLoop(set_as_default=True)  # Must be started from main thread
 
@@ -76,14 +76,14 @@ class Manager(Thread):
         """Thread that will load interfaces and drivers and contact the odoo server
         with the updates. It will also reconnect to the Wi-Fi if the connection is lost.
         """
-        if platform.system() == 'Linux':
+        if IS_RPI:
             wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
 
         helpers.start_nginx_server()
         _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))
         upgrade.check_git_branch()
 
-        if platform.system() == 'Linux' and helpers.get_odoo_server_url():
+        if IS_RPI and helpers.get_odoo_server_url():
             helpers.generate_password()
 
         certificate.ensure_validity()
@@ -115,7 +115,7 @@ class Manager(Thread):
                 if current_devices != previous_iot_devices:
                     previous_iot_devices = current_devices
                     self.send_all_devices()
-                if platform.system() == 'Linux' and helpers.get_ip() != '10.11.12.1':
+                if IS_RPI and helpers.get_ip() != '10.11.12.1':
                     wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
                 time.sleep(3)
                 schedule.run_pending()
