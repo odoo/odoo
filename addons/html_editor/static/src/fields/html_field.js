@@ -189,7 +189,7 @@ export class HtmlField extends Component {
 
     async commitChanges({ urgent } = {}) {
         if (urgent) {
-            this._commitChanges({ urgent });
+            return this._commitChanges({ urgent });
         } else {
             return this.mutex.exec(() => this._commitChanges({ urgent }));
         }
@@ -228,7 +228,7 @@ export class HtmlField extends Component {
                 ...(this.props.embeddedComponents ? EMBEDDED_COMPONENT_PLUGINS : []),
             ],
             classList: this.classList,
-            onChange: this.onChange.bind(this),
+            onChange: () => this.onChange(),
             collaboration: this.props.isCollaborative && {
                 busService: this.busService,
                 ormService: this.ormService,

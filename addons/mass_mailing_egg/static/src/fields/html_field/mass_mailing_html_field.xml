@@ -2,12 +2,12 @@
     <t t-name="mass_mailing_egg.HtmlField">
         <div t-if="displayTransition.shouldMount" t-att-class="displayTransition.class">
             <t t-if="state.showThemeSelector">
-                <ThemeSelector t-key="state.key" config="getThemeSelectorConfig()"/>
+                <ThemeSelector config="getThemeSelectorConfig()"/>
             </t>
-            <t t-else="">
-                <MassMailingIframe t-key="state.key"
-                    config="getConfig()" themeOptions="state.themeOptions" readonly="props.readonly"/>
-            </t>
+            <MassMailingIframe t-key="state.key"
+                config="this.getConfig()" themeOptions="state.themeOptions" readonly="props.readonly"
+                onEditorLoad.bind="onEditorLoad" onIframeLoad.bind="onIframeLoad" iframeRef="iframeRef"
+                showThemeSelector="state.showThemeSelector" onBlur.bind="onBlur"/>
         </div>
     </t>
 </templates>

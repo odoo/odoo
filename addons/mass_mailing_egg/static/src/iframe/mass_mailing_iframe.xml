@@ -1,14 +1,14 @@
 <templates>
     <t t-name="mass_mailing_egg.MassMailingIframe">
-        <div class="o_mass_mailing_iframe_wrapper bg-200" t-att-class="{'o_mass_mailing_fullscreen': state.showFullscreen}">
+        <div class="o_mass_mailing_iframe_wrapper bg-200"
+            t-att-class="{'o_mass_mailing_fullscreen': state.showFullscreen}">
             <div class="d-flex w-100 h-100">
                 <div class="flex-grow-1">
                     <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
-                    <div class="h-100">
-                        <iframe class="h-100" t-ref="iframeRef"/>
-                    </div>
+                    <iframe class="h-100" t-att-class="{'d-none': props.showThemeSelector}" t-ref="iframeRef"
+                        t-on-blur="onBlur"/>
                 </div>
-                <div t-if="!props.readonly and props.themeOptions.withBuilder"
+                <div t-if="!props.readonly and props.themeOptions.withBuilder and !props.showThemeSelector"
                     class="o_mass_mailing_egg-builder_sidebar border-start border-dark o_builder_sidebar_open">
                     <LazyComponent t-if="state.ready" Component="'website.Builder'"
                         props="() => this.getBuilderProps()" bundle="'mass_mailing_egg.assets_builder'"/>

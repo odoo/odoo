@@ -215,7 +215,11 @@
                                     'dynamic_placeholder_model_reference_field': 'mailing_model_real',
                                     'cssReadonly': 'mass_mailing.iframe_css_assets_edit'
                                 -->
-                                <field name="body_arch" class="o_mail_body_mailing_egg" widget="mass_mailing_egg_html" options="{
+                                <field name="body_arch" class="o_mail_body_mailing_egg" widget="mass_mailing_egg_html"
+                                    options="{
+                                        'inline_field': 'body_html',
+                                        'dynamic_placeholder': true,
+                                        'dynamic_placeholder_model_reference_field': 'mailing_model_real',
                                     }" readonly="state in ('sending', 'done')"/>
                                 <field name="is_body_empty" invisible="1"/>
                                 <!-- TODO EGGMAIL handle that in the widget -->

@@ -89,7 +89,7 @@ export class ThemeModel extends Reactive {
     }
 
     getThemes() {
-        return this.loadedThemes.values();
+        return this.loadedThemes;
     }
 
     isLoaded(asset = DEFAULT_ASSET) {

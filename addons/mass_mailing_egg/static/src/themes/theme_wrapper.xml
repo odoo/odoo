@@ -10,7 +10,8 @@
     <t t-name="mass_mailing_egg.ThemeWrapper">
         <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
             <div class="row">
-                <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable" t-out="html"/>
+                <!-- TODO data-oe-model guarantees that o_editable class is added, this is bullshit -->
+                <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure" data-oe-model="" t-out="html"/>
             </div>
         </div>
     </t>

@@ -7,10 +7,14 @@ import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { MassMailingIframe } from "@mass_mailing_egg/iframe/mass_mailing_iframe";
 import { ThemeSelector } from "@mass_mailing_egg/themes/theme_selector/theme_selector";
 import { onWillUpdateProps, status, toRaw } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useTransition } from "@web/core/transition";
 import { effect } from "@web/core/utils/reactive";
 import { htmlField, HtmlField } from "@html_editor/fields/html_field";
+import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
+import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
+import { Deferred, Race } from "@web/core/utils/concurrency";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export class MassMailingHtmlField extends HtmlMailField {
     static template = "mass_mailing_egg.HtmlField";
@@ -23,6 +27,7 @@ export class MassMailingHtmlField extends HtmlMailField {
     static props = {
         ...HtmlField.props,
         filterTemplates: { type: Boolean, optional: true },
+        inlineField: { type: String, optional: true },
     };
 
     setup() {
@@ -31,12 +36,20 @@ export class MassMailingHtmlField extends HtmlMailField {
         Object.assign(this.state, {
             // TODO EGGMAIL: maybe define a condition if there is no content to display
             // theme selectors. Or at least add an interface button to allow changing the theme
-            showThemeSelector: this.props.record.isNew,
+            // TODO EGGMAIL: usage of is_body_empty is forbidden, do something else for
+            // this heuristic
+            showThemeSelector: this.props.record.isNew || this.props.record.data.is_body_empty,
             activeTheme: undefined,
             themeOptions: {
                 withBuilder: true,
             },
         });
+        useRecordObserver((record) => {
+            this.state.showThemeSelector = record.isNew || record.data.is_body_empty;
+        });
+
+        this.iframeLoadingRace = new Race();
+        this.iframeRef = useChildRef();
 
         // Use a transition to display the HtmlField only when the themes
         // service finished loading
@@ -64,6 +77,8 @@ export class MassMailingHtmlField extends HtmlMailField {
         }
 
         // Force a full reload for MassMailingIframe on readonly change
+        // TODO EGGMAIL probably need a full reload when switching from normal
+        // editor to builder? maybe it never happens
         onWillUpdateProps((nextProps) => {
             if (
                 this.props.readonly !== nextProps.readonly &&
@@ -74,7 +89,7 @@ export class MassMailingHtmlField extends HtmlMailField {
         });
 
         // Recompute the themeOptions when the html value changes on the record
-        let currentKey = this.state.key;
+        let currentKey;
         effect(
             (state) => {
                 if (status(this) === "destroyed") {
@@ -82,11 +97,17 @@ export class MassMailingHtmlField extends HtmlMailField {
                 }
                 if (state.key !== currentKey) {
                     this.updateThemeOptions();
+                    this.resetIframe();
                     currentKey = state.key;
                 }
             },
             [this.state]
         );
+    }
+
+    resetIframe() {
+        this.iframeLoaded = new Deferred();
+        this.iframeLoadingRace.add(this.iframeLoaded);
     }
 
     updateThemeOptions() {
@@ -122,18 +143,23 @@ export class MassMailingHtmlField extends HtmlMailField {
     }
 
     getBuilderConfig() {
+        const config = super.getConfig();
         return {
-            content: this.value,
+            ...config,
+            Plugins: [...(this.props.dynamicPlaceholder ? DYNAMIC_PLACEHOLDER_PLUGINS : [])],
             // TODO EGGMAIL?: allow the builder to show the theme selection again
             // Applying a new Theme from the builder should CREATE AN EDITOR STEP
             // that can be UNDONE.
-            showThemeSelector: () => (this.state.showThemeSelector = true),
+            toggleThemeSelector: (show) => this.toggleThemeSelector(show),
         };
     }
 
     getSimpleEditorConfig() {
         // TODO EGGMAIL: special config for no-builder mode
-        return super.getConfig();
+        return {
+            ...super.getConfig(),
+            toggleThemeSelector: (show) => this.toggleThemeSelector(show),
+        };
     }
 
     getThemeSelectorConfig() {
@@ -141,13 +167,60 @@ export class MassMailingHtmlField extends HtmlMailField {
             setThemeOptions: async (themeOptions) => {
                 this.state.activeTheme = themeOptions.name;
                 this.state.themeOptions = themeOptions;
-                this.state.showThemeSelector = false;
                 await this.updateValue(themeOptions.html);
+                this.state.showThemeSelector = false;
             },
             filterTemplates: this.props.filterTemplates,
             mailingModelId: this.props.record.data.mailing_model_id.id,
             mailingModelName: this.props.record.data.mailing_model_id.display_name || "",
         };
+    }
+
+    onIframeLoad(iframeLoaded) {
+        this.iframeLoaded.resolve(iframeLoaded);
+    }
+
+    /**
+     * In mass_mailing, only the field given with `inline-field` option is
+     * processed with `toInline`.
+     * @override
+     */
+    processEditorContent(el) {
+        return el;
+    }
+
+    toggleThemeSelector(show = true) {
+        this.state.showThemeSelector = show;
+    }
+
+    /**
+     * Complete rewrite of `updateValue` to ensure that both the field and the
+     * inlineField are saved at the same time. Depends on the iframe to compute
+     * the style of the inlineField.
+     * @override
+     */
+    async updateValue(value) {
+        await this.iframeLoadingRace.getCurrentProm();
+        this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
+        this.isDirty = false;
+        const shouldRestoreDisplayNone = this.iframeRef.el.classList.contains("d-none");
+        this.iframeRef.el.classList.remove("d-none");
+        const previousSibling =
+            this.iframeRef.el.contentDocument.querySelector(".o_mass_mailing_value");
+        const inlineValue = await HtmlMailField.getInlinedEditorContent(
+            previousSibling,
+            parseHTML(this.iframeRef.el.contentDocument, value).firstElementChild
+        ).innerHTML;
+        if (shouldRestoreDisplayNone) {
+            this.iframeRef.el.classList.add("d-none");
+        }
+        await this.props.record
+            .update({
+                [this.props.name]: value,
+                [this.props.inlineField]: inlineValue,
+            })
+            .catch(() => (this.isDirty = true));
+        this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
     }
 }
 
@@ -159,6 +232,7 @@ export const massMailingHtmlField = {
         const props = htmlField.extractProps(...arguments);
         Object.assign(props, {
             filterTemplates: options.filterTemplates,
+            inlineField: options["inline_field"],
             migrateHTML: false,
             embeddedComponents: false,
         });

@@ -11,22 +11,28 @@ export class HtmlMailField extends HtmlField {
      * @param {Editor} editor
      * @param {HTMLElement} el
      */
-    static async getInlinedEditorContent(cssRulesByElement, editor, el) {
-        if (!cssRulesByElement.has(editor.editable)) {
-            cssRulesByElement.set(editor.editable, getCSSRules(editor.document));
+    static async getInlinedEditorContent(previousSibling, el) {
+        if (!cssRulesByElement.has(previousSibling)) {
+            cssRulesByElement.set(previousSibling, getCSSRules(previousSibling.ownerDocument));
         }
-        const cssRules = cssRulesByElement.get(editor.editable);
+        const cssRules = cssRulesByElement.get(previousSibling);
         // Insert the cloned element inside an DOM so we can get its computed style.
-        editor.editable.after(el);
+        previousSibling.after(el);
         el.classList.remove("odoo-editor-editable");
         await toInline(el, cssRules);
         el.remove();
+        return el;
     }
 
     async getEditorContent() {
-        const el = await super.getEditorContent();
-        await HtmlMailField.getInlinedEditorContent(cssRulesByElement, this.editor, el);
+        let el = await super.getEditorContent();
+        el = await this.processEditorContent(el);
         return el;
+    }
+
+    async processEditorContent(el) {
+        const previousSibling = this.editor.editable;
+        return await HtmlMailField.getInlinedEditorContent(previousSibling, el);
     }
 
     getConfig() {

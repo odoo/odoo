@@ -6,6 +6,7 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUpdateProps,
+    status,
     useRef,
     useState,
     useSubEnv,
@@ -85,6 +86,9 @@ export class Builder extends Component {
                     if (!isPreviewing) {
                         this.state.canUndo = this.editor.shared.history.canUndo();
                         this.state.canRedo = this.editor.shared.history.canRedo();
+                        if (this.props.config.onChange) {
+                            this.props.config.onChange();
+                        }
                         this.updateInvisibleEls();
                         this.editorBus.trigger("UPDATE_EDITING_ELEMENT");
                         this.triggerDomUpdated();
@@ -152,6 +156,9 @@ export class Builder extends Component {
             // instantiating the sub components that potentially need the
             // editor.
             const iframeEl = await this.props.iframeLoaded;
+            if (status(this) === "destroyed") {
+                return;
+            }
             this.editableEl = iframeEl.contentDocument.body.querySelector(
                 this.props.editableSelector
             );
