@@ -1,10 +1,8 @@
 """Module to manage odoo code upgrades using git"""
 
 import logging
-import platform
 import requests
 import subprocess
-from functools import wraps
 from odoo.addons.iot_drivers.tools.helpers import (
     odoo_restart,
     path_file,
@@ -12,19 +10,9 @@ from odoo.addons.iot_drivers.tools.helpers import (
     toggleable,
     writable,
 )
+from odoo.addons.iot_drivers.tools.system import rpi_only, IS_RPI
 
 _logger = logging.getLogger(__name__)
-
-IS_LINUX = platform.system() == 'Linux'
-
-
-def linux(function):
-    """Decorator to check if the system is Linux before running the function."""
-    @wraps(function)
-    def wrapper(*args, **kwargs):
-        if IS_LINUX:
-            return function(*args, **kwargs)
-    return wrapper
 
 
 def git(*args):
@@ -33,7 +21,7 @@ def git(*args):
 
     :param args: list of arguments to pass to git
     """
-    git_executable = 'git' if IS_LINUX else path_file('git', 'cmd', 'git.exe')
+    git_executable = 'git' if IS_RPI else path_file('git', 'cmd', 'git.exe')
     command = [git_executable, f'--work-tree={path_file("odoo")}', f'--git-dir={path_file("odoo", ".git")}', *args]
 
     p = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=False)
@@ -48,10 +36,10 @@ def pip(*args):
 
     :param args: list of arguments to pass to pip
     """
-    python_executable = [] if IS_LINUX else [path_file('python', 'python.exe'), '-m']
+    python_executable = [] if IS_RPI else [path_file('python', 'python.exe'), '-m']
     command = [*python_executable, 'pip', *args]
 
-    if IS_LINUX and args[0] == 'install':
+    if IS_RPI and args[0] == 'install':
         command.append('--user')
         command.append('--break-system-package')
 
@@ -161,7 +149,7 @@ def update_requirements():
     pip('install', '-r', requirements_file)
 
 
-@linux
+@rpi_only
 def update_packages():
     """Update apt packages on the IoT Box, installing the ones listed in
     the packages.txt file.
@@ -191,7 +179,7 @@ def update_packages():
     subprocess.Popen(["sudo", "bash", "-c", background_cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-@linux
+@rpi_only
 def misc_migration_updates():
     """Run miscellaneous updates after the code update."""
     _logger.warning("Running version migration updates")
