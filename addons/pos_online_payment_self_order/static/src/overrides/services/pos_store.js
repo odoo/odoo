@@ -14,6 +14,10 @@ patch(PosStore.prototype, {
 
                 const orderId = notification.data["pos.order"][0].id;
                 if (document.visibilityState === "visible") {
+                    // If auto printing is enabled, no need to print again
+                    if (this.config.iface_print_auto) {
+                        return;
+                    }
                     this.printSelfOrderReceipt(orderId);
                 } else {
                     this.printingQueue.push(() => this.printSelfOrderReceipt(orderId));
