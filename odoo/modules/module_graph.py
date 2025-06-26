@@ -143,7 +143,7 @@ class ModuleNode:
         self.name: str = name
         # for performance reasons, use the cached value to avoid deepcopy; it is
         # acceptable in this context since we don't modify it
-        manifest = Manifest.for_addon(name)
+        manifest = Manifest.for_addon(name, display_warning=False)
         if manifest is not None:
             manifest.manifest_cached  # parse the manifest now
         self.manifest: Mapping = manifest or {}
