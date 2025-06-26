@@ -479,6 +479,7 @@ class AccountMoveSend(models.AbstractModel):
         new_message = move.with_context(
             email_notification_allow_footer=True,
             disable_attachment_import=True,
+            no_document=True,
         ).message_post(
             message_type='comment',
             **kwargs,
