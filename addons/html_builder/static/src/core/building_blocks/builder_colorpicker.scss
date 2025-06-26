@@ -4,7 +4,7 @@
 }
 
 .o-hb-colorpicker {
-    --o-hb-colorpicker-focus-border-color: var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});
+    --o-color-picker-active-color: var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});
 
     --bg: #{$o-we-item-clickable-bg};
 
@@ -34,7 +34,7 @@
             );
 
             &:hover {
-                border: $o-we-border-width solid var(--o-hb-colorpicker-focus-border-color);
+                border: $o-we-border-width solid var(--o-color-picker-active-color);
             }
         }
     }
@@ -73,13 +73,14 @@
     }
 
     .btn:focus-visible {
-        border: $o-we-border-width solid var(--o-hb-colorpicker-focus-border-color);
+        border: $o-we-border-width solid var(--o-color-picker-active-color);
+        z-index: 1;
     }
 
     .color-combination-button:focus-visible {
         box-shadow:
             0 0 0 1px $o-we-bg-darker,
-            0 0 0 3px var(--o-hb-colorpicker-focus-border-color);
+            0 0 0 3px var(--o-color-picker-active-color);
         outline: none;
     }
 
@@ -91,7 +92,9 @@
     .gradient-angle-thumb {
         background-color: $white;
     }
-    .gradient-angle-knob + input[name=angle] {
+    .gradient-angle-knob + input[name=angle],
+    input[name=positionX],
+    input[name=positionY] {
         @extend %o-hb-input-base;
 
         & + .input-group-text {
