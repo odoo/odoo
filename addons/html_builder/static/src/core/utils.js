@@ -548,7 +548,7 @@ export function useClickableBuilderComponent() {
             const shouldClean = _shouldClean(comp, hasClean, isAlreadyApplied);
             if (shouldClean) {
                 proms.push(
-                    applySpec.clean({
+                    applySpec.action.clean({
                         isPreviewing,
                         editingElement: applySpec.editingElement,
                         params: applySpec.actionParam,
@@ -560,7 +560,7 @@ export function useClickableBuilderComponent() {
                 );
             } else {
                 proms.push(
-                    applySpec.apply({
+                    applySpec.action.apply({
                         isPreviewing,
                         editingElement: applySpec.editingElement,
                         params: applySpec.actionParam,
@@ -627,7 +627,7 @@ export function useInputBuilderComponent({
         const proms = [];
         for (const applySpec of applySpecs) {
             proms.push(
-                applySpec.apply({
+                applySpec.action.apply({
                     isPreviewing,
                     editingElement: applySpec.editingElement,
                     params: applySpec.actionParam,
@@ -805,7 +805,10 @@ export function getAllActionsAndOperations(comp) {
                     actionId,
                     actionParam,
                     actionValue,
+                    action,
                 };
+                // TODO Since the action is now in the spec, this shouldn't be
+                // necessary anymore.
                 for (const method of overridableMethods) {
                     if (!action.has || action.has(method)) {
                         spec[method] = action[method];
@@ -874,15 +877,15 @@ export function getAllActionsAndOperations(comp) {
             load: async () =>
                 Promise.all(
                     actionsSpecs.map(async (applySpec) => {
-                        if (!applySpec.load) {
+                        if (!applySpec.action.has("load")) {
                             return;
                         }
-                        const hasClean = !!applySpec.clean;
+                        const hasClean = !!applySpec.action.has("clean");
                         if (!applySpec.loadOnClean && _shouldClean(comp, hasClean, isApplied())) {
                             // The element will be cleaned, do not load
                             return;
                         }
-                        const result = await applySpec.load({
+                        const result = await applySpec.action.load({
                             editingElement: applySpec.editingElement,
                             params: applySpec.actionParam,
                             value: applySpec.actionValue,
