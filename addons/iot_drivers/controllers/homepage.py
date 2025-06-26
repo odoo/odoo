@@ -3,7 +3,6 @@
 import json
 import logging
 import netifaces
-import requests
 import subprocess
 import threading
 import time
@@ -254,16 +253,7 @@ class IotBoxOwlHomePage(http.Controller):
 
     @route.iot_route('/iot_drivers/is_ngrok_enabled', type="http", linux_only=True)
     def is_ngrok_enabled(self):
-        try:
-            response = requests.get("http://localhost:4040/api/tunnels", timeout=5)
-            response.raise_for_status()
-            response.json()
-        except (requests.exceptions.RequestException, ValueError):
-            # if the request fails or the response is not valid JSON,
-            # it means ngrok is not enabled or not running
-            return json.dumps({'enabled': False})
-
-        return json.dumps({'enabled': True})
+        return json.dumps({'enabled': helpers.is_ngrok_enabled()})
 
     # ---------------------------------------------------------- #
     # POST methods                                               #
@@ -320,36 +310,11 @@ class IotBoxOwlHomePage(http.Controller):
 
     @route.iot_route('/iot_drivers/enable_ngrok', type="jsonrpc", methods=['POST'], linux_only=True)
     def enable_remote_connection(self, auth_token):
-        p = subprocess.run(
-            ['ngrok', 'config', 'add-authtoken', auth_token, '--config', '/home/pi/ngrok.yml'],
-            check=False,
-        )
-        if p.returncode == 0:
-            subprocess.run(
-                ['sudo', 'systemctl', 'restart', 'odoo-ngrok.service'],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                check=False,
-            )
-            return {'status': 'success'}
-
-        return {'status': 'failure'}
+        return {'status': 'success' if helpers.toggle_remote_connection(auth_token) else 'failure'}
 
     @route.iot_route('/iot_drivers/disable_ngrok', type="jsonrpc", methods=['POST'], linux_only=True)
     def disable_remote_connection(self):
-        p = subprocess.run(
-            ['ngrok', 'config', 'add-authtoken', '""', '--config', '/home/pi/ngrok.yml'], check=False
-        )
-        if p.returncode == 0:
-            subprocess.run(
-                ['sudo', 'systemctl', 'stop', 'odoo-ngrok.service'],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                check=False,
-            )
-            return {'status': 'success'}
-
-        return {'status': 'failure'}
+        return {'status': 'success' if helpers.toggle_remote_connection() else 'failure'}
 
     @route.iot_route('/iot_drivers/connect_to_server', type="jsonrpc", methods=['POST'], cors='*')
     def connect_to_odoo_server(self, token):
