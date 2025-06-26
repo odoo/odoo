@@ -555,7 +555,7 @@ export class DomPlugin extends Plugin {
         for (const block of deepestTargetedBlocks) {
             if (
                 isParagraphRelatedElement(block) ||
-                block.nodeName === "PRE" || // TODO remove: PRE should be a paragraphRelatedElement
+                ["PRE", "BLOCKQUOTE"].includes(block.nodeName) || // TODO remove: PRE should be a paragraphRelatedElement
                 isListItemElement(block)
             ) {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
