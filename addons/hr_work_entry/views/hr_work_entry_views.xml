@@ -148,8 +148,8 @@
                 <separator/>
                 <filter name="date_filter" string="Date" date="date_start"/>
                 <filter name="current_month" string="Current Month" domain="[
-                    ('date_stop', '&gt;=', (context_today()).strftime('%Y-%m-01')),
-                    ('date_start', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                    ('date_stop', '&gt;=', '=1d'),
+                    ('date_start', '&lt;', '=1d +1m')]"/>
                 <separator/>
                 <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
                 <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>

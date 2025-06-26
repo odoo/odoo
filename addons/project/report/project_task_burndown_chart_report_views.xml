@@ -20,7 +20,7 @@
                 <filter name="filter_date" date="date" string="Date" default_period="year,year-1" />
                 <filter name="filter_last_stage_update" date="date_last_stage_update"/>
                 <filter name="filter_date_deadline" date="date_deadline"/>
-                <filter string="Last Month" invisible="1" name="last_month" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last Month" invisible="1" name="last_month" domain="[('date','&gt;=', 'today -30d')]"/>
                 <separator/>
                 <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', 'open')]"/>
                 <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', 'closed')]"/>

@@ -28,11 +28,11 @@
                         domain="[('activity_user_id', '=', uid)]"/>
                     <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '&lt;', 'today')]"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '=', 'today')]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_date_deadline', '&gt;', 'today')]"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
@@ -42,20 +42,20 @@
                     <filter string="In Contract" name="in_contract"
                             domain="[
                                 ('contract_date_start', '!=', False),
-                                ('contract_date_start', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                                ('contract_date_start', '&lt;=', 'today'),
                                 '|',
                                     ('contract_date_end', '=', False),
-                                    ('contract_date_end', '>=', context_today().strftime('%Y-%m-%d'))
+                                    ('contract_date_end', '>=', 'today')
                             ]"/>
                     <filter string="Out of Contract" name="out_of_contract"
                             domain="[
                                 '|',
                                     ('contract_date_start', '=', False),
                                     '|',
-                                        ('contract_date_start', '>', context_today().strftime('%Y-%m-%d')),
+                                        ('contract_date_start', '>', 'today'),
                                         '&amp;',
                                             ('contract_date_end', '!=', False),
-                                            ('contract_date_end', '&lt;', context_today().strftime('%Y-%m-%d'))
+                                            ('contract_date_end', '&lt;', 'today')
                             ]"/>
                     <separator />
                     <filter string="Contract Start Date" name="contract_date_start" date="contract_date_start"/>
