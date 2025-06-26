@@ -120,7 +120,15 @@ const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 
 export class FontPlugin extends Plugin {
     static id = "font";
-    static dependencies = ["baseContainer", "input", "split", "selection", "dom", "format"];
+    static dependencies = [
+        "baseContainer",
+        "input",
+        "split",
+        "selection",
+        "dom",
+        "format",
+        "lineBreak",
+    ];
     resources = {
         user_commands: [
             {
@@ -441,49 +449,54 @@ export class FontPlugin extends Plugin {
      * Specific behavior for blockquote: insert p at end and remove the last
      * empty node.
      */
-    handleSplitBlockquote({ targetNode, targetOffset }) {
+    handleSplitBlockquote({ targetNode, targetOffset, blockToSplit }) {
         const closestQuote = closestElement(targetNode, "blockquote");
         const closestBlockNode = closestBlock(targetNode);
-        if (
-            !closestQuote ||
-            (closestBlockNode.nodeName !== "BLOCKQUOTE" &&
-                ((closestBlockNode.textContent && !isZWS(closestBlockNode)) ||
-                    closestBlockNode.nextSibling))
-        ) {
+        const blockQuotedir = closestQuote && closestQuote.getAttribute("dir");
+
+        if (!closestQuote || closestBlockNode.nodeName !== "BLOCKQUOTE") {
+            // If the closestBlockNode is the last element child of its parent
+            // and the parent is a blockquote
+            // we should move the current block ouside of the blockquote.
+            if (
+                closestBlockNode.parentElement === closestQuote &&
+                closestBlockNode.parentElement.lastElementChild === closestBlockNode &&
+                !closestBlockNode.textContent
+            ) {
+                closestQuote.after(closestBlockNode);
+
+                if (blockQuotedir && !closestBlockNode.getAttribute("dir")) {
+                    closestBlockNode.setAttribute("dir", blockQuotedir);
+                }
+                this.dependencies.selection.setSelection({
+                    anchorNode: closestBlockNode,
+                    anchorOffset: 0,
+                });
+                return true;
+            }
             return;
         }
 
-        // Nodes to the right of the split position.
-        const nodesAfterTarget = [...rightLeafOnlyNotBlockPath(targetNode, targetOffset)];
-        if (
-            !nodesAfterTarget.length ||
-            (nodesAfterTarget.length === 1 && nodesAfterTarget[0].nodeName === "BR") ||
-            isEmptyBlock(closestBlockNode)
-        ) {
-            const [beforeElement, afterElement] = this.dependencies.split.splitElementBlock({
+        const selection = this.dependencies.selection.getEditableSelection();
+        const previousElementSibling = selection.anchorNode?.childNodes[selection.anchorOffset - 1];
+        const nextElementSibling = selection.anchorNode?.childNodes[selection.anchorOffset];
+        // Double enter at the end of blockquote => we should break out of the blockquote element.
+        if (previousElementSibling?.tagName === "BR" && nextElementSibling?.tagName === "BR") {
+            nextElementSibling.remove();
+            previousElementSibling.remove();
+            this.dependencies.split.splitElementBlock({
                 targetNode,
                 targetOffset,
-                blockToSplit: closestBlockNode,
+                blockToSplit,
             });
-            const isQuoteBlock = beforeElement.nodeName === "BLOCKQUOTE";
-            const baseContainer = isQuoteBlock
-                ? this.dependencies.baseContainer.createBaseContainer()
-                : afterElement;
-
-            if (isQuoteBlock) {
-                baseContainer.replaceChildren(...afterElement.childNodes);
-                afterElement.replaceWith(baseContainer);
-            } else {
-                beforeElement.remove();
-                closestQuote.after(afterElement);
-            }
-            const dir = closestBlockNode.getAttribute("dir") || closestQuote.getAttribute("dir");
-            if (dir) {
-                baseContainer.setAttribute("dir", dir);
-            }
-            this.dependencies.selection.setCursorStart(baseContainer);
+            this.dependencies.dom.setTag({
+                tagName: this.dependencies.baseContainer.getDefaultNodeName(),
+            });
             return true;
         }
+
+        this.dependencies.lineBreak.insertLineBreakElement({ targetNode, targetOffset });
+        return true;
     }
 
     // @todo @phoenix: Move this to a specific Heading plugin?
@@ -521,7 +534,7 @@ export class FontPlugin extends Plugin {
 
     /**
      * Transform an empty heading, blockquote or pre at the beginning of the
-     * editable into a paragraph.
+     * editable into a baseContainer.
      */
     handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
         // Detect if cursor is at the start of the editable (collapsed range).
