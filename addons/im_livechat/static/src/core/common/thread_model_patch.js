@@ -59,6 +59,10 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" || super.isChatChannel;
     },
 
+    get composerHidden() {
+        return this.channel_type === "livechat" && this.livechat_active === false;
+    },
+
     get composerDisabled() {
         return this.channel_type === "livechat" && this.livechat_active === false;
     },

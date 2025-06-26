@@ -145,6 +145,13 @@ patch(Thread.prototype, {
         return super.showUnreadBanner;
     },
 
+    get composerHidden() {
+        if (this.chatbot?.forwarded && this.livechat_active) {
+            return false;
+        }
+        return super.composerHidden || this.chatbot?.completed;
+    },
+
     get composerDisabled() {
         const step = this.chatbot?.currentStep;
         if (this.chatbot?.forwarded && this.livechat_active) {
@@ -166,12 +173,6 @@ patch(Thread.prototype, {
         }
         if (this.chatbot.completed) {
             return _t("This livechat conversation has ended");
-        }
-        if (
-            this.chatbot.currentStep?.type === "question_selection" &&
-            !this.chatbot.currentStep.selectedAnswer
-        ) {
-            return _t("Select an option above");
         }
         return _t("Say something");
     },
