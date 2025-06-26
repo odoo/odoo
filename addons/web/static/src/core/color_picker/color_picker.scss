@@ -115,6 +115,20 @@
         border-radius: 4px;
         border: 1px solid #666;
     }
+
+    input[type=range]:focus-visible {
+        outline: none;
+
+        &::-webkit-slider-thumb {
+            box-shadow: 0 0 0 1px var(--bg, $white), 0 0 0 3px $o-enterprise-action-color;
+        }
+        &::-moz-range-thumb {
+            box-shadow: 0 0 0 1px var(--bg, $white), 0 0 0 3px $o-enterprise-action-color;
+        }
+        &::-ms-thumb {
+            box-shadow: 0 0 0 1px var(--bg, $white), 0 0 0 3px $o-enterprise-action-color;
+        }
+    }
 }
 .gradient-color-bin {
     position: relative;

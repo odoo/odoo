@@ -1,0 +1,111 @@
+.o-hb-colorpicker-popover {
+    --popover-bg: #{$o-we-bg-darker};
+    --popover-border-color: #{$o-we-bg-darker};
+}
+
+.o-hb-colorpicker {
+    --o-hb-colorpicker-focus-border-color: var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});
+
+    --bg: #{$o-we-item-clickable-bg};
+
+    background-color: $o-we-item-clickable-bg;
+    color: $white;
+
+    & > div:first-child {
+        background-color: $o-we-bg-darker;
+        padding-block: 0.5em;
+    }
+
+    & > div:not(:first-child) {
+        .btn {
+            @include button-variant(
+                $background: $o-we-item-clickable-bg,
+                $border: transparent,
+                $color: $o-we-item-clickable-color,
+                $hover-background: $o-we-item-clickable-hover-bg,
+                $hover-border: transparent,
+                $hover-color: $o-we-item-clickable-color,
+                $active-background: rgba($o-we-color-accent, .15),
+                $active-border: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg),
+                $active-color: $o-we-fg-lighter,
+                $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
+                $disabled-border: transparent,
+                $disabled-color: $o-we-item-clickable-color,
+            );
+
+            &:hover {
+                border: $o-we-border-width solid var(--o-hb-colorpicker-focus-border-color);
+            }
+        }
+    }
+
+    .btn[title=Reset] {
+        @include button-variant(
+            $background: $o-we-bg-light,
+            $border: transparent,
+            $color: $o-we-item-clickable-color,
+            $hover-background: $o-we-bg-lighter,
+            $hover-border: transparent,
+            $hover-color: $o-we-item-clickable-color,
+            $active-background: $o-we-bg-lighter,
+            $active-border: transparent,
+            $active-color: $o-we-fg-lighter,
+            $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
+            $disabled-border: transparent,
+            $disabled-color: $o-we-item-clickable-color,
+        );
+    }
+    .btn-tab {
+        @include button-variant(
+            $background: $o-we-bg-darker,
+            $border: transparent,
+            $color: $o-we-item-clickable-color,
+            $hover-background: $o-we-bg-light,
+            $hover-border: transparent,
+            $hover-color: $o-we-item-clickable-color,
+            $active-background: rgba($o-we-color-accent, .15),
+            $active-border: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg),
+            $active-color: $o-we-fg-lighter,
+            $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
+            $disabled-border: transparent,
+            $disabled-color: $o-we-item-clickable-color,
+        );
+    }
+
+    .btn:focus-visible {
+        border: $o-we-border-width solid var(--o-hb-colorpicker-focus-border-color);
+    }
+
+    .color-combination-button:focus-visible {
+        box-shadow:
+            0 0 0 1px $o-we-bg-darker,
+            0 0 0 3px var(--o-hb-colorpicker-focus-border-color);
+        outline: none;
+    }
+
+    // Gradients
+    .o_custom_gradient_button {
+        color: $o-we-item-clickable-color;
+    }
+
+    .gradient-angle-thumb {
+        background-color: $white;
+    }
+    .gradient-angle-knob + input[name=angle] {
+        @extend %o-hb-input-base;
+
+        & + .input-group-text {
+            background-color: revert;
+            border: revert;
+            color: inherit;
+        }
+    }
+
+    .o_color_picker_inputs {
+        color: $o-we-item-clickable-color;
+
+        & input {
+            color: currentColor;
+        }
+    }
+}
