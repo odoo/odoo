@@ -31,6 +31,11 @@ class TestSaleFiscal(AccountTestInvoicingCommon):
             'state_id': cls.env.ref('base.state_us_1').id,
             'country_id': cls.env.ref('base.us').id,
         })
+        cls.partner_foreign_no_state = cls.env['res.partner'].create({
+            'name': 'Partner Outside India without State',
+            'country_id': cls.env.ref('base.us').id,
+            # No state_id defined
+        })
 
     def _assert_order_fiscal_position(self, fpos_ref, partner, post=True):
         test_order = self.env['sale.order'].create({
@@ -101,3 +106,13 @@ class TestSaleFiscal(AccountTestInvoicingCommon):
                 sale_order.fiscal_position_id,
                 template.ref('fiscal_position_in_export_sez_in')
             )
+
+    def test_foreign_partner_without_state_fiscal_position(self):
+        """Verify foreign partner without state gets export fiscal position"""
+        self.env.company = self.default_company
+
+        # Foreign partner without state should get export fiscal position
+        self._assert_order_fiscal_position(
+            fpos_ref='fiscal_position_in_export_sez_in',
+            partner=self.partner_foreign_no_state.id,
+        )
