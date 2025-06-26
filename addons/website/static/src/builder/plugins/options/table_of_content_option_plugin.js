@@ -39,9 +39,21 @@ class TableOfContentOptionPlugin extends Plugin {
             NavbarPositionAction,
         },
         normalize_handlers: this.normalize.bind(this),
+        // Prevent dropping a table of content inside another table of content.
         dropzone_selector: {
             selector: ".s_table_of_content",
             excludeAncestor: ".s_table_of_content",
+        },
+        // Only allow moving main parts of the table of content by using arrows.
+        is_draggable_handlers: (el) => {
+            if (
+                el.matches(
+                    ".s_table_of_content .s_table_of_content_navbar_wrap, .s_table_of_content .s_table_of_content_main"
+                )
+            ) {
+                return false;
+            }
+            return true;
         },
     };
 
