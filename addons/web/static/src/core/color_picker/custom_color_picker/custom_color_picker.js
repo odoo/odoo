@@ -1,3 +1,5 @@
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { _t } from "@web/core/l10n/translation";
 import {
     convertCSSColorToRgba,
     convertHslToRgb,
@@ -9,6 +11,9 @@ import { clamp } from "@web/core/utils/numbers";
 import { debounce, useThrottleForAnimation } from "@web/core/utils/timing";
 
 import { Component, onMounted, onWillUpdateProps, useExternalListener, useRef } from "@odoo/owl";
+
+const ARROW_KEYS = ["arrowup", "arrowdown", "arrowleft", "arrowright"];
+const SLIDER_KEYS = [...ARROW_KEYS, "pageup", "pagedown", "home", "end"];
 
 export class CustomColorPicker extends Component {
     static template = "web.CustomColorPicker";
@@ -41,6 +46,7 @@ export class CustomColorPicker extends Component {
         this.colorComponents = {};
         this.uniqueId = uniqueId("colorpicker");
         this.selectedHexValue = "";
+        this.lastFocusedSliderEl = undefined;
         if (!this.props.selectedColor) {
             this.props.selectedColor = this.props.defaultColor;
         }
@@ -114,9 +120,58 @@ export class CustomColorPicker extends Component {
             this._updateUI();
         }
     }
+    /**
+     * @param {string[]} allowedKeys
+     * @returns {string[]} allowed keys + modifiers
+     */
+    getAllowedHotkeys(allowedKeys) {
+        return allowedKeys.flatMap((key) => [key, `control+${key}`]);
+    }
+    /**
+     * @param {HTMLElement} el
+     */
+    setLastFocusedSliderEl(el) {
+        this.lastFocusedSliderEl = el;
+        document.activeElement.blur();
+    }
 
     get el() {
         return this.elRef.el;
+    }
+    /**
+     * @param {string} hotkey
+     * @param {number} value
+     * @param {Object} [options]
+     * @param {number} [options.min=0]
+     * @param {number} [options.max=100]
+     * @param {number} [options.defaultStep=10] - default step
+     * @param {number} [options.modifierStep=1] - step when holding ctrl+key
+     * @param {number} [options.leap=20] - step for pageup / pagedown
+     * @returns {number} updated and clamped value
+     */
+    handleRangeKeydownValue(
+        hotkey,
+        value,
+        { min = 0, max = 100, defaultStep = 10, modifierStep = 1, leap = 20 } = {}
+    ) {
+        let step = defaultStep;
+        if (hotkey.startsWith("control+")) {
+            step = modifierStep;
+        }
+        const mainKey = hotkey.replace("control+", "");
+        if (mainKey === "pageup" || mainKey === "pagedown") {
+            step = leap;
+        }
+        if (["arrowup", "arrowright", "pageup"].includes(mainKey)) {
+            value += step;
+        } else if (["arrowdown", "arrowleft", "pagedown"].includes(mainKey)) {
+            value -= step;
+        } else if (mainKey === "home") {
+            value = min;
+        } else if (mainKey === "end") {
+            value = max;
+        }
+        return clamp(value, min, max);
     }
 
     //--------------------------------------------------------------------------
@@ -146,12 +201,23 @@ export class CustomColorPicker extends Component {
         const colorpickerPointer = this.colorPickerPointerRef.el;
         colorpickerPointer.style.top = top - 5 + "px";
         colorpickerPointer.style.left = left - 5 + "px";
+        colorpickerPointer.setAttribute(
+            "aria-label",
+            _t("Saturation: %(saturationLvl)s %. Brightness: %(brightnessLvl)s %", {
+                saturationLvl: this.colorComponents.saturation?.toFixed(2) || "0",
+                brightnessLvl: this.colorComponents.lightness?.toFixed(2) || "0",
+            })
+        );
 
         // Update color slider position
         const colorSlider = this.colorSliderRef.el;
         const height = colorSlider.clientHeight;
         const y = (this.colorComponents.hue * height) / 360;
-        this.colorSliderPointerRef.el.style.top = `${Math.round(y - 2)}px`;
+        this.colorSliderPointerRef.el.style.bottom = `${Math.round(y - 4)}px`;
+        this.colorSliderPointerRef.el.setAttribute(
+            "aria-valuenow",
+            this.colorComponents.hue.toFixed(2)
+        );
 
         if (!this.props.noTransparency) {
             // Update opacity slider position
@@ -159,6 +225,10 @@ export class CustomColorPicker extends Component {
             const heightOpacity = opacitySlider.clientHeight;
             const z = heightOpacity * (1 - this.colorComponents.opacity / 100.0);
             this.opacitySliderPointerRef.el.style.top = `${Math.round(z - 2)}px`;
+            this.opacitySliderPointerRef.el.setAttribute(
+                "aria-valuenow",
+                this.colorComponents.opacity.toFixed(2)
+            );
 
             // Add gradient color on opacity slider
             const sliderColor = this.colorComponents.hex.slice(0, 7);
@@ -334,6 +404,11 @@ export class CustomColorPicker extends Component {
         this.pickerFlag = false;
         this.sliderFlag = false;
         this.opacitySliderFlag = false;
+
+        if (this.lastFocusedSliderEl) {
+            this.lastFocusedSliderEl.focus();
+            this.lastFocusedSliderEl = undefined;
+        }
     }
     /**
      * Updates color when the user starts clicking on the picker.
@@ -345,6 +420,7 @@ export class CustomColorPicker extends Component {
         this.pickerFlag = true;
         ev.preventDefault();
         this.onPointerMovePicker(ev);
+        this.setLastFocusedSliderEl(this.colorPickerPointerRef.el);
     }
     /**
      * Updates saturation and lightness values on pointer drag over picker.
@@ -372,6 +448,39 @@ export class CustomColorPicker extends Component {
         this._updateUI();
     }
     /**
+     * Updates saturation and lightness values on arrow keydown over picker.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    onPickerKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (!this.getAllowedHotkeys(ARROW_KEYS).includes(hotkey)) {
+            return;
+        }
+        let saturation = this.colorComponents.saturation;
+        let lightness = this.colorComponents.lightness;
+        let step = 10;
+        if (hotkey.startsWith("control+")) {
+            step = 1;
+        }
+        const mainKey = hotkey.replace("control+", "");
+        if (mainKey === "arrowup") {
+            lightness += step;
+        } else if (mainKey === "arrowdown") {
+            lightness -= step;
+        } else if (mainKey === "arrowright") {
+            saturation += step;
+        } else if (mainKey === "arrowleft") {
+            saturation -= step;
+        }
+        lightness = clamp(lightness, 0, 100);
+        saturation = clamp(saturation, 0, 100);
+
+        this._updateHsl(this.colorComponents.hue, saturation, lightness);
+        this._updateUI();
+    }
+    /**
      * Updates color when user starts clicking on slider.
      *
      * @private
@@ -381,6 +490,7 @@ export class CustomColorPicker extends Component {
         this.sliderFlag = true;
         ev.preventDefault();
         this.onPointerMoveSlider(ev);
+        this.setLastFocusedSliderEl(this.colorSliderPointerRef.el);
     }
     /**
      * Updates hue value on pointer drag over slider.
@@ -394,10 +504,29 @@ export class CustomColorPicker extends Component {
         }
 
         const colorSlider = this.colorSliderRef.el;
-        const y = ev.pageY - colorSlider.getClientRects()[0].top;
+        const colorSliderRects = colorSlider.getClientRects();
+        const y = colorSliderRects[0].height - (ev.pageY - colorSliderRects[0].top);
         let hue = Math.round((360 * y) / colorSlider.clientHeight);
         hue = clamp(hue, 0, 360);
 
+        this._updateHsl(hue, this.colorComponents.saturation, this.colorComponents.lightness);
+        this._updateUI();
+    }
+    /**
+     * Updates hue value on arrow keydown on slider.
+     *
+     * @param {Event} ev
+     */
+    onSliderKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (!this.getAllowedHotkeys(SLIDER_KEYS).includes(hotkey)) {
+            return;
+        }
+        const hue = this.handleRangeKeydownValue(hotkey, this.colorComponents.hue, {
+            min: 0,
+            max: 360,
+            leap: 30,
+        });
         this._updateHsl(hue, this.colorComponents.saturation, this.colorComponents.lightness);
         this._updateUI();
     }
@@ -411,6 +540,7 @@ export class CustomColorPicker extends Component {
         this.opacitySliderFlag = true;
         ev.preventDefault();
         this.onPointerMoveOpacitySlider(ev);
+        this.setLastFocusedSliderEl(this.opacitySliderPointerRef.el);
     }
     /**
      * Updates opacity value on pointer drag over opacity slider.
@@ -427,6 +557,21 @@ export class CustomColorPicker extends Component {
         const y = ev.pageY - opacitySlider.getClientRects()[0].top;
         let opacity = Math.round(100 * (1 - y / opacitySlider.clientHeight));
         opacity = clamp(opacity, 0, 100);
+
+        this._updateOpacity(opacity);
+        this._updateUI();
+    }
+    /**
+     * Updates opacity value on arrow keydown on opacity slider.
+     *
+     * @param {Event} ev
+     */
+    onOpacitySliderKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (!this.getAllowedHotkeys(SLIDER_KEYS).includes(hotkey)) {
+            return;
+        }
+        const opacity = this.handleRangeKeydownValue(hotkey, this.colorComponents.opacity);
 
         this._updateOpacity(opacity);
         this._updateUI();
