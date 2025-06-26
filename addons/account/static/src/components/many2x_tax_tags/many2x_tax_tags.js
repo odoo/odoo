@@ -38,14 +38,6 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
             ];
         }
 
-        const filterFP = context.dynamic_fiscal_position_id;
-        if (filterFP) {
-            dynamicFilters.push({
-                description: _t("Document Fiscal Position"),
-                domain: [["fiscal_position_ids", "in", [parseInt(filterFP)]]]
-            })
-        }
-
         const title = _t("Search: %s", fieldString);
         this.selectCreate({
             domain,
