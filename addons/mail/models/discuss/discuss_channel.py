@@ -680,7 +680,7 @@ class DiscussChannel(models.Model):
                 sql_query,
                 (email_from or '', list(pids), [author_id] if author_id else [], )
             )
-            for partner_id, email_normalized, lang, name, partner_share, uid, notif, ushare in self._cr.fetchall():
+            for partner_id, email_normalized, lang, name, partner_share, uid, notif, ushare in self.env.cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
                 recipients_data.append({
                     'active': True,

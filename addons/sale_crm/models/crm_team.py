@@ -11,11 +11,11 @@ class CrmTeam(models.Model):
     def _compute_dashboard_button_name(self):
         super(CrmTeam, self)._compute_dashboard_button_name()
         teams_with_opp = self.filtered(lambda team: team.use_opportunities)
-        if self._context.get('in_sales_app'):
+        if self.env.context.get('in_sales_app'):
             teams_with_opp.update({'dashboard_button_name': _("Sales Analysis")})
 
     def action_primary_channel_button(self):
-        if self._context.get('in_sales_app') and self.use_opportunities:
+        if self.env.context.get('in_sales_app') and self.use_opportunities:
             return self.env["ir.actions.actions"]._for_xml_id("sale.action_order_report_so_salesteam")
         return super(CrmTeam,self).action_primary_channel_button()
 
@@ -25,21 +25,21 @@ class CrmTeam(models.Model):
         return super()._graph_get_model()
 
     def _graph_date_column(self):
-        if self.use_opportunities and self._context.get('in_sales_app'):
+        if self.use_opportunities and self.env.context.get('in_sales_app'):
             return SQL('date')
         return super(CrmTeam,self)._graph_date_column()
 
     def _graph_y_query(self):
-        if self.use_opportunities and self._context.get('in_sales_app'):
+        if self.use_opportunities and self.env.context.get('in_sales_app'):
             return SQL('SUM(price_subtotal)')
         return super(CrmTeam,self)._graph_y_query()
 
     def _graph_title_and_key(self):
-        if self.use_opportunities and self._context.get('in_sales_app'):
+        if self.use_opportunities and self.env.context.get('in_sales_app'):
             return ['', _('Sales: Untaxed Total')]
         return super(CrmTeam,self)._graph_title_and_key()
 
     def _extra_sql_conditions(self):
-        if self.use_opportunities and self._context.get('in_sales_app'):
+        if self.use_opportunities and self.env.context.get('in_sales_app'):
             return SQL("state = 'sale'")
         return super(CrmTeam,self)._extra_sql_conditions()

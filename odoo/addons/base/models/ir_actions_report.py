@@ -813,7 +813,7 @@ class IrActionsReport(models.Model):
 
                 stream = None
                 attachment = None
-                if not has_duplicated_ids and report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
+                if not has_duplicated_ids and report_sudo.attachment and not self.env.context.get("report_pdf_no_attachment"):
                     attachment = report_sudo.retrieve_attachment(record)
 
                     # Extract the stream from the attachment.
@@ -873,9 +873,9 @@ class IrActionsReport(models.Model):
                 report_ref=report_ref,
                 header=header,
                 footer=footer,
-                landscape=self._context.get('landscape'),
+                landscape=self.env.context.get('landscape'),
                 specific_paperformat_args=specific_paperformat_args,
-                set_viewport_size=self._context.get('set_viewport_size'),
+                set_viewport_size=self.env.context.get('set_viewport_size'),
             )
             pdf_content_stream = io.BytesIO(pdf_content)
 
@@ -1025,7 +1025,7 @@ class IrActionsReport(models.Model):
         report_sudo = self._get_report(report_ref)
 
         # Generate the ir.attachment if needed.
-        if not has_duplicated_ids and report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
+        if not has_duplicated_ids and report_sudo.attachment and not self.env.context.get("report_pdf_no_attachment"):
             attachment_vals_list = self._prepare_pdf_report_attachment_vals_list(report_sudo, collected_streams)
             if attachment_vals_list:
                 attachment_names = ', '.join(x['name'] for x in attachment_vals_list)

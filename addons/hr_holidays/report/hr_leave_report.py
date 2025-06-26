@@ -32,9 +32,9 @@ class HrLeaveReport(models.Model):
     company_id = fields.Many2one('res.company', string="Company", readonly=True)
 
     def init(self):
-        tools.drop_view_if_exists(self._cr, 'hr_leave_report')
+        tools.drop_view_if_exists(self.env.cr, 'hr_leave_report')
 
-        self._cr.execute("""
+        self.env.cr.execute("""
             CREATE or REPLACE view hr_leave_report as (
                 SELECT row_number() over(ORDER BY leaves.employee_id) as id,
                 leaves.leave_id as leave_id,

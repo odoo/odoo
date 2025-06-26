@@ -26,7 +26,7 @@ class IrConfig_Parameter(models.Model):
     def unlink(self):
         pls_emptied = any(record.key == "crm.pls_fields" for record in self)
         result = super().unlink()
-        if pls_emptied and not self._context.get(MODULE_UNINSTALL_FLAG):
+        if pls_emptied and not self.env.context.get(MODULE_UNINSTALL_FLAG):
             self.env.flush_all()
             self.env.registry._setup_models__(self.env.cr, ['crm.lead'])
         return result

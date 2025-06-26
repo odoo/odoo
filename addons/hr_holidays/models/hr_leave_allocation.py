@@ -188,7 +188,7 @@ class HrLeaveAllocation(models.Model):
 
     @api.depends('employee_id', 'holiday_status_id')
     def _compute_leaves(self):
-        date_from = fields.Date.from_string(self._context['default_date_from']) if 'default_date_from' in self._context else fields.Date.today()
+        date_from = fields.Date.from_string(self.env.context['default_date_from']) if 'default_date_from' in self.env.context else fields.Date.today()
         employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id, date_from)[0]
         for allocation in self:
             origin = allocation._origin
@@ -677,8 +677,8 @@ class HrLeaveAllocation(models.Model):
         # Try to force the leave_type display_name when creating new records
         # This is called right after pressing create and returns the display_name for
         # most fields in the view.
-        if values and 'employee_id' in fields_spec and 'employee_id' not in self._context:
-            employee_id = get_employee_from_context(values, self._context, self.env.user.employee_id.id)
+        if values and 'employee_id' in fields_spec and 'employee_id' not in self.env.context:
+            employee_id = get_employee_from_context(values, self.env.context, self.env.user.employee_id.id)
             self = self.with_context(employee_id=employee_id)
         return super().onchange(values, field_names, fields_spec)
 
@@ -744,7 +744,7 @@ class HrLeaveAllocation(models.Model):
                 partners_to_subscribe.add(allocation.employee_id.sudo().parent_id.user_id.partner_id.id)
                 partners_to_subscribe.add(allocation.employee_id.leave_manager_id.partner_id.id)
             allocation.message_subscribe(partner_ids=tuple(partners_to_subscribe))
-            if not self._context.get('import_file'):
+            if not self.env.context.get('import_file'):
                 allocation.activity_update()
             if allocation.validation_type == 'no_validation' and allocation.state == 'confirm':
                 allocation.action_approve()

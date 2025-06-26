@@ -12,7 +12,7 @@ class AccountMoveLine(models.Model):
         # analytic account from being overridden by analytic default rules and lack thereof
         project_amls = self.filtered(lambda aml: aml.analytic_distribution and any(aml.sale_line_ids.project_id))
         super(AccountMoveLine, self - project_amls)._compute_analytic_distribution()
-        project_id = self._context.get('project_id', False)
+        project_id = self.env.context.get('project_id', False)
         if project_id:
             project = self.env['project.project'].browse(project_id)
             lines = self.filtered(lambda line: line.account_type not in ['asset_receivable', 'liability_payable'])

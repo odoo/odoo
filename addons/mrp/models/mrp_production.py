@@ -306,10 +306,10 @@ class MrpProduction(models.Model):
         ]
         picking_types = self.env['stock.picking.type'].search_read(domain, ['company_id'], load=False, limit=1)
         picking_type_by_company = {pt['company_id']: pt['id'] for pt in picking_types}
-        default_picking_type_id = self._context.get('default_picking_type_id')
+        default_picking_type_id = self.env.context.get('default_picking_type_id')
         default_picking_type = default_picking_type_id and self.env['stock.picking.type'].browse(default_picking_type_id)
         if not default_picking_type:
-            default_warehouse_id = self._context.get('force_warehouse_id')
+            default_warehouse_id = self.env.context.get('force_warehouse_id')
             default_picking_type = default_warehouse_id and self.env['stock.warehouse'].browse(default_warehouse_id).manu_type_id
         for mo in self:
             if default_picking_type and default_picking_type.company_id == mo.company_id:
@@ -405,7 +405,7 @@ class MrpProduction(models.Model):
             mo_by_company_id[mo.company_id.id] |= mo
 
         for company_id, productions in mo_by_company_id.items():
-            picking_type_id = self._context.get('default_picking_type_id')
+            picking_type_id = self.env.context.get('default_picking_type_id')
             picking_type = picking_type_id and self.env['stock.picking.type'].browse(picking_type_id)
             boms_by_product = self.env['mrp.bom'].with_context(active_test=True)._bom_find(productions.product_id, picking_type=picking_type, company_id=company_id, bom_type='normal')
             for production in productions:
@@ -1061,7 +1061,7 @@ class MrpProduction(models.Model):
             picking_form = self.env.ref('stock.view_picking_form', False)
             picking_form_view = [(picking_form and picking_form.id or False, 'form')]
             action['views'] = picking_form_view + [(state, view) for state, view in action.get('views', []) if view != 'form']
-        action['context'] = dict(self._context, default_origin=self.name)
+        action['context'] = dict(self.env.context, default_origin=self.name)
         return action
 
     def action_toggle_is_locked(self):
@@ -2249,7 +2249,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
         action['domain'] = [('production_id', '=', self.id)]
-        action['context'] = dict(self._context, default_origin=self.name)
+        action['context'] = dict(self.env.context, default_origin=self.name)
         return action
 
     def action_view_reception_report(self):

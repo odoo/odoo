@@ -48,8 +48,8 @@ class EventSaleReport(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
 
     def init(self):
-        tools.drop_view_if_exists(self._cr, self._table)
-        self._cr.execute('CREATE OR REPLACE VIEW %s AS (%s);' % (self._table, self._query()))
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute('CREATE OR REPLACE VIEW %s AS (%s);' % (self._table, self._query()))
 
     def _query(self, with_=None, select=None, join=None, group_by=None):
         return "\n".join([

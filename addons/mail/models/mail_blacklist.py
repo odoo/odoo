@@ -42,8 +42,8 @@ class MailBlacklist(models.Model):
         if new_values:
             sql = '''SELECT email, id FROM mail_blacklist WHERE email = ANY(%s)'''
             emails = [v['email'] for v in new_values]
-            self._cr.execute(sql, (emails,))
-            bl_entries = dict(self._cr.fetchall())
+            self.env.cr.execute(sql, (emails,))
+            bl_entries = dict(self.env.cr.fetchall())
             to_create = [v for v in new_values if v['email'] not in bl_entries]
 
         # TODO DBE Fixme : reorder ids according to incoming ids.

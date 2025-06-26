@@ -268,9 +268,9 @@ class AccountBankStatement(models.Model):
         if 'line_ids' not in fields_list:
             return defaults
 
-        active_ids = self._context.get('active_ids', [])
-        context_split_line_id = self._context.get('split_line_id')
-        context_st_line_id = self._context.get('st_line_id')
+        active_ids = self.env.context.get('active_ids', [])
+        context_split_line_id = self.env.context.get('split_line_id')
+        context_st_line_id = self.env.context.get('st_line_id')
         lines = None
         # creating statements with split button
         if context_split_line_id:

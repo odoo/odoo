@@ -387,7 +387,7 @@ class AccountMove(models.Model):
                 'OperationDate': operation_date,
                 'ExchangeRateDetails': conversion_needed,
                 'ExchangeRate': f"{round(self.invoice_currency_rate, 4):.4f}",
-                'LanguageName': self._context.get('lang', 'en_US').split('_')[0],
+                'LanguageName': self.env.context.get('lang', 'en_US').split('_')[0],
                 'InvoicingPeriod': None,
                 'ReceiverTransactionReference': invoice_ref,
                 'FileReference': invoice_ref,

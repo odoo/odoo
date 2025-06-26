@@ -233,7 +233,7 @@ class BaseAutomationTestUi(HttpCase):
             onchange_link_passes += 1
             res = origin_link_onchange(self_model, *args)
             if onchange_link_passes == 1:
-                default_keys = {k: v for k, v in self_model._context.items() if k.startswith("default_")}
+                default_keys = {k: v for k, v in self_model.env.context.items() if k.startswith("default_")}
                 self.assertEqual(
                     default_keys,
                     {"default_model_id": model.id, "default_usage": "base_automation"},

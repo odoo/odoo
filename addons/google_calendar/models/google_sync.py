@@ -266,7 +266,7 @@ class GoogleCalendarSync(models.AbstractModel):
     def _google_delete(self, google_service: GoogleCalendarService, google_id, timeout=TIMEOUT):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
-                is_recurrence = self._context.get('is_recurrence', False)
+                is_recurrence = self.env.context.get('is_recurrence', False)
                 google_service.google_service = google_service.google_service.with_context(is_recurrence=is_recurrence)
                 google_service.delete(google_id, token=token, timeout=timeout)
                 # When the record has been deleted on our side, we need to delete it on google but we don't want
@@ -307,7 +307,7 @@ class GoogleCalendarSync(models.AbstractModel):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
                 try:
-                    send_updates = self._context.get('send_updates', True)
+                    send_updates = self.env.context.get('send_updates', True)
                     google_service.google_service = google_service.google_service.with_context(send_updates=send_updates)
                     google_values = google_service.insert(values, token=token, timeout=timeout, need_video_call=self._need_video_call())
                     self.with_context(dont_notify=True).write(self._get_post_sync_values(values, google_values))

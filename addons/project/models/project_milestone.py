@@ -124,7 +124,7 @@ class ProjectMilestone(models.Model):
 
     def _compute_display_name(self):
         super()._compute_display_name()
-        if not self._context.get('display_milestone_deadline'):
+        if not self.env.context.get('display_milestone_deadline'):
             return
         for milestone in self:
             if milestone.deadline:

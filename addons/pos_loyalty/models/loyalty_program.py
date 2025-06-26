@@ -90,8 +90,8 @@ class LoyaltyProgram(models.Model):
                 WHERE program.id = ANY(%s)
                     GROUP BY program.id
                 """
-        self._cr.execute(query, (self.ids,))
-        res = self._cr.dictfetchall()
+        self.env.cr.execute(query, (self.ids,))
+        res = self.env.cr.dictfetchall()
         res = {k['id']: k['sum'] for k in res}
 
         for rec in self:

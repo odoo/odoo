@@ -146,7 +146,7 @@ class TestTaxesComputation(TestTaxCommonAccountTaxPython):
             'product.field_that_does_not_exist',
             'product.ids',
             'product._fields',
-            'product._cr',
+            'product.env.cr',
             'range(1, 10)',
         ]
 

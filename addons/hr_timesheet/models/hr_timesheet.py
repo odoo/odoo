@@ -40,7 +40,7 @@ class AccountAnalyticLine(models.Model):
         result = super().default_get(field_list)
         if not self.env.context.get('default_employee_id') and 'employee_id' in field_list and result.get('user_id'):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id']), ('company_id', '=', result.get('company_id', self.env.company.id))], limit=1).id
-        if not self._context.get('default_project_id') and self._context.get('is_timesheet'):
+        if not self.env.context.get('default_project_id') and self.env.context.get('is_timesheet'):
             employee_id = result.get('employee_id', self.env.context.get('default_employee_id', False))
             favorite_project_id = self._get_favorite_project_id(employee_id)
             if favorite_project_id:
@@ -54,7 +54,7 @@ class AccountAnalyticLine(models.Model):
         return domain
 
     def _domain_employee_id(self):
-        domain = Domain('company_id', 'in', self._context.get('allowed_company_ids'))
+        domain = Domain('company_id', 'in', self.env.context.get('allowed_company_ids'))
         if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver'):
             domain &= Domain('user_id', '=', self.env.user.id)
         return domain
@@ -252,7 +252,7 @@ class AccountAnalyticLine(models.Model):
 
             if not vals.get('name'):
                 vals['name'] = '/'
-            employee_id = vals.get('employee_id', self._context.get('default_employee_id', False))
+            employee_id = vals.get('employee_id', self.env.context.get('default_employee_id', False))
             if employee_id and employee_id not in employee_ids:
                 employee_ids.append(employee_id)
             else:
@@ -285,7 +285,7 @@ class AccountAnalyticLine(models.Model):
         for vals in vals_list:
             if not vals.get('project_id'):
                 continue
-            employee_in_id = vals.get('employee_id', self._context.get('default_employee_id', False))
+            employee_in_id = vals.get('employee_id', self.env.context.get('default_employee_id', False))
             if employee_in_id:
                 company = False
                 if not vals.get('company_id'):
@@ -501,7 +501,7 @@ class AccountAnalyticLine(models.Model):
             'res_id': self.id,
             'res_model': 'account.analytic.line',
             'views': [(self.env.ref('hr_timesheet.timesheet_view_form_portal_user').id, 'form')],
-            'context': self._context,
+            'context': self.env.context,
         }
 
     @api.model

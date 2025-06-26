@@ -279,8 +279,8 @@ class EventEvent(models.Model):
                         GROUP BY event_id, state
                     """
             self.env['event.registration'].flush_model(['event_id', 'state', 'active'])
-            self._cr.execute(query, (tuple(self.ids),))
-            res = self._cr.fetchall()
+            self.env.cr.execute(query, (tuple(self.ids),))
+            res = self.env.cr.fetchall()
             for event_id, state, num in res:
                 results[event_id][state_field[state]] = num
 

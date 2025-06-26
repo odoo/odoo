@@ -23,8 +23,8 @@ class StockReplenishmentOption(models.TransientModel):
     _inherit = 'stock.replenishment.option'
 
     def select_route(self):
-        if self._context.get('replenish_id'):
-            replenish = self.env['product.replenish'].browse(self._context.get('replenish_id'))
+        if self.env.context.get('replenish_id'):
+            replenish = self.env['product.replenish'].browse(self.env.context.get('replenish_id'))
             replenish.route_id = self.route_id.id
             return {
                 'type': 'ir.actions.act_window',

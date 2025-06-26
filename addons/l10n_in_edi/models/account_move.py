@@ -126,7 +126,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return (
             self.country_code == 'IN'
-            and not self._context.get('l10n_in_edi_force_cancel')
+            and not self.env.context.get('l10n_in_edi_force_cancel')
             and self.is_sale_document()
             and self.l10n_in_edi_status == 'sent'
         )
@@ -334,7 +334,7 @@ class AccountMove(models.Model):
             self.l10n_in_edi_status = 'cancelled'
             self.button_cancel()
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
         return True
 
     @api.model

@@ -78,4 +78,4 @@ class AccountMoveSend(models.AbstractModel):
                     }
 
                 if self._can_commit():
-                    self._cr.commit()
+                    self.env.cr.commit()

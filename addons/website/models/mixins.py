@@ -260,7 +260,7 @@ class WebsitePublishedMixin(models.AbstractModel):
                 # Some main_record might be in sudo because their content needs
                 # to be rendered by a template even if they were not supposed
                 # to be accessible
-                plain_record = record.sudo(flag=False) if self._context.get('can_publish_unsudo_main_object', False) else record
+                plain_record = record.sudo(flag=False) if self.env.context.get('can_publish_unsudo_main_object', False) else record
                 self.env['website'].get_current_website()._check_user_can_modify(plain_record)
                 record.can_publish = True
             except AccessError:
@@ -286,7 +286,7 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
     @api.depends('is_published', 'website_id')
     @api.depends_context('website_id')
     def _compute_website_published(self):
-        current_website_id = self._context.get('website_id')
+        current_website_id = self.env.context.get('website_id')
         for record in self:
             if current_website_id:
                 record.website_published = record.is_published and (not record.website_id or record.website_id.id == current_website_id)
@@ -302,7 +302,7 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             return NotImplemented
         assert list(value) == [True]
 
-        current_website_id = self._context.get('website_id')
+        current_website_id = self.env.context.get('website_id')
         is_published = Domain('is_published', '=', True)
         if current_website_id:
             on_current_website = self.env['website'].website_domain(current_website_id)

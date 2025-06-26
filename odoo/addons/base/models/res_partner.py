@@ -74,7 +74,7 @@ class FormatAddressMixin(models.AbstractModel):
         # consider the country of the user, not the country of the partner we want to display
         address_view_id = self.env.company.country_id.address_view_id.sudo()
         address_format = self.env.company.country_id.address_format
-        if address_view_id and not self._context.get('no_address_format') and (not address_view_id.model or address_view_id.model == self._name):
+        if address_view_id and not self.env.context.get('no_address_format') and (not address_view_id.model or address_view_id.model == self._name):
             #render the partner address accordingly to address_view_id
             for address_node in arch.xpath("//div[hasclass('o_address_format')]"):
                 Partner = self.env['res.partner'].with_context(no_address_format=True)
@@ -90,7 +90,7 @@ class FormatAddressMixin(models.AbstractModel):
                 if new_address_node is not None:
                     sub_arch = new_address_node
                 address_node.getparent().replace(address_node, sub_arch)
-        elif address_format and not self._context.get('no_address_format'):
+        elif address_format and not self.env.context.get('no_address_format'):
             # For the zip, city and state fields we need to move them around in order to follow the country address format.
             # The purpose of this is to help the user by following a format he is used to.
             city_line = [self._extract_fields_from_address(line) for line in address_format.split('\n') if 'city' in line]
@@ -193,7 +193,7 @@ class ResPartner(models.Model):
     _complete_name_displayed_types = ('invoice', 'delivery', 'other')
 
     def _default_category(self):
-        return self.env['res.partner.category'].browse(self._context.get('category_id'))
+        return self.env['res.partner.category'].browse(self.env.context.get('category_id'))
 
     @api.model
     def default_get(self, default_fields):
@@ -218,7 +218,7 @@ class ResPartner(models.Model):
                             compute='_compute_lang', readonly=False, store=True,
                             help="All the emails and documents sent to this contact will be translated in this language.")
     active_lang_count = fields.Integer(compute='_compute_active_lang_count')
-    tz = fields.Selection(_tzs, string='Timezone', default=lambda self: self._context.get('tz'),
+    tz = fields.Selection(_tzs, string='Timezone', default=lambda self: self.env.context.get('tz'),
                           help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
                                "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
                                "Anywhere else, time values are computed according to the time offset of your web client.")
@@ -1010,27 +1010,27 @@ class ResPartner(models.Model):
     )
     def _compute_display_name(self):
         for partner in self:
-            if partner._context.get("formatted_display_name"):
+            if partner.env.context.get("formatted_display_name"):
                 name = partner.name or ''
                 if partner.parent_id or partner.company_name:
                     name = f"{partner.company_name or partner.parent_id.name} \t --{partner.name}--"
 
-                if partner._context.get('show_email') and partner.email:
+                if partner.env.context.get('show_email') and partner.email:
                     name = f"{name} \t --{partner.email}--"
-                elif partner._context.get('partner_show_db_id'):
+                elif partner.env.context.get('partner_show_db_id'):
                     name = f"{name} \t --{partner.id}--"
 
             else:
                 name = partner.with_context(lang=self.env.lang)._get_complete_name()
-                if partner._context.get('partner_show_db_id'):
+                if partner.env.context.get('partner_show_db_id'):
                     name = f"{name} ({partner.id})"
-                if partner._context.get('show_email') and partner.email:
+                if partner.env.context.get('show_email') and partner.email:
                     name = f"{name} <{partner.email}>"
-                if partner._context.get('show_address'):
+                if partner.env.context.get('show_address'):
                     name = name + "\n" + partner._display_address(without_company=True)
 
-                if partner._context.get('show_vat') and partner.vat:
-                    if partner._context.get('show_address'):
+                if partner.env.context.get('show_vat') and partner.vat:
+                    if partner.env.context.get('show_address'):
                         name = f"{name} \n {partner.vat}"
                     else:
                         name = f"{name} - {partner.vat}"
@@ -1045,13 +1045,13 @@ class ResPartner(models.Model):
             If only an email address is received and that the regex cannot find
             a name, the name will have the email value.
             If 'force_email' key in context: must find the email address. """
-        default_type = self._context.get('default_type')
+        default_type = self.env.context.get('default_type')
         if default_type and default_type not in self._fields['type'].get_values(self.env):
-            context = dict(self._context)
+            context = dict(self.env.context)
             context.pop('default_type')
             self = self.with_context(context)
         name, email_normalized = tools.parse_contact_from_email(name)
-        if self._context.get('force_email') and not email_normalized:
+        if self.env.context.get('force_email') and not email_normalized:
             raise ValidationError(_("Couldn't create contact without email address!"))
 
         create_values = {self._rec_name: name or email_normalized}

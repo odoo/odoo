@@ -108,7 +108,7 @@ class IrCron(models.Model):
         for vals in vals_list:
             vals['usage'] = 'ir_cron'
         if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
-            self._cr.postcommit.add(self._notifydb)
+            self.env.cr.postcommit.add(self._notifydb)
         return super().create(vals_list)
 
     @api.model
@@ -610,7 +610,7 @@ class IrCron(models.Model):
             _logger.debug(
                 "cron.object.execute(%r, %d, '*', %r, %d)",
                 self.env.cr.dbname,
-                self._uid,
+                self.env.uid,
                 cron_name,
                 server_action_id,
             )
@@ -633,7 +633,7 @@ class IrCron(models.Model):
                 "Please try again in a few minutes"
             )) from None
         if ('nextcall' in vals or vals.get('active')) and os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
-            self._cr.postcommit.add(self._notifydb)
+            self.env.cr.postcommit.add(self._notifydb)
         return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
@@ -716,7 +716,7 @@ class IrCron(models.Model):
             _logger.debug('Job %r (%s) will execute at %s', self.sudo().name, self.id, ats)
 
         if min(at_list) <= now or os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
-            self._cr.postcommit.add(self._notifydb)
+            self.env.cr.postcommit.add(self._notifydb)
         return triggers
 
     @api.model
