@@ -2143,7 +2143,7 @@ class Website(models.Model):
             :rel_table: name of the rel table when search_fields in search_details contains a Many2many.
             :rel_joinkey: name of the column used to join model._table with rel_table.
             """
-            subquery = Query(self.env.cr, model._table, model._table_query)
+            subquery = Query(model)
             unaccent = self.env.registry.unaccent
             similarity = SQL(
                 "GREATEST(%(similarities)s) as similarity",

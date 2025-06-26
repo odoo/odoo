@@ -442,7 +442,7 @@ class ProjectProject(models.Model):
             f'{SaleOrderLine._table}.id AS sale_line_id',
         )
 
-        return Query(self.env, 'project_sale_order_item', SQL('(%s)', SQL(' UNION ').join([
+        return Query(None, 'project_sale_order_item', SQL('(%s)', SQL(' UNION ').join([
             project_sql, task_sql, milestone_sql, sale_order_line_sql,
         ])))
 

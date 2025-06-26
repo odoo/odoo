@@ -7,7 +7,7 @@ from odoo.tools import Query, SQL
 class QueryTestCase(BaseCase):
 
     def test_basic_query(self):
-        query = Query(None, 'product_product')
+        query = Query(None, 'product_product', SQL.identifier('product_product'))
         query.add_table('product_template')
         query.add_where("product_product.template_id = product_template.id")
         # add inner join
@@ -23,7 +23,7 @@ class QueryTestCase(BaseCase):
             "product_product.template_id = product_template.id")
 
     def test_query_chained_explicit_joins(self):
-        query = Query(None, 'product_product')
+        query = Query(None, 'product_product', SQL.identifier('product_product'))
         query.add_table('product_template')
         query.add_where("product_product.template_id = product_template.id")
         # add inner join
@@ -39,7 +39,7 @@ class QueryTestCase(BaseCase):
             "product_product.template_id = product_template.id")
 
     def test_mixed_query_chained_explicit_implicit_joins(self):
-        query = Query(None, 'product_product')
+        query = Query(None, 'product_product', SQL.identifier('product_product'))
         query.add_table('product_template')
         query.add_where("product_product.template_id = product_template.id")
         # add inner join
@@ -58,12 +58,12 @@ class QueryTestCase(BaseCase):
             "product_product.template_id = product_template.id AND product_category.expense_account_id = account_account.id")
 
     def test_raise_missing_lhs(self):
-        query = Query(None, 'product_product')
+        query = Query(None, 'product_product', SQL.identifier('product_product'))
         with self.assertRaises(AssertionError):
             query.join("product_template", "categ_id", "product_category", "id", "categ_id")
 
     def test_long_aliases(self):
-        query = Query(None, 'product_product')
+        query = Query(None, 'product_product', SQL.identifier('product_product'))
         tmp = query.join('product_product', 'product_tmpl_id', 'product_template', 'id', 'product_tmpl_id')
         self.assertEqual(tmp, 'product_product__product_tmpl_id')
         # no hashing
@@ -81,7 +81,7 @@ class QueryTestCase(BaseCase):
         self.assertEqual(tmp_cat_stm_par, 'product_product__product_tmpl_id__product_category_id__00363fdd')
 
     def test_table_expression(self):
-        query = Query(None, 'foo')
+        query = Query(None, 'foo', SQL.identifier('foo'))
         from_clause = query.from_clause.code
         self.assertEqual(from_clause, '"foo"')
 
@@ -89,18 +89,18 @@ class QueryTestCase(BaseCase):
         from_clause = query.from_clause.code
         self.assertEqual(from_clause, '(SELECT id FROM foo) AS "bar"')
 
-        query = Query(None, 'foo')
+        query = Query(None, 'foo', SQL.identifier('foo'))
         query.add_table('bar', SQL('(SELECT id FROM foo)'))
         from_clause = query.from_clause.code
         self.assertEqual(from_clause, '"foo", (SELECT id FROM foo) AS "bar"')
 
-        query = Query(None, 'foo')
+        query = Query(None, 'foo', SQL.identifier('foo'))
         query.join('foo', 'bar_id', SQL('(SELECT id FROM foo)'), 'id', 'bar')
         from_clause = query.from_clause.code
         self.assertEqual(from_clause, '"foo" JOIN (SELECT id FROM foo) AS "foo__bar" ON ("foo"."bar_id" = "foo__bar"."id")')
 
     def test_empty_set_result_ids(self):
-        query = Query(None, 'foo')
+        query = Query(None, 'foo', SQL.identifier('foo'))
         query.set_result_ids([])
         self.assertEqual(query.get_result_ids(), ())
         self.assertTrue(query.is_empty())
@@ -110,7 +110,7 @@ class QueryTestCase(BaseCase):
         self.assertTrue(query.is_empty(), "adding where clauses keeps the result empty")
 
     def test_set_result_ids(self):
-        query = Query(None, 'foo')
+        query = Query(None, 'foo', SQL.identifier('foo'))
         query.set_result_ids([1, 2, 3])
         self.assertEqual(query.get_result_ids(), (1, 2, 3))
         self.assertFalse(query.is_empty())

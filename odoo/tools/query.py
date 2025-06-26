@@ -1,6 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
+
 import itertools
-from collections.abc import Iterable, Iterator
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
+    from odoo.orm.models import BaseModel
 
 from .sql import SQL, make_identifier
 
@@ -53,12 +59,12 @@ class Query:
     :param table: a table expression (``str`` or ``SQL`` object), optional
     """
 
-    def __init__(self, env, alias: str, table: (SQL | None) = None):
+    def __init__(self, model: BaseModel | None, alias: (str | None) = None, table: (SQL | None) = None):
         # database cursor
-        self._env = env
+        self._model = model
 
         self._tables: dict[str, SQL] = {
-            alias: table if table is not None else SQL.identifier(alias),
+            (alias or model._table): (table or model._table_sql),
         }
 
         # joins {alias: (kind(SQL), table(SQL), condition(SQL))}
@@ -224,7 +230,7 @@ class Query:
         is memoized for future use, which avoids making the same query twice.
         """
         if self._ids is None:
-            self._ids = tuple(id_ for id_, in self._env.execute_query(self.select()))
+            self._ids = tuple(id_ for id_, in self._model.env.execute_query(self.select()))
         return self._ids
 
     def set_result_ids(self, ids: Iterable[int], ordered: bool = True) -> None:
@@ -269,7 +275,7 @@ class Query:
                 sql = SQL("SELECT COUNT(*) FROM (%s) t", self.select(""))
             else:
                 sql = self.select('COUNT(*)')
-            return self._env.execute_query(sql)[0][0]
+            return self._model.env.execute_query(sql)[0][0]
         return len(self.get_result_ids())
 
     def __iter__(self) -> Iterator[int]:

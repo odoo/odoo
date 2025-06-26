@@ -914,7 +914,7 @@ class Cache:
                 return
 
             # select the column for the given ids
-            query = Query(env, model._table, model._table_sql)
+            query = Query(model)
             sql_id = SQL.identifier(model._table, 'id')
             sql_field = model._field_to_sql(model._table, field.name, query)
             if field.type == 'binary' and (
