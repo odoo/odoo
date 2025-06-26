@@ -1,8 +1,8 @@
 import { parseExpr } from "@web/core/py_js/py";
-import { Hole, setHoleValues, upToHole } from "@web/core/tree_editor/hole";
-import { Just, Nothing } from "@web/core/tree_editor/maybe_monad";
-import { Pattern } from "@web/core/tree_editor/pattern";
 import { deepCopy } from "@web/core/utils/objects";
+import { Hole, setHoleValues, upToHole } from "../hole";
+import { Just, Nothing } from "../maybe_monad";
+import { Pattern } from "./pattern";
 
 const areEqualArraysOfASTs = upToHole((array, otherArray) => {
     if (array.length !== otherArray.length) {

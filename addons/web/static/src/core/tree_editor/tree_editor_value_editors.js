@@ -8,17 +8,15 @@ import {
 } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { connector, Expression, formatValue, isTree } from "@web/core/tree_editor/condition_tree";
 import {
-    connector,
     DATE_TODAY_STRING_EXPRESSION,
     DATETIME_END_OF_TODAY_STRING_EXPRESSION,
     DATETIME_TODAY_STRING_EXPRESSION,
-    Expression,
-    formatValue,
     isEndOfTodayExpr,
     isTodayExpr,
-    isTree,
-} from "@web/core/tree_editor/condition_tree";
+} from "@web/core/tree_editor/virtual_operators";
+
 import {
     DomainSelectorAutocomplete,
     DomainSelectorSingleAutocomplete,
