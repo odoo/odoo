@@ -81,8 +81,11 @@ class TestRules(TransactionCase):
         container_user.invalidate_model(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [self.allowed.id])
 
-        # this should not fail
-        container_user.write({'some_ids': [Command.set(ids)]})
+        # this should fail
+        with self.assertRaises(AccessError):
+            container_user.write({'some_ids': [Command.set(ids)]})
+
+        container_admin.write({'some_ids': [Command.set(ids)]})
         container_user.invalidate_model(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [self.allowed.id])
         container_admin.invalidate_model(['some_ids'])
