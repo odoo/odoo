@@ -401,7 +401,9 @@ describe("inherited actions", () => {
     function makeAction(n, { async, isApplied } = {}) {
         const action = class extends BuilderAction {
             static id = `customAction${n}`;
-            isApplied = isApplied;
+            isApplied() {
+                return isApplied?.();
+            }
             clean({ params: { mainParam: testParam }, value }) {
                 expect.step(`customAction${n} clean ${testParam} ${value}`);
             }
