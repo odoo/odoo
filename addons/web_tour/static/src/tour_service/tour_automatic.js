@@ -71,10 +71,10 @@ export class TourAutomatic {
                                     The key { expectUnloadPage } is defined but page has not been unloaded within 20000 ms. 
                                     You probably don't need it.
                                 `.replace(/^\s+/gm, "");
-                                throw new Error(message);
+                                this.throwError(message);
                             }, 20000);
                         }
-                        const result = await step.doAction();
+                        await step.doAction();
                         if (this.debugMode) {
                             console.log(trigger);
                             if (step.skipped) {
@@ -88,7 +88,9 @@ export class TourAutomatic {
                             }
                         }
                         tourState.setCurrentIndex(step.index + 1);
-                        return this.allowUnload ? "StopTheMacro!" : result;
+                        if (this.allowUnload) {
+                            return "StopTheMacro!";
+                        }
                     },
                 },
             ]);
@@ -139,19 +141,18 @@ export class TourAutomatic {
             },
         });
 
-        //TODO: uncomment the listener
-        // window.addEventListener("beforeunload", () => {
-        //     if (!this.allowUnload) {
-        //         const message = `
-        //             Be sure to use { expectUnloadPage: true } for any step
-        //             that involves firing a beforeUnload event.
-        //             This avoid a non-deterministic behavior by explicitly stopping
-        //             the tour that might continue before the page is unloaded.
-        //         `.replace(/^\s+/gm, "");
-        //         const error = new Error(message);
-        //         this.throwError(error);
-        //     }
-        // });
+        const beforeUnloadHandler = () => {
+            if (!this.allowUnload) {
+                const message = `
+                    Be sure to use { expectUnloadPage: true } for any step
+                    that involves firing a beforeUnload event.
+                    This avoid a non-deterministic behavior by explicitly stopping
+                    the tour that might continue before the page is unloaded.
+                `.replace(/^\s+/gm, "");
+                this.throwError(message);
+            }
+        };
+        window.addEventListener("beforeunload", beforeUnloadHandler);
 
         if (this.debugMode && this.currentIndex === 0) {
             // Starts the tour with a debugger to allow you to choose devtools configuration.

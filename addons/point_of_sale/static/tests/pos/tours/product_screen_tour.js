@@ -792,7 +792,11 @@ registry.category("web_tour.tours").add("test_remove_archived_product_from_cache
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
             Chrome.clickMenuOption("Close Register"),
-            Dialog.confirm("Close Register"),
+            {
+                trigger: ".modal .modal-footer .btn:contains(close register)",
+                run: "click",
+                expectUnloadPage: true,
+            },
             {
                 content: `Select button backend`,
                 trigger: `button:contains(backend)`,
