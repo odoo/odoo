@@ -48,7 +48,9 @@ class ProductProduct(models.Model):
         return not self._is_sold_out() and super()._website_show_quick_add()
 
     def _send_availability_email(self):
+        salesperson = self.env['website'].get_current_website().salesperson_id
         mail_template = self.env.ref('website_sale_stock.stock_availability_email')
+        mail_template = mail_template.with_user(salesperson)
         for product in self.search([('stock_notification_partner_ids', '!=', False)]):
             if product._is_sold_out():
                 continue
