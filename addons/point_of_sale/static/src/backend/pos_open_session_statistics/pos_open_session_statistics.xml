@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="point_of_sale.pos_open_session_statistics">
+        <div class="o_session-statistics position-relative">
+            <div class="my-1" t-att-class="{'opacity-75': !data.date.is_started, 'opacity-25 pe-none': data.session.demo}">
+                <div class="fs-5 pt-2 mb-1 fw-bold cursor-pointer" t-on-click.stop.prevent="() => this.actionViewSession()">
+                    <span>Session <span class="text-action" t-esc="data.session.name" /></span>
+                </div>
+
+                <div class="row gy-1 mb-3">
+                    <t t-set="icon" t-value="'fa fa-usd'" />
+                    <t t-set="iconColor" t-value="'text-bg-secondary'" />
+                    <t t-set="onClick" t-value="() => this.actionViewSession()" />
+                    <t t-set="name" t-value="'Cash Control'" />
+                    <t t-set="value" t-value="data.cash.opening_cash" />
+                    <t t-call="point_of_sale.pos_open_session_statistics-row" />
+
+                    <t t-set="icon" t-value="'fa fa-unlock'" />
+                    <t t-set="iconColor" t-value="'text-bg-secondary'" />
+                    <t t-set="onClick" t-value="() => this.actionViewSession()" />
+                    <t t-set="name" t-value="'Opening Date'" />
+                    <t t-set="value" t-value="data.date.start_date" />
+                    <t t-call="point_of_sale.pos_open_session_statistics-row" />
+                </div>
+
+                <div class="fs-5 mt-2 mb-1 fw-bold">
+                    <span>Orders <t t-esc="data.session.nb_orders" /></span>
+                </div>
+                <div class="row gy-1">
+                    <t t-set="icon" t-value="'fa fa-check'" />
+                    <t t-set="iconColor" t-value="'text-bg-success'" />
+                    <t t-set="onClick" t-value="() => this.actionViewOrders('paid')" />
+                    <t t-set="name" t-value="'Finalized'" />
+                    <t t-set="value" t-value="`${data.orders.paid.total} (${data.orders.paid.count})`" />
+                    <t t-call="point_of_sale.pos_open_session_statistics-row" />
+
+                    <t t-set="icon" t-value="'fa fa-check'" />
+                    <t t-set="iconColor" t-value="'text-bg-secondary'" />
+                    <t t-set="onClick" t-value="() => this.actionViewOrders('draft')" />
+                    <t t-set="name" t-value="'Active'" />
+                    <t t-set="value" t-value="`${data.orders.draft.total} (${data.orders.draft.count})`" />
+                    <t t-call="point_of_sale.pos_open_session_statistics-row" />
+
+                    <t t-set="icon" t-value="'fa fa-times'" />
+                    <t t-set="iconColor" t-value="'text-bg-danger'" />
+                    <t t-set="onClick" t-value="() => this.actionViewOrders('cancel')" />
+                    <t t-set="name" t-value="'Cancelled'" />
+                    <t t-set="value" t-value="`${data.orders.cancel.total} (${data.orders.cancel.count})`" />
+                    <t t-call="point_of_sale.pos_open_session_statistics-row" />
+
+                    <t t-set="icon" t-value="'fa fa-refresh'" />
+                    <t t-set="iconColor" t-value="'text-bg-secondary'" />
+                    <t t-set="onClick" t-value="() => this.actionViewOrders('refund')" />
+                    <t t-set="name" t-value="'Refunded'" />
+                    <t t-set="value" t-value="`${data.orders.refund.total} (${data.orders.refund.count})`" />
+                    <t t-call="point_of_sale.pos_open_session_statistics-row" />
+                </div>
+            </div>
+
+            <div t-if="data.session.demo" class="position-absolute left-0 bottom-0 w-100">
+                <div class="demo-overlay" />
+                <div class="d-flex justify-content-center align-items-center flex-column bg-white py-2">
+                    <span class="fs-4 fw-bold">No data available!</span>
+                    <span class="fs-6">Click the button above to start.</span>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.pos_open_session_statistics-row">
+        <div class="col-auto d-flex align-items-center justify-content-between fs-6 fw-light cursor-pointer col-12 col-sm-6"
+            t-on-click.stop.prevent="onClick">
+            <div class="d-flex align-items-center gap-2">
+                <div class="icon d-flex justify-content-center align-items-center" t-attf-class="{{iconColor}}">
+                    <i t-attf-class="{{icon}}" />
+                </div>
+                <span t-esc="name" />
+            </div>
+            <span t-esc="value" />
+        </div>
+    </t>
+</templates>

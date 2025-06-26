@@ -5,6 +5,7 @@ from datetime import datetime
 from uuid import uuid4
 import pytz
 import secrets
+from collections import defaultdict
 
 from odoo import api, fields, models, _, Command, tools, SUPERUSER_ID
 from odoo.http import request
@@ -202,6 +203,7 @@ class PosConfig(models.Model):
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
+    statistics_for_current_session = fields.Json(string="Session Statistics", compute="_compute_statistics_for_current_session")
 
     def notify_synchronisation(self, session_id, login_number, records={}):
         self.ensure_one()
@@ -311,7 +313,82 @@ class PosConfig(models.Model):
             pos_config.current_session_state = session and session[0].state or False
             pos_config.number_of_rescue_session = len(rescue_sessions)
 
-    @api.depends('session_ids')
+    def _compute_statistics_for_current_session(self):
+        for config in self:
+            session = config.current_session_id or config.session_ids[0] if config.session_ids else False
+            if not session or not session.exists():
+                config.statistics_for_current_session = False
+                continue
+            config.statistics_for_current_session = config.get_statistics_for_session(session)
+
+    def get_statistics_for_session(self, session):
+        self.ensure_one()
+        currency = self.currency_id
+        statistics = {
+            'session': {
+                'is_open': session.state != 'closed',
+                'session_id': session.id,
+                'nb_orders': len(session.order_ids),
+                'name': session.name,
+                'demo': False,
+            },
+            'cash': {
+                'cash_control': self.cash_control,
+                'raw_opening_cash': session.cash_register_balance_start,
+                'opening_cash': currency.format(session.cash_register_balance_start)
+            },
+            'date': {
+                'is_started': bool(session.start_at),
+                'is_ended': bool(session.stop_at),
+                'start_date': fields.Date.to_string(session.start_at.date()) if session.start_at else _("Not started yet"),
+                'end_date': fields.Date.to_string(session.stop_at.date()) if session.stop_at else _("Not ended yet"),
+            },
+            'orders': {
+                'paid': False,
+                'refund': False,
+                'draft': False,
+                'cancel': False,
+            },
+        }
+
+        paid_orders = session.order_ids.filtered(lambda o: o.state == 'paid')
+        cancel_orders = session.order_ids.filtered(lambda o: o.state == 'cancel')
+        draft_orders = session.order_ids.filtered(lambda o: o.state == 'draft')
+        refunds = paid_orders.filtered(lambda o: o.is_refund)
+        orders = paid_orders - refunds
+
+        # calculate total refunded amount per original order for refund count check
+        refund_totals = defaultdict(float)
+        for refund in refunds:
+            if refund.refunded_order_id:
+                refund_totals[refund.refunded_order_id.id] += abs(refund.amount_total)
+
+        total_draft = self.currency_id.round(sum(draft_orders.mapped('amount_total')))
+        statistics['orders']['draft'] = {
+            'count': len(draft_orders),
+            'total': currency.format(sum(draft_orders.mapped('amount_total')))
+        }
+
+        # count paid orders that are not completely refunded
+        paid_order_count = sum(1 for order in orders if refund_totals.get(order.id, 0.0) != order.amount_total)
+        total_paid = self.currency_id.round(sum(paid_orders.mapped('amount_total')))
+        statistics['orders']['paid'] = {
+            'count': len(paid_orders),
+            'total': currency.format(sum(paid_orders.mapped('amount_total')))
+        }
+
+        statistics['orders']['refund'] = {
+            'count': len(refunds),
+            'total': currency.format(sum(refunds.mapped('amount_total')))
+        }
+
+        statistics['orders']['cancel'] = {
+            'count': len(cancel_orders),
+            'total': currency.format(sum(cancel_orders.mapped('amount_total')))
+        }
+
+        return statistics
+
     def _compute_last_session(self):
         PosSession = self.env['pos.session']
         for pos_config in self:

@@ -79,6 +79,7 @@
             'point_of_sale/static/src/scss/pos_dashboard.scss',
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
             'point_of_sale/static/src/backend/pos_kanban_view/*',
+            'point_of_sale/static/src/backend/pos_open_session_statistics/*',
             'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
