@@ -19,7 +19,7 @@
             'google_calendar/static/src/scss/google_calendar.scss',
             'google_calendar/static/src/views/**/*',
         ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'google_calendar/static/tests/**/*',
         ],
     },
