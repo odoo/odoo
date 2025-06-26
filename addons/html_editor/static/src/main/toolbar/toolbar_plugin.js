@@ -9,6 +9,7 @@ import { debounce } from "@web/core/utils/timing";
 import { omit, pick } from "@web/core/utils/objects";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
+import { memoize } from "@web/core/utils/functions";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
@@ -130,6 +131,8 @@ import { _t } from "@web/core/l10n/translation";
 
 /** Delay in ms for toolbar open after keyup, double click or triple click. */
 const DELAY_TOOLBAR_OPEN = 300;
+/** Number of buttons below which toolbar will open directly in its expanded form */
+const MIN_SIZE_FOR_COMPACT = 7;
 
 /**
  * @typedef { Object } ToolbarShared
@@ -162,10 +165,10 @@ export class ToolbarPlugin extends Plugin {
             description: _t("Expand toolbar"),
             icon: "oi-ellipsis-v",
         },
-        toolbar_namespaces: withSequence(100, {
-            id: "compact",
-            isApplied: () => !this.isToolbarExpanded,
-        }),
+        toolbar_namespaces: [
+            withSequence(99, { id: "compact", isApplied: () => !this.isToolbarExpanded }),
+            withSequence(100, { id: "expanded", isApplied: () => true }),
+        ],
     };
 
     setup() {
@@ -177,6 +180,7 @@ export class ToolbarPlugin extends Plugin {
             groupIds.add(group.id);
         }
         this.buttonGroups = this.getButtonGroups();
+        this.buttonsByNamespace = this.getButtonsByNamespace();
 
         this.isMobileToolbar = hasTouch() && window.visualViewport;
 
@@ -303,6 +307,20 @@ export class ToolbarPlugin extends Plugin {
         }));
     }
 
+    /**
+     * @returns {Object<string, ToolbarButton[]>}
+     */
+    getButtonsByNamespace() {
+        const namespaces = this.getResource("toolbar_namespaces").map((ns) => ns.id);
+        const buttonsByNamespace = {};
+        for (const namespace of namespaces) {
+            buttonsByNamespace[namespace] = this.buttonGroups.flatMap((group) =>
+                group.buttons.filter((btn) => btn.namespaces.includes(namespace))
+            );
+        }
+        return buttonsByNamespace;
+    }
+
     getToolbarInfo() {
         return {
             buttonGroups: this.buttonGroups,
@@ -390,19 +408,20 @@ export class ToolbarPlugin extends Plugin {
     updateNamespace(targetedNodes) {
         const namespaces = this.getResource("toolbar_namespaces");
         const activeNamespace = namespaces.find((ns) => ns.isApplied(targetedNodes));
-        this.state.namespace = activeNamespace?.id || "expanded";
+        this.state.namespace = activeNamespace?.id;
     }
 
+    /**
+     * @param {EditorSelection} selection
+     * @param {Node[]} targetedNodes
+     */
     updateButtonsStates(selection, targetedNodes) {
+        const availableButtons = this.getAvailableButtonsSet(selection);
         const buttonGroups = this.buttonGroups
             .map((group) => ({
                 id: group.id,
                 buttons: group.buttons
-                    .filter(
-                        (button) =>
-                            button.namespaces.includes(this.state.namespace) &&
-                            button.isAvailable(selection)
-                    )
+                    .filter((button) => availableButtons.has(button))
                     .map((button) => ({
                         id: button.id,
                         description: button.description(selection, targetedNodes),
@@ -419,6 +438,44 @@ export class ToolbarPlugin extends Plugin {
             .filter((group) => group.buttons.length > 0);
 
         this.state.buttonGroups = buttonGroups;
+    }
+
+    /**
+     * Get the set of available buttons for the current namespace and selection.
+     *
+     * @param {EditorSelection} selection
+     * @returns {Set<ToolbarButton>}
+     */
+    getAvailableButtonsSet(selection) {
+        if (this.state.namespace === "compact") {
+            return this.getAvailableButtonsCompact(selection);
+        }
+        const isAvailable = (button) => button.isAvailable(selection);
+        return new Set(this.buttonsByNamespace[this.state.namespace].filter(isAvailable));
+    }
+
+    /**
+     * We only display the toolbar in its compact form if the expanded form is
+     * larger than a threshold, and larger than the compact version itself.
+     * Otherwise, we display the expanded toolbar directly.
+     *
+     * @param {EditorSelection} selection
+     * @returns {Set<ToolbarButton>}
+     */
+    getAvailableButtonsCompact(selection) {
+        const isAvailable = memoize((button) => button.isAvailable(selection));
+        const compact = this.buttonsByNamespace["compact"].filter(isAvailable);
+        const expanded = this.buttonsByNamespace["expanded"].filter(isAvailable);
+        const shouldDisplayCompactToolbar =
+            // Expanded version is big enough
+            expanded.length >= MIN_SIZE_FOR_COMPACT &&
+            // Expanded version is bigger than the compact version
+            expanded.length > compact.length;
+        if (shouldDisplayCompactToolbar) {
+            return new Set(compact);
+        }
+        this.state.namespace = "expanded";
+        return new Set(expanded);
     }
 
     closeToolbar() {

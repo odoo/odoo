@@ -877,12 +877,125 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
     expect.verifySteps(["image format evaluated"]);
 });
 
-test("toolbar opens in 'compact' namespace by default", async () => {
-    await setupEditor("<p>[test]</p>");
-    await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
-    await expandToolbar();
-    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+describe("compact toolbar", () => {
+    test("toolbar opens in 'compact' namespace by default", async () => {
+        await setupEditor("<p>[test]</p>");
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
+        await expandToolbar();
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+    });
+
+    const patchToUseOnlyTestButtons = () =>
+        patchWithCleanup(ToolbarPlugin.prototype, {
+            getResource(resourceName) {
+                const result = super.getResource(resourceName);
+                if (resourceName === "toolbar_groups") {
+                    return result.filter((group) =>
+                        ["expand_toolbar", "test_group"].includes(group.id)
+                    );
+                }
+                return result;
+            },
+        });
+    let id = 0;
+    const makeTestButton = (obj) => ({
+        id: `btn_${id++}`,
+        groupId: "test_group",
+        commandId: "test_cmd",
+        description: "Test Button",
+        icon: "fa-square",
+        ...obj,
+    });
+    const repeat = (count, fn) => Array.from({ length: count }, fn);
+
+    test("toolbar should not open in compact mode if expanded toolbar has less than 7 items", async () => {
+        class TestPlugin extends Plugin {
+            static id = "TestPlugin";
+            resources = {
+                user_commands: { id: "test_cmd", run: () => null },
+                toolbar_groups: { id: "test_group" },
+                toolbar_items: [
+                    // 3 buttons in compact and expanded namespaces
+                    ...repeat(3, () => makeTestButton({ namespaces: ["compact", "expanded"] })),
+                    // 3 buttons in expanded only namespace
+                    ...repeat(3, () => makeTestButton({ namespaces: ["expanded"] })),
+                ],
+            };
+        }
+        patchToUseOnlyTestButtons();
+        await setupEditor("<p>[test]</p>", {
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+    });
+    test("toolbar should open in compact mode if expanded toolbar is big enough (>= 7 items)", async () => {
+        class TestPlugin extends Plugin {
+            static id = "TestPlugin";
+            resources = {
+                user_commands: { id: "test_cmd", run: () => null },
+                toolbar_groups: { id: "test_group" },
+                toolbar_items: [
+                    // 3 buttons in compact and expanded namespaces
+                    ...repeat(3, () => makeTestButton({ namespaces: ["compact", "expanded"] })),
+                    // 4 buttons in expanded only namespace
+                    ...repeat(4, () => makeTestButton({ namespaces: ["expanded"] })),
+                ],
+            };
+        }
+        patchToUseOnlyTestButtons();
+        await setupEditor("<p>[test]</p>", {
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
+    });
+    test("toolbar should not open in compact mode if expanded toolbar has only one extra item", async () => {
+        class TestPlugin extends Plugin {
+            static id = "TestPlugin";
+            resources = {
+                user_commands: { id: "test_cmd", run: () => null },
+                toolbar_groups: { id: "test_group" },
+                toolbar_items: [
+                    // 10 buttons in compact and expanded namespaces
+                    ...repeat(10, () => makeTestButton({ namespaces: ["compact", "expanded"] })),
+                    // 1 button in expanded only namespace
+                    makeTestButton({ namespaces: ["expanded"] }),
+                ],
+            };
+        }
+        patchToUseOnlyTestButtons();
+        await setupEditor("<p>[test]</p>", {
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+    });
+    test("toolbar should open in compact mode if expanded toolbar has more than one extra item", async () => {
+        class TestPlugin extends Plugin {
+            static id = "TestPlugin";
+            resources = {
+                user_commands: { id: "test_cmd", run: () => null },
+                toolbar_groups: { id: "test_group" },
+                toolbar_items: [
+                    // 10 buttons in compact and expanded namespaces
+                    ...repeat(10, () => makeTestButton({ namespaces: ["compact", "expanded"] })),
+                    // 2 buttons in expanded only namespace
+                    makeTestButton({ namespaces: ["expanded"] }),
+                    makeTestButton({ namespaces: ["expanded"] }),
+                ],
+            };
+        }
+        patchToUseOnlyTestButtons();
+        await setupEditor("<p>[test]</p>", {
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
+        await expandToolbar();
+        expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+    });
 });
 
 test.tags("desktop");
