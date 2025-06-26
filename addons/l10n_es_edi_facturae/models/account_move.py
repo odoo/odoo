@@ -5,7 +5,7 @@ from markupsafe import Markup
 
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import UserError
-from odoo.tools import float_repr, date_utils
+from odoo.tools import float_repr, date_utils, float_round
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
 
 PHONE_CLEAN_TABLE = str.maketrans({" ": None, "-": None, "(": None, ")": None, "+": None})
@@ -220,6 +220,7 @@ class AccountMove(models.Model):
         taxes = []
         taxes_withheld = []
         invoice_ref = self.ref[:20] if self.ref else False
+        unit_price_decimals = self.env['decimal.precision'].precision_get('Product Price')
         for line in self.invoice_line_ids:
             if line.display_type in {'line_section', 'line_note'}:
                 continue
@@ -267,7 +268,7 @@ class AccountMove(models.Model):
                 'ItemDescription': line.name,
                 'Quantity': line.quantity,
                 'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
-                'UnitPriceWithoutTax': line.currency_id.round(price_before_discount / line.quantity if line.quantity else 0.),
+                'UnitPriceWithoutTax': float_round(price_before_discount / line.quantity if line.quantity else 0, precision_digits=unit_price_decimals),
                 'TotalCost': price_before_discount,
                 'DiscountsAndRebates': [{
                     'DiscountReason': '/',
@@ -325,6 +326,7 @@ class AccountMove(models.Model):
 
         eur_curr = self.env['res.currency'].search([('name', '=', 'EUR')])
         inv_curr = self.currency_id
+        unit_price_decimals = self.env['decimal.precision'].precision_get('Product Price')
         legal_literals = self.narration.striptags() if self.narration else False
         legal_literals = legal_literals.split(";") if legal_literals else False
 
@@ -347,6 +349,7 @@ class AccountMove(models.Model):
             'is_outstanding': self.move_type.startswith('out_'),
             'float_repr': float_repr,
             'file_currency': inv_curr,
+            'unit_price_decimals': unit_price_decimals,
             'eur': eur_curr,
             'conversion_needed': need_conv,
             'refund_multiplier': -1 if self.move_type.endswith('refund') else 1,

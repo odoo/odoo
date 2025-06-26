@@ -224,6 +224,26 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 expected_xml = lxml.etree.fromstring(f.read().encode())
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
 
+    def test_out_invoice(self):
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')])
+        decimal_precision.digits = 4
+        with freeze_time(self.frozen_today):
+            invoice = self.create_invoice(
+                partner_id=self.partner_a.id,
+                move_type='out_invoice',
+                invoice_line_ids=[
+                    {'price_unit': 2.0592, 'quantity': 22.0, 'tax_ids': [self.tax.id]},
+                ],
+            )
+            invoice.action_post()
+            generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+            self.assertFalse(errors)
+            self.assertTrue(generated_file)
+
+            with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_4_decimals.xml", "rt") as f:
+                expected_xml = lxml.etree.fromstring(f.read().encode())
+            self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
     def test_refund_invoice(self):
         random.seed(42)
         # We need to patch dates and uuid to ensure the signature's consistency
