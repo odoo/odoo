@@ -11,6 +11,10 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'co_puc_130500',
             'property_account_payable_id': 'co_puc_220500',
+            'code_digits': '0',
+            'property_account_expense_categ_id': 'co_puc_610000',
+            'property_account_income_categ_id': 'co_puc_417500',
+            'property_stock_valuation_account_id': 'co_puc_140500',
         }
 
     @template('co', 'res.company')
