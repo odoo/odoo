@@ -137,9 +137,11 @@ export class BuilderColorPicker extends Component {
                 showRgbaField: true,
                 noTransparency: this.props.noTransparency,
                 enabledTabs: this.props.enabledTabs,
+                className: "o-hb-colorpicker",
             },
             {
                 onClose: onPreviewRevert,
+                popoverClass: "o-hb-colorpicker-popover",
             }
         );
     }
