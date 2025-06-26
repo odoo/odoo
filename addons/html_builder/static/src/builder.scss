@@ -65,14 +65,22 @@
         --btn-active-bg: transparent;
         --btn-active-color: #{$o-we-fg-lighter};
 
-        &[data-name="blocks"] i {
-            color: $o-we-color-success;
+        &[data-name="blocks"] {
+            --o-snippets-tabs-accent-color: #{$o-we-color-success};
         }
-        &[data-name="customize"] i {
-            color: $o-we-color-accent;
+        &[data-name="customize"] {
+            --o-snippets-tabs-accent-color: #{$o-we-color-accent};
         }
-        &[data-name="theme"] i {
-            color: $o-we-color-global;
+        &[data-name="theme"] {
+            --o-snippets-tabs-accent-color: #{$o-we-color-global};
+        }
+
+        & i {
+            color: var(--o-snippets-tabs-accent-color);
+        }
+
+        &:focus-visible, &:active {
+            box-shadow: 0 0 0 #{$o-we-border-width} var(--o-snippets-tabs-accent-color);
         }
     }
 }
