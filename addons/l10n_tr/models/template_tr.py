@@ -28,6 +28,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_suspense_account_id': 'tr102999',
                 'account_sale_tax_id': 'tr_s_20',
                 'account_purchase_tax_id': 'tr_p_20',
+                'deferred_expense_account_id': 'tr180',
+                'deferred_revenue_account_id': 'tr380',
                 'expense_account_id': 'tr150',
                 'income_account_id': 'tr600',
             },
