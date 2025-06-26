@@ -32,8 +32,12 @@
                     <Pager t-props="pagerProps"/>
                 </div>
             </div>
-            <ListRenderer t-if="props.viewMode === 'list'" t-props="this.rendererProps" />
-            <KanbanRenderer t-elif="props.viewMode" t-props="this.rendererProps" />
+
+            <t t-if="this.renderer" t-component="this.renderer" t-props="this.rendererProps" />
+            <t t-else="">
+                <ListRenderer t-if="props.viewMode === 'list'" t-props="this.rendererProps" />
+                <KanbanRenderer t-elif="props.viewMode" t-props="this.rendererProps" />
+            </t>
         </div>
     </t>
 

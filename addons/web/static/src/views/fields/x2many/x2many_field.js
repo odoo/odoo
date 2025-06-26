@@ -119,6 +119,9 @@ export class X2ManyField extends Component {
         };
         this.action = useService("action");
         this.notificationService = useService("notification");
+        const js_class = this.archInfo.xmlDoc.getAttribute('js_class');
+        if (js_class)
+            this.renderer = registry.category("views").get(js_class).Renderer;
     }
 
     get activeField() {
