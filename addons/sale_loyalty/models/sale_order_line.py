@@ -6,6 +6,22 @@ from odoo import api, fields, models
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    discount_line_ids = fields.Many2many(
+        string="Discount Lines",
+        help="The discount lines applied to this  sale order line.",
+        comodel_name='sale.order.line',
+        column1='discounted_line_id',
+        column2='discount_line_id',
+        relation='loyalty_discounted_order_lines_discount_lines_rel',
+    )
+    discounted_line_ids = fields.Many2many(
+        string="Discounted Lines",
+        help="The discounted sale order lines this discount was applied to.",
+        comodel_name='sale.order.line',
+        column1='discount_line_id',
+        column2='discounted_line_id',
+        relation='loyalty_discounted_order_lines_discount_lines_rel',
+    )
     is_reward_line = fields.Boolean(
         string="Is a program reward line", compute='_compute_is_reward_line'
     )

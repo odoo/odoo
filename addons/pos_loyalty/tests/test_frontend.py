@@ -2567,6 +2567,73 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
 
+    def test_cheapest_product_reward_multiple_times(self):
+        self.env['product.product'].create({
+            "name": "Expensive product",
+            "lst_price": 1000,
+            "available_in_pos": True,
+        })
+        self.env['product.product'].create({
+            "name": "Cheap product",
+            "lst_price": 1,
+            "available_in_pos": True,
+        })
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'Auto Promo Program - Cheapest Product',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'minimum_qty': 2})],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f"/pos/ui?config_id={self.main_pos_config.id}",
+            'PosCheapestRewardProgramMultipleTimes',
+            login="pos_user",
+        )
+
+    def test_cheapest_product_reward_when_clear_wallet(self):
+        self.env['product.product'].create({
+            "name": "Expensive product",
+            "lst_price": 1000,
+            "available_in_pos": True,
+        })
+        self.env['product.product'].create({
+            "name": "Cheap product",
+            "lst_price": 1,
+            "available_in_pos": True,
+        })
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'Auto Promo Program - Cheapest Product',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'minimum_qty': 2})],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+                'clear_wallet': True
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f"/pos/ui?config_id={self.main_pos_config.id}",
+            'PosCheapestRewardProgramWhenClearWallet',
+            login="pos_user",
+        )
+
     def test_cheapest_product_tax_included(self):
         tax_01 = self.env['account.tax'].create({
                 "name": "Tax 1",
