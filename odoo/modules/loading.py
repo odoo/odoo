@@ -401,6 +401,8 @@ def load_modules(
             cr.execute("SELECT model || '.' || name FROM ir_model_fields WHERE translate IS TRUE")
             registry._database_translated_fields = {row[0] for row in cr.fetchall()}
 
+        upgrade_modules = [m for m in upgrade_modules if m != 'continue']
+
         report = registry._assertion_report
         env = api.Environment(cr, api.SUPERUSER_ID, {})
         load_module_graph(
@@ -488,7 +490,10 @@ def load_modules(
         modules = Module.search_fetch(Module._get_modules_to_load_domain(), ['name'], order='name')
         missing = [name for name in modules.mapped('name') if name not in graph]
         if missing:
-            _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", missing)
+            if update_module:
+                _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", missing)
+            else:
+                _logger.error("Some modules are updated, call -u continue to update them %s", missing)
 
         # STEP 3.5: execute migration end-scripts
         if update_module:
