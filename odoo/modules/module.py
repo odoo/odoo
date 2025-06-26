@@ -316,17 +316,18 @@ class Manifest(Mapping[str, typing.Any]):
     @staticmethod
     def all_addon_manifests() -> list[Manifest]:
         """Read all manifests in the addons paths."""
-        modules: list[Manifest] = []
+        modules: dict[str, Manifest] = {}
         for adp in odoo.addons.__path__:
             if not os.path.isdir(adp):
                 _logger.warning("addons path is not a directory: %s", adp)
                 continue
-            modules.extend(
-                mod
-                for file_name in os.listdir(adp)
-                if (mod := Manifest._from_path(opj(adp, file_name)))
-            )
-        return sorted(modules, key=lambda m: m.name)
+            for file_name in os.listdir(adp):
+                if file_name in modules:
+                    continue
+                if mod := Manifest._from_path(opj(adp, file_name)):
+                    assert file_name == mod.name
+                    modules[file_name] = mod
+        return sorted(modules.values(), key=lambda m: m.name)
 
 
 def get_module_path(module: str, downloaded: bool = False, display_warning: bool = True) -> str | None:
