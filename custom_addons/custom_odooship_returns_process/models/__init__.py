@@ -3,3 +3,4 @@
 
 from . import stock_move_inherit
 from . import stock_picking_inherit
+from . import grade_message_configuration

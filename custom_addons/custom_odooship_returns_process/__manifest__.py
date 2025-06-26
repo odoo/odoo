@@ -11,8 +11,10 @@
     'depends': ['stock', 'base', 'sale','custom_odooship_decanting_process',
                 'custom_odooship_outbound_process'],
     'data': [
+        'security/ir.model.access.csv',
         'views/stock_picking_inherit_views.xml',
-
+        'views/grade_message_configuration_views.xml',
+        'wizard/custom_returns_wizard_view.xml',
     ],
     'installable': True,
     'application': True,

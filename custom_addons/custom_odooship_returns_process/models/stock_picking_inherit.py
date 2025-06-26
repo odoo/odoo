@@ -40,3 +40,26 @@ class StockPicking(models.Model):
                 # For other types, run Odoo's standard aggregation logic
                 super(StockPicking, picking).action_confirm()
         return True
+
+    def action_open_returns_scan_wizard(self):
+        self.ensure_one()
+        wizard = self.env['returns.scan.wizard'].create({
+            'picking_id': self.id,
+            'tenant_code_id': self.tenant_code_id.id if self.tenant_code_id else False,
+            'site_code_id': self.site_code_id.id if self.site_code_id else False,
+            'line_ids': [(0, 0, {
+                'product_id': move.product_id.id,
+                'name': move.name,
+                'qty': move.product_uom_qty,
+                'product_grade': move.product_grade,
+                'summary': move.summary,
+            }) for move in self.move_ids],
+        })
+        return {
+            'name': 'Returns Scan Wizard',
+            'type': 'ir.actions.act_window',
+            'res_model': 'returns.scan.wizard',
+            'res_id': wizard.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
