@@ -195,7 +195,7 @@ class DonationOptionPlugin extends Plugin {
         const descriptionInputContainerEl = editingElement.querySelector(
             "#s_donation_description_inputs"
         );
-        descriptionInputContainerEl.innerHTML = "";
+        descriptionInputContainerEl.textContent = "";
         if (showDescriptions) {
             descriptionInputContainerEl.insertBefore(
                 renderToFragment("website_payment.donation.descriptionTranslationInputs", {

@@ -56,7 +56,7 @@ export class MediaVideo extends Interaction {
     generateIframe() {
         // Bug fix / compatibility: empty the <div/> element as all information
         // to rebuild the iframe should have been saved on the <div/> element
-        this.el.innerHTML = "";
+        this.el.textContent = "";
 
         // Add extra content for size / edition
         const div1 = document.createElement("div");
