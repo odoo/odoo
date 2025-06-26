@@ -4694,7 +4694,7 @@ class BaseModel(metaclass=MetaModel):
         domain = domain.optimize_full(self)
         if domain.is_false():
             return self.browse()._as_query()
-        query = Query(self.env, self._table, self._table_sql)
+        query = Query(self)
         if not domain.is_true():
             query.add_where(domain._to_sql(self, self._table, query))
 
@@ -4724,7 +4724,7 @@ class BaseModel(metaclass=MetaModel):
 
         :param ordered: whether the recordset order must be enforced by the query
         """
-        query = Query(self.env, self._table, self._table_sql)
+        query = Query(self)
         query.set_result_ids(self._ids, ordered)
         return query
 
@@ -4877,7 +4877,7 @@ class BaseModel(metaclass=MetaModel):
         new_ids, ids = partition(lambda i: isinstance(i, NewId), self._ids)
         if not ids:
             return self
-        query = Query(self.env, self._table, self._table_sql)
+        query = Query(self)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         real_ids = (id_ for [id_] in self.env.execute_query(query.select()))
         valid_ids = {*real_ids, *new_ids}
@@ -4899,7 +4899,7 @@ class BaseModel(metaclass=MetaModel):
         ids = {id_ for id_ in self._ids if id_}
         if not ids:
             return
-        query = Query(self.env, self._table, self._table_sql)
+        query = Query(self)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         # Use SKIP LOCKED instead of NOWAIT because the later aborts the
         # transaction and we do not want to use SAVEPOINTS.
@@ -4931,7 +4931,7 @@ class BaseModel(metaclass=MetaModel):
             query = self.browse(ids)._as_query(ordered=True)
             query.limit = limit - len(new_ids)
         else:
-            query = Query(self.env, self._table, self._table_sql)
+            query = Query(self)
             query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         if not ids:
             return self
