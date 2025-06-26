@@ -88,7 +88,7 @@ class PosEdiXmlUBL21(models.AbstractModel):
             'cbc:ID': {'_text': vals['name']},
             'cbc:IssueDate': {'_text': pos_order.date_order},
             'cbc:InvoiceTypeCode': {'_text': 380} if vals['document_type'] == 'invoice' else None,
-            'cbc:Note': {'_text': pos_order.general_note},
+            'cbc:Note': {'_text': pos_order.general_customer_note},
             'cbc:DocumentCurrencyCode': {'_text': pos_order.currency_id.name},
             'cac:OrderReference': {
                 'cbc:ID': {'_text': vals['name']},
