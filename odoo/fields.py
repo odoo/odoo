@@ -2992,7 +2992,8 @@ class Selection(Field[str | typing.Literal[False]]):
         raise ValueError("Wrong value for %s: %r" % (self, value))
 
     def convert_to_export(self, value, record):
-        if not isinstance(self.selection, list):
+        selection = self.selection
+        if not isinstance(selection, (list, str)) and not callable(selection):
             # FIXME: this reproduces an existing buggy behavior!
             return value if value else ''
         for item in self._description_selection(record.env):
