@@ -2503,6 +2503,56 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
         self._check_domains_count(result)
 
+    def test_properties_field_web_read_group(self):
+        self.messages.discussion = self.discussion_1
+        # search on text properties
+        self.message_1.attributes = [{
+            'name': 'mychar',
+            'type': 'char',
+            'value': 'qsd',
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mychar': 'qsd'}
+        self.message_3.attributes = {'mychar': 'boum'}
+
+        Model = self.env['test_orm.message']
+        with self.assertQueryCount(6):  # 3 for formatted_read_group + 1 query by group opened
+            result = Model.web_read_group(
+                domain=[],
+                aggregates=['__count'],
+                groupby=['attributes.mychar'],
+                auto_unfold=True,
+                unfold_read_specification={'id': {}},
+            )
+        groups = result['groups']
+
+        self.assertEqual(len(groups), 3)
+
+        # check counts
+        count_by_values = {
+            value['attributes.mychar']: value['__count']
+            for value in groups
+        }
+        self.assertEqual(count_by_values['boum'], 1)
+        self.assertEqual(count_by_values['qsd'], 2)
+        self.assertEqual(count_by_values[False], 1)
+
+        # check domains
+        domain_by_values = {
+            value['attributes.mychar']: value['__extra_domain']
+            for value in groups
+        }
+        self.assertEqual(domain_by_values['boum'], [('attributes.mychar', '=', 'boum')])
+        self.assertEqual(domain_by_values['qsd'], [('attributes.mychar', '=', 'qsd')])
+        self._check_domains_count(groups)
+
+        # group boum
+        self.assertEqual(groups[0]['__records'], [{'id': self.message_3.id}])
+        # group qsd
+        self.assertEqual(groups[1]['__records'], [{'id': self.message_1.id}, {'id': self.message_2.id}])
+        # group False
+        self.assertEqual(groups[2]['__records'], [{'id': self.message_4.id}])
+
     @mute_logger('odoo.fields')
     def test_properties_field_read_progress_bar(self):
         """Test "_read_progress_bar" with a properties field."""
