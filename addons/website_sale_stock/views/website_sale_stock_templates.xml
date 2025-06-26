@@ -5,7 +5,7 @@
         <xpath expr="//input[@type='text'][hasclass('quantity')]" position="attributes">
             <attribute name="t-att-data-max">line._get_max_line_qty()</attribute>
         </xpath>
-        <xpath expr="//div[hasclass('css_quantity')]" position="after">
+        <xpath expr="//div[contains(@t-attf-class, 'css_quantity')]" position="after">
             <div class="availability_messages"/>
         </xpath>
     </template>

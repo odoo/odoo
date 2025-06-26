@@ -2832,14 +2832,14 @@
     </template>
 
     <template id="cart_lines_quantity" name="Shopping Cart Line quantity">
+        <t
+            t-set="should_show_quantity_selector"
+            t-value="is_view_active('website_sale.product_quantity')"
+        />
         <div
-            class="css_quantity input-group justify-content-end h-100 border"
+            t-attf-class="css_quantity input-group justify-content-end h-100 {{should_show_quantity_selector and line._is_sellable() and 'border' or ''}}"
             t-attf-name="{{'website_sale_cart_line_quantity' if not is_mobile else 'website_sale_cart_line_quantity_mobile'}}"
         >
-            <t
-                t-set="should_show_quantity_selector"
-                t-value="is_view_active('website_sale.product_quantity')"
-            />
             <t t-if="should_show_quantity_selector and line._is_sellable()">
                 <a
                     href="#"
