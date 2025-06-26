@@ -412,7 +412,7 @@ describe("search", () => {
             await insertText(editor, "a");
             await animationFrame();
             await expectElementCount(".o-we-powerbox", 0);
-            expect(getContent(el)).toBe("<p>a[]<br></p>");
+            expect(getContent(el)).toBe("<p>a[]</p>");
         });
 
         test("press escape should close the powerbox", async () => {
@@ -529,11 +529,7 @@ test("should toggle list on empty paragraph", async () => {
     /** @todo fix warnings */
     patchWithCleanup(console, { warn: () => {} });
 
-    await insertText(editor, "/");
-    // @todo @phoenix: remove this once we manage inputs.
-    // Simulate <br> removal by contenteditable when something is inserted
-    el.querySelector("p > br").remove();
-    await insertText(editor, "checklist");
+    await insertText(editor, "/checklist");
     expect(getContent(el)).toBe("<p>/checklist[]</p>");
     await animationFrame();
     expect(commandNames(el)).toEqual(["Checklist"]);
@@ -593,11 +589,7 @@ test("should restore state before /command insertion when command is executed (2
     expect(getContent(el)).toBe(
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
-    await insertText(editor, "/");
-    // @todo @phoenix: remove this once we manage inputs.
-    // Simulate <br> removal by contenteditable when something is inserted
-    el.querySelector("p > br").remove();
-    await insertText(editor, "no-op");
+    await insertText(editor, "/no-op");
     expect(getContent(el)).toBe("<p>/no-op[]</p>");
     await animationFrame();
     await expectElementCount(".o-we-powerbox", 1);
