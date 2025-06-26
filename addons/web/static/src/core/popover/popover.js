@@ -150,6 +150,7 @@ export class Popover extends Component {
                 this.props.onPositioned?.(el, solution);
             },
             position: this.props.position,
+            shrink: true,
         };
     }
 
