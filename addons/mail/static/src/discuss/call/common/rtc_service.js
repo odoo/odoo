@@ -1294,7 +1294,6 @@ export class Rtc extends Record {
             if (session.eq(this.localSession)) {
                 continue;
             }
-            this.log(session, "init call", { step: "init call" });
             this.p2pService.addPeer(session.id, { sequence });
         }
     }
