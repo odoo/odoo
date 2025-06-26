@@ -294,12 +294,18 @@ class MailActivity(models.Model):
             other.action_notify()
 
         # subscribe (batch by model and user to speedup)
+<<<<<<< 775c11ef9273f483577b86bb0786bfa712380367
         for model, activity_data in activities.filtered('res_model')._classify_by_model().items():
             per_user = dict()
+||||||| 96a32ab4541a6147b8ba43dee2c31f2bcf9849be
+        for model, activity_data in activities._classify_by_model().items():
+            per_user = dict()
+=======
+        for model, activity_data in activities._classify_by_model().items():
+            per_user = defaultdict(list)
+>>>>>>> 73d9beeac894c1fb7cf4ce75676b4d8a6bb0e1cb
             for activity in activity_data['activities'].filtered(lambda act: act.user_id):
-                if activity.user_id not in per_user:
-                    per_user[activity.user_id] = [activity.res_id]
-                else:
+                if activity.res_id not in per_user[activity.user_id]:
                     per_user[activity.user_id].append(activity.res_id)
             for user, res_ids in per_user.items():
                 pids = user.partner_id.ids if user.partner_id in readable_user_partners else user.sudo().partner_id.ids
