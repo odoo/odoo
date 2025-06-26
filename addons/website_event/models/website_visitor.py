@@ -21,6 +21,50 @@ class WebsiteVisitor(models.Model):
         search="_search_event_registered_ids",
         groups="event.group_event_registration_desk")
 
+    # View tracking (not registrations)
+    visitor_event_count = fields.Integer(
+        string="Event Views",
+        help="Total number of event page views",
+        compute='_compute_event_statistics',
+    )
+    event_ids = fields.Many2many(
+        comodel_name='event.event',
+        string="Events",
+        compute='_compute_event_statistics',
+    )
+    event_count = fields.Integer(
+        string='Distinct Events Viewed',
+        help="Number of distinct event records viewed",
+        compute='_compute_event_statistics',
+    )
+
+    @api.depends('website_track_ids')
+    def _compute_event_statistics(self):
+        results = self.env['website.track']._read_group([
+            ('visitor_id', 'in', self.ids),
+            ('event_id', '!=', False),
+        ], ['visitor_id'], ['event_id:array_agg', '__count'])
+
+        mapped_data = {
+            visitor.id: {'event_ids': event_ids, 'event_count': count}
+            for visitor, event_ids, count in results
+        }
+
+        for visitor in self:
+            info = mapped_data.get(visitor.id, {'event_ids': [], 'event_count': 0})
+
+            visitor.event_ids = [(6, 0, info['event_ids'])]
+            visitor.visitor_event_count = info['event_count']
+            visitor.event_count = len(info['event_ids'])
+
+    def _add_viewed_event(self, event_id):
+        """ Track event view using website.track """
+        self.ensure_one()
+        if event_id:
+            domain = [('event_id', '=', event_id)]
+            values = {'event_id': event_id}
+            self._add_tracking(domain, values)
+
     @api.depends('partner_id', 'event_registration_ids.name')
     def _compute_display_name(self):
         """ If there is an event registration for an anonymous visitor, use that

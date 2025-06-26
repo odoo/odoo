@@ -200,6 +200,9 @@ class WebsiteEventController(http.Controller):
     @http.route(['''/event/<model("event.event"):event>/register'''], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def event_register(self, event, **post):
         values = self._prepare_event_register_values(event, **post)
+        visitor = request.env['website.visitor']._get_visitor_from_request()
+        if visitor:
+            visitor._add_viewed_event(event.id)
         return request.render("website_event.event_description_full", values)
 
     def _prepare_event_register_values(self, event, **post):
