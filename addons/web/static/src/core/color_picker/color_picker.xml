@@ -62,7 +62,7 @@
             </div>
         </t>
         <t t-if="state.activeTab==='solid'">
-            <div class="p-1"
+            <div class="d-flex flex-column align-items-center p-1"
                 t-on-click="onColorApply"
                 t-on-mouseover="onColorHover"
                 t-on-mouseout="onColorHoverOut"
@@ -71,39 +71,39 @@
                 t-on-focusin="onColorFocusin"
                 t-on-focusout="onColorFocusout">
                 <div class="o_colorpicker_section">
-                    <button data-color="o-color-1" t-attf-style="background-color: var(--o-color-1)" class="btn o_color_button"/>
-                    <button data-color="o-color-3" t-attf-style="background-color: var(--o-color-3)" class="btn o_color_button"/>
-                    <button data-color="o-color-2" t-attf-style="background-color: var(--o-color-2)" class="btn o_color_button"/>
-                    <button data-color="o-color-4" t-attf-style="background-color: var(--o-color-4)" class="ms-2 btn o_color_button"/>
-                    <button data-color="o-color-5" t-attf-style="background-color: var(--o-color-5)" class="btn o_color_button"/>
+                    <button data-color="o-color-1" t-attf-style="background-color: var(--o-color-1)" class="btn p-0 o_color_button"/>
+                    <button data-color="o-color-3" t-attf-style="background-color: var(--o-color-3)" class="btn p-0 o_color_button"/>
+                    <button data-color="o-color-2" t-attf-style="background-color: var(--o-color-2)" class="btn p-0 o_color_button"/>
+                    <button data-color="o-color-4" t-attf-style="grid-column: 5; background-color: var(--o-color-4)" class="btn p-0 o_color_button"/>
+                    <button data-color="o-color-5" t-attf-style="background-color: var(--o-color-5)" class="btn p-0 o_color_button"/>
                 </div>
 
-                <t t-foreach="DEFAULT_COLORS" t-as="line" t-key="line_index">
-                    <div class="o_color_section justify-content-center d-flex">
+                <div class="o_color_section">
+                    <t t-foreach="DEFAULT_COLORS" t-as="line" t-key="line_index">
                         <t t-foreach="line" t-as="color" t-key="color_index">
-                            <button class="o_color_button btn" t-att-class="{'selected': color === this.state.currentCustomColor.toUpperCase()}" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
+                            <button class="o_color_button btn p-0" t-att-class="{'selected': color === this.state.currentCustomColor.toUpperCase()}" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                         </t>
-                    </div>
-                </t>
+                    </t>
+                </div>
             </div>
         </t>
         <t t-if="state.activeTab==='custom'">
-            <div class="p-1" t-on-keydown="colorPickerNavigation">
+            <div class="d-flex flex-column align-items-start p-1" t-on-keydown="colorPickerNavigation">
                 <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
                     <t t-foreach="this.usedCustomColors" t-as="color" t-key="color_index">
-                        <button t-if="color !== this.state.currentCustomColor?.toLowerCase()" class="o_color_button btn" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
+                        <button t-if="color !== this.state.currentCustomColor?.toLowerCase()" class="o_color_button btn p-0" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                     </t>
-                    <button class="o_color_button btn selected" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
+                    <button class="o_color_button btn p-0 selected" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
                 </div>
                 <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
-                    <button data-color="black" class="btn o_color_button bg-black"></button>
-                    <button data-color="900" class="o_color_button btn" style="background-color: var(--900)"></button>
-                    <button data-color="800" class="o_color_button btn" style="background-color: var(--800)"></button>
-                    <button data-color="600" class="o_color_button btn" style="background-color: var(--600)"></button>
-                    <button data-color="400" class="o_color_button btn" style="background-color: var(--400)"></button>
-                    <button data-color="200" class="o_color_button btn" style="background-color: var(--200)"></button>
-                    <button data-color="100" class="o_color_button btn" style="background-color: var(--100)"></button>
-                    <button data-color="white" class="o_color_button btn bg-white"></button>
+                    <button data-color="black" class="btn p-0 o_color_button bg-black"></button>
+                    <button data-color="900" class="o_color_button btn p-0" style="background-color: var(--900)"></button>
+                    <button data-color="800" class="o_color_button btn p-0" style="background-color: var(--800)"></button>
+                    <button data-color="600" class="o_color_button btn p-0" style="background-color: var(--600)"></button>
+                    <button data-color="400" class="o_color_button btn p-0" style="background-color: var(--400)"></button>
+                    <button data-color="200" class="o_color_button btn p-0" style="background-color: var(--200)"></button>
+                    <button data-color="100" class="o_color_button btn p-0" style="background-color: var(--100)"></button>
+                    <button data-color="white" class="o_color_button btn p-0 bg-white"></button>
                 </div>
                 <CustomColorPicker
                     defaultColor="this.state.currentCustomColor"
@@ -117,7 +117,7 @@
             <t t-set="currentGradient" t-value="getCurrentGradientColor()" />
             <div class="o_colorpicker_sections p-2" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
                 <t t-foreach="this.DEFAULT_GRADIENT_COLORS" t-as="gradient" t-key="gradient">
-                    <button class="w-50 m-0 o_color_button o_gradient_color_button btn" t-att-class="{'selected': currentGradient?.includes(gradient)}" t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
+                    <button class="w-50 m-0 o_color_button o_gradient_color_button btn p-0" t-att-class="{'selected': currentGradient?.includes(gradient)}" t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
                 </t>
             </div>
             <div class="px-2">
