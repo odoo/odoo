@@ -5,6 +5,8 @@ import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { useColorPicker } from "@web/core/color_picker/color_picker";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 const DEFAULT_CUSTOM_TEXT_COLOR = "#714B67";
 const DEFAULT_CUSTOM_FILL_COLOR = "#ffffff";
@@ -38,12 +40,36 @@ export class LinkPopover extends Component {
     static defaultProps = {
         canEdit: true,
     };
-    static components = { CheckBox };
+    static components = { CheckBox, Dropdown, DropdownItem };
     colorsData = [
-        { type: "", label: _t("Link"), btnPreview: "link" },
-        { type: "primary", label: _t("Button Primary"), btnPreview: "primary" },
-        { type: "secondary", label: _t("Button Secondary"), btnPreview: "secondary" },
-        { type: "custom", label: _t("Custom"), btnPreview: "custom" },
+        {
+            type: "",
+            label: _t("Link"),
+            btnPreview: "link",
+            className: "",
+            style: "color: #008f8c;",
+        },
+        {
+            type: "primary",
+            label: _t("Button Primary"),
+            btnPreview: "primary",
+            className: "btn btn-sm btn-primary",
+            style: "",
+        },
+        {
+            type: "secondary",
+            label: _t("Button Secondary"),
+            btnPreview: "secondary",
+            className: "btn btn-sm btn-secondary",
+            style: "",
+        },
+        {
+            type: "custom",
+            label: _t("Custom"),
+            btnPreview: "custom",
+            className: "",
+            style: "",
+        },
         // Note: by compatibility the dialog should be able to remove old
         // colors that were suggested like the BS status colors or the
         // alpha -> epsilon classes. This is currently done by removing
@@ -159,7 +185,9 @@ export class LinkPopover extends Component {
         }
         this.updateDocumentState();
         this.editingWrapper = useRef("editing-wrapper");
-        this.inputRef = useRef(this.state.isImage ? "url" : "label");
+        this.inputRef = useRef(
+            this.state.isImage || (this.state.label && !this.state.url) ? "url" : "label"
+        );
         useEffect(
             (el) => {
                 if (el) {
@@ -179,7 +207,8 @@ export class LinkPopover extends Component {
             } else if (
                 this.editingWrapper?.el &&
                 !this.state.isImage &&
-                !this.editingWrapper.el.contains(ev.target)
+                !this.editingWrapper.el.contains(ev.target) &&
+                !ev.target.closest(".o-we-link-type-dropdown")
             ) {
                 this.onClickApply();
             }
@@ -237,14 +266,6 @@ export class LinkPopover extends Component {
             textContent === this.props.linkElement.href ||
             textContent + "/" === this.props.linkElement.href;
         this.state.label = labelEqualsUrl ? "" : textContent;
-    }
-    async onClickCopy(ev) {
-        ev.preventDefault();
-        await browser.navigator.clipboard.writeText(this.props.linkElement.href || "");
-        this.notificationService.add(_t("Link copied to clipboard."), {
-            type: "success",
-        });
-        this.props.onCopy();
     }
     onClickRemove() {
         this.props.onRemove();
@@ -510,5 +531,10 @@ export class LinkPopover extends Component {
     }
     isAttachmentUrl() {
         return !!this.state.url.match(/\/web\/content\/\d+/);
+    }
+
+    onSelectedLinkType(type) {
+        this.state.type = type;
+        this.onChange();
     }
 }
