@@ -1,0 +1,40 @@
+<odoo>
+    <record id="view_health_plan_form" model="ir.ui.view">
+        <field name="name">crm.health.plan.form</field>
+        <field name="model">crm.health.plan</field>
+        <field name="arch" type="xml">
+            <form string="Plano de Saúde">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="operator"/>
+                        <field name="coverage"/>
+                        <field name="price"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_health_plan_tree" model="ir.ui.view">
+        <field name="name">crm.health.plan.tree</field>
+        <field name="model">crm.health.plan</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="operator"/>
+                <field name="coverage"/>
+                <field name="price"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem id="menu_crm_health_plan_root" name="Planos de Saúde" parent="crm.crm_menu_root"/>
+    <menuitem id="menu_crm_health_plan" name="Gerenciar Planos" parent="menu_crm_health_plan_root" action="action_health_plan"/>
+
+    <record id="action_health_plan" model="ir.actions.act_window">
+        <field name="name">Planos de Saúde</field>
+        <field name="res_model">crm.health.plan</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

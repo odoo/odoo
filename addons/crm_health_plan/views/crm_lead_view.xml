@@ -1,0 +1,13 @@
+<odoo>
+    <record id="view_crm_lead_form_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.health</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="health_plan_type"/>
+                <field name="health_plan_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
