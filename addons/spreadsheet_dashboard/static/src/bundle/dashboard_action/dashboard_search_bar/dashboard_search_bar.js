@@ -2,9 +2,8 @@ import { Component, onWillUpdateProps, onWillStart } from "@odoo/owl";
 import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { _t } from "@web/core/l10n/translation";
 import { DashboardSearchDialog } from "../dashboard_search_dialog/dashboard_search_dialog";
-import { dateFilterValueToString } from "@spreadsheet/global_filters/helpers";
+import { getFacetInfo } from "@spreadsheet/global_filters/helpers";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
 
 export class DashboardSearchBar extends Component {
@@ -69,30 +68,6 @@ export class DashboardSearchBar extends Component {
 
     async getFacetFor(filter) {
         const filterValues = this.props.model.getters.getGlobalFilterValue(filter.id);
-        let values;
-        const separator = _t("or");
-        switch (filter.type) {
-            case "boolean":
-            case "text":
-                values = [filterValues];
-                break;
-            case "date": {
-                if (!filterValues) {
-                    throw new Error("Should be defined at this point");
-                }
-                values = [dateFilterValueToString(filterValues)];
-                break;
-            }
-            case "relation":
-                values = await this.nameService.loadDisplayNames(filter.modelName, filterValues);
-                values = Object.values(values);
-                break;
-        }
-        return {
-            title: filter.label,
-            values,
-            id: filter.id,
-            separator,
-        };
+        return getFacetInfo(filter, filterValues, this.nameService);
     }
 }

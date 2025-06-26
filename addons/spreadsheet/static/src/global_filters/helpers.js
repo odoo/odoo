@@ -572,3 +572,33 @@ export function getDateDomain(from, to, field, fieldType) {
     }
     return new Domain();
 }
+
+export async function getFacetInfo(filter, filterValues, nameService) {
+    let values;
+    const separator = _t("or");
+    switch (filter.type) {
+        case "boolean":
+            values = filterValues.map((value) => (value ? _t("Is set") : _t("Is not set")));
+            break;
+        case "text":
+            values = filterValues;
+            break;
+        case "date": {
+            if (!filterValues) {
+                throw new Error("Should be defined at this point");
+            }
+            values = [dateFilterValueToString(filterValues)];
+            break;
+        }
+        case "relation":
+            values = await nameService.loadDisplayNames(filter.modelName, filterValues);
+            values = Object.values(values);
+            break;
+    }
+    return {
+        title: filter.label,
+        values,
+        id: filter.id,
+        separator,
+    };
+}
