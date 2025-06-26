@@ -105,6 +105,15 @@ test("second tab still receives notifications after main pagehide", async () => 
             }
         },
     });
+    const worker = getWebSocketWorker();
+    patchWithCleanup(worker, {
+        _unregisterClient(client) {
+            // Ensure that the worker does not receive any messages from the main tab
+            // after pagehide, mimicking real-world behavior.
+            client.onmessage = null;
+            super._unregisterClient(client);
+        },
+    });
     restoreRegistry(registry);
     const secondEnv = await makeMockEnv(null, { makeNew: true });
     secondEnv.services.bus_service.addChannel("lambda");
