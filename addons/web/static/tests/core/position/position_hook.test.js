@@ -705,6 +705,62 @@ test("not positioned if target not connected", async () => {
     expect.verifySteps([]);
 });
 
+function shrinkPopperTest(position, offset, onPositioned) {
+    return async () => {
+        class TestComp extends Component {
+            static template = xml`
+                <div id="container" t-ref="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px;">
+                    <div id="target" t-ref="target" style="background-color: royalblue; width: 50px; height: 50px; margin-top: ${offset}px;"/>
+                    <div id="popper" t-ref="popper" style="background-color: maroon; width: 100px; overflow: auto;">
+                        <div id="popper-content" style="background-color: seagreen; height: 500px; width: 50px;"/>
+                    </div>
+                </div>
+            `;
+            static props = ["*"];
+            setup() {
+                const target = useRef("target");
+                const container = useRef("container");
+                usePosition("popper", () => target.el, {
+                    position,
+                    container: () => container.el,
+                    onPositioned(el) {
+                        expect.step("onPositioned");
+                        onPositioned({
+                            c: container.el.getBoundingClientRect(),
+                            p: el.getBoundingClientRect(),
+                            t: target.el.getBoundingClientRect(),
+                        });
+                    },
+                    shrink: true,
+                });
+            }
+        }
+        await mountWithCleanup(TestComp);
+        expect.verifySteps(["onPositioned"]);
+    };
+}
+
+test("max height to prevent container overflow - top", shrinkPopperTest("top", 10, ({ c, p, t }) => {
+    expect(p.top).toBe(c.top);
+    expect(p.bottom).toBe(t.top);
+}));
+test("max height to prevent container overflow - bottom", shrinkPopperTest("bottom", -10, ({ c, p, t }) => {
+    expect(p.top).toBe(t.bottom);
+    expect(p.bottom).toBe(c.bottom);
+}));
+test("max height to prevent container overflow - right-start", shrinkPopperTest("right-start", 0, ({ c, p, t }) => {
+    expect(p.top).toBe(t.top);
+    expect(p.bottom).toBe(c.bottom);
+}));
+test("max height to prevent container overflow - right-middle", shrinkPopperTest("right-middle", 0, ({ c, p }) => {
+    expect(p.top).toBe(c.top);
+    expect(p.bottom).toBe(c.bottom);
+}));
+test("max height to prevent container overflow - right-end", shrinkPopperTest("right-end", 0, ({ c, p, t }) => {
+    expect(p.bottom).toBe(t.bottom);
+    expect(p.top).toBe(c.top);
+}));
+
 function getPositionTest(position, positionToCheck) {
     return async () => {
         expect.assertions(2);
