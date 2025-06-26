@@ -7,27 +7,31 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="//form/header" position="inside">
-                     <hr/><field name="current_state" widget="statusbar"/>
-                     <button name="action_confirm_geek_pick"
+                <xpath expr="//form/header" position="inside">
+                    <hr/>
+                    <field name="current_state" widget="statusbar"/>
+                    <button name="action_confirm_geek_pick"
                             string="Geek Pick confirm"
                             type="object"
                             class="btn-primary"
-                            invisible="state in ('done', 'cancel')"
+                            invisible="current_state in ('pick','pack')"
                     />
-                     <button name="action_confirm_pack"
+                    <button name="action_confirm_pack"
                             string="Geek Pack confirm"
                             type="object"
                             class="btn-primary"
-                            invisible="state in ('done', 'cancel')"
+                            invisible="current_state in ('draft','pack')"
                     />
                 </xpath>
+
                 <xpath expr="//field[@name='batch_id']" position="before">
                     <field name="discrete_pick"/>
                     <field name="automation_manual_order"/>
                     <field name="slsu"/>
+                    <field name="operation_process_type"/>
                 </xpath>
-                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']" position="after">
+                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']"
+                       position="after">
                     <field name="pc_container_code"/>
                     <field name="packed" optional="hide" column_invisible="parent.state=='draft'"/>
                     <field name="released_manual" optional="hide" column_invisible="parent.state=='draft'"/>

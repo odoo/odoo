@@ -29,6 +29,7 @@ class StockPicking(models.Model):
         ('merge', 'Merge')
     ], string='Automation/Manual Order', copy=False)
     slsu = fields.Boolean(string="Manual SLSU")
+    operation_process_type = fields.Selection(related='picking_type_id.picking_process_type')
 
     def action_confirm_geek_pick(self):
         """
