@@ -3706,7 +3706,13 @@ class TestX2many(TransactionExpressionCase):
         public_group = self.env['test_orm.group'].with_user(admin_user).create({
             'name': 'public',
         }).with_user(self.env.user)
-        u = self.env['test_orm.user'].with_user(admin_user).create({
+        with self.assertRaises(AccessError):
+            # the default user on the transaction has no access
+            self.env['test_orm.user'].with_user(admin_user).create({
+                'name': 'foo',
+                'group_ids': [public_group.id],
+            })
+        u = self.env['test_orm.user'].with_user(admin_user).sudo().create({
             'name': 'foo',
             'group_ids': [public_group.id],
         }).with_user(self.env.user)
