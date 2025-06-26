@@ -70,8 +70,26 @@ class WebsiteRewrite(models.Model):
         404 Not Found: If you want remove a specific page/controller (e.g. Ecommerce is installed, but you don't want /shop on a specific website)
         308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)
     ''')
+    is_url_from_exist = fields.Boolean(compute="_compute_is_url_from_exist", default=False)
 
     sequence = fields.Integer()
+
+    @api.depends("url_from", "redirect_type")
+    def _compute_is_url_from_exist(self):
+        dynamic_routes = self.env["ir.http"].routing_map().iter_rules()
+        for rewrite in self:
+            rewrite.is_url_from_exist = bool(
+                rewrite.url_from
+                and rewrite.redirect_type in ["301", "302"]
+                and (
+                    any(
+                        rule for rule in dynamic_routes
+                        if rule.rule.rstrip("/") == rewrite.url_from.rstrip("/")
+                    ) or self.env["website.page"].search(
+                        [("url", "=", rewrite.url_from)], limit=1
+                    )
+                )
+            )
 
     @api.onchange('route_id')
     def _onchange_route_id(self):
