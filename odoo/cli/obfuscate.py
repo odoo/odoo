@@ -56,7 +56,7 @@ class Obfuscate(Command):
 
     @_ensure_cr
     def begin(self):
-        self.cr.execute("begin work")
+        self.cr.execute("BEGIN WORK")
         self.cr.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto")
 
     @_ensure_cr
@@ -69,12 +69,16 @@ class Obfuscate(Command):
 
     @_ensure_cr
     def set_pwd(self, pwd):
-        """Set password to cypher/uncypher datas"""
-        self.cr.execute("INSERT INTO ir_config_parameter (key, value) VALUES ('odoo_cyph_pwd', 'odoo_cyph_'||encode(pgp_sym_encrypt(%s, %s), 'base64')) ON CONFLICT(key) DO NOTHING", [pwd, pwd])
+        """ Set password to cypher/uncypher datas """
+        self.cr.execute("""
+            INSERT INTO ir_config_parameter (key, value)
+                 VALUES ('odoo_cyph_pwd', 'odoo_cyph_' || encode(pgp_sym_encrypt(%s, %s), 'base64'))
+            ON CONFLICT (key) DO NOTHING
+        """, [pwd, pwd])
 
     @_ensure_cr
     def check_pwd(self, pwd):
-        """If password is set, check if it's valid"""
+        """ If password is set, check if it's valid """
         uncypher_pwd = self.uncypher_string(SQL.identifier('value'), pwd)
 
         try:
@@ -88,18 +92,33 @@ class Obfuscate(Command):
 
     @_ensure_cr
     def clear_pwd(self):
-        """Unset password to cypher/uncypher datas"""
+        """ Unset password to cypher/uncypher datas """
         self.cr.execute("DELETE FROM ir_config_parameter WHERE key='odoo_cyph_pwd' ")
 
     def cypher_string(self, sql_field: SQL, password):
         # don't double cypher fields
-        return SQL("""CASE WHEN starts_with(%(field_name)s, 'odoo_cyph_') THEN %(field_name)s ELSE 'odoo_cyph_'||encode(pgp_sym_encrypt(%(field_name)s, %(pwd)s), 'base64') END""", field_name=sql_field, pwd=password)
+        return SQL("""
+              CASE WHEN starts_with(%(field_name)s, 'odoo_cyph_')
+                   THEN %(field_name)s
+                   ELSE 'odoo_cyph_'||encode(pgp_sym_encrypt(%(field_name)s, %(pwd)s), 'base64')
+              END
+        """, field_name=sql_field, pwd=password)
 
     def uncypher_string(self, sql_field: SQL, password):
-        return SQL("""CASE WHEN starts_with(%(field_name)s, 'odoo_cyph_') THEN pgp_sym_decrypt(decode(substring(%(field_name)s, 11)::text, 'base64'), %(pwd)s) ELSE %(field_name)s END""", field_name=sql_field, pwd=password)
+        return SQL("""
+              CASE WHEN starts_with(%(field_name)s, 'odoo_cyph_')
+                   THEN pgp_sym_decrypt(decode(substring(%(field_name)s, 11)::text, 'base64'), %(pwd)s)
+                   ELSE %(field_name)s
+              END
+        """, field_name=sql_field, pwd=password)
 
     def check_field(self, table, field):
-        qry = "SELECT udt_name FROM information_schema.columns WHERE table_name=%s AND column_name=%s"
+        qry = """
+            SELECT udt_name
+              FROM information_schema.columns
+             WHERE table_name = %s
+               AND column_name = %s
+        """
         self.cr.execute(qry, [table, field])
         if self.cr.rowcount == 1:
             res = self.cr.fetchone()
@@ -111,7 +130,15 @@ class Obfuscate(Command):
         return False
 
     def get_all_fields(self):
-        qry = "SELECT table_name, column_name FROM information_schema.columns WHERE table_schema='public' AND udt_name IN ['text', 'varchar', 'jsonb'] AND NOT table_name LIKE 'ir_%' ORDER BY 1,2"
+        qry = """
+            SELECT table_name,
+                   column_name
+              FROM information_schema.columns
+             WHERE table_schema = 'public'
+               AND udt_name IN ['text', 'varchar', 'jsonb']
+               AND NOT table_name LIKE 'ir_%'
+             ORDER BY 1, 2
+        """
         self.cr.execute(qry)
         return self.cr.fetchall()
 
@@ -131,12 +158,14 @@ class Obfuscate(Command):
                 # Nest the jsonb_set calls to update all values at once
                 # Do not create the key in json if doesn't esist
                 new_field_value = sql_field
-                self.cr.execute(SQL('select distinct jsonb_object_keys(%s) as key from %s', sql_field, SQL.identifier(table)))
+                self.cr.execute(SQL("""
+                    SELECT DISTINCT jsonb_object_keys(%s) AS key FROM %s
+                """, sql_field, SQL.identifier(table)))
                 keys = [k[0] for k in self.cr.fetchall()]
                 for key in keys:
                     cypher_query = cyph_fct(SQL("%s->>%s", sql_field, key), pwd)
                     new_field_value = SQL(
-                        """jsonb_set(%s, array[%s], to_jsonb(%s)::jsonb, FALSE)""",
+                        "jsonb_set(%s, array[%s], to_jsonb(%s)::jsonb, FALSE)",
                         new_field_value, key, cypher_query,
                     )
                 cypherings.append(SQL('%s=%s', sql_field, new_field_value))
