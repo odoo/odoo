@@ -25,10 +25,10 @@ Auto-complete partner companies' data
             'partner_autocomplete/static/src/js/*',
             'partner_autocomplete/static/src/xml/*',
         ],
-        'web.tests_assets': [
+        'web.jsvat_lib': [
             'partner_autocomplete/static/lib/**/*',
         ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'partner_autocomplete/static/tests/**/*',
         ],
     },
