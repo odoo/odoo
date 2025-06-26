@@ -1393,6 +1393,10 @@ def preload_registries(dbnames):
         try:
             threading.current_thread().dbname = dbname
             update_module = config['init'] or config['update']
+            if not update_module:
+                with sql_db.db_connect(dbname).cursor() as cr:
+                    cr.execute("SELECT 1 FROM ir_module_module WHERE state IN ('to remove', 'to upgrade', 'to install') FETCH FIRST 1 ROW ONLY")
+                    update_module = bool(cr.rowcount)
             registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'])
 
             # run post-install tests
