@@ -14,11 +14,7 @@ import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
-import {
-    generatePreparationChanges,
-    generatePreparationReceiptElement,
-} from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
-import { renderToElement } from "@web/core/utils/render";
+import * as PreparationReceipt from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
@@ -458,15 +454,15 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                 content: "Check if order preparation contains always Variant",
                 trigger: "body",
                 run: async () => {
-                    const rendered = generatePreparationReceiptElement();
+                    const receipts = await PreparationReceipt.generatePreparationReceipts();
 
-                    if (!rendered.innerHTML.includes("Value 1")) {
+                    if (!receipts[0].innerHTML.includes("Value 1")) {
                         throw new Error("Value 1 not found in printed receipt");
                     }
-                    if (!rendered.innerHTML.includes("14:20")) {
+                    if (!receipts[0].innerHTML.includes("14:20")) {
                         throw new Error("14:20 not found in printed receipt");
                     }
-                    if (rendered.innerHTML.includes("DUPLICATA!")) {
+                    if (receipts[0].innerHTML.includes("DUPLICATA!")) {
                         throw new Error("DUPLICATA! should not be present in printed receipt");
                     }
                 },
@@ -480,22 +476,96 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                 content: "Check if order preparation contains 'To Serve' order level internal note",
                 trigger: "body",
                 run: async () => {
-                    const changes = generatePreparationChanges();
-                    const rendered = renderToElement("point_of_sale.OrderChangeReceipt", {
-                        data: changes.orderData,
-                    });
-
-                    if (!rendered.innerHTML.includes("INTERNAL NOTE")) {
+                    const receipts = await PreparationReceipt.generatePreparationReceipts();
+                    if (!receipts[0].innerHTML.includes("Water")) {
+                        throw new Error("'Water' not found in printed receipt");
+                    }
+                    if (!receipts[1].innerHTML.includes("INTERNAL NOTE")) {
                         throw new Error("'INTERNAL NOTE' not found in printed receipt");
                     }
-                    if (!rendered.innerHTML.includes("To Serve")) {
+                    if (!receipts[1].innerHTML.includes("To Serve")) {
                         throw new Error("To Serve not found in printed receipt");
                     }
-                    if (rendered.innerHTML.includes("colorIndex")) {
+                    if (receipts[1].innerHTML.includes("colorIndex")) {
                         throw new Error("colorIndex should not be displayed in printed receipt");
                     }
                 },
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_course_restaurant_preparation_tour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickCourseButton(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickCourseButton(),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.clickCourseButton(),
+            ProductScreen.clickDisplayedProduct("Minute Maid"),
+            {
+                content: "Check if order preparation contains courses with products",
+                trigger: "body",
+                run: async () => {
+                    const receipts = await PreparationReceipt.generatePreparationReceipts();
+                    const coursesAndProducts = [
+                        { course: "Course 1", product: "Coca-Cola" },
+                        { course: "Course 2", product: "Water" },
+                        { course: "Course 3", product: "Minute Maid" },
+                    ];
+                    const courseEls = receipts[0].querySelectorAll("div.fw-bold");
+                    const productEls = receipts[0].querySelectorAll(".product-name");
+
+                    coursesAndProducts.forEach(({ course, product }) => {
+                        const courseFound = Array.from(courseEls).some((el) =>
+                            el.textContent.includes(course)
+                        );
+                        const productFound = Array.from(productEls).some((el) =>
+                            el.textContent.includes(product)
+                        );
+
+                        if (!courseFound || !productFound) {
+                            throw new Error(
+                                `"${course}" or "${product}" not found in printed receipt`
+                            );
+                        }
+                    });
+                },
+            },
+            ProductScreen.clickOrderButton(),
+            Dialog.bodyIs("Failed in printing Preparation Printer, Printer changes of the order"),
+            Dialog.confirm(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.selectCourseLine("Course 2"),
+            {
+                content: "Check if 'Course 2' is printed on the receipt",
+                trigger: "body",
+                run: async () => {
+                    const receipts = await PreparationReceipt.generateFireCourseReceipts();
+                    if (!receipts[0].innerHTML.includes("Course 2 fired")) {
+                        throw new Error("'Course 2 fired' not found on printed receipt");
+                    }
+                },
+            },
+            ProductScreen.fireCourseButton(),
+            Dialog.bodyIs("Failed in printing Preparation Printer, Printer changes of the order"),
+            Dialog.confirm(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.selectCourseLine("Course 3"),
+            {
+                content: "Check if 'Course 3' is printed on the receipt",
+                trigger: "body",
+                run: async () => {
+                    const receipts = await PreparationReceipt.generateFireCourseReceipts();
+                    if (!receipts[0].innerHTML.includes("Course 3 fired")) {
+                        throw new Error("'Course 3 fired' not found on printed receipt");
+                    }
+                },
+            },
+            ProductScreen.fireCourseButton(),
         ].flat(),
 });
 
@@ -519,8 +589,8 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt", {
                 content: "Check if order preparation has product correctly ordered",
                 trigger: "body",
                 run: async () => {
-                    const rendered = generatePreparationReceiptElement();
-                    const orderLines = [...rendered.querySelectorAll(".orderline")];
+                    const receipts = await PreparationReceipt.generatePreparationReceipts();
+                    const orderLines = [...receipts[0].querySelectorAll(".orderline")];
                     const orderLinesInnerText = orderLines.map((orderLine) => orderLine.innerText);
                     const expectedOrderLines = [
                         "Office Combo",
@@ -650,9 +720,9 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout",
             {
                 trigger: "body",
                 run: async () => {
-                    const rendered = generatePreparationReceiptElement();
+                    const receipts = await PreparationReceipt.generatePreparationReceipts();
 
-                    const comboItemLines = [...rendered.querySelectorAll(".orderline.ms-5")].map(
+                    const comboItemLines = [...receipts[0].querySelectorAll(".orderline.ms-5")].map(
                         (el) => el.innerText
                     );
                     const expectedComboItemLines = [
