@@ -172,18 +172,19 @@ class HrLeaveAllocation(models.Model):
     @api.depends('name', 'date_from', 'date_to')
     def _compute_description_validity(self):
         for allocation in self:
+            date_from = allocation.date_from or fields.Date.context_today(allocation)
             if allocation.date_to:
                 name_validity = _(
                     "%(allocation_name)s (from %(date_from)s to %(date_to)s)",
                     allocation_name=allocation.name,
-                    date_from=allocation.date_from.strftime("%b %d %Y"),
+                    date_from=date_from.strftime("%b %d %Y"),
                     date_to=allocation.date_to.strftime("%b %d %Y"),
                 )
             else:
                 name_validity = _(
                     "%(allocation_name)s (from %(date_from)s to No Limit)",
                     allocation_name=allocation.name,
-                    date_from=allocation.date_from.strftime("%b %d %Y"),
+                    date_from=date_from.strftime("%b %d %Y"),
                 )
             allocation.name_validity = name_validity
 
