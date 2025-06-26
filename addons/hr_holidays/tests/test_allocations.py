@@ -3,6 +3,7 @@ from datetime import date
 from freezegun import freeze_time
 
 from odoo.exceptions import ValidationError
+from odoo.fields import Date
 from odoo.tests import Form, tagged, users
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -452,3 +453,26 @@ class TestAllocations(TestHrHolidaysCommon):
 
         self.assertEqual(leave.max_leaves, 22)
         self.assertEqual(leave.virtual_remaining_leaves, 14)
+
+    def test_allocation_request_with_date_from(self):
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager)
+        allocation_view = 'hr_holidays.hr_leave_allocation_view_form'
+        with self.assertRaises(AssertionError):
+            with Form(allocation, allocation_view) as allocation_form:
+                allocation_form.holiday_status_id = self.leave_type
+                allocation_form.date_from = False
+
+        with Form(allocation, allocation_view) as allocation_form:
+            date_from = Date.today()
+            allocation_form.holiday_status_id = self.leave_type
+            allocation_form.date_from = date_from
+
+            self.assertEqual(allocation_form.date_from, date_from)
+            self.assertEqual(
+                allocation_form.name_validity,
+                "%(allocation_name)s (from %(date_from)s to No Limit)" % {
+                    'allocation_name': allocation_form.name,
+                    'date_from': allocation_form.date_from.strftime("%b %d %Y"),
+                },
+                "The name_validity field was not set correctly."
+            )
