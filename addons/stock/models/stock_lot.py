@@ -149,7 +149,7 @@ class StockLot(models.Model):
         always triggered.
         """
         for prod_lot in self:
-            prod_lot.display_complete = prod_lot.id or self._context.get('display_complete')
+            prod_lot.display_complete = prod_lot.id or self.env.context.get('display_complete')
 
     def _compute_delivery_ids(self):
         delivery_ids_by_lot = self._find_delivery_ids_by_lot()

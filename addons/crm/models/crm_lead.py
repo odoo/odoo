@@ -1042,7 +1042,7 @@ class CrmLead(models.Model):
         # - ('id', 'in', stages.ids): add columns that should be present
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
-        team_id = self._context.get('default_team_id')
+        team_id = self.env.context.get('default_team_id')
         if team_id:
             search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
         else:
@@ -1367,7 +1367,7 @@ class CrmLead(models.Model):
             return help_message
 
         help_title, sub_title = "", ""
-        if self._context.get('default_type') == 'lead':
+        if self.env.context.get('default_type') == 'lead':
             help_title = _('Create a new lead')
         else:
             help_title = _('Create an opportunity to start playing with your pipeline.')
@@ -2343,7 +2343,7 @@ class CrmLead(models.Model):
         except AccessError:
             raise UserError(_("You don't have the access needed to run this cron."))
         else:
-            self._cr.execute('TRUNCATE TABLE crm_lead_scoring_frequency')
+            self.env.cr.execute('TRUNCATE TABLE crm_lead_scoring_frequency')
 
         new_frequencies_by_team, unused = self._pls_prepare_update_frequency_table(rebuild=True)
         # update frequency table
@@ -2689,22 +2689,22 @@ class CrmLead(models.Model):
             table = query.table
             query.order = SQL("%(table)s.team_id asc, %(table)s.id desc", table=SQL.identifier(table))
             sql_fields = [SQL.identifier(field) for field in pls_fields]
-            self._cr.execute(query.select(
+            self.env.cr.execute(query.select(
                 SQL("id"),
                 SQL("probability"),
                 *sql_fields,
             ))
-            lead_results = self._cr.dictfetchall()
+            lead_results = self.env.cr.dictfetchall()
 
             if use_tags:
                 # Get tags values
                 tag_rel_alias = query.left_join(table, 'id', 'crm_tag_rel', 'lead_id', 'crm_tag_rel')
                 tag_alias = query.left_join(tag_rel_alias, 'tag_id', 'crm_tag', 'id', 'crm_tag')
-                self._cr.execute(query.select(
+                self.env.cr.execute(query.select(
                     SQL("%s AS lead_id", SQL.identifier(table, "id")),
                     SQL("%s AS tag_id", SQL.identifier(tag_alias, "id")),
                 ))
-                tag_results = self._cr.dictfetchall()
+                tag_results = self.env.cr.dictfetchall()
             else:
                 tag_results = []
 

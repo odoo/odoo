@@ -176,7 +176,7 @@ class TestOrmMessage(models.Model):
     @api.depends('author.name', 'discussion.name')
     def _compute_name(self):
         for message in self:
-            message.name = self._context.get('compute_name',
+            message.name = self.env.context.get('compute_name',
                 "[%s] %s" % (message.discussion.name or '', message.author.name or ''))
 
     @api.constrains('name')
@@ -520,19 +520,19 @@ class TestOrmComputeInverse(models.Model):
 
     @api.depends('foo')
     def _compute_bar(self):
-        self._context.get('log', []).append('compute')
+        self.env.context.get('log', []).append('compute')
         for record in self:
             record.bar = record.foo
 
     def _inverse_bar(self):
-        self._context.get('log', []).append('inverse')
+        self.env.context.get('log', []).append('inverse')
         for record in self:
             record.foo = record.bar
 
     @api.constrains('bar', 'baz')
     def _check_constraint(self):
-        if self._context.get('log_constraint'):
-            self._context.get('log', []).append('constraint')
+        if self.env.context.get('log_constraint'):
+            self.env.context.get('log', []).append('constraint')
 
     @api.depends('foo')
     def _compute_child_ids(self):
@@ -573,18 +573,18 @@ class TestOrmMulti_Compute_Inverse(models.Model):
 
     @api.depends('foo')
     def _compute_bars(self):
-        self._context.get('log', []).append('compute')
+        self.env.context.get('log', []).append('compute')
         for record in self:
             substrs = record.foo.split('/') + ['', '', '']
             record.bar1, record.bar2, record.bar3 = substrs[:3]
 
     def _inverse_bar1(self):
-        self._context.get('log', []).append('inverse1')
+        self.env.context.get('log', []).append('inverse1')
         for record in self:
             record.write({'foo': f'{record.bar1}/{record.bar2}/{record.bar3}'})
 
     def _inverse_bar23(self):
-        self._context.get('log', []).append('inverse23')
+        self.env.context.get('log', []).append('inverse23')
         for record in self:
             record.write({'foo': f'{record.bar1}/{record.bar2}/{record.bar3}'})
 

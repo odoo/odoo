@@ -273,7 +273,7 @@ class AccountTax(models.Model):
             if (
                 record.tax_exigibility == 'on_payment'
                 and not record.cash_basis_transition_account_id.reconcile
-                and not self._context.get('chart_template_load')
+                and not self.env.context.get('chart_template_load')
             ):
                 raise ValidationError(_("The cash basis transition account needs to allow reconciliation."))
 
@@ -3213,8 +3213,8 @@ class AccountTax(models.Model):
 
         # Compute tax details for a single line.
         currency = currency or company.currency_id
-        if 'force_price_include' in self._context:
-            special_mode = 'total_included' if self._context['force_price_include'] else 'total_excluded'
+        if 'force_price_include' in self.env.context:
+            special_mode = 'total_included' if self.env.context['force_price_include'] else 'total_excluded'
         elif not handle_price_include:
             special_mode = 'total_excluded'
         else:
@@ -3265,7 +3265,7 @@ class AccountTax(models.Model):
                 if not rep_line.account_id:
                     total_void += tax_rep_data['tax_amount_currency']
 
-        if self._context.get('round_base', True):
+        if self.env.context.get('round_base', True):
             total_excluded = currency.round(total_excluded)
             total_included = currency.round(total_included)
 
@@ -3507,7 +3507,7 @@ class AccountTaxRepartitionLine(models.Model):
         :return: An account.account record or an empty recordset.
         """
         self.ensure_one()
-        if not force_caba_exigibility and self.tax_id.tax_exigibility == 'on_payment' and not self._context.get('caba_no_transition_account'):
+        if not force_caba_exigibility and self.tax_id.tax_exigibility == 'on_payment' and not self.env.context.get('caba_no_transition_account'):
             return self.tax_id.cash_basis_transition_account_id
         else:
             return self.account_id

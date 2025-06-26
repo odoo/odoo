@@ -49,8 +49,8 @@ class ProjectProject(models.Model):
     @api.model
     def default_get(self, fields_list):
         defaults = super().default_get(fields_list)
-        if self._context.get('order_state') == 'sale':
-            order_id = self._context.get('order_id')
+        if self.env.context.get('order_state') == 'sale':
+            order_id = self.env.context.get('order_id')
             sale_line_id = self.env['sale.order.line'].search(
                 [('order_id', '=', order_id), ('is_service', '=', True)],
                 limit=1).id

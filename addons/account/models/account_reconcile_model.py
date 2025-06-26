@@ -169,14 +169,14 @@ class AccountReconcileModel(models.Model):
     def action_reconcile_stat(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_journal_line")
-        self._cr.execute('''
+        self.env.cr.execute('''
             SELECT ARRAY_AGG(DISTINCT move_id)
             FROM account_move_line
             WHERE reconcile_model_id = %s
         ''', [self.id])
         action.update({
             'context': {},
-            'domain': [('id', 'in', self._cr.fetchone()[0])],
+            'domain': [('id', 'in', self.env.cr.fetchone()[0])],
             'help': """<p class="o_view_nocontent_empty_folder">{}</p>""".format(_('This reconciliation model has created no entry so far')),
         })
         return action

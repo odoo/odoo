@@ -57,7 +57,7 @@ class AccountJournal(models.Model):
         journal_ids = self.ids
 
         if journal_ids:
-            self._cr.execute('''
+            self.env.cr.execute('''
                 SELECT
                     move.journal_id,
                     ARRAY_AGG(doc.edi_format_id) AS edi_format_ids
@@ -67,7 +67,7 @@ class AccountJournal(models.Model):
                 AND move.journal_id IN %s
                 GROUP BY move.journal_id
             ''', [tuple(journal_ids)])
-            protected_edi_formats_per_journal = {r[0]: set(r[1]) for r in self._cr.fetchall()}
+            protected_edi_formats_per_journal = {r[0]: set(r[1]) for r in self.env.cr.fetchall()}
         else:
             protected_edi_formats_per_journal = defaultdict(set)
 

@@ -149,9 +149,9 @@ class PurchaseOrderLine(models.Model):
 
     def _get_invoice_lines(self):
         self.ensure_one()
-        if self._context.get('accrual_entry_date'):
+        if self.env.context.get('accrual_entry_date'):
             return self.invoice_lines.filtered(
-                lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= self._context['accrual_entry_date']
+                lambda l: l.move_id.invoice_date and l.move_id.invoice_date <= self.env.context['accrual_entry_date']
             )
         else:
             return self.invoice_lines

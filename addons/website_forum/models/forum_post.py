@@ -191,7 +191,7 @@ class ForumPost(models.Model):
 
     @api.depends_context('uid')
     def _compute_user_vote(self):
-        votes = self.env['forum.post.vote'].search_read([('post_id', 'in', self._ids), ('user_id', '=', self._uid)], ['vote', 'post_id'])
+        votes = self.env['forum.post.vote'].search_read([('post_id', 'in', self._ids), ('user_id', '=', self.env.uid)], ['vote', 'post_id'])
         mapped_vote = dict([(v['post_id'][0], v['vote']) for v in votes])
         for vote in self:
             vote.user_vote = mapped_vote.get(vote.id, 0)
@@ -208,7 +208,7 @@ class ForumPost(models.Model):
     @api.depends_context('uid')
     def _compute_user_favourite(self):
         for post in self:
-            post.user_favourite = post._uid in post.favourite_ids.ids
+            post.user_favourite = post.env.uid in post.favourite_ids.ids
 
     @api.depends('favourite_ids')
     def _compute_favorite_count(self):
@@ -228,7 +228,7 @@ class ForumPost(models.Model):
     @api.depends_context('uid')
     def _compute_uid_has_answered(self):
         for post in self:
-            post.uid_has_answered = post._uid in post.child_ids.create_uid.ids
+            post.uid_has_answered = post.env.uid in post.child_ids.create_uid.ids
 
     @api.depends('child_ids.is_correct')
     def _compute_has_validated_answer(self):
@@ -375,7 +375,7 @@ class ForumPost(models.Model):
                     raise AccessError(_('%d karma required to accept or refuse an answer.', post.karma_accept))
                 # update karma except for self-acceptance
                 mult = 1 if vals['is_correct'] else -1
-                if vals['is_correct'] != post.is_correct and post.create_uid.id != self._uid:
+                if vals['is_correct'] != post.is_correct and post.create_uid.id != self.env.uid:
                     post.create_uid.sudo()._add_karma(post.forum_id.karma_gen_answer_accepted * mult, post,
                                                       _('User answer accepted') if mult > 0 else _('Accepted answer removed'))
                     self.env.user.sudo()._add_karma(post.forum_id.karma_gen_answer_accept * mult, post,
@@ -521,7 +521,7 @@ class ForumPost(models.Model):
 
         self.write({
             'state': 'close',
-            'closed_uid': self._uid,
+            'closed_uid': self.env.uid,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
             'closed_reason_id': reason_id,
         })
@@ -608,7 +608,7 @@ class ForumPost(models.Model):
     def vote(self, upvote=True):
         self.ensure_one()
         Vote = self.env['forum.post.vote']
-        existing_vote = Vote.search([('post_id', '=', self.id), ('user_id', '=', self._uid)])
+        existing_vote = Vote.search([('post_id', '=', self.id), ('user_id', '=', self.env.uid)])
         new_vote_value = '1' if upvote else '-1'
         if existing_vote:
             if upvote:

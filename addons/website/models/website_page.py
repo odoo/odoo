@@ -76,7 +76,7 @@ class WebsitePage(models.Model):
         ids = []
         previous_page = None
         page_keys = self.sudo().search(
-            self.env['website'].website_domain(website_id=self._context.get('website_id'))
+            self.env['website'].website_domain(website_id=self.env.context.get('website_id'))
         ).mapped('key')
         # Iterate a single time on the whole list sorted on specific-website first.
         for page in self.sorted(key=lambda p: (p.url, not p.website_id)):

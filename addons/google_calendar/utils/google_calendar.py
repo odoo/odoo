@@ -72,7 +72,7 @@ class GoogleCalendarService():
 
     @requires_auth_token
     def insert(self, values, token=None, timeout=TIMEOUT, need_video_call=True):
-        send_updates = self.google_service._context.get('send_updates', True)
+        send_updates = self.google_service.env.context.get('send_updates', True)
         url = "/calendar/v3/calendars/primary/events?conferenceDataVersion=%d&sendUpdates=%s" % (1 if need_video_call else 0, "all" if send_updates else "none")
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
         if not values.get('id'):
@@ -94,7 +94,7 @@ class GoogleCalendarService():
         # Delete all events from recurrence in a single request to Google and triggering a single mail.
         # The 'singleEvents' parameter is a trick that tells Google API to delete all recurrent events individually,
         # making the deletion be handled entirely on their side, and then we archive the events in Odoo.
-        is_recurrence = self.google_service._context.get('is_recurrence', True)
+        is_recurrence = self.google_service.env.context.get('is_recurrence', True)
         if is_recurrence:
             params['singleEvents'] = 'true'
         try:
@@ -125,7 +125,7 @@ class GoogleCalendarService():
             'f': from_url,
             'u': self.google_service.env['ir.config_parameter'].sudo().get_param('database.uuid'),
         }
-        base_url = self.google_service._context.get('base_url') or self.google_service.get_base_url()
+        base_url = self.google_service.env.context.get('base_url') or self.google_service.get_base_url()
         return self.google_service._get_authorize_uri(
             'calendar',
             self._get_calendar_scope(),

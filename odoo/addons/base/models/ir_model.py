@@ -330,11 +330,11 @@ class IrModel(models.Model):
                     continue
 
                 table = current_model._table
-                kind = sql.table_kind(self._cr, table)
+                kind = sql.table_kind(self.env.cr, table)
                 if kind == sql.TableKind.View:
-                    self._cr.execute(SQL('DROP VIEW %s', SQL.identifier(table)))
+                    self.env.cr.execute(SQL('DROP VIEW %s', SQL.identifier(table)))
                 elif kind == sql.TableKind.Regular:
-                    self._cr.execute(SQL('DROP TABLE %s CASCADE', SQL.identifier(table)))
+                    self.env.cr.execute(SQL('DROP TABLE %s CASCADE', SQL.identifier(table)))
                 elif kind is not None:
                     _logger.warning(
                         "Unable to drop table %r of model %r: unmanaged or unknown tabe type %r",
@@ -370,10 +370,10 @@ class IrModel(models.Model):
 
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
-        if not self._context.get(MODULE_UNINSTALL_FLAG):
+        if not self.env.context.get(MODULE_UNINSTALL_FLAG):
             # setup models; this automatically removes model from registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr)
+            self.pool._setup_models__(self.env.cr)
 
         return res
 
@@ -390,7 +390,7 @@ class IrModel(models.Model):
         if 'order' in vals or 'fold_name' in vals:
             self.env.flush_all()  # _setup_models__ need to fetch the updated values from the db
             # incremental setup will reload custom models
-            self.pool._setup_models__(self._cr, [])
+            self.pool._setup_models__(self.env.cr, [])
         return res
 
     @api.model_create_multi
@@ -403,9 +403,9 @@ class IrModel(models.Model):
             # setup models; this automatically adds model in registry
             self.env.flush_all()
             # incremental setup will reload custom models
-            self.pool._setup_models__(self._cr, [])
+            self.pool._setup_models__(self.env.cr, [])
             # update database schema
-            self.pool.init_models(self._cr, manual_models, dict(self._context, update_custom_fields=True))
+            self.pool.init_models(self.env.cr, manual_models, dict(self.env.context, update_custom_fields=True))
         return res
 
     @api.model
@@ -455,7 +455,7 @@ class IrModel(models.Model):
             self.pool.post_init(mark_modified, self.browse(ids), cols[1:])
 
         # update their XML id
-        module = self._context.get('module')
+        module = self.env.context.get('module')
         if not module:
             return
 
@@ -839,9 +839,9 @@ class IrModelFields(models.Model):
             is_model = model is not None
             if field.store:
                 # TODO: Refactor this brol in master
-                if is_model and sql.column_exists(self._cr, model._table, field.name) and \
-                        sql.table_kind(self._cr, model._table) == sql.TableKind.Regular:
-                    self._cr.execute(SQL('ALTER TABLE %s DROP COLUMN %s CASCADE',
+                if is_model and sql.column_exists(self.env.cr, model._table, field.name) and \
+                        sql.table_kind(self.env.cr, model._table) == sql.TableKind.Regular:
+                    self.env.cr.execute(SQL('ALTER TABLE %s DROP COLUMN %s CASCADE',
                         SQL.identifier(model._table), SQL.identifier(field.name),
                     ))
                 if field.state == 'manual' and field.ttype == 'many2many':
@@ -869,7 +869,7 @@ class IrModelFields(models.Model):
         """
         from odoo.orm.model_classes import pop_field
 
-        uninstalling = self._context.get(MODULE_UNINSTALL_FLAG)
+        uninstalling = self.env.context.get(MODULE_UNINSTALL_FLAG)
         if not uninstalling and any(record.state != 'manual' for record in self):
             raise UserError(_("This column contains module data and cannot be removed!"))
 
@@ -947,7 +947,7 @@ class IrModelFields(models.Model):
         finally:
             if not uninstalling:
                 # the registry has been modified, restore it
-                self.pool._setup_models__(self._cr)
+                self.pool._setup_models__(self.env.cr)
 
         return self
 
@@ -980,13 +980,13 @@ class IrModelFields(models.Model):
 
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
-        if not self._context.get(MODULE_UNINSTALL_FLAG):
+        if not self.env.context.get(MODULE_UNINSTALL_FLAG):
             # setup models; this re-initializes models in registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr, model_names)
+            self.pool._setup_models__(self.env.cr, model_names)
             # update database schema of model and its descendant models
             models = self.pool.descendants(model_names, '_inherits')
-            self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
+            self.pool.init_models(self.env.cr, models, dict(self.env.context, update_custom_fields=True))
 
         return res
 
@@ -1019,10 +1019,10 @@ class IrModelFields(models.Model):
         if any(model in self.pool for model in models):
             # setup models; this re-initializes model in registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr, models)
+            self.pool._setup_models__(self.env.cr, models)
             # update database schema of models and their descendants
             models = self.pool.descendants(models, '_inherits')
-            self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
+            self.pool.init_models(self.env.cr, models, dict(self.env.context, update_custom_fields=True))
 
         return res
 
@@ -1082,14 +1082,14 @@ class IrModelFields(models.Model):
             # rename column in database, and its corresponding index if present
             table, oldname, newname, index, stored = column_rename
             if stored:
-                self._cr.execute(SQL(
+                self.env.cr.execute(SQL(
                     'ALTER TABLE %s RENAME COLUMN %s TO %s',
                     SQL.identifier(table),
                     SQL.identifier(oldname),
                     SQL.identifier(newname)
                 ))
                 if index:
-                    self._cr.execute(SQL(
+                    self.env.cr.execute(SQL(
                         'ALTER INDEX %s RENAME TO %s',
                         SQL.identifier(f'{table}_{oldname}_index'),
                         SQL.identifier(f'{table}_{newname}_index'),
@@ -1099,12 +1099,12 @@ class IrModelFields(models.Model):
             # setup models, this will reload all manual fields in registry
             self.env.flush_all()
             model_names = OrderedSet(self.mapped('model'))
-            self.pool._setup_models__(self._cr, model_names)
+            self.pool._setup_models__(self.env.cr, model_names)
 
         if patched_models:
             # update the database schema of the models to patch
             models = self.pool.descendants(patched_models, '_inherits')
-            self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
+            self.pool.init_models(self.env.cr, models, dict(self.env.context, update_custom_fields=True))
 
         return res
 
@@ -1197,7 +1197,7 @@ class IrModelFields(models.Model):
             self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
 
         # update their XML id
-        module = self._context.get('module')
+        module = self.env.context.get('module')
         if not module:
             return
 
@@ -1222,7 +1222,7 @@ class IrModelFields(models.Model):
 
     @tools.ormcache()
     def _all_manual_field_data(self):
-        cr = self._cr
+        cr = self.env.cr
         # we cannot use self._fields to determine translated fields, as it has not been set up yet
         cr.execute("""
             SELECT *, field_description->>'en_US' AS field_description, help->>'en_US' AS help
@@ -1482,13 +1482,13 @@ class IrModelFieldsSelection(models.Model):
 
     def _get_selection_data(self, field_id):
         # return selection as expected on registry (no translations)
-        self._cr.execute("""
+        self.env.cr.execute("""
             SELECT value, name->>'en_US'
             FROM ir_model_fields_selection
             WHERE field_id=%s
             ORDER BY sequence, id
         """, (field_id,))
-        return self._cr.fetchall()
+        return self.env.cr.fetchall()
 
     def _reflect_selections(self, model_names):
         """ Reflect the selections of the fields of the given models. """
@@ -1535,7 +1535,7 @@ class IrModelFieldsSelection(models.Model):
             self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
 
         # update their XML ids
-        module = self._context.get('module')
+        module = self.env.context.get('module')
         if not module:
             return
 
@@ -1612,8 +1612,8 @@ class IrModelFieldsSelection(models.Model):
             JOIN ir_model_fields f ON s.field_id=f.id
             WHERE f.model=%s and f.name=%s
         """
-        self._cr.execute(query, [model_name, field_name])
-        return {row['value']: row for row in self._cr.dictfetchall()}
+        self.env.cr.execute(query, [model_name, field_name])
+        return {row['value']: row for row in self.env.cr.dictfetchall()}
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1635,7 +1635,7 @@ class IrModelFieldsSelection(models.Model):
         if model_names:
             # setup models; this re-initializes model in registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr, model_names)
+            self.pool._setup_models__(self.env.cr, model_names)
 
         return recs
 
@@ -1670,7 +1670,7 @@ class IrModelFieldsSelection(models.Model):
         # setup models; this re-initializes model in registry
         self.env.flush_all()
         model_names = self.field_id.model_id.mapped('model')
-        self.pool._setup_models__(self._cr, model_names)
+        self.pool._setup_models__(self.env.cr, model_names)
 
         return result
 
@@ -1692,10 +1692,10 @@ class IrModelFieldsSelection(models.Model):
 
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
-        if not self._context.get(MODULE_UNINSTALL_FLAG):
+        if not self.env.context.get(MODULE_UNINSTALL_FLAG):
             # setup models; this re-initializes model in registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr, model_names)
+            self.pool._setup_models__(self.env.cr, model_names)
 
         return result
 
@@ -1960,20 +1960,20 @@ class IrModelRelation(models.Model):
             name = data.name
 
             # double-check we are really going to delete all the owners of this schema element
-            self._cr.execute("""SELECT id from ir_model_relation where name = %s""", [name])
-            external_ids = {x[0] for x in self._cr.fetchall()}
+            self.env.cr.execute("""SELECT id from ir_model_relation where name = %s""", [name])
+            external_ids = {x[0] for x in self.env.cr.fetchall()}
             if not external_ids.issubset(ids_set):
                 # as installed modules have defined this element we must not delete it!
                 continue
 
-            if sql.table_exists(self._cr, name):
+            if sql.table_exists(self.env.cr, name):
                 to_drop.add(name)
 
         self.unlink()
 
         # drop m2m relation tables
         for table in to_drop:
-            self._cr.execute(SQL('DROP TABLE %s CASCADE', SQL.identifier(table)))
+            self.env.cr.execute(SQL('DROP TABLE %s CASCADE', SQL.identifier(table)))
             _logger.info('Dropped table %s', table)
 
     def _reflect_relation(self, model, table, module):
@@ -1981,7 +1981,7 @@ class IrModelRelation(models.Model):
             it possible to delete it later when the module is uninstalled.
         """
         self.env.invalidate_all()
-        cr = self._cr
+        cr = self.env.cr
         query = """ SELECT 1 FROM ir_model_relation r, ir_module_module m
                     WHERE r.module=m.id AND r.name=%s AND m.name=%s """
         cr.execute(query, (table, module))
@@ -2021,7 +2021,7 @@ class IrModelAccess(models.Model):
         """
         assert access_mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
         lang = self.env.lang or 'en_US'
-        self._cr.execute(f"""
+        self.env.cr.execute(f"""
             SELECT COALESCE(c.name->>%s, c.name->>'en_US'), COALESCE(g.name->>%s, g.name->>'en_US')
               FROM ir_model_access a
               JOIN ir_model m ON (a.model_id = m.id)
@@ -2032,7 +2032,7 @@ class IrModelAccess(models.Model):
                AND a.perm_{access_mode} = TRUE
           ORDER BY c.name, g.name NULLS LAST
         """, [lang, lang, model_name])
-        return [('%s/%s' % x) if x[0] else x[1] for x in self._cr.fetchall()]
+        return [('%s/%s' % x) if x[0] else x[1] for x in self.env.cr.fetchall()]
 
     @api.model
     @tools.ormcache('model_name', 'access_mode')
@@ -2097,7 +2097,7 @@ class IrModelAccess(models.Model):
 
     def _make_access_error(self, model: str, mode: str):
         """ Return the exception corresponding to an access error. """
-        _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
+        _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self.env.uid, model)
 
         operation_error = str(ACCESS_ERROR_HEADER[mode]) % {
             'document_kind': self.env['ir.model']._get(model).name or model,
@@ -2483,7 +2483,7 @@ class IrModelData(models.Model):
             # now delete the records
             _logger.info('Deleting %s', records)
             try:
-                with self._cr.savepoint():
+                with self.env.cr.savepoint():
                     cloc_exclude_data.unlink()
                     records.unlink()
             except Exception:
@@ -2568,8 +2568,8 @@ class IrModelData(models.Model):
         query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data
                     WHERE module IN %s AND res_id IS NOT NULL AND COALESCE(noupdate, false) != %s ORDER BY id DESC
                 """
-        self._cr.execute(query, (tuple(modules), True))
-        for (id, xmlid, model, res_id) in self._cr.fetchall():
+        self.env.cr.execute(query, (tuple(modules), True))
+        for (id, xmlid, model, res_id) in self.env.cr.fetchall():
             if xmlid in loaded_xmlids:
                 continue
 

@@ -63,8 +63,8 @@ class ResPartnerBank(models.Model):
         """ Getting content for the QR through calling QRIS API and storing the QRIS transaction as a record"""
         # EXTENDS account
         if qr_method == "id_qr":
-            model = self._context.get('qris_model')
-            model_id = self._context.get('qris_model_id')
+            model = self.env.context.get('qris_model')
+            model_id = self.env.context.get('qris_model_id')
 
             # qris_trx is to help us fetch the backend record associated to the model and model_id.
             # we are using model and model_id instead of model.browse(id) because while executing this method
@@ -120,7 +120,7 @@ class ResPartnerBank(models.Model):
     def _get_qr_code_generation_params(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         # EXTENDS account
         if qr_method == 'id_qr':
-            if not self._context.get('is_online_qr'):
+            if not self.env.context.get('is_online_qr'):
                 return {}
             return {
                 'barcode_type': 'QR',

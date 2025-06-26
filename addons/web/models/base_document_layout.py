@@ -104,7 +104,7 @@ class BaseDocumentLayout(models.TransientModel):
     @api.depends('logo')
     def _compute_logo_colors(self):
         for wizard in self:
-            if wizard._context.get('bin_size'):
+            if wizard.env.context.get('bin_size'):
                 wizard_for_image = wizard.with_context(bin_size=False)
             else:
                 wizard_for_image = wizard

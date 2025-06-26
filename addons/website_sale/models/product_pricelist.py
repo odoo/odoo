@@ -15,8 +15,8 @@ class ProductPricelist(models.Model):
         """ Find the first company's website, if there is one. """
         company_id = self.env.company.id
 
-        if self._context.get('default_company_id'):
-            company_id = self._context.get('default_company_id')
+        if self.env.context.get('default_company_id'):
+            company_id = self.env.context.get('default_company_id')
 
         domain = [('company_id', '=', company_id)]
         return self.env['website'].search(domain, limit=1)

@@ -81,7 +81,7 @@ class IrQweb(models.AbstractModel):
     def _compile_directive_snippet(self, el, compile_context, indent):
         key = el.attrib.pop('t-snippet')
         el.set('t-call', key)
-        snippet_lang = self._context.get('snippet_lang')
+        snippet_lang = self.env.context.get('snippet_lang')
         if snippet_lang:
             el.set('t-lang', f"'{snippet_lang}'")
 

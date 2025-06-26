@@ -243,7 +243,7 @@ class IrModuleModule(models.Model):
             for model_name in self._theme_model_names:
                 module._update_records(model_name, website)
 
-            if self._context.get('apply_new_theme'):
+            if self.env.context.get('apply_new_theme'):
                 # Both the theme install and upgrade flow ends up here.
                 # The _post_copy() is supposed to be called only when the theme
                 # is installed for the first time on a website.

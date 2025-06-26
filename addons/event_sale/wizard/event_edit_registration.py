@@ -17,7 +17,7 @@ class RegistrationEditor(models.TransientModel):
     def default_get(self, fields):
         res = super(RegistrationEditor, self).default_get(fields)
         if not res.get('sale_order_id'):
-            sale_order_id = res.get('sale_order_id', self._context.get('active_id'))
+            sale_order_id = res.get('sale_order_id', self.env.context.get('active_id'))
             res['sale_order_id'] = sale_order_id
         sale_order = self.env['sale.order'].browse(res.get('sale_order_id'))
         registrations = self.env['event.registration'].search([

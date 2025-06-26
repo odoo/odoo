@@ -338,7 +338,7 @@ class AccountJournal(models.Model):
                 fnames.append('payment_provider_id')
             self.env['account.payment.method.line'].flush_model(fnames=fnames)
 
-            self._cr.execute(
+            self.env.cr.execute(
                 f'''
                     SELECT
                         apm.id,
@@ -352,7 +352,7 @@ class AccountJournal(models.Model):
                 ''',
                 [tuple(unique_electronic_ids)],
             )
-            for pay_method_id, company_id, journal_id, provider_id in self._cr.fetchall():
+            for pay_method_id, company_id, journal_id, provider_id in self.env.cr.fetchall():
                 values = method_information_mapping[pay_method_id]
                 is_electronic = manage_providers and values['mode'] == 'electronic'
                 if is_electronic:
@@ -762,7 +762,7 @@ class AccountJournal(models.Model):
         result = super(AccountJournal, self).write(vals)
 
         # Ensure alias coherency when changing type
-        if 'type' in vals and not self._context.get('account_journal_skip_alias_sync'):
+        if 'type' in vals and not self.env.context.get('account_journal_skip_alias_sync'):
             for journal in self:
                 alias_vals = journal._alias_get_creation_values()
                 alias_vals = {
@@ -1072,7 +1072,7 @@ class AccountJournal(models.Model):
             'domain': [('id', 'in', invoices.ids)],
             'res_model': 'account.move',
             'type': 'ir.actions.act_window',
-            'context': self._context
+            'context': self.env.context
         }
         if len(invoices) == 1:
             action_vals.update({

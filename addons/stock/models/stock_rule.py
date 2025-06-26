@@ -701,7 +701,7 @@ class ProcurementGroup(models.Model):
         for moves_chunk in split_every(1000, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
             if use_new_cursor:
-                self._cr.commit()
+                self.env.cr.commit()
                 _logger.info("A batch of %d moves are assigned and committed", len(moves_chunk))
 
         if use_new_cursor:

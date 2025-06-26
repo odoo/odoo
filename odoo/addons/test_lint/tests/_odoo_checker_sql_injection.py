@@ -22,7 +22,7 @@ except ImportError:
     from pylint.checkers.utils import check_messages as only_required_for_messages
 
 DFTL_CURSOR_EXPR = [
-    'self.env.cr', 'self._cr',  # new api
+    'self.env.cr', 'self.env.cr',  # new api
     'self.cr',  # controllers and test
     'cr',  # old api
     'odoo.tools',

@@ -47,7 +47,7 @@ class Publisher_WarrantyContract(AbstractModel):
             "nbr_active_users": nbr_active_users,
             "nbr_share_users": nbr_share_users,
             "nbr_active_share_users": nbr_active_share_users,
-            "dbname": self._cr.dbname,
+            "dbname": self.env.cr.dbname,
             "db_create_date": db_create_date,
             "version": release.version,
             "language": user.lang,

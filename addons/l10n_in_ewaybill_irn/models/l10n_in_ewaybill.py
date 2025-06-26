@@ -100,7 +100,7 @@ class L10nInEwaybill(models.Model):
             ),
             **self._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response_data)
         })
-        self._cr.commit()
+        self.env.cr.commit()
 
     def _get_edi_irn_number(self):
         self.ensure_one()

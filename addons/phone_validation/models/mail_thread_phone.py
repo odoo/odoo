@@ -124,7 +124,7 @@ class MailThreadPhone(models.AbstractModel):
             term = re.sub(PHONE_REGEX_PATTERN, '', value[1 if value.startswith('+') else 2:])
             if operator not in ('=', '!='):  # for like operators
                 term = f'{term}%'
-            self._cr.execute(
+            self.env.cr.execute(
                 query, (PHONE_REGEX_PATTERN, '00' + term, PHONE_REGEX_PATTERN, '+' + term) * len(phone_fields)
             )
         else:
@@ -142,8 +142,8 @@ class MailThreadPhone(models.AbstractModel):
             term = re.sub(PHONE_REGEX_PATTERN, '', value)
             if operator not in ('=', '!='):  # for like operators
                 term = f'%{term}%'
-            self._cr.execute(query, (PHONE_REGEX_PATTERN, term) * len(phone_fields))
-        res = self._cr.fetchall()
+            self.env.cr.execute(query, (PHONE_REGEX_PATTERN, term) * len(phone_fields))
+        res = self.env.cr.fetchall()
         return Domain('id', 'in', [r[0] for r in res])
 
     @api.depends(lambda self: self._phone_get_sanitize_triggers())
@@ -196,8 +196,8 @@ class MailThreadPhone(models.AbstractModel):
                     ON m.phone_sanitized = bl.number AND bl.active
                     WHERE bl.id IS NULL
             """
-        self._cr.execute(query % self._table)
-        res = self._cr.fetchall()
+        self.env.cr.execute(query % self._table)
+        res = self.env.cr.fetchall()
         return [('id', 'in', [r[0] for r in res])]
 
     def _assert_phone_field(self):

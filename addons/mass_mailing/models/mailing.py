@@ -690,7 +690,7 @@ class MailingMailing(models.Model):
             'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
             ),
-            'context': dict(self._context, create=False)
+            'context': dict(self.env.context, create=False)
         }
 
     def action_view_traces_scheduled(self):
@@ -777,7 +777,7 @@ class MailingMailing(models.Model):
             'view_mode': 'list,form',
             'res_model': self.mailing_model_real,
             'domain': [('id', 'in', res_ids)],
-            'context': dict(self._context, create=False),
+            'context': dict(self.env.context, create=False),
         }
         if helper_header and helper_message:
             action['help'] = Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
@@ -1187,7 +1187,7 @@ class MailingMailing(models.Model):
         for mailing in self:
             if mailing.user_id:
                 mailing = mailing.with_user(mailing.user_id).with_context(
-                    lang=mailing.user_id.lang or self._context.get('lang')
+                    lang=mailing.user_id.lang or self.env.context.get('lang')
                 )
             mailing_type = mailing._get_pretty_mailing_type()
             mail_user = mailing.user_id or self.env.user

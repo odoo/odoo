@@ -173,7 +173,7 @@ class IrRule(models.Model):
 
     def _compute_domain_context_values(self):
         for k in self._compute_domain_keys():
-            v = self._context.get(k)
+            v = self.env.context.get(k)
             if isinstance(v, list):
                 # currently this could be a frozenset (to avoid depending on
                 # the order of allowed_company_ids) but it seems safer if
@@ -205,7 +205,7 @@ class IrRule(models.Model):
         return res
 
     def _make_access_error(self, operation, records):
-        _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, records.ids[:6], self._uid, records._name)
+        _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, records.ids[:6], self.env.uid, records._name)
         self = self.with_context(self.env.user.context_get())
 
         model = records._name

@@ -97,7 +97,7 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         fields = super().fields_get(allfields, attributes)
-        if not self._context.get("studio") and self.env['account.analytic.plan'].has_access('read'):
+        if not self.env.context.get("studio") and self.env['account.analytic.plan'].has_access('read'):
             project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
             for plan in project_plan + other_plans:
                 fname = plan._column_name()
@@ -111,7 +111,7 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
         return self._patch_view(arch, view, view_type)
 
     def _patch_view(self, arch, view, view_type):
-        if not self._context.get("studio") and self.env['account.analytic.plan'].has_access('read'):
+        if not self.env.context.get("studio") and self.env['account.analytic.plan'].has_access('read'):
             project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
 
             # Find main account nodes

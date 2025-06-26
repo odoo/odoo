@@ -171,8 +171,8 @@ class AccountJournal(models.Model):
         fields_to_check = [field for field in protected_fields if field in vals]
 
         if fields_to_check:
-            self._cr.execute("SELECT DISTINCT(journal_id) FROM account_move WHERE posted_before = True")
-            res = self._cr.fetchall()
+            self.env.cr.execute("SELECT DISTINCT(journal_id) FROM account_move WHERE posted_before = True")
+            res = self.env.cr.fetchall()
             journal_with_entry_ids = [journal_id for journal_id, in res]
 
             for journal in self:

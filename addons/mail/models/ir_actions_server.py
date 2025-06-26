@@ -274,7 +274,7 @@ class IrActionsServer(models.Model):
     def _run_action_followers_multi(self, eval_context=None):
         Model = self.env[self.model_name]
         if hasattr(Model, 'message_subscribe'):
-            records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
+            records = Model.browse(self.env.context.get('active_ids', self.env.context.get('active_id')))
             if self.followers_type == 'specific':
                 partner_ids = self.partner_ids
             else:
@@ -286,7 +286,7 @@ class IrActionsServer(models.Model):
     def _run_action_remove_followers_multi(self, eval_context=None):
         Model = self.env[self.model_name]
         if hasattr(Model, 'message_unsubscribe'):
-            records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
+            records = Model.browse(self.env.context.get('active_ids', self.env.context.get('active_id')))
             if self.followers_type == 'specific':
                 partner_ids = self.partner_ids
             else:
@@ -302,10 +302,10 @@ class IrActionsServer(models.Model):
         Except if the computed field is supposed to trigger the action
         """
         records = self.env[self.model_name].browse(
-            self._context.get('active_ids', self._context.get('active_id')))
-        old_values = self._context.get('old_values')
+            self.env.context.get('active_ids', self.env.context.get('active_id')))
+        old_values = self.env.context.get('old_values')
         if old_values:
-            domain_post = self._context.get('domain_post')
+            domain_post = self.env.context.get('domain_post')
             tracked_fields = []
             if domain_post:
                 for leaf in domain_post:
@@ -323,9 +323,9 @@ class IrActionsServer(models.Model):
 
     def _run_action_mail_post_multi(self, eval_context=None):
         # TDE CLEANME: when going to new api with server action, remove action
-        if not self.template_id or (not self._context.get('active_ids') and not self._context.get('active_id')) or self._is_recompute():
+        if not self.template_id or (not self.env.context.get('active_ids') and not self.env.context.get('active_id')) or self._is_recompute():
             return False
-        res_ids = self._context.get('active_ids', [self._context.get('active_id')])
+        res_ids = self.env.context.get('active_ids', [self.env.context.get('active_id')])
 
         # Clean context from default_type to avoid making attachment
         # with wrong values in subsequent operations
@@ -358,10 +358,10 @@ class IrActionsServer(models.Model):
         return False
 
     def _run_action_next_activity(self, eval_context=None):
-        if not self.activity_type_id or not self._context.get('active_id') or self._is_recompute():
+        if not self.activity_type_id or not self.env.context.get('active_id') or self._is_recompute():
             return False
 
-        records = self.env[self.model_name].browse(self._context.get('active_ids', self._context.get('active_id')))
+        records = self.env[self.model_name].browse(self.env.context.get('active_ids', self.env.context.get('active_id')))
 
         vals = {
             'summary': self.activity_summary or '',

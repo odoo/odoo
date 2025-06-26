@@ -1058,7 +1058,7 @@ class StockPicking(models.Model):
     def get_empty_list_help(self, help_message):
         return self.env['ir.ui.view']._render_template(
             'stock.help_message_template', {
-                'picking_type_code': self._context.get('restricted_picking_type_code') or self.picking_type_code,
+                'picking_type_code': self.env.context.get('restricted_picking_type_code') or self.picking_type_code,
             }
         )
 
@@ -1907,7 +1907,7 @@ class StockPicking(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
         scraps = self.env['stock.scrap'].search([('picking_id', '=', self.id)])
         action['domain'] = [('id', 'in', scraps.ids)]
-        action['context'] = dict(self._context, create=False)
+        action['context'] = dict(self.env.context, create=False)
         return action
 
     def action_see_packages(self):

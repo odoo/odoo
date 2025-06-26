@@ -128,7 +128,7 @@ class StockLot(models.Model):
         elif all(self.product_id.uom_id.is_zero(layer.remaining_qty) for layer in self.stock_valuation_layer_ids):
             raise UserError(_("You cannot adjust the valuation of a layer with zero quantity"))
         self.ensure_one()
-        ctx = dict(self._context, default_lot_ids=self.ids, default_company_id=self.env.company.id)
+        ctx = dict(self.env.context, default_lot_ids=self.ids, default_company_id=self.env.company.id)
         return {
             'name': _('Lot/Serial number Revaluation - %s', self.product_id.display_name),
             'view_mode': 'form',

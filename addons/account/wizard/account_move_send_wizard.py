@@ -90,7 +90,7 @@ class AccountMoveSendWizard(models.TransientModel):
         # EXTENDS 'base'
         results = super().default_get(fields_list)
         if 'move_id' in fields_list and 'move_id' not in results:
-            move_id = self._context.get('active_ids', [])[0]
+            move_id = self.env.context.get('active_ids', [])[0]
             results['move_id'] = move_id
         return results
 

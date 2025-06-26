@@ -28,7 +28,7 @@ class FleetVehicleLogContract(models.Model):
     user_id = fields.Many2one(
         comodel_name='res.users',
         string='Responsible',
-        default=lambda self: self.env['fleet.vehicle'].browse(self._context.get('active_id')).manager_id,
+        default=lambda self: self.env['fleet.vehicle'].browse(self.env.context.get('active_id')).manager_id,
         index=True)
     start_date = fields.Date(
         'Contract Start Date', default=fields.Date.context_today, tracking=True,

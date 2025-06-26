@@ -105,13 +105,13 @@ class CrmRevealRule(models.Model):
     def action_get_lead_tree_view(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'lead')]
-        action['context'] = dict(self._context, create=False)
+        action['context'] = dict(self.env.context, create=False)
         return action
 
     def action_get_opportunity_tree_view(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_opportunities")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'opportunity')]
-        action['context'] = dict(self._context, create=False)
+        action['context'] = dict(self.env.context, create=False)
         return action
 
     @api.model
@@ -218,7 +218,7 @@ class CrmRevealRule(models.Model):
             enough_credit = self._perform_reveal_service(server_payload)
             if autocommit:
                 # auto-commit for batch processing
-                self._cr.commit()
+                self.env.cr.commit()
             if enough_credit:
                 reveal_views = self._get_reveal_views_to_process()
             else:

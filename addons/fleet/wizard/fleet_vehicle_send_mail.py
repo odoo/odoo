@@ -65,7 +65,7 @@ class FleetVehicleSendMail(models.TransientModel):
         })
 
         if self.attachment_ids:
-            attachments = self.env['ir.attachment'].sudo().browse(self.attachment_ids.ids).filtered(lambda a: a.create_uid.id == self._uid)
+            attachments = self.env['ir.attachment'].sudo().browse(self.attachment_ids.ids).filtered(lambda a: a.create_uid.id == self.env.uid)
             if attachments:
                 attachments.write({'res_model': template._name, 'res_id': template.id})
             template.attachment_ids |= self.attachment_ids

@@ -109,8 +109,8 @@ class CalendarEvent(models.Model):
     def _default_partners(self):
         """ When active_model is res.partner, the current partners should be attendees """
         partners = self.env.user.partner_id
-        active_id = self._context.get('active_id')
-        if self._context.get('active_model') == 'res.partner' and active_id and active_id not in partners.ids:
+        active_id = self.env.context.get('active_id')
+        if self.env.context.get('active_model') == 'res.partner' and active_id and active_id not in partners.ids:
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
 
@@ -578,7 +578,7 @@ class CalendarEvent(models.Model):
 
         # if user is creating an event for an activity that already has one, create a second activity
         existing_event = False
-        orig_activity_ids = self.env['mail.activity'].browse(self._context.get('orig_activity_ids', []))
+        orig_activity_ids = self.env['mail.activity'].browse(self.env.context.get('orig_activity_ids', []))
         if len(orig_activity_ids) == 1:
             existing_event = orig_activity_ids.calendar_event_id
             if existing_event and orig_activity_ids.activity_type_id.category == 'meeting':
@@ -1544,7 +1544,7 @@ class CalendarEvent(models.Model):
                 1) if user add duration for 2 hours, return : August-23-2013 at (04-30 To 06-30) (Europe/Brussels)
                 2) if event all day ,return : AllDay, July-31-2013
         """
-        timezone = self._context.get('tz') or self.env.user.partner_id.tz or 'UTC'
+        timezone = self.env.context.get('tz') or self.env.user.partner_id.tz or 'UTC'
 
         # get date/time format according to context
         format_date, format_time = self._get_date_formats()

@@ -107,7 +107,7 @@ class ResCurrency(models.Model):
 
     @api.constrains('active')
     def _check_company_currency_stays_active(self):
-        if self._context.get('install_mode') or self._context.get('force_deactivate'):
+        if self.env.context.get('install_mode') or self.env.context.get('force_deactivate'):
             # install_mode : At install, when this check is run, the "active" field of a currency added to a company will
             #                still be evaluated as False, despite it's automatically set at True when added to the company.
             # force_deactivate : Allows deactivation of a currency in tests to enable non multi_currency behaviors
@@ -146,8 +146,8 @@ class ResCurrency(models.Model):
     @api.depends('rate_ids.rate')
     @api.depends_context('to_currency', 'date', 'company', 'company_id')
     def _compute_current_rate(self):
-        date = self._context.get('date') or fields.Date.context_today(self)
-        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env.company
+        date = self.env.context.get('date') or fields.Date.context_today(self)
+        company = self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company
         to_currency = self.browse(self.env.context.get('to_currency')) or company.currency_id
         # the subquery selects the last rate before 'date' for the given currency/company
         currency_rates = (self + to_currency)._get_rates(self.env.company, date)
@@ -320,13 +320,13 @@ class ResCurrency(models.Model):
         """The override of _get_view changing the rate field labels according to the company currency
         makes the view cache dependent on the company currency"""
         key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + ((self.env['res.company'].browse(self._context.get('company_id')) or self.env.company).currency_id.name,)
+        return key + ((self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company).currency_id.name,)
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type in ('list', 'form'):
-            currency_name = (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company).currency_id.name
+            currency_name = (self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company).currency_id.name
             fields_maps = [
                 [['company_rate', 'rate'], self.env._('Unit per %s', currency_name)],
                 [['inverse_company_rate', 'inverse_rate'], self.env._('%s per Unit', currency_name)],
@@ -485,15 +485,15 @@ class ResCurrencyRate(models.Model):
         """The override of _get_view changing the rate field labels according to the company currency
         makes the view cache dependent on the company currency"""
         key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + ((self.env['res.company'].browse(self._context.get('company_id')) or self.env.company).currency_id.name,)
+        return key + ((self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company).currency_id.name,)
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         if view_type == 'list':
             names = {
-                'company_currency_name': (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company).currency_id.name,
-                'rate_currency_name': self.env['res.currency'].browse(self._context.get('active_id')).name or 'Unit',
+                'company_currency_name': (self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company).currency_id.name,
+                'rate_currency_name': self.env['res.currency'].browse(self.env.context.get('active_id')).name or 'Unit',
             }
             for name, label in [['company_rate', self.env._('%(rate_currency_name)s per %(company_currency_name)s', **names)],
                                 ['inverse_company_rate', self.env._('%(company_currency_name)s per %(rate_currency_name)s', **names)]]:

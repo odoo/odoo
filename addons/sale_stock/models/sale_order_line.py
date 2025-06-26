@@ -310,8 +310,8 @@ class SaleOrderLine(models.Model):
                 if move.warehouse_id.id not in seen_wh_ids:
                     triggering_rule_ids.append(move.rule_id.id)
                     seen_wh_ids.add(move.warehouse_id.id)
-        if self._context.get('accrual_entry_date'):
-            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
+        if self.env.context.get('accrual_entry_date'):
+            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self.env.context['accrual_entry_date'])
 
         for move in moves:
             if (strict and move.location_dest_id._is_outgoing()) or \
@@ -346,7 +346,7 @@ class SaleOrderLine(models.Model):
         sale order line. procurement group will launch '_run_pull', '_run_buy' or '_run_manufacture'
         depending on the sale order line product rule.
         """
-        if self._context.get("skip_procurement"):
+        if self.env.context.get("skip_procurement"):
             return True
         precision = self.env['decimal.precision'].precision_get('Product Unit')
         procurements = []

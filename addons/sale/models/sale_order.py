@@ -47,7 +47,7 @@ class SaleOrder(models.Model):
 
     @property
     def _rec_names_search(self):
-        if self._context.get('sale_show_partner_name'):
+        if self.env.context.get('sale_show_partner_name'):
             return ['name', 'partner_id.name']
         return ['name']
 
@@ -322,7 +322,7 @@ class SaleOrder(models.Model):
     @api.depends('partner_id')
     @api.depends_context('sale_show_partner_name')
     def _compute_display_name(self):
-        if not self._context.get('sale_show_partner_name'):
+        if not self.env.context.get('sale_show_partner_name'):
             return super()._compute_display_name()
         for order in self:
             name = order.name
@@ -1125,7 +1125,7 @@ class SaleOrder(models.Model):
 
         # Context key 'default_name' is sometimes propagated up to here.
         # We don't need it and it creates issues in the creation of linked records.
-        context = self._context.copy()
+        context = self.env.context.copy()
         context.pop('default_name', None)
 
         self.with_context(context)._action_confirm()
@@ -1528,7 +1528,7 @@ class SaleOrder(models.Model):
             invoice_vals['invoice_line_ids'] += invoice_line_vals
             invoice_vals_list.append(invoice_vals)
 
-        if not invoice_vals_list and self._context.get('raise_if_nothing_to_invoice', True):
+        if not invoice_vals_list and self.env.context.get('raise_if_nothing_to_invoice', True):
             raise UserError(self._nothing_to_invoice_error_message())
 
         # 2) Manage 'grouped' parameter: group by (partner_id, partner_shipping_id, currency_id).
@@ -1645,7 +1645,7 @@ class SaleOrder(models.Model):
             return groups
 
         self.ensure_one()
-        if self._context.get('proforma'):
+        if self.env.context.get('proforma'):
             for group in [g for g in groups if g[0] in ('portal_customer', 'portal', 'follower', 'customer')]:
                 group[2]['has_button_access'] = False
             return groups

@@ -82,7 +82,7 @@ class IrFieldsConverter(models.AbstractModel):
         we can the link the errors to the correct header-field couple in the import UI.
         """
         field_path = [field]
-        parent_fields_hierarchy = self._context.get('parent_fields_hierarchy')
+        parent_fields_hierarchy = self.env.context.get('parent_fields_hierarchy')
         if parent_fields_hierarchy:
             field_path = parent_fields_hierarchy + field_path
 
@@ -326,7 +326,7 @@ class IrFieldsConverter(models.AbstractModel):
         if value.lower() in falses:
             return False, []
 
-        if field.name in self._context.get('import_skip_records', []):
+        if field.name in self.env.context.get('import_skip_records', []):
             return None, []
 
         return True, [self._format_import_error(
@@ -382,9 +382,9 @@ class IrFieldsConverter(models.AbstractModel):
     @api.model
     def _input_tz(self):
         # if there's a tz in context, try to use that
-        if self._context.get('tz'):
+        if self.env.context.get('tz'):
             try:
-                return pytz.timezone(self._context['tz'])
+                return pytz.timezone(self.env.context['tz'])
             except pytz.UnknownTimeZoneError:
                 pass
 
@@ -420,7 +420,7 @@ class IrFieldsConverter(models.AbstractModel):
     def _get_boolean_translations(self, src):
         # Cache translations so they don't have to be reloaded from scratch on
         # every row of the file
-        tnx_cache = self._cr.cache.setdefault(self._name, {})
+        tnx_cache = self.env.cr.cache.setdefault(self._name, {})
         if src in tnx_cache:
             return tnx_cache[src]
 
@@ -439,7 +439,7 @@ class IrFieldsConverter(models.AbstractModel):
             return []
         # Cache translations so they don't have to be reloaded from scratch on
         # every row of the file
-        tnx_cache = self._cr.cache.setdefault(self._name, {})
+        tnx_cache = self.env.cr.cache.setdefault(self._name, {})
         if src in tnx_cache:
             return tnx_cache[src]
 
@@ -479,9 +479,9 @@ class IrFieldsConverter(models.AbstractModel):
             if value.lower() == str(item).lower() or any(value.lower() == label.lower() for label in labels):
                 return item, []
 
-        if field.name in self._context.get('import_skip_records', []):
+        if field.name in self.env.context.get('import_skip_records', []):
             return None, []
-        elif field.name in self._context.get('import_set_empty_fields', []):
+        elif field.name in self.env.context.get('import_set_empty_fields', []):
             return False, []
         raise self._format_import_error(
             ValueError,
@@ -510,7 +510,7 @@ class IrFieldsConverter(models.AbstractModel):
         """
         # the function 'flush' comes from BaseModel.load(), and forces the
         # creation/update of former records (batch creation)
-        flush = self._context.get('import_flush', lambda **kw: None)
+        flush = self.env.context.get('import_flush', lambda **kw: None)
 
         id = None
         warnings = []
@@ -550,7 +550,7 @@ class IrFieldsConverter(models.AbstractModel):
             if '.' in value:
                 xmlid = value
             else:
-                xmlid = "%s.%s" % (self._context.get('_import_current_module', ''), value)
+                xmlid = "%s.%s" % (self.env.context.get('_import_current_module', ''), value)
             flush(xml_id=xmlid)
             id = self._xmlid_to_record_id(xmlid, RelatedModel)
         elif subfield is None:
@@ -688,14 +688,14 @@ class IrFieldsConverter(models.AbstractModel):
         elif field.name in self.env.context.get('import_skip_records', []) and any(id is None for id in ids):
             return None, warnings
 
-        if self._context.get('update_many2many'):
+        if self.env.context.get('update_many2many'):
             return [Command.link(id) for id in ids], warnings
         else:
             return [Command.set(ids)], warnings
 
     @api.model
     def _str_to_one2many(self, model, field, records, savepoint):
-        name_create_enabled_fields = self._context.get('name_create_enabled_fields') or {}
+        name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
         prefix = field.name + '/'
         relative_name_create_enabled_fields = {
             k[len(prefix):]: v
@@ -725,7 +725,7 @@ class IrFieldsConverter(models.AbstractModel):
 
         # Complete the field hierarchy path
         # E.g. For "parent/child/subchild", field hierarchy path for "subchild" is ['parent', 'child']
-        parent_fields_hierarchy = self._context.get('parent_fields_hierarchy', []) + [field.name]
+        parent_fields_hierarchy = self.env.context.get('parent_fields_hierarchy', []) + [field.name]
 
         convert = self.with_context(
             name_create_enabled_fields=relative_name_create_enabled_fields,

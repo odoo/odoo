@@ -62,7 +62,7 @@ class MailTestFieldType(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # Emulate an addon that alters the creation context, such as `crm`
-        if not self._context.get('default_type'):
+        if not self.env.context.get('default_type'):
             self = self.with_context(default_type='first')
         return super(MailTestFieldType, self).create(vals_list)
 

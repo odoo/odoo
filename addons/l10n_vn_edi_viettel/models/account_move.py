@@ -371,7 +371,7 @@ class AccountMove(models.Model):
             invoice.l10n_vn_edi_invoice_state = 'sent'
 
             if self._can_commit():
-                self._cr.commit()
+                self.env.cr.commit()
 
     def _l10n_vn_need_cancel_request(self):
         return self._l10n_vn_edi_is_sent() and self.l10n_vn_edi_invoice_state != 'canceled'
@@ -479,7 +479,7 @@ class AccountMove(models.Model):
         })
 
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
 
     def _l10n_vn_edi_cancel_invoice(self, reason, agreement_document_name, agreement_document_date):
         """ Send a request to cancel the invoice. """
@@ -532,7 +532,7 @@ class AccountMove(models.Model):
             )
 
         if self._can_commit():
-            self._cr.commit()
+            self.env.cr.commit()
 
     def button_draft(self):
         # EXTEND account

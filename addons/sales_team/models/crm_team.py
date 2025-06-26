@@ -321,5 +321,5 @@ class CrmTeam(models.Model):
             extra_conditions=extra_conditions,
         )
 
-        self._cr.execute(sql)
+        self.env.cr.execute(sql)
         return self.env.cr.dictfetchall()

@@ -130,7 +130,7 @@ class CalendarAttendee(models.Model):
         notified_attendees = self.browse(notified_attendees_ids)
         if isinstance(mail_template, str):
             raise ValueError('Template should be a template record, not an XML ID anymore.')
-        if self.env['ir.config_parameter'].sudo().get_param('calendar.block_mail') or self._context.get("no_mail_to_attendees"):
+        if self.env['ir.config_parameter'].sudo().get_param('calendar.block_mail') or self.env.context.get("no_mail_to_attendees"):
             return False
         if not mail_template:
             _logger.warning("No template passed to %s notification process. Skipped.", self)

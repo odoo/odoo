@@ -211,7 +211,7 @@ class IrUiMenu(models.Model):
         return []
 
     @api.model
-    @tools.ormcache_context('self._uid', keys=('lang',))
+    @tools.ormcache_context('self.env.uid', keys=('lang',))
     def load_menus_root(self):
         fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_roots = self.get_user_roots()
@@ -232,7 +232,7 @@ class IrUiMenu(models.Model):
         return menu_root
 
     @api.model
-    @tools.ormcache_context('self._uid', 'debug', keys=('lang',))
+    @tools.ormcache_context('self.env.uid', 'debug', keys=('lang',))
     def load_menus(self, debug):
         blacklisted_menu_ids = self._load_menus_blacklist()
         visible_menus = self.search_fetch(

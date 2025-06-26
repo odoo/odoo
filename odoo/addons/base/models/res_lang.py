@@ -378,7 +378,7 @@ class ResLang(models.Model):
         for language in self:
             if language.code == 'en_US':
                 raise UserError(_("Base Language 'en_US' can not be deleted."))
-            ctx_lang = self._context.get('lang')
+            ctx_lang = self.env.context.get('lang')
             if ctx_lang and (language.code == ctx_lang):
                 raise UserError(_("You cannot delete the language which is the user's preferred language."))
             if language.active:

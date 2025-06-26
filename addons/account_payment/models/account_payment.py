@@ -212,8 +212,8 @@ class AccountPayment(models.Model):
             'token_id': self.payment_token_id.id,
             'operation': 'offline',
             'payment_id': self.id,
-            **({'invoice_ids': [Command.set(self._context.get('active_ids', []))]}
-                if self._context.get('active_model') == 'account.move'
+            **({'invoice_ids': [Command.set(self.env.context.get('active_ids', []))]}
+                if self.env.context.get('active_model') == 'account.move'
                 else {}),
             **extra_create_values,
         }

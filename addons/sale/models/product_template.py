@@ -137,7 +137,7 @@ class ProductTemplate(models.Model):
         action['domain'] = [('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'pivot_measures': ['product_uom_qty'],
-            'active_id': self._context.get('active_id'),
+            'active_id': self.env.context.get('active_id'),
             'active_model': 'sale.report',
             'search_default_Sales': 1,
             'search_default_filter_order_date': 1,

@@ -109,7 +109,7 @@ class ResUsers(models.Model):
         users = super().create(vals_list)
 
         # log a portal status change (manual tracking)
-        log_portal_access = not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
+        log_portal_access = not self.env.context.get('mail_create_nolog') and not self.env.context.get('mail_notrack')
         if log_portal_access:
             for user in users:
                 if user._is_portal():
@@ -122,7 +122,7 @@ class ResUsers(models.Model):
         return users
 
     def write(self, vals):
-        log_portal_access = 'group_ids' in vals and not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
+        log_portal_access = 'group_ids' in vals and not self.env.context.get('mail_create_nolog') and not self.env.context.get('mail_notrack')
         user_portal_access_dict = {
             user.id: user._is_portal()
             for user in self

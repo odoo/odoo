@@ -139,7 +139,7 @@ class IrHttp(models.AbstractModel):
             rule, args = request.env['ir.http']._match(url)
             for key, val in list(args.items()):
                 if isinstance(val, models.BaseModel):
-                    if isinstance(val._uid, RequestUID):
+                    if isinstance(val.env.uid, RequestUID):
                         args[key] = val = val.with_user(request.uid)
                     if val.env.context.get('lang') != lang.code:
                         args[key] = val = val.with_context(lang=lang.code)
