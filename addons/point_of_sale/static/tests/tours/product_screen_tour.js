@@ -580,6 +580,23 @@ registry.category("web_tour.tours").add("test_one_attribute_value_scan_barcode",
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_dynamic_variant_price", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Cake"),
+            ProductConfiguratorPopup.pickRadio("Vanilla"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("11.00"),
+            ProductScreen.clickDisplayedProduct("Cake"),
+            ProductConfiguratorPopup.pickRadio("Chocolate"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("37.00"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("FiscalPositionTaxLabels", {
     steps: () =>
         [

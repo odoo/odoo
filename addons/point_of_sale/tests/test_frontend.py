@@ -1877,6 +1877,49 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_one_attribute_value_scan_barcode', login="pos_user")
 
+    def test_dynamic_variant_price(self):
+        """Tests the price of products with dynamic variant when added to cart"""
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': 'flavour',
+            'create_variant': 'dynamic',
+        })
+        value_1 = self.env['product.attribute.value'].create({
+            'name': 'Vanilla',
+            'attribute_id': dynamic_attribute.id,
+            'default_extra_price': 10,
+        })
+        value_2 = self.env['product.attribute.value'].create({
+            'name': 'Chocolate',
+            'attribute_id': dynamic_attribute.id,
+            'default_extra_price': 25,
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Cake',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'is_storable': True,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': dynamic_attribute.id,
+            'value_ids': [Command.set([value_1.id, value_2.id])],
+        })
+        # Create a variant (because of dynamic attribute)
+        ptav_vanilla = self.env['product.template.attribute.value'].search([
+            ('attribute_line_id', '=', product_template.attribute_line_ids.id),
+            ('product_attribute_value_id', '=', value_1.id)
+        ])
+        self.env['product.product'].create({
+            'available_in_pos': True,
+            'product_tmpl_id': product_template.id,
+            'product_template_attribute_value_ids': [(6, 0, [ptav_vanilla.id])],
+            'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_dynamic_variant_price', login="pos_user")
+
     def test_draft_orders_not_syncing(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_draft_orders_not_syncing', login="pos_user")

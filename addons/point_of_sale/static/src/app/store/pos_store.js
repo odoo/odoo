@@ -661,6 +661,8 @@ export class PosStore extends Reactive {
             vals.product_id = this.data.models["product.product"].get(vals.product_id);
         }
         const product = vals.product_id;
+        let product_lst_price = false;
+        let isAllDynamicVariants = false;
 
         const values = {
             price_type: "price_unit" in vals ? "manual" : "original",
@@ -701,6 +703,18 @@ export class PosStore extends Reactive {
                         )
                     );
 
+                const product_id = productFound || values.product_id;
+                product_lst_price = product_id.price_extra
+                    ? product_id.lst_price - product_id.price_extra
+                    : false;
+
+                const variantAttributes = product_id.product_template_variant_value_ids.map(
+                    (vv) => vv.attribute_id
+                );
+                isAllDynamicVariants =
+                    variantAttributes.length > 0 &&
+                    variantAttributes.every((att) => att.create_variant === "dynamic");
+
                 Object.assign(values, {
                     attribute_value_ids: payload.attribute_value_ids
                         .filter((a) => {
@@ -729,7 +743,7 @@ export class PosStore extends Reactive {
                     ),
                     price_extra: values.price_extra + payload.price_extra,
                     qty: payload.qty || values.qty,
-                    product_id: productFound || values.product_id,
+                    product_id: product_id,
                 });
             } else {
                 return;
@@ -853,11 +867,13 @@ export class PosStore extends Reactive {
             values.price_unit = values.product_id.get_price(order.pricelist_id, values.qty);
         }
         const isScannedProduct = opts.code && opts.code.type === "product";
-        if (values.price_extra && !isScannedProduct) {
+        if ((values.price_extra || isAllDynamicVariants) && !isScannedProduct) {
             const price = values.product_id.get_price(
                 order.pricelist_id,
                 values.qty,
-                values.price_extra
+                values.price_extra,
+                false,
+                product_lst_price
             );
 
             values.price_unit = price;
