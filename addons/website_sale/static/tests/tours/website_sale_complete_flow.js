@@ -171,21 +171,11 @@ import { pay } from "@website_sale/js/tours/tour_utils";
         content: "Check selected billing address is same as typed in previous step",
         trigger: '#delivery_and_billing :contains(Billing):contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
     },
-    {
-        content: "Select `Wire Transfer` payment method",
-        trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
-        run: "click",
-    },
-    {
-        trigger:
-            'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
-    },
-    {
-        content: "Pay Now",
-        trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
-        run: "click",
+    ...tourUtils.payWithTransfer({
+        redirect: false,
         expectUnloadPage: true,
-    },
+        waitFinalizeYourPayment: true,
+    }),
     {
         content: "Sign up",
         trigger: '.oe_cart a:contains("Sign Up")',
@@ -380,6 +370,7 @@ import { pay } from "@website_sale/js/tours/tour_utils";
         content: "Click on Confirm button to save the address",
         trigger: 'a[name="website_sale_main_button"]',
         run: "click",
+        expectUnloadPage: true,
     },
         tourUtils.confirmOrder(),
     {
