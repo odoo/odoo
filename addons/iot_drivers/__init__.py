@@ -15,6 +15,7 @@ from . import interface
 from . import main
 from . import tools
 from . import websocket_client
+from . import webrtc_client
 
 _logger = logging.getLogger(__name__)
 _logger.warning("==== Starting Odoo ====")
