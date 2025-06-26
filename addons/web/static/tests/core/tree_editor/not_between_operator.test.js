@@ -2,14 +2,11 @@ import { describe, expect, test } from "@odoo/hoot";
 
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
 
+import { condition, connector, expression } from "@web/core/tree_editor/condition_tree";
 import {
-    applyTransformations,
-    condition,
-    connector,
-    expression,
-    FULL_VIRTUAL_OPERATORS_ELIMINATION,
-    FULL_VIRTUAL_OPERATORS_INTRODUCTION,
-} from "@web/core/tree_editor/condition_tree";
+    eliminateVirtualOperators,
+    introduceVirtualOperators,
+} from "@web/core/tree_editor/virtual_operators";
 
 describe.current.tags("headless");
 
@@ -137,9 +134,7 @@ test("not_between operator: introduction/elimination", async () => {
         },
     ];
     for (const { tree_py, tree } of toTest) {
-        expect(applyTransformations(FULL_VIRTUAL_OPERATORS_INTRODUCTION, tree_py, options)).toEqual(
-            tree
-        );
-        expect(applyTransformations(FULL_VIRTUAL_OPERATORS_ELIMINATION, tree)).toEqual(tree_py);
+        expect(introduceVirtualOperators(tree_py, options)).toEqual(tree);
+        expect(eliminateVirtualOperators(tree)).toEqual(tree_py);
     }
 });

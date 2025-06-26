@@ -7,11 +7,9 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { EvaluationError } from "@web/core/py_js/py_builtin";
 import { registry } from "@web/core/registry";
-import {
-    constructTree,
-    domainContainsExpresssions,
-    treeFromDomain,
-} from "@web/core/tree_editor/condition_tree";
+import { constructTreeFromDomain } from "@web/core/tree_editor/construct_tree_from_domain";
+import { domainContainsExpressions } from "@web/core/tree_editor/domain_contains_expressions";
+import { treeFromDomain } from "@web/core/tree_editor/tree_from_domain";
 import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -109,7 +107,7 @@ export class DomainField extends Component {
     getEvaluatedDomain(props = this.props) {
         const domainStringRepr = this.getDomain(props);
         const evalContext = this.getContext(props);
-        if (domainContainsExpresssions(domainStringRepr)) {
+        if (domainContainsExpressions(domainStringRepr)) {
             const allowExpressions = this.allowExpressions(props);
             if (domainStringRepr !== this.lastDomainChecked) {
                 this.lastDomainChecked = domainStringRepr;
@@ -168,7 +166,10 @@ export class DomainField extends Component {
         let promises = [];
         const domain = this.getDomain(props);
         try {
-            const getFieldDef = await this.makeGetFieldDef(resModel, constructTree(domain));
+            const getFieldDef = await this.makeGetFieldDef(
+                resModel,
+                constructTreeFromDomain(domain)
+            );
             const tree = treeFromDomain(domain, { distributeNot: !this.env.debug, getFieldDef });
             const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
             promises = trees.map((tree) => this.getDomainTreeDescription(resModel, tree));
