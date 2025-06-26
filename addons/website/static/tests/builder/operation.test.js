@@ -143,6 +143,7 @@ describe("Async operations", () => {
         addActionOption({
             customAction: class extends BuilderAction {
                 static id = "customAction";
+                suppressPreviewableAsyncWarning = true;
                 async apply({ editingElement, value }) {
                     await new Promise((resolve) => setTimeout(resolve, applyDelay));
                     editingElement.classList.add(value);

@@ -403,6 +403,7 @@ class SetAnimationModeAction extends BuilderAction {
             // });
         }
         if (forceAnimation) {
+            // TODO: await promise?
             this.dependencies.animateOption.forceAnimation(editingElement);
         }
     }
@@ -451,6 +452,7 @@ class SetAnimateIntensityAction extends BuilderAction {
     }
     apply({ editingElement, value }) {
         editingElement.style.setProperty("--wanim-intensity", `${value}`);
+        // TODO: await promise?
         this.dependencies.animateOption.forceAnimation(editingElement);
     }
 }
@@ -461,8 +463,8 @@ class ForceAnimationAction extends BuilderAction {
     isActive() {
         return true;
     }
-    apply({ editingElement }) {
-        this.dependencies.animateOption.forceAnimation(editingElement);
+    async apply({ editingElement }) {
+        return this.dependencies.animateOption.forceAnimation(editingElement);
     }
 }
 class SetAnimationEffectAction extends BuilderAction {
@@ -491,6 +493,7 @@ class SetAnimationEffectAction extends BuilderAction {
             editingElement.classList.add(directionClassName);
         }
         editingElement.classList.add(effectClassName);
+        // TODO: await promise?
         this.dependencies.animateOption.forceAnimation(editingElement);
     }
 }

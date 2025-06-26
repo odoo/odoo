@@ -38,9 +38,9 @@
             'html_builder/static/src/**/*',
         ],
         'html_builder.inside_builder_style': [
-            ('include', 'web._assets_helpers'),
-
-            'web/static/src/scss/bootstrap_overridden.scss',
+            ('include', 'web.assets_frontend'),
+            ('remove', 'web/static/**/*.js'),
+            ('remove', 'web/static/**/*.xml'),
             'html_builder/static/src/**/*.inside.scss',
             'html_editor/static/src/main/chatgpt/chatgpt_plugin.scss',
             'html_editor/static/src/main/link/link.scss',
