@@ -148,11 +148,10 @@ class DisplayDriver(Driver):
         if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION_WAYLAND:
             subprocess.run(['wlr-randr', '--output', self.device_identifier, '--transform', orientation.value], check=True)
             # Update touchscreen mapping to this display
-            with helpers.writable():
-                subprocess.run(
-                    ['sed', '-i', f's/HDMI-A-[12]/{self.device_identifier}/', '/home/odoo/.config/labwc/rc.xml'],
-                    check=False,
-                )
+            subprocess.run(
+                ['sed', '-i', f's/HDMI-A-[12]/{self.device_identifier}/', '/home/odoo/.config/labwc/rc.xml'],
+                check=False,
+            )
             # Tell labwc to reload its configuration
             subprocess.run(['pkill', '-HUP', 'labwc'], check=False)
         else:

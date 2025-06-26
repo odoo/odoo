@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import configparser
-import contextlib
 from enum import Enum
 from functools import cache, wraps
 from importlib import util
@@ -78,22 +77,6 @@ def toggleable(function):
 
         return function(*args, **kwargs)
     return devtools_wrapper
-
-
-if IS_WINDOWS:
-    writable = contextlib.nullcontext
-elif IS_RPI:
-    @contextlib.contextmanager
-    def writable():
-        with lock:
-            try:
-                subprocess.run(["sudo", "mount", "-o", "remount,rw", "/"], check=False)
-                subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"], check=False)
-                yield
-            finally:
-                subprocess.run(["sudo", "mount", "-o", "remount,ro", "/"], check=False)
-                subprocess.run(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"], check=False)
-                subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"], check=False)
 
 
 def require_db(function):
@@ -188,8 +171,7 @@ def generate_password():
     try:
         shadow_password = crypt.crypt(password, crypt.mksalt())
         subprocess.run(('sudo', 'usermod', '-p', shadow_password, 'pi'), check=True)
-        with writable():
-            subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
+        subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
         return password
     except subprocess.CalledProcessError as e:
         _logger.exception("Failed to generate password: %s", e.output)
@@ -336,8 +318,7 @@ def download_iot_handlers(auto=True, server_url=None):
 
     delete_iot_handlers()
     path = path_file('odoo', 'addons', 'iot_drivers', 'iot_handlers')
-    with writable():
-        zip_file.extractall(path)
+    zip_file.extractall(path)
 
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
@@ -409,11 +390,10 @@ def read_file_first_line(filename):
 
 
 def unlink_file(*filenames):
-    with writable():
-        for filename in filenames:
-            path = path_file(filename)
-            if path.exists():
-                path.unlink()
+    for filename in filenames:
+        path = path_file(filename)
+        if path.exists():
+            path.unlink()
 
 
 def write_file(filename, text, mode='w'):
@@ -423,10 +403,9 @@ def write_file(filename, text, mode='w'):
     :param text: The text to write to the file
     :param mode: The mode to open the file in (Default: 'w')
     """
-    with writable():
-        path = path_file(filename)
-        with open(path, mode) as f:
-            f.write(text)
+    path = path_file(filename)
+    with open(path, mode) as f:
+        f.write(text)
 
 
 def download_from_url(download_url, path_to_filename):
@@ -454,11 +433,10 @@ def unzip_file(path_to_filename, path_to_extract):
     Will extract all the contents of 'downloaded_file.zip' to the 'new_folder' location)
     """
     try:
-        with writable():
-            path = path_file(path_to_filename)
-            with zipfile.ZipFile(path) as zip_file:
-                zip_file.extractall(path_file(path_to_extract))
-            Path(path).unlink()
+        path = path_file(path_to_filename)
+        with zipfile.ZipFile(path) as zip_file:
+            zip_file.extractall(path_file(path_to_extract))
+        Path(path).unlink()
         _logger.info('Unzipped %s to %s', path_to_filename, path_to_extract)
     except Exception:
         _logger.exception('Failed to unzip %s', path_to_filename)
@@ -470,16 +448,15 @@ def update_conf(values, section='iot.box'):
     :param dict values: key-value pairs to update the config with.
     :param str section: The section to update the key-value pairs in (Default: iot.box).
     """
-    with writable():
-        _logger.debug("Updating odoo.conf with values: %s", values)
-        conf = get_conf()
+    _logger.debug("Updating odoo.conf with values: %s", values)
+    conf = get_conf()
 
-        if not conf.has_section(section):
-            _logger.debug("Creating new section '%s' in odoo.conf", section)
-            conf.add_section(section)
+    if not conf.has_section(section):
+        _logger.debug("Creating new section '%s' in odoo.conf", section)
+        conf.add_section(section)
 
-        for key, value in values.items():
-            conf.set(section, key, value) if value else conf.remove_option(section, key)
+    for key, value in values.items():
+        conf.set(section, key, value) if value else conf.remove_option(section, key)
 
         with open(path_file("odoo.conf"), "w", encoding='utf-8') as f:
             conf.write(f)
