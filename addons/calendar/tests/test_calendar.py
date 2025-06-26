@@ -3,7 +3,7 @@
 import base64
 import freezegun
 
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 
 from odoo import fields, Command
 from odoo.tests import Form, new_test_user
