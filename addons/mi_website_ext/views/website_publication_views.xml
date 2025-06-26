@@ -1,0 +1,108 @@
+<odoo>
+    <data>
+        <record id="view_website_publication_list" model="ir.ui.view">
+            <field name="name">website.publication.list</field>
+            <field name="model">website.publication</field>
+            <field name="arch" type="xml">
+                <list string="Publicaciones" decoration-muted="not is_published">
+                    <field name="publish_date"/>
+                    <field name="name"/>
+                    <field name="publication_type"/>
+                    <field name="user_id"/>
+                    <field name="is_published" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+        <record id="view_website_publication_form" model="ir.ui.view">
+            <field name="name">website.publication.form</field>
+            <field name="model">website.publication</field>
+            <field name="arch" type="xml">
+                <form string="Publicación">
+                    <sheet>
+                        <field name="image_1920" widget="image" class="oe_avatar"
+                       invisible="publication_type in ['phrase', 'special_event', 'winner']"/>
+                        <div class="oe_title" invisible="publication_type == 'winner'">
+                            <label for="name" string="Título"/>
+                            <h1>
+                                <field name="name" placeholder="Título principal o la Frase del Día"/>
+                            </h1>
+                            <h2 invisible="publication_type not in ['activity', 'blog', 'news']">
+                                <field name="subtitle" placeholder="Subtítulo (opcional)"/>
+                            </h2>
+                        </div>
+                        <h1 invisible="publication_type != 'winner'">
+                            <field name="name" readonly="1" force_save="1"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="publication_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="is_published" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="user_id" readonly="1" force_save="1"/>
+                                <field name="publish_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="employee_id" string="Empleado Festejado/Ganador"
+                           invisible="publication_type not in ['winner']"/>
+                            <field name="winner_score" invisible="publication_type != 'winner'"/>
+                            <field name="activity_datetime" invisible="publication_type != 'activity'"/>
+                        </group>
+                        <group invisible="publication_type != 'phrase'">
+                            <field name="author_name"/>
+                            <field name="author_description"/>
+                        </group>
+                        <notebook invisible="publication_type in ['phrase', 'winner']">
+                            <page string="Contenido Principal">
+                                <field name="content_html" widget="html"
+                               placeholder="Escribe aquí el cuerpo del mensaje..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="action_website_publication" model="ir.actions.act_window">
+            <field name="name">Publicaciones del Portal</field>
+            <field name="res_model">website.publication</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crea la primera publicación para tu sitio web (anuncios, noticias, etc.).
+                </p>
+            </field>
+        </record>
+        <record id="action_website_policy" model="ir.actions.act_window">
+        <field name="name">Políticas y Reglamentos</field>
+        <field name="res_model">website.publication</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('publication_type', '=', 'policy')]</field>
+        <field name="context">{'default_publication_type': 'policy'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea la primera política o reglamento.
+            </p>
+        </field>
+    </record>
+        <menuitem id="menu_website_publication_root"
+                  name="Contenido del Portal"
+                  parent="hr.menu_hr_root" 
+                  sequence="95"
+                  groups="hr.group_hr_user,hr.group_hr_manager,base.group_system"/>
+        <menuitem id="menu_website_publication_action"
+                  name="Gestionar Publicaciones"
+                  parent="menu_website_publication_root"
+                  action="action_website_publication"/>
+         <menuitem id="menu_website_policy_action"
+              name="Gestionar Políticas"
+              parent="mi_website_ext.menu_website_publication_root"
+              action="action_website_policy"
+              sequence="30"/>
+    </data>
+</odoo>

@@ -1,0 +1,93 @@
+.content_container {
+  display: flex;
+  padding: 16px 84px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.anniversary_container {
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1 0 0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.anniversary_header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  align-self: stretch;
+}
+
+.anniversary_title {
+  color: #323030;
+  font-family: "Rubik";
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 800;
+  margin: 0;
+}
+
+.anniversary_header h4 {
+  align-self: stretch;
+  margin: 0;
+  color: #5b5959;
+  font-family: "Rubik";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.anniversary_author {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+}
+
+.anniversary_subtitle {
+  align-self: stretch;
+  color: #5b5959;
+  font-family: "Noto Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.anniversary_photo {
+  display: flex;
+  height: 662px;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 8px;
+}
+
+.anniversary_section {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 32px;
+  align-self: stretch;
+}
+
+@media (max-width: 576px) {
+  .anniversary_container {
+    width: 100%;
+    max-height: none;
+    position: static;
+  }
+
+  .content_container {
+    padding: 16px !important;
+  }
+}
+
+
+

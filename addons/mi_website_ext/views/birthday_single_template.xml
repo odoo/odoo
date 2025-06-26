@@ -1,0 +1,57 @@
+<odoo>
+    <template id="birthday_single_template" name="Birthday View">
+        <t t-call="website.layout">
+            <t t-call-assets="mi_website_ext.assets_birthday_single" />
+            <t t-if="employee">
+                <div class="content_container">
+                    <div class="birthday_container">
+                        <div class="birthday_header">
+                            <h1 class="birthday_title">!Feliz Cumpleaños!
+                                <t t-esc="employee.name.split(' ')[0]"/>
+                            </h1>
+                            <h4>¡Que sea un gran día para tí!</h4>
+                        </div>
+                        <t t-if="employee.user_id and employee.user_id.image_1920">
+                            <img t-att-src="image_data_uri(employee.user_id.image_1920)" t-att-alt="employee.name" class="birthday_photo"/>
+                        </t>
+                        <t t-elif="employee.image_1920">
+                            <img t-att-src="image_data_uri(employee.image_1920)" t-att-alt="employee.name" class="birthday_photo"/>
+                        </t>
+                        <t t-else="">
+                            <img src="/mi_website_ext/static/src/img/imagetester.jpg" alt="Foto de Cumpleaños" class="birthday_photo" />
+                        </t>
+                        <!--<div class="birthday_section">
+                            <div class="creative-birthday-card">
+                                <img src="/mi_website_ext/static/src/img/fresa.png" alt="Fresa" class="deco-img strawberry-1"/>
+                                <img src="/mi_website_ext/static/src/img/fresa_pequena.png" alt="Fresa" class="deco-img strawberry-2"/>
+                                <img src="/mi_website_ext/static/src/img/blueberry.png" alt="Limón" class="deco-img blueberry-1"/>
+                                <img src="/mi_website_ext/static/src/img/fresa.png" alt="Fresa" class="deco-img strawberry-3"/>
+                                <img src="/mi_website_ext/static/src/img/fresa_pequena.png" alt="Fresa" class="deco-img strawberry-4"/>
+                                <img src="/mi_website_ext/static/src/img/blueberry.png" alt="Limón" class="deco-img blueberry-2"/>
+                                <div class="hero-content-birthday">
+                                    <div class="heading-group">
+                                        <span class="happy-text">HAPPY</span>
+                                        <h1 class="birthday-text">Birthday</h1>
+                                    </div>
+                                    <img src="/mi_website_ext/static/src/img/pastel.png" alt="Rebanada de pastel" class="cake-img"/>
+                                </div>
+                            </div>
+                            <div>
+                                <t t-call="mi_website_ext.comment_section_template">
+                                    <t t-set="main_object" t-value="employee"/>
+    </t>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="container text-center py-5">
+                    <h2>Empleado no encontrado.</h2>
+                    <p>No se pudo encontrar al empleado que buscas.</p>
+                    <a href="/" class="btn btn-primary">Volver al inicio</a>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

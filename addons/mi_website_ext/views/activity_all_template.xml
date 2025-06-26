@@ -1,0 +1,44 @@
+<odoo>
+    <template id="activity_all_template" name="All Activities View">
+        <t t-call="website.layout">
+             <t t-set="hide_sidebar" t-value="True"/>
+            <t t-call-assets="mi_website_ext.assets_activity-all" />
+            <div class="content_container">
+                <div class="activity_container">
+                    <h1 class="activity_title">Todas las actividades</h1>
+                    <p class="activity_subtitle">Aquí puedes mirar las fotos de todas nuestras
+                        actividades.</p>
+                    <div class="album_section">
+                        <div class="album_list">
+                            <a class="album_item" href="/activity">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg" />
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </a>
+                            <a class="album_item" href="/activity">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg" />
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </a>
+                            <a class="album_item" href="/activity">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg" />
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </a>
+                            <a class="album_item" href="/activity">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg" />
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </a>
+                            <a class="album_item" href="/activity">
+                                <img src="/mi_website_ext/static/src/img/imagetester.jpg" />
+                                <h3>Dia del trabajador</h3>
+                                <p>01 de mayo</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

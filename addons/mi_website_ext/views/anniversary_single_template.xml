@@ -1,0 +1,35 @@
+<odoo>
+    <template id="anniversary_single_template" name="Anniversary Single View">
+        <t t-call="website.layout">
+            <t t-call-assets="mi_website_ext.assets_anniversary_single" />
+            <div class="content_container">
+                <div class="anniversary_container">
+                    <div class="anniversary_header">
+                        <h1 class="anniversary_title">Feliz Aniversario
+                            <t t-esc="employee.name"/>
+                        </h1>
+                        <h4>Los éxitos se cosechan con consistencia</h4>
+                    </div>
+                    <div class="anniversary_author">
+                        <p class="anniversary_subtitle">16 de abril de 2025</p>
+                        <p class="anniversary_subtitle">Raisa Montoya</p>
+                    </div>
+                    <t t-if="employee.user_id and employee.user_id.image_1920">
+                        <img t-att-src="image_data_uri(employee.user_id.image_1920)" t-att-alt="employee.name" class="birthday_photo"/>
+                    </t>
+                    <t t-elif="employee.image_1920">
+                        <img t-att-src="image_data_uri(employee.image_1920)" t-att-alt="employee.name" class="birthday_photo"/>
+                    </t>
+                    <t t-else="">
+                        <img src="/mi_website_ext/static/src/img/imagetester.jpg" alt="Foto de Cumpleaños" class="birthday_photo" />
+                    </t>
+                    <div class="anniversary_section">
+                        <t t-call="mi_website_ext.comment_section_template">
+                            <t t-set="main_object" t-value="employee"/>
+    </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
