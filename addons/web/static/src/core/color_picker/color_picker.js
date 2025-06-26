@@ -219,12 +219,21 @@ export class ColorPicker extends Component {
             targetBtn = target.previousElementSibling;
         } else if (key === "ArrowUp" || key === "ArrowDown") {
             const buttonIndex = [...target.parentElement.children].indexOf(target);
-            const row =
-                key === "ArrowUp"
-                    ? target.parentElement.previousElementSibling
-                    : target.parentElement.nextElementSibling;
-            if (row?.matches(".o_color_section, .o_colorpicker_section")) {
-                targetBtn = row.children[buttonIndex];
+            const nbColumns = getComputedStyle(target).getPropertyValue(
+                "--o-color-picker-grid-columns"
+            );
+            targetBtn =
+                target.parentElement.children[
+                    buttonIndex + (key === "ArrowUp" ? -1 : 1) * nbColumns
+                ];
+            if (!targetBtn) {
+                const row =
+                    key === "ArrowUp"
+                        ? target.parentElement.previousElementSibling
+                        : target.parentElement.nextElementSibling;
+                if (row?.matches(".o_color_section, .o_colorpicker_section")) {
+                    targetBtn = row.children[buttonIndex];
+                }
             }
         }
         if (targetBtn && targetBtn.classList.contains("o_color_button")) {
