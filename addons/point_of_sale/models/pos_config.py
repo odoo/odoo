@@ -5,6 +5,7 @@ from datetime import datetime
 from uuid import uuid4
 import pytz
 import secrets
+from collections import defaultdict
 
 from odoo import api, fields, models, _, Command, tools, SUPERUSER_ID
 from odoo.http import request
@@ -201,6 +202,10 @@ class PosConfig(models.Model):
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
+    current_session_start_date = fields.Date(string="Current session Start Date", compute='_compute_current_session')
+    current_session_opening_cash = fields.Monetary(string="Current session opening Cash", compute='_compute_current_session', currency_field='currency_id')
+    current_session_sold = fields.Char(string="Current session sold orders", compute="_compute_current_session")
+    current_session_ongoing = fields.Char(string="Current session ongoing orders", compute="_compute_current_session")
 
     def notify_synchronisation(self, session_id, login_number, records={}):
         self.ensure_one()
@@ -307,6 +312,52 @@ class PosConfig(models.Model):
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
             pos_config.number_of_rescue_session = len(rescue_sessions)
+
+            session_record = session[0] if session else None
+            if not session_record:
+                pos_config.current_session_opening_cash = False
+                pos_config.current_session_start_date = False
+                pos_config.current_session_sold = False
+                pos_config.current_session_ongoing = False
+            else:
+                pos_config.current_session_opening_cash = session_record.cash_register_balance_start
+
+                start_at = session_record.start_at
+                if start_at:
+                    timezone = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
+                    pos_config.current_session_start_date = start_at.astimezone(timezone).date()
+                else:
+                    pos_config.current_session_start_date = False
+
+                all_paid_orders = session_record.order_ids.filtered(lambda o: o.state == 'paid')
+                refund_orders = all_paid_orders.filtered(lambda o: o.is_refund)
+                non_refund_orders = all_paid_orders - refund_orders
+
+                # calculate total refunded amount per original order for refund count check
+                refund_totals = defaultdict(float)
+                for refund in refund_orders:
+                    if refund.refunded_order_id:
+                        refund_totals[refund.refunded_order_id.id] += abs(refund.amount_total)
+
+                # count paid orders that are not completely refunded
+                paid_order_count = sum(
+                    1 for order in non_refund_orders
+                    if refund_totals.get(order.id, 0.0) != order.amount_total
+                )
+
+                if paid_order_count:
+                    total_paid = pos_config.currency_id.round(sum(all_paid_orders.mapped('amount_total')))
+                    pos_config.current_session_sold = f"{pos_config.currency_id.symbol} {total_paid} ({paid_order_count} {'order' if paid_order_count == 1 else 'orders'})"
+                else:
+                    pos_config.current_session_sold = False
+
+                draft_orders = session_record.order_ids.filtered(lambda o: o.state == 'draft')
+                if draft_orders:
+                    total_draft = pos_config.currency_id.round(sum(draft_orders.mapped('amount_total')))
+                    count_draft = len(draft_orders)
+                    pos_config.current_session_ongoing = f"{pos_config.currency_id.symbol} {total_draft} ({count_draft} {'order' if count_draft == 1 else 'orders'})"
+                else:
+                    pos_config.current_session_ongoing = False
 
     @api.depends('session_ids')
     def _compute_last_session(self):
