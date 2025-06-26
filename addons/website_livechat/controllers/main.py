@@ -12,6 +12,10 @@ class WebsiteLivechat(LivechatController):
         visitor_sudo = request.env["website.visitor"]._get_visitor_from_request()
         return _('Visitor #%d', visitor_sudo.id) if visitor_sudo else super()._get_guest_name()
 
+    @http.route(website=True)
+    def assets_embed(self, ext, **kwargs):
+        return super().assets_embed(ext, **kwargs)
+
     @http.route()
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True):
         """ Override to use visitor name instead of 'Visitor' whenever a visitor start a livechat session. """
