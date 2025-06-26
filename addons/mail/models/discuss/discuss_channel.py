@@ -1071,7 +1071,6 @@ class DiscussChannel(models.Model):
         ]
         if for_current_user:
             res = res + [
-                forward_member_field("custom_notifications"),
                 {"fetchChannelInfoState": "fetched"},
                 "is_editable",
                 forward_member_field("is_pinned"),
@@ -1088,6 +1087,7 @@ class DiscussChannel(models.Model):
                     "self_member_id",
                     extra_fields=[
                         "custom_channel_name",
+                        "custom_notifications",
                         "last_interest_dt",
                         "message_unread_counter",
                         {"message_unread_counter_bus_id": bus_last_id},

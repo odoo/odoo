@@ -37,7 +37,7 @@
                                 <span class="fw-bolder o-xsmaller ps-2 o-discuss-NotificationSettings-defaultValue"><t t-out="store.settings.NOTIFICATIONS.find((n) => n.label === store.settings.channel_notifications).name"/></span>
                             </div>
                             <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
-                            <input class="form-check-input shadow-sm" type="radio" t-att-checked="!props.thread.custom_notifications"/>
+                            <input class="form-check-input shadow-sm" type="radio" t-att-checked="!props.thread.selfMember?.custom_notifications"/>
                         </div>
                     </button>
                     <t t-foreach="store.settings.NOTIFICATIONS" t-as="notif" t-key="notif.label">
@@ -45,7 +45,7 @@
                             <div class="d-flex flex-grow-1 align-items-center px-2 py-1 rounded">
                                 <span class="fs-6 fw-normal text-wrap text-start text-break" t-esc="notif.name"/>
                                 <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
-                                <input class="form-check-input ms-2 shadow-sm" type="radio" t-att-checked="props.thread.custom_notifications === notif.label"/>
+                                <input class="form-check-input ms-2 shadow-sm" type="radio" t-att-checked="props.thread.selfMember?.custom_notifications === notif.label"/>
                             </div>
                         </button>
                     </t>
