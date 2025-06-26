@@ -66,7 +66,30 @@ class AccountMoveSend(models.AbstractModel):
                     invoice_data['error'] = _("The CIUS-RO E-Factura could not be found")
                     continue
 
+<<<<<<< 7cfee855c10e5f7e8d1c20563376af5748df39a9
                 if errors := invoice._l10n_ro_edi_send_invoice(xml_data):
+||||||| 61782d7163be2f6e277dba519bce5a059e788d57
+                invoice._l10n_ro_edi_send_invoice(xml_data)
+
+                if self._can_commit():
+                    self.env.cr.commit()
+
+                active_document = invoice.l10n_ro_edi_document_ids.sorted()[0]
+
+                if active_document.state == 'invoice_sending_failed':
+=======
+                if self._can_commit():
+                    self.env.cr.commit()
+
+                invoice._l10n_ro_edi_send_invoice(xml_data)
+
+                if self._can_commit():
+                    self.env.cr.commit()
+
+                active_document = invoice.l10n_ro_edi_document_ids.sorted()[0]
+
+                if active_document.state == 'invoice_sending_failed':
+>>>>>>> 2ebe5cff55028f6501ab5bde88c25e6cf5a52431
                     invoice_data['error'] = {
                         'error_title': _("Error when sending CIUS-RO E-Factura to the SPV"),
                         'errors': errors,
