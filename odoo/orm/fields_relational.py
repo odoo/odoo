@@ -1461,6 +1461,19 @@ class Many2many(_RelationalMulti):
                 comodel.browse(to_delete).unlink()
                 relation_delete(to_delete)
 
+        # check comodel access of added records
+        # we check the su flag of the environment of records, because su may be
+        # disabled on the comodel
+        if not model.env.su:
+            try:
+                comodel.browse(
+                    co_id
+                    for rec_id, new_co_ids in new_relation.items()
+                    for co_id in new_co_ids - old_relation[rec_id]
+                ).check_access('read')
+            except AccessError as e:
+                raise AccessError(model.env._("Failed to write field %s", self) + "\n" + str(e))
+
         # update the cache of self
         for record in records:
             self._update_cache(record, tuple(new_relation[record.id]))
