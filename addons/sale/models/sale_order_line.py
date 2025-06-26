@@ -572,11 +572,10 @@ class SaleOrderLine(models.Model):
             else:
                 line = line.with_company(line.company_id)
                 price = line._get_display_price()
+                product_taxes = line.product_id.taxes_id._filter_taxes_by_company(line.company_id)
                 line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
                     price,
-                    product_taxes=line.product_id.taxes_id.filtered(
-                        lambda tax: tax.company_id == line.env.company
-                    ),
+                    product_taxes=product_taxes,
                     fiscal_position=line.order_id.fiscal_position_id,
                 )
                 line.technical_price_unit = line.price_unit
