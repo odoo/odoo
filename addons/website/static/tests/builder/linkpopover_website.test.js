@@ -1,13 +1,25 @@
 import { expect, test } from "@odoo/hoot";
-import { click, press, waitFor, queryOne } from "@odoo/hoot-dom";
+import { click, press, waitFor, waitForNone, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { cleanLinkArtifacts } from "@html_editor/../tests/_helpers/format";
-import { getContent, setSelection } from "@html_editor/../tests/_helpers/selection";
+import { getContent, setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
-import { contains, defineModels, onRpc, serverState, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { click as mailClick, mailModels, openFormView, start } from "@mail/../tests/mail_test_helpers";
+import {
+    contains,
+    defineModels,
+    onRpc,
+    serverState,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import {
+    click as mailClick,
+    mailModels,
+    openFormView,
+    start,
+} from "@mail/../tests/mail_test_helpers";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { HtmlField } from "@html_editor/fields/html_field";
+import { browser } from "@web/core/browser/browser";
 
 defineModels(mailModels);
 
@@ -82,7 +94,6 @@ test("autocomplete should shown and able to edit the link", async () => {
 });
 
 test("LinkPopover opens in full composer", async () => {
-
     let htmlEditor;
     mailModels.MailComposeMessage._views = {
         "form,false": `
@@ -108,4 +119,45 @@ test("LinkPopover opens in full composer", async () => {
     await waitFor(".o-we-linkpopover");
     await animationFrame();
     expect(".o-we-linkpopover").toHaveCount(1);
+});
+
+test("link redirection should be prefixed for url of website pages only", async () => {
+    patchWithCleanup(browser, {
+        open(url) {
+            expect.step("website page url prefixed");
+            expect(url.pathname.startsWith("/@")).toBe(true);
+        },
+    });
+    onRpc("/html_editor/link_preview_internal", () => ({}));
+    onRpc("/contactus", () => ({}));
+    onRpc("/odoo/project/1", () => ({}));
+    onRpc("/web/project/1", () => ({}));
+
+    // website pages should be prefixed with /@
+    const { el } = await setupEditor('<p>this is a <a href="/contactus">li[]nk</a></p>');
+    await waitFor(".o-we-linkpopover");
+    await click(".o-we-linkpopover a");
+    expect.verifySteps(["website page url prefixed"]);
+
+    // other backend urls and external urls should not be prefixed
+    setContent(el, `<p>this is a[] <a href="/odoo/project/1">link</a></p>`);
+    await waitForNone(".o-we-linkpopover");
+    setContent(el, `<p>this is a <a href="/odoo/project/1">li[]nk</a></p>`);
+    await waitFor(".o-we-linkpopover");
+    await click(".o-we-linkpopover a");
+    expect.verifySteps([]);
+
+    setContent(el, `<p>this is a[] <a href="/web/project/1">link</a></p>`);
+    await waitForNone(".o-we-linkpopover");
+    setContent(el, `<p>this is a <a href="/web/project/1">li[]nk</a></p>`);
+    await waitFor(".o-we-linkpopover");
+    await click(".o-we-linkpopover a");
+    expect.verifySteps([]);
+
+    setContent(el, `<p>this is a[] <a href="http://test.test">link</a></p>`);
+    await waitForNone(".o-we-linkpopover");
+    setContent(el, `<p>this is a <a href="http://test.test">li[]nk</a></p>`);
+    await waitFor(".o-we-linkpopover");
+    await click(".o-we-linkpopover a");
+    expect.verifySteps([]);
 });
