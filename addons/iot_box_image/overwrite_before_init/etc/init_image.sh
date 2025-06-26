@@ -28,13 +28,11 @@ dpkg-reconfigure locales
 echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo='sudo systemctl stop odoo; sudo -u odoo /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_logs='less -R +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias read_mode='sudo mount -o remount,ro / && sudo mount -o remount,ro /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias install='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks && sudo chroot /root_bypass_ramdisks/'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias install='sudo chroot /root_bypass_ramdisks/'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias blackbox='ls /dev/serial/by-path/'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias nano='write_mode; sudo -u odoo nano -l'" | tee -a /home/pi/.bashrc
-echo  "alias vim='write_mode; sudo -u odoo vim -u /home/pi/.vimrc'" | tee -a /home/pi/.bashrc
+echo  "alias nano='sudo -u odoo nano -l'" | tee -a /home/pi/.bashrc
+echo  "alias vim='sudo -u odoo vim -u /home/pi/.vimrc'" | tee -a /home/pi/.bashrc
 echo  "alias odoo_luxe='printf \" ______\n< Luxe >\n ------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\ \n                ||----w |\n                ||     ||\n\"'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_start='sudo systemctl start odoo'" >> /home/pi/.bashrc
 echo  "alias odoo_stop='sudo systemctl stop odoo'" >> /home/pi/.bashrc
@@ -48,8 +46,6 @@ odoo_help() {
   echo 'odoo                  Starts/Restarts Odoo server manually (not through odoo.service)'
   echo 'odoo_logs             Displays Odoo server logs in real time'
   echo 'odoo_conf             Displays Odoo configuration file content'
-  echo 'write_mode            Enables system write mode'
-  echo 'read_mode             Switches system to read-only mode'
   echo 'install               Bypasses ramdisks to allow package installation'
   echo 'blackbox              Lists all serial connected devices'
   echo 'odoo_start            Starts Odoo service'
@@ -67,7 +63,6 @@ odoo_dev() {
     odoo_help
     return
   fi
-  write_mode
   pwd=\$(pwd)
   cd /home/pi/odoo
   sudo -u odoo git remote add dev https://github.com/odoo-dev/odoo.git
@@ -84,7 +79,6 @@ odoo_origin() {
     odoo_help
     return
   fi
-  write_mode
   pwd=\$(pwd)
   cd /home/pi/odoo
   sudo -u odoo git remote set-url origin https://github.com/odoo/odoo.git  # ensure odoo repository
@@ -120,19 +114,16 @@ devtools() {
     enable|disable)
       case \"\$2\" in
         general|actions|longpolling)
-          write_mode
           if ! grep -q '^\[devtools\]' /home/pi/odoo.conf; then
             sudo -u odoo bash -c \"printf '\n[devtools]\n' >> /home/pi/odoo.conf\"
           fi
           if [ \"\$1\" == \"disable\" ]; then
             value=\"\${3:-*}\" # Default to '*' if no action name is provided
             devtools enable \"\$2\" # Remove action/general/longpolling from conf to avoid duplicate keys
-            write_mode
             sudo sed -i \"/^\[devtools\]/a\\\\\$2 = \$value\" /home/pi/odoo.conf
           elif [ \"\$1\" == \"enable\" ]; then
             sudo sed -i \"/\[devtools\]/,/\[/{/\$2 =/d}\" /home/pi/odoo.conf
           fi
-          read_mode
           ;;
         *)
           help_message

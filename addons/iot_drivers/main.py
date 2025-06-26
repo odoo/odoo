@@ -2,6 +2,7 @@
 import logging
 import requests
 import schedule
+import subprocess
 from threading import Thread
 import time
 
@@ -116,6 +117,10 @@ class Manager(Thread):
         with the updates. It will also reconnect to the Wi-Fi if the connection is lost.
         """
         if IS_RPI:
+            # ensure that the root filesystem is writable retro compatibility (TODO: remove this in 19.0)
+            subprocess.run(["sudo", "mount", "-o", "remount,rw", "/"], check=False)
+            subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"], check=False)
+
             wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
 
         helpers.start_nginx_server()

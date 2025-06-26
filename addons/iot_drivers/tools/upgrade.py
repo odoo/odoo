@@ -8,7 +8,6 @@ from odoo.addons.iot_drivers.tools.helpers import (
     path_file,
     require_db,
     toggleable,
-    writable,
 )
 from odoo.addons.iot_drivers.tools.system import rpi_only, IS_RPI
 
@@ -87,16 +86,15 @@ def check_git_branch(server_url=None):
         _logger.info("IoT Box git branch: %s / Associated Odoo db's git branch: %s", local_branch, db_branch)
 
         if db_branch != local_branch:
-            with writable():
-                # Repository updates
-                checkout(db_branch)
-                update_requirements()
+            # Repository updates
+            checkout(db_branch)
+            update_requirements()
 
-                # System updates
-                update_packages()
+            # System updates
+            update_packages()
 
-                # Miscellaneous updates (version migrations)
-                misc_migration_updates()
+            # Miscellaneous updates (version migrations)
+            misc_migration_updates()
             _logger.warning("Update completed, restarting...")
             odoo_restart()
     except Exception:
