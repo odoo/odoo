@@ -13,7 +13,6 @@ from odoo.addons.iot_drivers.tools.helpers import (
     require_db,
     start_nginx_server,
     update_conf,
-    writable,
 )
 from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_WINDOWS
 
@@ -104,11 +103,10 @@ def download_odoo_certificate():
         return None
 
     if IS_RPI:
-        with writable():
-            Path('/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')
-            Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')
-            Path('/etc/ssl/private/nginx-cert.key').write_text(private_key, encoding='utf-8')
-            Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(private_key, encoding='utf-8')
+        Path('/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')
+        Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(certificate, encoding='utf-8')
+        Path('/etc/ssl/private/nginx-cert.key').write_text(private_key, encoding='utf-8')
+        Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(private_key, encoding='utf-8')
         start_nginx_server()
         return str(x509.load_pem_x509_certificate(certificate.encode()).not_valid_after)
     else:
