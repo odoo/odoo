@@ -11,6 +11,24 @@ export class DiscussNotificationSettings extends Component {
             selectedDuration: false,
         });
     }
+    onChangeMuteWhatsapp() {
+        const shouldMute = !this.store.settings.mute_all_whatsapp;
+        if (shouldMute){
+            const FOREVER = this.store.settings.MUTES.find((m) => m.label === "forever").value;
+            this.store.settings.toggleMuteWhatsappConversations(shouldMute ,FOREVER);
+            this.state.selectedDuration = FOREVER;
+        }
+        else{
+            this.store.settings.toggleMuteWhatsappConversations(shouldMute , -1)
+        }
+    }
+    onChangeMuteDurationWhatsapp(ev){
+        if (ev.target.value === "default") {
+            return;
+        }
+        this.store.settings.toggleMuteWhatsappConversations(this.store.settings.mute_all_whatsapp,parseInt(ev.target.value));
+        this.state.selectedDuration = parseInt(ev.target.value);
+    }
 
     onChangeDisplayMuteDetails() {
         // set the default mute duration to forever when opens the mute details

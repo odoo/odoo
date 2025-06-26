@@ -22,6 +22,7 @@ class ResUsersSettings(models.Model):
         help="This setting will only be applied to channels. Mentions only if not specified.",
     )
     mute_until_dt = fields.Datetime(string="Mute notifications until", index=True, help="If set, the user will not receive notifications from all the channels until this date.")
+    mute_all_whatsapp = fields.Boolean(string="Mute All WhatsApp Channels", default=False, help="If set, the user will not receive notifications from WhatsApp channels")
 
     @api.model
     def _cleanup_expired_mutes(self):
@@ -41,6 +42,9 @@ class ResUsersSettings(models.Model):
             res['volumes'] = [('ADD', volume_settings)]
         if "mute_until_dt" in fields_to_format:
             res["mute_until_dt"] = fields.Datetime.to_string(self.mute_until_dt)
+        if 'mute_all_whatsapp' in fields_to_format:
+            # Add the current boolean value of the field directly to the result dictionary
+            res['mute_all_whatsapp'] = self.mute_all_whatsapp
         return res
 
     def _notify_mute(self):
