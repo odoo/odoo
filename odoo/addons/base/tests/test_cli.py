@@ -125,16 +125,15 @@ class TestCommand(BaseCase):
         with os.fdopen(child, 'w', encoding="utf-8") as stdin_file:
             stdin_file.write(
                 'print(message)\n'
-                'exit()\n'
+                'exit()\n',
             )
         self.assertFalse(shell.wait(), "exited with a non 0 code")
 
         self.assertEqual(shell.stdout.read().splitlines(), [
-            Like("No environment set..."),
             Like("odoo: <module 'odoo' ...>"),
             Like("openerp: <module 'odoo' ...>"),
             ">>> Hello from Python!",
-            '>>> '
+            '>>> ',
         ])
 
 

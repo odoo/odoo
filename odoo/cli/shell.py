@@ -121,7 +121,7 @@ class Shell(Command):
 
             # Start the shell
             for shell in (
-                [parsed_args.shell_interface, 'python']
+                list({parsed_args.shell_interface, 'python'})
                 if parsed_args.shell_interface else SHELL
             ):
                 try:
@@ -130,7 +130,7 @@ class Shell(Command):
                 except ImportError:
                     pass
                 except Exception:  # noqa: BLE001
-                    _logger.warning("Could not start '%s' shell.", shell)
+                    _logger.exception("Could not start '%s' shell", shell)
                     _logger.debug("Shell error:", exc_info=True)
             return None
 
@@ -177,7 +177,7 @@ class Shell(Command):
 
         console = Console(locals=local_vars, filename="<console>")
         if parsed_args.shell_file:
-            script = Path.read_text(parsed_args.shell_file)
+            script = Path(parsed_args.shell_file).read_text(encoding='utf-8')
             console.runsource(script, filename=parsed_args.shell_file, symbol='exec')
 
         console.interact(banner='')
