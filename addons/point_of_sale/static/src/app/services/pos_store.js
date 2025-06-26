@@ -1751,6 +1751,45 @@ export class PosStore extends WithLazyGetterTrap {
         return { orderData, changes };
     }
 
+    async generateReceiptsDataToPrint(orderData, changes, orderChange) {
+        const receiptsData = [];
+        if (changes.new.length) {
+            const orderDataNew = { ...orderData };
+            orderDataNew.changes = {
+                title: _t("NEW"),
+                data: changes.new,
+            };
+            receiptsData.push(await this.prepareReceiptGroupedData(orderDataNew));
+        }
+
+        if (changes.cancelled.length) {
+            const orderDataCancelled = { ...orderData };
+            orderDataCancelled.changes = {
+                title: _t("CANCELLED"),
+                data: changes.cancelled,
+            };
+            receiptsData.push(await this.prepareReceiptGroupedData(orderDataCancelled));
+        }
+
+        if (changes.noteUpdate.length) {
+            const orderDataNoteUpdate = { ...orderData };
+            const { noteUpdateTitle, printNoteUpdateData = true } = orderChange;
+            orderDataNoteUpdate.changes = {
+                title: noteUpdateTitle || _t("NOTE UPDATE"),
+                data: printNoteUpdateData ? changes.noteUpdate : [],
+            };
+            receiptsData.push(await this.prepareReceiptGroupedData(orderDataNoteUpdate));
+            orderData.changes.noteUpdate = [];
+        }
+
+        if (orderChange.internal_note || orderChange.general_customer_note) {
+            const orderDataNote = { ...orderData };
+            orderDataNote.changes = { title: "", data: [] };
+            receiptsData.push(await this.prepareReceiptGroupedData(orderDataNote));
+        }
+        return receiptsData;
+    }
+
     async printChanges(order, orderChange, reprint = false) {
         const unsuccedPrints = [];
 
@@ -1761,45 +1800,13 @@ export class PosStore extends WithLazyGetterTrap {
                 printer.config.product_categories_ids,
                 reprint
             );
-
-            if (changes.new.length) {
-                orderData.changes = {
-                    title: _t("NEW"),
-                    data: changes.new,
-                };
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
-                }
-            }
-
-            if (changes.cancelled.length) {
-                orderData.changes = {
-                    title: _t("CANCELLED"),
-                    data: changes.cancelled,
-                };
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
-                }
-            }
-
-            if (changes.noteUpdate.length) {
-                const { noteUpdateTitle, printNoteUpdateData = true } = orderChange;
-                orderData.changes = {
-                    title: noteUpdateTitle || _t("NOTE UPDATE"),
-                    data: printNoteUpdateData ? changes.noteUpdate : [],
-                };
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
-                }
-                orderData.changes.noteUpdate = [];
-            }
-
-            if (orderChange.internal_note || orderChange.general_customer_note) {
-                orderData.changes = { title: "", data: [] };
-                const result = await this.printOrderChanges(orderData, printer);
+            const receiptsData = await this.generateReceiptsDataToPrint(
+                orderData,
+                changes,
+                orderChange
+            );
+            for (const data of receiptsData) {
+                const result = await this.printOrderChanges(data, printer);
                 if (!result.successful) {
                     unsuccedPrints.push(printer.config.name);
                 }
@@ -1816,7 +1823,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    async printOrderChanges(data, printer) {
+    async prepareReceiptGroupedData(data) {
         const dataChanges = data.changes?.data;
         if (dataChanges && dataChanges.some((c) => c.group)) {
             const groupedData = dataChanges.reduce((acc, c) => {
@@ -1829,6 +1836,10 @@ export class PosStore extends WithLazyGetterTrap {
             }, {});
             data.changes.groupedData = Object.values(groupedData).sort((a, b) => a.index - b.index);
         }
+        return data;
+    }
+
+    async printOrderChanges(data, printer) {
         const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
             data: data,
         });
