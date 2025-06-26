@@ -127,7 +127,7 @@ class PrinterInterface(Interface):
         sorted_printers = sorted(discovered_printers.values(), key=lambda printer: str(printer.get('ip')))
 
         for ip, printers_with_same_ip in groupby(sorted_printers, lambda printer: printer.get('ip')):
-            printers_with_same_ip = list(printers_with_same_ip)
+            printers_with_same_ip = sorted(printers_with_same_ip, key=lambda printer: printer['identifier'])
             if ip is None or len(printers_with_same_ip) == 1:
                 result += printers_with_same_ip
                 continue
