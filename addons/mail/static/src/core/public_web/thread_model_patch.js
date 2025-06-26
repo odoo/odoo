@@ -19,7 +19,7 @@ patch(Thread.prototype, {
      */
     async notifyMessageToUser(message) {
         const channel_notifications =
-            this.custom_notifications || this.store.settings.channel_notifications;
+            this.selfMember?.custom_notifications || this.store.settings.channel_notifications;
         if (
             !this.mute_until_dt &&
             !this.store.self.im_status.includes("busy") &&

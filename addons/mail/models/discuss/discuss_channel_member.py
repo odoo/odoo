@@ -257,7 +257,7 @@ class DiscussChannelMember(models.Model):
     def set_custom_notifications(self, custom_notifications):
         self.ensure_one()
         self.custom_notifications = custom_notifications
-        self._bus_send_store(self.channel_id, {"custom_notifications": self.custom_notifications})
+        self._bus_send_store(self, "custom_notifications")
 
     @api.model
     def _cleanup_expired_mutes(self):
