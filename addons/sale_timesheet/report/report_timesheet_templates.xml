@@ -9,7 +9,7 @@
                     <t t-foreach="docs" t-as="doc">
                         <t t-set="doc_name" t-value="doc.name"/>
                         <t t-if="with_order_id" t-set="doc_name" t-value="str(doc.order_id.name) +' - '+ str(doc_name)"/>
-                        <t t-elif="doc_name == '/'" t-set="doc_name" t-value="'Draft'"/>
+                        <t t-elif="doc_name == '/'" t-set="doc_name">Draft</t>
                         <div class="oe_structure"/>
                         <div class="row mt8">
                             <div class="col-12">
