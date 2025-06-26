@@ -173,6 +173,7 @@
             <field name="name">OpenSession/0003</field>
             <field name="config_id" ref="pos_config_main_restaurant" />
             <field name="user_id" ref="base.user_admin" />
+            <field name="start_at" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
         </record>
 
         <record id="pos_open_order_2" model="pos.order" forcecreate="False">

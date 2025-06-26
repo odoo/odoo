@@ -227,3 +227,33 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
             ReceiptScreen.totalAmountContains("100"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("SessionStatisticsDisplay", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.enterOpeningAmount("100.00"),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "5", "5"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.isShown(),
+            ProductScreen.addOrderline("Monitor Stand", "2", "10"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.isShown(),
+            Chrome.clickMenuOption("Backend", { expectUnloadPage: true }),
+            {
+                trigger: `[name=opening_cash]:contains(100.00)`,
+            },
+            {
+                trigger: `[name=paid_orders]:contains(45.00 (2 orders))`,
+            },
+        ].flat(),
+});
