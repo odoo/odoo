@@ -53,7 +53,25 @@ describe("collapsed selection", () => {
                 await press(["ctrl", "a"]);
                 await insertText(editor, "x");
             },
-            contentAfter: "<h1>x[]<br></h1>",
+            contentAfter: "<h1>x[]</h1>",
+        });
+    });
+    test("should insert a char into an empty p and remove the br", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                await insertText(editor, "x");
+            },
+            contentAfter: "<p>x[]</p>",
+        });
+    });
+    test("should insert a char into an p with br and remove the unecessary br", async () => {
+        await testEditor({
+            contentBefore: "<p>abc<br>[]<br></p>",
+            stepFunction: async (editor) => {
+                await insertText(editor, "x");
+            },
+            contentAfter: "<p>abc<br>x[]</p>",
         });
     });
 });
