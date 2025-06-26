@@ -77,14 +77,6 @@ class StockRule(models.Model):
             if not supplier and self.env.context.get('from_orderpoint'):
                 msg = _('There is no vendors to generate the purchase order for product %s. Go on the product form and add at least one vendor.', procurement.product_id.display_name)
                 errors.append((procurement, msg))
-            elif not supplier and not override_default_supplier:
-                # If the supplier is not set, we cannot create a PO, but don't want to block SO
-                moves = procurement.values.get('move_dest_ids') or self.env['stock.move']
-                if moves.propagate_cancel:
-                    moves._action_cancel()
-                moves.procure_method = 'make_to_stock'
-                self._notify_responsible(procurement)
-                return
 
             partner = supplier.partner_id if not override_default_supplier else procurement.values["group_id"].partner_id
             # we put `supplier_info` in values for extensibility purposes
