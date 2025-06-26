@@ -872,6 +872,9 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
+        with po_1.order_line.new() as po_line:
+            po_line.display_type = 'line_note'
+            po_line.name = 'Test Note'
         po_1 = po_1.save()
         po_1.incoterm_id = incoterm_id_1
 
@@ -890,6 +893,9 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line_2.product_id = self.product_b
             po_line_2.product_qty = 5
             po_line_2.price_unit = 500
+        with po_2.order_line.new() as po_line:
+            po_line.display_type = 'line_section'
+            po_line.name = 'Test section'
         po_2 = po_2.save()
         po_2.incoterm_id = incoterm_id_2
 

@@ -114,3 +114,10 @@ export function setupCombo(products, addToCart = true) {
 
     return steps;
 }
+
+export function isShown() {
+    return {
+        content: `product page is shown`,
+        trigger: `.product-list`,
+    };
+}

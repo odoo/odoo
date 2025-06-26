@@ -38,7 +38,6 @@ class AccountMoveLine(models.Model):
         :param fallback:            Fallback on an approximated mapping if the mapping failed.
         :return:                    query as an SQL object
         """
-        #pylint: disable=sql-injection        
         group_taxes = self.env['account.tax'].search([('amount_type', '=', 'group')])
 
         group_taxes_query_list = []
@@ -103,42 +102,7 @@ class AccountMoveLine(models.Model):
             tax_line_4      5                                                       275         base_line_2/3
             */
 
-            WITH affecting_base_tax_ids AS (
-
-                /*
-                This CTE builds a reference table based on the tax_ids field, with the following changes:
-                  - flatten the group of taxes
-                  - exclude the taxes having 'is_base_affected' set to False.
-                Those allow to match only base_line_1 when finding the base lines of tax_line_1, as we need to find
-                base lines having a 'affecting_base_tax_ids' ending with [10_affect_base, 20], not only containing
-                '10_affect_base'. Otherwise, base_line_2/3 would also be matched.
-                In our example, as all the taxes are set to be affected by previous ones affecting the base, the
-                result is similar to the table 'account_move_line_account_tax_rel':
-                Id                 Tax_ids
-                -------------------------------------------
-                base_line_1        [10_affect_base, 20]
-                base_line_2        [10_affect_base, 5]
-                base_line_3        [10_affect_base, 5]
-                */
-
-                SELECT
-                    sub.line_id AS id,
-                    ARRAY_AGG(sub.tax_id ORDER BY sub.sequence, sub.tax_id) AS tax_ids
-                FROM (
-                    SELECT
-                        tax_rel.account_move_line_id AS line_id,
-                        %(group_taxes_query)s AS tax_id,
-                        tax.sequence
-                    FROM %(table_references)s
-                    JOIN account_move_line_account_tax_rel tax_rel ON account_move_line.id = tax_rel.account_move_line_id
-                    JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
-                    WHERE tax.is_base_affected
-                    AND %(search_condition)s
-                ) AS sub
-                GROUP BY sub.line_id
-            ),
-
-            base_tax_line_mapping AS (
+            WITH base_tax_line_mapping AS (
 
                 /*
                 Create the mapping of each tax lines with their corresponding base lines.
@@ -194,12 +158,49 @@ class AccountMoveLine(models.Model):
                     curr.id = account_move_line.currency_id
                 JOIN res_currency comp_curr ON
                     comp_curr.id = account_move_line.company_currency_id
-                LEFT JOIN affecting_base_tax_ids tax_line_tax_ids ON tax_line_tax_ids.id = account_move_line.id
-                JOIN affecting_base_tax_ids base_line_tax_ids ON base_line_tax_ids.id = base_line.id
+                LEFT JOIN LATERAL (
+                    /*
+                        This table builds a reference table based on the tax_ids field, with the following changes:
+                          - flatten the group of taxes
+                          - exclude the taxes having 'is_base_affected' set to False.
+                        Those allow to match only base_line_1 when finding the base lines of tax_line_1, as we need to find
+                        base lines having a 'affecting_base_tax_ids' ending with [10_affect_base, 20], not only containing
+                        '10_affect_base'. Otherwise, base_line_2/3 would also be matched.
+                        In our example, as all the taxes are set to be affected by previous ones affecting the base, the
+                        result is similar to the table 'account_move_line_account_tax_rel':
+                        Id                 Tax_ids
+                        -------------------------------------------
+                        base_line_1        [10_affect_base, 20]
+                        base_line_2        [10_affect_base, 5]
+                        base_line_3        [10_affect_base, 5]
+                    */
+                    SELECT ARRAY_AGG(sub.tax_id ORDER BY sub.sequence, sub.tax_id) AS tax_ids
+                    FROM (
+                        SELECT
+                            %(group_taxes_query)s AS tax_id,
+                            tax.sequence
+                        FROM account_move_line_account_tax_rel tax_rel
+                        JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
+                        WHERE tax.is_base_affected
+                        AND tax_rel.account_move_line_id = account_move_line.id
+                    ) AS sub
+                ) tax_line_tax_ids ON TRUE
+                LEFT JOIN LATERAL (
+                    SELECT ARRAY_AGG(sub.tax_id ORDER BY sub.sequence, sub.tax_id) AS tax_ids
+                    FROM (
+                        SELECT
+                            %(group_taxes_query)s AS tax_id,
+                            tax.sequence
+                        FROM account_move_line_account_tax_rel tax_rel
+                        JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
+                        WHERE tax.is_base_affected
+                        AND tax_rel.account_move_line_id = base_line.id
+                    ) AS sub
+                ) base_line_tax_ids ON TRUE
                 WHERE account_move_line.tax_repartition_line_id IS NOT NULL
                     AND %(search_condition)s
                     AND (
-                        -- keeping only the rows from affecting_base_tax_lines that end with the same taxes applied (see comment in affecting_base_tax_ids)
+                        -- keeping only the rows from affecting_base_tax_lines that end with the same taxes applied (see comment in tax_line_tax_ids)
                         NOT tax.include_base_amount
                         OR base_line_tax_ids.tax_ids[ARRAY_LENGTH(base_line_tax_ids.tax_ids, 1) - COALESCE(ARRAY_LENGTH(tax_line_tax_ids.tax_ids, 1), 0):ARRAY_LENGTH(base_line_tax_ids.tax_ids, 1)]
                             = ARRAY[account_move_line.tax_line_id] || COALESCE(tax_line_tax_ids.tax_ids, ARRAY[]::INTEGER[])
