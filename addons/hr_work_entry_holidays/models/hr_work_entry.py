@@ -12,9 +12,6 @@ class HrWorkEntry(models.Model):
     leave_id = fields.Many2one('hr.leave', string='Time Off')
     leave_state = fields.Selection(related='leave_id.state')
 
-    def _is_duration_computed_from_calendar(self):
-        return super()._is_duration_computed_from_calendar() or bool(not self.work_entry_type_id and self.leave_id)
-
     def write(self, vals):
         if 'state' in vals and vals['state'] == 'cancelled':
             self.mapped('leave_id').filtered(lambda l: l.state != 'refuse').action_refuse()

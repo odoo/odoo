@@ -7,7 +7,8 @@ import pytz
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.tools import ormcache
 from odoo.tools.intervals import Intervals
@@ -402,7 +403,104 @@ class HrVersion(models.Model):
         if not vals_list:
             return self.env['hr.work.entry']
 
+        vals_list = self._generate_work_entries_postprocess(vals_list)
         return self.env['hr.work.entry'].create(vals_list)
+
+    @api.model
+    def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
+        if 'work_entry_type_id' not in vals:
+            return False
+        return self.env['hr.work.entry.type'].browse(vals['work_entry_type_id']).is_leave
+
+    @api.model
+    def _generate_work_entries_postprocess(self, vals_list):
+        # Convert date_start/date_stop to date/duration
+        # Split work entries over 2 days due to timezone conversion
+        # Regroup work entries of the same type
+        mapped_periods = defaultdict(lambda: defaultdict(lambda: self.env['hr.employee']))
+        cached_periods = defaultdict(float)
+        new_vals_list = []
+        for vals in vals_list:
+            new_vals = vals.copy()
+            if not new_vals.get('date_start') or not new_vals.get('date_stop'):
+                new_vals.pop('date_start', False)
+                new_vals.pop('date_stop', False)
+                if 'duration' not in new_vals or 'date' not in new_vals:
+                    raise UserError(_('Missing date or duration on work entry'))
+            date_start = new_vals['date_start']
+            date_stop = new_vals['date_stop']
+            offset = (date_stop.date() - date_start.date()).days
+            if offset:
+                if offset > 1:
+                    raise UserError(_('Work entry starting and ending dates should be the same or over 2 days.'))
+                end_of_day = datetime.combine(date_start.date(), datetime.max.time())
+                first_part = new_vals.copy()
+                first_part['date_stop'] = end_of_day
+                new_vals_list.append(first_part)
+                start_of_next_day = datetime.combine(date_stop.date(), datetime.min.time())
+                second_part = new_vals.copy()
+                second_part['date_start'] = start_of_next_day
+                new_vals_list.append(second_part)
+            else:
+                new_vals_list.append(new_vals)
+        vals_list = new_vals_list
+
+        for vals in vals_list:
+            date_start = vals['date_start']
+            date_stop = vals['date_stop']
+            if not self._generate_work_entries_postprocess_adapt_to_calendar(vals):
+                vals['date'] = date_start.date()
+                if (date_start, date_stop) in cached_periods:
+                    vals['duration'] = cached_periods[date_start, date_stop]
+                else:
+                    dt = date_stop - date_start
+                    duration = round(dt.total_seconds()) / 3600  # Number of hours
+                    cached_periods[date_start, date_stop] = duration
+                    vals['duration'] = duration
+                continue
+            version = self.env['hr.version'].browse(vals['version_id'])
+            calendar = version.resource_calendar_id
+            if not calendar:
+                vals['date'] = date_start.date()
+                vals['duration'] = 0.0
+                continue
+            employee = version.employee_id
+            mapped_periods[date_start, date_stop][calendar] |= employee
+
+        # {(date_start, date_stop): {calendar: {'hours': foo}}}
+        mapped_version_data = defaultdict(lambda: defaultdict(lambda: {'hours': 0.0}))
+        for (date_start, date_stop), employees_by_calendar in mapped_periods.items():
+            for calendar, employees in employees_by_calendar.items():
+                mapped_version_data[date_start, date_stop][calendar] = employees._get_work_days_data_batch(
+                    date_start, date_stop, compute_leaves=False, calendar=calendar)
+
+        for vals in vals_list:
+            if 'duration' not in vals:
+                date_start = vals['date_start']
+                date_stop = vals['date_stop']
+                version = self.env['hr.version'].browse(vals['version_id'])
+                calendar = version.resource_calendar_id
+                employee = version.employee_id
+                vals['date'] = date_start.date()
+                vals['duration'] = mapped_version_data[date_start, date_stop][calendar][employee.id]['hours'] if calendar else 0.0
+            vals.pop('date_start', False)
+            vals.pop('date_stop', False)
+
+        # Now merge similar work entries on the same day
+        merged_vals = {}
+        for vals in vals_list:
+            key = (
+                vals['date'],
+                vals.get('work_entry_type_id', False),
+                vals['employee_id'],
+                vals['version_id'],
+                vals.get('company_id', False),
+            )
+            if key in merged_vals:
+                merged_vals[key]['duration'] += vals.get('duration', 0.0)
+            else:
+                merged_vals[key] = vals.copy()
+        return list(merged_vals.values())
 
     def _remove_work_entries(self):
         ''' Remove all work_entries that are outside contract period (function used after writing new start or/and end date) '''
@@ -410,7 +508,7 @@ class HrVersion(models.Model):
         for version in self:
             date_start = fields.Datetime.to_datetime(version.date_start)
             if version.date_generated_from < date_start:
-                we_to_remove = self.env['hr.work.entry'].search([('date_stop', '<=', date_start), ('version_id', '=', version.id)])
+                we_to_remove = self.env['hr.work.entry'].search([('date', '<', date_start), ('version_id', '=', version.id)])
                 if we_to_remove:
                     version.date_generated_from = date_start
                     all_we_to_unlink |= we_to_remove
@@ -418,7 +516,7 @@ class HrVersion(models.Model):
                 continue
             date_end = datetime.combine(version.date_end, datetime.max.time())
             if version.date_generated_to > date_end:
-                we_to_remove = self.env['hr.work.entry'].search([('date_start', '>=', date_end), ('version_id', '=', version.id)])
+                we_to_remove = self.env['hr.work.entry'].search([('date', '>', date_end), ('version_id', '=', version.id)])
                 if we_to_remove:
                     version.date_generated_to = date_end
                     all_we_to_unlink |= we_to_remove
@@ -432,11 +530,11 @@ class HrVersion(models.Model):
             date_start = fields.Datetime.to_datetime(version.date_start)
             version_domain = Domain([
                 ('version_id', '=', version.id),
-                ('date_start', '>=', date_start),
+                ('date', '>=', date_start),
             ])
             if version.date_end:
                 date_end = datetime.combine(version.date_end, datetime.max.time())
-                version_domain &= Domain('date_stop', '<=', date_end)
+                version_domain &= Domain('date', '<=', date_end)
             domains.append(version_domain)
         domain = Domain.OR(domains) & Domain('state', '!=', 'validated')
         work_entries = self.env['hr.work.entry'].sudo().search(domain)

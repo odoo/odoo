@@ -100,4 +100,4 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
 
         # Original work entries to generate when we don't adapt date_generated_from and
         # date_generated_to when they are equal for old contracts: 138300
-        self.assertEqual(len(work_entries), 8800)
+        self.assertEqual(len(work_entries), 4400)
