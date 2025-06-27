@@ -12,8 +12,11 @@ test("message translation in livechat", async () => {
         anonymous_name: "Visitor",
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: serverState.publicPartnerId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({
+                partner_id: serverState.publicPartnerId,
+                livechat_member_type: "visitor",
+            }),
         ],
     });
     pyEnv["mail.message"].create({
