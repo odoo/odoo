@@ -52,39 +52,39 @@ test("addLink: utility function and special entities", () => {
     const testInputs = [
         // textContent not unescaped
         [
-            markup("<p>https://example.com/?&amp;currency_id</p>"),
+            markup`<p>https://example.com/?&amp;currency_id</p>`,
             '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/?&amp;currency_id">https://example.com/?&amp;currency_id</a></p>',
         ],
         // entities not unescaped
-        [markup("&amp; &amp;amp; &gt; &lt;"), "&amp; &amp;amp; &gt; &lt;"],
+        [markup`&amp; &amp;amp; &gt; &lt;`, "&amp; &amp;amp; &gt; &lt;"],
         // > and " not linkified since they are not in URL regex
         [
-            markup("<p>https://example.com/&gt;</p>"),
+            markup`<p>https://example.com/&gt;</p>`,
             '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>&gt;</p>',
         ],
         [
-            markup('<p>https://example.com/"hello"&gt;</p>'),
+            markup`<p>https://example.com/"hello"&gt;</p>`,
             '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/">https://example.com/</a>"hello"&gt;</p>',
         ],
         // & and ' linkified since they are in URL regex
         [
-            markup("<p>https://example.com/&amp;hello</p>"),
+            markup`<p>https://example.com/&amp;hello</p>`,
             '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/&amp;hello">https://example.com/&amp;hello</a></p>',
         ],
         [
-            markup("<p>https://example.com/'yeah'</p>"),
+            markup`<p>https://example.com/'yeah'</p>`,
             '<p><a target="_blank" rel="noreferrer noopener" href="https://example.com/\'yeah\'">https://example.com/\'yeah\'</a></p>',
         ],
-        [markup("<p>:'(</p>"), "<p>:'(</p>"],
-        [markup(":'("), ":&#x27;("],
+        [markup`<p>:'(</p>`, "<p>:'(</p>"],
+        [markup`:'(`, ":&#x27;("],
         ["<p>:'(</p>", "&lt;p&gt;:&#x27;(&lt;/p&gt;"],
         [":'(", ":&#x27;("],
-        [markup("<3"), "&lt;3"],
-        [markup("&lt;3"), "&lt;3"],
+        [markup`<3`, "&lt;3"],
+        [markup`&lt;3`, "&lt;3"],
         ["<3", "&lt;3"],
         // Already encoded url should not be encoded twice
         [
-            markup("https://odoo.com/%5B%5D"),
+            markup`https://odoo.com/%5B%5D`,
             `<a target="_blank" rel="noreferrer noopener" href="https://odoo.com/%5B%5D">https://odoo.com/[]</a>`,
         ],
     ];
@@ -97,7 +97,7 @@ test("addLink: utility function and special entities", () => {
 });
 
 test("addLink: linkify inside text node (1 occurrence)", async () => {
-    const content = markup("<p>some text https://somelink.com</p>");
+    const content = markup`<p>some text https://somelink.com</p>`;
     const linkified = parseAndTransform(content, addLink);
     expect(linkified.startsWith("<p>some text <a")).toBe(true);
     expect(linkified.endsWith("</a></p>")).toBe(true);

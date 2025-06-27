@@ -33,10 +33,8 @@ export const pttExtensionHookService = {
                 return _t(
                     "The Push-to-Talk feature is only accessible within tab focus. To enable the Push-to-Talk functionality outside of this tab, we recommend downloading our %(anchor_start)sextension%(anchor_end)s.",
                     {
-                        anchor_start: markup(
-                            `<a href="${this.downloadURL}" target="_blank" class="text-reset text-decoration-underline">`
-                        ),
-                        anchor_end: markup("</a>"),
+                        anchor_start: markup`<a href="${this.downloadURL}" target="_blank" class="text-reset text-decoration-underline">`,
+                        anchor_end: markup`</a>`,
                     }
                 );
             },
