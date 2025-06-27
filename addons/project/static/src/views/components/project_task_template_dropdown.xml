@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="project.TemplateDropdown">
-        <button t-if="!taskTemplates.length" type="button" t-att-class="props.newButtonClasses" t-att-data-hotkey="props.hotkey" t-on-click.stop="props.onCreate" data-bounce-button="">New</button>
+        <button t-if="!state.taskTemplates.length" type="button" t-att-class="props.newButtonClasses" t-att-data-hotkey="props.hotkey" t-on-click.stop="props.onCreate" data-bounce-button="">New</button>
         <t t-else="">
             <a t-attf-class="{{ props.newButtonClasses }} dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" t-att-data-hotkey="props.hotkey" data-bounce-button="">
                 New
@@ -12,7 +12,7 @@
                 </button>
                 <div class="dropdown-divider"/>
                 <div class="dropdown-header" style="padding-left: 20px;">Task Templates</div>
-                <t t-foreach="taskTemplates" t-as="template" t-key="template.id">
+                <t t-foreach="state.taskTemplates" t-as="template" t-key="template.id">
                     <button type="button" class="btn btn-link o-dropdown-item dropdown-item" style="padding-left: 32px;" t-on-click="() =&gt; this.createTaskFromTemplate(template.id)" t-out="template.name"/>
                 </t>
             </ul>
