@@ -23,19 +23,11 @@
             <attribute name="class" remove="d-flex" separator=" "/>
             <attribute name="class" add="d-block d-xl-flex" separator=" "/>
         </xpath>
-        <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
-            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput" />
-            <t t-if="canCreate and props.showButtons and env.isSmall">
-                <button type="button" class="btn btn-primary o-kanban-button-new" data-hotkey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
-                    New
-                </button>
-            </t>
-        </xpath>
-
     </t>
 
     <t t-name="hr_expense.KanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary">
         <xpath expr="//button[hasclass('o-kanban-button-new')]" position="before">
+            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput" />
             <button t-if="!env.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
                 Upload
             </button>
