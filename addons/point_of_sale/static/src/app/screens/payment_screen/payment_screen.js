@@ -418,7 +418,12 @@ export class PaymentScreen extends Component {
                 if (this.pos.config.iface_print_skip_screen) {
                     this.pos.orderDone(this.currentOrder);
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
-                    nextPage = this.pos.defaultPage;
+                    nextPage = {
+                        page: "FeedbackScreen",
+                        params: {
+                            orderUuid: this.currentOrder.uuid,
+                        },
+                    };
                     if (switchScreen) {
                         this.selectNextOrder();
                     }
