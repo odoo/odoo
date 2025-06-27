@@ -12,4 +12,9 @@
         <field name="name">First Contact</field>
         <field name="sequence">3</field>
     </record>
+    <record id="website_partners_page" model="website.technical.page">
+        <field name="name_technical_page">Partners Page</field>
+        <field name="website_url_technical_page">/partners</field>
+        <field name="view_id" ref="website_crm_partner_assign.index"/>
+    </record>
 </odoo>

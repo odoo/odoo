@@ -102,5 +102,15 @@
             <field name="lang">{{ object.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
+        <record id="website_profile_user_page" model="website.technical.page">
+            <field name="name_technical_page">Profile-User Page</field>
+            <field name="website_url_technical_page">/profile/users</field>
+            <field name="view_id" ref="website_profile.users_page_main"/>
+        </record>
+        <record id="website_profile_ranks-badges_page" model="website.technical.page">
+            <field name="name_technical_page">Profile-rank-badges Page</field>
+            <field name="website_url_technical_page">/profile/ranks_badges</field>
+            <field name="view_id" ref="website_profile.rank_badge_main"/>
+        </record>
     </data>
 </odoo>

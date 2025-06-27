@@ -520,6 +520,32 @@
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
         </record>
+        <record id="website_login_page" model="website.technical.page">
+            <field name="name_technical_page">Login</field>
+            <field name="website_url_technical_page">/web/login</field>
+            <field name="view_id" ref="web.login"/>
+        </record>
+        <record id="website_signup_page" model="website.technical.page">
+            <field name="name_technical_page">Signup Page</field>
+            <field name="website_url_technical_page">/web/signup</field>
+            <field name="view_id" ref="auth_signup.login"/>
+        </record>
+        <record id="website_reset_password_page" model="website.technical.page">
+            <field name="name_technical_page">Reset Password Page</field>
+            <field name="website_url_technical_page">/web/reset_password</field>
+            <field name="view_id" ref="auth_signup.reset_password"/>
+        </record>
+        <record id="website_portal_home_page" model="website.technical.page">
+            <field name="name_technical_page">portal home page</field>
+            <field name="website_url_technical_page">/my/home</field>
+            <field name="view_id" ref="portal.portal_layout"/>
+        </record>
+        <record id="website_info_page" model="website.technical.page">
+            <field name="name_technical_page">website-info Page</field>
+            <field name="website_url_technical_page">/website/info</field>
+            <field name="view_id" ref="website.website_info"/>
+        </record>
+
 
         <!-- Default Website -->
         <record id="default_website" model="website">

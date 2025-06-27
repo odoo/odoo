@@ -30,6 +30,11 @@
             <field name="default" eval="False"/>
             <field name="description">Event unpublished</field>
         </record>
+        <record id="website_event_page" model="website.technical.page">
+            <field name="name_technical_page">Event Page</field>
+            <field name="website_url_technical_page">/event</field>
+            <field name="view_id" ref="website_event.index"/>
+        </record>
 
     </data>
 </odoo>

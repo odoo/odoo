@@ -12,12 +12,12 @@
     'data': [
         'security/ir.model.access.csv',
         'security/website_hr_recruitment_security.xml',
-        'data/config_data.xml',
         'views/website_hr_recruitment_templates.xml',
         'views/hr_recruitment_views.xml',
         'views/hr_job_views.xml',
         'views/website_pages_views.xml',
         'views/snippets.xml',
+        'data/config_data.xml',
     ],
     'demo': [
         'data/hr_job_demo.xml',
