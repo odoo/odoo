@@ -170,7 +170,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Save edited message",
-            trigger: ".o-mail-Message a:contains(save)",
+            trigger: ".o-mail-Message button:contains(save)",
             run: "click",
         },
         {
