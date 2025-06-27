@@ -36,4 +36,28 @@
         </field>
     </record>
 
+    <record id="project_project_view_form_quick_create_template" model="ir.ui.view">
+        <field name="name">project.project.quick.create.wizard.form</field>
+        <field name="model">project.template.create.wizard</field>
+        <field name="inherit_id" ref="project_project_view_form_simplified_template"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="replace"/>
+            <xpath expr="//label[@for='alias_name']" position="replace"/>
+            <xpath expr="//div[field[@name='alias_name']]" position="replace"/>
+            <field name="date_start" position="before">
+                <field
+                    name="template_id"
+                    string="Project Template"
+                    placeholder="New project"
+                    domain="[('is_template', '=', True)]"
+                    context="{'default_is_template': True}"
+                />
+            </field>
+            <xpath expr="//field[@name='date_start']" position="attributes">
+                <attribute name="invisible">not template_id</attribute>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
