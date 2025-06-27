@@ -1,0 +1,75 @@
+<odoo>
+    <data>
+
+
+        <record id="res_partner_list_inherit_extension" model="ir.ui.view">
+            <field name="name">res.partner.list.inherit.extension</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='country_id']" position="after">
+                    <field name="cuit" optional="show"/>
+                    <field name="delivery_street" optional="hide" string="Calle de entrega"/>
+                    <field name="delivery_city" optional="show" string="Ciudad de entrega"/>
+                    <field name="delivery_state_id" optional="hide" string="Provincia de entrega"/>
+                    <field name="delivery_country_id" optional="show" string="Pais de entrega"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="res_partner_list_inherit_hide_fields" model="ir.ui.view">
+            <field name="name">res.partner.list.inherit.hide_fields</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='category_id']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='category_id']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_list_inherit_hide_activity_fields" model="ir.ui.view">
+            <field name="name">res.partner.list.inherit.hide_activity_fields</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="mail.res_partner_view_tree_inherit_mail"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='activity_ids']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_list_inherit_hide_account_fields" model="ir.ui.view">
+            <field name="name">res.partner.list.inherit.hide_account_fields</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.res_partner_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_sending_method']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='invoice_edi_format']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
