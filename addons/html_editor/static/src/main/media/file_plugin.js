@@ -33,14 +33,15 @@ export class FilePlugin extends Plugin {
             description: _t("Upload a file"),
         }),
         unsplittable_node_predicates: (node) => node.classList?.contains("o_file_box"),
-        ...(this.config.allowFile && {
-            media_dialog_extra_tabs: {
-                id: "DOCUMENTS",
-                title: _t("Documents"),
-                Component: this.componentForMediaDialog,
-                sequence: 15,
-            },
-        }),
+        ...(this.config.allowFile &&
+            this.config.allowMediaDocuments && {
+                media_dialog_extra_tabs: {
+                    id: "DOCUMENTS",
+                    title: _t("Documents"),
+                    Component: this.componentForMediaDialog,
+                    sequence: 15,
+                },
+            }),
         selectors_for_feff_providers: () => ".o_file_box",
     };
 
