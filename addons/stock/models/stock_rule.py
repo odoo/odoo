@@ -640,7 +640,7 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _check_intercomp_location(self, locations):
-        if self.env.user.has_group('base.group_multi_company') and locations.filtered(lambda location: location.usage == 'transit'):
+        if locations.filtered(lambda location: location.usage == 'transit'):
             inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
             return inter_comp_location and inter_comp_location.id in locations.ids
 

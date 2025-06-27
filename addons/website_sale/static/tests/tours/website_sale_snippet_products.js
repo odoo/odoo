@@ -58,7 +58,7 @@ registerWebsitePreviewTour('website_sale.snippet_products', {
             trigger: ":iframe .s_dynamic_snippet_products .o_carousel_product_card_body .js_add_cart",
             run: 'click',
         },
-        goToCart({backend: true}),
+        goToCart({ backend: true, expectUnloadPage: false }),
     ]
 });
 
