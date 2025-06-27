@@ -654,7 +654,7 @@ class TestHrVersion(TestHrCommon):
             "currency_id",
             "date_end",
             "date_start",
-            "departure_description",
+            "departure_id",
             "display_name",
             "id",
             "is_current",

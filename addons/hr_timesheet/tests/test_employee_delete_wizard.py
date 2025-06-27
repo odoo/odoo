@@ -16,7 +16,7 @@ class TestEmployeeDeleteWizard(TestHrCommon):
                 'name': 'Employee A',
                 'user_id': False,
                 'work_email': 'employee_A@example.com',
-            }
+            },
         ])
 
         delete_wizard = self.env['hr.employee.delete.wizard'].create({
@@ -25,5 +25,4 @@ class TestEmployeeDeleteWizard(TestHrCommon):
 
         returned_action_Record = delete_wizard.action_archive()
 
-        self.assertEqual(returned_action_Record['context']['active_ids'], [employee_A.id], "Employee should have been selected")
-        self.assertEqual(returned_action_Record['context']['employee_termination'], True, "Employee Termination should have been set")
+        self.assertEqual(returned_action_Record['context']['default_employee_ids'], employee_A.ids, "Employee should have been selected")

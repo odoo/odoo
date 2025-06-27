@@ -656,13 +656,13 @@ class HrVersion(models.Model):
             return
         domains = []
         for version in self:
-            date_start = fields.Datetime.to_datetime(version.date_start)
+            date_start = fields.Datetime.to_datetime(version.sudo().date_start)
             version_domain = Domain([
                 ('version_id', '=', version.id),
                 ('date', '>=', date_start),
             ])
-            if version.date_end:
-                date_end = datetime.combine(version.date_end, datetime.max.time())
+            if version.sudo().date_end:
+                date_end = datetime.combine(version.sudo().date_end, datetime.max.time())
                 version_domain &= Domain('date', '<=', date_end)
             domains.append(version_domain)
         domain = Domain.OR(domains) & Domain('state', '!=', 'validated')

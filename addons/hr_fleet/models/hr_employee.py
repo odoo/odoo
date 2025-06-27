@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.fields import Domain
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class HrEmployee(models.Model):
@@ -14,6 +14,8 @@ class HrEmployee(models.Model):
         groups="fleet.fleet_group_manager,hr.group_hr_user",
     )
     license_plate = fields.Char(compute="_compute_license_plate", search="_search_license_plate", groups="hr.group_hr_user")
+    departure_do_unassign_company_car = fields.Boolean(related='version_id.departure_do_unassign_company_car',
+        inherited=True, readonly=False, groups="hr.group_hr_user")
 
     def action_open_employee_cars(self):
         self.ensure_one()

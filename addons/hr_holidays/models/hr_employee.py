@@ -46,6 +46,9 @@ class HrEmployee(models.Model):
         ('presence_holiday_absent', 'On leave'),
         ('presence_holiday_present', 'Present but on leave')])
 
+    departure_do_cancel_time_off_requests = fields.Boolean(related='version_id.departure_do_cancel_time_off_requests',
+        inherited=True, readonly=False, groups="hr.group_hr_user")
+
     def _compute_current_leave(self):
         self.current_leave_id = False
 

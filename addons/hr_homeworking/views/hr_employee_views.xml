@@ -15,7 +15,7 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='departure']" position="after">
+            <xpath expr="//group[@name='work_location']" position="after">
                 <group string="Usual Work Location">
                     <field name="monday_location_id" placeholder="Unspecified" force_save="1"/>
                     <field name="tuesday_location_id" placeholder="Unspecified" force_save="1"/>

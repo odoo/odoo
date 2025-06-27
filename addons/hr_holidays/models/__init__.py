@@ -2,6 +2,7 @@
 
 from . import resource
 from . import hr_employee
+from . import hr_employee_departure
 from . import hr_employee_public
 from . import hr_department
 from . import hr_leave

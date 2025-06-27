@@ -17,6 +17,14 @@
             <group name="application_group" position="attributes">
                 <attribute name="invisible">0</attribute>
             </group>
+            <group name="departure_planned_actions_right" position="inside">
+                <label for="departure_do_unassign_company_car" string="Fleet"/>
+                <div class="o_row">
+                    <field name="departure_do_unassign_company_car" nolabel="1"
+                        readonly="departure_apply_date"/>
+                    <span>Unassign Company Car</span>
+                </div>
+            </group>
         </field>
     </record>
 

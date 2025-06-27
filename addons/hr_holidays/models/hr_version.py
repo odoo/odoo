@@ -19,6 +19,8 @@ class HrVersion(models.Model):
     _inherit = 'hr.version'
     _description = 'Employee Contract'
 
+    departure_do_cancel_time_off_requests = fields.Boolean(related='departure_id.do_cancel_time_off_requests')
+
     @api.constrains('contract_date_start', 'contract_date_end')
     def _check_contracts(self):
         self._get_leaves()._check_contracts()

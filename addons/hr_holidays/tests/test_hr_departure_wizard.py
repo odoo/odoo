@@ -13,7 +13,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.employee = cls.env['hr.employee'].create({
-            'name': 'Sky'
+            'name': 'Sky',
+            'date_version': date(2022, 1, 1),
         })
         cls.departure_date = date.today()
         departure_reason = cls.env['hr.departure.reason'].create({'name': "Fired"})
