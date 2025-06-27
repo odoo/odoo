@@ -30,3 +30,25 @@ test("Reordering a carousel item should update the container title", async () =>
     expectOptionContainerToInclude(firstItemEl);
     expect("[data-container-title='Slide (3/3)']").toHaveCount(1);
 });
+
+test("Remove slide", async () => {
+    await setupWebsiteBuilderWithSnippet("s_carousel");
+
+    expect(":iframe .carousel-item").toHaveCount(3);
+    await contains(":iframe .carousel-item").click();
+
+    const removeSlideButton = await waitFor("button[title='Remove Slide']");
+    removeSlideButton.click();
+    removeSlideButton.click();
+    await waitFor("[data-container-title='Slide (2/2)']", {
+        message:
+            "Clicking on Remove slide twice without waiting should not crash " +
+            "and remove only one slide. Then it should focus on the previous slide.",
+    });
+
+    expect(":iframe .carousel-item").toHaveCount(2);
+    expect(":iframe .carousel-item.active").toHaveCount(1);
+
+    expect(":iframe .carousel-indicators > *").toHaveCount(2);
+    expect(":iframe .carousel-indicators > .active").toHaveCount(1);
+});

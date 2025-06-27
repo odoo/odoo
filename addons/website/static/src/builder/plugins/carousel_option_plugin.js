@@ -41,8 +41,13 @@ export class CarouselOptionPlugin extends Plugin {
                 ".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item",
             props: {
                 addSlide: (editingElement) => this.addSlide(editingElement.closest(".carousel")),
-                removeSlide: (editingElement) =>
-                    this.removeSlide(editingElement.closest(".carousel")),
+                removeSlide: async (editingElement) => {
+                    // Check if the slide is still in the DOM
+                    // TODO: find a more general way to handle target element already removed by an option
+                    if (editingElement.parentElement) {
+                        await this.removeSlide(editingElement.closest(".carousel"));
+                    }
+                },
                 applyAction: this.dependencies.builderActions.applyAction,
             },
         },
