@@ -14,6 +14,10 @@ patch(Thread.prototype, {
                 if (this.channel_type !== "livechat") {
                     return;
                 }
+                if (this.channel_member_ids.length === 1) {
+                    // self-chat
+                    return this.channel_member_ids[0];
+                }
                 // For livechat threads, the correspondent is the first
                 // channel member that is not the operator.
                 const orderedChannelMembers = [...this.channel_member_ids].sort(
@@ -49,7 +53,7 @@ patch(Thread.prototype, {
         if (this.channel_type === "livechat") {
             if (!["agent", "bot"].includes(this.selfMember?.livechat_member_type)) {
                 return this.livechat_operator_id?.avatarUrl;
-            } else if (this.correspondent.persona?.avatarUrl) {
+            } else if (this.correspondent?.persona?.avatarUrl) {
                 return this.correspondent.persona.avatarUrl;
             }
         }

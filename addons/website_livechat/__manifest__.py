@@ -24,6 +24,7 @@
     'assets': {
         "im_livechat.assets_embed_core": [
             "website/static/src/**/common/**/*",
+            "website_livechat/static/src/**/common/**/*",
         ],
         "mail.assets_public": [
             "website_livechat/static/src/**/common/**/*",
