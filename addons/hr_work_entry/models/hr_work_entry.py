@@ -24,9 +24,8 @@ class HrWorkEntry(models.Model):
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     version_id = fields.Many2one('hr.version', string="Version", required=True)
     work_entry_source = fields.Selection(related='version_id.work_entry_source')
-    date_start = fields.Datetime(required=True, string='From')
-    date_stop = fields.Datetime(compute='_compute_date_stop', store=True, readonly=False, string='To')
-    duration = fields.Float(compute='_compute_duration', store=True, string="Duration", readonly=False)
+    date = fields.Date(required=True)
+    duration = fields.Float(string="Duration")
     work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
@@ -43,37 +42,8 @@ class HrWorkEntry(models.Model):
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
     country_id = fields.Many2one('res.country', related='employee_id.company_id.country_id')
 
-    # There is no way for _error_checking() to detect conflicts in work
-    # entries that have been introduced in concurrent transactions, because of the transaction
-    # isolation.
-    # So if 2 transactions create work entries in parallel it is possible to create a conflict
-    # that will not be visible by either transaction. There is no way to detect conflicts
-    # between different records in a safe manner unless a SQL constraint is used, e.g. via
-    # an EXCLUSION constraint [1]. This (obscure) type of constraint allows comparing 2 rows
-    # using special operator classes and it also supports partial WHERE clauses. Similarly to
-    # CHECK constraints, it's backed by an index.
-    # 1: https://www.postgresql.org/docs/9.6/sql-createtable.html#SQL-CREATETABLE-EXCLUDE
-    _work_entry_has_end = models.Constraint(
-        'CHECK (date_stop IS NOT NULL)',
-        'Work entry must end. Please define an end date or a duration.',
-    )
-    _work_entry_start_before_end = models.Constraint(
-        'CHECK (date_stop > date_start)',
-        'Starting time should be before end time.',
-    )
-    _work_entries_no_validated_conflict = models.Constraint(
-        """
-            EXCLUDE USING GIST (
-                tsrange(date_start, date_stop, '()') WITH &&,
-                int4range(employee_id, employee_id, '[]') WITH =
-            )
-            WHERE (state = 'validated' AND active = TRUE)
-        """,
-        'Validated work entries cannot overlap',
-    )
-    _date_start_date_stop_index = models.Index("(date_start, date_stop)")
     # FROM 7s by query to 2ms (with 2.6 millions entries)
-    _contract_date_start_stop_idx = models.Index("(version_id, date_start, date_stop) WHERE state IN ('draft', 'validated')")
+    _contract_date_start_stop_idx = models.Index("(version_id, date) WHERE state IN ('draft', 'validated')")
 
     def _init_column(self, column_name):
         if column_name != 'version_id':
@@ -84,20 +54,19 @@ class HrWorkEntry(models.Model):
                 SET version_id = result.version_id
                 FROM (
                     SELECT
-                        hc.id AS version_id,
+                        v.id AS version_id,
                         array_agg(hwe.id) AS entry_ids
                     FROM
                         hr_work_entry AS hwe
                     LEFT JOIN
-                        hr_version AS hc
+                        hr_version AS v
                     ON
-                        hwe.employee_id=hc.employee_id AND
-                        hwe.date_start >= hc.date_start AND
-                        hwe.date_stop < COALESCE(hc.date_end + integer '1', '9999-12-31 23:59:59')
+                        hwe.employee_id=v.employee_id AND
+                        hwe.date = v.date_start
                     WHERE
                         hwe.version_id IS NULL
                     GROUP BY
-                        hwe.employee_id, hc.id
+                        hwe.employee_id, v.id
                 ) AS result
                 WHERE _hwe.id = ANY(result.entry_ids)
             """)
@@ -115,30 +84,11 @@ class HrWorkEntry(models.Model):
         for rec in self:
             rec.conflict = rec.state == 'conflict'
 
-    @api.depends('date_stop', 'date_start')
-    def _compute_duration(self):
-        durations = self._get_duration_batch()
-        for work_entry in self:
-            work_entry.duration = durations[work_entry.id]
-
-    @api.depends('date_start', 'duration')
-    def _compute_date_stop(self):
-        for work_entry in self:
-            if work_entry._get_duration_is_valid():
-                calendar = work_entry.version_id.resource_calendar_id
-                if not calendar:
-                    continue
-                work_entry.date_stop = calendar.plan_hours(work_entry.duration, work_entry.date_start, compute_leaves=True)
-                continue
-            if work_entry.date_start and work_entry.duration:
-                work_entry.date_stop = work_entry.date_start + relativedelta(hours=work_entry.duration)
-
-    @api.onchange('employee_id', 'date_start', 'date_stop')
+    @api.onchange('employee_id', 'date')
     def _onchange_version_id(self):
         vals = {
             'employee_id': self.employee_id.id,
-            'date_start': self.date_start,
-            'date_stop': self.date_stop,
+            'date': self.date,
         }
         try:
             res = self._set_current_contract(vals)
@@ -149,24 +99,6 @@ class HrWorkEntry(models.Model):
 
     def _get_duration_is_valid(self):
         return self.work_entry_type_id and self.work_entry_type_id.is_leave
-
-    def _get_duration_batch(self):
-        result = {}
-        cached_periods = defaultdict(float)
-        for work_entry in self:
-            date_start = work_entry.date_start
-            date_stop = work_entry.date_stop
-            if not date_start or not date_stop:
-                result[work_entry.id] = 0.0
-                continue
-            if (date_start, date_stop) in cached_periods:
-                result[work_entry.id] = cached_periods[(date_start, date_stop)]
-            else:
-                dt = date_stop - date_start
-                duration = dt.days * 24 + round(dt.total_seconds()) / 3600  # Number of hours
-                cached_periods[(date_start, date_stop)] = duration
-                result[work_entry.id] = duration
-        return result
 
     def _get_duration_batch(self):
         no_version_work_entries = self.env['hr.work.entry']
@@ -207,7 +139,6 @@ class HrWorkEntry(models.Model):
                 duration = round(dt.total_seconds()) / 3600  # Number of hours
                 cached_periods[date_start, date_stop] = duration
                 result[work_entry.id] = duration
-
         for work_entry in self - no_version_work_entries:
             date_start = work_entry.date_start
             date_stop = work_entry.date_stop
@@ -222,21 +153,20 @@ class HrWorkEntry(models.Model):
 
     @api.model
     def _set_current_contract(self, vals):
-        if not vals.get('version_id') and vals.get('date_start') and vals.get('date_stop') and vals.get('employee_id'):
-            contract_start = fields.Datetime.to_datetime(vals.get('date_start')).date()
-            contract_end = fields.Datetime.to_datetime(vals.get('date_stop')).date()
+        if not vals.get('version_id') and vals.get('date') and vals.get('employee_id'):
+            contract_start = fields.Datetime.to_datetime(vals.get('date'))
+            contract_end = contract_start
             employee = self.env['hr.employee'].browse(vals.get('employee_id'))
             contracts = employee._get_versions_with_contract_overlap_with_period(contract_start, contract_end)
             if not contracts:
                 raise ValidationError(_(
-                    "%(employee)s does not have a contract from %(date_start)s to %(date_end)s.",
+                    "%(employee)s does not have a contract on %(date)s.",
                     employee=employee.name,
-                    date_start=contract_start,
-                    date_end=contract_end,
+                    date=contract_start,
                 ))
-            elif len(contracts) > 1:
-                raise ValidationError(_("%(employee)s has multiple contracts from %(date_start)s to %(date_end)s. A work entry cannot overlap multiple contracts.",
-                                        employee=employee.name, date_start=contract_start, date_end=contract_end))
+            if len(contracts) > 1:  # YTI To check: Should never happen IMO
+                raise ValidationError(_("%(employee)s has multiple contracts on %(date)s. A work entry cannot overlap multiple contracts.",
+                                        employee=employee.name, date=contract_start))
             return dict(vals, version_id=contracts[0].id)
         return vals
 
@@ -258,7 +188,7 @@ class HrWorkEntry(models.Model):
             return False
         undefined_type = self.filtered(lambda b: not b.work_entry_type_id)
         undefined_type.write({'state': 'conflict'})
-        conflict = self._mark_conflicting_work_entries(min(self.mapped('date_start')), max(self.mapped('date_stop')))
+        conflict = self._mark_conflicting_work_entries(min(self.mapped('date')), max(self.mapped('date')))
         outside_calendar = self._mark_leaves_outside_schedule()
         return undefined_type or conflict or outside_calendar
 
@@ -274,6 +204,9 @@ class HrWorkEntry(models.Model):
         # use '()' to exlude the lower and upper bounds of the range.
         # Filter on date_start and date_stop (both indexed) in the EXISTS clause to
         # limit the resulting set size and fasten the query.
+
+        # YTI TODO: Probably to drop, or check if duration sum doesn't exceed 24h ?
+        return False
         self.flush_model(['date_start', 'date_stop', 'employee_id', 'active'])
         query = """
             SELECT b1.id,
@@ -363,7 +296,7 @@ class HrWorkEntry(models.Model):
         if 'employee_id' in vals and vals['employee_id']:
             employee_ids += [vals['employee_id']]
         with self._error_checking(skip=skip_check, employee_ids=employee_ids):
-            return super(HrWorkEntry, self).write(vals)
+            return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_validated_work_entries(self):
@@ -392,12 +325,12 @@ class HrWorkEntry(models.Model):
         """
         try:
             skip = skip or self.env.context.get('hr_work_entry_no_check', False)
-            start = start or min(self.mapped('date_start'), default=False)
-            stop = stop or max(self.mapped('date_stop'), default=False)
+            start = start or min(self.mapped('date'), default=False)
+            stop = stop or max(self.mapped('date'), default=False)
             if not skip and start and stop:
                 domain = (
-                    Domain('date_start', '<', stop)
-                    & Domain('date_stop', '>', start)
+                    Domain('date', '<', stop)
+                    & Domain('date', '>', start)
                     & Domain('state', 'not in', ('validated', 'cancelled'))
                 )
                 if employee_ids:
