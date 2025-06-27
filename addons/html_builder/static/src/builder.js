@@ -132,6 +132,7 @@ export class Builder extends Component {
                 updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
                 allowCustomStyle: true,
                 allowTargetBlank: true,
+                allowMediaDocuments: false,
                 getAnimateTextConfig: () => ({ editor: this.editor, editorBus }),
             },
             this.env.services

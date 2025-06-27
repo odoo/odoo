@@ -9,14 +9,7 @@ import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_component
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import {
-    click,
-    press,
-    queryAll,
-    queryAllTexts,
-    queryOne,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { click, press, queryAll, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
 import {
@@ -1199,6 +1192,31 @@ test("'Media' command is not available when 'allowImage' = false", async () => {
     await insertText(htmlEditor, "/media");
     await animationFrame();
     expect(queryAllTexts(".o-we-command-name")).not.toInclude("Media");
+});
+
+test("MediaDialog does not contain 'Documents' tab in html field when 'allowMediaDocuments' = false", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+            <field name="txt" widget="html" options="{'allowMediaDocuments': False}"/>
+            </form>`,
+    });
+
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "/media");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
+
+    await press("Enter");
+    await animationFrame();
+    expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
+        "Images",
+        "Icons",
+        "Videos",
+    ]);
 });
 
 test("'Upload a file' command is not available when 'allowFile' = false", async () => {
