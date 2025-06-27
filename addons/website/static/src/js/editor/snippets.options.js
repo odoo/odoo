@@ -3145,7 +3145,10 @@ options.registry.anchor = options.Class.extend({
         buttonEl.addEventListener("click", async (ev) => {
             const anchorLink = this._getAnchorLink();
             await browser.navigator.clipboard.writeText(anchorLink);
-            const message = markup(_t("Anchor copied to clipboard<br>Link: %s", anchorLink));
+            const message = _t("Anchor copied to clipboard%(br)sLink: %(link)s", {
+                br: markup`<br>`,
+                link: anchorLink,
+            });
             this.notification.add(message, {
                 type: "success",
                 buttons: [{name: _t("Edit"), onClick: () => this._openAnchorDialog(buttonEl), primary: true}],
