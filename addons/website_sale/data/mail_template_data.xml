@@ -17,7 +17,11 @@
                             <td align="center" style="min-width: 590px;">
                                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:collapse;" role="presentation">
                                     <tr><td valign="top" style="font-size: 14px;">
-                                        <img t-if="object.company_id.logo" t-att-src="image_data_uri(object.company_id.logo)" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
+                                        <t t-set="logo" t-value="object.company_id.logo or ''"/>
+                                        <t t-if="hasattr(object, 'website_id') and object.website_id and object.website_id.logo">
+                                            <t t-set="logo" t-value="object.website_id.logo"/>
+                                        </t>
+                                        <img t-if="logo" t-att-src="image_data_uri(logo)" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
                                         <p style="margin: 0 0 12px; line-height: 18px;">
                                             Hello <t t-out="object.partner_id.display_name or ''">Johnny Tester</t>,
                                             <br/><br/>
@@ -28,6 +32,15 @@
                                         <t t-if="not is_html_empty(user.signature)">
                                             <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="user.signature or ''">Mitchell Admin</t></div>
                                         </t>
+                                        <t t-if="'show_recovery_button' in ctx">
+                                            <div style="margin-bottom: 22px; font-size: 14px;">
+                                                <a t-attf-href="{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}"
+                                                    target="_blank"
+                                                    t-attf-style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-size:14px;">
+                                                    Resume order
+                                                </a>
+                                            </div>
+                                        </t>
                                         <t t-if="object.order_line">
                                             <t t-foreach="object.website_order_line" t-as="line">
                                                 <div style="margin-bottom: 12px;">
@@ -37,19 +50,38 @@
                                                                 <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" style="width: 100px; height: 100px; object-fit: contain;" alt="Product image"></img>
                                                             </td>
                                                             <td style="padding-bottom: 8px; vertical-align: top;">
-                                                                <h2 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};"><strong t-out="line.product_id.name or ''">Desk Combination</strong></h2>
+                                                                <t t-set="product_name" t-value="line.product_id.name or ''" />
+                                                                <t t-if="hasattr(line, 'is_rental') and line.is_rental">
+                                                                    <t t-set="product_name" t-value="line.name" />
+                                                                </t>
+                                                                <h2 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; color: {{object.company_id.email_secondary_color or '#875A7B'}};"><strong t-out="product_name or ''">Desk Combination</strong></h2>
                                                                 <p t-if="line.product_id.product_template_attribute_value_ids" style="margin: 4px 0 0;">
                                                                     <t t-out="', '.join(line.product_id.product_template_attribute_value_ids.mapped('name'))" />
                                                                 </p>
+                                                                <t t-if="hasattr(line, 'is_rental') and line.is_rental">
+                                                                    <t t-out="line.product_id.display_price or ''"/> <br/>
+                                                                </t>
                                                                 <t t-esc="line.product_id.description_ecommerce"/>
-                                                                <span style="display: inline-block; margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-color: #e9ecef; font-size: 12px;"><t t-out="int(line.product_uom_qty) or ''">10000</t> <t t-out="line.product_uom_id.name or ''"></t></span>
+                                                                <span style="display: inline-block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-color: #e9ecef; font-size: 12px;">
+                                                                    <t t-out="int(line.product_uom_qty) or ''">10000</t>
+                                                                    <t t-out="line.product_uom_id.name or ''" t-if="line.order_id.create_uid._has_group('uom.group_uom')"></t>
+                                                                </span>
                                                             </td>
                                                             <td width="19%" align="right" style="max-width: 100px; vertical-align: top;">
-                                                                <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
-                                                                    <t t-out="format_amount(line.price_reduce_taxexcl, object.currency_id) or ''">$ 4,500.00</t>
+                                                                <t t-if="line.display_type == 'line_section' or line.product_type == 'combo'">
+                                                                    <span t-out="format_amount(line._get_cart_display_price(), object.currency_id) or ''">$ 10.00</span>
                                                                 </t>
                                                                 <t t-else="">
-                                                                    <t t-out="format_amount(line.price_reduce_taxinc, object.currency_id) or ''">$ 4,500.00</t>
+                                                                    <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
+                                                                        <t t-out="format_amount(line.price_subtotal, object.currency_id) or ''">$ 4,500.00</t>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <t t-out="format_amount(line.price_total, object.currency_id) or ''">$ 4,500.00</t>
+                                                                    </t>
+                                                                    <t t-if="hasattr(line, 'recurring_invoice') and line.recurring_invoice">
+                                                                        <br/>
+                                                                        <t t-out="line.subscription_plan_id.billing_period_display_sentence or ''"/>
+                                                                    </t>
                                                                 </t>
                                                             </td>
                                                         </tr>
@@ -78,9 +110,6 @@
                                                     </td>
                                                 </tr>
                                             </table>
-                                            <t t-if="'show_recovery_button' in ctx">
-
-                                            </t>
                                         </t>
                                         <t t-set="company" t-value="object.company_id or object.user_id.company_id or user.company_id"/>
                                     </td></tr>

@@ -10,7 +10,7 @@
             <field name="use_default_to" eval="False"/>
             <field name="description">Mail sent to customer when a product comes back in
             stock</field>
-            <field name="email_layout_xmlid">mail.mail_notification_light</field>
+            <field name="email_layout_xmlid">mail.mail_notification_layout_with_footer_and_powered_by</field>
             <field name="body_html" type="html">
                 <t t-set="partner_name" t-value="partner in ctx and ctx['partner'].name or ''"/>
                 <div id="body">

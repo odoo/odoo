@@ -93,7 +93,12 @@
                             <field name="description">Sent to customers on order confirmation</field>
                             <field name="body_html" type="html">
                                 <div style="margin: 0px; padding: 0px;">
-                                    <img t-if="object.company_id.logo" t-att-src="image_data_uri(object.company_id.logo)" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
+                                    <t t-set="color" t-value="object.company_id.email_secondary_color or '#875A7B'"/>
+                                    <t t-set="logo" t-value="object.company_id.logo or ''"/>
+                                    <t t-if="hasattr(object, 'website_id') and object.website_id and object.website_id.logo">
+                                        <t t-set="logo" t-value="object.website_id.logo"/>
+                                    </t>
+                                    <img t-if="logo" t-att-src="image_data_uri(logo)" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
                                     <p style="margin: 0 0 12px; padding: 0px; line-height: 18px; font-size: 14px;">
                                         Hello <t t-out="object.partner_id.display_name or ''">Johnny Tester</t>,
                                         <br/><br/>
@@ -135,17 +140,7 @@
                                     </p>
                                     <t t-if="hasattr(object, 'website_id') and object.website_id">
                                         <div style="margin: 0px; padding: 0px;">
-                                            <t t-set="current_subtotal" t-value="0"/>
                                             <t t-foreach="object.order_line" t-as="line">
-                                                <t
-                                                    t-set="line_subtotal"
-                                                    t-value="
-                                                        line.price_subtotal
-                                                        if object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'
-                                                        else line.price_total
-                                                    "
-                                                />
-                                                <t t-set="current_subtotal" t-value="current_subtotal + line_subtotal"/>
                                                 <t
                                                     t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and (
                                                         line.display_type in ['line_section', 'line_note']
@@ -153,18 +148,21 @@
                                                     )"
                                                 >
                                                     <div style="margin: 16px 0;">
-                                                        <table width="100%" t-attf-style="max-width: 590px; color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; font-size: 14px; border-collapse: collapse;" role="presentation">
+                                                        <table width="100%" t-attf-style="max-width: 590px; color: {{color}}; font-size: 14px; border-collapse: collapse;" role="presentation">
                                                         <tr>
                                                             <td colspan="4">
                                                                 <t t-if="line.display_type == 'line_section' or line.product_type == 'combo'">
-                                                                    <h2 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; font-weight: bold; color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};" t-out="line.name or ''">Taking care of Trees Course</h2>
-                                                                    <t t-set="current_section" t-value="line"/>
-                                                                    <t t-set="current_subtotal" t-value="0"/>
+                                                                    <h2 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; font-weight: bold; color: {{color}};" t-out="line.name or ''">Taking care of Trees Course</h2>
                                                                 </t>
                                                                 <t t-elif="line.display_type == 'line_note'">
                                                                     <i t-out="line.name or ''">Taking care of Trees Course</i>
                                                                 </t>
                                                             </td>
+                                                            <t t-if="line.display_type == 'line_section' or line.product_type == 'combo'">
+                                                                <td style="text-align: right; font-weight: bold;">
+                                                                    <span t-out="format_amount(line._get_cart_display_price(), object.currency_id) or ''">$ 10.00</span>
+                                                                </td>
+                                                            </t>
                                                         </tr>
                                                     </table>
                                                     </div>
@@ -176,11 +174,17 @@
                                                                 <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" style="width: 100px; height: 100px; object-fit: contain;" alt="Product image"></img>
                                                             </td>
                                                             <td align="left" style="vertical-align: top; padding-bottom: 12px;">
-                                                                <h3 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};"><strong t-out="line.product_id.name or ''">Taking care of Trees Course</strong></h3>
+                                                                <t t-set="product_name" t-value="line.product_id.name or ''" />
+                                                                <t t-if="hasattr(line, 'is_rental') and line.is_rental">
+                                                                    <t t-set="product_name" t-value="line.name" />
+                                                                </t>
+                                                                <h3 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; color: {{color}};"><strong t-out="product_name or ''">Taking care of Trees Course</strong></h3>
                                                                 <p t-if="line.product_id.product_template_attribute_value_ids" style="margin: 4px 0 0;">
                                                                     <t t-out="', '.join(line.product_id.product_template_attribute_value_ids.mapped('name'))" />
                                                                 </p>
-                                                                <t t-esc="line.product_id.description_ecommerce"/>
+                                                                <t t-if="hasattr(line, 'is_rental') and line.is_rental">
+                                                                    <t t-out="line.product_id.display_price or ''"/> <br/>
+                                                                </t>
                                                                 <span style="display: inline-block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-color: #e9ecef; font-size: 12px;">
                                                                     <t t-out="int(line.product_uom_qty) or ''">10000</t>
                                                                     <t t-out="line.product_uom_id.name or ''" t-if="line.order_id.create_uid._has_group('uom.group_uom')"></t>
@@ -189,40 +193,19 @@
                                                             <td width="19%" align="right" style="max-width: 100px; vertical-align: top;">
                                                                 <span style="white-space: nowrap;">
                                                                     <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
-                                                                        <t t-out="format_amount(line.price_reduce_taxexcl, object.currency_id) or ''">$ 10.00</t>
+                                                                        <t t-out="format_amount(line.price_subtotal, object.currency_id) or ''">$ 10.00</t>
                                                                     </t>
                                                                     <t t-else="">
-                                                                        <t t-out="format_amount(line.price_reduce_taxinc, object.currency_id) or ''">$ 10.00</t>
+                                                                        <t t-out="format_amount(line.price_total, object.currency_id) or ''">$ 10.00</t>
                                                                     </t>
                                                                 </span>
+                                                                <t t-if="hasattr(line, 'recurring_invoice') and line.recurring_invoice">
+                                                                    <br/>
+                                                                    <t t-out="line.subscription_plan_id.billing_period_display_sentence or ''"/>
+                                                                </t>
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                </t>
-                                                <t
-                                                    t-if="current_section and (
-                                                        line_last
-                                                        or object.order_line[line_index+1].display_type == 'line_section'
-                                                        or object.order_line[line_index+1].product_type == 'combo'
-                                                        or (
-                                                            line.combo_item_id
-                                                            and not object.order_line[line_index+1].combo_item_id
-                                                        )
-                                                    ) and not line.is_downpayment"
-                                                >
-                                                    <div style="margin: 0 0 20px;">
-                                                        <table width="100%" style="max-width: 590px; color: #495057; font-size: 14px; border-collapse: collapse;" role="presentation">
-                                                            <tr>
-                                                                <td style="width: 50%" align="left">
-                                                                    <t t-out="current_section.name or ''">Combo</t> total
-                                                                </td>
-                                                                <t t-set="current_section" t-value="None"/>
-                                                                <td style="width: 50%" align="right">
-                                                                    <span t-out="format_amount(current_subtotal, object.currency_id) or ''">$ 10.00</span>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </div>
                                                 </t>
                                             </t>
                                         </div>
@@ -253,13 +236,8 @@
                                                     <td style="width: 80%; padding-top: 4px; border-top: 1px solid #343a40; color: #343a40; font-weight: bold; " align="right">
                                                         <span style="display: inline-block; margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-radius: 4px;">
                                                             Paid with
-                                                            <span t-attf-style="color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; font-weight: bold;">
-                                                                <t t-if="tx_sudo.token_id">
-                                                                    <t t-out="tx_sudo.token_id.display_name or ''"></t>
-                                                                </t>
-                                                                <t t-else="">
-                                                                    <t t-out="tx_sudo.provider_id.sudo().name or ''"></t>
-                                                                </t>
+                                                            <span t-attf-style="color: {{color}}; font-weight: bold;">
+                                                                <t t-out="tx_sudo.provider_id.sudo().name or ''"></t>
                                                             </span>
                                                         </span>
                                                         <t t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</t>
@@ -271,7 +249,7 @@
                                             <tr>
                                                 <td style="padding-bottom: 4px; font-weight: bold;">
                                                     Delivery with
-                                                    <span t-attf-style="color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}};"><t t-out="object.carrier_id.name or ''"></t></span>
+                                                    <span t-attf-style="color: {{color}};"><t t-out="object.carrier_id.name or ''"></t></span>
                                                 </td>
                                             </tr>
                                             <tr>
