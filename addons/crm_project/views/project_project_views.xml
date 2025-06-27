@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="crm_project_form_create_view" model="ir.ui.view">
+        <field name="name">Create a Project: Override Footer</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_templates_view_form" />
+        <field name="mode">primary</field>
+        <field name="priority" eval="100"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <footer>
+                    <button string="Save" type="object" name="success_notification_popup" class="btn-primary" data-hotkey="q" />
+                    <button string="Discard" special="cancel" class="btn-secondary" data-hotkey="x" />
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
