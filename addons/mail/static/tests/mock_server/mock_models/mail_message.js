@@ -65,26 +65,17 @@ export class MailMessage extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _to_store(ids, store, fields, for_current_user, add_followers) {
-        const kwargs = getKwArgs(arguments, "ids", "store", "for_current_user", "add_followers");
-        ids = kwargs.ids;
+    _to_store(store, fields, for_current_user, add_followers) {
+        const kwargs = getKwArgs(arguments, "store", "fields", "for_current_user", "add_followers");
         store = kwargs.store;
         fields = kwargs.fields;
         for_current_user = kwargs.for_current_user ?? false;
         add_followers = kwargs.add_followers ?? false;
 
-        /** @type {import("mock_models").IrAttachment} */
-        const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
         /** @type {import("mock_models").MailMessageLinkPreview} */
         const MailMessageLinkPreview = this.env["mail.message.link.preview"];
-        /** @type {import("mock_models").MailMessage} */
-        const MailMessage = this.env["mail.message"];
-        /** @type {import("mock_models").MailMessageReaction} */
-        const MailMessageReaction = this.env["mail.message.reaction"];
-        /** @type {import("mock_models").MailMessageSubtype} */
-        const MailMessageSubtype = this.env["mail.message.subtype"];
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
         /** @type {import("mock_models").MailThread} */
@@ -93,28 +84,17 @@ export class MailMessage extends models.ServerModel {
         const MailTrackingValue = this.env["mail.tracking.value"];
         /** @type {import("mock_models").ResFake} */
         const ResFake = this.env["res.fake"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        if (!fields) {
-            fields = [
-                "body",
-                "create_date",
-                "date",
-                "message_type",
-                "model",
-                "pinned_at",
-                "res_id",
-                "subject",
-                "write_date",
-            ];
-        }
 
         const notifications = MailNotification._filtered_for_web_client(
-            MailNotification._filter([["mail_message_id", "in", ids]]).map((n) => n.id)
+            MailNotification._filter([["mail_message_id", "in", this.map((m) => m.id)]]).map(
+                (n) => n.id
+            )
         );
-        for (const message of MailMessage.browse(ids)) {
-            const [data] = this._read_format(message.id, fields, false);
+        store._add_record_fields(
+            this,
+            fields.filter((field) => !["notification_ids", "mail_link_preview_ids"].includes(field))
+        );
+        for (const message of this) {
             const thread = message.model && this.env[message.model].browse(message.res_id)[0];
             if (thread) {
                 const thread_data = {
@@ -130,20 +110,18 @@ export class MailMessage extends models.ServerModel {
                                 ["partner_id", "=", this.env.user.partner_id],
                             ])
                         ),
-                        makeKwArgs({ fields: { is_active: true, partner: [] } })
+                        makeKwArgs({
+                            fields: ["is_active", mailDataHelpers.Store.one("partner_id", [])],
+                        })
                     );
                 }
-                store.add(
+                store._add_record_fields(
                     this.env[message.model].browse(message.res_id),
                     thread_data,
                     makeKwArgs({ as_thread: true })
                 );
             }
-            Object.assign(data, {
-                attachment_ids: mailDataHelpers.Store.many(
-                    IrAttachment.browse(message.attachment_ids).sort((a1, a2) => a1.id - a2.id)
-                ),
-                body: ["markup", data.body],
+            const data = {
                 default_subject:
                     message.model &&
                     message.res_id &&
@@ -151,38 +129,25 @@ export class MailMessage extends models.ServerModel {
                         ? ResFake._message_compute_subject([message.res_id])
                         : MailThread._message_compute_subject([message.res_id])
                     ).get(message.res_id),
-                message_link_preview_ids: mailDataHelpers.Store.many(
-                    MailMessageLinkPreview.browse(message.message_link_preview_ids).filter(
-                        (lpm) => !lpm.is_hidden
-                    )
-                ),
-                notification_ids: mailDataHelpers.Store.many(
-                    notifications.filter(
-                        (notification) => notification.mail_message_id == message.id
-                    )
-                ),
-                parent_id: mailDataHelpers.Store.one(
-                    MailMessage.browse(message.parent_id),
-                    makeKwArgs({ format_reply: false })
-                ),
-                partner_ids: mailDataHelpers.Store.many(
-                    ResPartner.browse(message.partner_ids),
-                    makeKwArgs({ fields: ["name"] })
-                ),
-                reactions: mailDataHelpers.Store.many(
-                    MailMessageReaction.browse(message.reaction_ids)
-                ),
                 record_name: thread?.name ?? thread?.display_name,
                 scheduledDatetime: false,
                 thread: mailDataHelpers.Store.one(
                     message.model && this.env[message.model].browse(message.res_id),
                     makeKwArgs({ as_thread: true, only_id: true })
                 ),
-            });
-            if (message.subtype_id) {
-                data.subtype_id = mailDataHelpers.Store.one(
-                    MailMessageSubtype.browse(message.subtype_id),
-                    makeKwArgs({ fields: ["description"] })
+            };
+            if (fields.includes("message_link_preview_ids")) {
+                data.message_link_preview_ids = mailDataHelpers.Store.many(
+                    MailMessageLinkPreview.browse(message.message_link_preview_ids).filter(
+                        (lpm) => !lpm.is_hidden
+                    )
+                );
+            }
+            if (fields.includes("notification_ids")) {
+                data.notification_ids = mailDataHelpers.Store.many(
+                    notifications.filter(
+                        (notification) => notification.mail_message_id == message.id
+                    )
                 );
             }
             if (for_current_user) {
@@ -200,12 +165,46 @@ export class MailMessage extends models.ServerModel {
                     MailTrackingValue._tracking_value_format(trackingValues);
                 data["trackingValues"] = formattedTrackingValues;
             }
-            store.add(this.browse(message.id), data);
+            store._add_record_fields(this.browse(message.id), data);
         }
-        this._author_to_store(ids, store);
+        this._author_to_store(store);
     }
 
-    _author_to_store(ids, store) {
+    get _to_store_defaults() {
+        return [
+            mailDataHelpers.Store.many(
+                "attachment_ids",
+                makeKwArgs({
+                    sort: (a1, a2) => a1.id - a2.id,
+                })
+            ),
+            mailDataHelpers.Store.attr("body", (m) => ["markup", m.body]),
+            "create_date",
+            "date",
+            "message_type",
+            "model",
+            "message_link_preview_ids",
+            "notification_ids",
+            mailDataHelpers.Store.one("parent_id", makeKwArgs({ format_reply: false })),
+            mailDataHelpers.Store.many("partner_ids", makeKwArgs({ fields: ["name"] })),
+            "pinned_at",
+            mailDataHelpers.Store.attr("reactions", (m) =>
+                mailDataHelpers.Store.many(this.env["mail.message.reaction"].browse(m.reaction_ids))
+            ),
+            "res_id",
+            "subject",
+            "write_date",
+            mailDataHelpers.Store.one(
+                "subtype_id",
+                makeKwArgs({
+                    fields: ["description"],
+                    predicate: (m) => m.subtype_id,
+                })
+            ),
+        ];
+    }
+
+    _author_to_store(store) {
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").MailMessage} */
@@ -213,7 +212,7 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        for (const message of MailMessage.browse(ids)) {
+        for (const message of this) {
             const data = {
                 author_id: false,
                 author_guest_id: false,
@@ -230,7 +229,7 @@ export class MailMessage extends models.ServerModel {
                     makeKwArgs({ fields: ["avatar_128", "is_company", "name", "user"] })
                 );
             }
-            store.add(this.browse(message.id), data);
+            store._add_record_fields(MailMessage.browse(message.id), data);
         }
     }
 

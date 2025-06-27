@@ -1,4 +1,5 @@
-import { fields, models, getKwArgs } from "@web/../tests/web_test_helpers";
+import { fields, models } from "@web/../tests/web_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 export class HrEmployee extends models.ServerModel {
     _name = "hr.employee";
@@ -10,19 +11,15 @@ export class HrEmployee extends models.ServerModel {
     work_location_id = fields.Many2one({ relation: "hr.work.location" });
     job_title = fields.Char();
 
-    _to_store(ids, store, fields) {
-        const kwargs = getKwArgs(arguments, "id", "store", "fields");
-        fields = kwargs.fields;
-        for (const employee of this.browse(ids)) {
-            const [data] = this._read_format(employee.id, fields);
-            if (fields.includes("department_id")) {
-                data.department_id = data.department_id[0];
-            }
-            if (fields.includes("work_location_id")) {
-                data.work_location_id = data.work_location_id[0];
-            }
-            store.add(this.browse(employee.id), data);
-        }
+    _get_store_avatar_card_fields() {
+        return [
+            "company_id",
+            mailDataHelpers.Store.one("department_id", ["name"]),
+            "work_email",
+            mailDataHelpers.Store.one("work_location_id", ["location_type", "name"]),
+            "work_phone",
+            "job_title",
+        ];
     }
 
     _views = {

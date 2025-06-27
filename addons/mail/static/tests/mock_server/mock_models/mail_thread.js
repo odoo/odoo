@@ -80,7 +80,7 @@ export class MailThread extends models.ServerModel {
             {
                 [filter_recipients ? "recipients" : "followers"]: mailDataHelpers.Store.many(
                     followers,
-                    reset ? "REPLACE" : "ADD"
+                    makeKwArgs({ mode: reset ? "REPLACE" : "ADD" })
                 ),
             },
             makeKwArgs({ as_thread: true })
@@ -585,9 +585,8 @@ export class MailThread extends models.ServerModel {
         return false;
     }
 
-    _thread_to_store(ids, store, fields, request_list) {
-        const kwargs = getKwArgs(arguments, "ids", "store", "fields", "request_list");
-        const id = kwargs.ids[0];
+    _thread_to_store(store, fields, request_list) {
+        const kwargs = getKwArgs(arguments, "store", "fields", "request_list");
         store = kwargs.store;
         fields = kwargs.fields;
         request_list = kwargs.request_list;
@@ -606,14 +605,17 @@ export class MailThread extends models.ServerModel {
         if (!fields) {
             fields = [];
         }
-        const [thread] = this.env[this._name].browse(id);
-        const [res] = this._read_format(thread.id, fields, false);
+        const thread = this[0];
+        store._add_record_fields(this.env[this._name].browse(thread.id), fields, true);
+        const res = {};
         if (request_list) {
             res.hasReadAccess = true;
             res.hasWriteAccess = thread.hasWriteAccess ?? true; // mimic user with write access by default
             res["canPostOnReadonly"] = this._mail_post_access === "read";
         }
-        if (request_list && request_list.includes("activities") && this.has_activities) {
+        const model = this.env[this._name];
+
+        if (request_list && request_list.includes("activities") && model.has_activities) {
             res["activities"] = mailDataHelpers.Store.many(
                 MailActivity.browse(thread.activity_ids)
             );
@@ -657,7 +659,7 @@ export class MailThread extends models.ServerModel {
             );
             MailThread._message_followers_to_store.call(
                 this,
-                [id],
+                [thread.id],
                 store,
                 makeKwArgs({ reset: true })
             );
@@ -669,7 +671,7 @@ export class MailThread extends models.ServerModel {
             ]);
             MailThread._message_followers_to_store.call(
                 this,
-                [id],
+                [thread.id],
                 store,
                 makeKwArgs({ filter_recipients: true, reset: true })
             );
@@ -679,16 +681,16 @@ export class MailThread extends models.ServerModel {
         }
         if (request_list && request_list.includes("suggestedRecipients")) {
             res["suggestedRecipients"] = MailThread._message_get_suggested_recipients.call(this, [
-                id,
+                thread.id,
             ]);
         }
         if (request_list && request_list.includes("scheduledMessages")) {
             res["scheduledMessages"] = mailDataHelpers.Store.many(
                 MailScheduledMessage.filter(
-                    (message) => message.model === this._name && message.res_id === id
+                    (message) => message.model === this._name && message.res_id === thread.id
                 )
             );
         }
-        store.add(this.env[this._name].browse(id), res, makeKwArgs({ as_thread: true }));
+        store._add_record_fields(this.env[this._name].browse(thread.id), res, true);
     }
 }

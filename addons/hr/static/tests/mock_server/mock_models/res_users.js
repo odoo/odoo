@@ -1,5 +1,6 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { fields } from "@web/../tests/web_test_helpers";
+import { fields, makeKwArgs } from "@web/../tests/web_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 export class ResUsers extends mailModels.ResUsers {
     employee_id = fields.Many2one({ relation: "hr.employee" });
@@ -20,22 +21,16 @@ export class ResUsers extends mailModels.ResUsers {
     });
     job_title = fields.Char({ related: "employee_id.job_title" });
 
-    _get_store_avatar_card_related_fields() {
-        return {
-            department_id: ["name"],
-            work_location_id: ["name", "location_type"],
-            employee_ids: [
-                "company_id",
-                "work_email",
-                "work_phone",
-                "job_title",
-                "work_location_id",
-                "department_id",
-            ],
-        };
-    }
     _get_store_avatar_card_fields() {
-        const fields = super._get_store_avatar_card_fields();
-        return fields.concat(["employee_ids"]);
+        return [
+            ...super._get_store_avatar_card_fields(),
+            mailDataHelpers.Store.many(
+                "employee_ids",
+                makeKwArgs({
+                    fields: this.env["hr.employee"]._get_store_avatar_card_fields(),
+                    mode: "ADD",
+                })
+            ),
+        ];
     }
 }

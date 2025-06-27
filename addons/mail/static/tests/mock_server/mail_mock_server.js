@@ -201,7 +201,7 @@ async function channel_call_join(request) {
         ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
     ]);
     return new mailDataHelpers.Store(DiscussChannel.browse(channel_id), {
-        rtc_session_ids: mailDataHelpers.Store.many(rtcSessions, "ADD"),
+        rtc_session_ids: mailDataHelpers.Store.many(rtcSessions, makeKwArgs({ mode: "ADD" })),
     })
         .add("Rtc", {
             iceServers: false,
@@ -248,8 +248,7 @@ async function channel_call_leave(request) {
             new mailDataHelpers.Store(DiscussChannel.browse(Number(channelId)), {
                 rtc_session_ids: mailDataHelpers.Store.many(
                     DiscussChannelRtcSession.browse(sessions.map((session) => session.id)),
-                    "DELETE",
-                    makeKwArgs({ only_id: true })
+                    makeKwArgs({ only_id: true, mode: "DELETE" })
                 ),
             }).get_result(),
         ]);
@@ -301,7 +300,7 @@ async function discuss_channel_messages(request) {
             MailMessage.browse(messages.map((message) => message.id)),
             makeKwArgs({ for_current_user: true })
         ).get_result(),
-        messages: mailDataHelpers.Store.many_ids(messages),
+        messages: messages.map((message) => message.id),
     };
 }
 
@@ -328,7 +327,7 @@ async function discuss_channel_sub_channel_fetch(request) {
         domain.push(["id", "<", before]);
     }
     const subChannels = DiscussChannel.search(domain, makeKwArgs({ limit, order: "id DESC" }));
-    const store = new mailDataHelpers.Store(subChannels);
+    const store = new mailDataHelpers.Store(DiscussChannel.browse(subChannels));
     const lastMessageIds = [];
     for (const channel of subChannels) {
         const lastMessageId = Math.max(channel.message_ids);
@@ -407,7 +406,7 @@ async function discuss_channel_pins(request) {
         ["pinned_at", "!=", false],
     ]);
     return new mailDataHelpers.Store(
-        messageIds,
+        MailMessage.browse(messageIds),
         makeKwArgs({ for_current_user: true })
     ).get_result();
 }
@@ -481,7 +480,7 @@ async function discuss_history_messages(request) {
             MailMessage.browse(messagesWithNotification.map((message) => message.id)),
             makeKwArgs({ for_current_user: true })
         ).get_result(),
-        messages: mailDataHelpers.Store.many_ids(messages),
+        messages: mailDataHelpers.Store.many(messages)._get_id(),
     };
 }
 
@@ -502,7 +501,7 @@ async function discuss_inbox_messages(request) {
             MailMessage.browse(messages.map((message) => message.id)),
             makeKwArgs({ for_current_user: true, add_followers: true })
         ).get_result(),
-        messages: mailDataHelpers.Store.many_ids(messages),
+        messages: messages.map((message) => message.id),
     };
 }
 
@@ -765,8 +764,11 @@ async function read_subscription_data(request) {
         ["res_model", "=", false],
     ]);
     return {
-        store_data: new mailDataHelpers.Store(subtypes, makeKwArgs({ fields: ["name"] }))
-            .add(MailFollowers.browse(follower_id), makeKwArgs({ fields: { subtype_ids: true } }))
+        store_data: new mailDataHelpers.Store(
+            MailMessageSubtype.browse(subtypes),
+            makeKwArgs({ fields: ["name"] })
+        )
+            .add(MailFollowers.browse(follower_id), makeKwArgs({ fields: ["subtype_ids"] }))
             .get_result(),
         subtype_ids: subtypes, // Not sorted for simplicity.
     };
@@ -807,7 +809,7 @@ async function discuss_starred_messages(request) {
             MailMessage.browse(messages.map((message) => message.id)),
             makeKwArgs({ for_current_user: true })
         ).get_result(),
-        messages: mailDataHelpers.Store.many_ids(messages),
+        messages: messages.map((message) => message.id),
     };
 }
 
@@ -833,7 +835,7 @@ async function mail_thread_messages(request) {
             MailMessage.browse(messages.map((message) => message.id)),
             makeKwArgs({ for_current_user: true })
         ).get_result(),
-        messages: mailDataHelpers.Store.many_ids(messages),
+        messages: messages.map((message) => message.id),
     };
 }
 
@@ -965,7 +967,7 @@ function _process_request_for_all(store, name, params, context = {}) {
             ["rtc_inviting_session_id", "!=", false],
         ]);
         const channelsDomain = [["id", "in", members.map((m) => m.channel_id)]];
-        store.add(DiscussChannel.search(channelsDomain));
+        store.add(DiscussChannel.browse(DiscussChannel.search(channelsDomain)));
     }
     if (name === "failures" && this.env.user?.partner_id) {
         const [partner] = ResPartner.browse(this.env.user.partner_id);
@@ -1007,7 +1009,7 @@ function _process_request_for_all(store, name, params, context = {}) {
             ),
             makeKwArgs({ for_current_user: true })
         );
-        store.add(channels.map((channel) => channel.id));
+        store.add(channels);
     }
     if (name === "mail.thread") {
         store.add(
@@ -1017,7 +1019,7 @@ function _process_request_for_all(store, name, params, context = {}) {
     }
     if (name === "discuss.channel") {
         const channels = DiscussChannel.search([["id", "=", params]]);
-        store.add(channels);
+        store.add(DiscussChannel.browse(channels));
         for (const channelId of params.filter((id) => !channels.includes(id))) {
             const channel = DiscussChannel.browse();
             // limitation of mock server: cannot browse non-existing record
@@ -1066,7 +1068,9 @@ function _process_request_for_internal_user(store, name, params) {
             ["create_uid", "=", this.env.user.id],
             ["group_ids", "in", this.env.user.group_ids],
         ];
-        store.add(this.env["mail.canned.response"].search(domain));
+        const CannedResponse = this.env["mail.canned.response"];
+        const cannedResponses = CannedResponse.search(domain);
+        store.add(CannedResponse.browse(cannedResponses));
     }
     if (name === "avatar_card") {
         const userId = params.user_id;
@@ -1085,11 +1089,208 @@ const ids_by_model = {
     Store: [],
 };
 
-const MANY = Symbol("MANY");
-const ONE = Symbol("ONE");
+function extractAndDeleteKwArgs(args, ...keys) {
+    const allKwargs = unmakeKwArgs(getKwArgs(args, ...keys));
+    const kwargs = {};
+    for (const key of keys) {
+        if (Object.hasOwn(allKwargs, key)) {
+            kwargs[key] = allKwargs[key];
+            delete allKwargs[key];
+        }
+    }
+    return [kwargs, allKwargs];
+}
+
+export class StoreAttr {
+    constructor(name, value, predicate) {
+        const [kwargs] = extractAndDeleteKwArgs(arguments, "name", "value", "predicate");
+        this.name = kwargs.name;
+        this.value = kwargs.value;
+        this.predicate = kwargs.predicate;
+    }
+
+    _get_value(record, model = null) {
+        if (typeof this.value === "function") {
+            return this.value(record);
+        }
+        const value = this.value ?? record[this.name];
+        return value;
+    }
+}
+
+export class StoreRelation extends StoreAttr {
+    constructor(name_or_record, fields, value, predicate, as_thread, only_id) {
+        [{ name_or_record, fields, value, predicate, as_thread, only_id }] = extractAndDeleteKwArgs(
+            arguments,
+            "name_or_record",
+            "fields",
+            "value",
+            "predicate",
+            "as_thread",
+            "only_id"
+        );
+        const name = typeof name_or_record === "string" ? name_or_record : null;
+        super(makeKwArgs({ name, value }));
+        this.records = name_or_record instanceof models.Model ? name_or_record : null;
+        this.predicate = predicate;
+        this.as_thread = as_thread;
+        this.fields = fields;
+        this.only_id = only_id;
+    }
+    _get_value(record, model) {
+        let target = super._get_value(record);
+        if (!target) {
+            const res_model_field = model._fields["res_model"] ? "res_model" : "model";
+            if (this.name === "thread" && !record["thread"]) {
+                const res_model = record[res_model_field];
+                const res_id = record["res_id"];
+                if (res_model && res_id) {
+                    target = model.env[res_model].browse(res_id);
+                }
+            }
+        } else {
+            const field = model._fields[this.name];
+
+            target = model.env[field.relation].browse(target);
+        }
+        return this._copy_with_records(target, record);
+    }
+
+    _copy_with_records(target, record) {
+        if (this.records) {
+            throw new Error(`StoreRelation ${this.name} cannot be used with records`);
+        }
+
+        return new this.constructor(
+            target,
+            makeKwArgs({
+                fields: this.fields,
+                value: this.value,
+                predicate: this.predicate,
+                as_thread: this.as_thread,
+            })
+        );
+    }
+
+    _add_to_store(store, target, key) {
+        if (!this.only_id) {
+            store.add(this.records, this.fields, makeKwArgs({ as_thread: this.as_thread }));
+        }
+    }
+}
+
+export class StoreOne extends StoreRelation {
+    _add_to_store(store, target, key) {
+        super._add_to_store(store, target, key);
+        target[key] = this._get_id();
+    }
+    _get_id() {
+        if (!this.records || !this.records.length) {
+            return false;
+        }
+        const id = this.records[0].id;
+        if (this.as_thread) {
+            return { id, model: this.records._name };
+        }
+        if (this.records._name === "discuss.channel") {
+            return { id, model: "discuss.channel" };
+        }
+        if (this.records._name === "mail.guest") {
+            return { id, type: "guest" };
+        }
+        if (this.records._name === "res.partner") {
+            return { id, type: "partner" };
+        }
+        return id;
+    }
+}
+
+export class StoreMany extends StoreRelation {
+    constructor(name_or_record, fields, value, predicate, as_thread, mode, only_id, sort) {
+        const [kwargs] = extractAndDeleteKwArgs(
+            arguments,
+            "name_or_record",
+            "fields",
+            "value",
+            "predicate",
+            "as_thread",
+            "mode",
+            "only_id",
+            "sort"
+        );
+        name_or_record = kwargs.name_or_record;
+        fields = kwargs.fields;
+        value = kwargs.value;
+        predicate = kwargs.predicate;
+        as_thread = kwargs.as_thread;
+        mode = kwargs.mode || "REPLACE";
+        only_id = kwargs.only_id || false;
+        sort = kwargs.sort || false;
+        super(
+            name_or_record,
+            makeKwArgs({
+                fields,
+                value,
+                predicate,
+                as_thread,
+                only_id,
+            })
+        );
+        this.mode = mode;
+    }
+    _copy_with_records(target, record) {
+        const res = super._copy_with_records(target, record);
+        res.mode = this.mode;
+        res.sort = this.sort;
+        return res;
+    }
+
+    _sort_records() {
+        if (this.sort) {
+            this.records.sort(this.sort);
+            this.sort = false;
+        }
+    }
+    _add_to_store(store, target, key) {
+        this._sort_records();
+        super._add_to_store(store, target, key);
+        const rel_val = this._get_id();
+        const previous_value = this.mode !== "REPLACE" ? target[key] : undefined;
+        target[key] = (previous_value || []).concat(rel_val);
+    }
+    _get_id() {
+        if (!this.records || !this.records.length) {
+            return [];
+        }
+        const res = [];
+
+        if (this.records._name === "mail.message.reaction") {
+            const reactionGroups = groupBy(this.records, (r) => [r.message_id, r.content]);
+            for (const groupId in reactionGroups) {
+                const { message_id, content } = reactionGroups[groupId][0];
+                res.push({ message: message_id, content: content });
+            }
+        } else {
+            for (const record of this.records) {
+                res.push(
+                    new StoreOne(
+                        this.records.env[this.records._name].browse(record.id),
+                        makeKwArgs({
+                            as_thread: this.as_thread,
+                        })
+                    )._get_id()
+                );
+            }
+        }
+        if (["ADD", "DELETE"].includes(this.mode)) {
+            return [[this.mode, res]];
+        }
+        return res;
+    }
+}
 
 class Store {
-    constructor(data, values, as_thread, _delete, kwargs) {
+    constructor(data, fields, as_thread, _delete, kwargs) {
         this.data = new Map();
         this.data_id = null;
         if (data) {
@@ -1097,93 +1298,161 @@ class Store {
         }
     }
 
-    add(data, values, as_thread, _delete, kwargs) {
+    add(data, fields, as_thread, _delete, extra_fields, kwargs) {
         if (!data) {
             return this;
         }
-        kwargs = unmakeKwArgs(getKwArgs(arguments, "data", "values", "as_thread", "delete"));
-        data = kwargs.data;
-        delete kwargs.data;
-        values = kwargs.values;
-        delete kwargs.values;
-        as_thread = kwargs.as_thread;
-        delete kwargs.as_thread;
-        _delete = kwargs.delete ?? false;
-        delete kwargs.delete;
+        [{ data, fields, as_thread, delete: _delete, extra_fields }, kwargs] =
+            extractAndDeleteKwArgs(
+                arguments,
+                "data",
+                "fields",
+                "as_thread",
+                "delete",
+                "extra_fields"
+            );
+        _delete = _delete ?? false;
         let model_name;
         if (data instanceof models.Model) {
-            if (values) {
-                if (data.length !== 1) {
-                    throw new Error(`expected single recordset ${data} with values`);
-                }
+            if (fields) {
                 if (Object.keys(kwargs).length) {
                     throw new Error(
                         `expected empty kwargs with recordset ${data} values: ${kwargs}`
                     );
                 }
                 if (_delete) {
-                    throw new Error(`deleted not expected for ${data} with values: ${values}`);
+                    throw new Error(`deleted not expected for ${data} with values: ${fields}`);
                 }
             }
             if (_delete) {
                 if (data.length !== 1) {
                     throw new Error(`expected single record ${data} with delete`);
                 }
-                if (values) {
-                    throw new Error(`for ${data} expected empty values with delete: ${values}`);
+                if (fields) {
+                    throw new Error(`for ${data} expected empty values with delete: ${fields}`);
                 }
             }
             const ids = data.map((idOrRecord) =>
                 typeof idOrRecord === "number" ? idOrRecord : idOrRecord.id
             );
-            if (as_thread) {
-                if (_delete) {
-                    this.add(
+            if (_delete) {
+                if (as_thread) {
+                    this._add_model_values(
                         "mail.thread",
                         { id: data[0].id, model: data._name },
                         makeKwArgs({ delete: _delete })
                     );
-                } else if (values) {
-                    this.add("mail.thread", { id: data[0].id, model: data._name, ...values });
                 } else {
-                    MockServer.env["mail.thread"]._thread_to_store.call(
-                        MockServer.env[data._name],
-                        ids,
-                        this,
-                        makeKwArgs(kwargs)
+                    this._add_model_values(
+                        data._name,
+                        { id: ids[0] },
+                        makeKwArgs({ delete: _delete })
                     );
                 }
             } else {
-                if (_delete) {
-                    this.add(data._name, { id: ids[0] }, makeKwArgs({ delete: _delete }));
-                } else if (values) {
-                    this.add(data._name, { id: ids[0], ...values });
+                if (!fields) {
+                    if (as_thread) {
+                        fields = [];
+                    } else {
+                        fields = data._to_store_defaults || [];
+                    }
+                }
+                fields = this._format_fields(fields).concat(this._format_fields(extra_fields));
+                if (as_thread) {
+                    MockServer.env["mail.thread"]._thread_to_store.call(
+                        data,
+                        this,
+                        fields,
+                        makeKwArgs(kwargs)
+                    );
                 } else {
-                    MockServer.env[data._name]._to_store(ids, this, makeKwArgs(kwargs));
+                    if (data._to_store) {
+                        data._to_store(this, fields, makeKwArgs(kwargs));
+                    } else {
+                        this._add_record_fields(data, fields, as_thread);
+                    }
                 }
             }
             return this;
         } else if (typeof data === "object") {
-            if (values) {
-                throw new Error(`expected empty values with dict ${data}: ${values}`);
+            if (fields) {
+                throw new Error(`expected empty values with dict ${data}: ${fields}`);
             }
             if (Object.keys(kwargs).length) {
                 throw new Error(`expected empty kwargs with dict ${data}: ${kwargs}`);
             }
             if (as_thread) {
-                throw new Error(`expected not as_thread with dict ${data}: ${values}`);
+                throw new Error(`expected not as_thread with dict ${data}: ${fields}`);
             }
             model_name = "Store";
-            values = data;
+            fields = data;
         } else {
             if (Object.keys(kwargs).length) {
                 throw new Error(`expected empty kwargs with model name ${data}: ${kwargs}`);
             }
             if (as_thread) {
-                throw new Error(`expected not as_thread with model name ${data}: ${values}`);
+                throw new Error(`expected not as_thread with model name ${data}: ${fields}`);
             }
             model_name = data;
         }
+        return this._add_model_values(model_name, fields, _delete);
+    }
+
+    _get_records_data_list(records, fields) {
+        const abstractedFields = fields.filter((field) => field instanceof StoreAttr);
+        const records_data_list = records
+            ._read_format(
+                records.map((r) => r.id),
+                fields.filter((f) => !abstractedFields.includes(f)),
+                false
+            )
+            .map((data) => [data]);
+        for (const index in records_data_list) {
+            const record = records[index];
+            for (const field of abstractedFields) {
+                if (field instanceof StoreAttr) {
+                    if (!field.predicate || field.predicate(record)) {
+                        const field_data = {};
+                        field_data[field.name] = field._get_value(record, records);
+                        records_data_list[index].push(field_data);
+                    }
+                } else {
+                    records_data_list[index].push(field);
+                }
+            }
+        }
+        return records_data_list;
+    }
+
+    _add_record_fields(records, fields, as_thread) {
+        if (!records || !records.length) {
+            return this;
+        }
+        if (!(records instanceof models.Model)) {
+            throw new Error(`expected recordset for _add_record_fields: ${records}`);
+        }
+        fields = this._format_fields(fields);
+        const data_list = this._get_records_data_list(records, fields);
+        const model_name = records._name;
+        for (const index in data_list) {
+            for (const data of data_list[index]) {
+                if (as_thread) {
+                    this._add_model_values("mail.thread", {
+                        id: records[index].id,
+                        model: model_name,
+                        ...data,
+                    });
+                } else {
+                    this._add_model_values(model_name, {
+                        id: records[index].id,
+                        ...data,
+                    });
+                }
+            }
+        }
+        return this;
+    }
+    _add_model_values(model_name, values, _delete) {
         if (typeof model_name !== "string") {
             throw new Error(`expected string for model name: ${model_name}: ${values}`);
         }
@@ -1240,35 +1509,32 @@ class Store {
         return this;
     }
 
+    _format_fields(fields) {
+        if (fields === null || fields === undefined) {
+            return [];
+        } else if (
+            typeof fields === "object" &&
+            !Array.isArray(fields) &&
+            !(fields instanceof StoreAttr)
+        ) {
+            fields = Object.entries(fields).map(
+                ([key, value]) => new StoreAttr(makeKwArgs({ name: key, value }))
+            );
+        }
+        if (!Array.isArray(fields)) {
+            fields = [fields];
+        }
+        return fields;
+    }
+
     _add_values(values, model_name, index) {
         const target = index ? this.data.get(model_name).get(index) : this.data.get(model_name);
         for (const [key, val] of Object.entries(values)) {
             if (key === "_DELETE") {
                 throw new Error(`invalid key ${key} in ${model_name}: ${values}`);
             }
-            if (Array.isArray(val) && val[0] === ONE) {
-                const [, subrecord, as_thread, only_id, subrecord_kwargs] = val;
-                if (subrecord && !(subrecord instanceof models.Model)) {
-                    throw new Error(`expected recordset for one ${key}: ${subrecord}`);
-                }
-                if (subrecord && subrecord.length && !only_id) {
-                    this.add(subrecord, makeKwArgs({ as_thread, ...subrecord_kwargs }));
-                }
-                target[key] = Store.one_id(subrecord, makeKwArgs({ as_thread }));
-            } else if (Array.isArray(val) && val[0] === MANY) {
-                const [, subrecords, mode, as_thread, only_id, subrecords_kwargs] = val;
-                if (subrecords && !(subrecords instanceof models.Model)) {
-                    throw new Error(`expected recordset for many ${key}: ${subrecords}`);
-                }
-                if (!["ADD", "DELETE", "REPLACE"].includes(mode)) {
-                    throw new Error(`invalid mode for many ${key}: ${mode} `);
-                }
-                if (subrecords && subrecords.length && !only_id) {
-                    this.add(subrecords, makeKwArgs({ as_thread, ...subrecords_kwargs }));
-                }
-                const rel_val = Store.many_ids(subrecords, mode, makeKwArgs({ as_thread }));
-                target[key] =
-                    key in target && mode !== "REPLACE" ? target[key].concat(rel_val) : rel_val;
+            if (val instanceof StoreRelation) {
+                val._add_to_store(this, target, key);
             } else {
                 target[key] = val;
             }
@@ -1291,7 +1557,7 @@ class Store {
 
     resolve_data_request(values) {
         if (this.data_id) {
-            this.add("DataResponse", { id: this.data_id, _resolve: true, ...values });
+            this._add_model_values("DataResponse", { id: this.data_id, _resolve: true, ...values });
         }
         return this;
     }
@@ -1302,96 +1568,54 @@ class Store {
         );
     }
 
-    static many(records, mode = "REPLACE", as_thread, only_id, kwargs) {
-        kwargs = getKwArgs(arguments, "records", "mode");
-        records = kwargs.records;
-        delete kwargs.records;
-        mode = kwargs.mode ?? "REPLACE";
-        delete kwargs.mode;
-        as_thread = kwargs.as_thread;
-        delete kwargs.as_thread;
-        only_id = kwargs.only_id;
-        delete kwargs.only_id;
-        if (records && !(records instanceof models.Model)) {
-            throw new Error(`expected recordset for many: ${records}`);
-        }
-        return [MANY, records, mode, as_thread, only_id, makeKwArgs(kwargs)];
-    }
-
-    static one(records, as_thread, only_id, kwargs) {
-        kwargs = getKwArgs(arguments, "records");
-        records = kwargs.records;
-        delete kwargs.records;
-        as_thread = kwargs.as_thread;
-        delete kwargs.as_thread;
-        only_id = kwargs.only_id;
-        delete kwargs.only_id;
-        if (records && !(records instanceof models.Model)) {
-            throw new Error(`expected recordset for one: ${records}`);
-        }
-        return [ONE, records, as_thread, only_id, makeKwArgs(kwargs)];
-    }
-
-    static many_ids(records, mode = "REPLACE", as_thread) {
-        const kwargs = getKwArgs(arguments, "records", "mode");
-        records = kwargs.records;
-        mode = kwargs.mode ?? "REPLACE";
-        as_thread = kwargs.as_thread;
-        if (records && !(records instanceof models.Model)) {
-            throw new Error(`expected recordset for many_ids: ${records}`);
-        }
-        if (!["ADD", "DELETE", "REPLACE"].includes(mode)) {
-            throw new Error(`invalid mode for many_ids: ${mode} `);
-        }
-        let res = records.map((record) =>
-            Store.one_id(records.browse(record.id), makeKwArgs({ as_thread }))
+    static many(records, fields, mode = "REPLACE", as_thread, kwargs) {
+        let otherKwArgs;
+        [kwargs, otherKwArgs] = extractAndDeleteKwArgs(
+            arguments,
+            "records",
+            "fields",
+            "mode",
+            "as_thread"
         );
-        if (records._name === "mail.message.reaction") {
-            res = [];
-            const reactionGroups = groupBy(records, (r) => [r.message_id, r.content]);
-            for (const groupId in reactionGroups) {
-                const { message_id, content } = reactionGroups[groupId][0];
-                res.push({ message: message_id, content: content });
-            }
-        }
-        if (mode === "ADD") {
-            res = [["ADD", res]];
-        } else if (mode === "DELETE") {
-            res = [["DELETE", res]];
-        }
-        return res;
+        records = kwargs.records;
+        fields = kwargs.fields;
+        mode = kwargs.mode ?? "REPLACE";
+        as_thread = kwargs.as_thread;
+        return new StoreMany(
+            records,
+            makeKwArgs({
+                fields: fields,
+                mode,
+                as_thread,
+                ...otherKwArgs,
+            })
+        );
     }
 
-    static one_id(records, as_thread) {
-        const kwargs = getKwArgs(arguments, "records");
+    static one(records, fields, as_thread, kwargs) {
+        let otherKwArgs;
+        [kwargs, otherKwArgs] = extractAndDeleteKwArgs(arguments, "records", "fields", "as_thread");
         records = kwargs.records;
+        fields = kwargs.fields;
         as_thread = kwargs.as_thread;
-        if (!records) {
-            return false;
-        }
-        if (!(records instanceof models.Model)) {
-            throw new Error(`expected recordset for one_id: ${records}`);
-        }
-        if (records.length > 1) {
-            throw new Error(`expected none or single record for one_id: ${records}`);
-        }
-        const [record] = records;
-        if (!record) {
-            return false;
-        }
-        if (as_thread) {
-            return { id: record.id, model: records._name };
-        }
-        if (records._name === "discuss.channel") {
-            return { id: record.id, model: "discuss.channel" };
-        }
-        if (records._name === "mail.guest") {
-            return { id: record.id, type: "guest" };
-        }
-        if (records._name === "res.partner") {
-            return { id: record.id, type: "partner" };
-        }
-        return record.id;
+        return new StoreOne(
+            records,
+            makeKwArgs({
+                fields: fields,
+                as_thread,
+                ...otherKwArgs,
+            })
+        );
+    }
+
+    static attr(name, value, predicate) {
+        [{ name, value, predicate }] = extractAndDeleteKwArgs(
+            arguments,
+            "name",
+            "value",
+            "predicate"
+        );
+        return new StoreAttr(makeKwArgs({ name, value, predicate }));
     }
 }
 

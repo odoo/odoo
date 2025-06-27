@@ -5,13 +5,13 @@ import { mailDataHelpers } from "../mail_mock_server";
 export class MailMessageReaction extends models.ServerModel {
     _name = "mail.message.reaction";
 
-    _to_store(ids, store) {
+    _to_store(store) {
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const reactionGroups = groupBy(this.browse(ids), (r) => [r.message_id, r.content]);
+        const reactionGroups = groupBy(this, (r) => [r.message_id, r.content]);
         for (const groupId in reactionGroups) {
             const reactionGroup = reactionGroups[groupId];
             const { message_id, content } = reactionGroups[groupId][0];

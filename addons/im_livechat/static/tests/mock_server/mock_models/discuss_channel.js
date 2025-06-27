@@ -53,15 +53,14 @@ export class DiscussChannel extends mailModels.DiscussChannel {
      * @override
      * @type {typeof mailModels.DiscussChannel["prototype"]["_to_store"]}
      */
-    _to_store(ids, store) {
+    _to_store(store) {
         /** @type {import("mock_models").ResCountry} */
         const ResCountry = this.env["res.country"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
         super._to_store(...arguments);
-        const channels = this.browse(ids);
-        for (const channel of channels) {
+        for (const channel of this) {
             const channelInfo = {};
             channelInfo["anonymous_name"] = channel.anonymous_name;
             const [country] = ResCountry.browse(channel.country_id);
@@ -96,7 +95,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                     makeKwArgs({ fields: ["name"] })
                 );
             }
-            store.add(this.browse(channel.id), channelInfo);
+            store._add_record_fields(this.browse(channel.id), channelInfo);
         }
     }
     _close_livechat_session(channel_id) {

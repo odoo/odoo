@@ -86,8 +86,7 @@ export class DiscussChannel extends models.ServerModel {
         const store = new mailDataHelpers.Store(this.browse(channel.id), {
             channel_member_ids: mailDataHelpers.Store.many(
                 DiscussChannelMember.browse(channelMember.id),
-                "DELETE",
-                makeKwArgs({ only_id: true })
+                makeKwArgs({ only_id: true, mode: "DELETE" })
             ),
             member_count: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
         });
@@ -361,89 +360,88 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _to_store(ids, store) {
-        const kwargs = getKwArgs(arguments, "ids", "store");
-        ids = kwargs.ids;
-        delete kwargs.ids;
+    _to_store(store, fields) {
+        const kwargs = getKwArgs(arguments, "store", "fields");
+        store = kwargs.store;
+        fields = kwargs.fields;
 
-        const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
-        /** @type {import("mock_models").DiscussChannelMember} */
-        const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").DiscussChannelRtcSession} */
-        const DiscussChannelRtcSession = this.env["discuss.channel.rtc.session"];
-        /** @type {import("mock_models").MailMessage} */
-        const MailMessage = this.env["mail.message"];
-        /** @type {import("mock_models").MailNotification} */
-        const MailNotification = this.env["mail.notification"];
-        /** @type {import("mock_models").ResGroups}*/
-        const ResGroups = this.env["res.groups"];
+        if (fields && Array.isArray(fields) && fields.length) {
+            store._add_record_fields(this, fields);
+        } else {
+            const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
+            /** @type {import("mock_models").DiscussChannelMember} */
+            const DiscussChannelMember = this.env["discuss.channel.member"];
+            /** @type {import("mock_models").DiscussChannelRtcSession} */
+            const DiscussChannelRtcSession = this.env["discuss.channel.rtc.session"];
+            /** @type {import("mock_models").MailMessage} */
+            const MailMessage = this.env["mail.message"];
+            /** @type {import("mock_models").MailNotification} */
+            const MailNotification = this.env["mail.notification"];
+            /** @type {import("mock_models").ResGroups}*/
+            const ResGroups = this.env["res.groups"];
 
-        const channels = this.browse(ids);
-        for (const channel of channels) {
-            const members = DiscussChannelMember.browse(channel.channel_member_ids);
-            const messages = MailMessage._filter([
-                ["model", "=", "discuss.channel"],
-                ["res_id", "=", channel.id],
-            ]);
-            const res = this._channel_basic_info([channel.id]);
-            res.fetchChannelInfoState = "fetched";
-            res.parent_channel_id = mailDataHelpers.Store.one(
-                this.browse(channel.parent_channel_id)
-            );
-            res.from_message_id = mailDataHelpers.Store.one(
-                MailMessage.browse(channel.from_message_id)
-            );
-            res.group_public_id = mailDataHelpers.Store.one(
-                ResGroups.browse(channel.group_public_id),
-                makeKwArgs({ fields: ["full_name"] })
-            );
-            if (this.env.user) {
-                const message_needaction_counter = MailNotification._filter([
-                    ["res_partner_id", "=", this.env.user.partner_id],
-                    ["is_read", "=", false],
-                    ["mail_message_id", "in", messages.map((message) => message.id)],
-                ]).length;
-                Object.assign(res, {
-                    message_needaction_counter,
-                    message_needaction_counter_bus_id: bus_last_id,
-                });
-            }
-            const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
-            if (memberOfCurrentUser) {
-                const message_unread_counter = this.env[
-                    "discuss.channel.member"
-                ]._compute_message_unread_counter([memberOfCurrentUser.id]);
-                DiscussChannelMember.write([memberOfCurrentUser.id], {
-                    message_unread_counter,
-                });
-                res.is_pinned = memberOfCurrentUser.is_pinned;
-                if (memberOfCurrentUser.rtc_inviting_session_id) {
-                    res.rtcInvitingSession = mailDataHelpers.Store.one(
-                        DiscussChannelMember.browse(memberOfCurrentUser.rtc_inviting_session_id)
+            for (const channel of this) {
+                const members = DiscussChannelMember.browse(channel.channel_member_ids);
+                const messages = MailMessage._filter([
+                    ["model", "=", "discuss.channel"],
+                    ["res_id", "=", channel.id],
+                ]);
+                const res = this._channel_basic_info([channel.id]);
+                res.fetchChannelInfoState = "fetched";
+                res.parent_channel_id = mailDataHelpers.Store.one(
+                    this.env["discuss.channel"].browse(channel.parent_channel_id)
+                );
+                res.from_message_id = mailDataHelpers.Store.one(
+                    MailMessage.browse(channel.from_message_id)
+                );
+                res.group_public_id = mailDataHelpers.Store.one(
+                    ResGroups.browse(channel.group_public_id),
+                    makeKwArgs({ fields: ["full_name"] })
+                );
+                if (this.env.user) {
+                    const message_needaction_counter = MailNotification._filter([
+                        ["res_partner_id", "=", this.env.user.partner_id],
+                        ["is_read", "=", false],
+                        ["mail_message_id", "in", messages.map((message) => message.id)],
+                    ]).length;
+                    Object.assign(res, {
+                        message_needaction_counter,
+                        message_needaction_counter_bus_id: bus_last_id,
+                    });
+                }
+                const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
+                if (memberOfCurrentUser) {
+                    const message_unread_counter = this.env[
+                        "discuss.channel.member"
+                    ]._compute_message_unread_counter([memberOfCurrentUser.id]);
+                    DiscussChannelMember.write([memberOfCurrentUser.id], {
+                        message_unread_counter,
+                    });
+                    res.is_pinned = memberOfCurrentUser.is_pinned;
+                    if (memberOfCurrentUser.rtc_inviting_session_id) {
+                        res.rtcInvitingSession = mailDataHelpers.Store.one(
+                            DiscussChannelMember.browse(memberOfCurrentUser.rtc_inviting_session_id)
+                        );
+                    }
+                    store.add(
+                        DiscussChannelMember.browse(memberOfCurrentUser.id),
+                        makeKwArgs({
+                            extra_fields: ["custom_channel_name", "message_unread_counter"],
+                        })
                     );
                 }
-                store.add(
-                    DiscussChannelMember.browse(memberOfCurrentUser.id),
-                    makeKwArgs({
-                        extra_fields: {
-                            custom_channel_name: memberOfCurrentUser.custom_channel_name,
-                            message_unread_counter: true,
-                        },
-                    })
+                if (channel.channel_type !== "channel") {
+                    const otherMembers = members.filter(
+                        (member) => member.id !== memberOfCurrentUser?.id
+                    );
+                    store.add(otherMembers);
+                }
+                res.rtc_session_ids = mailDataHelpers.Store.many(
+                    DiscussChannelRtcSession.browse(channel.rtc_session_ids),
+                    makeKwArgs({ extra: true, mode: "ADD" })
                 );
+                store._add_record_fields(this.browse(channel.id), res);
             }
-            if (channel.channel_type !== "channel") {
-                const otherMembers = members.filter(
-                    (member) => member.id !== memberOfCurrentUser?.id
-                );
-                store.add(otherMembers.map((member) => member.id));
-            }
-            res.rtc_session_ids = mailDataHelpers.Store.many(
-                DiscussChannelRtcSession.browse(channel.rtc_session_ids),
-                "ADD",
-                makeKwArgs({ extra: true })
-            );
-            store.add(this.browse(channel.id), res);
         }
     }
 
@@ -798,7 +796,7 @@ export class DiscussChannel extends models.ServerModel {
         );
         const member_count = DiscussChannelMember.search_count([["channel_id", "in", ids]]);
         return new mailDataHelpers.Store(this.browse(ids[0]), { member_count })
-            .add(members)
+            .add(DiscussChannelMember.browse(members))
             .get_result();
     }
 
