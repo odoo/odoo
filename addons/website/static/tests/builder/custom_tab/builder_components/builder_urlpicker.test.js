@@ -64,7 +64,7 @@ after(() => {
 test("link button opens in new window if url not empty", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+        template: xml`<WebsiteUrlPicker dataAttributeAction="'url'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -85,7 +85,7 @@ test("opens dropdown when typing /", async () => {
     });
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+        template: xml`<WebsiteUrlPicker dataAttributeAction="'url'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -100,7 +100,7 @@ test("selects and commits value from dropdown", async () => {
     mockGetSuggestedLinks();
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+        template: xml`<WebsiteUrlPicker dataAttributeAction="'url'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -117,7 +117,7 @@ test("collects anchors in current page and suggests them", async () => {
     mockGetSuggestedLinks();
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
+        template: xml`<WebsiteUrlPicker dataAttributeAction="'url'"/>`,
     });
     await setupWebsiteBuilder(`
         <div class="test-options-target">b</div>

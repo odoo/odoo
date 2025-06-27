@@ -2,7 +2,7 @@ import { REPLACE_MEDIA } from "@html_builder/utils/option_sequence";
 import {
     REPLACE_MEDIA_SELECTOR,
     REPLACE_MEDIA_EXCLUDE,
-} from "@website/builder/plugins/image/image_tool_option_plugin";
+} from "@html_builder/plugins/image/image_tool_option_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";

@@ -26,6 +26,7 @@ export function getNbColumns(columnEls, isMobile) {
 
     return Math.floor((12 - offsetSize) / colSize);
 }
+export const getRow = (el) => el.querySelector(":scope > .row");
 /**
  * Gets the first item, whether it has a mobile order or not.
  *

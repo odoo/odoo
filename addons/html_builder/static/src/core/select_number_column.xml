@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.SelectNumberColumn">
+    <BuilderSelect action="'changeColumnCount'" >
+        <BuilderSelectItem t-if="this.state.canHaveZeroColumns" actionValue="0">None</BuilderSelectItem>
+        <t t-foreach="[1, 2, 3, 4, 5, 6]" t-as="column" t-key="column_index">
+            <BuilderSelectItem actionValue="column" t-esc="column"/>
+        </t>
+        <BuilderSelectItem t-if="this.state.isCustomColumn" actionValue="'custom'">Custom</BuilderSelectItem>
+    </BuilderSelect>
+</t>
+</templates>

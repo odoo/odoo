@@ -1,4 +1,4 @@
-import { VerticalAlignmentOption } from "@website/builder/plugins/vertical_alignment_option";
+import { VerticalAlignmentOption } from "@html_builder/plugins/vertical_alignment_option";
 import { BEGIN, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";

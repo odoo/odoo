@@ -108,11 +108,27 @@ if (__DETECT_ERROR_1__.length > 0) {
     console.error("Wrong count in split before default");
 }
 
-const [SNIPPET_SPECIFIC_AFTER, SNIPPET_SPECIFIC_NEXT, SNIPPET_SPECIFIC_END, ...__DETECT_ERROR_2__] =
-    splitBetween(SNIPPET_SPECIFIC, END, 3);
+const [
+    SNIPPET_SPECIFIC_AFTER,
+    LAYOUT_COLUMN,
+    VERTICAL_ALIGNMENT,
+    SNIPPET_SPECIFIC_NEXT,
+    SNIPPET_SPECIFIC_END,
+    ...__DETECT_ERROR_2__
+] = splitBetween(SNIPPET_SPECIFIC, END, 5);
 if (__DETECT_ERROR_2__.length > 0) {
     console.error("Wrong count in split after default");
 }
+
+const [TEXT_ALIGNMENT, TITLE_LAYOUT_SIZE, WIDTH, BLOCK_ALIGN, ...__DETECT_ERROR_3__] = splitBetween(
+    AFTER_HTML_BUILDER,
+    SNIPPET_SPECIFIC_BEFORE,
+    4
+);
+if (__DETECT_ERROR_3__.length > 0) {
+    console.error("Wrong count in website split before specific");
+}
+export { TEXT_ALIGNMENT, TITLE_LAYOUT_SIZE, WIDTH, BLOCK_ALIGN };
 
 export {
     BEGIN,
@@ -125,6 +141,8 @@ export {
     SNIPPET_SPECIFIC_BEFORE,
     SNIPPET_SPECIFIC,
     SNIPPET_SPECIFIC_AFTER,
+    LAYOUT_COLUMN,
+    VERTICAL_ALIGNMENT,
     SNIPPET_SPECIFIC_NEXT,
     SNIPPET_SPECIFIC_END,
     END,
