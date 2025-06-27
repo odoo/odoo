@@ -9,7 +9,7 @@
         'l10n_fr_hr_holidays',
         'hr_work_entry_holidays',
     ],
-    'auto_install': True,
+    'auto_install': ['hr_work_entry_holidays'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
