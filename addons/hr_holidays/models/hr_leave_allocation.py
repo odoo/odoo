@@ -813,17 +813,6 @@ class HrLeaveAllocation(models.Model):
     # Business methods
     ####################################################
 
-    def action_set_to_confirm(self):
-        if any(allocation.state != 'refuse' for allocation in self):
-            raise UserError(_('Allocation state must be "Refused" in order to be reset to "To Approve".'))
-        self.write({
-            'state': 'confirm',
-            'approver_id': False,
-            'second_approver_id': False,
-        })
-        self.activity_update()
-        return True
-
     def action_approve(self):
         current_employee = self.env.user.employee_id
         allocation_to_approve = self.env['hr.leave.allocation']

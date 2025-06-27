@@ -910,22 +910,6 @@ Contracts:
     # Business methods
     ####################################################
 
-    @api.model
-    def action_open_records(self, leave_ids):
-        if len(leave_ids) == 1:
-            return {
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_id': leave_ids[0],
-                'res_model': 'hr.leave',
-            }
-        return {
-            'type': 'ir.actions.act_window',
-            'view_mode': [[False, 'list'], [False, 'form']],
-            'domain': [('id', 'in', leave_ids.ids)],
-            'res_model': 'hr.leave',
-        }
-
     def _prepare_resource_leave_vals(self):
         """Hook method for others to inject data
         """

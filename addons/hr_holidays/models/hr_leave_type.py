@@ -351,12 +351,6 @@ class HrLeaveType(models.Model):
         )
         return {holiday_status.id: count for holiday_status, count in allocations_count}
 
-    @api.depends('employee_requests')
-    def _compute_allocation_validation_type(self):
-        for leave_type in self:
-            if not leave_type.employee_requests:
-                leave_type.allocation_validation_type = 'hr'
-
     def requested_display_name(self):
         return self.env.context.get('holiday_status_display_name', True) and self.env.context.get('employee_id')
 
