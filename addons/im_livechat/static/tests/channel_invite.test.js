@@ -38,8 +38,13 @@ test("Can invite a partner to a livechat channel", async () => {
             Command.create({
                 partner_id: serverState.partnerId,
                 last_interest_dt: "2021-01-03 12:00:00",
+                livechat_member_type: "agent",
             }),
-            Command.create({ guest_id: guestId, last_interest_dt: "2021-01-03 12:00:00" }),
+            Command.create({
+                guest_id: guestId,
+                last_interest_dt: "2021-01-03 12:00:00",
+                livechat_member_type: "visitor",
+            }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
@@ -81,8 +86,8 @@ test("Available operators come first", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #1",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
     });
@@ -115,8 +120,13 @@ test("Partners invited most frequently by the current user come first", async ()
             Command.create({
                 partner_id: serverState.partnerId,
                 last_interest_dt: "2021-01-03 12:00:00",
+                livechat_member_type: "agent",
             }),
-            Command.create({ guest_id: guestId_1, last_interest_dt: "2021-01-03 12:00:00" }),
+            Command.create({
+                guest_id: guestId_1,
+                last_interest_dt: "2021-01-03 12:00:00",
+                livechat_member_type: "visitor",
+            }),
         ],
         livechat_operator_id: serverState.partnerId,
     });
@@ -128,8 +138,13 @@ test("Partners invited most frequently by the current user come first", async ()
             Command.create({
                 partner_id: serverState.partnerId,
                 last_interest_dt: "2021-01-03 11:00:00",
+                livechat_member_type: "agent",
             }),
-            Command.create({ guest_id: guestId_2, last_interest_dt: "2021-01-03 11:00:00" }),
+            Command.create({
+                guest_id: guestId_2,
+                last_interest_dt: "2021-01-03 11:00:00",
+                livechat_member_type: "visitor",
+            }),
         ],
         livechat_operator_id: serverState.partnerId,
     });
@@ -155,7 +170,10 @@ test("shows operators are in call", async () => {
     ]);
     const bobChannelId = pyEnv["discuss.channel"].create({
         channel_type: "livechat",
-        channel_member_ids: [Command.create({ partner_id: bobPartnerId })],
+        channel_member_ids: [
+            Command.create({ partner_id: bobPartnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
     });
     const [bobMemberId] = pyEnv["discuss.channel.member"].search([
         ["partner_id", "=", bobPartnerId],
@@ -169,8 +187,8 @@ test("shows operators are in call", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
     });
     await start();
@@ -199,8 +217,13 @@ test("Operator invite shows livechat_username", async () => {
             Command.create({
                 partner_id: serverState.partnerId,
                 last_interest_dt: "2021-01-03 12:00:00",
+                livechat_member_type: "agent",
             }),
-            Command.create({ guest_id: guestId_1, last_interest_dt: "2021-01-03 12:00:00" }),
+            Command.create({
+                guest_id: guestId_1,
+                last_interest_dt: "2021-01-03 12:00:00",
+                livechat_member_type: "visitor",
+            }),
         ],
         livechat_operator_id: serverState.partnerId,
     });
