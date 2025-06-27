@@ -1,7 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { sprintf } from "@web/core/utils/strings";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
@@ -139,7 +138,7 @@ export class PaymentVivaCom extends PaymentInterface {
         if (isPaymentSuccessful) {
             this.handleSuccessResponse(line, notification);
         } else {
-            this._show_error(sprintf(_t("Message from Viva.com: %s"), notification.error));
+            this._show_error(_t("Message from Viva.com: %s", notification.error));
         }
 
         // when starting to wait for the payment response we create a promise

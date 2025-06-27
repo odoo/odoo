@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { helpers, registries, EvaluationError } from "@odoo/o-spreadsheet";
-import { sprintf } from "@web/core/utils/strings";
 
 const { arg, toString, toNumber } = helpers;
 const { functionRegistry } = registries;
@@ -11,7 +10,7 @@ const { functionRegistry } = registries;
 
 function assertListsExists(listId, getters) {
     if (!getters.isExistingList(listId)) {
-        throw new EvaluationError(sprintf(_t('There is no list with id "%s"'), listId));
+        throw new EvaluationError(_t('There is no list with id "%s"', listId));
     }
 }
 

@@ -1,5 +1,4 @@
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 import { browser } from "@web/core/browser/browser";
 import { fields, Record } from "./record";
 import { debounce } from "@web/core/utils/timing";
@@ -147,7 +146,7 @@ export class Settings extends Record {
     getMuteUntilText(dt) {
         if (dt) {
             return dt.year <= luxon.DateTime.now().year + 2
-                ? sprintf(_t(`Until %s`), dt.toLocaleString(luxon.DateTime.DATETIME_MED))
+                ? _t(`Until %s`, dt.toLocaleString(luxon.DateTime.DATETIME_MED))
                 : _t("Until I turn it back on");
         }
         return undefined;
