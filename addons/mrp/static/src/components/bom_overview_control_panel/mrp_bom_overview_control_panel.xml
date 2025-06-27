@@ -3,20 +3,16 @@
 
     <t t-name="mrp.BomOverviewControlPanel">
         <ControlPanel display="controlPanelDisplay">
-            <t t-if="props.showOptions.mode == 'forecast'" t-set-slot="control-panel-create-button">
-                <button t-on-click="manufactureFromBoM" type="button" class="btn btn-primary">Manufacture</button>
+            <t t-set-slot="control-panel-create-button">
+                <button t-if="props.showOptions.mode == 'forecast'" t-on-click="manufactureFromBoM" type="button" class="btn btn-primary">Manufacture</button>
             </t>
             <t t-set-slot="control-panel-always-buttons">
-                <div class="o_cp_buttons">
-                    <div class="o_list_buttons o_mrp_bom_report_buttons d-xl-flex gap-xl-1">
-                        <button t-on-click="() => this.props.print()" type="button" class="btn btn-secondary">Print</button>
-                        <!-- <t t-if="props.showVariants"> commented, waiting for ui update
-                            <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-secondary text-nowrap">Print All Variants</button>
-                        </t>
-                        </t> -->
-                        <button t-if="props.foldable" t-on-click="clickTogglefold" type="button" class="btn btn-secondary" t-esc="foldButtonText"/>
-                    </div>
-                </div>
+                <button t-on-click="() => this.props.print()" type="button" class="btn btn-secondary">Print</button>
+                <!-- <t t-if="props.showVariants"> commented, waiting for ui update
+                    <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-secondary text-nowrap">Print All Variants</button>
+                </t>
+                </t> -->
+                <button t-if="props.foldable" t-on-click="clickTogglefold" type="button" class="btn btn-secondary" t-esc="foldButtonText"/>
             </t>
             <t t-set-slot="layout-actions">
                 <div t-if="props.showVariants" class="input-group align-items-center">

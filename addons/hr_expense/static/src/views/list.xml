@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="hr_expense.ListButtons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
-
-       <!-- hr.expense -->
-        <xpath expr="//div[hasclass('o_list_buttons')]" position="attributes">
-            <!-- Ensure that dropdown items show vertically and not side-by-side -->
-            <attribute name="class" remove="d-flex" separator=" "/>
-            <attribute name="class" add="d-block d-xl-flex" separator=" "/>
-        </xpath>
-        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+        <xpath expr="." position="inside">
             <button t-if="displaySubmit()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_submit')">
                 Submit
             </button>

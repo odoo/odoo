@@ -40,15 +40,13 @@
                 t-on-click="() =>this.onClick('action_refuse')"
                 data-hotkey="x">Refuse</button>
         </xpath>
-        <xpath expr="//div" position="inside">
-            <div class="ms-auto d-flex gap-1">
-                <button class="btn btn-danger" t-if="canDelete" t-on-click="deleteRecord" data-hotkey="v">
-                    Delete Time Off
-                </button>
-                <button class="btn btn-danger" t-if="canCancel" t-on-click="cancelRecord" data-hotkey="x">
-                    Cancel Time Off
-                </button>
-            </div>
+        <xpath expr="." position="inside">
+            <button class="btn btn-danger ms-auto" t-if="canDelete" t-on-click="deleteRecord" data-hotkey="v">
+                Delete Time Off
+            </button>
+            <button class="btn btn-danger" t-att-class="{'ms-auto': !canDelete}" t-if="canCancel" t-on-click="cancelRecord" data-hotkey="x">
+                Cancel Time Off
+            </button>
         </xpath>
     </t>
 </templates>
