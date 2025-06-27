@@ -6548,3 +6548,35 @@ class AccountMove(models.Model):
         :returns: True if commit is acceptable, False otherwise.
         """
         return not modules.module.current_test
+
+    @api.model
+    def get_import_templates(self):
+        move_type = self.env.context.get('default_move_type')
+        match move_type:
+            case 'entry':
+                return [{
+                    'label': _('Import Template for Misc. Operations'),
+                    'template': '/account/static/xls/misc_operations_import_template.xlsx',
+                }]
+            case 'out_invoice':
+                return [{
+                    'label': _('Import Template for Invoices'),
+                    'template': '/account/static/xls/customer_invoices_credit_notes_import_template.xlsx',
+                }]
+            case 'out_refund':
+                return [{
+                    'label': _('Import Template for Credit Notes'),
+                    'template': '/account/static/xls/customer_invoices_credit_notes_import_template.xlsx',
+                }]
+            case 'in_invoice':
+                return [{
+                    'label': _('Import Template for Bills'),
+                    'template': '/account/static/xls/vendor_bills_refunds_import_template.xlsx',
+                }]
+            case 'in_refund':
+                return [{
+                    'label': _('Import Template for Refunds'),
+                    'template': '/account/static/xls/vendor_bills_refunds_import_template.xlsx',
+                }]
+            case _:
+                return []
