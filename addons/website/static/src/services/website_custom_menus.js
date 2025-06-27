@@ -101,19 +101,39 @@ registry.category('website_custom_menus').add('website.menu_page_properties', {
         const mainObject = website.currentWebsite.metadata.mainObject;
         const isPage = mainObject.model === "website.page";
         const model = isPage ? "website.page.properties" : "website.page.properties.base";
+        const websiteId = website.currentWebsite.id;
+        // Do not rely on window.location.pathname: while the editor boots it can
+        // still be "/web" or even empty, which would give the dialog a wrong URL.
+        // website.currentLocation already tracks the actual page (without the
+        // language prefix), so we reuse it and fall back to the metadata path,
+        // forcing a leading '/' for extra safety. This keeps the wizard working
+        // even if the user opens it as soon as the builder loads.
+        const getNormalizedPath = () => {
+            let path = website.currentLocation;
+            if (!path) {
+                try {
+                    path = new URL(website.currentWebsite.metadata.path).pathname;
+                } catch {
+                    path = website.currentWebsite.metadata.path || '/';
+                }
+            }
+            if (path && !path.startsWith('/')) {
+                path = `/${path}`;
+            }
+            return path || '/';
+        };
+        const recordValues = isPage
+            ? {
+                  target_model_id: mainObject.id,
+                  website_id: websiteId,
+              }
+            : {
+                  target_model_id: `${mainObject.model},${mainObject.id}`,
+                  url: getNormalizedPath(),
+                  website_id: websiteId,
+              };
         return {
-            resId: await orm.call(model, "create", [
-                isPage
-                    ? {
-                          target_model_id: mainObject.id,
-                          website_id: website.currentWebsite.id,
-                      }
-                    : {
-                          target_model_id: `${mainObject.model},${mainObject.id}`,
-                          url: window.location.pathname,
-                          website_id: website.currentWebsite.id,
-                      },
-            ]),
+            resId: await orm.call(model, "create", [recordValues]),
             resModel: model,
             onRecordSaved: async (record) => {
                 const page = isPage

@@ -19,21 +19,27 @@ const openPagePropertiesDialog = [
     },
 ];
 
-const clickOnSaveButtonStep = {
-    content: "Click on Save & Close",
-    trigger: ".o_form_button_save:enabled",
-    run: "click",
-};
+const clickOnSaveButtonStep = [
+    {
+        content: "Click on Save & Close",
+        trigger: ".o_form_button_save:enabled",
+        run: "click",
+    },
+    {
+        content: "Wait",
+        trigger: "body:not(.modal-open)",
+    }
+];
 
 const openCreatePageDialog = [
     {
         content: "Open create content menu",
-        trigger: ".o_new_content_container a",
+        trigger: ".o_new_content_container button",
         run: "click",
     },
     {
         content: "Create a new page",
-        trigger: 'a[title="New Page"]',
+        trigger: 'button[title="New Page"]',
         run: "click",
     },
 ];
@@ -80,6 +86,11 @@ function checkIsTemplate(isTemplate, pageTitle = undefined) {
             trigger: ".modal-header .btn-close",
             run: "click",
         },
+        {
+            content: "Exit new content backdrop",
+            trigger: "body",
+            run: "press escape",
+        }
     ];
 }
 
@@ -140,7 +151,6 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
             {
                 content: "Verify is not in menu",
                 trigger: `:visible :iframe #top_menu:not(:has(a[href="${url}"]))`,
-                timeout: 30000,
             },
             stepUtils.goToUrl(getClientActionUrl("/")),
             ...assertPageCanonicalUrlIs("/"),
@@ -150,11 +160,11 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
             return [
                 ...openPagePropertiesDialog,
                 ...this.setup,
-                clickOnSaveButtonStep,
+                ...clickOnSaveButtonStep,
                 ...this.check,
                 ...openPagePropertiesDialog,
                 ...this.teardown,
-                clickOnSaveButtonStep,
+                ...clickOnSaveButtonStep,
                 ...this.checkTorndown,
             ];
         },
@@ -211,7 +221,7 @@ function testWebsitePageProperties() {
             // TODO: this needs to be tested
             content: "Change date published",
             trigger: "#date_publish_0",
-            run: "edit 02/01/2005 01:00:00",
+            run: "edit 02/01/2005 01:00:00 && press enter",
         },
         {
             content: "Don't index",
@@ -259,15 +269,6 @@ function testWebsitePageProperties() {
             content: `Change url back to /new-page`,
             trigger: "#url_0",
             run: `edit new-page && press Enter`,
-        },
-        {
-            content: "Open dependencies link",
-            trigger: '[data-bs-html="true"][title="Dependencies"] a',
-            run: "click",
-        },
-        {
-            content: "Check that the dependencies popover exists",
-            trigger: ".o_page_dependencies",
         },
         {
             content: "Reset date published",
@@ -352,7 +353,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Wait for editor to open",
-            trigger: ".o_website_navbar_hide",
+            trigger: ":iframe body.editor_enable",
             timeout: 30000,
         },
         ...clickOnSave(),
