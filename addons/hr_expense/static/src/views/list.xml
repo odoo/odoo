@@ -9,7 +9,6 @@
             <attribute name="class" add="d-block d-xl-flex" separator=" "/>
         </xpath>
         <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
-            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput"/>
             <button t-if="displaySubmit()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_submit')">
                 Submit
             </button>
@@ -24,6 +23,7 @@
 
     <t t-name="hr_expense.ListView" t-inherit="web.ListView" t-inherit-mode="primary">
         <xpath expr="//button[hasclass('o_list_button_add')]" position="before">
+            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput"/>
             <button t-if="!env.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
                 Upload
             </button>
