@@ -85,6 +85,36 @@ test("change action of form changes available options", async () => {
     expect("div:has(>span:contains('URL')) + div input").toHaveValue("/contactus-thank-you");
 });
 
+test("field's name stays after modifying the options list", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(
+        `<section class="s_website_form pt16 pb16 o_colored_level" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+            <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" 
+                data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you" contenteditable="false">
+                <div class="s_website_form_rows row s_col_no_bgcolor">
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_required" data-type="many2one">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oyeqnysxh10b">
+                                <span class="s_website_form_label_content">Author</span>
+                            </label>
+                            <div class="col-sm">
+                                <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="author_id" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </section>`
+    );
+
+    expect(":iframe section select.s_website_form_input").toHaveAttribute("name", "author_id");
+    await contains(":iframe section span:contains(Author)").click();
+    await contains("button.builder_list_add_item").click();
+    expect(":iframe section select.s_website_form_input").toHaveAttribute("name", "author_id");
+});
+
 test("undo redo add form field", async () => {
     onRpc("get_authorized_fields", () => ({}));
     const { getEditor } = await setupWebsiteBuilder(
