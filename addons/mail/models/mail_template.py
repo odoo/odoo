@@ -217,6 +217,7 @@ class MailTemplate(models.Model):
                 try:
                     template._render_field(fname, record.ids, options=render_options)
                 except Exception as e:
+                    _logger.exception("Error while checking if template can be rendered for field %s", fname)
                     raise ValidationError(
                         _("Oops! We couldn't save your template due to an issue with this value: %(template_txt)s. Correct it and try again.",
                         template_txt=template[fname])
