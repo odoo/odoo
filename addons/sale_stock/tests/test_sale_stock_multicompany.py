@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import Command
+from odoo.exceptions import UserError
+
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import tagged
@@ -108,6 +111,28 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
         sale_order.action_confirm()
 
         self.assertTrue(sale_order.picking_ids.move_ids)
+
+    def test_order_warehouse_from_child_company(self):
+        parent_company = self.env.company
+        branch_company = self.env['res.company'].create({
+            'name': "Branch Company",
+            'parent_id': parent_company.id,
+        })
+        branch_warehouse = self.env['stock.warehouse'].create({
+            'name': "Branch WH",
+            'code': 'BWH',
+            'company_id': branch_company.id,
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'warehouse_id': branch_warehouse.id,
+            'order_line': [Command.create({'product_id': self.product.id})],
+        })
+        order.action_confirm()
+
+        self.assertTrue(order.picking_ids.move_ids)
+        with self.assertRaises(UserError, msg="Warehouse company should relate to SO company"):
+            order.copy({'warehouse_id': self.warehouse_B.id})
 
     def test_intercompany_transfer_sale_order_workflow(self):
         company2 = self.company_data_2['company']
