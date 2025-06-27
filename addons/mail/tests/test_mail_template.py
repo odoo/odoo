@@ -34,6 +34,7 @@ class TestMailTemplate(MailCommon):
         })
 
     @users('admin')
+    @mute_logger('odoo.addons.mail.models.mail_template')
     @mute_logger('odoo.addons.mail.models.mail_render_mixin')
     def test_invalid_template_on_save(self):
         mail_template = self.env['mail.template'].create({
