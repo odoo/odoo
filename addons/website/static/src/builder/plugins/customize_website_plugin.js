@@ -34,6 +34,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "getPendingThemeRequests",
         "setPendingThemeRequests",
         "isPluginDestroyed",
+        "reloadBundles",
     ];
 
     resources = {
@@ -107,7 +108,12 @@ export class CustomizeWebsitePlugin extends Plugin {
         }
         return finalValue;
     }
-    async customizeWebsiteVariables(variables = {}, nullValue = "null", clean = false) {
+    async customizeWebsiteVariables(
+        variables = {},
+        nullValue = "null",
+        clean = false,
+        reloadBundles = true
+    ) {
         this.variablesToCustomize = Object.assign(this.variablesToCustomize, variables);
         if (!Object.keys(this.variablesToCustomize).length) {
             return;
@@ -118,7 +124,9 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }
         await this.debouncedSCSSVariablesCusto(nullValue);
-        await this.reloadBundles();
+        if (reloadBundles) {
+            await this.reloadBundles();
+        }
     }
     debouncedSCSSVariablesCusto = debounce(async (nullValue) => {
         const variables = this.variablesToCustomize;
@@ -129,7 +137,10 @@ export class CustomizeWebsitePlugin extends Plugin {
             nullValue
         );
     }, 0);
-    async customizeWebsiteColors(colors = {}, { colorType, combinationColor, nullValue } = {}) {
+    async customizeWebsiteColors(
+        colors = {},
+        { colorType, combinationColor, nullValue, resetCcOnEmpty, reloadBundles = true } = {}
+    ) {
         const baseURL = "/website/static/src/scss/options/colors/";
         colorType = colorType ? colorType + "_" : "";
         const url = `${baseURL}user_${colorType}color_palette.scss`;
@@ -148,11 +159,18 @@ export class CustomizeWebsitePlugin extends Plugin {
                 } else if (!isCSSColor(color)) {
                     finalColors[colorName] = `'${color}'`;
                 }
+            } else {
+                if (resetCcOnEmpty) {
+                    finalColors[combinationColor] = "";
+                }
+                finalColors[colorName] = "";
             }
         }
         this.colorsToCustomize = Object.assign(this.colorsToCustomize, finalColors);
         await this.debouncedSCSSColorsCusto(url, nullValue);
-        await this.reloadBundles();
+        if (reloadBundles) {
+            await this.reloadBundles();
+        }
     }
     debouncedSCSSColorsCusto = debounce(async (url, nullValue) => {
         const colors = this.colorsToCustomize;
@@ -749,19 +767,30 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
             } else {
                 colorValue = value;
             }
+            const isColorCombination = /^o_cc[12345]$/.test(value);
             await this.dependencies.customizeWebsite.customizeWebsiteColors(
                 {
                     [color]: colorValue,
                 },
-                { colorType, combinationColor, nullValue }
+                {
+                    colorType,
+                    combinationColor,
+                    nullValue,
+                    // Do not touch CC if a gradient is being set
+                    resetCcOnEmpty: !gradientValue,
+                    // Reload bundle will be handled by setting gradient
+                    reloadBundles: isColorCombination,
+                }
             );
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                [gradientColor]: gradientValue || nullValue,
-            }); // reloads bundles
+            if (!isColorCombination) {
+                await this.dependencies.customizeWebsite.customizeWebsiteVariables({
+                    [gradientColor]: gradientValue || nullValue,
+                }); // reloads bundles
+            }
         } else {
             await this.dependencies.customizeWebsite.customizeWebsiteColors(
                 { [color]: value },
-                { colorType, combinationColor, nullValue }
+                { colorType, combinationColor, resetCcOnEmpty: true, nullValue }
             );
         }
         setBuilderCSSVariables();
