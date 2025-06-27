@@ -429,10 +429,14 @@ class DiscussChannelMember(models.Model):
         :param list member_ids: List of the partner ids to invite.
         """
         self.ensure_one()
-        domain = Domain([
-            ('channel_id', '=', self.channel_id.id),
-            ('rtc_inviting_session_id', '=', False),
-            ('rtc_session_ids', '=', False),
+        domain = Domain.AND([
+            [('channel_id', '=', self.channel_id.id)],
+            [('rtc_inviting_session_id', '=', False)],
+            [('rtc_session_ids', '=', False)],
+            Domain.OR([
+                [("partner_id", "=", False)],
+                [("partner_id.user_ids.manual_im_status", "!=", "busy")],
+            ]),
         ])
         if member_ids:
             domain &= Domain('id', 'in', member_ids)

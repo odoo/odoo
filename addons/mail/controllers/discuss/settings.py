@@ -9,27 +9,24 @@ from odoo.http import request, route, Controller
 
 class DiscussSettingsController(Controller):
     @route("/discuss/settings/mute", methods=["POST"], type="jsonrpc", auth="user")
-    def discuss_mute(self, minutes, channel_id=None):
+    def discuss_mute(self, minutes, channel_id):
         """Mute notifications for the given number of minutes.
         :param minutes: (integer) number of minutes to mute notifications, -1 means mute until the user unmutes
-        :param channel_id: (integer) id of the discuss.channel record, if not set, mute for res.users.settings
+        :param channel_id: (integer) id of the discuss.channel record
         """
-        if not channel_id:
-            record = request.env['res.users.settings']._find_or_create_for_user(request.env.user)
-        else:
-            channel = request.env["discuss.channel"].browse(channel_id)
-            if not channel:
-                raise request.not_found()
-            record = channel._find_or_create_member_for_self()
-        if not record:
+        channel = request.env["discuss.channel"].browse(channel_id)
+        if not channel:
+            raise request.not_found()
+        member = channel._find_or_create_member_for_self()
+        if not member:
             raise request.not_found()
         if minutes == -1:
-            record.mute_until_dt = datetime.max
+            member.mute_until_dt = datetime.max
         elif minutes:
-            record.mute_until_dt = fields.Datetime.now() + relativedelta(minutes=minutes)
+            member.mute_until_dt = fields.Datetime.now() + relativedelta(minutes=minutes)
         else:
-            record.mute_until_dt = False
-        record._notify_mute()
+            member.mute_until_dt = False
+        member._notify_mute()
 
     @route("/discuss/settings/custom_notifications", methods=["POST"], type="jsonrpc", auth="user")
     def discuss_custom_notifications(self, custom_notifications, channel_id=None):
