@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.FeedbackScreen">
+        <div t-ref="feedback-screen" class="feedback-screen fixed-top w-100 h-100 d-flex flex-column bg-black text-white align-items-center justify-content-center" t-on-click="goToNextScreen">
+            <div class="amount-paid">Amount Paid</div>
+            <div t-ref="amount" class="amount"><PriceFormatter price="this.currentOrder.amount_total.toString()"/></div>
+        </div>
+    </t>
+</templates>
