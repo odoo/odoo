@@ -1,5 +1,4 @@
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { EvaluationError } from "@odoo/o-spreadsheet";
@@ -128,10 +127,8 @@ export function parseAccountingDate(dateRange, locale) {
         );
     } catch {
         throw new EvaluationError(
-            sprintf(
-                _t(
-                    `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`
-                ),
+            _t(
+                `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`,
                 dateRange?.value
             )
         );

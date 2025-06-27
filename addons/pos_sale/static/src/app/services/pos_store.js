@@ -1,5 +1,4 @@
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 import { parseFloat } from "@web/views/fields/parsers";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -208,10 +207,7 @@ patch(PosStore.prototype, {
         }
         const payload = await makeAwaitable(this.dialog, NumberPopup, {
             title: _t("Down Payment"),
-            subtitle: sprintf(
-                _t("Due balance: %s"),
-                this.env.utils.formatCurrency(saleOrder.amount_unpaid)
-            ),
+            subtitle: _t("Due balance: %s", this.env.utils.formatCurrency(saleOrder.amount_unpaid)),
             buttons: enhancedButtons(),
             formatDisplayedValue: (x) => (isPercentage ? `% ${x}` : x),
             feedback: (buffer) =>
