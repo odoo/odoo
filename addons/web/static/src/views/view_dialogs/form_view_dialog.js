@@ -3,7 +3,7 @@ import { useChildRef, useService } from "@web/core/utils/hooks";
 import { CallbackRecorder } from "@web/search/action_hook";
 import { View } from "@web/views/view";
 
-import { Component, onMounted } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class FormViewDialog extends Component {
     static template = "web.FormViewDialog";
@@ -97,17 +97,6 @@ export class FormViewDialog extends Component {
                 this.props.close();
             };
         }
-
-        onMounted(() => {
-            if (this.modalRef.el.querySelector(".modal-footer").childElementCount > 1) {
-                const defaultButton = this.modalRef.el.querySelector(
-                    ".modal-footer button.o-default-button"
-                );
-                if (defaultButton) {
-                    defaultButton.classList.add("d-none");
-                }
-            }
-        });
     }
 
     async discardRecord() {
