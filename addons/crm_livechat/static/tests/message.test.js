@@ -8,11 +8,11 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { defineCrmModels } from "@crm/../tests/crm_test_helpers";
 import { press } from "@odoo/hoot-dom";
+import { defineCrmLivechatModels } from "./crm_livechat_test_helpers";
 
 describe.current.tags("desktop");
-defineCrmModels();
+defineCrmLivechatModels();
 
 test("Can open lead from internal link", async () => {
     const pyEnv = await startServer();
@@ -20,8 +20,8 @@ test("Can open lead from internal link", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,

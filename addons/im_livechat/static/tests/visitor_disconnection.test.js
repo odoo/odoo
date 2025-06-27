@@ -37,8 +37,8 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
     const channel_id = pyEnv["discuss.channel"].create({
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,

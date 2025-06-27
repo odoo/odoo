@@ -27,8 +27,8 @@ test("can create a lead from the thread action after the conversation ends", asy
     const channel_id = pyEnv["discuss.channel"].create({
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         livechat_operator_id: serverState.partnerId,
     });

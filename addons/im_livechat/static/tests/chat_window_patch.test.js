@@ -26,10 +26,12 @@ test("can fold livechat chat windows in mobile", async () => {
             Command.create({
                 unpin_dt: false,
                 partner_id: serverState.partnerId,
+                livechat_member_type: "agent",
             }),
-            Command.create({ partner_id: partnerId }),
+            Command.create({ partner_id: partnerId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
+        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -53,18 +55,21 @@ test("closing a chat window with no message from admin side unpins it", async ()
             Command.create({
                 unpin_dt: false,
                 partner_id: serverState.partnerId,
+                livechat_member_type: "agent",
             }),
-            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_1, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
+        livechat_operator_id: serverState.partnerId,
     });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({
                 unpin_dt: false,
                 partner_id: serverState.partnerId,
+                livechat_member_type: "agent",
             }),
-            Command.create({ partner_id: partnerId_2 }),
+            Command.create({ partner_id: partnerId_2, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
         livechat_end_dt: serializeDate(today()),
@@ -92,8 +97,9 @@ test("Focus should not be stolen when a new livechat open", async () => {
             channel_member_ids: [
                 Command.create({
                     partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
                 }),
-                Command.create({ guest_id: guestId }),
+                Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
         },
@@ -125,9 +131,9 @@ test("do not ask confirmation if other operators are present", async () => {
     const otherOperatorId = pyEnv["res.partner"].create({ name: "John" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
-            Command.create({ partner_id: otherOperatorId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+            Command.create({ partner_id: otherOperatorId, livechat_member_type: "agent" }),
         ],
         livechat_operator_id: serverState.partnerId,
         channel_type: "livechat",

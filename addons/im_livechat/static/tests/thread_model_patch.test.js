@@ -28,8 +28,8 @@ test("Thread name unchanged when inviting new users", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #20",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
@@ -54,8 +54,8 @@ test("Can set a custom name to livechat conversation", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #20",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
@@ -79,8 +79,8 @@ test("Display livechat custom username if defined", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #20",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
@@ -103,8 +103,8 @@ test("Display livechat custom name in typing status", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #20",
         channel_member_ids: [
-            Command.create({ partner_id: partnerId }),
-            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId, livechat_member_type: "agent" }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: partnerId,
