@@ -2040,6 +2040,7 @@
             <field name="res_model">account.move</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
+            <field name="context">{'default_move_type': 'entry'}</field>
         </record>
 
         <record model="ir.actions.server" id="action_move_switch_move_type">
