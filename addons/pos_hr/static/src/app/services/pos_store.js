@@ -53,17 +53,22 @@ patch(PosStore.prototype, {
 
         return order;
     },
-    setCashier(employee) {
-        super.setCashier(employee);
-
+    setCashierUpdateSession(employee) {
         if (this.config.module_pos_hr) {
-            if (!this.data.network.offline) {
+            if (navigator.onLine) {
                 this.data.write("pos.session", [this.config.current_session_id.id], {
                     employee_id: employee.id,
                 });
             } else {
                 this.employeeBuffer.push(employee);
             }
+        }
+    },
+    setCashier(employee) {
+        super.setCashier(employee);
+
+        if (this.config.module_pos_hr) {
+            this.setCashierUpdateSession(employee);
             const o = this.getOrder();
             if (o && !o.getOrderlines().length) {
                 // Order without lines can be considered to be un-owned by any employee.
