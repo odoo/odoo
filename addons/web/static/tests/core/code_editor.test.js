@@ -102,7 +102,7 @@ test("CodeEditor shouldn't accepts markup values", async () => {
     }
 
     const codeEditor = await mountWithCleanup(GrandParent);
-    const textMarkup = markup("<div>Some Text</div>");
+    const textMarkup = markup`<div>Some Text</div>`;
 
     codeEditor.state.value = textMarkup;
     await animationFrame();

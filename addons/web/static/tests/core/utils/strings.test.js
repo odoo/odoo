@@ -9,7 +9,6 @@ import {
     isEmail,
     isNumeric,
     sprintf,
-    odoomark,
 } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 
@@ -129,26 +128,4 @@ test("isNumeric", () => {
     expect(isNumeric("12.34")).toBe(false);
 
     expect(isNumeric("1234")).toBe(true);
-});
-
-test("odoomark", () => {
-    expect(odoomark("").toString()).toBe("");
-    expect(odoomark("**test**").toString()).toBe("<b>test</b>");
-    expect(odoomark("**test** something else **test**").toString()).toBe(
-        "<b>test</b> something else <b>test</b>"
-    );
-    expect(odoomark("--test--").toString()).toBe("<span class='text-muted'>test</span>");
-    expect(odoomark("--test-- something else --test--").toString()).toBe(
-        "<span class='text-muted'>test</span> something else <span class='text-muted'>test</span>"
-    );
-    expect(odoomark("`test`").toString()).toBe(
-        `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span>`
-    );
-    expect(odoomark("`test` something else `test`").toString()).toBe(
-        `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span> something else <span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span>`
-    );
-    expect(odoomark("test\ttest2").toString()).toBe(
-        `test<span style="margin-left: 2em"></span>test2`
-    );
-    expect(odoomark("test\ntest2").toString()).toBe("test<br/>test2");
 });

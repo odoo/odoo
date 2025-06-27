@@ -1,8 +1,9 @@
-import { htmlEscape, markup } from "@odoo/owl";
+import { markup } from "@odoo/owl";
 
 import { formatList } from "@web/core/l10n/utils";
 import { isIterable } from "@web/core/utils/arrays";
 import { Deferred } from "@web/core/utils/concurrency";
+import { htmlSprintf } from "@web/core/utils/html";
 import { isObject } from "@web/core/utils/objects";
 import { sprintf } from "@web/core/utils/strings";
 
@@ -35,7 +36,7 @@ const Markup = markup().constructor;
  * _t("Good morning"); // "Bonjour"
  * _t("Good morning %s", user.name); // "Bonjour Marc"
  * _t("Good morning %(newcomer)s, goodbye %(departer)s", { newcomer: Marc, departer: Mitchel }); // Bonjour Marc, au revoir Mitchel
- * _t("I love %s", markup("<blink>Minecraft</blink>")); // Markup {"J'adore <blink>Minecraft</blink>"}
+ * _t("I love %s", markup`<blink>Minecraft</blink>`); // Markup {"J'adore <blink>Minecraft</blink>"}
  * _t("Good morning %s!", ["Mitchell", "Marc", "Louis"]); // Bonjour Mitchell, Marc et Louis !
  *
  * @param {string} term
@@ -136,25 +137,7 @@ function _safeFormatAndSprintf(str, ...values) {
         hasMarkup ||= value instanceof Markup;
     }
     if (hasMarkup) {
-        return markup(sprintf(htmlEscape(str), ..._escapeNonMarkup(values)));
+        return htmlSprintf(str, ...values);
     }
     return sprintf(str, ...values);
-}
-
-/**
- * Go through each value to be passed to sprintf and escape anything that isn't
- * a markup.
- *
- * @param {any[]|[Object]} values Values for use with sprintf.
- * @returns {any[]|[Object]}
- */
-function _escapeNonMarkup(values) {
-    if (isObject(values[0])) {
-        const sanitized = {};
-        for (const [key, value] of Object.entries(values[0])) {
-            sanitized[key] = htmlEscape(value);
-        }
-        return [sanitized];
-    }
-    return values.map((x) => htmlEscape(x));
 }

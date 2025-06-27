@@ -5385,7 +5385,7 @@ test(`custom delete confirmation dialog`, async () => {
     class CautiousController extends listView.Controller {
         get deleteConfirmationDialogProps() {
             const props = super.deleteConfirmationDialogProps;
-            props.body = markup(`<span class="text-danger">These are the consequences</span>`);
+            props.body = markup`<span class="text-danger">These are the consequences</span>`;
             return props;
         }
     }

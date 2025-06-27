@@ -1,5 +1,6 @@
 import { htmlEscape, markup } from "@odoo/owl";
 
+import { escapeRegExp, sprintf } from "@web/core/utils/strings";
 import { formatList } from "../l10n/utils";
 
 const Markup = markup().constructor;
@@ -26,6 +27,35 @@ export function createElementWithContent(elementName, content) {
     const element = document.createElement(elementName);
     setElementContent(element, content);
     return element;
+}
+
+/**
+ * Returns a markuped version of the input text where
+ * the query is highlighted using the input classes
+ * if it is part of the text.
+ *
+ * @param {string | ReturnType<markup>} query
+ * @param {string | ReturnType<markup>} text
+ * @param {string | ReturnType<markup>} classes
+ * @returns {string | ReturnType<markup>}
+ */
+export function highlightText(query, text, classes) {
+    if (!query) {
+        return text;
+    }
+    const regex = new RegExp(
+        `(${escapeRegExp(htmlEscape(query))})+(?=(?:[^>]*<[^<]*>)*[^<>]*$)`,
+        "ig"
+    );
+    return htmlReplace(text, regex, (_, match) => {
+        /**
+         * markup: text is a Markup object (either escaped inside htmlReplace or
+         * flagged safe), `match` is directly coming from this value,
+         * and the regex doesn't do anything crazy to unescape it.
+         */
+        match = markup(match);
+        return markup`<span class="${classes}">${match}</span>`;
+    });
 }
 
 /**
@@ -107,6 +137,43 @@ export function htmlJoin(list, separator = "") {
 }
 
 /**
+ * Same behavior as sprintf, but produces safe HTML. If the string or values are flagged as safe HTML
+ * using `markup()` they are set as it is. Otherwise they are escaped.
+ *
+ * @param {string} str The string with placeholders (%s) to insert values into.
+ * @param  {...any} values Primitive values to insert in place of placeholders.
+ * @returns {string|Markup}
+ */
+export function htmlSprintf(str, ...values) {
+    const valuesDict = values[0];
+    if (
+        valuesDict &&
+        Object.prototype.toString.call(valuesDict) === "[object Object]" &&
+        !(valuesDict instanceof Markup)
+    ) {
+        // markup: escaped base string and values (assuming sprintf itself is safe)
+        return markup(
+            sprintf(
+                htmlEscape(str).toString(),
+                Object.fromEntries(
+                    Object.entries(valuesDict).map(([key, value]) => [
+                        key,
+                        htmlEscape(value).toString(),
+                    ])
+                )
+            )
+        );
+    }
+    // markup: escaped base string and values (assuming sprintf itself is safe)
+    return markup(
+        sprintf(
+            htmlEscape(str).toString(),
+            values.map((value) => htmlEscape(value).toString())
+        )
+    );
+}
+
+/**
  * Applies string trim on content and returns a markup result built for HTML.
  *
  * @param {string|ReturnType<markup>} content
@@ -131,6 +198,64 @@ export function htmlTrim(content) {
  */
 export function isHtmlEmpty(content = "") {
     return createElementWithContent("div", content).textContent.trim() === "";
+}
+
+/**
+ * Format the text as follow:
+ *      \*\*text\*\* => Put the text in bold.
+ *      --text-- => Put the text in muted.
+ *      \`text\` => Put the text in a rounded badge (bg-primary).
+ *      \n => Insert a breakline.
+ *      \t => Insert 4 spaces.
+ *
+ * @param {string|ReturnType<markup>} text
+ * @returns {string|ReturnType<markup>} the formatted text
+ */
+export function odoomark(text) {
+    const replacements = [
+        [/\n/g, () => markup`<br/>`],
+        [/\t/g, () => markup`<span style="margin-left: 2em"></span>`],
+        [
+            /\*\*(.+?)\*\*/g,
+            (_, bold) => {
+                /**
+                 * markup: text is a Markup object (either escaped inside htmlReplace or
+                 * flagged safe), `bold` is directly coming from this value,
+                 * and the regex doesn't do anything crazy to unescape it.
+                 */
+                markup(bold);
+                return markup`<b>${bold}</b>`;
+            },
+        ],
+        [
+            /--(.+?)--/g,
+            (_, muted) => {
+                /**
+                 * markup: text is a Markup object (either escaped inside htmlReplace or
+                 * flagged safe), `muted` is directly coming from this value,
+                 * and the regex doesn't do anything crazy to unescape it.
+                 */
+                muted = markup(muted);
+                return markup`<span class='text-muted'>${muted}</span>`;
+            },
+        ],
+        [
+            /&#x60;(.+?)&#x60;/g,
+            (_, tag) => {
+                /**
+                 * markup: text is a Markup object (either escaped inside htmlReplace or
+                 * flagged safe), `tag` is directly coming from this value,
+                 * and the regex doesn't do anything crazy to unescape it.
+                 */
+                tag = markup(tag);
+                return markup`<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">${tag}</span>`;
+            },
+        ],
+    ];
+    for (const replacement of replacements) {
+        text = htmlReplaceAll(text, replacement[0], replacement[1]);
+    }
+    return text;
 }
 
 /**
