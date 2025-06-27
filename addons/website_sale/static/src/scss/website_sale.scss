@@ -390,12 +390,7 @@ $input-border-color: $gray-400;
             }
         }
 
-        $-o-scrollbar-subdle-bg: rgba($dark, 0.05);
         transform: translateZ(0);
-
-        &.o_wsale_filmstrip_fancy_disabled {
-            scrollbar-color: currentColor $-o-scrollbar-subdle-bg;
-        }
 
         .o_wsale_filmstrip_wrapper {
             margin-bottom: map-get($spacers, 2);
@@ -405,6 +400,12 @@ $input-border-color: $gray-400;
             padding-bottom: var(--o-wsale-filmstrip-wrapper-padding-bottom, #{map-get($spacers, 1)});
             cursor: grab;
             scroll-snap-type: x mandatory;
+
+            // Firefox only scrollbar style
+            @supports (-moz-appearance:none) {
+                scrollbar-width: thin;
+                scrollbar-color: currentColor transparent;
+            }
 
             .o_wsale_filmstrip {
                 gap: var(--o-wsale-filmstrip-gap, #{map-get($spacers, 2)});
@@ -477,23 +478,25 @@ $input-border-color: $gray-400;
                     box-shadow: var(--o-wsale-filmstrip-item-box-shadow-hover, none);
                 }
             }
-
-            &::-webkit-scrollbar {
-                height: 2px;
-            }
-
-            &::-webkit-scrollbar-thumb {
-                border-radius: $btn-border-radius-sm;
-                background: currentColor;
-            }
-
-            &::-webkit-scrollbar-track {
-                background: $-o-scrollbar-subdle-bg;
-            }
         }
 
-        &:not(.o_wsale_filmstrip_fancy_disabled):hover {
+        &:where(:not(.o_wsale_filmstrip_fancy_disabled)) {
             .o_wsale_filmstrip_wrapper {
+                &::-webkit-scrollbar {
+                    height: 2px;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    border-radius: $btn-border-radius-sm;
+                    background: currentColor;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: rgba($dark, 0.05);
+                }
+            }
+
+            &:hover .o_wsale_filmstrip_wrapper {
                 margin-bottom: map-get($spacers, 1);
 
                 &::-webkit-scrollbar {
