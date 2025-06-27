@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Add stat button for linked projects -->
+    <record id="crm_lead_view_form" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.crm.project</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field name="arch" type="xml">
+            <button name="action_schedule_meeting" position="after">
+                <button
+                    name="action_view_project_ids"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-check"
+                    groups="project.group_project_user"
+                    invisible="not project_count"
+                >
+                    <div class="o_stat_info">
+                        <div class="o_row">
+                            <span class="o_stat_value order-first">
+                                <field name="project_count"/>
+                            </span>
+                            <span class="o_stat_text"> Projects</span>
+                        </div>
+                        <div class="o_row">
+                            <span class="o_stat_value order-first">
+                                <field name="task_count"/>
+                            </span>
+                            <span class="o_stat_text"> Tasks</span>
+                        </div>
+                    </div>
+                </button>
+            </button>
+        </field>
+    </record>
+
+</odoo>
