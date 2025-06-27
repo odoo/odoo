@@ -2,7 +2,6 @@ import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
-import { sprintf } from "@web/core/utils/strings";
 const { DateTime } = luxon;
 
 export class PaymentAdyen extends PaymentInterface {
@@ -55,7 +54,7 @@ export class PaymentAdyen extends PaymentInterface {
 
     _adyenGetSaleId() {
         var config = this.pos.config;
-        return sprintf("%s (ID: %s)", config.display_name, config.id);
+        return `${config.display_name} (ID: ${config.id})`;
     }
 
     _adyenCommonMessageHeader() {
@@ -159,9 +158,9 @@ export class PaymentAdyen extends PaymentInterface {
         return output_text.reduce((acc, entry) => {
             var params = new URLSearchParams(entry.Text);
             if (params.get("name") && !params.get("value")) {
-                return acc + sprintf("\n%s", params.get("name"));
+                return acc + "\n" + params.get("name");
             } else if (params.get("name") && params.get("value")) {
-                return acc + sprintf("\n%s: %s", params.get("name"), params.get("value"));
+                return `${acc}\n${params.get("name")}: ${params.get("value")}`;
             }
 
             return acc;
@@ -230,9 +229,7 @@ export class PaymentAdyen extends PaymentInterface {
         if (isPaymentSuccessful) {
             this.handleSuccessResponse(line, notification, additional_response);
         } else {
-            this._show_error(
-                sprintf(_t("Message from Adyen: %s"), additional_response.get("message"))
-            );
+            this._show_error(_t("Message from Adyen: %s", additional_response.get("message")));
         }
         // when starting to wait for the payment response we create a promise
         // that will be resolved when the payment response is received.
