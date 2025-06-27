@@ -323,7 +323,7 @@ export class Thread extends Record {
     }
 
     get isMuted() {
-        return this.mute_until_dt || this.store.settings.mute_until_dt;
+        return this.mute_until_dt;
     }
 
     get typesAllowingCalls() {

@@ -57,7 +57,6 @@ export class Settings extends Record {
             }
         },
     });
-    mute_until_dt = fields.Datetime();
 
     // Voice settings
     // DeviceId of the audio input selected by the user

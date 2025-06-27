@@ -52,6 +52,7 @@ export class ResUsers extends webModels.ResUsers {
                         fields: [
                             "active",
                             "avatar_128",
+                            "im_status",
                             "is_admin",
                             "name",
                             "notification_type",

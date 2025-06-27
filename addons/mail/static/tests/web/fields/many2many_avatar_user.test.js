@@ -282,6 +282,7 @@ test("avatar card preview", async () => {
                 return {
                     registerToImStatus() {},
                     unregisterFromImStatus() {},
+                    updateBusPresence() {},
                 };
             },
         },

@@ -702,7 +702,7 @@ class DiscussChannel(models.Model):
             [("partner_id", "!=", author_id)],
             [("partner_id.active", "=", True)],
             [("mute_until_dt", "=", False)],
-            [("partner_id.user_ids.res_users_settings_ids.mute_until_dt", "=", False)],
+            [("partner_id.user_ids.manual_im_status", "!=", "busy")],
             Domain.OR([
                 [("channel_id.channel_type", "!=", "channel")],
                 Domain.AND([
