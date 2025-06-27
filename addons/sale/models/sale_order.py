@@ -1182,6 +1182,8 @@ class SaleOrder(models.Model):
         """
         for order in self:
             mail_template = order._get_confirmation_template()
+            salesperson = self.env['website'].get_current_website().salesperson_id
+            mail_template = mail_template.with_user(salesperson)
             order._send_order_notification_mail(mail_template)
 
     def _send_payment_succeeded_for_order_mail(self):
@@ -1227,7 +1229,7 @@ class SaleOrder(models.Model):
             # Send the email synchronously.
             self.with_context(force_send=True).message_post_with_source(
                 mail_template,
-                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                email_layout_xmlid='mail.mail_notification_layout_with_footer_and_powered_by',
                 subtype_xmlid='mail.mt_comment',
             )
 
