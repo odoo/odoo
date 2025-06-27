@@ -27,6 +27,8 @@ import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 
+const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-steps"];
+
 /**
  * Check whether the current value contains nodes that would break
  * on insertion inside an existing body.
@@ -361,3 +363,23 @@ export const htmlField = {
 };
 
 registry.category("fields").add("html", htmlField, { force: true });
+
+export function getHtmlFieldMetadata(content) {
+    const metadata = {};
+    for (const attribute of HTML_FIELD_METADATA_ATTRIBUTES) {
+        const regex = new RegExp(`${attribute}\\s*=\\s*"([^"]+)"`);
+        metadata[attribute] = content.match(regex)?.[1];
+    }
+    return metadata;
+}
+export function setHtmlFieldMetadata(content, metadata) {
+    const htmlContent = content.toString() || "<div></div>";
+    const parser = new DOMParser();
+    const contentDocument = parser.parseFromString(htmlContent, "text/html");
+    for (const [attribute, value] of Object.entries(metadata)) {
+        if (value) {
+            contentDocument.body.firstChild.setAttribute(attribute, value);
+        }
+    }
+    return contentDocument.body.innerHTML;
+}
