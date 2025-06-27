@@ -6,9 +6,7 @@
             <div class="o_form_view_container">
                 <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
                     <t t-set-slot="control-panel-create-button">
-                        <t t-if="canCreate">
-                            <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
-                        </t>
+                        <button t-if="canCreate" type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
                     </t>
 
                     <t t-set-slot="layout-buttons">
@@ -44,6 +42,7 @@
                             <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" />
                         </t>
                     </t>
+
                     <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" readonly="props.readonly" archInfo="archInfo" translateAlert="translateAlert" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
                 </Layout>
             </div>
@@ -51,22 +50,18 @@
     </t>
 
     <t t-name="web.FormView.Buttons">
-        <div t-if="model.root.isInEdition" class="o_form_buttons_edit d-flex gap-1">
-            <button type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
-                Save
-            </button>
-            <button type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="discard">
-                Discard
-            </button>
-            <button t-if="props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="props.removeRecord" data-hotkey="x">
-                Remove
-            </button>
-        </div>
-        <div t-elif="canCreate" class="o_form_buttons_view">
-            <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
-                New
-            </button>
-        </div>
+        <button t-if="model.root.isInEdition" type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
+            Save
+        </button>
+        <button t-if="model.root.isInEdition" type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="discard">
+            Discard
+        </button>
+        <button t-if="model.root.isInEdition and props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="props.removeRecord" data-hotkey="x">
+            Remove
+        </button>
+        <button t-if="!model.root.isInEdition and canCreate" type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
+            New
+        </button>
     </t>
 
     <t t-name="web.DefaultButtonsSlot">

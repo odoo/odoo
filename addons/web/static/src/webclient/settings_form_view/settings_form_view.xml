@@ -16,7 +16,16 @@
                 </div>
             </t>
         </xpath>
-        <xpath expr="//Layout/t[@t-set-slot='control-panel-status-indicator']" position="replace"/>
+        <xpath expr="//Layout/t[@t-set-slot='control-panel-create-button']" position="replace">
+            <t t-set-slot="control-panel-create-button">
+                <t t-call="{{ props.buttonTemplate }}"/>
+            </t>
+        </xpath>
+        <xpath expr="//Layout/t[@t-set-slot='control-panel-status-indicator']" position="replace">
+            <t t-set-slot="control-panel-status-indicator">
+                <span t-if="model.root.dirty" class="text-muted ms-2 o_dirty_warning">Unsaved changes</span>
+            </t>
+        </xpath>
         <xpath expr="//Layout/t[@t-set-slot='control-panel-additional-actions']" position="replace"/>
         <xpath expr="//Layout/t[@t-component='props.Renderer']" position="attributes">
             <attribute name="initialApp">initialApp</attribute>
@@ -28,20 +37,6 @@
                     <t t-set="description">Try searching for another keyword</t>
                 </t>
             </t>
-        </xpath>
-        <xpath expr="//Layout" position="inside">
-            <t t-set-slot="control-panel-status-indicator">
-                <t t-call="{{ props.buttonTemplate }}"/>
-            </t>
-        </xpath>
-    </t>
-
-    <t t-name="web.SettingsFormView.Buttons" t-inherit="web.FormView.Buttons" t-inherit-mode="primary">
-        <xpath expr="//div" position="attributes">
-            <attribute name="class" add="order-first w-auto" separator=" "/>
-        </xpath>
-        <xpath expr="//div" position="after">
-            <span t-if="model.root.dirty" class="text-muted ms-2 o_dirty_warning">Unsaved changes</span>
         </xpath>
     </t>
 </templates>
