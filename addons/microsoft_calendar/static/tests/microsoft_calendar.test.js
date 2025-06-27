@@ -121,5 +121,5 @@ test(`component is destroyed while sync microsoft calendar`, async () => {
 
     deferred.resolve();
     await animationFrame();
-    expect.verifySteps(["search_read"]);
+    await expect.waitForSteps(["search_read"]);
 });

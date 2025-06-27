@@ -24,7 +24,7 @@ import {
 } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
-import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -112,7 +112,6 @@ export class Message extends Component {
             });
         }
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.root);
-        this.hasTouch = hasTouch;
         this.messageBody = useRef("body");
         this.messageActions = useMessageActions({
             message: () => this.message,

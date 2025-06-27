@@ -3,9 +3,11 @@ import { advanceFrame, advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
 import { contains, getMockEnv, swipeLeft, swipeRight } from "@web/../tests/web_test_helpers";
 
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { createElement } from "@web/core/utils/xml";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { Field } from "@web/views/fields/field";
+import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
 export const DEFAULT_DATE = luxon.DateTime.local(2021, 7, 16, 8, 0, 0, 0);
 
@@ -165,6 +167,12 @@ export const FAKE_MODEL = {
     canCreate: true,
     canDelete: true,
     canEdit: true,
+    data: {
+        filterSections: {},
+        range: null,
+        records: FAKE_RECORDS,
+        unusualDays: [],
+    },
     date: DEFAULT_DATE,
     fieldMapping: {
         date_start: "start_date",
@@ -200,6 +208,10 @@ export const FAKE_MODEL = {
     },
     rangeEnd: DEFAULT_DATE.endOf("month"),
     rangeStart: DEFAULT_DATE.startOf("month"),
+    visibleRange: {
+        start: DEFAULT_DATE.startOf("month"),
+        end: DEFAULT_DATE.endOf("month"),
+    },
     records: FAKE_RECORDS,
     resModel: "event",
     scale: "month",
@@ -223,6 +235,13 @@ export const FAKE_MODEL = {
 function instantScrollTo(element) {
     element.scrollIntoView({ behavior: "instant", block: "center" });
 }
+
+async function waitForSelection() {
+    if (hasTouch()) {
+        await advanceTime(TOUCH_SELECTION_THRESHOLD);
+    }
+    await animationFrame();
+};
 
 /**
  * @param {string} date
@@ -376,12 +395,13 @@ export async function selectTimeRange(startDateTime, endDateTime) {
     const optionStart = {
         relative: true,
         position: { y: 1, x: startColumnRect.left },
+        pointerDownDuration: TOUCH_SELECTION_THRESHOLD,
     };
 
     await hover(startRow, optionStart);
     await animationFrame();
     const { drop } = await drag(startRow, optionStart);
-    await animationFrame();
+    await waitForSelection();
     await drop(endRow, {
         position: { y: -1, x: endColumnRect.left },
         relative: true,
@@ -404,8 +424,8 @@ export async function selectDateRange(startDate, endDate) {
     await hover(startCell);
     await animationFrame();
 
-    const { moveTo, drop } = await drag(startCell);
-    await animationFrame();
+    const { moveTo, drop } = await drag(startCell, {pointerDownDuration: TOUCH_SELECTION_THRESHOLD});
+    await waitForSelection();
 
     await moveTo(endCell);
     await animationFrame();
@@ -428,8 +448,8 @@ export async function selectAllDayRange(startDate, endDate) {
     await hover(start);
     await animationFrame();
 
-    const { drop } = await drag(start);
-    await animationFrame();
+    const { drop } = await drag(start, {pointerDownDuration: TOUCH_SELECTION_THRESHOLD});
+    await waitForSelection();
 
     await drop(end);
     await animationFrame();
@@ -456,8 +476,8 @@ export async function moveEventToDate(eventId, date, options) {
     await hover(eventEl);
     await animationFrame();
 
-    const { drop, moveTo } = await drag(eventEl);
-    await animationFrame();
+    const { drop, moveTo } = await drag(eventEl, {pointerDownDuration: TOUCH_SELECTION_THRESHOLD});
+    await waitForSelection();
 
     await moveTo(cell);
     await animationFrame();
@@ -490,13 +510,9 @@ export async function moveEventToTime(eventId, dateTime) {
     const { drop, moveTo } = await drag(eventEl, {
         position: { y: 1 },
         relative: true,
+        pointerDownDuration: TOUCH_SELECTION_THRESHOLD
     });
-
-    if (getMockEnv().isSmall) {
-        await advanceTime(500);
-    }
-
-    await animationFrame();
+    await waitForSelection();
 
     await moveTo(row, {
         position: {
@@ -534,13 +550,9 @@ export async function moveEventToAllDaySlot(eventId, date) {
     const { drop, moveTo } = await drag(eventEl, {
         position: { y: 1 },
         relative: true,
+        pointerDownDuration: TOUCH_SELECTION_THRESHOLD
     });
-
-    if (getMockEnv().isSmall) {
-        await advanceTime(500);
-    }
-
-    await animationFrame();
+    await waitForSelection();
 
     await moveTo(slot, {
         position: {
@@ -659,11 +671,11 @@ export async function hideCalendarPanel() {
  * @returns {Promise<void>}
  */
 export async function navigate(direction) {
-    if (getMockEnv().isSmall) {
+    if (hasTouch()) {
         if (direction === "next") {
-            await swipeLeft(".o_calendar_widget");
+            await swipeLeft(".o_calendar_widget", {pointerDownDuration: 200});
         } else {
-            await swipeRight(".o_calendar_widget");
+            await swipeRight(".o_calendar_widget", {pointerDownDuration: 200});
         }
         await advanceFrame(16);
     } else {
