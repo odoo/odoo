@@ -52,6 +52,14 @@ class ProgressBarState {
     }
 
     getGroupInfo(group) {
+        if (this._pbCounts === null) {
+            // progressbar isn't loaded yet
+            return {
+                activeBar: null,
+                bars: [],
+                isReady: false,
+            };
+        }
         if (!this._groupsInfo[group.id]) {
             const aggValues = _findGroup(
                 this._aggregateValues,
@@ -122,6 +130,7 @@ class ProgressBarState {
                     return self.activeBars[group.serverValue]?.value || null;
                 },
                 bars,
+                isReady: true,
             };
 
             this._groupsInfo[group.id] = progressBar;
@@ -343,8 +352,8 @@ export function useProgressBar(progressAttributes, model, aggregateFields, activ
         new ProgressBarState(progressAttributes, model, aggregateFields, activeBars)
     );
 
-    let prom;
     const onWillLoadRoot = model.hooks.onWillLoadRoot;
+    let prom;
     model.hooks.onWillLoadRoot = (config) => {
         onWillLoadRoot();
         prom = progressBarState.loadProgressBar({
@@ -357,7 +366,10 @@ export function useProgressBar(progressAttributes, model, aggregateFields, activ
     const onRootLoaded = model.hooks.onRootLoaded;
     model.hooks.onRootLoaded = async (root) => {
         await onRootLoaded(root);
-        return prom;
+        if (model.isReady) {
+            // do not wait for the progressbar on first load, to show the kanban view asap
+            return prom;
+        }
     };
 
     return progressBarState;

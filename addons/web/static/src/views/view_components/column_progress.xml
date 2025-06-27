@@ -22,15 +22,17 @@
                 />
             </t>
         </div>
-        <AnimatedNumber
-            t-if="props.aggregate.value !== false"
-            value="props.aggregate.value"
-            title="props.aggregate.title"
-            duration="1000"
-            currency="props.aggregate.currency"
-            animationClass="props.aggregate.value > 999 ? 'o_animated_grow' : 'o_animated_grow_huge'"
-        />
-        <b t-else="" class="pe-1" t-att-data-tooltip="invalidAggregateTooltip">—</b>
+        <t t-if="props.progressBar.isReady">
+            <AnimatedNumber
+                t-if="props.aggregate.value !== false"
+                value="props.aggregate.value"
+                title="props.aggregate.title"
+                duration="1000"
+                currency="props.aggregate.currency"
+                animationClass="props.aggregate.value > 999 ? 'o_animated_grow' : 'o_animated_grow_huge'"
+            />
+            <b t-else="" class="pe-1" t-att-data-tooltip="invalidAggregateTooltip">—</b>
+        </t>
     </t>
 
 </templates>

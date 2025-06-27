@@ -25,7 +25,6 @@ export class DynamicGroupList extends DynamicList {
     }
 
     /**
-     * x
      * @param {Record<string, unknown>} data
      */
     _setData(data) {

@@ -103,7 +103,7 @@ const DEFAULT_HOOKS = {
 
 rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
     if (ev.detail.data.params?.method === "unlink") {
-        rpcBus.trigger("CLEAR-CACHES", ["web_read", "web_search_read"]);
+        rpcBus.trigger("CLEAR-CACHES", ["web_read", "web_search_read", "web_read_group"]);
     }
 });
 
@@ -290,19 +290,25 @@ export class RelationalModel extends Model {
                     }
                     const { root, loadId } = await rootLoadDef;
                     if (root.id !== this.root.id) {
-                        // The root that we want to update is not the current one. It may happen
-                        // we displayed sample data from the cache, but the rpc returned records. In
-                        // that case, we want to display those records. In all other usecases, we
-                        // simply ignore the update.
-                        if (this.useSampleModel && result.length > 0) {
+                        // The root id might have changed, either because:
+                        //  1) the user already changed the domain and a second load has been done
+                        //  2) there was no data, so we reloaded directly with the sample orm
+                        // In the first case, there's nothing to do, we can ignore this update. We
+                        // have to deal with the second case:
+                        if (this.useSampleModel) {
+                            // We displayed sample data from the cache, but the rpc returned records
+                            // or groups => leave sample mode, forget previous groups and update
                             this.useSampleModel = false;
+                            if (this.root.config.groupBy.length) {
+                                delete this.root.config.currentGroups;
+                                result = await this._postprocessReadGroup(this.root.config, result);
+                            }
                             this.root._setData(result);
                         }
                         return;
                     }
                     if (loadId !== this.root.config.loadId) {
-                        // Avoid updating if another load was already done.
-                        // For instance a sort in a list.
+                        // Avoid updating if another load was already done (e.g. a sort in a list)
                         return;
                     }
                     if (root.config.isMonoRecord) {
@@ -318,7 +324,14 @@ export class RelationalModel extends Model {
                         return root._setData(result[0]);
                     }
 
-                    // result is the response of a web_search_read rpc
+                    // multi record case: either grouped or ungrouped
+                    if (root.config.groupBy.length) {
+                        // result is the response of a web_read_group rpc
+                        // in case there're less groups, we don't want to keep displaying groups
+                        // that are no longer there => forget previous groups
+                        delete this.root.config.currentGroups;
+                        result = await this._postprocessReadGroup(root.config, result);
+                    }
                     root._setData(result);
                 },
             };
@@ -421,7 +434,7 @@ export class RelationalModel extends Model {
             return this._loadRecords({ ...config, resIds });
         }
         if (config.groupBy.length) {
-            return this._loadGroupedList(config);
+            return this._loadGroupedList(config, cached);
         }
         Object.assign(config, {
             limit: config.limit || this.initialLimit,
@@ -441,8 +454,9 @@ export class RelationalModel extends Model {
 
     /**
      * @param {RelationalModelConfig} config
+     * @param {Object} [cached]
      */
-    async _loadGroupedList(config) {
+    async _loadGroupedList(config, cached) {
         config.offset = config.offset || 0;
         config.limit = config.limit || this.initialGroupsLimit;
         if (!config.limit) {
@@ -452,6 +466,11 @@ export class RelationalModel extends Model {
         }
         config.groups = config.groups || {};
 
+        const response = await this._webReadGroup(config, cached);
+        return this._postprocessReadGroup(config, response);
+    }
+
+    async _postprocessReadGroup(config, { groups, length }) {
         const commonConfig = {
             resModel: config.resModel,
             fields: config.fields,
@@ -459,7 +478,6 @@ export class RelationalModel extends Model {
             fieldsToAggregate: config.fieldsToAggregate,
             offset: 0,
         };
-
         const extractGroups = async (currentConfig, groupsData) => {
             const groupByFieldName = currentConfig.groupBy[0].split(":")[0];
             if (groupByFieldName.includes(".")) {
@@ -563,8 +581,7 @@ export class RelationalModel extends Model {
             return groups;
         };
 
-        const response = await this._webReadGroup(config);
-        const groups = await extractGroups(config, response.groups);
+        groups = await extractGroups(config, groups);
 
         const params = JSON.stringify([
             config.domain,
@@ -594,7 +611,7 @@ export class RelationalModel extends Model {
         }
         config.currentGroups = { params, groups };
 
-        return { groups, length: response.length };
+        return { groups, length };
     }
 
     /**
@@ -766,7 +783,11 @@ export class RelationalModel extends Model {
         }
     }
 
-    async _webReadGroup(config) {
+    /**
+     * @param {RelationalModelConfig} config
+     * @param {Object} cached
+     */
+    async _webReadGroup(config, cached) {
         function getGroupInfo(groups) {
             return Object.values(groups).map((group) => {
                 const field = group.fields[group.groupByFieldName];
@@ -809,7 +830,7 @@ export class RelationalModel extends Model {
             }
         }
 
-        return this.orm.webReadGroup(config.resModel, config.domain, config.groupBy, aggregates, {
+        const params = {
             limit: config.limit !== Number.MAX_SAFE_INTEGER ? config.limit : undefined,
             offset: config.offset,
             order: orderByToString(config.orderBy),
@@ -819,6 +840,8 @@ export class RelationalModel extends Model {
             unfold_read_default_limit: this.initialLimit,
             groupby_read_specification: groupByReadSpecification,
             context: { read_group_expand: true, ...config.context },
-        });
+        };
+        const orm = cached ? this.orm.cached(cached) : this.orm;
+        return orm.webReadGroup(config.resModel, config.domain, config.groupBy, aggregates, params);
     }
 }
