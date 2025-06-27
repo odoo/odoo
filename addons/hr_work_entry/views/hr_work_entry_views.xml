@@ -34,6 +34,7 @@
             <form>
                 <group>
                     <field name="work_entry_type_id"/>
+                    <field name="duration" widget="float_time"/>
                 </group>
             </form>
         </field>
@@ -45,8 +46,8 @@
         <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
             <calendar string="Work Entry"
-                date_start="date_start"
-                date_stop="date_stop"
+                date_start="date"
+                date_stop="date"
                 mode="month"
                 month_overflow="0"
                 quick_create="0"
@@ -85,15 +86,14 @@
                             <field name="work_entry_type_id" readonly="state == 'validated'" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group>
-                            <field name="date_start" readonly="state != 'draft'" />
-                            <field name="date_stop" required="1" readonly="state != 'draft'"/>
+                            <field name="date" readonly="state != 'draft'"/>
                             <label for="duration"/>
                             <div class="o_row mw-50 mw-sm-25">
                                 <field name="duration"
                                     nolabel="1"
                                     widget="float_time"
                                     class="o_hr_narrow_field"
-                                    readonly="state != 'draft'" />
+                                    readonly="state != 'draft'"/>
                                 <span>Hours</span>
                             </div>
                             <field name="company_id" invisible="1"/>
@@ -113,10 +113,9 @@
                 <field name="work_entry_type_id" options="{'no_create': True, 'no_open': True}"/>
                 <field name="code" optional="hidden"/>
                 <field name="external_code" optional="hidden"/>
-                <field name="duration" widget="float_time" readonly="1"/>
+                <field name="duration" widget="float_time"/>
                 <field name="state"/>
-                <field name="date_start" string="Beginning" readonly="1"/>
-                <field name="date_stop" string="End" readonly="1"/>
+                <field name="date"/>
             </list>
         </field>
     </record>
@@ -146,15 +145,15 @@
                 <filter name="work_entries_validated" string="Validated" domain="[('state', '=', 'validated')]"/>
                 <filter name="work_entries_error" string="Conflicting" domain="[('state', '=', 'conflict')]"/>
                 <separator/>
-                <filter name="date_filter" string="Date" date="date_start"/>
+                <filter name="date_filter" string="Date" date="date"/>
                 <filter name="current_month" string="Current Month" domain="[
-                    ('date_stop', '&gt;=', '=1d'),
-                    ('date_start', '&lt;', '=1d +1m')]"/>
+                    ('date', '&gt;=', '=1d'),
+                    ('date', '&lt;', '=1d +1m')]"/>
                 <separator/>
                 <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
                 <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>
                 <filter name="group_work_entry_type" string="Type" context="{'group_by': 'work_entry_type_id'}"/>
-                <filter name="group_start_date" string="Start Date" context="{'group_by': 'date_start'}"/>
+                <filter name="group_start_date" string="Date" context="{'group_by': 'date'}"/>
                 <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
             </search>
