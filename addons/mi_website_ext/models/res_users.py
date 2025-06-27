@@ -113,7 +113,7 @@ class Users(models.Model):
         # Es más robusto buscarlo por XML ID o por nombre si el ID numérico no es 100% estable.
         # Intentemos por nombre primero, y si no, usamos el ID 6 como fallback (con advertencia).
         permission_leave_type = self.env['hr.leave.type'].search([
-            ('name', '=', 'Permiso remunerado') # Buscar por el nombre exacto
+            ('name', '=', 'Solicitud de permiso') # Buscar por el nombre exacto
         ], limit=1)
         
         permission_leave_type_id = None
@@ -122,10 +122,10 @@ class Users(models.Model):
         elif self.env['hr.leave.type'].browse(6).exists(): # Verificar si el ID 6 existe como fallback
             # Solo usar el ID 6 directamente si la búsqueda por nombre falla Y sabes que el ID 6 es correcto
             # y estable en tu instancia específica.
-            _logger.warning("No se encontró 'Permiso remunerado' por nombre, usando ID 6 como fallback. Es preferible usar XML ID o asegurar el nombre.")
+            _logger.warning("No se encontró 'Solicitud de permiso' por nombre, usando ID 6 como fallback. Es preferible usar XML ID o asegurar el nombre.")
             permission_leave_type_id = 6
         else:
-            _logger.error("Tipo de ausencia 'Permiso remunerado' (ID 6 o por nombre) no encontrado. Verifica la configuración de Tipos de Ausencia en RRHH.")
+            _logger.error("Tipo de ausencia 'Solicitud de permiso' (ID 6 o por nombre) no encontrado. Verifica la configuración de Tipos de Ausencia en RRHH.")
             for user_no_type in self:
                 user_no_type.x_available_remunerated_permission_hours = "Error Conf."
             return

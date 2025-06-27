@@ -1,44 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_publication_view_wizard_form" model="ir.ui.view">
-        <field name="name">publication.view.wizard.form</field>
-        <field name="model">publication.view.wizard</field>
-        <field name="arch" type="xml">
-            <form>
-                <group>
-                    <field name="publication_id" options="{'no_create': True, 'no_open': True}"/>
-                </group>
-                <notebook>
-                    <page string="Leído Por">
-                        <field name="read_by_user_ids" readonly="1">
-                            <list>
-                                <field name="name"/>
-                            </list>
-                        </field>
-                    </page>
-                    <page string="Pendiente de Leer">
-                        <field name="unread_by_user_ids" readonly="1">
-                            <list>
-                                <field name="name"/>
-                            </list>
-                        </field>
-                    </page>
-                </notebook>
-                <footer>
-                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
-                </footer>
-            </form>
-        </field>
-    </record>
+    <data>
 
-    <record id="action_publication_view_wizard" model="ir.actions.act_window">
-        <field name="name">Seguimiento de Lecturas</field>
-        <field name="res_model">publication.view.wizard</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field> </record>
+        <record id="view_publication_view_wizard_form" model="ir.ui.view">
+            <field name="name">publication.view.wizard.form</field>
+            <field name="model">publication.view.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Vistas de la Publicación">
+                    <sheet>
+                        <group>
+                            <field name="publication_id" readonly="1" options="{'no_open': True}"/>
+                        </group>
+                        <notebook>
+                            <page string="Registros de Vistas">
+                                <field name="view_logs" readonly="1">
+                                    <list>
+                                        <field name="user_id"/>
+                                        <field name="create_date" string="Fecha de Vista"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
-    <!--<menuitem id="menu_publication_view_wizard"
-              name="Seguimiento de Lecturas"
-              parent="mi_website_ext.menu_website_publication_root"
-              action="action_publication_view_wizard"
-              sequence="50"/>-->
+        <record id="action_publication_view_wizard" model="ir.actions.act_window">
+            <field name="name">Ver Vistas de Publicación</field>
+            <field name="res_model">publication.view.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_view_publication_logs" model="ir.actions.act_window">
+            <field name="name">Registros de Vistas de Publicaciones</field>
+            <field name="res_model">publication.view.log</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'search_default_group_by_publication': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Aún no hay registros de lecturas de publicaciones.
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_publication_tracking"
+            name="Seguimiento de publicaciones"
+            action="action_view_publication_logs"
+            parent="mi_website_ext.menu_website_publication_root"
+            sequence="50"
+            groups="hr.group_hr_user,hr.group_hr_manager"
+        />
+    </data>
 </odoo>

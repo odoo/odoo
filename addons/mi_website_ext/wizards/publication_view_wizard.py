@@ -14,6 +14,13 @@ class PublicationViewWizard(models.TransientModel):
         domain="[('publication_type', 'in', ['announce', 'policy', 'activity', 'news', 'blog'])]",
     )
 
+    view_logs = fields.Many2many(
+        comodel_name="publication.view.log",
+        string="Registros de Vistas",
+        compute="_compute_view_logs",
+        readonly=True
+    )
+
     # Dos campos para mostrar los resultados
     read_by_user_ids = fields.Many2many(
         "res.users",

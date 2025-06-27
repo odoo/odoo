@@ -19,6 +19,10 @@
             <field name="arch" type="xml">
                 <form string="Publicación">
                     <sheet>
+                        <header>
+                            <button name="open_view_wizard" type="object" string="Ver Lecturas" class="btn btn-primary"/>
+
+                        </header>
                         <field name="image_1920" widget="image" class="oe_avatar"
                        invisible="publication_type in ['phrase', 'special_event', 'winner']"/>
                         <div class="oe_title" invisible="publication_type == 'winner'">
@@ -59,6 +63,9 @@
                                placeholder="Escribe aquí el cuerpo del mensaje..."/>
                             </page>
                         </notebook>
+                        <group string="Documento PDF" invisible="publication_type != 'policy'">
+                            <field name="policy_pdf" filename="policy_pdf_filename"/>
+                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids"/>
@@ -79,17 +86,17 @@
             </field>
         </record>
         <record id="action_website_policy" model="ir.actions.act_window">
-        <field name="name">Políticas y Reglamentos</field>
-        <field name="res_model">website.publication</field>
-        <field name="view_mode">list,form</field>
-        <field name="domain">[('publication_type', '=', 'policy')]</field>
-        <field name="context">{'default_publication_type': 'policy'}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <field name="name">Políticas y Reglamentos</field>
+            <field name="res_model">website.publication</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('publication_type', '=', 'policy')]</field>
+            <field name="context">{'default_publication_type': 'policy'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
                 Crea la primera política o reglamento.
             </p>
-        </field>
-    </record>
+            </field>
+        </record>
         <menuitem id="menu_website_publication_root"
                   name="Contenido del Portal"
                   parent="hr.menu_hr_root" 
@@ -99,7 +106,7 @@
                   name="Gestionar Publicaciones"
                   parent="menu_website_publication_root"
                   action="action_website_publication"/>
-         <menuitem id="menu_website_policy_action"
+        <menuitem id="menu_website_policy_action"
               name="Gestionar Políticas"
               parent="mi_website_ext.menu_website_publication_root"
               action="action_website_policy"

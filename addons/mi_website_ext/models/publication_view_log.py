@@ -17,3 +17,18 @@ class PublicationViewLog(models.Model):
     _sql_constraints = [
         ('user_object_uniq', 'unique(user_id, res_model, res_id)', 'Este objeto ya ha sido marcado como visto por este usuario.')
     ]
+
+    def open_view_wizard_from_log(self):
+        self.ensure_one()
+        if self.res_model == 'website.publication':
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Ver Seguimiento de Lectura',
+                'res_model': 'publication.view.wizard',
+                'view_mode': 'form',
+                'view_id': self.env.ref('mi_website_ext.view_publication_view_wizard_form').id,
+                'target': 'new',
+                'context': {
+                    'default_publication_id': self.res_id,
+                }
+            }

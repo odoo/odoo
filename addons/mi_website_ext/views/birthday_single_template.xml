@@ -6,8 +6,9 @@
                 <div class="content_container">
                     <div class="birthday_container">
                         <div class="birthday_header">
-                            <h1 class="birthday_title">!Feliz Cumpleaños!
+                            <h1 class="birthday_title">!Feliz Cumpleaños
                                 <t t-esc="employee.name.split(' ')[0]"/>
+                                !
                             </h1>
                             <h4>¡Que sea un gran día para tí!</h4>
                         </div>
@@ -20,6 +21,13 @@
                         <t t-else="">
                             <img src="/mi_website_ext/static/src/img/imagetester.jpg" alt="Foto de Cumpleaños" class="birthday_photo" />
                         </t>
+                        <img src="/mi_website_ext/static/src/img/birthdayilustration.svg" alt="Grupo" class="birthday-image-u" />
+                        <p class="birthday-p">
+                           ¡Feliz cumpleaños! 
+Te deseamos un día genial y un año lleno de éxitos. 
+
+¡Que lo disfrutes mucho!
+                        </p>
                         <!--<div class="birthday_section">
                             <div class="creative-birthday-card">
                                 <img src="/mi_website_ext/static/src/img/fresa.png" alt="Fresa" class="deco-img strawberry-1"/>

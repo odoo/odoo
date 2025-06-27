@@ -74,7 +74,7 @@
                                     </div>
                                     <hr class="divider" />
                                     <div class="card-items-button">
-                                        <button class="notify-button">
+                                        <button class="notify-button emergency-button">
                                             <img
                                     src="/mi_website_ext/static/src/img/Sick.svg" alt="Grupo" class="sick-img" />
                                         </button>
@@ -219,7 +219,11 @@
                                         <t t-if="sorted_new_hires_list">
                                             <div class="welcome-card">
                                                 <div class="welcome-title">
-                                                    <h3>Bienvenido a la familia Calengs</h3>
+                                                    <h3>
+                                                        <t t-if="len(sorted_new_hires_list) == 1">Bienvenido</t>
+                                                        <t t-else="">Bienvenidos</t>
+    a la familia Calengs
+                                                    </h3>
                                                     <img src="/mi_website_ext/static/src/img/Welcome.svg" alt="Grupo" />
                                                 </div>
                                                 <div class="welcome-body">
@@ -541,7 +545,7 @@
                                     <div class="profile-section">
                                         <div class="avatar-section">
                                             <img
-                                    t-att-src="'/web/image/res.users/' + str(user.id) + '/image_128'"
+                                    t-att-src="'/web/image/res.users/' + str(user.id) + '/image_512'"
                                     alt="Avatar" class="avatar" />
                                         </div>
                                         <h2 class="name">
@@ -589,7 +593,7 @@
                                     </div>
                                     -->
                                         <div class="btn-section">
-                                            <a class="btn-time" href="http://44.220.161.53:8069/odoo/time-off">Maneja tu tiempo</a>
+                                            <a class="btn-time" href="https://odoo.calengs.com/odoo/time-off">Maneja tu tiempo</a>
                                         </div>
                                         <!-- <div class="btn-section">
                                 <a class="btn-soli" href="http://44.220.161.53:8069/odoo/time-off">Solicitar carta</a>

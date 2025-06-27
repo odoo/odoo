@@ -132,33 +132,25 @@ class WebsiteCustom(http.Controller):
     @http.route("/policy", type="http", auth="user", website=True)
     def render_policy(self, **kwargs):
         # 1. Buscamos en el modelo 'website.publication' con el tipo 'policy'
-        Publication = request.env["website.publication"]
-        policies = Publication.search(
-            [
-                ("publication_type", "=", "policy"),
-                ("is_published", "=", True),
-            ]
-        )
+        Publication = request.env['website.publication']
+        policies = Publication.search([
+            ('publication_type', '=', 'policy'),
+            ('is_published', '=', True),
+        ])
 
         # 2. Buscamos en 'publication.view.log' los registros de lectura para estas publicaciones
-        read_logs = request.env["publication.view.log"].search(
-            [
-                ("user_id", "=", request.env.user.id),
-                (
-                    "res_model",
-                    "=",
-                    "website.publication",
-                ),  # El modelo de origen es 'website.publication'
-                ("res_id", "in", policies.ids),
-            ]
-        )
-        read_policy_ids = read_logs.mapped("res_id")
+        read_logs = request.env['publication.view.log'].search([
+            ('user_id', '=', request.env.user.id),
+            ('res_model', '=', 'website.publication'), # El modelo de origen es 'website.publication'
+            ('res_id', 'in', policies.ids)
+        ])
+        read_policy_ids = read_logs.mapped('res_id')
 
         # 3. Preparamos y pasamos los datos a la plantilla
         values = {
-            "policies": policies,
-            "read_policy_ids": read_policy_ids,
-            "hide_sidebar": True,
+            'policies': policies,
+            'read_policy_ids': read_policy_ids,
+            'hide_sidebar': True,
         }
         return request.render("mi_website_ext.policy_template", values)
 
@@ -363,100 +355,76 @@ class WebsiteCustom(http.Controller):
     # En mi_website_ext/controllers/main.py
     # (Tus otras importaciones y rutas se quedan igual)
 
-    @http.route(
-        "/notify/absence", type="http", auth="user", methods=["POST"], website=True
-    )
-    def notify_absence(self, reason=None, **kwargs):
+    @http.route("/notify/absence", type="json", auth="user", methods=["POST"], website=True)
+    def notify_absence(self, **kwargs):
+        _logger.warning("✅ Se llamó correctamente a /notify/absence desde: %s", request.env.user.name)
+
         user = request.env.user
         employee = user.employee_id
 
-        # Verificamos que el usuario tenga un empleado asociado
         if not employee:
-            return request.make_json_response(
-                {"error": "Tu usuario no está vinculado a un registro de empleado."}
-            )
+            return {
+                "error": "Tu usuario no está vinculado a un empleado."
+            }
 
         try:
-            # --- 1. Lógica para crear la solicitud de ausencia ---
             Leave = request.env["hr.leave"].sudo()
             today = fields.Date.context_today(self)
 
-            # Reemplaza 'hr_holidays.holiday_status_sl' con el XML ID que encontraste
-            leave_type = request.env["hr.leave.type"].browse(7).exists()
-
+            leave_type = request.env['hr.leave.type'].sudo().browse(2).exists()
             if not leave_type:
-                return request.make_json_response(
-                    {"error": "No se encontró el tipo de ausencia por enfermedad."}
-                )
+                leave_type = request.env['hr.leave.type'].sudo().search([
+                    ('name', '=', 'Ausencias por enfermedad')
+                ], limit=1)
 
-            # Creamos la solicitud de ausencia para el día de hoy
-            leave_request = Leave.create(
-                {
-                    "name": reason or f"Ausencia notificada por {employee.name}",
-                    "employee_id": employee.id,
-                    "holiday_status_id": leave_type.id,
-                    "request_date_from": today,
-                    "request_date_to": today,
-                    "number_of_days": 1,
-                }
-            )
+            if not leave_type or not leave_type.exists():
+                return {"error": "No se encontró el tipo de ausencia por ID=2."}
 
-            # --- 2. Lógica para adjuntar el archivo (si existe) ---
-            attachment_ids = []
-            uploaded_file = request.httprequest.files.get("incapacity_proof")
-            if uploaded_file:
-                attachment = (
-                    request.env["ir.attachment"]
-                    .sudo()
-                    .create(
-                        {
-                            "name": uploaded_file.filename,
-                            "datas": uploaded_file.read(),
-                            "res_model": "hr.leave",  # Se adjunta a la solicitud de ausencia
-                            "res_id": leave_request.id,
-                        }
-                    )
-                )
-                attachment_ids.append(attachment.id)
+            # Crear solicitud de ausencia
+            Leave.create({
+                "name": f"Ausencia por enfermedad - notificada por {employee.name}",
+                "employee_id": employee.id,
+                "holiday_status_id": leave_type.id,
+                "request_date_from": today,
+                "request_date_to": today,
+                "number_of_days": 1,
+            })
 
-            # --- 3. Lógica para notificar en el canal de Discuss (existente) ---
+            # Notificar en canal de Discuss
             channel_name = "rrhh-notificaciones-ausencia"
-            channel = (
-                request.env["discuss.channel"]
-                .sudo()
-                .search([("name", "=", channel_name)], limit=1)
-            )
-            # ... (código para crear el canal si no existe) ...
+            channel = request.env["discuss.channel"].sudo().search([
+                ("name", "=", channel_name)
+            ], limit=1)
+
+            if not channel:
+                channel = request.env["discuss.channel"].sudo().create({
+                    "name": channel_name,
+                    "channel_type": "channel",
+                    "public": "groups",
+                    "group_ids": [(6, 0, [request.env.ref('base.group_hr_user').id])],
+                })
 
             message_body = (
                 f"<p>El colaborador <strong>{employee.name}</strong> ha notificado una ausencia por enfermedad para hoy.</p>"
-                f"<p><strong>Motivo:</strong> <em>{reason or 'No especificado'}</em></p>"
             )
-            if attachment_ids:
-                message_body += (
-                    "<p><strong>Se ha adjuntado un justificante.</strong></p>"
-                )
 
-            # Publicamos el mensaje
             channel.message_post(
                 body=message_body,
                 message_type="comment",
                 subtype_xmlid="mail.mt_note",
-                attachment_ids=attachment_ids,  # Adjuntamos el archivo también al mensaje
             )
 
-            return request.make_json_response(
-                {
-                    "success": True,
-                    "message": "Notificación y solicitud de ausencia creadas correctamente.",
-                }
-            )
+            return {
+                "success": True,
+                "message": "Notificación y solicitud de ausencia creadas correctamente.",
+            }
 
         except Exception as e:
-            _logger.error(f"Error al procesar notificación de ausencia: {e}")
-            return request.make_json_response(
-                {"error": "No se pudo procesar la solicitud."}
-            )
+            import traceback
+            _logger.error("Error completo:\n%s", traceback.format_exc())
+            return {
+                "Este feature estara habilitado proximamente."
+            }
 
     @http.route("/get_popup_announcements", type="json", auth="user", website=True)
     def get_popup_announcements(self, **kwargs):

@@ -78,48 +78,50 @@ class WebsitePublication(models.Model):
         "calendar.event", string="Evento de Calendario", readonly=True, copy=False
     )
 
+    policy_pdf = fields.Binary("PDF de la Política")
+    policy_pdf_filename = fields.Char("Nombre del archivo PDF")
+
     attachment_url = fields.Char(
         string="URL del Adjunto",
         compute="_compute_attachment_url",
         help="URL de descarga para el primer PDF adjunto.",
     )
 
+
     def _compute_attachment_url(self):
         for pub in self:
-            # Buscamos el primer adjunto que sea un PDF para esta publicación
-            attachment = self.env["ir.attachment"].search(
-                [
-                    ("res_model", "=", self._name),
-                    ("res_id", "=", pub.id),
-                    (
-                        "mimetype",
-                        "=",
-                        "application/pdf",
-                    ),  # Filtramos para que sea un PDF
-                ],
-                limit=1,
-                order="create_date desc",
-            )
-
-            if attachment:
-                # Construimos la URL de descarga correcta
-                pub.attachment_url = f"/web/content/{attachment.id}"
+       
+            if pub.policy_pdf:
+                pub.attachment_url = f"/web/content/{pub._name}/{pub.id}/policy_pdf"
             else:
-                pub.attachment_url = False
+       
+                attachment = self.env["ir.attachment"].search(
+                    [
+                        ("res_model", "=", self._name),
+                        ("res_id", "=", pub.id),
+                        ("mimetype", "=", "application/pdf"),
+                    ],
+                    limit=1,
+                    order="create_date desc",
+                )
+                if attachment:
+                    pub.attachment_url = f"/web/content/{attachment.id}"
+                else:
+                    pub.attachment_url = False
 
     def _get_url_base_for_publication(self):
         """Método auxiliar para obtener la URL base según el tipo."""
         self.ensure_one()
-        # Mapeo de tipos a las URLs base de tus plantillas de detalle
+       
         url_map = {
             "announce": "/announce",
             "activity": "/activity",
-            "blog": "/blog",  # Asumiendo que es una lista y el detalle es /blog/slug-o-id
+            "blog": "/blog",  
             "news": "/news_detail",
             "birthday": "/birthday_single",
             "anniversary": "/anniversary",
             "phrase": False,
-            "special_event": False,  # Los eventos especiales tampoco, se muestran en el sidebar
+            "special_event": False,  
         }
         return url_map.get(self.publication_type, False)
 
@@ -133,6 +135,24 @@ class WebsitePublication(models.Model):
                 publication.website_url = False
 
     # Al final de la clase WebsitePublication
+
+    def open_view_wizard(self):
+        self.ensure_one()
+
+        if self.publication_type not in ['announce', 'policy', 'activity', 'news', 'blog']:
+            raise UserError("Este tipo de publicación no admite seguimiento de lecturas.")
+    
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Ver Seguimiento de Lectura',
+            'res_model': 'publication.view.wizard',
+            'view_mode': 'form',
+            'view_id': self.env.ref('mi_website_ext.view_publication_view_wizard_form').id,
+            'target': 'new',
+            'context': {
+                'default_publication_id': self.id,
+            }
+        }
 
     @api.model_create_multi
     def create(self, vals_list):
