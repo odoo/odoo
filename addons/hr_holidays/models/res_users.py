@@ -8,7 +8,6 @@ from odoo.tools import format_date
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
     allocation_count = fields.Float(related='employee_id.allocation_count')
     leave_date_to = fields.Date(related='employee_id.leave_date_to')
     current_leave_state = fields.Selection(related='employee_id.current_leave_state')
@@ -16,16 +15,9 @@ class ResUsers(models.Model):
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + [
-            'leave_manager_id',
             'allocation_count',
             'leave_date_to',
             'current_leave_state',
-        ]
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + [
-            'leave_manager_id',
         ]
 
     def _compute_im_status(self):
