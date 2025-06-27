@@ -4,6 +4,7 @@ import { HistoryDialog } from "@html_editor/components/history_dialog/history_di
 import { useService } from '@web/core/utils/hooks';
 import { markup, useEffect } from "@odoo/owl";
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
+import { getHtmlFieldMetadata, setHtmlFieldMetadata } from "@html_editor/fields/html_field";
 
 import { ProjectTaskTemplateDropdown } from "../components/project_task_template_dropdown";
 
@@ -109,7 +110,8 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
                         body: _t("Restoring will replace the current content with the selected version. Any unsaved changes will be lost."),
                         confirm: () => {
                             const restoredData = {};
-                            restoredData[versionedFieldName] = html;
+                            const contentMetadata = getHtmlFieldMetadata(record.data[versionedFieldName]);
+                            restoredData[versionedFieldName] = setHtmlFieldMetadata(html, contentMetadata);
                             record.update(restoredData);
                             close();
                         },
