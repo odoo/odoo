@@ -132,6 +132,10 @@ Party = {
         'cbc:RegistrationName': {},
         'cbc:CompanyID': {},
         'cac:RegistrationAddress': Address,
+        'cac:CorporateRegistrationScheme': {
+            'cbc:ID': {},
+            'cbc:Name': {},
+        },
     },
     'cac:Contact': Contact,
     'cac:Person': {
@@ -225,6 +229,7 @@ TaxCategory = {
 }
 
 AllowanceCharge = {
+    'cbc:ID': {},
     'cbc:ChargeIndicator': {},
     'cbc:AllowanceChargeReasonCode': {},
     'cbc:AllowanceChargeReason': {},
