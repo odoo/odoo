@@ -1919,7 +1919,7 @@ X[]
                             `</div>`,
                         stepFunction: deleteBackward,
                         contentAfter: `<div class="oe_unbreakable">` +
-                            `<div class="oe_unbreakable">[]<br></div>` +
+                            `<p>[]<br></p>` +
                             `<div class="oe_unbreakable">f1</div>` +
                             `</div>`,
                     });
@@ -1954,7 +1954,7 @@ X[]
                             `</div>`,
                         stepFunction: deleteBackward,
                         contentAfter: `<div class="oe_unbreakable">` +
-                            `<div class="oe_unbreakable">[]<br></div>` +
+                            `<p>[]<br></p>` +
                             `</div>`,
                     });
                     await testEditor(BasicEditor, {
@@ -1970,7 +1970,7 @@ X[]
                             `</div>`,
                         stepFunction: deleteBackward,
                         contentAfter: `<div class="oe_unbreakable">` +
-                            `<div class="oe_unbreakable">[]<br></div>` +
+                            `<p>[]<br></p>` +
                             `</div>` +
                             `<div class="oe_unbreakable">` +
                             `<div class="oe_unbreakable">l5</div>` +
@@ -2118,6 +2118,23 @@ X[]
                         contentBefore: `<p>a<a class="btn">[]</a></p>`,
                         stepFunction: deleteBackward,
                         contentAfter: `<p>a[]</p>`,
+                    });
+                });
+                it('should replace div with p', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<div>a[]</div>`,
+                        stepFunction: async (...args) => {
+                            await deleteBackward(...args);
+                            await deleteBackward(...args);
+                        },
+                        contentAfter: `<p>[]<br></p>`,
+                    });
+                });
+                it('should add p inside unremovable', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<div class="oe_unremovable">[]</div>`,
+                        stepFunction: deleteBackward,
+                        contentAfter: `<div class="oe_unremovable"><p>[]<br></p></div>`,
                     });
                 });
             });
@@ -3545,6 +3562,20 @@ X[]
                         stepFunction: deleteBackward,
                         contentAfter: `<ul><li>ab</li></ul><ol><li>[]f</li><li>gh</li></ol>`,
                     });
+                });
+            });
+            it('should replace div with p', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<div>[abc]</div>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>[]<br></p>`,
+                });
+            });
+            it('should add p inside unremovable', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<div class="oe_unremovable">[abc]</div>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<div class="oe_unremovable"><p>[]<br></p></div>`,
                 });
             });
         });
