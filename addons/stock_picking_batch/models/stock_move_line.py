@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
 
 from odoo import _, Command, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.misc import OrderedSet
 
 
@@ -166,25 +165,25 @@ class StockMoveLine(models.Model):
         remaining_lines = OrderedSet()
         for (picking_type, lines) in self.grouped(lambda l: l.picking_type_id).items():
             if lines:
-                domain = [
-                    ('picking_type_id', '=', picking_type.id),
-                    ('company_id', 'in', lines.mapped('company_id').ids),
-                    ('is_wave', '=', True)
+                domains = [
+                    Domain('picking_type_id', '=', picking_type.id),
+                    Domain('company_id', 'in', lines.mapped('company_id').ids),
+                    Domain('is_wave', '=', True),
                 ]
                 if picking_type.batch_auto_confirm:
-                    domain = expression.AND([domain, [('state', 'not in', ['done', 'cancel'])]])
+                    domains.append(Domain('state', 'not in', ['done', 'cancel']))
                 else:
-                    domain = expression.AND([domain, [('state', '=', 'draft')]])
+                    domains.append(Domain('state', '=', 'draft'))
                 if picking_type.batch_group_by_partner:
-                    domain = expression.AND([domain, [('picking_ids.partner_id', 'in', lines.move_id.partner_id.ids)]])
+                    domains.append(Domain('picking_ids.partner_id', 'in', lines.move_id.partner_id.ids))
                 if picking_type.batch_group_by_destination:
-                    domain = expression.AND([domain, [('picking_ids.partner_id.country_id', 'in', lines.move_id.partner_id.country_id.ids)]])
+                    domains.append(Domain('picking_ids.partner_id.country_id', 'in', lines.move_id.partner_id.country_id.ids))
                 if picking_type.batch_group_by_src_loc:
-                    domain = expression.AND([domain, [('picking_ids.location_id', 'in', lines.location_id.ids)]])
+                    domains.append(Domain('picking_ids.location_id', 'in', lines.location_id.ids))
                 if picking_type.batch_group_by_dest_loc:
-                    domain = expression.AND([domain, [('picking_ids.location_dest_id', 'in', lines.location_dest_id.ids)]])
+                    domains.append(Domain('picking_ids.location_dest_id', 'in', lines.location_dest_id.ids))
 
-                potential_waves = self.env['stock.picking.batch'].search(domain)
+                potential_waves = self.env['stock.picking.batch'].search(Domain.AND(domains))
                 wave_to_new_lines = defaultdict(set)
 
                 # These dictionaries are used to enforce batch max lines/transfers/weight limits
@@ -254,31 +253,31 @@ class StockMoveLine(models.Model):
         picking_types = self.picking_type_id
         for picking_type in picking_types:
             lines = self.filtered(lambda l: l.picking_type_id == picking_type)
-            domain = [
+            domains = [Domain([
                 ('id', 'in', lines.ids),
                 ('company_id', 'in', self.company_id.ids),
                 ('picking_id.state', '=', 'assigned'),
                 ('picking_type_id', '=', picking_type.id),
                 '|',
                 ('batch_id', '=', False),
-                ('batch_id.is_wave', '=', False)
-            ]
+                ('batch_id.is_wave', '=', False),
+            ])]
             if picking_type.batch_group_by_partner:
-                domain = expression.AND([domain, [('move_id.partner_id', 'in', lines.move_id.partner_id.ids)]])
+                domains.append(Domain('move_id.partner_id', 'in', lines.move_id.partner_id.ids))
             if picking_type.batch_group_by_destination:
-                domain = expression.AND([domain, [('move_id.partner_id.country_id', 'in', lines.move_id.partner_id.country_id.ids)]])
+                domains.append(Domain('move_id.partner_id.country_id', 'in', lines.move_id.partner_id.country_id.ids))
             if picking_type.batch_group_by_src_loc:
-                domain = expression.AND([domain, [('location_id', 'in', lines.location_id.ids)]])
+                domains.append(Domain('location_id', 'in', lines.location_id.ids))
             if picking_type.batch_group_by_dest_loc:
-                domain = expression.AND([domain, [('location_dest_id', 'in', lines.location_dest_id.ids)]])
+                domains.append(Domain('location_dest_id', 'in', lines.location_dest_id.ids))
             if picking_type.wave_group_by_product:
-                domain = expression.AND([domain, [('product_id', 'in', lines.product_id.ids)]])
+                domains.append(Domain('product_id', 'in', lines.product_id.ids))
             if picking_type.wave_group_by_category:
-                domain = expression.AND([domain, [('product_id.categ_id', 'in', lines.product_id.categ_id.ids)]])
+                domains.append(Domain('product_id.categ_id', 'in', lines.product_id.categ_id.ids))
             if picking_type.wave_group_by_location:
-                domain = expression.AND([domain, [('location_id', 'child_of', picking_type.wave_location_ids.ids)]])
+                domains.append(Domain('location_id', 'child_of', picking_type.wave_location_ids.ids))
 
-            potential_lines = self.env['stock.move.line'].search(domain)
+            potential_lines = self.env['stock.move.line'].search(Domain.AND(domains))
             lines_nearest_parent_locations = defaultdict(int)
             if picking_type.wave_group_by_location:
                 for line in potential_lines:

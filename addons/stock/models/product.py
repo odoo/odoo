@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.barcode import check_barcode_encoding
 from odoo.tools.mail import html2plaintext, is_html_empty
 
@@ -326,9 +326,9 @@ class ProductProduct(models.Model):
                 if isinstance(item, int):
                     ids.add(item)
                 else:
-                    domains.append([(self.env[model]._rec_name, 'ilike', item)])
+                    domains.append(Domain(self.env[model]._rec_name, 'ilike', item))
             if domains:
-                ids |= set(self.env[model].search(expression.OR(domains)).ids)
+                ids |= set(self.env[model].search(Domain.OR(domains)).ids)
             return ids
 
         # We may receive a location or warehouse from the context, either by explicit
@@ -363,31 +363,31 @@ class ProductProduct(models.Model):
 
         return self._get_domain_locations_new(location_ids)
 
-    def _get_domain_locations_new(self, location_ids):
+    def _get_domain_locations_new(self, location_ids) -> tuple[Domain, Domain, Domain]:
         if not location_ids:
-            return [[expression.FALSE_LEAF]] * 3
+            return (Domain.FALSE,) * 3
         locations = self.env['stock.location'].browse(location_ids)
         # TDE FIXME: should move the support of child_of + auto_join directly in expression
         # this optimizes [('location_id', 'child_of', locations.ids)]
         # by avoiding the ORM to search for children locations and injecting a
         # lot of location ids into the main query
         if self.env.context.get('strict'):
-            loc_domain = [('location_id', 'in', locations.ids)]
-            dest_loc_domain = [('location_dest_id', 'in', locations.ids)]
+            loc_domain = Domain('location_id', 'in', locations.ids)
+            dest_loc_domain = Domain('location_dest_id', 'in', locations.ids)
         elif locations:
-            paths_domain = expression.OR([[('parent_path', '=like', loc.parent_path + '%')] for loc in locations])
-            loc_domain = [('location_id', 'any', paths_domain)]
-            dest_loc_domain = [
+            paths_domain = Domain.OR(Domain('parent_path', '=like', loc.parent_path + '%') for loc in locations)
+            loc_domain = Domain('location_id', 'any', paths_domain)
+            dest_loc_domain = Domain([
                 '|',
                 '&', ('location_final_id', '!=', False), ('location_final_id', 'any', paths_domain),
                 '&', ('location_final_id', '=', False), ('location_dest_id', 'any', paths_domain),
-            ]
+            ])
 
         # returns: (domain_quant_loc, domain_move_in_loc, domain_move_out_loc)
         return (
             loc_domain,
-            dest_loc_domain + ['!'] + loc_domain,
-            loc_domain + ['!'] + dest_loc_domain,
+            dest_loc_domain & ~loc_domain,
+            loc_domain & ~dest_loc_domain,
         )
 
     def _search_qty_available(self, operator, value):
@@ -538,7 +538,7 @@ class ProductProduct(models.Model):
                 'search_default_product_id': self.ids[0]
             })
         else:
-            action['domain'] = expression.AND([action.get('domain') or [], [('product_id', 'in', self.ids)]])
+            action['domain'] = Domain(action.get('domain') or Domain.TRUE) & Domain('product_id', 'in', self.ids)
         return action
 
     def action_view_routes(self):
@@ -669,7 +669,7 @@ class ProductProduct(models.Model):
 
         :rtype: defaultdict(float)
         """
-        domain_quant = expression.AND([self._get_domain_locations()[0], [('product_id', 'in', self.ids)]])
+        domain_quant = Domain.AND([self._get_domain_locations()[0], [('product_id', 'in', self.ids)]])
         quants_groupby = self.env['stock.quant']._read_group(domain_quant, ['product_id'], ['quantity:sum'])
         currents = defaultdict(float)
         currents.update({product.id: quantity for product, quantity in quants_groupby})
@@ -692,13 +692,11 @@ class ProductProduct(models.Model):
     def _count_returned_sn_products_domain(self, sn_lot, or_domains):
         if not or_domains:
             return None
-        base_domain = [
+        return Domain([
             ('lot_id', '=', sn_lot.id),
             ('quantity', '=', 1),
             ('state', '=', 'done'),
-        ]
-        or_domains = expression.OR(or_domains)
-        return expression.AND([base_domain, or_domains])
+        ]) & Domain.OR(or_domains)
 
     def _update_uom(self, to_uom_id):
         for uom, product, moves in self.env['stock.move']._read_group(
@@ -1222,13 +1220,13 @@ class ProductCategory(models.Model):
         if operator != 'in':
             return NotImplemented
 
-        domain = expression.TRUE_DOMAIN
+        domain = Domain.TRUE
         active_model = self.env.context.get('active_model')
         if active_model in ('product.template', 'product.product') and self.env.context.get('active_id'):
             product = self.env[active_model].browse(self.env.context.get('active_id'))
             product = product.exists()
             if product:
-                domain = [('id', '=', product.categ_id.id)]
+                domain = Domain('id', '=', product.categ_id.id)
         return domain
 
 
