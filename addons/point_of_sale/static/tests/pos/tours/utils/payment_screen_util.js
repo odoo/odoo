@@ -358,7 +358,7 @@ export function clickPartnerButton() {
         },
         {
             content: "partner screen is shown",
-            trigger: `.modal ${PartnerList.clickPartner().trigger}`,
+            trigger: `${PartnerList.clickPartner().trigger}`,
         },
     ];
 }
