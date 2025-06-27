@@ -2,7 +2,7 @@ from lxml import etree
 
 from odoo import _, models, Command
 from odoo.tools import html2plaintext
-from odoo.tools.float_utils import float_round, float_repr
+from odoo.tools.float_utils import float_is_zero, float_round, float_repr
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 
@@ -320,6 +320,22 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             },
         })
 
+    def _get_invoice_line_node(self, vals):
+        self._add_invoice_line_vals(vals)
+
+        line_node = {}
+        self._add_invoice_line_id_nodes(line_node, vals)
+        self._add_invoice_line_note_nodes(line_node, vals)
+        self._add_invoice_line_amount_nodes(line_node, vals)
+        self._add_invoice_line_period_nodes(line_node, vals)
+        self._add_invoice_line_allowance_charge_nodes(line_node, vals)
+        self._add_invoice_line_tax_total_nodes(line_node, vals)
+        self._add_invoice_line_item_nodes(line_node, vals)
+        self._add_invoice_line_tax_category_nodes(line_node, vals)
+        self._add_invoice_line_price_nodes(line_node, vals)
+        self._add_invoice_line_pricing_reference_nodes(line_node, vals)
+        return line_node
+
     def _add_invoice_line_nodes(self, document_node, vals):
         line_idx = 1
 
@@ -334,20 +350,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
                     'line_idx': line_idx,
                     'base_line': base_line,
                 }
-                self._add_invoice_line_vals(line_vals)
-
-                line_node = {}
-                self._add_invoice_line_id_nodes(line_node, line_vals)
-                self._add_invoice_line_note_nodes(line_node, line_vals)
-                self._add_invoice_line_amount_nodes(line_node, line_vals)
-                self._add_invoice_line_period_nodes(line_node, line_vals)
-                self._add_invoice_line_allowance_charge_nodes(line_node, line_vals)
-                self._add_invoice_line_tax_total_nodes(line_node, line_vals)
-                self._add_invoice_line_item_nodes(line_node, line_vals)
-                self._add_invoice_line_tax_category_nodes(line_node, line_vals)
-                self._add_invoice_line_price_nodes(line_node, line_vals)
-                self._add_invoice_line_pricing_reference_nodes(line_node, line_vals)
-
+                line_node = self._get_invoice_line_node(line_vals)
                 line_nodes.append(line_node)
                 line_idx += 1
 
@@ -689,6 +692,38 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             },
         }
 
+    def _get_document_line_node(self, vals):
+        self._add_document_line_vals(vals)
+
+        line_node = {}
+        self._add_document_line_id_nodes(line_node, vals)
+        self._add_document_line_note_nodes(line_node, vals)
+        self._add_document_line_amount_nodes(line_node, vals)
+        self._add_document_line_period_nodes(line_node, vals)
+        self._add_document_line_allowance_charge_nodes(line_node, vals)
+        self._add_document_line_tax_total_nodes(line_node, vals)
+        self._add_document_line_item_nodes(line_node, vals)
+        self._add_document_line_tax_category_nodes(line_node, vals)
+        self._add_document_line_price_nodes(line_node, vals)
+        self._add_document_line_pricing_reference_nodes(line_node, vals)
+        return line_node
+
+    def _add_document_line_nodes(self, document_node, vals):
+        line_idx = 1
+
+        line_tag = self._get_tags_for_document_type(vals)['document_line']
+        document_node[line_tag] = line_nodes = []
+        for base_line in vals['base_lines']:
+            if not self._is_document_allowance_charge(base_line):
+                line_vals = {
+                    **vals,
+                    'line_idx': line_idx,
+                    'base_line': base_line,
+                }
+                line_node = self._get_document_line_node(line_vals)
+                line_nodes.append(line_node)
+                line_idx += 1
+
     # -------------------------------------------------------------------------
     # EXPORT: Templates for document-level allowance charge nodes
     # -------------------------------------------------------------------------
@@ -768,6 +803,13 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             gross_subtotal_currency = base_line['currency_id'].round(base_line['price_unit'] * base_line['quantity'])
             gross_subtotal = company_currency.round(gross_subtotal_currency / base_line['rate'])
 
+        if base_line['quantity'] == 0.0 or discount_factor == 0.0:
+            gross_price_unit_currency = base_line['price_unit']
+            gross_price_unit = company_currency.round(base_line['price_unit'] / base_line['rate'])
+        else:
+            gross_price_unit_currency = gross_subtotal_currency / base_line['quantity']
+            gross_price_unit = gross_subtotal / base_line['quantity']
+
         discount_amount_currency = gross_subtotal_currency - base_line['tax_details']['total_excluded_currency']
         discount_amount = gross_subtotal - base_line['tax_details']['total_excluded']
 
@@ -776,8 +818,8 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             'discount_amount': discount_amount,
             'gross_subtotal_currency': gross_subtotal_currency,
             'gross_subtotal': gross_subtotal,
-            'gross_price_unit_currency': gross_subtotal_currency / base_line['quantity'],
-            'gross_price_unit': gross_subtotal / base_line['quantity'],
+            'gross_price_unit_currency': gross_price_unit_currency,
+            'gross_price_unit': gross_price_unit,
         })
 
     def _add_document_line_id_nodes(self, line_node, vals):
@@ -803,6 +845,9 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             },
         })
 
+    def _add_document_line_period_nodes(self, line_node, vals):
+        pass
+
     def _add_document_line_item_nodes(self, line_node, vals):
         product = vals['base_line']['product_id']
 
@@ -827,11 +872,9 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
                 line_node['cac:AllowanceCharge'].extend(self._get_line_fixed_tax_allowance_charge_nodes(vals))
 
     def _get_line_discount_allowance_charge_node(self, vals):
-        base_line = vals['base_line']
-        if base_line['discount'] == 0.0:
-            return None
-
         currency_suffix = vals['currency_suffix']
+        if float_is_zero(vals[f'discount_amount{currency_suffix}'], precision_digits=vals['currency_dp']):
+            return None
 
         return {
             'cbc:ChargeIndicator': {'_text': 'false' if vals[f'discount_amount{currency_suffix}'] > 0 else 'true'},
@@ -903,6 +946,9 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
                 'currencyID': vals['currency_name'],
             },
         }
+
+    def _add_document_line_pricing_reference_nodes(self, line_node, vals):
+        pass
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints
