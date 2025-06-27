@@ -2754,7 +2754,7 @@ class TestStockUOM(TestStockCommon):
         T_TEST = self.env['product.product'].create({
             'name': 'T_TEST',
             'is_storable': True,
-            'uom_ids': [(4, T_LBS.id)],
+            'uom_id': T_LBS.id,
             'tracking': 'lot',
         })
 

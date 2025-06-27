@@ -81,6 +81,14 @@ class UomUom(models.Model):
             return qty
         self.ensure_one()
 
+        if self != to_unit and not self._has_common_reference(to_unit):
+            if raise_if_failure:
+                raise UserError(_(
+                    'The unit of measure %(unit)s cannot be converted to %(to_unit)s. Please correct one of these units to ensure compatibility. The units must share a common reference unit.',
+                    unit=self.name, to_unit=to_unit.name))
+            else:
+                return qty
+
         if self == to_unit:
             amount = qty
         else:
