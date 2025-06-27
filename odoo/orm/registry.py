@@ -805,8 +805,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
         for indexname, tablename, field in expected:
             index = field.index
             assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
-            if index and indexname not in existing and \
-                    ((not field.translate and index != 'trigram') or (index == 'trigram' and self.has_trigram)):
+            if index and indexname not in existing:
+                if index == 'trigram' and not self.has_trigram:
+                    # Ignore if trigram index is not supported
+                    continue
+                if field.translate and index != 'trigram':
+                    _schema.warning(f"Index attribute on {field!r} ignored, only trigram index is supported for translated fields")
+                    continue
+
                 column_expression = f'"{field.name}"'
                 if index == 'trigram':
                     if field.translate:
