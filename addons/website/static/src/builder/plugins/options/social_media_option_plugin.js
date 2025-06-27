@@ -7,8 +7,7 @@ import { registry } from "@web/core/registry";
 import { renderToFragment } from "@web/core/utils/render";
 import { SocialMediaLinks } from "./social_media_links";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { SNIPPET_SPECIFIC } from "@html_builder/utils/option_sequence";
-import { TITLE_LAYOUT_SIZE } from "@website/builder/option_sequence";
+import { SNIPPET_SPECIFIC, TITLE_LAYOUT_SIZE } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**

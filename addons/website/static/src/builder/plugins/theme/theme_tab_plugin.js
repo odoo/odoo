@@ -1,4 +1,3 @@
-import { BuilderFontFamilyPicker } from "@website/builder/builder_fontfamilypicker";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { ThemeColorsOption } from "./theme_colors_option";
@@ -41,7 +40,6 @@ export class ThemeTabPlugin extends Plugin {
     grays = reactive({});
 
     resources = {
-        builder_components: { BuilderFontFamilyPicker },
         builder_actions: {
             CustomizeGrayAction,
             ChangeColorPaletteAction,
