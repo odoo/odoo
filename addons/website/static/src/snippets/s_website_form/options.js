@@ -8,7 +8,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { memoize } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
-import { escape } from "@web/core/utils/strings";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import wUtils from '@website/js/utils';
 
@@ -218,7 +217,7 @@ const FormEditor = options.Class.extend({
         if (!field.id) {
             field.id = weUtils.generateHTMLId();
         }
-        const params = { field: { ...field }, defaultName: escape(_t("Field")) };
+        const params = { field: { ...field }, defaultName: _t("Field") };
         if (["url", "email", "tel"].includes(field.type)) {
             params.field.inputType = field.type;
         }

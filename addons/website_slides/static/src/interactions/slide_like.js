@@ -1,7 +1,8 @@
+import { htmlEscape, markup } from "@odoo/owl";
+
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { escape, sprintf } from '@web/core/utils/strings';
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
@@ -23,7 +24,7 @@ export class SlideLike extends Interaction {
             container: 'body',
             html: true,
             content: function () {
-                return message;
+                return htmlEscape(message).toString();
             }
         });
         bsPopover.show();
@@ -57,20 +58,37 @@ export class SlideLike extends Interaction {
             dislikesIcon.classList.toggle("fa-thumbs-o-down", data.user_vote !== -1);
         } else {
             if (data.error === 'public_user') {
-                const message = data.error_signup_allowed ?
-                    _t('Please <a href="/web/login?redirect=%(url)s">login</a> or <a href="/web/signup?redirect=%(url)s">create an account</a> to vote for this lesson') :
-                    _t('Please <a href="/web/login?redirect=%(url)s">login</a> to vote for this lesson');
-                this.showAlert(sprintf(message, { url: encodeURIComponent(document.URL) }));
+                const tags = {
+                    a_login_open: markup`<a href="/web/login?redirect=${encodeURIComponent(
+                        document.URL
+                    )}">`,
+                    a_login_close: markup`</a>`,
+                    a_signup_open: markup`<a href="/web/signup?redirect=${encodeURIComponent(
+                        document.URL
+                    )}">`,
+                    a_signup_close: markup`</a>`,
+                };
+                this.showAlert(
+                    data.error_signup_allowed
+                        ? _t(
+                              "Please %(a_login_open)slogin%(a_login_close)s or %(a_signup_open)screate an account%(a_signup_close)s to vote for this lesson",
+                              tags
+                          )
+                        : _t(
+                              "Please %(a_login_open)slogin%(a_login_close)s to vote for this lesson",
+                              tags
+                          )
+                );
             } else if (data.error === 'slide_access') {
-                this.showAlert(escape(_t('You don\'t have access to this lesson')));
-            } else if (data.error === 'channel_membership_required') {
-                this.showAlert(escape(_t('You must be member of this course to vote')));
-            } else if (data.error === 'channel_comment_disabled') {
-                this.showAlert(escape(_t('Votes and comments are disabled for this course')));
-            } else if (data.error === 'channel_karma_required') {
-                this.showAlert(escape(_t('You don\'t have enough karma to vote')));
+                this.showAlert(_t("You don't have access to this lesson"));
+            } else if (data.error === "channel_membership_required") {
+                this.showAlert(_t("You must be member of this course to vote"));
+            } else if (data.error === "channel_comment_disabled") {
+                this.showAlert(_t("Votes and comments are disabled for this course"));
+            } else if (data.error === "channel_karma_required") {
+                this.showAlert(_t("You don't have enough karma to vote"));
             } else {
-                this.showAlert(escape(_t('Unknown error')));
+                this.showAlert(_t("Unknown error"));
             }
         }
     }

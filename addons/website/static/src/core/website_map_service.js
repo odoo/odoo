@@ -4,7 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { markup } from "@odoo/owl";
-import { escape } from "@web/core/utils/strings";
 
 registry.category("services").add("website_map", {
     dependencies: ["public.interactions", "notification"],
@@ -68,10 +67,10 @@ registry.category("services").add("website_map", {
                                 const message = _t("Cannot load google map.");
                                 const urlTitle = _t("Check your configuration.");
                                 notification.add(
-                                    markup(`<div>
-                                        <span>${escape(message)}</span><br/>
-                                        <a href="/odoo/action-website.action_website_configuration">${escape(urlTitle)}</a>
-                                    </div>`),
+                                    markup`<div>
+                                        <span>${message}</span><br/>
+                                        <a href="/odoo/action-website.action_website_configuration">${urlTitle}</a>
+                                    </div>`,
                                     { type: 'warning', sticky: true }
                                 );
                             }
