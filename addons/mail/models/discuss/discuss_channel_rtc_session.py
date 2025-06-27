@@ -44,7 +44,16 @@ class DiscussChannelRtcSession(models.Model):
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            channel._bus_send_store(channel, {"rtc_session_ids": Store.Many(rtc_sessions, mode="ADD")})
+            channel._bus_send_store(
+                channel,
+                {
+                    "rtc_session_ids": Store.Many(
+                        rtc_sessions,
+                        rtc_sessions._get_store_default_fields(for_current_user=False),
+                        mode="ADD",
+                    ),
+                },
+            )
         for channel in rtc_sessions.channel_id.filtered(lambda c: len(c.rtc_session_ids) == 1):
             body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
             message = channel.message_post(body=body, message_type="notification")
@@ -102,7 +111,7 @@ class DiscussChannelRtcSession(models.Model):
         """
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
-        store = Store(self, extra=True)
+        store = Store(self, self._get_store_default_fields(extra=True, for_current_user=False))
         self.channel_id._bus_send(
             "discuss.channel.rtc.session/update_and_broadcast",
             {"data": store.get_result(), "channelId": self.channel_id.id},
@@ -157,19 +166,27 @@ class DiscussChannelRtcSession(models.Model):
         for target, payload in payload_by_target.items():
             target._bus_send("discuss.channel.rtc.session/peer_notification", payload)
 
-    def _to_store_defaults(self):
-        return Store.One(
+    def _get_store_default_fields(self, *, extra=False, for_current_user):
+        res = [Store.One(
             "channel_member_id",
             [
                 Store.One("channel_id", [], as_thread=True),
-                *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
+                *self.env["discuss.channel.member"]._to_store_persona(
+                    "avatar_card",
+                    for_current_user=for_current_user,
+                ),
             ],
-        )
-
-    def _to_store(self, store: Store, fields, *, extra=False):
+        )]
         if extra:
-            fields += ["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"]
-        store.add_records_fields(self, fields)
+            res += ["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"]
+        return res
+
+    def _get_store_extra_fields(self):
+        return ["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"]
+
+    def _to_store_defaults(self):
+        _logger.warning("_to_store_defaults of rtc session", stack_info=True)
+        return self._get_store_default_fields(for_current_user=False)
 
     @api.model
     def _inactive_rtc_session_domain(self):

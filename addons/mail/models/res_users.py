@@ -330,7 +330,7 @@ class ResUsers(models.Model):
             internalUserGroupId=self.env.ref("base.group_user").id,
             mt_comment=xmlid_to_res_id("mail.mt_comment"),
             mt_note=xmlid_to_res_id("mail.mt_note"),
-            odoobot=Store.One(odoobot),
+            odoobot=Store.One(odoobot, odoobot._get_store_default_fields(for_current_user=True)),
         )
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)

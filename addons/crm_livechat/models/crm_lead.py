@@ -37,5 +37,7 @@ class CrmLead(models.Model):
 
     def action_open_livechat(self):
         self.env.user._bus_send_store(
-            self.origin_channel_id, extra_fields={"open_chat_window": True}
+            self.origin_channel_id,
+            self.origin_channel_id._to_store_defaults(for_current_user=True)
+            + [{"open_chat_window": True}],
         )

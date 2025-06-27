@@ -23,7 +23,7 @@ class DiscussChannelWebclientController(WebclientController):
         super()._process_request_loop(store, fetch_params)
         channels = request.env.context["channels"]
         if channels:
-            store.add(channels)
+            store.add(channels, channels._get_store_default_fields(for_current_user=True))
         if request.env.context["add_channels_last_message"]:
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)

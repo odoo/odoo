@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import re
 
 from odoo import _, api, fields, models, tools
@@ -7,6 +8,8 @@ from odoo.fields import Domain
 from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
+
+_logger = logging.getLogger(__name__)
 
 
 class ResPartner(models.Model):
@@ -258,21 +261,22 @@ class ResPartner(models.Model):
             ]
         return [field_name]
 
-    def _to_store_defaults(self):
-        return [
+    def _get_store_default_fields(self, *, for_current_user):
+        res = [
             "active",
             "avatar_128",
-            "email",
             "im_status",
             "is_company",
             Store.One("main_user_id", ["share"]),
             "name",
         ]
+        if for_current_user and self.env.user._is_internal():
+            res.append("email")
+        return res
 
-    def _to_store(self, store: Store, fields):
-        if not self.env.user._is_internal() and "email" in fields:
-            fields.remove("email")
-        store.add_records_fields(self, fields)
+    def _to_store_defaults(self, for_current_user=False):
+        _logger.warning("_to_store_defaults of partner", stack_info=True)
+        return self._get_store_default_fields(for_current_user=for_current_user)
 
     @api.readonly
     @api.model

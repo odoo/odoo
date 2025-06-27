@@ -105,13 +105,13 @@ class Store:
             if hasattr(records, "_thread_to_store"):
                 records._thread_to_store(self, fields, **kwargs)
             else:
-                assert not kwargs
+                assert not kwargs, kwargs
                 self.add_records_fields(records, fields, as_thread=True)
         else:
             if hasattr(records, "_to_store"):
                 records._to_store(self, fields, **kwargs)
             else:
-                assert not kwargs
+                assert not kwargs, kwargs
                 self.add_records_fields(records, fields)
         return self
 

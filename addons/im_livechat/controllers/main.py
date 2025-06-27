@@ -166,13 +166,14 @@ class LivechatController(http.Controller):
         # Make sure not to send "isLoaded" value on the guest bus, otherwise it
         # could be overwritten.
         if channel:
-             store.add(
-                 channel,
-                 extra_fields={
-                     "isLoaded": not chatbot_script,
-                     "scrollUnread": False,
-                 },
-             )
+            store.add(
+                channel,
+                channel._to_store_defaults(for_current_user=True)
+                + [
+                    Store.Attr("isLoaded", not chatbot_script),
+                    Store.Attr("scrollUnread", False),
+                ],
+            )
         return {
             "store_data": store.get_result(),
             "channel_id": channel_id,

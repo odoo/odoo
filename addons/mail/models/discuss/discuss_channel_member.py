@@ -246,7 +246,11 @@ class DiscussChannelMember(models.Model):
             :param is_typing: (boolean) tells whether the members are typing or not
         """
         for member in self:
-            member.channel_id._bus_send_store(member, extra_fields={"isTyping": is_typing, "is_typing_dt": fields.Datetime.now()})
+            member.channel_id._bus_send_store(
+                member,
+                member._get_store_default_fields(for_current_user=False)
+                + [{"isTyping": is_typing, "is_typing_dt": fields.Datetime.now()}],
+            )
 
     def _notify_mute(self):
         for member in self:
@@ -268,14 +272,17 @@ class DiscussChannelMember(models.Model):
         members.write({"mute_until_dt": False})
         members._notify_mute()
 
-    def _to_store_persona(self, fields=None):
+    def _to_store_persona(self, fields=None, *, for_current_user):
         if fields == "avatar_card":
             fields = ["avatar_128", "im_status", "name"]
         return [
             # sudo: res.partner - reading partner related to a member is considered acceptable
             Store.Attr(
                 "partner_id",
-                lambda m: Store.One(m.partner_id.sudo(), m._get_store_partner_fields(fields)),
+                lambda m: Store.One(
+                    m.partner_id.sudo(),
+                    m._get_store_partner_fields(fields, for_current_user=for_current_user),
+                ),
                 predicate=lambda m: m.partner_id,
             ),
             # sudo: mail.guest - reading guest related to a member is considered acceptable
@@ -286,19 +293,29 @@ class DiscussChannelMember(models.Model):
             ),
         ]
 
-    def _to_store_defaults(self):
+    def _get_store_default_fields(self, *, for_current_user):
         return [
             Store.One("channel_id", [], as_thread=True),
             "create_date",
             "fetched_message_id",
             "last_seen_dt",
             "seen_message_id",
-            *self.env["discuss.channel.member"]._to_store_persona(),
+            *self.env["discuss.channel.member"]._to_store_persona(
+                for_current_user=for_current_user,
+            ),
         ]
 
-    def _get_store_partner_fields(self, fields):
+    def _to_store_defaults(self):
+        _logger.warning("_to_store_defaults of member", stack_info=True)
+        return self._get_store_default_fields(for_current_user=False)
+
+    def _get_store_partner_fields(self, fields, *, for_current_user):
         self.ensure_one()
-        return fields
+        return (
+            self.env["res.partner"]._get_store_default_fields(for_current_user=for_current_user)
+            if fields is None
+            else fields
+        )
 
     def _get_store_guest_fields(self, fields):
         self.ensure_one()
@@ -325,7 +342,14 @@ class DiscussChannelMember(models.Model):
         self._join_sfu(ice_servers)
         if store:
             store.add(
-                self.channel_id, {"rtc_session_ids": Store.Many(current_rtc_sessions, mode="ADD")}
+                self.channel_id,
+                {
+                    "rtc_session_ids": Store.Many(
+                        current_rtc_sessions,
+                        current_rtc_sessions._get_store_default_fields(for_current_user=True),
+                        mode="ADD",
+                    ),
+                },
             )
             store.add(
                 self.channel_id,
@@ -335,7 +359,10 @@ class DiscussChannelMember(models.Model):
                 "Rtc",
                 {
                     "iceServers": ice_servers or False,
-                    "localSession": Store.One(rtc_session),
+                    "localSession": Store.One(
+                        rtc_session,
+                        rtc_session._get_store_default_fields(for_current_user=True),
+                    ),
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )
@@ -451,7 +478,16 @@ class DiscussChannelMember(models.Model):
         for member in members:
             member.rtc_inviting_session_id = self.rtc_session_ids.id
             member._bus_send_store(
-                self.channel_id, {"rtcInvitingSession": Store.One(member.rtc_inviting_session_id, extra=True)}
+                self.channel_id,
+                {
+                    "rtcInvitingSession": Store.One(
+                        member.rtc_inviting_session_id,
+                        member.rtc_inviting_session_id._get_store_default_fields(
+                            extra=True,
+                            for_current_user=False,
+                        ),
+                    ),
+                },
             )
         if members:
             self.channel_id._bus_send_store(
@@ -461,7 +497,10 @@ class DiscussChannelMember(models.Model):
                         members,
                         [
                             Store.One("channel_id", [], as_thread=True),
-                            *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
+                            *self.env["discuss.channel.member"]._to_store_persona(
+                                "avatar_card",
+                                for_current_user=False,
+                            ),
                         ],
                         mode="ADD",
                     ),
@@ -552,7 +591,10 @@ class DiscussChannelMember(models.Model):
             self,
             [
                 Store.One("channel_id", [], as_thread=True),
-                *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
+                *self.env["discuss.channel.member"]._to_store_persona(
+                    "avatar_card",
+                    for_current_user=target == self,
+                ),
                 "seen_message_id",
             ],
         )
@@ -575,7 +617,7 @@ class DiscussChannelMember(models.Model):
                 "message_unread_counter",
                 {"message_unread_counter_bus_id": bus_last_id},
                 "new_message_separator",
-                *self.env["discuss.channel.member"]._to_store_persona([]),
+                *self.env["discuss.channel.member"]._to_store_persona([], for_current_user=True),
             ],
         )
 
