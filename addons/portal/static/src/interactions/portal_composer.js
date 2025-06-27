@@ -1,9 +1,8 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { escape } from "@web/core/utils/strings";
 import { post } from "@web/core/network/http_service";
-import { Component } from "@odoo/owl";
+import { Component, markup } from "@odoo/owl";
 import { rpc, RPCError } from "@web/core/network/rpc";
 
 /**
@@ -133,8 +132,8 @@ export class PortalComposer extends Interaction {
                                     if (error instanceof RPCError) {
                                         this.services.notification.add(
                                             _t(
-                                                "Could not save file <strong>%s</strong>",
-                                                escape(file.name)
+                                                "Could not save file %s",
+                                                markup`<strong>${file.name}</strong>`
                                             ),
                                             { type: "warning", sticky: true }
                                         );
