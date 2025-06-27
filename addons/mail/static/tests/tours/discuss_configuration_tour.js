@@ -18,10 +18,6 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-DiscussNotificationSettings label:contains('Mute')",
-            run: "click",
-        },
-        {
             trigger: "button:contains('All Messages')",
             run: "click",
         },
