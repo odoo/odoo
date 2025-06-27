@@ -40,8 +40,7 @@ class PosCategory(models.Model):
     def _load_pos_data_domain(self, data, config):
         domain = []
         if config.limit_categories:
-            category_ids = config.iface_available_categ_ids._get_descendants().ids
-            domain += [('id', 'in', category_ids)]
+            domain += [('id', 'in', config.iface_available_categ_ids.ids)]
         return domain
 
     @api.model
