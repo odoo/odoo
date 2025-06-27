@@ -6,7 +6,7 @@ import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
 registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
     url: '/shop',
     steps: () => [
-        ...wsTourUtils.addToCart({productName: "Plumbus"}),
+        ...wsTourUtils.addToCart({ productName: "Plumbus", expectUnloadPage: true }),
         wsTourUtils.goToCart(1),
         wsTourUtils.goToCheckout(),
         {
@@ -23,6 +23,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
             content: "click on 'Apply'",
             trigger: "a[role='button'].a-submit:contains(Apply)",
             run: "click",
+            expectUnloadPage: true,
         },
         wsTourUtils.confirmOrder(),
         ...wsTourUtils.assertCartAmounts({

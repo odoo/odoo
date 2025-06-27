@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
             content: "Check portal is loaded",
             trigger: 'a[href*="/my/account"]:contains("Edit"):first',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Load my account details",
@@ -24,6 +25,7 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
             content: "Submit the form",
             trigger: 'button[type=submit]',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Check that we are back on the portal",
