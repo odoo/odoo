@@ -106,6 +106,11 @@
       <cbc:ID>TR0123456789</cbc:ID>
     </cac:PayeeFinancialAccount>
   </cac:PaymentMeans>
+  <cac:AllowanceCharge>
+    <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+    <cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+    <cbc:Amount currencyID="TRY">18.00</cbc:Amount>
+  </cac:AllowanceCharge>
   <cac:TaxTotal>
     <cbc:TaxAmount currencyID="TRY">21.12</cbc:TaxAmount>
     <cac:TaxSubtotal>
@@ -135,7 +140,7 @@
     <cbc:LineExtensionAmount currencyID="TRY">132.00</cbc:LineExtensionAmount>
     <cbc:TaxExclusiveAmount currencyID="TRY">132.00</cbc:TaxExclusiveAmount>
     <cbc:TaxInclusiveAmount currencyID="TRY">153.12</cbc:TaxInclusiveAmount>
-    <cbc:AllowanceTotalAmount currencyID="TRY">0.00</cbc:AllowanceTotalAmount>
+    <cbc:AllowanceTotalAmount currencyID="TRY">18.00</cbc:AllowanceTotalAmount>
     <cbc:PayableAmount currencyID="TRY">153.12</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>
