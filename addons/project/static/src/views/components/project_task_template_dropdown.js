@@ -1,4 +1,4 @@
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -36,15 +36,21 @@ export class ProjectTaskTemplateDropdown extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
+        this.state = useState({ taskTemplates: [] });
         onWillStart(this.onWillStart);
-        this.taskTemplates = [];
     }
 
     async onWillStart() {
         if (this.props.projectId && !this.props.context.default_is_template) {
-            this.taskTemplates = await this.orm.call("project.project", "get_template_tasks", [
-                this.props.projectId,
-            ]);
+            this.state.taskTemplates = await this.orm
+                .cached({
+                    onFinish: (hasChanged, result) => {
+                        if (hasChanged) {
+                            this.state.taskTemplates = result;
+                        }
+                    },
+                })
+                .call("project.project", "get_template_tasks", [this.props.projectId]);
         }
     }
 
