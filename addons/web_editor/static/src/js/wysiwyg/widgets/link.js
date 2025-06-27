@@ -15,7 +15,15 @@ import {
 } from "@odoo/owl";
 import { deduceURLfromText } from "@web_editor/js/editor/odoo-editor/src/utils/sanitize";
 
-const { getDeepRange, getInSelection, EMAIL_REGEX, PHONE_REGEX } = OdooEditorLib;
+const {
+    closestElement,
+    getDeepRange,
+    getInSelection,
+    EMAIL_REGEX,
+    FONT_SIZE_CLASSES,
+    PHONE_REGEX,
+    splitAroundUntil,
+} = OdooEditorLib;
 
 /**
  * Allows to customize link content and style.
@@ -725,7 +733,18 @@ export function getOrCreateLink({ containerNode, startNode } = {}) {
             range.insertNode(link);
             needLabel = true;
         } else {
-            link.appendChild(range.extractContents());
+            const fontSizeWrapper = closestElement(
+                commonAncestor,
+                (el) =>
+                    el.tagName === "SPAN" &&
+                    FONT_SIZE_CLASSES.some((cls) => el.classList.contains(cls))
+            );
+
+            const contentToLink = fontSizeWrapper
+                ? splitAroundUntil(commonAncestor, fontSizeWrapper)
+                : range.extractContents();
+
+            link.appendChild(contentToLink);
             range.insertNode(link);
         }
     }
