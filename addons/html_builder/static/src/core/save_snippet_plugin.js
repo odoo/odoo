@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { escape } from "@web/core/utils/strings";
 
 const savableSelector = "[data-snippet], a.btn";
 // TODO `so_submit_button_selector` ?
@@ -40,11 +39,9 @@ export class SaveSnippetPlugin extends Plugin {
         const cleanForSaveHandlers = this.getResource("clean_for_save_handlers");
         const savedName = await this.config.saveSnippet(el, cleanForSaveHandlers);
         if (savedName) {
-            const message = markup(
-                _t(
-                    "Your custom snippet was successfully saved as <strong>%s</strong>. Find it in your snippets collection.",
-                    escape(savedName)
-                )
+            const message = _t(
+                "Your custom snippet was successfully saved as %s. Find it in your snippets collection.",
+                markup`<strong>${savedName}</strong>`
             );
             this.services.notification.add(message, {
                 type: "success",
