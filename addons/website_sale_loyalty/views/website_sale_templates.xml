@@ -1,10 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
-        <xpath expr="//form[@name='coupon_code']//input[@name='promo']" position="attributes">
-            <attribute name="placeholder">Gift card or discount code...</attribute>
+
+    <!-- Deactivatable through the website editor. -->
+    <template id="reduction_code" inherit_id="website_sale.total" name="Promo Code">
+        <!-- Checkout context:
+            - hide_promotions: Whether to hide promotion input; default: `None`.
+            - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
+            - website_sale_order: The current order.
+        -->
+        <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
+            <tr t-if="not hide_promotions">
+                <td colspan="3" class="text-end text-xl-end border-0 p-0">
+                <span>
+                    <div class="coupon_form">
+                        <form
+                            name="coupon_code"
+                            t-attf-action="/shop/promo#{redirect and '?r=' + redirect or ''}"
+                            method="post"
+                        >
+                            <input
+                                name="csrf_token"
+                                type="hidden"
+                                t-att-value="request.csrf_token()"
+                                t-nocache="The csrf token must always be up to date."
+                            />
+                            <div class="input-group w-100 my-2">
+                                <input
+                                    name="promo"
+                                    class="form-control"
+                                    type="text"
+                                    placeholder="Gift card or discount code..."
+                                />
+                                <a
+                                    href="#"
+                                    role="button"
+                                    class="btn btn-secondary a-submit"
+                                >
+                                    Apply
+                                </a>
+                            </div>
+                        </form>
+                        <t
+                            t-if="request.params.get('code_not_available')"
+                            name="code_not_available"
+                        >
+                            <div
+                                class="alert alert-danger text-start"
+                                role="alert"
+                            >
+                                This promo code is not available.
+                            </div>
+                        </t>
+                    </div>
+                </span>
+                </td>
+            </tr>
         </xpath>
-        <xpath expr="//t[@name='code_not_available']" position="replace"/>
     </template>
 
     <template id="modify_code_form" inherit_id="website_sale.total" name="Loyalty, coupon, gift card">
@@ -189,12 +240,6 @@
                     }'/>
             </td>
             </tr>
-        </xpath>
-    </template>
-
-    <template id="reduction_coupon_code" inherit_id="website_sale.reduction_code">
-        <xpath expr="//t[@t-set='force_coupon']" position="after">
-            <t t-set="_placeholder" t-value="'Discount code or gift card'"/>
         </xpath>
     </template>
 
