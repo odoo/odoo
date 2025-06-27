@@ -1,8 +1,14 @@
 import { Component, onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class ProjectTemplateDropdown extends Component {
     static template = "project.ProjectTemplateDropdown";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
 
     static props = {
         hotkey: {

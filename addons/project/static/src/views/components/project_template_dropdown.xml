@@ -2,20 +2,22 @@
 <templates>
     <t t-name="project.ProjectTemplateDropdown">
         <button t-if="!projectTemplates.length" type="button" t-att-class="props.newButtonClasses" t-att-disabled="props.isDisabled" t-att-data-hotkey="props.hotkey" t-on-click.stop="props.onCreate" data-bounce-button="">New</button>
-        <t t-else="">
-            <a t-attf-class="{{ props.newButtonClasses }} dropdown-toggle" data-bs-toggle="dropdown" t-att-disabled="props.isDisabled" aria-expanded="false" t-att-data-hotkey="props.hotkey" data-bounce-button="">
+        <Dropdown t-else="">
+            <button t-attf-class="{{ props.newButtonClasses }} o-dropdown-caret" t-att-disabled="props.isDisabled" t-att-data-hotkey="props.hotkey" data-bounce-button="">
                 New
-            </a>
-            <ul class="dropdown-menu o-project-form-dropdown-menu">
-                <button type="button" class="btn btn-link dropdown-item o-dropdown-item" t-on-click="props.onCreate">
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="props.onCreate">
                     New Project
-                </button>
-                <div class="dropdown-divider"/>
-                <div class="dropdown-header" style="padding-left: 20px;">Project Templates</div>
+                </DropdownItem>
+                <div role="separator" class="dropdown-divider"/>
+                <div class="dropdown-header">Project Templates</div>
                 <t t-foreach="projectTemplates" t-as="template" t-key="template.id">
-                    <button type="button" class="btn btn-link o-dropdown-item dropdown-item" style="padding-left: 32px;" t-on-click="() => this.createProjectFromTemplate(template)" t-out="template.name"/>
+                    <DropdownItem tag="'button'" class="'btn btn-link o-dropdopwn-item-indent'" onSelected="() => this.createProjectFromTemplate(template)">
+                        <t t-out="template.name"/>
+                    </DropdownItem>
                 </t>
-            </ul>
-        </t>
+            </t>
+        </Dropdown>
     </t>
 </templates>
