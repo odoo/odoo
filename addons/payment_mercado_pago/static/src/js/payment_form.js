@@ -22,7 +22,7 @@ paymentForm.include({
      * @return {void}
      */
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
-        if (providerCode !== 'mercado_pago') {
+        if (providerCode !== 'mercado_pago' || paymentMethodCode !== 'card') {
             this._super(...arguments);
             return;
         }
@@ -111,7 +111,7 @@ paymentForm.include({
             this.mercadoPagoComponents[paymentOptionId] = this.mercadoPagoCheckout;
     },
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
-        if (providerCode !== 'mercado_pago' || flow === 'token') {
+        if (providerCode !== 'mercado_pago' || flow === 'token' || paymentMethodCode !== 'card') {
             await this._super(...arguments); // Tokens are handled by the generic flow.
             return;
         }

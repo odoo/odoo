@@ -1,12 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import pprint
+from urllib.parse import quote as url_quote
+
+from werkzeug import urls
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools import float_round
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_mercado_pago import const
+from odoo.addons.payment_mercado_pago.controllers.main import MercadoPagoController
 
 
 _logger = logging.getLogger(__name__)
@@ -14,6 +20,87 @@ _logger = logging.getLogger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
+
+    def _get_specific_rendering_values(self, processing_values):
+        """ Override of `payment` to return Mercado Pago-specific rendering values.
+        Note: self.ensure_one() from `_get_rendering_values`.
+        :param dict processing_values: The generic and specific processing values of the transaction
+        :return: The dict of provider-specific processing values.
+        :rtype: dict
+        """
+        res = super()._get_specific_rendering_values(processing_values)
+        if self.provider_code != 'mercado_pago':
+            return res
+
+        # Initiate the payment and retrieve the payment link data.
+        payload = self._mercado_pago_prepare_preference_request_payload()
+        _logger.info(
+            "Sending '/checkout/preferences' request for link creation:\n%s",
+            pprint.pformat(payload),
+        )
+        api_url = self.provider_id._mercado_pago_make_request(
+            '/checkout/preferences', payload=payload
+        )['init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point']
+
+        # Extract the payment link URL and params and embed them in the redirect form.
+        parsed_url = urls.url_parse(api_url)
+        url_params = urls.url_decode(parsed_url.query)
+        rendering_values = {
+            'api_url': api_url,
+            'url_params': url_params,  # Encore the params as inputs to preserve them.
+        }
+        return rendering_values
+
+    def _mercado_pago_prepare_preference_request_payload(self):
+        """ Create the payload for the preference request based on the transaction values.
+        :return: The request payload.
+        :rtype: dict
+        """
+        base_url = 'https://b285-94-140-169-33.ngrok-free.app/'
+        return_url = urls.url_join(base_url, MercadoPagoController._return_url)
+        sanitized_reference = url_quote(self.reference)
+        webhook_url = urls.url_join(
+            base_url, f'{MercadoPagoController._webhook_url}/{sanitized_reference}'
+        )  # Append the reference to identify the transaction from the webhook notification data.
+
+        unit_price = self.amount
+        decimal_places = const.CURRENCY_DECIMALS.get(self.currency_id.name)
+        if decimal_places is not None:
+            unit_price = float_round(unit_price, decimal_places, rounding_method='DOWN')
+
+        return {
+            'auto_return': 'all',
+            'back_urls': {
+                'success': return_url,
+                'pending': return_url,
+                'failure': return_url,
+            },
+            'external_reference': self.reference,
+            'items': [{
+                'title': self.reference,
+                'quantity': 1,
+                'currency_id': self.currency_id.name,
+                'unit_price': unit_price,
+            }],
+            'notification_url': webhook_url,
+            'payer': {
+                'name': self.partner_name,
+                'email': self.partner_email,
+                'phone': {
+                    'number': self.partner_phone,
+                },
+                'address': {
+                    'zip_code': self.partner_zip,
+                    'street_name': self.partner_address,
+                },
+            },
+            'payment_methods':{
+                'excluded_payment_types':[
+                {'id': 'credit_card',},
+                {'id': 'debit_card',},
+                ],
+            },
+        }
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on Mercado Pago data.
@@ -51,9 +138,12 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'mercado_pago':
             return super()._compare_notification_data(notification_data)
 
-        amount = notification_data.get('additional_info', {}).get('items', [{}])[0].get(
-            'unit_price'
-        )
+        if self.operation == 'online_redirect':
+            amount = notification_data.get('additional_info', {}).get('items', [{}])[0].get(
+                'unit_price'
+            )
+        else:
+            amount = notification_data.get('transaction_amount')
         # The currency code isn't included in the notification data, so we can't validate it.
         self._validate_amount_and_currency(
             amount,

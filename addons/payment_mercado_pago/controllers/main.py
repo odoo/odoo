@@ -13,7 +13,23 @@ _logger = logging.getLogger(__name__)
 
 
 class MercadoPagoController(http.Controller):
+    _return_url = '/payment/mercado_pago/return'
     _webhook_url = '/payment/mercado_pago/webhook'
+
+    @http.route(_return_url, type='http', methods=['GET'], auth='public')
+    def mercado_pago_return_from_checkout(self, **data):
+        """ Process the notification data sent by Mercado Pago after redirection from checkout.
+        :param dict data: The notification data.
+        """
+        # Handle the notification data.
+        _logger.info("Handling redirection from Mercado Pago with data:\n%s", pprint.pformat(data))
+        if data.get('payment_id') != 'null':
+            self._verify_and_handle_notification_data(data)
+        else:  # The customer cancelled the payment by clicking on the return button.
+            pass  # Don't try to process this case because the payment id was not provided.
+
+        # Redirect the user to the status page.
+        return request.redirect('/payment/status')
 
     @http.route(
         f'{_webhook_url}/<reference>', type='http', auth='public', methods=['POST'], csrf=False
@@ -60,36 +76,22 @@ class MercadoPagoController(http.Controller):
         )
         tx_sudo._handle_notification_data('mercado_pago', verified_data)
 
-    @http.route('/mercado_pago/methods', type='http')
-    def mercado_pago_methods(self):
-
-        headers = {'Content-Type':'application/json','Authorization': f'Bearer TEST-8088927131040927-082108-480b8790088df9ec287c80b5982f31ad-1074382083'}
-
-        x = requests.get('https://api.mercadopago.com/v1/payment_methods', params=None, headers=headers, timeout=10)
-        print(x)
-
-
     @http.route('/payment/mercado_pago/payments', type='jsonrpc', auth='public')
     def make_mp_transacton(self, payment_method_id, payer, provider_id, reference, transaction_amount, token=None, issuer_id=None):
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
         tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
 
         payload = {
-            "transaction_amount": transaction_amount,
+            "transaction_amount": float(transaction_amount),
             "description": reference,
             "installments": 1,
             "payment_method_id": payment_method_id,
             "payer": payer,
-            **self.card_payment_values(token, issuer_id),
+            'token': token,
         }
 
         response_content = provider_sudo._mercado_pago_make_request(endpoint='/v1/payments', payload=payload, method='POST', idempotency_key=payment_utils.generate_idempotency_key(tx_sudo))
 
         tx_sudo._handle_notification_data(
-            'mercado_pago', dict(response_content, merchantReference=reference, **self.card_payment_values(token, issuer_id)),  # Match the transaction
+            'mercado_pago', dict(response_content, merchantReference=reference, token=token),  # Match the transaction
         )
-
-    def card_payment_values(self, token, issuer_id):
-        if token and issuer_id:
-            return {"token": token, "issuer_id": issuer_id}
-        return {}

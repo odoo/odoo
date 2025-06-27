@@ -47,6 +47,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
     # Brand payment methods.
+    'amex',
     'visa',
     'mastercard',
     'argencard',
