@@ -6,7 +6,6 @@ import { useDragAndDrop } from "@web_editor/js/editor/drag_and_drop";
 import options from "@web_editor/js/editor/snippets.options";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
-import { escape } from "@web/core/utils/strings";
 import { closestElement, isUnremovable } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
@@ -3298,8 +3297,8 @@ class SnippetsMenu extends Component {
                     displayName: snippetEl.getAttribute("name"),
                     category: category,
                     content: snippetEl.children,
-                    thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
-                    imagePreview: escape(snippetEl.dataset.oImagePreview),
+                    thumbnailSrc: snippetEl.dataset.oeThumbnail,
+                    imagePreview: snippetEl.dataset.oImagePreview,
                     visible: true,
                     baseBody: snippetEl.children[0],
                     data: {...snippetEl.dataset, ...snippetEl.children[0].dataset},
@@ -5213,7 +5212,7 @@ class SnippetsMenu extends Component {
         const linkUrl = '/odoo/action-base.open_module_tree/' + encodeURIComponent(moduleID);
         this.dialog.add(ConfirmationDialog, {
             title: _t("Install %s", moduleDisplayName),
-            body: markup(`${escape(bodyText)}\n<a href="${escape(linkUrl)}" target="_blank"><i class="oi oi-arrow-right me-1"></i>${escape(linkText)}</a>`),
+            body: markup`${bodyText}\n<a href="${linkUrl}" target="_blank"><i class="oi oi-arrow-right me-1"></i>${linkText}</a>`,
             confirm: async () => {
                 try {
                     this._execWithLoadingEffect(async () => {
@@ -5228,7 +5227,7 @@ class SnippetsMenu extends Component {
                     });
                 } catch (e) {
                     if (e instanceof RPCError) {
-                        const message = escape(_t("Could not install module %s", moduleDisplayName));
+                        const message = _t("Could not install module %s", moduleDisplayName);
                         this.notification.add(message, {
                             type: "danger",
                             sticky: true,
