@@ -34,6 +34,9 @@ class SaleOrder(models.Model):
     def print_quotation_report(self):
         return self.env.ref('sale.action_report_saleorder').report_action(self)
 
+    def print_ordernote_report(self):
+         return self.env.ref('sale_extension.order_note_pdf').report_action(self)
+
     #custom computes
     @api.depends('order_line.item_delivery_date')
     def _compute_delivery_date(self):
