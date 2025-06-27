@@ -29,8 +29,8 @@ export async function prettifyMessageContent(
     { validMentions = [], allowEmojiLoading = true } = {}
 ) {
     let body = htmlTrim(rawBody);
-    body = htmlReplace(body, /(\r|\n){2,}/g, () => markup("<br/><br/>"));
-    body = htmlReplace(body, /(\r|\n)/g, () => markup("<br/>"));
+    body = htmlReplace(body, /(\r|\n){2,}/g, () => markup`<br/><br/>`);
+    body = htmlReplace(body, /(\r|\n)/g, () => markup`<br/>`);
     body = htmlReplace(body, /&nbsp;/g, () => " ");
     body = htmlTrim(body);
     // This message will be received from the mail composer as html content
@@ -178,7 +178,7 @@ function generateMentionsLinks(
         body = htmlReplace(
             body,
             `@${special}`,
-            markup(`<a href="#" class="o-discuss-mention">@${htmlEscape(special)}</a>`)
+            markup`<a href="#" class="o-discuss-mention">@${special}</a>`
         );
     }
     for (const role of roles) {

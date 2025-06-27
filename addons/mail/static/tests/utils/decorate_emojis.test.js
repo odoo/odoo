@@ -24,7 +24,7 @@ test("emojis in text content are wrapped with title and marked up", async () => 
 test("emojis in attributes are not wrapped with title", async () => {
     await makeMockEnv();
     await loadEmoji();
-    const result = decorateEmojis(markup("<span title='😇'>test</span>"));
+    const result = decorateEmojis(markup`<span title='😇'>test</span>`);
     expect(result.toString()).toEqual('<span title="😇">test</span>');
 });
 
