@@ -75,7 +75,7 @@ class IrModuleCategory(models.Model):
     _order = 'sequence, name, id'
     _allow_sudo_commands = False
 
-    name = fields.Char(string='Name', required=True, translate=True, index=True)
+    name = fields.Char(string='Name', required=True, translate=True)
     parent_id = fields.Many2one('ir.module.category', string='Parent Application', index=True)
     child_ids = fields.One2many('ir.module.category', 'parent_id', string='Child Applications')
     module_ids = fields.One2many('ir.module.module', 'category_id', string='Modules')
