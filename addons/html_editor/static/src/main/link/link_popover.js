@@ -99,7 +99,7 @@ export class LinkPopover extends Component {
             customBorderStyle: computedStyle.borderStyle || "solid",
             isImage: this.props.isImage,
             showReplaceTitleBanner: this.props.showReplaceTitleBanner,
-            isLabelHidden: !!this.props.linkElement.childElementCount,
+            showLabel: !this.props.linkElement.childElementCount,
         });
 
         this.customTextColorState = useState({
