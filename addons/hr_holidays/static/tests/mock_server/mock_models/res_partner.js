@@ -25,15 +25,15 @@ export class ResPartner extends mailModels.ResPartner {
      * @override
      * @type {typeof mailModels.ResPartner["prototype"]["_to_store"]}
      */
-    _to_store(ids, store, fields) {
-        const kwargs = getKwArgs(arguments, "ids", "store", "fields");
+    _to_store(store, fields) {
+        const kwargs = getKwArgs(arguments, "store", "fields");
         fields = kwargs.fields;
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
         super._to_store(...arguments);
-        for (const partner of this.browse(ids)) {
+        for (const partner of this) {
             if (partner.main_user_id) {
-                store.add(
+                store._add_record_fields(
                     ResUsers.browse(partner.main_user_id),
                     makeKwArgs({ fields: ["leave_date_to"] })
                 );

@@ -1,4 +1,4 @@
-import { fields, getKwArgs, models } from "@web/../tests/web_test_helpers";
+import { fields, models } from "@web/../tests/web_test_helpers";
 
 export class MailMessageSubtype extends models.ServerModel {
     _name = "mail.message.subtype";
@@ -29,15 +29,4 @@ export class MailMessageSubtype extends models.ServerModel {
             track_recipients: true,
         },
     ];
-
-    _to_store(ids, store, fields) {
-        const kwargs = getKwArgs(arguments, "ids", "store", "fields");
-        ids = kwargs.ids;
-        store = kwargs.store;
-        fields = kwargs.fields ?? [];
-
-        for (const subtypeId of ids) {
-            store.add(this.browse(subtypeId), this._read_format(subtypeId, fields, false)[0]);
-        }
-    }
 }
