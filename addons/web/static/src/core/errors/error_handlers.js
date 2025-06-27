@@ -105,7 +105,7 @@ export function lostConnectionHandler(env, error, originalError) {
         }
         connectionLostNotifRemove = env.services.notification.add(
             _t("Connection lost. Trying to reconnect..."),
-            { sticky: true }
+            { autocloseDelay: 0 }
         );
         let delay = 2000;
         browser.setTimeout(function checkConnection() {

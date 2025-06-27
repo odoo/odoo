@@ -19,11 +19,9 @@ test("receive and display simple notification", async () => {
     await mountWithCleanup(WebClient);
     MockServer.env["bus.bus"]._sendone(serverState.partnerId, "simple_notification", {
         message: "simple notification",
-        title: "simple title",
     });
     await waitFor(".o_notification");
     expect(queryFirst(".o_notification_content")).toHaveText("simple notification");
-    expect(queryFirst(".o_notification_title")).toHaveText("simple title");
 });
 
 test("receive and display simple notification with specific type", async () => {
@@ -40,7 +38,7 @@ test("receive and display simple notification with specific type", async () => {
 test("receive and display simple notification as sticky", async () => {
     mockService("notification", {
         add(_, options) {
-            expect(options.sticky).toBe(true);
+            expect(options.autocloseDelay).toBe(0);
             asyncStep("add notification");
         },
     });

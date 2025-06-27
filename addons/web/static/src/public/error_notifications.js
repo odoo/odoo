@@ -8,7 +8,7 @@ odooExceptionTitleMap.forEach((title, exceptionName) => {
     registry.category("error_notifications").add(exceptionName, {
         title: title,
         type: "warning",
-        sticky: true,
+        autocloseDelay: 0,
     });
 });
 

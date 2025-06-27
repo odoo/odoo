@@ -270,7 +270,6 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             }
             this.env.services.notification.add(message, {
                 type: 'info',
-                sticky: false,
             });
         };
         for (const translationEl of $editable) {

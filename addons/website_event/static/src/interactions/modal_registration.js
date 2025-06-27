@@ -37,7 +37,7 @@ export class ModalRegistration extends Interaction {
             this.services.notification.add(this.recaptchaToken.error, {
                 type: "danger",
                 title: _t("Error"),
-                sticky: true,
+                autocloseDelay: 0,
             });
             this.enableRegistrationFormSubmit();
 

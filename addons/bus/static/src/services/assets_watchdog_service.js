@@ -30,7 +30,7 @@ export const assetsWatchdogService = {
                     notification.add(_t("The page appears to be out of date."), {
                         title: _t("Refresh"),
                         type: "warning",
-                        sticky: true,
+                        autocloseDelay: 0,
                         buttons: [
                             {
                                 name: _t("Refresh"),

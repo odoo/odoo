@@ -382,7 +382,7 @@ export class FileSelector extends Component {
                             _t("An error occurred while fetching the entered URL."),
                             {
                                 title: _t("Error"),
-                                sticky: true,
+                                autocloseDelay: 0,
                             }
                         );
                         resolve();

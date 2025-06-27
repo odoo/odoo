@@ -133,7 +133,6 @@ export class PaymentPineLabs extends PaymentInterface {
             } else {
                 this.pos.notification.add(response.notification, {
                     type: "warning",
-                    sticky: false,
                 });
             }
             this._removePaymentHandler();

@@ -91,9 +91,8 @@ export class SubtaskKanbanList extends Component {
     async _onSubtaskCreateNameChanged(name) {
         if (name.trim() === "") {
             this.notification.add(
-                markup(`<ul><li>${escape(_t("Display Name"))}</li></ul>`),
+                markup(`Invalid fields:<br/><ul><li>${escape(_t("Display Name"))}</li></ul>`),
                 {
-                    title: _t("Invalid fields: "),
                     type: "danger",
                 }
             );

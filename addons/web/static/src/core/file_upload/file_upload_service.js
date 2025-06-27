@@ -82,7 +82,7 @@ export const fileUploadService = {
                 ) {
                     notificationService.add(_t("An error occured while uploading."), {
                         title: _t("Error"),
-                        sticky: true,
+                        autocloseDelay: 0,
                     });
                 }
                 bus.trigger("FILE_UPLOAD_ERROR", { upload });

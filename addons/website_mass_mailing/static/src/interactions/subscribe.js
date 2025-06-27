@@ -111,7 +111,7 @@ export class Subscribe extends Interaction {
             this.notification.add(tokenObj.error, {
                 type: 'danger',
                 title: _t("Error"),
-                sticky: true,
+                autocloseDelay: 0,
             });
             return;
         }
@@ -133,7 +133,7 @@ export class Subscribe extends Interaction {
         this.notification.add(result.toast_content, {
             type: toastType,
             title: toastType === 'success' ? _t("Success") : _t("Error"),
-            sticky: true,
+            autocloseDelay: 0,
         });
     }
 }

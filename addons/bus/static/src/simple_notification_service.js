@@ -4,7 +4,11 @@ export const simpleNotificationService = {
     dependencies: ["bus_service", "notification"],
     start(env, { bus_service, notification: notificationService }) {
         bus_service.subscribe("simple_notification", ({ message, sticky, title, type }) => {
-            notificationService.add(message, { sticky, title, type });
+            notificationService.add(message, {
+                title,
+                type,
+                autocloseDelay: sticky ? 0 : undefined
+            });
         });
         bus_service.start();
     },

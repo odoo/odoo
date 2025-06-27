@@ -122,7 +122,6 @@ test("Don't duplicate record", async function () {
     });
     await animationFrame();
     expect(".o_notification").toHaveCount(1);
-    expect(".o_notification .o_notification_title").toHaveText("This record already exists.");
     expect(".o_notification .o_notification_body").toHaveText(
         "You tried to create a record that already exists. The existing record was modified instead."
     );

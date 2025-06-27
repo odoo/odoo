@@ -126,7 +126,6 @@ export class TranslationPlugin extends Plugin {
             }
             this.notificationService.add(message, {
                 type: "info",
-                sticky: false,
             });
         };
         for (const translateEl of editableEls) {

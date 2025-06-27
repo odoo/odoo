@@ -83,7 +83,7 @@ export class Quiz extends Interaction {
         this.services.notification.add(message, {
             type: "warning",
             title: _t("Quiz validation error"),
-            sticky: true,
+            autocloseDelay: 0,
         });
     }
 

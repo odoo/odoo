@@ -65,7 +65,7 @@ export class DocumentFileUploader extends Component {
                 this.notification.add(msg, {
                     title: file,
                     type: "info",
-                    sticky: true,
+                    autocloseDelay: 0,
                 });
             }
             delete action.context.notifications;

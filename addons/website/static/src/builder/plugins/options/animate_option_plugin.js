@@ -156,7 +156,7 @@ class AnimateOptionPlugin extends Plugin {
             _t(
                 "Cannot apply this option on current text selection. Try clearing the format and try again."
             ),
-            { type: "danger", sticky: true }
+            { type: "danger", autocloseDelay: 0 }
         );
         return {};
     }

@@ -71,7 +71,7 @@ registry.category("services").add("google_maps", {
                                             urlTitle
                                         )}</a>
                                     </div>`),
-                                    { type: "warning", sticky: true }
+                                    { type: "warning", autocloseDelay: 0 }
                                 );
                             }
                             resolve(false);
