@@ -522,12 +522,12 @@
                         <field  name="workorder_id"/>
                         <field name="workcenter_id"/>
                         <field name="loss_id"/>
-                        <field name="company_id" invisible="1"/>
-                    </group><group>
+                    </group>
+                    <group>
                         <field name="date_start"/>
                         <field name="date_end"/>
                         <field name="duration"/>
-                        <field name="company_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <field name="description"/>
                 </group>
