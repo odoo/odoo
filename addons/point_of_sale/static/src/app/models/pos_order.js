@@ -71,6 +71,7 @@ export class PosOrder extends Base {
             TipScreen: {
                 inputTipAmount: "",
             },
+            requiredPartnerDetails: {},
         };
     }
 
@@ -136,12 +137,27 @@ export class PosOrder extends Base {
     }
 
     get presetRequirementsFilled() {
-        return (
-            (!this.preset_id?.needsPartner ||
-                (this.partner_id?.name && (this.partner_id?.street || this.partner_id?.street2))) &&
-            (!this.preset_id?.needsName || this.partner_id?.name || this.floating_order_name) &&
-            (!this.preset_id?.needsSlot || this.preset_time)
-        );
+        const invalidCustomer =
+            (this.preset_id?.needsName && !(this.floating_order_name || this.partner_id)) ||
+            (this.preset_id?.needsPartner && !this.partner_id);
+        const isAddressMissing =
+            this.preset_id?.needsPartner && !(this.partner_id?.street || this.partner_id?.street2);
+        const invalidSlot = this.preset_id?.needsSlot && !this.preset_time;
+
+        if (invalidCustomer || isAddressMissing || invalidSlot) {
+            this.uiState.requiredPartnerDetails = {
+                field: _t(
+                    invalidCustomer ? _t("Customer") : isAddressMissing ? _t("Address") : _t("Slot")
+                ),
+                message: invalidCustomer
+                    ? _t("Please add a valid customer to the order.")
+                    : isAddressMissing
+                    ? _t("The selected customer needs an address.")
+                    : _t("Please select a time slot before proceeding."),
+            };
+            return false;
+        }
+        return true;
     }
 
     get isRefund() {

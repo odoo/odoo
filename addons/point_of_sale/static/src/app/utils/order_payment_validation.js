@@ -314,9 +314,10 @@ export default class OrderPaymentValidation {
         }
 
         if (!this.order.presetRequirementsFilled) {
+            const { field, message } = this.order.uiState.requiredPartnerDetails || {};
             this.pos.dialog.add(AlertDialog, {
-                title: _t("Customer required"),
-                body: _t("Please add a valid customer to the order."),
+                title: field ? _t("%s required", field) : _t("Missing required"),
+                body: message || _t("Some required information is missing."),
             });
             return false;
         }

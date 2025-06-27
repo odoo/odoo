@@ -21,6 +21,7 @@ describe("pos.order", () => {
             TipScreen: {
                 inputTipAmount: "",
             },
+            requiredPartnerDetails: {},
         });
     });
 
@@ -148,5 +149,61 @@ describe("pos.order", () => {
         expect(taxTotalsWDiscount.base_amount).toBe(10.2);
         expect(taxTotalsWDiscount.total_amount).toBe(12.03);
         expect(taxTotalsWDiscount.tax_amount_currency).toBe(1.83);
+    });
+
+    test("customer requirements", async () => {
+        const store = await setupPosEnv();
+        const preset = store.models["pos.preset"].get(3); // Address Required Preset
+        const partner = store.models["res.partner"].get(3); // Customer Without Address
+        const order = store.addNewOrder();
+        order.preset_id = preset;
+
+        // No partner
+        expect(order.presetRequirementsFilled).toBe(false);
+        expect(order.uiState.requiredPartnerDetails.field).toBe("Customer");
+        expect(order.uiState.requiredPartnerDetails.message).toBe(
+            "Please add a valid customer to the order."
+        );
+
+        // Partner
+        order.partner_id = partner;
+        expect(order.presetRequirementsFilled).toBe(true);
+    });
+
+    test("Address requirements", async () => {
+        const store = await setupPosEnv();
+        const preset = store.models["pos.preset"].get(4); // Address Required Preset
+        const partner = store.models["res.partner"].get(3); // Customer Without Address
+        const order = store.addNewOrder();
+        order.preset_id = preset;
+        order.partner_id = partner;
+
+        expect(order.presetRequirementsFilled).toBe(false);
+        expect(order.uiState.requiredPartnerDetails.field).toBe("Address");
+        expect(order.uiState.requiredPartnerDetails.message).toBe(
+            "The selected customer needs an address."
+        );
+
+        // Partner with address
+        partner.street = "test abc";
+        expect(order.presetRequirementsFilled).toBe(true);
+    });
+
+    test("slot requirement preset", async () => {
+        const store = await setupPosEnv();
+        const preset = store.models["pos.preset"].get(2); // Time Slot Preset
+        const order = store.addNewOrder();
+        order.preset_id = preset;
+
+        // No slot
+        expect(order.presetRequirementsFilled).toBe(false);
+        expect(order.uiState.requiredPartnerDetails.field).toBe("Slot");
+        expect(order.uiState.requiredPartnerDetails.message).toBe(
+            "Please select a time slot before proceeding."
+        );
+
+        // Slot set
+        order.preset_time = "2025-08-11 14:00:00";
+        expect(order.presetRequirementsFilled).toBe(true);
     });
 });
