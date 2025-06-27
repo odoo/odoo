@@ -1,14 +1,5 @@
-.o_hr_skills_group {
-    padding: 0 calc(var(--gutter-x) * 1)!important;
-    &:first-child {
-        padding-left: calc(var(--gutter-x) * .5)!important;
-    }
-    &:last-child {
-        padding-right: calc(var(--gutter-x) * .5)!important;
-    }
-    .o_list_renderer {
-        overflow-x: hidden!important;
-    }
+.o_hr_skills_group .o_list_renderer {
+    overflow-x: hidden !important;
 }
 
 .o_hr_skill_type_form {
@@ -44,4 +35,9 @@
     .flex-row-reverse {
         flex-direction: inherit !important;
     }
+}
+
+#o_work_information_right .o_list_renderer {
+    --ListRenderer-margin-x: 0;
+    --ListRenderer-table-padding-x: 0;
 }
