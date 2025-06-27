@@ -85,3 +85,16 @@
         max-width: #{$size}rem!important;
     }
 }
+
+@include media-breakpoint-up(lg) {
+    .o_hr_column {
+        padding: 0 calc(var(--gutter-x) * 1)!important;
+
+        &:first-child {
+            padding-left: calc(var(--gutter-x) * .5)!important;
+        }
+        &:last-child {
+            padding-right: calc(var(--gutter-x) * .5)!important;
+        }
+    }
+}
