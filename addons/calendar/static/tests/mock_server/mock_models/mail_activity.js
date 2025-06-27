@@ -26,11 +26,11 @@ export class MailActivity extends mailModels.MailActivity {
     }
 
     /** @param {number[]} ids */
-    _to_store(ids, store) {
+    _to_store(store) {
         super._to_store(...arguments);
-        for (const activity of this.browse(ids)) {
+        for (const activity of this) {
             if (activity.calendar_event_id) {
-                store.add(this.browse(activity.id), {
+                store._add_record_fields(this.browse(activity.id), {
                     calendar_event_id: activity.calendar_event_id,
                 });
             }

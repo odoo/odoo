@@ -10,15 +10,14 @@ export class DiscussChannel extends livechatModels.DiscussChannel {
      * @override
      * @type {typeof mailModels.DiscussChannel["prototype"]["_to_store"]}
      */
-    _to_store(ids, store) {
+    _to_store(store) {
         /** @type {import("mock_models").WebsiteVisitor} */
         const WebsiteVisitor = this.env["website.visitor"];
 
         super._to_store(...arguments);
-        const channels = this.browse(ids);
-        for (const channel of channels) {
+        for (const channel of this) {
             if (channel.channel_type === "livechat" && channel.livechat_visitor_id) {
-                store.add(this.browse(channel.id), {
+                store._add_record_fields(this.browse(channel.id), {
                     livechat_visitor_id: mailDataHelpers.Store.one(
                         WebsiteVisitor.browse(channel.livechat_visitor_id)
                     ),

@@ -248,14 +248,17 @@ test("mark channel as seen from the bus", async () => {
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 0 });
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
+    const DiscussChannelMember = pyEnv["discuss.channel.member"];
     pyEnv["bus.bus"]._sendone(
         channel,
         "mail.record/insert",
         new mailDataHelpers.Store(
-            pyEnv["discuss.channel.member"].search([
-                ["channel_id", "=", channelId],
-                ["partner_id", "=", partnerId],
-            ]),
+            DiscussChannelMember.browse(
+                DiscussChannelMember.search([
+                    ["channel_id", "=", channelId],
+                    ["partner_id", "=", partnerId],
+                ])
+            ),
             { seen_message_id: messageId }
         ).get_result()
     );
@@ -297,14 +300,17 @@ test("should display message indicator when message is fetched/seen", async () =
     });
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 1 });
     // Simulate received channel seen notification
+    const DiscussChannelMember = pyEnv["discuss.channel.member"];
     pyEnv["bus.bus"]._sendone(
         channel,
         "mail.record/insert",
         new mailDataHelpers.Store(
-            pyEnv["discuss.channel.member"].search([
-                ["channel_id", "=", channelId],
-                ["partner_id", "=", partnerId],
-            ]),
+            DiscussChannelMember.browse(
+                DiscussChannelMember.search([
+                    ["channel_id", "=", channelId],
+                    ["partner_id", "=", partnerId],
+                ])
+            ),
             { seen_message_id: messageId }
         ).get_result()
     );

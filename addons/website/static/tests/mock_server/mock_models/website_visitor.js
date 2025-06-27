@@ -21,7 +21,7 @@ export class WebsiteVisitor extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _to_store(ids, store) {
+    _to_store(store) {
         /** @type {import("mock_models").ResCountry} */
         const ResCountry = this.env["res.country"];
         /** @type {import("mock_models").ResLang} */
@@ -31,7 +31,7 @@ export class WebsiteVisitor extends models.ServerModel {
         /** @type {import("mock_models").Website} */
         const Website = this.env["website"];
 
-        for (const visitor of this.browse(ids)) {
+        for (const visitor of this) {
             const [data] = this._read_format(visitor.id, ["display_name"]);
             data.country_id = mailDataHelpers.Store.one(ResCountry.browse(visitor.country_id));
             data.history = visitor.history;
@@ -41,7 +41,7 @@ export class WebsiteVisitor extends models.ServerModel {
                 makeKwArgs({ fields: ["country_id"] })
             );
             data.website_id = mailDataHelpers.Store.one(Website.browse(visitor.website_id));
-            store.add(this.browse(visitor.id), data);
+            store._add_record_fields(this.browse(visitor.id), data);
         }
     }
 }
