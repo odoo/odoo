@@ -48,14 +48,19 @@ class ProjectTags(models.Model):
 
     @api.model
     def arrange_tag_list_by_id(self, tag_list, id_order):
-        """arrange_tag_list_by_id re-order a list of record values (dict) following a given id sequence
-           complexity: O(n)
-           param:
-                - tag_list: ordered (by id) list of record values, each record being a dict
-                  containing at least an 'id' key
-                - id_order: list of value (int) corresponding to the id of the records to re-arrange
-           result:
-                - Sorted list of record values (dict)
+        """
+        Re-order a list of record values (dict) according to a given ID sequence.
+
+        This method rearranges the input ``tag_list`` so that the resulting list
+        follows the order specified in ``id_order``. Complexity is O(n).
+
+        :param list[dict] tag_list: Ordered (by ID) list of record values, each record being
+                        a dict containing at least an 'id' key.
+
+        :param list[int] id_order: List of integer IDs specifying the desired order of records.
+
+        :returns: The sorted list of record values (dict) following the given ID sequence.
+        :rtype: list[dict]
         """
         tags_by_id = {tag['id']: tag for tag in tag_list}
         return [tags_by_id[id] for id in id_order if id in tags_by_id]
