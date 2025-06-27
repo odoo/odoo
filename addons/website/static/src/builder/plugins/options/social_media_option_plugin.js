@@ -185,7 +185,7 @@ class SocialMediaOptionPlugin extends Plugin {
         );
         for (const name of socialMediaInfo.keys()) {
             const key = `social_${name}`;
-            if (key in res[0]) {
+            if (key in res[0] && res[0][key]) {
                 this.recordedSocialMedia.set(name, res[0][key]);
             }
         }
