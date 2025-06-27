@@ -8888,6 +8888,40 @@ test("kanban with progressbars: correctly update env when archiving records", as
     ]);
 });
 
+test("kanban with progressbars: slow read_progress_bar", async () => {
+    const def = new Deferred();
+    onRpc("read_progress_bar", () => def);
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+            <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+            <templates>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`,
+        groupBy: ["bar"],
+    });
+
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(".o_kanban_group:nth-child(2) .o_column_progress").toHaveCount(1);
+    expect(".o_kanban_group:nth-child(2) .o_column_progress .progress-bar").toHaveCount(0);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_header").toHaveText("Yes");
+
+    def.resolve();
+    await animationFrame();
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(".o_kanban_group:nth-child(2) .o_column_progress").toHaveCount(1);
+    expect(".o_kanban_group:nth-child(2) .o_column_progress .progress-bar").toHaveCount(3);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_header").toHaveText("Yes\n36");
+});
+
 test("RPCs when (re)loading kanban view progressbars", async () => {
     stepAllNetworkCalls();
 
@@ -13882,4 +13916,491 @@ test(`kanban with custom cog action that has a confirmation target="new" action`
         "get_views",
         "web_read",
     ]);
+});
+
+test(`cache web_read_group (no change)`, async () => {
+    let def;
+    onRpc("web_read_group", () => def);
+
+    Partner._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "kanban,false": `
+            <kanban default_group_by="bar">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [[false, "kanban"]],
+            search_view_id: [false, "search"],
+        },
+        {
+            id: 2,
+            name: "Another action",
+            res_model: "partner",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view`).toHaveCount(1);
+    expect(`.o_kanban_group`).toHaveCount(2);
+    expect(queryAllTexts(`.o_kanban_header`)).toEqual(["No\n(1)", "Yes\n(3)"]);
+
+    // execute another action to remove the kanban from the DOM
+    await getService("action").doAction(2);
+    expect(`.o_list_view`).toHaveCount(1);
+
+    // execute again action 1, but web_read_group is delayed
+    def = new Deferred();
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view`).toHaveCount(1);
+    expect(`.o_kanban_group`).toHaveCount(2);
+    expect(queryAllTexts(`.o_kanban_header`)).toEqual(["No\n(1)", "Yes\n(3)"]);
+
+    // simulate the return of web_read_group => nothing should have changed
+    def.resolve();
+    await animationFrame();
+    expect(`.o_kanban_view`).toHaveCount(1);
+    expect(`.o_kanban_group`).toHaveCount(2);
+    expect(queryAllTexts(`.o_kanban_header`)).toEqual(["No\n(1)", "Yes\n(3)"]);
+});
+
+test(`cache web_read_group (change)`, async () => {
+    let def;
+    onRpc("web_read_group", () => def);
+
+    Partner._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "kanban,false": `
+            <kanban default_group_by="int_field">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [[false, "kanban"]],
+            search_view_id: [false, "search"],
+        },
+        {
+            id: 2,
+            name: "Another action",
+            res_model: "partner",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view`).toHaveCount(1);
+    expect(`.o_kanban_group`).toHaveCount(4);
+    expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual([
+        "-4\n(1)",
+        "9\n(1)",
+        "10\n(1)",
+        "17\n(1)",
+    ]);
+
+    // simulate the create of new records by someone else
+    MockServer.env.partner.create([{ int_field: 44 }, { int_field: -4 }]);
+
+    // execute another action to remove the kanban from the DOM
+    await getService("action").doAction(2);
+    expect(`.o_list_view`).toHaveCount(1);
+
+    // execute again action 1, but web_read_group is delayed
+    def = new Deferred();
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view`).toHaveCount(1);
+    expect(`.o_kanban_group`).toHaveCount(4);
+    expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual([
+        "-4\n(1)",
+        "9\n(1)",
+        "10\n(1)",
+        "17\n(1)",
+    ]);
+
+    // simulate the return of web_read_group => the data should have been updated
+    def.resolve();
+    await animationFrame();
+    expect(`.o_kanban_view`).toHaveCount(1);
+    expect(`.o_kanban_group`).toHaveCount(5);
+    expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual([
+        "-4\n(2)",
+        "9\n(1)",
+        "10\n(1)",
+        "17\n(1)",
+        "44\n(1)",
+    ]);
+});
+
+test(`cache web_read_group (no data, no change)`, async () => {
+    let def;
+    onRpc("web_read_group", () => def);
+
+    Partner._records = [];
+    Partner._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "kanban,false": `
+            <kanban default_group_by="product_id">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [[false, "kanban"]],
+            search_view_id: [false, "search"],
+        },
+        {
+            id: 2,
+            name: "Another action",
+            res_model: "partner",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+
+    // execute another action to remove the kanban from the DOM
+    await getService("action").doAction(2);
+    expect(`.o_list_view`).toHaveCount(1);
+
+    // execute again action 1, but web_read_group is delayed
+    def = new Deferred();
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+
+    // simulate the return of web_read_group => the sample data should still be displayed
+    def.resolve();
+    await animationFrame();
+    expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+});
+
+test(`cache web_read_group (no data, change)`, async () => {
+    let def;
+    onRpc("web_read_group", () => def);
+
+    Partner._records = [];
+    Partner._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "kanban,false": `
+            <kanban sample="1" default_group_by="product_id">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [[false, "kanban"]],
+            search_view_id: [false, "search"],
+        },
+        {
+            id: 2,
+            name: "Another action",
+            res_model: "partner",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+
+    // simulate the create of new records by someone else
+    MockServer.env.partner.create([{ product_id: 3 }, { product_id: 5 }]);
+
+    // execute another action to remove the kanban from the DOM
+    await getService("action").doAction(2);
+    expect(`.o_list_view`).toHaveCount(1);
+
+    // execute again action 1, but web_read_group is delayed
+    def = new Deferred();
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+
+    // simulate the return of web_read_group => the data should have been updated
+    def.resolve();
+    await animationFrame();
+    expect(`.o_kanban_view`).toHaveCount(1);
+    expect(`.o_kanban_group`).toHaveCount(2);
+    expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual(["hello\n(1)", "xmo\n(1)"]);
+});
+
+test(`cache web_read_group (group_expand: groups, then no group)`, async () => {
+    // this test simulates that we are on a grouped kanban, with the group_expand feature, i.e.
+    // empty groups are shown, and when we first go to the view, there are groups, but empty, so
+    // sample data is displayed. Then, when we come back, we retrieve the data from the cache, but
+    // the rpc returns no group, so the view must be properly updated.
+    let def;
+    let withGroups = true;
+    onRpc("web_read_group", async () => {
+        if (withGroups) {
+            return {
+                groups: [
+                    {
+                        __extra_domain: [["product_id", "=", 3]],
+                        __records: [],
+                        __count: 0,
+                        product_id: [3, "xphone"],
+                    },
+                ],
+                length: 1,
+            };
+        } else {
+            await def;
+            return { groups: [], length: 0 };
+        }
+    });
+
+    Partner._records = [];
+    Partner._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "kanban,false": `
+            <kanban sample="1" default_group_by="product_id">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [[false, "kanban"]],
+            search_view_id: [false, "search"],
+        },
+        {
+            id: 2,
+            name: "Another action",
+            res_model: "partner",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view .o_view_sample_data`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_group`).toHaveCount(1);
+
+    // execute another action to remove the kanban from the DOM
+    await getService("action").doAction(2);
+    expect(`.o_list_view`).toHaveCount(1);
+
+    // simulate the removal of the (only) empty group
+    withGroups = false;
+
+    // execute again action 1, but web_read_group is delayed
+    def = new Deferred();
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view .o_view_sample_data`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_group`).toHaveCount(1);
+
+    // simulate the return of web_read_group => the data should have been updated
+    def.resolve();
+    await animationFrame();
+    expect(`.o_kanban_view`).toHaveCount(1);
+    expect(`.o_kanban_view .o_view_sample_data`).toHaveCount(0);
+    expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_stages_nocontent`).toHaveCount(1);
+});
+
+test(`cache web_read_group (group_expand: groups, then more groups)`, async () => {
+    // this test simulates that we are on a grouped kanban, with the group_expand feature, i.e.
+    // empty groups are shown, and when we first go to the view, there are groups, but empty, so
+    // sample data is displayed. Then, when we come back, we retrieve the data from the cache, but
+    // the rpc returns more (or less, but still some) groups. Theoretically, we should remain in
+    // sample mode and display the updated groups. We do correctly display the groups, but the
+    // sample mode is left, because it is a quite complex usecase to deal with, and we don't think
+    // it would be worth the complexity. This test simply encodes the current behavior, that we may
+    // change in the future if we want to.
+    let def;
+    const groups = [
+        {
+            __extra_domain: [["product_id", "=", 3]],
+            __records: [],
+            __count: 0,
+            product_id: [3, "xphone"],
+        },
+    ];
+    onRpc("web_read_group", async () => {
+        await def;
+        return {
+            groups,
+            length: groups.length,
+        };
+    });
+
+    Partner._records = [];
+    Partner._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "kanban,false": `
+            <kanban sample="1" default_group_by="product_id">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [[false, "kanban"]],
+            search_view_id: [false, "search"],
+        },
+        {
+            id: 2,
+            name: "Another action",
+            res_model: "partner",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view .o_view_sample_data`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_group`).toHaveCount(1);
+
+    // execute another action to remove the kanban from the DOM
+    await getService("action").doAction(2);
+    expect(`.o_list_view`).toHaveCount(1);
+
+    // simulate the addition of another empty group
+    groups.push({
+        __extra_domain: [["product_id", "=", 5]],
+        __records: [],
+        __count: 0,
+        product_id: [5, "xpad"],
+    });
+
+    // execute again action 1, but web_read_group is delayed
+    def = new Deferred();
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view .o_view_sample_data`).toHaveCount(1);
+    expect(`.o_kanban_view .o_kanban_group`).toHaveCount(1);
+
+    // simulate the return of web_read_group => the data should have been updated
+    def.resolve();
+    await animationFrame();
+    expect(`.o_kanban_view .o_view_sample_data`).toHaveCount(0); // would be ok to remain in sample
+    expect(`.o_kanban_view .o_kanban_group`).toHaveCount(2);
+});
+
+test(`cache web_read_group: less groups than in cache`, async () => {
+    // this test simulates that we are on a grouped kanban and the rpc returns less groups than we
+    // got from the cache. Those missing groups should be properly removed from the UI on update.
+    let def;
+    onRpc("web_read_group", () => def);
+
+    Partner._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "kanban,false": `
+            <kanban sample="1" default_group_by="product_id">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [[false, "kanban"]],
+            search_view_id: [false, "search"],
+        },
+        {
+            id: 2,
+            name: "Another action",
+            res_model: "partner",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view .o_kanban_group`).toHaveCount(2);
+    expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual(["hello\n(2)", "xmo\n(2)"]);
+
+    // execute another action to remove the kanban from the DOM
+    await getService("action").doAction(2);
+    expect(`.o_list_view`).toHaveCount(1);
+
+    // simulate a move of records from first group to the second one
+    MockServer.env.partner.write([1, 3], { product_id: 5 });
+
+    // execute again action 1, but web_read_group is delayed
+    def = new Deferred();
+    await getService("action").doAction(1);
+    expect(`.o_kanban_view .o_kanban_group`).toHaveCount(2);
+    expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual(["hello\n(2)", "xmo\n(2)"]);
+
+    // simulate the return of web_read_group => the data should have been updated
+    def.resolve();
+    await animationFrame();
+    expect(`.o_kanban_view .o_kanban_group`).toHaveCount(1);
+    expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual(["xmo\n(4)"]);
 });
