@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -7,10 +6,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.modules.registry import Registry
-from odoo.osv import expression
-from odoo.sql_db import BaseCursor
-from odoo.tools import float_compare, float_is_zero
+from odoo.fields import Domain
+from odoo.tools import float_is_zero
 from odoo.tools.misc import split_every
 
 _logger = logging.getLogger(__name__)
@@ -503,8 +500,9 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _search_rule_for_warehouses(self, route_ids, packaging_uom_id, product_id, warehouse_ids, domain):
+        domain = Domain(domain)
         if warehouse_ids:
-            domain = expression.AND([['|', ('warehouse_id', 'in', warehouse_ids.ids), ('warehouse_id', '=', False)], domain])
+            domain &= Domain('warehouse_id', 'in', [False, *warehouse_ids.ids])
         valid_route_ids = set()
         if route_ids:
             valid_route_ids |= set(route_ids.ids)
@@ -515,7 +513,7 @@ class ProcurementGroup(models.Model):
         if warehouse_ids:
             valid_route_ids |= set(warehouse_ids.route_ids.ids)
         if valid_route_ids:
-            domain = expression.AND([[('route_id', 'in', list(valid_route_ids))], domain])
+            domain &= Domain('route_id', 'in', list(valid_route_ids))
         res = self.env["stock.rule"]._read_group(
             domain,
             groupby=["location_dest_id", "warehouse_id", "route_id"],
@@ -532,24 +530,26 @@ class ProcurementGroup(models.Model):
         group, then try on the routes defined for the product, finally fallback
         on the default behavior
         """
-        if warehouse_id:
-            domain = expression.AND([['|', ('warehouse_id', '=', warehouse_id.id), ('warehouse_id', '=', False)], domain])
         Rule = self.env['stock.rule']
         res = self.env['stock.rule']
+        domain = Domain(domain)
+        if warehouse_id:
+            domain &= Domain('warehouse_id', 'in', [False, warehouse_id.id])
+        domain = domain.optimize(Rule)
         if route_ids:
-            res = Rule.search(expression.AND([[('route_id', 'in', route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
+            res = Rule.search(Domain('route_id', 'in', route_ids.ids) & domain, order='route_sequence, sequence', limit=1)
         if not res and packaging_uom_id:
             packaging_routes = packaging_uom_id.package_type_id.route_ids
             if packaging_routes:
-                res = Rule.search(expression.AND([[('route_id', 'in', packaging_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
+                res = Rule.search(Domain('route_id', 'in', packaging_routes.ids) & domain, order='route_sequence, sequence', limit=1)
         if not res:
             product_routes = product_id.route_ids | product_id.categ_id.total_route_ids
             if product_routes:
-                res = Rule.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
+                res = Rule.search(Domain('route_id', 'in', product_routes.ids) & domain, order='route_sequence, sequence', limit=1)
         if not res and warehouse_id:
             warehouse_routes = warehouse_id.route_ids
             if warehouse_routes:
-                res = Rule.search(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
+                res = Rule.search(Domain('route_id', 'in', warehouse_routes.ids) & domain, order='route_sequence, sequence', limit=1)
         return res
 
     @api.model
@@ -641,7 +641,7 @@ class ProcurementGroup(models.Model):
         # This is to avoid having to duplicate every rules that deliver to Customer to have the Inter-company part.
         if self._check_intercomp_location(locations):
             location_ids.append(self.env.ref('stock.stock_location_customers', raise_if_not_found=False).id)
-        domain = ['&', ('location_dest_id', 'in', location_ids), ('action', '!=', 'push')]
+        domain = Domain('location_dest_id', 'in', location_ids) & Domain('action', '!=', 'push')
         # In case the method is called by the superuser, we need to restrict the rules to the
         # ones of the company. This is not useful as a regular user since there is a record
         # rule to filter out the rules based on the company.
@@ -650,7 +650,7 @@ class ProcurementGroup(models.Model):
             if values.get('route_ids'):
                 company_ids |= set(values['route_ids'].company_id.ids)
             domain_company = ['|', ('company_id', '=', False), ('company_id', 'child_of', list(company_ids))]
-            domain = expression.AND([domain, domain_company])
+            domain &= Domain(domain_company)
         return domain
 
     @api.model
@@ -660,25 +660,23 @@ class ProcurementGroup(models.Model):
         found_rule = self.env['stock.rule']
         location = location_dest_id
         while (not found_rule) and location:
-            domain = [('location_src_id', '=', location.id), ('action', 'in', ('push', 'pull_push'))]
-            if values.get('domain'):
-                domain = expression.AND([domain, values['domain']])
+            domain = Domain('location_src_id', '=', location.id) & Domain('action', 'in', ('push', 'pull_push'))
+            if dom := values.get('domain'):
+                domain &= Domain(dom)
             found_rule = self._search_rule(values.get('route_ids'), values.get('packaging_uom_id'), product_id, values.get('warehouse_id'), domain)
             location = location.location_id
         return found_rule
 
     @api.model
     def _get_moves_to_assign_domain(self, company_id):
-        moves_domain = [
+        return Domain([
+            ('company_id', '=?', company_id),
             ('state', 'in', ['confirmed', 'partially_available']),
             ('product_uom_qty', '!=', 0.0),
             '|',
                 ('reservation_date', '<=', fields.Date.today()),
                 ('picking_type_id.reservation_method', '=', 'at_confirm'),
-        ]
-        if company_id:
-            moves_domain = expression.AND([[('company_id', '=', company_id)], moves_domain])
-        return moves_domain
+        ])
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):

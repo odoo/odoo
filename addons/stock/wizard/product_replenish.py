@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.misc import clean_context
 
 
@@ -170,7 +167,7 @@ class ProductReplenish(models.TransientModel):
 
     def _get_route_domain(self, product_tmpl_id):
         company = product_tmpl_id.company_id or self.env.company
-        domain = expression.AND([self._get_allowed_route_domain(), self.env['stock.route']._check_company_domain(company)])
+        domain = Domain.AND([self._get_allowed_route_domain(), self.env['stock.route']._check_company_domain(company)])
         if product_tmpl_id.route_ids:
-            domain = expression.AND([domain, [('product_ids', '=', product_tmpl_id.id)]])
+            domain &= Domain('product_ids', '=', product_tmpl_id.id)
         return domain

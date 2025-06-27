@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import babel.dates
@@ -8,9 +7,8 @@ from dateutil.relativedelta import relativedelta
 
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.osv.expression import AND
+from odoo.fields import Domain
 from odoo.tools.date_utils import get_month, subtract
-from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import get_lang, format_date
 
 
@@ -69,18 +67,18 @@ class StockReplenishmentInfo(models.TransientModel):
             first_month = subtract(today, months=2)
             date_from, dummy = get_month(first_month)
             dummy, date_to = get_month(today)
-            domain = [
+            domain = Domain([
                 ('product_id', '=', replenishment_report.product_id.id),
                 ('date', '>=', date_from),
                 ('date', '<=', datetime.combine(date_to, time.max)),
                 ('state', '=', 'done'),
                 ('company_id', '=', replenishment_report.orderpoint_id.company_id.id)
-            ]
+            ])
             quantity_by_month_out = self.env['stock.move']._read_group(
-                AND([domain, [('location_dest_id.usage', '=', 'customer')]]),
+                domain & Domain('location_dest_id.usage', '=', 'customer'),
                 ['date:month'], ['product_qty:sum'])
             quantity_by_month_returned = dict(self.env['stock.move']._read_group(
-                AND([domain, [('location_id.usage', '=', 'customer')]]),
+                domain & Domain('location_id.usage', '=', 'customer'),
                 ['date:month'], ['product_qty:sum']))
             locale = get_lang(self.env).code
             fmt = models.READ_GROUP_DISPLAY_FORMAT['month']

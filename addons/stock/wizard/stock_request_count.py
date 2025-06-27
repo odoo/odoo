@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class StockRequestCount(models.TransientModel):
@@ -33,9 +32,11 @@ class StockRequestCount(models.TransientModel):
             return quants_to_count
         # Searches sibling quants for tracked product.
         if tracked_quants:
-            domain = {('&', ('product_id', '=', quant.product_id.id), ('location_id', '=', quant.location_id.id))
-                    for quant in tracked_quants}
-            domain = expression.OR(domain)
+            domain = {
+                Domain('product_id', '=', quant.product_id.id) & Domain('location_id', '=', quant.location_id.id)
+                for quant in tracked_quants
+            }
+            domain = Domain.OR(domain)
             sibling_quants = self.env['stock.quant'].search(domain)
             quants_to_count |= sibling_quants
         return quants_to_count
