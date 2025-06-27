@@ -3,7 +3,6 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { HistoryDialog } from "@html_editor/components/history_dialog/history_dialog";
 import { useService } from '@web/core/utils/hooks';
 import { markup, useEffect } from "@odoo/owl";
-import { escape } from '@web/core/utils/strings';
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
 
 import { ProjectTaskTemplateDropdown } from "../components/project_task_template_dropdown";
@@ -85,9 +84,9 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
         const historyMetadata = record.data["html_field_history_metadata"]?.[versionedFieldName];
         if (!historyMetadata) {
             this.notifications.add(
-                escape(_t(
+                _t(
                     "The task description lacks any past content that could be restored at the moment."
-                ))
+                )
             );
             return;
         }
@@ -96,13 +95,10 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
             HistoryDialog,
             {
                 title: _t("Task Description History"),
-                noContentHelper: markup(
-                    `<span class='text-muted fst-italic'>${escape(
-                        _t(
-                            "The task description was empty at the time."
-                        )
-                    )}</span>`
-                ),
+                noContentHelper: markup`
+                    <span class='text-muted fst-italic'>${_t(
+                        "The task description was empty at the time."
+                    )}</span>`,
                 recordId: record.resId,
                 recordModel: this.props.resModel,
                 versionedFieldName,
