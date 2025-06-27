@@ -33,6 +33,7 @@ export class MediaPlugin extends Plugin {
     static defaultConfig = {
         allowImage: true,
         allowMediaDialogVideo: true,
+        allowMediaDocuments: true,
     };
     resources = {
         user_commands: [
