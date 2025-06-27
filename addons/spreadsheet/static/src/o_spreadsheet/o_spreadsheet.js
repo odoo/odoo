@@ -68479,9 +68479,9 @@ autofillModifiersRegistry
     .add("ALPHANUMERIC_INCREMENT_MODIFIER", {
     apply: (rule, data) => {
         rule.current += rule.increment;
-        const content = `${rule.prefix}${rule.current
-            .toString()
-            .padStart(rule.numberPostfixLength || 0, "0")}`;
+        let value = Math.abs(rule.current).toString();
+        value = "0".repeat(Math.max(rule.numberPostfixLength - value.length, 0)) + value;
+        const content = `${rule.prefix}${value}`;
         return {
             cellData: {
                 border: data.border,
@@ -68599,6 +68599,7 @@ const autofillRulesRegistry = new Registry();
 const numberPostfixRegExp = /(\d+)$/;
 const stringPrefixRegExp = /^(.*\D+)/;
 const alphaNumericValueRegExp = /^(.*\D+)(\d+)$/;
+const leadingZerosRegex = /^0*/;
 /**
  * Get the consecutive evaluated cells that can pass the filter function (e.g. certain type filter).
  * Return the one which contains the given cell
@@ -68730,12 +68731,18 @@ autofillRulesRegistry
     generateRule: (cell, cells, direction) => {
         const numberPostfix = parseInt(cell.content.match(numberPostfixRegExp)[0]);
         const prefix = cell.content.match(stringPrefixRegExp)[0];
-        const numberPostfixLength = cell.content.length - prefix.length;
         const group = getGroup(cell, cells, (evaluatedCell) => evaluatedCell.type === CellValueType.text &&
-            alphaNumericValueRegExp.test(evaluatedCell.value)) // get consecutive alphanumeric cells, no matter what the prefix is
+            alphaNumericValueRegExp.test(evaluatedCell.value))
+            // get consecutive alphanumeric cells, no matter what the prefix is
             .filter((cell) => prefix === (cell.value ?? "").toString().match(stringPrefixRegExp)[0])
-            .map((cell) => parseInt((cell.value ?? "").toString().match(numberPostfixRegExp)[0]));
-        let increment = calculateIncrementBasedOnGroup(group);
+            .map((cell) => (cell.value ?? "").toString().match(numberPostfixRegExp)[0]);
+        // find the length of number with the most leading zeros
+        const mostLeadingZeros = group.reduce((candidate, current) => {
+            const currentLength = current.match(leadingZerosRegex)[0].length;
+            return currentLength > candidate[1] ? [current, currentLength] : candidate;
+        }, [group[0], 0]);
+        const numberPostfixLength = mostLeadingZeros[1] ? mostLeadingZeros[0].length : 0;
+        let increment = calculateIncrementBasedOnGroup(group.map((x) => parseInt(x)));
         if (["up", "left"].includes(direction) && group.length === 1) {
             increment = -increment;
         }
