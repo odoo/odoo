@@ -22,6 +22,12 @@ export class PosOrder extends models.ServerModel {
     }
 
     sync_from_ui(data) {
+        for (const order of data) {
+            if (order.to_invoice) {
+                order.invoice_status = "invoiced";
+            }
+        }
+
         const orderIds = this.create(data);
         return this.read_pos_data(orderIds, data, this.config_id);
     }

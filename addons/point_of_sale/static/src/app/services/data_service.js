@@ -10,9 +10,11 @@ import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { logPosMessage } from "../utils/pretty_console_log";
 
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
+const CONSOLE_COLOR = "#28ffeb";
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
@@ -398,31 +400,17 @@ export class PosData extends Reactive {
     }
 
     debugInfos() {
-        const sortedByLength = Object.keys(this.models)
-            .map((m) => [m, this.models[m].length])
-            .sort((a, b) => a[1] - b[1]);
-
-        for (const [model, length] of sortedByLength) {
-            console.debug(
-                `[%c${model}%c]: %c${length}%c records`,
-                "color:lime;",
-                "",
-                "font-weight:bold;color:#e67e22",
-                ""
-            );
-        }
-
         const measure = window.performance.measure(
             "pos_loading",
             "pos_data_service_init",
             "pos_data_service_init_end"
         );
 
-        console.debug(
-            `%cPosDataService initialized in %c${measure.duration.toFixed(2)}ms%c`,
-            "color:lime;font-weight:bold",
-            "color:#e67e22;font-weight:bold",
-            ""
+        logPosMessage(
+            "DataService",
+            "debugInfos",
+            `PosDataService initialized in ${measure.duration.toFixed(2)}ms`,
+            CONSOLE_COLOR
         );
     }
 

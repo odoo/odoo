@@ -61,7 +61,7 @@ export class OpeningControlPopup extends Component {
     }
     async openDetailsPopup() {
         const action = _t("Cash control - opening");
-        this.hardwareProxy.openCashbox(action);
+        await this.pos.openCashbox(action);
         this.dialog.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             action: action,
