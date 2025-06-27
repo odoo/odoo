@@ -14,10 +14,12 @@ import {
     clickOnButtonAddRule,
     clickOnButtonDeleteNode,
     editValue,
+    formatExpr,
     getOperatorOptions,
     getTreeEditorContent,
     getValueOptions,
     isNotSupportedPath,
+    label,
     openModelFieldSelectorPopover,
     selectOperator,
     toggleConnector,
@@ -107,7 +109,7 @@ test("rendering of falsy values", async () => {
         await parent.set(expr);
         expect(getTreeEditorContent()).toEqual([
             { value: "all", level: 0 },
-            { value: ["0", "equals", "1"], level: 1 },
+            { value: ["0", label("="), "1"], level: 1 },
         ]);
     }
 });
@@ -184,16 +186,15 @@ test("change path, operator and value", async () => {
     await makeExpressionEditor({ expression: `bar != "blabla"` });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "not equals", "blabla"] },
+        { level: 1, value: ["Bar", label("!="), "blabla"] },
     ]);
-    const tree = getTreeEditorContent({ node: true });
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_item_name:eq(5)").click();
-    await selectOperator("not in", 0, tree[1].node);
-    await editValue(["Doku", "Lukaku", "KDB"]);
+    await selectOperator("=");
+    await editValue("Doku");
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Foo", "is not in", "Doku,Lukaku,KDB"] },
+        { level: 1, value: ["Foo", label("="), "Doku"] },
     ]);
 });
 
@@ -216,12 +217,12 @@ test("rendering of a valid fieldName in fields", async () => {
     const parent = await makeExpressionEditor({ fieldFilters: ["foo"] });
 
     const toTests = [
-        { expr: `foo`, condition: ["Foo", "set"] },
-        { expr: `foo == "a"`, condition: ["Foo", "equals", "a"] },
-        { expr: `foo != "a"`, condition: ["Foo", "not equals", "a"] },
+        { expr: `foo`, condition: ["Foo", label("set")] },
+        { expr: `foo == "a"`, condition: ["Foo", label("="), "a"] },
+        { expr: `foo != "a"`, condition: ["Foo", label("!="), "a"] },
         // { expr: `foo is "a"`, complexCondition: `foo is "a"` },
         // { expr: `foo is not "a"`, complexCondition: `foo is not "a"` },
-        { expr: `not foo`, condition: ["Foo", "not set"] },
+        { expr: `not foo`, condition: ["Foo", label("not set")] },
         { expr: `foo + "a"`, complexCondition: `foo + "a"` },
     ];
 
@@ -248,18 +249,18 @@ test("rendering of simple conditions", async () => {
     const parent = await makeExpressionEditor({ fieldFilters: ["foo", "bar"] });
 
     const toTests = [
-        { expr: `bar == "a"`, condition: ["Bar", "equals", "a"] },
-        { expr: `foo == expr`, condition: ["Foo", "equals", "expr"] },
-        { expr: `"a" == foo`, condition: ["Foo", "equals", "a"] },
-        { expr: `expr == foo`, condition: ["Foo", "equals", "expr"] },
+        { expr: `bar == "a"`, condition: ["Bar", label("="), "a"] },
+        { expr: `foo == expr`, condition: ["Foo", label("="), "expr"] },
+        { expr: `"a" == foo`, condition: ["Foo", label("="), "a"] },
+        { expr: `expr == foo`, condition: ["Foo", label("="), "expr"] },
         { expr: `foo == bar`, complexCondition: `foo == bar` },
         { expr: `"a" == "b"`, complexCondition: `"a" == "b"` },
         { expr: `expr1 == expr2`, complexCondition: `expr1 == expr2` },
 
-        { expr: `foo < "a"`, condition: ["Foo", "lower", "a"] },
-        { expr: `foo < expr`, condition: ["Foo", "lower", "expr"] },
-        { expr: `"a" < foo`, condition: ["Foo", "greater", "a"] },
-        { expr: `expr < foo`, condition: ["Foo", "greater", "expr"] },
+        { expr: `foo < "a"`, condition: ["Foo", label("<"), "a"] },
+        { expr: `foo < expr`, condition: ["Foo", label("<"), "expr"] },
+        { expr: `"a" < foo`, condition: ["Foo", label(">"), "a"] },
+        { expr: `expr < foo`, condition: ["Foo", label(">"), "expr"] },
         { expr: `foo < bar`, complexCondition: `foo < bar` },
         { expr: `"a" < "b"`, complexCondition: `"a" < "b"` },
         { expr: `expr1 < expr2`, complexCondition: `expr1 < expr2` },
@@ -298,8 +299,8 @@ test("rendering of connectors", async () => {
         { level: 0, value: "any" },
         { level: 1, value: "all" },
         { level: 2, value: "expr" },
-        { level: 2, value: ["Foo", "equals", "abc"] },
-        { level: 1, value: ["Bar", "not set"] },
+        { level: 2, value: ["Foo", label("="), "abc"] },
+        { level: 1, value: ["Bar", label("not set")] },
     ]);
 });
 
@@ -314,7 +315,7 @@ test("rendering of connectors (2)", async () => {
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "none" },
         { level: 1, value: "expr" },
-        { level: 1, value: ["Foo", "equals", "abc"] },
+        { level: 1, value: ["Foo", label("="), "abc"] },
     ]);
     expect.verifySteps([]);
     expect(queryOne(SELECTORS.debugArea)).toHaveValue(`not (expr or foo == "abc")`);
@@ -323,7 +324,7 @@ test("rendering of connectors (2)", async () => {
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
         { level: 1, value: "expr" },
-        { level: 1, value: ["Foo", "equals", "abc"] },
+        { level: 1, value: ["Foo", label("="), "abc"] },
     ]);
     expect.verifySteps([`expr and foo == "abc"`]);
     expect(queryOne(SELECTORS.debugArea)).toHaveValue(`expr and foo == "abc"`);
@@ -334,11 +335,11 @@ test("rendering of if else", async () => {
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "any" },
         { level: 1, value: "all" },
-        { level: 2, value: ["0", "equals", "1"] },
-        { level: 2, value: ["1", "equals", "1"] },
+        { level: 2, value: ["0", label("="), "1"] },
+        { level: 2, value: ["1", label("="), "1"] },
         { level: 1, value: "all" },
-        { level: 2, value: ["1", "equals", "1"] },
-        { level: 2, value: ["0", "equals", "1"] },
+        { level: 2, value: ["1", label("="), "1"] },
+        { level: 2, value: ["0", label("="), "1"] },
     ]);
 });
 
@@ -350,7 +351,7 @@ test("check condition by default when creating a new rule", async () => {
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
         { level: 1, value: "expr" },
-        { level: 1, value: ["Country ID", "equals", ""] },
+        { level: 1, value: ["Country ID", label("="), ""] },
     ]);
 });
 
@@ -358,21 +359,21 @@ test("allow selection of boolean field", async () => {
     await makeExpressionEditor({ expression: "id" });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Id", "set"] },
+        { level: 1, value: ["Id", label("set")] },
     ]);
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_item_name").click();
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Bar", "set"] },
+        { level: 1, value: ["Bar", label("set")] },
     ]);
 });
 
 test("render false and true leaves", async () => {
     await makeExpressionEditor({ expression: `False and True` });
-    expect(getOperatorOptions()).toEqual(["equals"]);
+    expect(getOperatorOptions()).toEqual([label("=")]);
     expect(getValueOptions()).toEqual(["1"]);
-    expect(getOperatorOptions(-1)).toEqual(["equals"]);
+    expect(getOperatorOptions(-1)).toEqual([label("=")]);
     expect(getValueOptions(-1)).toEqual(["1"]);
 });
 
@@ -393,7 +394,7 @@ test("no field of type properties in model field selector", async () => {
     });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Properties", "set"] },
+        { level: 1, value: ["Properties", label("set")] },
     ]);
     expect(isNotSupportedPath()).toBe(true);
     await clearNotSupported();
@@ -416,7 +417,7 @@ test("no special fields in fields", async () => {
     await addNewRule();
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Foo", "equals", ""] },
+        { level: 1, value: ["Foo", label("="), ""] },
     ]);
     expect.verifySteps([`foo == ""`]);
 });
@@ -429,136 +430,38 @@ test("between operator", async () => {
         },
     });
     expect(getOperatorOptions()).toEqual([
-        "equals",
-        "not equals",
-        "greater",
-        "lower",
-        "between",
-        "not between",
-        "set",
-        "not set",
+        label("="),
+        label("!="),
+        label("<"),
+        label(">"),
+        label("between"),
     ]);
     expect.verifySteps([]);
     await selectOperator("between");
     expect.verifySteps([`id >= 1 and id <= 1`]);
 });
 
-test("next operator", async () => {
+test(`"in range" operator`, async () => {
     await makeExpressionEditor({
         expression: `date`,
         update(expression) {
             expect.step(expression);
         },
     });
-    expect(getOperatorOptions()).toEqual([
-        "today",
-        "not today",
-        "equals",
-        "not equals",
-        "greater",
-        "lower",
-        "between",
-        "not between",
-        "next",
-        "not next",
-        "last",
-        "not last",
-        "set",
-        "not set",
-    ]);
-    expect.verifySteps([]);
-    await selectOperator("next");
+    await selectOperator("in range");
     expect.verifySteps([
-        `date >= context_today().strftime("%Y-%m-%d") and date <= (context_today() + relativedelta(months = 1)).strftime("%Y-%m-%d")`,
+        formatExpr(
+            `
+            date >= context_today().strftime("%Y-%m-%d")
+                and
+            date < (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d")`
+        ),
     ]);
-});
-
-test("not_next operator", async () => {
-    await makeExpressionEditor({
-        expression: `datetime`,
-        update(expression) {
-            expect.step(expression);
+    expect(getTreeEditorContent()).toEqual([
+        { level: 0, value: "all" },
+        {
+            level: 1,
+            value: ["Date", "is in", "Today"],
         },
-    });
-    expect(getOperatorOptions()).toEqual([
-        "today",
-        "not today",
-        "equals",
-        "not equals",
-        "greater",
-        "lower",
-        "between",
-        "not between",
-        "next",
-        "not next",
-        "last",
-        "not last",
-        "set",
-        "not set",
-    ]);
-    expect.verifySteps([]);
-    await selectOperator("not_next");
-    expect.verifySteps([
-        `datetime < datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") or datetime > datetime.datetime.combine(context_today() + relativedelta(months = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
-    ]);
-});
-
-test("last operator", async () => {
-    await makeExpressionEditor({
-        expression: `datetime`,
-        update(expression) {
-            expect.step(expression);
-        },
-    });
-    expect(getOperatorOptions()).toEqual([
-        "today",
-        "not today",
-        "equals",
-        "not equals",
-        "greater",
-        "lower",
-        "between",
-        "not between",
-        "next",
-        "not next",
-        "last",
-        "not last",
-        "set",
-        "not set",
-    ]);
-    expect.verifySteps([]);
-    await selectOperator("last");
-    expect.verifySteps([
-        `datetime >= datetime.datetime.combine(context_today() + relativedelta(months = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and datetime <= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
-    ]);
-});
-
-test("not_last operator", async () => {
-    await makeExpressionEditor({
-        expression: `date`,
-        update(expression) {
-            expect.step(expression);
-        },
-    });
-    expect(getOperatorOptions()).toEqual([
-        "today",
-        "not today",
-        "equals",
-        "not equals",
-        "greater",
-        "lower",
-        "between",
-        "not between",
-        "next",
-        "not next",
-        "last",
-        "not last",
-        "set",
-        "not set",
-    ]);
-    expect.verifySteps([]);
-    await selectOperator("not_last");
-    expect.verifySteps([
-        `date < (context_today() + relativedelta(months = -1)).strftime("%Y-%m-%d") or date > context_today().strftime("%Y-%m-%d")`,
     ]);
 });
