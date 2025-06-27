@@ -895,3 +895,20 @@ registry.category("web_tour.tours").add("test_delete_line_release_table", {
             negateStep(...Order.hasLine({ productName: "Coca-Cola" })),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_preset_timing_restaurant_dialog", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            Dialog.bodyIs("Please select a time slot before proceeding."),
+            Dialog.confirm(),
+        ].flat(),
+});
