@@ -36,16 +36,16 @@ test("should apply font-size to completely selected list item", async () => {
                 <li>ghi]</li>
             </ol>
         `),
-        stepFunction: setFontSize("64px"),
+        stepFunction: setFontSize("72px"),
         contentAfter: unformat(`
-            <ol style="padding-inline-start: 68px;">
-                <li style="font-size: 64px;">[abc</li>
+            <ol style="padding-inline-start: 77px;">
+                <li style="font-size: 72px;">[abc</li>
                 <li class="oe-nested">
-                    <ol style="padding-inline-start: 67px;">
-                        <li style="font-size: 64px;">def</li>
+                    <ol style="padding-inline-start: 75px;">
+                        <li style="font-size: 72px;">def</li>
                     </ol>
                 </li>
-                <li style="font-size: 64px;">ghi]</li>
+                <li style="font-size: 72px;">ghi]</li>
             </ol>
         `),
     });
