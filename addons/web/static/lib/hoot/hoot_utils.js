@@ -106,6 +106,7 @@ const {
     PromiseRejectionEvent,
     Reflect: { ownKeys: $ownKeys },
     RegExp,
+    requestAnimationFrame,
     Set,
     setTimeout,
     String,
@@ -1451,6 +1452,23 @@ export function stringToNumber(string) {
         result += string.charCodeAt(i);
     }
     return $parseFloat(result);
+}
+
+/**
+ * @template {(...args: any[]) => any} T
+ * @param {T} fn
+ * @returns {T}
+ */
+export function throttle(fn) {
+    let canRun = true;
+    return function throttled(...args) {
+        if (!canRun) {
+            return;
+        }
+        canRun = false;
+        requestAnimationFrame(() => (canRun = true));
+        return fn(...args);
+    };
 }
 
 /**
