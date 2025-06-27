@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.MyCustomMany2ManyUserField" t-inherit="mail.ListMany2ManyTagsAvatarUserField" t-inherit-mode="primary">
+        <xpath expr="//TagsList" position="attributes">
+            <attribute name="class" add="custom-class" separator=" "/>
+        </xpath>
+    </t>
+</templates>
