@@ -1,7 +1,6 @@
 import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
-import { BaseRecipientsList } from "@mail/core/web/base_recipients_list";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -32,7 +31,6 @@ export const DELAY_FOR_SPINNER = 1000;
 Object.assign(Chatter.components, {
     Activity,
     AttachmentList,
-    BaseRecipientsList,
     Dropdown,
     FileUploader,
     FollowerList,
