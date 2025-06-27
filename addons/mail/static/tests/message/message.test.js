@@ -56,7 +56,7 @@ test("Start edition on click edit", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Edit']");
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "Hello world" });
-    await click("a[role='button']", { text: "cancel" });
+    await click("button", { text: "cancel" });
     await contains(".o-mail-Message .o-mail-Composer-input", { count: 0 });
 });
 
@@ -171,7 +171,7 @@ test("Editing message keeps the mentioned channels", async () => {
     await click(".o-mail-Message [title='Edit']");
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other" });
     await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message-content", { text: "other bye (edited)" });
     await click(".o_channel_redirect", { text: "other" });
     await contains(".o-mail-Discuss-threadName", { value: "other" });
@@ -274,7 +274,7 @@ test("Stop edition on click cancel", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Edit']");
-    await click(".o-mail-Message a", { text: "cancel" });
+    await click(".o-mail-Message button", { text: "cancel" });
     await contains(".o-mail-Message.o-editing .o-mail-Composer", { count: 0 });
 });
 
@@ -314,7 +314,7 @@ test("Stop edition on click save", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Edit']");
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message.o-editing .o-mail-Composer", { count: 0 });
 });
 
@@ -376,7 +376,7 @@ test("Edit and click save", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", { replace: true });
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message-body", { text: "Goodbye World (edited)" });
 });
 
@@ -397,7 +397,7 @@ test("Do not call server on save if no changes", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Edit']");
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message button", { text: "save" });
     await waitForSteps([]);
 });
 
@@ -421,7 +421,7 @@ test("Update the link previews when a message is edited", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "http://odoo.com", {
         replace: true,
     });
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message-body", { text: "http://odoo.com" });
     await waitForSteps(["link_preview"]);
 });
@@ -468,7 +468,7 @@ test("mentions are kept when editing message", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "Hi @Mitchell Admin", {
         replace: true,
     });
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message", {
         text: "Hi @Mitchell Admin (edited)",
         contains: ["a.o_mail_redirect", { text: "@Mitchell Admin" }],
@@ -503,7 +503,7 @@ test("can add new mentions when editing message", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", " @");
     await click(".o-mail-Composer-suggestion strong", { text: "TestPartner" });
     await contains(".o-mail-Composer-input", { value: "Hello @TestPartner " });
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message", {
         text: "Hello @TestPartner (edited)",
         contains: ["a.o_mail_redirect", { text: "@TestPartner" }],
@@ -617,7 +617,7 @@ test("Can open emoji picker after edit mode", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Edit']");
-    await click(".o-mail-Message a", { text: "save" });
+    await click(".o-mail-Message button", { text: "save" });
     await contains(".o-mail-Message", { text: "Hello world" });
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");

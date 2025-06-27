@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("course_reviews_comment", {
         },
         // Send the comment
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message a:contains('save')",
+            trigger: "#chatterRoot:shadow .o-mail-Message button:contains('save')",
             run: "click",
         },
         {
