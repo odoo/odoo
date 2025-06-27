@@ -1,6 +1,5 @@
 import math
 from num2words import num2words
-
 from odoo import api, models
 
 
@@ -85,6 +84,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         ]
         if vals['invoice'].currency_id.name != 'TRY':
             document_node['cbc:Note'].append({'_text': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual, vals['invoice'].currency_id), 'note_attrs': {}})
+            document_node['cbc:Note'].append({'_text': self._l10n_tr_get_invoice_currency_exchange_rate(invoice)})
 
     @api.model
     def _l10n_tr_get_amount_integer_partn_text_note(self, amount, currency):
@@ -105,6 +105,16 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         else:
             document_node['cac:Delivery'] = None
 
+    def _l10n_tr_get_invoice_currency_exchange_rate(self, invoice):
+        conversion_rate = self.env['res.currency']._get_conversion_rate(
+            from_currency=invoice.currency_id,
+            to_currency=invoice.company_currency_id,
+            company=invoice.company_id,
+            date=invoice.invoice_date,
+        )
+        # Nilvera Portal accepts the exchange rate for 6 decimals places only.
+        return f'KUR : {conversion_rate:.6f} TL'
+
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_21
         super()._add_invoice_payment_means_nodes(document_node, vals)
@@ -121,6 +131,30 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'cbc:CalculationRate': {'_text': round(invoice.currency_id._get_conversion_rate(invoice.currency_id, invoice.company_id.currency_id, invoice.company_id, invoice.invoice_date), 6)},
                 'cbc:Date': {'_text': invoice.invoice_date},
             }
+
+    def _l10n_tr_get_total_invoice_discount_amount(self, vals):
+        invoice = vals['invoice']
+        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in {'line_note', 'line_section'})
+        return sum(
+            line.currency_id.round(line.price_unit * line.quantity * (line.discount / 100))
+            for line in invoice_lines
+        )
+
+    def _add_document_allowance_charge_nodes(self, document_node, vals):
+        super()._add_document_allowance_charge_nodes(document_node, vals)
+        for node in document_node['cac:AllowanceCharge']:
+            node['cbc:AllowanceChargeReasonCode'] = None
+
+        total_discount_amount = self._l10n_tr_get_total_invoice_discount_amount(vals)
+        if total_discount_amount:
+            document_node['cac:AllowanceCharge'].append({
+                'cbc:ChargeIndicator': {'_text': 'false'},
+                'cbc:AllowanceChargeReason': {'_text': "Discount"},
+                'cbc:Amount': {
+                    '_text': self.format_float(total_discount_amount, vals['currency_dp']),
+                    'currencyID': vals['currency_name'],
+                },
+            })
 
     def _get_address_node(self, vals):
         partner = vals['partner']
@@ -213,14 +247,19 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         monetary_total_node = document_node[monetary_total_tag]
 
         # allowance_total_amount needs to have a value even if 0.0 otherwise it's blank in the Nilvera PDF.
-        if monetary_total_node['cbc:AllowanceTotalAmount'] is None:
-            monetary_total_node['cbc:AllowanceTotalAmount'] = {
-                '_text': self.format_float(0.0, vals['currency_dp']),
-                'currencyID': vals['currency_name']
-            }
+        total_allowance_amount = self._l10n_tr_get_total_invoice_discount_amount(vals)
+        monetary_total_node['cbc:AllowanceTotalAmount'] = {
+            '_text': self.format_float(total_allowance_amount, vals['currency_dp']),
+            'currencyID': vals['currency_name'],
+        }
 
-        if invoice.currency_id.is_zero(invoice.amount_total - invoice.amount_residual):
-            monetary_total_node['cbc:PrepaidAmount'] = None
+        # <cbc:PrepaidAmount> tag is not supported by Nilvera. so it is removed and <cbc:PayableAmount> holds the
+        # amount_total so that the total invoice amount (in invoice currency) is preserved.
+        monetary_total_node['cbc:PrepaidAmount'] = None
+        monetary_total_node['cbc:PayableAmount'] = {
+            '_text': self.format_float(invoice.amount_total, vals['currency_dp']),
+            'currencyID': vals['currency_name'],
+        }
 
     def _add_document_line_allowance_charge_nodes(self, line_node, vals):
         # EXTENDS account.edi.xml.ubl_21
