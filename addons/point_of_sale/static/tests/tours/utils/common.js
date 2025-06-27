@@ -30,11 +30,11 @@ export function negateStep(step) {
         trigger: negate(step.trigger),
     };
 }
-export function run(run, content = "run function") {
-    return { content, trigger: "body", run };
+export function run(run, content = "run function", expectUnloadPage = false) {
+    return { content, trigger: "body", run, expectUnloadPage };
 }
 export function refresh() {
-    return run(() => window.location.reload(), "refresh page");
+    return run(() => window.location.reload(), "refresh page", true);
 }
 export function elementDoesNotExist(selector) {
     return {

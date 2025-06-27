@@ -45,6 +45,7 @@
         content: "go to product page of Color Shoes (with variants)",
         trigger: '.oe_product_cart a:contains("Color Shoes")',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "check compare button is still there and contains 2 products",
@@ -114,6 +115,7 @@
         content: "click on compare button",
         trigger: '.o_comparelist_button a',
         run: "click",
+        expectUnloadPage: true,
     },
     // test on compare page
     {
@@ -136,6 +138,7 @@
         content: "remove Color Shoes (Pink) from compare table",
         trigger: '#o_comparelist_table .o_comparelist_remove:eq(2)',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "check color shoes with pink variant is removed",
@@ -158,6 +161,7 @@
         content: "click on compare button to reload",
         trigger: '.o_comparelist_button a',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "check product 'Color T-Shirt' is removed",

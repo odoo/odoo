@@ -11,6 +11,7 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
         content: "select Dynamic Product",
         trigger: ".oe_product_cart a:contains(/^Dynamic Product$/)",
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "click on the second variant",

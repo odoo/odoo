@@ -62,6 +62,7 @@ registry.category("web_tour.tours").add('website_crm_tour', {
     content: "Send the form",
     trigger: ".s_website_form_send",
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: "Check we were redirected to the success page",
     trigger: "#wrap:has(h1:contains('Thank You!'))",
@@ -86,6 +87,7 @@ registry.category("web_tour.tours").add('website_crm_catch_logged_partner_info_t
     content: "Send the form",
     trigger: ".s_website_form_send",
     run: "click",
+    expectUnloadPage: true,
 }, {
     content: "Check we were redirected to the success page",
     trigger: "#wrap:has(h1:contains('Thank You!'))",
