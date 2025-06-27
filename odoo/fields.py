@@ -1285,16 +1285,18 @@ class Field(MetaField('DummyField', (object,), {})):
             self.recompute(records)
 
         # retrieve values in cache, and fetch missing ones
-        vals = records.env.cache.get_until_miss(records, self)
-        while len(vals) < len(records):
+        vals, missing = records.env.cache.get_cached_values(records, self)
+        if missing:
             # It is important to construct a 'remaining' recordset with the
             # _prefetch_ids of the original recordset, in order to prefetch as
             # many records as possible. If not done this way, scenarios such as
             # [rec.line_ids.mapped('name') for rec in recs] would generate one
             # query per record in `recs`!
-            remaining = records.__class__(records.env, records._ids[len(vals):], records._prefetch_ids)
+            remaining = records.__class__(records.env, list(missing.values()), records._prefetch_ids)
             self.__get__(first(remaining), type(remaining))
-            vals += records.env.cache.get_until_miss(remaining, self)
+            vals_, _missing = records.env.cache.get_cached_values(remaining, self)
+            for idx, val_ in zip(missing.keys(), vals_):
+                vals.insert(idx, val_)
 
         return self.convert_to_record_multi(vals, records)
 

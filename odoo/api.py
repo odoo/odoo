@@ -1142,6 +1142,7 @@ class Cache(object):
 
     def get_until_miss(self, records, field):
         """ Return the cached values of ``field`` for ``records`` until a value is not found. """
+        # TODO: Deprecated, use get_cached_values instead
         field_cache = self._get_field_cache(records, field)
         if field.translate:
             lang = records.env.lang or 'en_US'
@@ -1159,6 +1160,30 @@ class Cache(object):
             except KeyError:
                 break
         return vals
+
+    def get_cached_values(self, records, field):
+        """
+        Return the cached values of ``field`` for ``records`` and a dict of missing ids,
+        with key being the index of the missing id in the records list, and value being the id.
+        """
+        field_cache = self._get_field_cache(records, field)
+        if field.translate:
+            lang = records.env.lang or 'en_US'
+
+            def get_value(id_):
+                cache_value = field_cache[id_]
+                return None if cache_value is None else cache_value[lang]
+        else:
+            get_value = field_cache.__getitem__
+
+        vals = []
+        missing = {}
+        for idx, record_id in enumerate(records._ids):
+            try:
+                vals.append(get_value(record_id))
+            except KeyError:
+                missing[idx] = record_id
+        return vals, missing
 
     def get_records_different_from(self, records, field, value):
         """ Return the subset of ``records`` that has not ``value`` for ``field``. """
