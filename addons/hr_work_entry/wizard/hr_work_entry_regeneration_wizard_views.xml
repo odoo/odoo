@@ -36,13 +36,11 @@
                     <div class="text-danger"><i class="fa fa-exclamation-triangle me-1" title="Warning"/>You are not allowed to regenerate validated work entries</div>
                     <field name="validated_work_entry_ids" widget="many2many" nolabel="1">
                         <list string="Work Entries"
-                              default_order = "date_start"
-
+                              default_order = "date"
                               editable="bottom"
                               no_open="1" decoration-danger="state == 'validated'">
                             <field name="state" column_invisible="True"/>
-                            <field name="date_start"/>
-                            <field name="date_stop"/>
+                            <field name="date"/>
                             <field name="work_entry_type_id"/>
                             <field name="state"/>
                         </list>

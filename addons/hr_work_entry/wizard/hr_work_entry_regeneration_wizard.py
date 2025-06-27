@@ -47,10 +47,10 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
             validated_work_entry_ids = self.env['hr.work.entry']
             if wizard.search_criteria_completed:
                 search_domain = [('employee_id', 'in', wizard.employee_ids.ids),
-                                 ('date_start', '>=', wizard.date_from),
-                                 ('date_stop', '<=', wizard.date_to),
+                                 ('date', '>=', wizard.date_from),
+                                 ('date', '<=', wizard.date_to),
                                  ('state', '=', 'validated')]
-                validated_work_entry_ids = self.env['hr.work.entry'].search(search_domain, order="date_start")
+                validated_work_entry_ids = self.env['hr.work.entry'].search(search_domain, order="date")
             wizard.validated_work_entry_ids = validated_work_entry_ids
 
     @api.depends('validated_work_entry_ids')
@@ -103,8 +103,8 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
         date_to = min(self.date_to, self.latest_available_date) if self.latest_available_date else self.date_to
         work_entries = self.env['hr.work.entry'].search([
             ('employee_id', 'in', self.employee_ids.ids),
-            ('date_stop', '>=', date_from),
-            ('date_start', '<=', date_to),
+            ('date', '>=', date_from),
+            ('date', '<=', date_to),
             ('state', '!=', 'validated')])
 
         write_vals = {field: False for field in self._work_entry_fields_to_nullify()}

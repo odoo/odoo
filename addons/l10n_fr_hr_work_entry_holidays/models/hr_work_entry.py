@@ -21,13 +21,3 @@ class HrWorkEntry(models.Model):
         if other_work_entries:
             return other_work_entries._mark_leaves_outside_schedule()
         return False
-
-    def _get_duration_batch(self):
-        res = super()._get_duration_batch()
-        french_part_time_work_entries = self._filter_french_part_time_entries()
-        if not french_part_time_work_entries:
-            return res
-        for entry in french_part_time_work_entries:
-            if entry.id in res and res[entry.id] == 0 and entry.date_start and entry.date_stop:
-                res[entry.id] = (entry.date_stop - entry.date_start).seconds/3600
-        return res

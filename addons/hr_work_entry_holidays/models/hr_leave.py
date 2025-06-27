@@ -45,6 +45,7 @@ class HrLeave(models.Model):
                 if leave.date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
                     work_entries_vals_list += contracts._get_work_entries_values(leave.date_from, leave.date_to)
 
+        work_entries_vals_list = self.env['hr.version']._generate_work_entries_postprocess(work_entries_vals_list)
         new_leave_work_entries = self.env['hr.work.entry'].create(work_entries_vals_list)
 
         if new_leave_work_entries:
@@ -52,8 +53,8 @@ class HrLeave(models.Model):
             start = min(self.mapped('date_from'), default=False)
             stop = max(self.mapped('date_to'), default=False)
             work_entry_groups = self.env['hr.work.entry']._read_group([
-                ('date_start', '<', stop),
-                ('date_stop', '>', start),
+                ('date', '<=', stop),
+                ('date', '>=', start),
                 ('employee_id', 'in', self.employee_id.ids),
             ], ['employee_id'], ['id:recordset'])
             work_entries_by_employee = {
@@ -121,7 +122,7 @@ class HrLeave(models.Model):
             lambda l: l.holiday_status_id.work_entry_type_id.code not in ['LEAVE110', 'LEAVE210', 'LEAVE280'])
 
     def _validate_leave_request(self):
-        super(HrLeave, self)._validate_leave_request()
+        super()._validate_leave_request()
         self.sudo()._cancel_work_entry_conflict()  # delete preexisting conflicting work_entries
         return True
 
@@ -130,7 +131,7 @@ class HrLeave(models.Model):
         Override to archive linked work entries and recreate attendance work entries
         where the refused leave was.
         """
-        res = super(HrLeave, self).action_refuse()
+        res = super().action_refuse()
         self._regen_work_entries()
         return res
 
@@ -149,7 +150,10 @@ class HrLeave(models.Model):
         # Re-create attendance work entries
         vals_list = []
         for work_entry in work_entries:
-            vals_list += work_entry.version_id._get_work_entries_values(work_entry.date_start, work_entry.date_stop)
+            vals_list += work_entry.version_id._get_work_entries_values(
+                datetime.combine(work_entry.date, time.min),
+                datetime.combine(work_entry.date, time.max))
+        vals_list = self.env['hr.version']._generate_work_entries_postprocess(vals_list)
         self.env['hr.work.entry'].create(vals_list)
 
     def _compute_can_cancel(self):

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from odoo.tests.common import TransactionCase
 
 
@@ -38,8 +39,7 @@ class TestHrWorkEntry(TransactionCase):
             'name': 'Test Work Entry',
             'employee_id': self.employee_b.id,
             'work_entry_type_id': self.work_entry_type.id,
-            'date_start': '2024-01-01 08:00:00',
-            'date_stop': '2024-01-01 16:00:00',
+            'date': date(2024, 1, 1),
             'duration': 8,
         })
         self.assertEqual(
