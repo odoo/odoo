@@ -112,7 +112,7 @@ class SurveyQuestion(models.Model):
         "Save as user email", compute='_compute_save_as_email', readonly=False, store=True, copy=True,
         help="If checked, this option will save the user's answer as its email address.")
     save_as_nickname = fields.Boolean(
-        "Save as user nickname", compute='_compute_save_as_nickname', readonly=False, store=True, copy=True,
+        "Save as nickname", compute='_compute_save_as_nickname', readonly=False, store=True, copy=True,
         help="If checked, this option will save the user's answer as its nickname.")
     # -- simple choice / multiple choice / matrix
     suggested_answer_ids = fields.One2many(

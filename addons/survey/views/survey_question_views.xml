@@ -26,10 +26,10 @@
                         <field name="allowed_question_types" invisible="1"/>
                         <field name="question_type" nolabel="1" widget="survey_question_type_select" options="{'allowed_selection_field': 'allowed_question_types'}" required="not is_page"/>
                     </div>
-                    <div class="oe_title" style="width: 100%;">
-                        <label for="title" string="Section" invisible="not is_page"/>
-                        <label for="title" string="Question" invisible="is_page"/><br/>
-                        <field name="title" placeholder="e.g. &quot;What is the...&quot;" colspan="4"/>
+                    <div class="w-100 mw-100">
+                        <label for="title" string="Section" invisible="not is_page" class="h2"/>
+                        <label for="title" string="Question" invisible="is_page" class="h2"/><br/>
+                        <field name="title" placeholder="Ask something..."/>
                         <field name="questions_selection" invisible="1"/>
                     </div>
                     <group class="o_label_nowrap" invisible="not is_page or questions_selection == 'all'">
@@ -47,7 +47,7 @@
                                     <field name="scale_mid_label" placeholder="Neutral"/>
                                     <field name="scale_max_label" placeholder="Extremely likely"/>
                                 </group>
-                                <group invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime']">
+                                <group invisible="question_type not in ['numerical_box', 'date', 'datetime']">
                                     <field name="answer_numerical_box" string="Correct Answer" class="oe_inline"
                                         invisible="question_type != 'numerical_box'"
                                         required="is_scored_question and question_type == 'numerical_box'" />
@@ -57,10 +57,18 @@
                                     <field name="answer_datetime" string="Correct Answer" class="oe_inline"
                                         invisible="question_type != 'datetime'"
                                         required="is_scored_question and question_type == 'datetime'"/>
+                                </group>
 
-                                    <field name="validation_email" invisible="question_type != 'char_box'"/>
-                                    <field name="save_as_email" invisible="not validation_email or question_type != 'char_box'"/>
-                                    <field name="save_as_nickname" invisible="question_type != 'char_box'"/>
+                                <group invisible="question_type !='char_box'">
+                                    <group invisible="question_type != 'char_box'">
+                                        <field name="validation_email"/>
+                                    </group>
+                                    <group invisible="not validation_email or question_type != 'char_box'">
+                                        <field name="save_as_email"/>
+                                    </group>
+                                    <group invisible="question_type != 'char_box'">
+                                        <field name="save_as_nickname"/>
+                                    </group>
                                 </group>
 
                                 <group invisible="scoring_type == 'no_scoring' or question_type not in ['numerical_box', 'date', 'datetime']">
@@ -75,7 +83,7 @@
                             <field name="suggested_answer_ids" context="{'default_question_id': id}" invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix']">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="value" string="Choices" required="not value_image"/>
+                                    <field name="value" string="Choices" required="not value_image" placeholder="Option Name"/>
                                     <field name="is_correct"
                                         column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
                                     <field name="answer_score"
@@ -170,14 +178,11 @@
                                         invisible="not constr_mandatory"
                                         placeholder="This question requires an answer."/>
                                 </group>
-                                <group string="Live Sessions">
+                                <group string="Live Sessions" invisible="not session_available">
                                     <field name="is_time_customized" invisible="True"/>
                                     <field name="session_available" invisible="True"/>
-                                    <p class="text-muted" colspan="2" invisible="session_available">
-                                        Time limits are only available for Live Sessions.
-                                    </p>
-                                    <label for="is_time_limited" string="Time Limit (seconds)" invisible="not session_available"/>
-                                    <div invisible="not session_available">
+                                    <label for="is_time_limited" string="Time Limit (seconds)"/>
+                                    <div>
                                         <field name="is_time_limited" nolabel="1" class="oe_inline"
                                             widget="boolean_update_flag"
                                             options="{'flagFieldName': 'is_time_customized'}"
