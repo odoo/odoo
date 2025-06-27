@@ -120,7 +120,8 @@ class SmsComposer(models.TransientModel):
                 composer.recipient_single_number_itf = ''
                 continue
             records.ensure_one()
-            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=True)
+            # If the composer was opened with a specific field use that, otherwise get the partner's
+            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=not composer.number_field_name)
             if not composer.recipient_single_number_itf:
                 composer.recipient_single_number_itf = res[records.id]['sanitized'] or res[records.id]['number'] or ''
             if not composer.number_field_name:
