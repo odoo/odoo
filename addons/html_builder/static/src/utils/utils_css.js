@@ -490,8 +490,6 @@ export function applyNeededCss(
     computedStyle = window.getComputedStyle(el),
     { force = false, allowImportant = true } = {}
 ) {
-    // Change camelCase to kebab-case.
-    cssProp = cssProp.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
     if (force) {
         el.style.setProperty(cssProp, cssValue, allowImportant ? "important" : "");
         return true;
