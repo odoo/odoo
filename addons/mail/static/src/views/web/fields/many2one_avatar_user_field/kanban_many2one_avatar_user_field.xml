@@ -8,9 +8,9 @@
                 <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value[0]" noSpacing="true" displayName="displayName"/>
             </t>
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
-                <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center" t-att-data-tooltip-info="tooltipDataDisplayName" data-tooltip-template="web.FieldTooltipName">
                     <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
-                    <t t-out="autoCompleteItemScope.label"/>
+                    <span class="text-truncate" t-out="autoCompleteItemScope.label"/>
                 </span>
             </t>
         </KanbanMany2One>
