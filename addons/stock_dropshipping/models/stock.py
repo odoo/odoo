@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class StockRule(models.Model):
@@ -35,7 +34,7 @@ class ProcurementGroup(models.Model):
     def _get_rule_domain(self, location, values):
         domain = super()._get_rule_domain(location, values)
         if 'sale_line_id' in values and values.get('company_id'):
-            domain = expression.AND([domain, [('company_id', '=', values['company_id'].id)]])
+            domain = Domain.AND([domain, [('company_id', '=', values['company_id'].id)]])
         return domain
 
 
@@ -103,7 +102,7 @@ class StockLot(models.Model):
 
     def _get_outgoing_domain(self):
         res = super()._get_outgoing_domain()
-        return expression.OR([res, [
+        return Domain.OR([res, [
             ('location_dest_id.usage', '=', 'customer'),
             ('location_id.usage', '=', 'supplier'),
         ]])

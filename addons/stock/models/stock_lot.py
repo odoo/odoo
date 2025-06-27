@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import operator as py_operator
@@ -8,7 +7,6 @@ from re import findall as regex_findall, split as regex_split
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.osv import expression
 
 PY_OPERATORS = {
     '<': py_operator.lt,
@@ -249,7 +247,7 @@ class StockLot(models.Model):
         partner_ids field within the form view since it uses different logic that isn't efficient
         enough for this search due to it being usable within the list view.
         """
-        if operator in expression.NEGATIVE_TERM_OPERATORS or not isinstance(value, (Iterable)):
+        if Domain.is_negative_operator(operator) or not isinstance(value, (Iterable)):
             return NotImplemented
         is_no_partner = operator == 'in' and list(value) == [False]
         domain = Domain([
@@ -308,12 +306,10 @@ class StockLot(models.Model):
     def _find_delivery_ids_by_lot(self, lot_path=None, delivery_by_lot=None):
         if lot_path is None:
             lot_path = set()
-        domain = [
+        domain = Domain([
             ('lot_id', 'in', self.ids),
             ('state', '=', 'done'),
-        ]
-        domain_restriction = self._get_outgoing_domain()
-        domain = expression.AND([domain, domain_restriction])
+        ]) & Domain(self._get_outgoing_domain())
         move_lines = self.env['stock.move.line'].search(domain)
         moves_by_lot = {
             lot_id: {'producing_lines': set(), 'barren_lines': set()}

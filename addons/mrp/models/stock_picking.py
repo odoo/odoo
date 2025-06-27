@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class StockPickingType(models.Model):
@@ -191,7 +190,7 @@ class StockPicking(models.Model):
 
         if picking_type_code == "mrp_operation":
             action = self._get_action("mrp.action_picking_tree_mrp_operation_graph")
-            action["domain"] = expression.AND([
+            action["domain"] = Domain.AND([
                 literal_eval(action["domain"] or '[]'), [('picking_type_id', '=', picking_type_id)]
             ])
             allowed_company_ids = self.env.context.get("allowed_company_ids", [])

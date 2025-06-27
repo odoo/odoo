@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_compare
 
 
 class ProductRemoval(models.Model):
@@ -111,20 +109,17 @@ class StockPutawayRule(models.Model):
             for rule in self:
                 if rule.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
-        return super(StockPutawayRule, self).write(vals)
+        return super().write(vals)
 
     def _get_last_used_search_domain(self, product):
         self.ensure_one()
-        domain = expression.AND([
-            [('state', '=', 'done')],
-            [('location_dest_id', 'child_of', self.location_out_id.id)],
-            [('product_id', '=', product.id)],
+        domain = Domain([
+            ('state', '=', 'done'),
+            ('location_dest_id', 'child_of', self.location_out_id.id),
+            ('product_id', '=', product.id),
         ])
         if self.package_type_ids:
-            domain = expression.AND([
-                domain,
-                [('result_package_id.package_type_id', 'in', self.package_type_ids.ids)],
-            ])
+            domain &= Domain('result_package_id.package_type_id', 'in', self.package_type_ids.ids)
         return domain
 
     def _get_last_used_location(self, product):

@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv.expression import AND, OR
-from odoo.tools import float_round
-from odoo.tools.misc import clean_context
+from odoo.fields import Command, Domain
+from odoo.tools.misc import clean_context, OrderedSet
 
 from collections import defaultdict
 
@@ -157,10 +155,10 @@ class MrpBom(models.Model):
 
         boms_to_check = self
         if self.bom_line_ids.product_id:
-            boms_to_check |= self.search(OR([
+            boms_to_check |= self.search(Domain.OR(
                 self._bom_find_domain(product)
                 for product in self.bom_line_ids.product_id
-            ]))
+            ))
 
         for bom in boms_to_check:
             if not bom.active:
@@ -344,13 +342,17 @@ class MrpBom(models.Model):
 
     @api.model
     def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
-        domain = ['&', '|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids), ('active', '=', True)]
+        domain = (
+            Domain('product_id', 'in', products.ids) | (
+                Domain('product_id', '=', False) & Domain('product_tmpl_id', 'in', products.product_tmpl_id.ids)
+            )
+        ) & Domain('active', '=', True)
         if company_id or self.env.context.get('company_id'):
-            domain = AND([domain, ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]])
+            domain &= Domain('company_id', 'in', [False, company_id or self.env.context.get('company_id')])
         if picking_type:
-            domain = AND([domain, ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]])
+            domain &= Domain('picking_type_id', 'in', [picking_type.id, False])
         if bom_type:
-            domain = AND([domain, [('type', '=', bom_type)]])
+            domain &= Domain('type', '=', bom_type)
         return domain
 
     @api.model
@@ -448,21 +450,22 @@ class MrpBom(models.Model):
         }]
 
     def _set_outdated_bom_in_productions(self):
+        if not self:
+            return
         # Searches for MOs using these BoMs to notify them that their BoM has been updated.
         list_of_domain_by_bom = []
         for bom in self:
-            domain_by_products = [('product_id', 'in', bom.product_tmpl_id.product_variant_ids.ids)]
             if bom.product_id:
-                domain_by_products = [('product_id', '=', bom.product_id.id)]
-            domain_for_confirmed_mo = AND([[('state', '=', 'confirmed')], domain_by_products])
+                domain_by_products = Domain('product_id', '=', bom.product_id.id)
+            else:
+                domain_by_products = Domain('product_id', 'in', bom.product_tmpl_id.product_variant_ids.ids)
+            domain_for_confirmed_mo = Domain('state', '=', 'confirmed') & domain_by_products
             # Avoid confirmed MOs if the BoM's product was changed.
-            domain_by_states = OR([[('state', '=', 'draft')], domain_for_confirmed_mo])
-            list_of_domain_by_bom.append(AND([[('bom_id', '=', bom.id)], domain_by_states]))
-        if list_of_domain_by_bom:
-            domain = OR(list_of_domain_by_bom)
-            productions = self.env['mrp.production'].search(domain)
-            if productions:
-                productions.is_outdated_bom = True
+            domain_by_states = Domain('state', '=', 'draft') | domain_for_confirmed_mo
+            list_of_domain_by_bom.append(Domain('bom_id', '=', bom.id) & domain_by_states)
+        productions = self.env['mrp.production'].search(Domain.OR(list_of_domain_by_bom))
+        if productions:
+            productions.is_outdated_bom = True
 
     # -------------------------------------------------------------------------
     # CATALOG
@@ -523,24 +526,20 @@ class MrpBom(models.Model):
         return res | self._get_extra_attachments()
 
     def _get_extra_attachments(self):
-        final_domain = []
-        bom_domain = [('attached_on_mrp', '=', 'bom')]
         is_byproduct = self.env.user.has_group('mrp.group_mrp_byproducts')
+        product_ids, template_ids = OrderedSet(), OrderedSet()
         for bom in self:
-            product_subdomain = ['|',
-                '&', ('res_model', '=', 'product.product'), ('res_id', '=', bom.product_id.id),
-                '&', ('res_model', '=', 'product.template'), ('res_id', '=', bom.product_tmpl_id.id)]
+            product_ids.add(bom.product_id.id)
+            template_ids.add(bom.product_tmpl_id.id)
             if is_byproduct:
-                product_domain = OR([product_subdomain, [
-                    '|',
-                    '&', ('res_model', '=', 'product.product'), ('res_id', 'in', bom.byproduct_ids.product_id.ids),
-                    '&', ('res_model', '=', 'product.template'), ('res_id', 'in', bom.byproduct_ids.product_id.product_tmpl_id.ids)]])
-            else:
-                product_domain = product_subdomain
-            prod_final_domain = AND([bom_domain, product_domain])
-            final_domain = OR([final_domain, prod_final_domain]) if final_domain else prod_final_domain
+                product_ids.update(bom.byproduct_ids.product_id.ids)
+                template_ids.update(bom.byproduct_ids.product_id.product_tmpl_id.ids)
 
-        attachements = self.env['product.document'].search(final_domain).ir_attachment_id
+        domain = Domain('attached_on_mrp', '=', 'bom') & (
+            (Domain('res_model', '=', 'product.product') & Domain('res_id', 'in', product_ids))
+            | (Domain('res_model', '=', 'product.template') & Domain('res_id', 'in', template_ids))
+        )
+        attachements = self.env['product.document'].search(domain).ir_attachment_id
         return attachements
 
     @api.model

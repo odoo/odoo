@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
-from odoo.tools.float_utils import float_is_zero
-from odoo.osv.expression import AND
-from dateutil.relativedelta import relativedelta
 from datetime import datetime, time
+
+from odoo import _, api, fields, models
+from odoo.fields import Domain
 
 
 class StockWarehouseOrderpoint(models.Model):
@@ -19,9 +17,9 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_replenishment_order_notification(self):
         self.ensure_one()
-        domain = [('orderpoint_id', 'in', self.ids)]
+        domain = Domain('orderpoint_id', 'in', self.ids)
         if self.env.context.get('written_after'):
-            domain = AND([domain, [('write_date', '>=', self.env.context.get('written_after'))]])
+            domain &= Domain('write_date', '>=', self.env.context.get('written_after'))
         production = self.env['mrp.production'].search(domain, limit=1)
         if production:
             return {

@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.osv.expression import AND
+from odoo.fields import Domain
 
 
 class MrpBom(models.Model):
@@ -17,7 +16,7 @@ class MrpBom(models.Model):
     def _bom_subcontract_find(self, product, picking_type=None, company_id=False, bom_type='subcontract', subcontractor=False):
         domain = self._bom_find_domain(product, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
         if subcontractor:
-            domain = AND([domain, [('subcontractor_ids', 'parent_of', subcontractor.ids)]])
+            domain &= Domain('subcontractor_ids', 'parent_of', subcontractor.ids)
             return self.search(domain, order='sequence, product_id, id', limit=1)
         else:
             return self.env['mrp.bom']

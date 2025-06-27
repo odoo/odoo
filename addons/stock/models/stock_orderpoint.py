@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -12,7 +11,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.modules.registry import Registry
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.sql_db import BaseCursor
 from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date
 
@@ -105,11 +104,11 @@ class StockWarehouseOrderpoint(models.Model):
         #  - strictly belonging to our warehouse
         #  - not belonging to any warehouses
         for orderpoint in self:
-            loc_domain = [('usage', 'in', ('internal', 'view'))]
+            loc_domain = Domain('usage', 'in', ('internal', 'view'))
             other_warehouses = self.env['stock.warehouse'].search([('id', '!=', orderpoint.warehouse_id.id)])
             for view_location_id in other_warehouses.mapped('view_location_id'):
-                loc_domain = expression.AND([loc_domain, ['!', ('id', 'child_of', view_location_id.id)]])
-                loc_domain = expression.AND([loc_domain, ['|', ('company_id', '=', False), ('company_id', '=', orderpoint.company_id.id)]])
+                loc_domain &= ~Domain('id', 'child_of', view_location_id.id)
+                loc_domain &= Domain('company_id', 'in', [False, orderpoint.company_id.id])
             orderpoint.allowed_location_ids = self.env['stock.location'].search(loc_domain)
 
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
@@ -435,16 +434,15 @@ class StockWarehouseOrderpoint(models.Model):
         ploc_per_day = defaultdict(set)
         # For each replenish location get products with negative virtual_available aka forecast
 
-
         Move = self.env['stock.move'].with_context(active_test=False)
         Quant = self.env['stock.quant'].with_context(active_test=False)
         domain_quant, domain_move_in_loc, domain_move_out_loc = all_product_ids._get_domain_locations_new(all_replenish_location_ids.ids)
-        domain_state = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))]
-        domain_product = [['product_id', 'in', all_product_ids.ids]]
+        domain_state = Domain('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))
+        domain_product = Domain('product_id', 'in', all_product_ids.ids)
 
-        domain_quant = expression.AND([domain_product, domain_quant])
-        domain_move_in = expression.AND([domain_product, domain_state, domain_move_in_loc])
-        domain_move_out = expression.AND([domain_product, domain_state, domain_move_out_loc])
+        domain_quant = Domain.AND((domain_product, domain_quant))
+        domain_move_in = Domain.AND((domain_product, domain_state, domain_move_in_loc))
+        domain_move_out = Domain.AND((domain_product, domain_state, domain_move_out_loc))
 
         moves_in = defaultdict(list)
         for item in Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'location_final_id'], ['product_qty:sum']):
@@ -559,9 +557,9 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_replenishment_order_notification(self):
         self.ensure_one()
-        domain = [('orderpoint_id', 'in', self.ids)]
+        domain = Domain('orderpoint_id', 'in', self.ids)
         if self.env.context.get('written_after'):
-            domain = expression.AND([domain, [('write_date', '>=', self.env.context.get('written_after'))]])
+            domain &= Domain('write_date', '>=', self.env.context.get('written_after'))
         move = self.env['stock.move'].search(domain, limit=1)
         if ((move.location_id.warehouse_id and move.location_id.warehouse_id != self.warehouse_id)
             or move.location_id.usage == 'transit') and move.picking_id:
@@ -589,12 +587,12 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.autovacuum
     def _unlink_processed_orderpoints(self):
-        domain = [
+        domain = Domain([
             ('create_uid', '=', SUPERUSER_ID),
             ('trigger', '=', 'manual'),
-        ]
+        ])
         if self.ids:
-            expression.AND([domain, [('ids', 'in', self.ids)]])
+            domain &= Domain('id', 'in', self.ids)
         manual_orderpoints = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search(domain)
         orderpoints_to_remove = manual_orderpoints.filtered(lambda o: o.qty_to_order <= 0.0)
         # Remove previous automatically created orderpoint that has been refilled.

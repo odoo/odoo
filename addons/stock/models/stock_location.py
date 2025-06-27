@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import calendar
@@ -8,8 +7,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
-from odoo.tools.float_utils import float_compare
+from odoo.fields import Domain
 
 
 class StockLocation(models.Model):
@@ -479,13 +477,13 @@ class StockLocation(models.Model):
             [('location_id', 'in', self.ids)],
             groupby=['location_id', 'product_id'], aggregates=['quantity:sum'],
         )
-        base_domain = [('state', 'not in', ['draft', 'done', 'cancel']), ('id', 'not in', tuple(excluded_sml_ids))]
+        base_domain = Domain('state', 'not in', ['draft', 'done', 'cancel']) & Domain('id', 'not in', tuple(excluded_sml_ids))
         outgoing_move_lines = StockMoveLine._read_group(
-            expression.AND([[('location_id', 'in', self.ids)], base_domain]),
+            Domain('location_id', 'in', self.ids) & base_domain,
             groupby=['location_id', 'product_id'], aggregates=['quantity_product_uom:sum'],
         )
         incoming_move_lines = StockMoveLine._read_group(
-            expression.AND([[('location_dest_id', 'in', self.ids)], base_domain]),
+            Domain('location_dest_id', 'in', self.ids) & base_domain,
             groupby=['location_dest_id', 'product_id'], aggregates=['quantity_product_uom:sum']
         )
 

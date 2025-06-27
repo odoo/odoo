@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 from ast import literal_eval
@@ -9,7 +8,7 @@ from re import findall as regex_findall
 
 from odoo import _, api, Command, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import clean_context, OrderedSet, groupby
 
@@ -808,20 +807,18 @@ Please change the quantity done or the rounding precision in your settings.""",
         """ Manually mark the relevant orderpoints for re-computation.
         This allows us to only recompute the qty_to_order for the orderpoints in the relevant warehouse(s),
         instead of all the orderpoints linked to the product."""
-        orderpoint_domain = []
+        if not self:
+            return
+        domains = []
         for move in self:
-            domain_for_move = [('product_id', '=', move.product_id.id)]
+            domain_for_move = Domain('product_id', '=', move.product_id.id)
             wh_ids = move.location_id.warehouse_id.ids + move.location_dest_id.warehouse_id.ids
             if wh_ids:
-                domain_for_move = expression.AND([domain_for_move, [('warehouse_id', 'in', wh_ids)]])
-            if not orderpoint_domain:
-                orderpoint_domain = domain_for_move
-                continue
-            orderpoint_domain = expression.OR([orderpoint_domain, domain_for_move])
-        if orderpoint_domain:
-            orderpoints = self.env['stock.warehouse.orderpoint'].sudo().search(orderpoint_domain, order='id')
-            orderpoints.invalidate_recordset(['qty_to_order', 'qty_forecast'])
-            self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['qty_to_order_computed'], orderpoints)
+                domain_for_move &= Domain('warehouse_id', 'in', wh_ids)
+            domains.append(domain_for_move)
+        orderpoints = self.env['stock.warehouse.orderpoint'].sudo().search(Domain.OR(domains), order='id')
+        orderpoints.invalidate_recordset(['qty_to_order', 'qty_forecast'])
+        self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['qty_to_order_computed'], orderpoints)
 
     def _delay_alert_get_documents(self):
         """Returns a list of recordset of the documents linked to the stock.move in `self` in order
@@ -2354,18 +2351,19 @@ Please change the quantity done or the rounding precision in your settings.""",
         if not self or self.env['ir.config_parameter'].sudo().get_param('stock.picking_no_auto_reserve'):
             return
 
-        domains = [
+        product_domains = Domain.OR(
             [('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)]
             for move in self
-        ]
+        )
         static_domain = [('state', 'in', ['confirmed', 'partially_available']),
                          ('procure_method', '=', 'make_to_stock'),
                          '|',
                             ('reservation_date', '<=', fields.Date.today()),
                             ('picking_type_id.reservation_method', '=', 'at_confirm')
                         ]
-        moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
-                                                         order='priority desc, date asc, id asc')
+        moves_to_reserve = self.env['stock.move'].search(
+            Domain(static_domain) & product_domains,
+            order='priority desc, date asc, id asc')
         moves_to_reserve = moves_to_reserve.sorted(key=lambda m: m.group_id.id in self.group_id.ids, reverse=True)
         moves_to_reserve._action_assign()
 

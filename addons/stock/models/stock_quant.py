@@ -8,13 +8,12 @@ from collections import defaultdict
 from markupsafe import escape
 from psycopg2 import Error
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.osv import expression
 from odoo.tools import SQL, groupby
 from odoo.tools.barcode import check_barcode_encoding
-from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.float_utils import float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -634,6 +633,7 @@ class StockQuant(models.Model):
 
     def _run_least_packages_removal_strategy_astar(self, domain, qty):
         # Fetch the available packages and contents
+        domain = Domain(domain).optimize(self)
         query = self._where_calc(domain)
         query.groupby = SQL("package_id")
         query.having = SQL("SUM(quantity - reserved_quantity) > 0")
@@ -685,13 +685,13 @@ class StockQuant(models.Model):
                 if pkg[0] is None:
                     # Lazily retrieve ids for single items
                     if not single_item_ids:
-                        single_item_ids = self.search(expression.AND([[('package_id', '=', None)], domain])).ids
+                        single_item_ids = self.search(Domain('package_id', '=', None) & domain).ids
                     selected_single_items.append(single_item_ids.pop())
 
-            expr = [('package_id', 'in', [elem[0] for elem in node.taken_packages if elem[0] is not None])]
-            if selected_single_items:
-                expr = expression.OR([expr, [('id', 'in', selected_single_items)]])
-            return expression.AND([expr, domain])
+            return (
+                Domain('package_id', 'in', [elem[0] for elem in node.taken_packages if elem[0] is not None])
+                | Domain('id', 'in', selected_single_items)
+            ) & domain
 
         Node = namedtuple("Node", "count_remaining taken_packages next_index")
 
@@ -752,23 +752,25 @@ class StockQuant(models.Model):
         raise UserError(_('Removal strategy %s not implemented.', removal_strategy))
 
     def _get_gather_domain(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
-        domain = [('product_id', '=', product_id.id)]
+        domains = [Domain('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
-                domain = expression.AND([['|', ('lot_id', '=', lot_id.id), ('lot_id', '=', False)], domain])
+                domains.append(Domain('lot_id', 'in', [lot_id.id, False]))
             if package_id:
-                domain = expression.AND([[('package_id', '=', package_id.id)], domain])
+                domains.append(Domain('package_id', '=', package_id.id))
             if owner_id:
-                domain = expression.AND([[('owner_id', '=', owner_id.id)], domain])
-            domain = expression.AND([[('location_id', 'child_of', location_id.id)], domain])
+                domains.append(Domain('owner_id', '=', owner_id.id))
+            domains.append(Domain('location_id', 'child_of', location_id.id))
         else:
-            domain = expression.AND([['|', ('lot_id', '=', lot_id.id), ('lot_id', '=', False)] if lot_id else [('lot_id', '=', False)], domain])
-            domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
-            domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
-            domain = expression.AND([[('location_id', '=', location_id.id)], domain])
+            domains.extend((
+                Domain('lot_id', 'in', [False, lot_id.id if lot_id else False]),
+                Domain('package_id', '=', package_id.id if package_id else False),
+                Domain('owner_id', '=', owner_id.id if owner_id else False),
+                Domain('location_id', '=', location_id.id),
+            ))
         if self.env.context.get('with_expiration'):
-            domain = expression.AND([['|', ('removal_date', '>=', self.env.context['with_expiration']), ('removal_date', '=', False)], domain])
-        return domain
+            domains.append(Domain('removal_date', '>=', self.env.context['with_expiration']) | Domain('removal_date', '=', False))
+        return Domain.AND(domains)
 
     def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, qty=0):
         """ if records in self, the records are filtered based on the wanted characteristics passed to this function
@@ -918,12 +920,12 @@ class StockQuant(models.Model):
     def _get_quants_by_products_locations(self, product_ids, location_ids, extra_domain=False):
         res = defaultdict(lambda: self.env['stock.quant'])
         if product_ids and location_ids:
-            domain = [
+            domain = Domain([
                 ('product_id', 'in', product_ids.ids),
                 ('location_id', 'child_of', location_ids.ids)
-            ]
+            ])
             if extra_domain:
-                domain = expression.AND([domain, extra_domain])
+                domain &= Domain(extra_domain)
             needed_quants = self.env['stock.quant']._read_group(
                 domain,
                 ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
@@ -1457,14 +1459,15 @@ class StockQuant(models.Model):
         message = None
         recommended_location = None
         if product_id.tracking == 'serial':
-            internal_domain = [('location_id.usage', 'in', ('internal', 'transit'))]
+            internal_domain = Domain('location_id.usage', 'in', ('internal', 'transit'))
             if lot_id.company_id:
-                internal_domain = expression.AND([internal_domain, [('company_id', '=', company_id.id)]])
-            quants = self.env['stock.quant'].search([('product_id', '=', product_id.id),
-                                                     ('lot_id', '=', lot_id.id),
-                                                     ('quantity', '!=', 0),
-                                                     '|', ('location_id.usage', '=', 'customer'),
-                                                           *internal_domain])
+                internal_domain &= Domain('company_id', '=', company_id.id)
+            quants = self.env['stock.quant'].search(Domain.AND((
+                Domain('product_id', '=', product_id.id),
+                Domain('lot_id', '=', lot_id.id),
+                Domain('quantity', '!=', 0),
+                Domain('location_id.usage', '=', 'customer') | internal_domain,
+            )))
             sn_locations = quants.mapped('location_id')
             if quants:
                 if not source_location_id:
@@ -1601,9 +1604,9 @@ class StockQuantPackage(models.Model):
                 package.valid_sscc = check_barcode_encoding(package.name, 'sscc')
 
     def _search_owner(self, operator, value):
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
+        if Domain.is_negative_operator(operator):
             return NotImplemented
-        return [('quant_ids.owner_id', operator, value)]
+        return Domain('quant_ids.owner_id', operator, value)
 
     def write(self, vals):
         if 'location_id' in vals:
