@@ -263,6 +263,32 @@ class HrEmployee(models.Model):
     # properties
     employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_user")
 
+    # departure
+    departure_id = fields.Many2one(related='version_id.departure_id', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_reason_id = fields.Many2one(related='version_id.departure_reason_id', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_description = fields.Html(related='version_id.departure_description', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_date = fields.Date(related='version_id.departure_date', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_action_at_departure = fields.Boolean(related='version_id.departure_action_at_departure', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_action_other_date = fields.Date(related='version_id.departure_action_other_date', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_do_archive_employee = fields.Boolean(related='version_id.departure_do_archive_employee', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_do_archive_user = fields.Boolean(related='version_id.departure_do_archive_user', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_do_set_date_end = fields.Boolean(related='version_id.departure_do_set_date_end', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
+    departure_has_selected_actions = fields.Boolean(related='version_id.departure_has_selected_actions', inherited=True,
+        groups="hr.group_hr_user")
+    departure_apply_immediately = fields.Boolean(related='version_id.departure_apply_immediately', inherited=True,
+        groups="hr.group_hr_user")
+    departure_apply_date = fields.Date(related='version_id.departure_apply_date', inherited=True,
+        groups="hr.group_hr_user")
+
     # mail.activity.mixin
     activity_ids = fields.One2many(groups="hr.group_hr_user")
     activity_state = fields.Selection(groups="hr.group_hr_user")
@@ -856,8 +882,9 @@ class HrEmployee(models.Model):
         """
         self.ensure_one()
         return self.env['hr.version']._read_group(
-            [('employee_id', '=', self.id), ('contract_date_start', '!=', False)],
-            ['contract_date_start:day', 'contract_date_end:day'])
+            domain=[('employee_id', '=', self.id), ('contract_date_start', '!=', False)],
+            groupby=['contract_date_start:day', 'contract_date_end:day'],
+            order="contract_date_start:day")
 
     def _get_contract_dates(self, date):
         """
@@ -1691,15 +1718,6 @@ class HrEmployee(models.Model):
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return []
 
-    def action_unarchive(self):
-        res = super().action_unarchive()
-        self.write({
-            'departure_reason_id': False,
-            'departure_description': False,
-            'departure_date': False
-        })
-        return res
-
     def action_archive(self):
         archived_employees = self.filtered('active')
         res = super().action_archive()
@@ -1717,17 +1735,6 @@ class HrEmployee(models.Model):
                 for field in user_fields_to_empty:
                     if employee[field] in archived_employees.user_id:
                         employee[field] = False
-
-            if len(archived_employees) == 1 and not self.env.context.get('no_wizard', False):
-                return {
-                    'type': 'ir.actions.act_window',
-                    'name': _('Register Departure'),
-                    'res_model': 'hr.departure.wizard',
-                    'view_mode': 'form',
-                    'target': 'new',
-                    'context': {'active_id': self.id},
-                    'views': [[False, 'form']]
-                }
         return res
 
     @api.onchange('company_id')
@@ -1737,6 +1744,7 @@ class HrEmployee(models.Model):
                 'title': _("Warning"),
                 'message': _("To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
             }}
+        return None
 
     def _load_scenario(self):
         demo_tag = self.env.ref('hr.employee_category_demo', raise_if_not_found=False)
@@ -1971,14 +1979,6 @@ class HrEmployee(models.Model):
             target_date = fields.Date.context_today(self.env.user)
         return relativedelta(target_date, self.birthday).years if self.birthday else 0
 
-    def _get_departure_date(self):
-        # Primarily used in the archive wizard
-        # to pick a good default for the departure date
-        self.ensure_one()
-        if self.date_end and self.date_end < fields.Date.today():
-            return self.departure_date
-        return False
-
     def _get_versions_with_contract_overlap_with_period(self, date_from, date_to):
         """
         Returns the versions of the employee between date_from and date_to
@@ -2071,3 +2071,53 @@ class HrEmployee(models.Model):
         self.ensure_one()
         current_val = self.primary_bank_account_id.allow_out_payment
         self.primary_bank_account_id.allow_out_payment = not current_val
+
+    def action_new_departure(self):
+        self.ensure_one()
+        return {
+            'name': self.env._('End of collaboration'),
+            'res_model': 'hr.employee.departure',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_id': self.id,
+            },
+        }
+
+    def action_departure_multi(self):
+        return {
+            'name': self.env._('End of collaboration'),
+            'res_model': 'hr.departure.wizard',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_ids': self.ids,
+            },
+        }
+
+    def action_reopen(self):
+        if any(not emp.departure_id for emp in self):
+            raise ValidationError(self.env._("You can't reopen employees that are still employed"))
+        today = fields.Date.context_today(self)
+        employees_to_edit = self.env['hr.employee']
+        for employee in self:
+            current_version = employee._get_version(today)
+            if current_version.date_version == today:
+                employees_to_edit += employee
+            else:
+                contract_end = current_version.contract_date_end
+                new_version_date = max(today, contract_end + relativedelta(days=1)) if contract_end else today
+                employee.create_version({
+                    'date_version': new_version_date,
+                    'departure_id': False,
+                    'contract_date_start': False,
+                    'contract_date_end': False,
+                })
+        employees_to_edit.write({'departure_id': False})
+        self.action_unarchive()
+
+    def action_cancel_departure(self):
+        self.ensure_one()
+        self.departure_id.unlink()

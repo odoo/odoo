@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_departure_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.departure.view.form</field>
+        <field name="model">hr.employee.departure</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="employee_id" invisible="1"/> <!-- used in computes -->
+                    <group name="header_group">
+                        <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                        <field name="departure_date" class="oe_inline"/>
+                    </group>
+                    <notebook name="departure_notebook">
+                        <page string="Planned Actions" name="planned_actions">
+                            <group>
+                                <group name="planned_actions_left">
+                                    <label for="do_archive_employee" string="Employee"/>
+                                    <div class="o_row">
+                                        <field name="do_archive_employee" readonly="apply_date"/>
+                                        <span>Archive</span>
+                                    </div>
+                                    <label for="do_set_date_end" string="Contracts"/>
+                                    <div class="o_row">
+                                        <field name="do_set_date_end" readonly="apply_date"/>
+                                        <span>Set Contracts End Date</span>
+                                    </div>
+                                    <label for="do_archive_user" string="Related User" invisible="not is_user_employee"/>
+                                    <div invisible="not is_user_employee">
+                                        <field name="do_archive_user"/>
+                                        <span>Archive</span>
+                                    </div>
+                                </group>
+                                <group name="planned_actions_right"/>
+                            </group>
+                            <group class="mt-4" invisible="not has_selected_actions">
+                                <group invisible="apply_date">
+                                    <field class="w-auto" name="action_at_departure"
+                                        readonly="apply_date" widget="boolean_radio" options="{
+                                            'yes_label_element_id': 'action_at_departure_yes',
+                                            'no_label_element_id': 'action_at_departure_no'
+                                        }"
+                                    />
+                                    <template id="action_at_departure_yes">Departure date</template>
+                                    <template id="action_at_departure_no">Other date</template>
+                                    <field name="action_other_date" invisible="action_at_departure"
+                                        placeholder="Immediately" readonly="apply_date"/>
+                                </group>
+                                <div invisible="not apply_date">
+                                    <span class="alert alert-warning" role="alert">
+                                        All selected actions have been executed on
+                                        <field name="apply_date" class="oe_inline"/>
+                                    </span>
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Detailed Reason">
+                            <field name="departure_description" nolabel="1"
+                                placeholder="Add more details about the reason to end the collaboration with this employee."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Schedule" special="save" class="oe_highlight"
+                        invisible="apply_immediately"/>
+                    <button name="action_register" string="Apply" type="object" class="oe_highlight"
+                        invisible="not apply_immediately"/>
+                    <button
+                        string="Discard"
+                        special="cancel"
+                        data-hotkey="j"
+                        class="btn-secondary"
+                        close="1"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

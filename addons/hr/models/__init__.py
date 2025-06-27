@@ -8,6 +8,7 @@ from . import mail_activity
 from . import hr_employee
 from . import hr_mixin
 from . import hr_employee_category
+from . import hr_employee_departure
 from . import hr_employee_public
 from . import hr_department
 from . import hr_departure_reason

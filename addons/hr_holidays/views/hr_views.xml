@@ -141,6 +141,14 @@
                     </div>
                 </button>
             </button>
+            <group name="departure_planned_actions_right" position="inside">
+                <label for="departure_do_cancel_time_off_requests" string="Time Off"/>
+                <div class="o_row">
+                    <field name="departure_do_cancel_time_off_requests" nolabel="1"
+                        readonly="departure_apply_date"/>
+                    <span>Cancel Future Requests</span>
+                </div>
+            </group>
         </field>
     </record>
 

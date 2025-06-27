@@ -7,37 +7,64 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <group>
-                            <group id="info">
-                                <field name="employee_ids" widget="many2many_tags"/>
-                                <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
-                                <field name="departure_date"/>
-                            </group>
-                            <group id="action">
-                                <div class="o_td_label" id="activities_label">
-                                    <span class="o_form_label o_hr_form_label cursor-default">Close Activities</span>
-                                </div>
-                                <div class="column" id="activities">
-                                    <div>
-                                        <field name="set_date_end"/><label for="set_date_end" string="Contract"/>
-                                    </div>
-                                    <div invisible="not is_user_employee">
-                                        <field name="remove_related_user"/>
-                                        <label for="remove_related_user" string="Related User"/>
-                                    </div>
-                                </div>
-                                <div class="column" id="info"/>
-                            </group>
-                        </group>
-                        <group>
-                            <div id="detailed_reason" colspan="2">
-                                <span class="o_form_label o_hr_form_label cursor-default">Detailed Reason</span>
-                                <field name="departure_description" placeholder="Give more details about the reason of archiving the employee."/>
+                        <group name="header_group">
+                            <field name="employee_ids" widget="many2many_avatar_employee"
+                                options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                            <label for="departure_date" string="Contract End Date"/>
+                            <div invisible="not departure_reason_id">
+                                <field name="departure_date" nolabel="1" class="oe_inline"/>
                             </div>
                         </group>
+                        <notebook>
+                            <page string="Planned Actions" name="planned_actions">
+                                <group>
+                                    <group name="planned_actions_left">
+                                        <label for="do_archive_employee" string="Employee"/>
+                                        <div class="o_row">
+                                            <field name="do_archive_employee"/>
+                                            <span>Archive</span>
+                                        </div>
+                                        <label for="do_set_date_end" string="Contracts"/>
+                                        <div class="o_row">
+                                            <field name="do_set_date_end"/>
+                                            <span>Set Contracts End Date</span>
+                                        </div>
+                                        <label for="do_archive_user" string="Related User" invisible="not is_user_employee"/>
+                                        <div invisible="not is_user_employee">
+                                            <field name="do_archive_user"/>
+                                            <span>Archive</span>
+                                        </div>
+                                    </group>
+                                    <group name="planned_actions_right"/>
+                                </group>
+                                <group class="mt-4" invisible="not has_selected_actions">
+                                    <group>
+                                        <label for="action_at_departure" string="Action at"/>
+                                        <field class="w-auto" name="action_at_departure" nolabel="1"
+                                            widget="boolean_radio" options="{
+                                                'yes_label_element_id': 'action_at_departure_yes',
+                                                'no_label_element_id': 'action_at_departure_no'
+                                            }"
+                                        />
+                                        <template id="action_at_departure_yes">Departure date</template>
+                                        <template id="action_at_departure_no">Other date</template>
+                                        <field name="action_other_date" invisible="action_at_departure"
+                                            placeholder="Immediately"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Detailed Reason">
+                                <field name="departure_description" nolabel="1"
+                                    placeholder="Add more details about the reason to end the collaboration with these employees."/>
+                            </page>
+                        </notebook>
                     </sheet>
                     <footer>
-                        <button name="action_register_departure" string="Apply" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button name="action_register_departure" string="Schedule" type="object" class="oe_highlight"
+                            invisible="apply_immediately"/>
+                        <button name="action_register_departure" string="Apply" type="object" class="oe_highlight"
+                            invisible="not apply_immediately"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
