@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.fields import Domain
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class HrEmployee(models.Model):

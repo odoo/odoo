@@ -695,8 +695,9 @@ class HrEmployee(models.Model):
         """
         self.ensure_one()
         return self.env['hr.version']._read_group(
-            [('employee_id', '=', self.id), ('contract_date_start', '!=', False)],
-            ['contract_date_start:day', 'contract_date_end:day'])
+            domain=[('employee_id', '=', self.id), ('contract_date_start', '!=', False)],
+            groupby=['contract_date_start:day', 'contract_date_end:day'],
+            order="contract_date_start:day")
 
     def _get_contract_dates(self, date):
         """
@@ -1393,11 +1394,11 @@ class HrEmployee(models.Model):
 
     def action_unarchive(self):
         res = super().action_unarchive()
-        self.write({
-            'departure_reason_id': False,
-            'departure_description': False,
-            'departure_date': False
-        })
+        if self.version_id.departure_id:
+            self.create_version({
+                'date_version': fields.Date.today(),
+                'departure_id': False,
+            })
         return res
 
     def action_archive(self):
@@ -1417,17 +1418,6 @@ class HrEmployee(models.Model):
                 for field in user_fields_to_empty:
                     if employee[field] in archived_employees.user_id:
                         employee[field] = False
-
-            if len(archived_employees) == 1 and not self.env.context.get('no_wizard', False):
-                return {
-                    'type': 'ir.actions.act_window',
-                    'name': _('Register Departure'),
-                    'res_model': 'hr.departure.wizard',
-                    'view_mode': 'form',
-                    'target': 'new',
-                    'context': {'active_id': self.id},
-                    'views': [[False, 'form']]
-                }
         return res
 
     @api.onchange('company_id')
@@ -1437,6 +1427,7 @@ class HrEmployee(models.Model):
                 'title': _("Warning"),
                 'message': _("To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
             }}
+        return None
 
     def _load_scenario(self):
         demo_tag = self.env.ref('hr.employee_category_demo', raise_if_not_found=False)
@@ -1763,3 +1754,34 @@ class HrEmployee(models.Model):
         self.ensure_one()
         current_val = self.primary_bank_account_id.allow_out_payment
         self.primary_bank_account_id.allow_out_payment = not current_val
+
+    def action_new_departure(self):
+        self.ensure_one()
+        return {
+            'name': self.env._('End of collaboration'),
+            'res_model': 'hr.employee.departure',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_id': self.id,
+            },
+        }
+
+    def action_departure_multi(self):
+        if len(self) == 1:
+            return self.action_new_departure()
+        return {
+            'name': self.env._('End of collaboration'),
+            'res_model': 'hr.departure.wizard',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_ids': self.ids,
+            },
+        }
+
+    def action_cancel_departure(self):
+        self.ensure_one()
+        self.version_id.departure_id.action_cancel()
