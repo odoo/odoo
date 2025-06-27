@@ -53,5 +53,17 @@ export class PosPreset extends models.ServerModel {
             attendance_ids: [],
             resource_calendar_id: 1,
         },
+        {
+            id: 3,
+            name: "Name Required Preset",
+            identification: "name",
+            use_timing: false,
+        },
+        {
+            id: 4,
+            name: "Address Required Preset",
+            identification: "address",
+            use_timing: false,
+        },
     ];
 }

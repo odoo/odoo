@@ -509,9 +509,10 @@ export class PaymentScreen extends Component {
         }
 
         if (!this.currentOrder.presetRequirementsFilled) {
+            const { field, message } = this.currentOrder.uiState.requiredPartnerDetails || {};
             this.dialog.add(AlertDialog, {
-                title: _t("Customer required"),
-                body: _t("Please add a valid customer to the order."),
+                title: field ? _t("%s required", field) : _t("Missing required"),
+                body: message || _t("Some required information is missing."),
             });
             return false;
         }
