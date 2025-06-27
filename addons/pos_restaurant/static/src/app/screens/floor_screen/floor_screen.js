@@ -1,5 +1,4 @@
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
@@ -938,8 +937,8 @@ export class FloorScreen extends Component {
     async deleteFloor() {
         const confirmed = await ask(this.dialog, {
             title: `Removing floor ${this.activeFloor.name}`,
-            body: sprintf(
-                _t("Removing a floor cannot be undone. Do you still want to remove %s?"),
+            body: _t(
+                "Removing a floor cannot be undone. Do you still want to remove %s?",
                 this.activeFloor.name
             ),
         });

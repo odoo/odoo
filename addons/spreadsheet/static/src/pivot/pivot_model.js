@@ -2,7 +2,6 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
-import { sprintf } from "@web/core/utils/strings";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 
 import { helpers, constants, EvaluationError, SpreadsheetPivotTable } from "@odoo/o-spreadsheet";
@@ -484,7 +483,7 @@ export class OdooPivotModel extends PivotModel {
                 rows.push(value);
             } else {
                 throw new EvaluationError(
-                    sprintf(_t("Dimension %s is not a group by"), dimensionWithGranularity)
+                    _t("Dimension %s is not a group by", dimensionWithGranularity)
                 );
             }
         }

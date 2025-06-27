@@ -17,7 +17,6 @@ import { Component, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
-import { sprintf } from "@web/core/utils/strings";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
@@ -686,14 +685,16 @@ export class PaymentScreen extends Component {
 
             this.dialog.add(AlertDialog, {
                 title: _t("Rounding error in payment lines"),
-                body: sprintf(
-                    _t(
-                        "The amount of your payment lines must be rounded to validate the transaction.\n" +
-                            "The rounding precision is %s so you should set %s as payment amount instead of %s."
-                    ),
-                    cashRounding.rounding.toFixed(this.pos.currency.decimal_places),
-                    expectedAmountPaid.toFixed(this.pos.currency.decimal_places),
-                    amountPaid.toFixed(this.pos.currency.decimal_places)
+                body: _t(
+                    "The amount of your payment lines must be rounded to validate the transaction.\n" +
+                        "The rounding precision is %(rounding)s so you should set %(expectedAmount)s as payment amount instead of %(paidAmount)s.",
+                    {
+                        rounding: cashRounding.rounding.toFixed(this.pos.currency.decimal_places),
+                        expectedAmount: expectedAmountPaid.toFixed(
+                            this.pos.currency.decimal_places
+                        ),
+                        paidAmount: amountPaid.toFixed(this.pos.currency.decimal_places),
+                    }
                 ),
             });
             return false;
