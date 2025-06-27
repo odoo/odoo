@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { backgroundShapesDefinition } from "./background_shapes_definition";
-import { ShapeSelector } from "../shape/shape_selector";
+import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 import { getDefaultColors } from "./background_shape_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { getBgImageURLFromURL } from "@html_editor/utils/image";
