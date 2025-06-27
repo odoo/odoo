@@ -509,6 +509,8 @@ export class ColorPlugin extends Plugin {
                 backgroundImagePartsToCss(parts)
             );
         } else {
+            // Change camelCase to kebab-case.
+            mode = mode.replace("backgroundColor", "background-color");
             this.delegateTo("apply_style", element, mode, color);
         }
         this.fixColorCombination(element);
