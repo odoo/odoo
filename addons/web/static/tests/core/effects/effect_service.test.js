@@ -11,7 +11,7 @@ let effectParams;
 beforeEach(async () => {
     await mountWithCleanup(MainComponentsContainer);
     effectParams = {
-        message: markup("<div>Congrats!</div>"),
+        message: markup`<div>Congrats!</div>`,
     };
 });
 

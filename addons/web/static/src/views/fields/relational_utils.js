@@ -47,7 +47,7 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
-import { highlightText, odoomark } from "@web/core/utils/strings";
+import { highlightText, odoomark } from "@web/core/utils/html";
 
 //
 // Commons

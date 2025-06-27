@@ -8,7 +8,7 @@ import {
     humanNumber,
     insertThousandsSep,
 } from "@web/core/utils/numbers";
-import { escape, exprToBoolean } from "@web/core/utils/strings";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 import { markup } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
@@ -52,19 +52,18 @@ export function formatBinary(value) {
  * @returns {string}
  */
 export function formatBoolean(value) {
-    return markup(`
+    return markup`
         <div class="o-checkbox d-inline-block me-2">
             <input id="boolean_checkbox" type="checkbox" class="form-check-input" disabled ${
                 value ? "checked" : ""
             }/>
             <label for="boolean_checkbox" class="form-check-label"/>
-        </div>`);
+        </div>`;
 }
 
 /**
  * @param {string} value
  * @param {Object} [options] additional options
- * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @param {boolean} [options.isPassword=false] if true, returns '********'
  *   instead of the formatted value
  * @returns {string}
@@ -72,9 +71,6 @@ export function formatBoolean(value) {
 export function formatChar(value, options) {
     if (options && options.isPassword) {
         return "*".repeat(value ? value.length : 0);
-    }
-    if (options && options.escape) {
-        value = escape(value);
     }
     return value || "";
 }
