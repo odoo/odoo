@@ -28,7 +28,7 @@ test("Message model properties", async () => {
     const message = store["mail.message"].insert({
         attachment_ids: 750,
         author_id: { id: 5, name: "Demo" },
-        body: markup("<p>Test</p>"),
+        body: markup`<p>Test</p>`,
         date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
         starred: true,
