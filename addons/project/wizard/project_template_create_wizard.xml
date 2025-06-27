@@ -22,7 +22,7 @@
                         </div>
                     </group>
                 </group>
-                <field name="role_to_users_ids" invisible="not role_to_users_ids">
+                <field name="role_to_users_ids" invisible="not role_to_users_ids" widget="project_role_users_list">
                     <list create="0" delete="0" no_open="1" editable="bottom">
                         <field name="role_id" force_save="1" readonly="1" options="{'no_open': True}"/>
                         <field name="user_ids" widget="many2many_avatar_user" options="{'no_open': True, 'no_quick_create': True}"/>

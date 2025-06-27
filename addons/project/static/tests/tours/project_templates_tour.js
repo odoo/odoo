@@ -24,6 +24,27 @@ registry.category("web_tour.tours").add("project_templates_tour", {
             run: "edit New Project",
         },
         {
+            trigger: '.modal span[title="Developer"] + div .o-autocomplete--input',
+            run: 'click',
+        },
+        {
+            trigger: '.ui-autocomplete .o-autocomplete--dropdown-item:contains("Developer User")',
+            content: "set Mitchell Admin in Designer role",
+            run: 'click',
+        },
+        {
+            trigger: 'body:not(:has(.ui-autocomplete:visible))',
+        },
+        {
+            trigger: '.modal span[title="Designer"] + div .o-autocomplete--input',
+            run: 'click',
+        },
+        {
+            trigger: '.ui-autocomplete .o-autocomplete--dropdown-item:contains("Designer User")',
+            content: "set Marc Demo in Designer role",
+            run: 'click',
+        },
+        {
             trigger: 'button[name="create_project_from_template"]',
             run: "click",
         },

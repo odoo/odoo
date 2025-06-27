@@ -1,0 +1,24 @@
+<template>
+    <t t-name="ProjectRoleUsersList">
+        <div class="o_project_role_users_list_container mt-4">
+            <div class="d-flex flex-column gap-3">
+                <t t-foreach="this.props.record.data.role_to_users_ids.records" t-as="item" t-key="item.data.role_id.id">
+                    <div class="row align-items-center mb-2">
+                        <span
+                            class="col-12 col-md-6 fw-bold text-truncate"
+                            t-att-title="item.data.role_id.display_name"
+                            t-esc="item.data.role_id.display_name"
+                        />
+                        <div class="col-12 col-md-6 o_field_widget o_field_many2many_tags d-flex">
+                            <Many2ManyTagsAvatarUserField
+                                name="'user_ids'"
+                                record="item"
+                                readonly="false"
+                            />
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</template>
