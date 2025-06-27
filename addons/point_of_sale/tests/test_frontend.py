@@ -2454,6 +2454,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_delete_line')
 
+    def test_automatic_receipt_printing(self):
+        self.main_pos_config.write({
+            'iface_print_auto': True,
+            'iface_print_skip_screen': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_automatic_receipt_printing', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
