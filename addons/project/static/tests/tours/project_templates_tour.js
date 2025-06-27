@@ -11,11 +11,11 @@ registry.category("web_tour.tours").add("project_templates_tour", {
         },
         {
             content: "Click on New Button of Kanban view",
-            trigger: "a.o-kanban-button-new",
+            trigger: ".o-kanban-button-new",
             run: "click",
         },
         {
-            trigger: 'ul.dropdown-menu button.dropdown-item:contains("Project Template")',
+            trigger: '.dropdown-menu button.dropdown-item:contains("Project Template")',
             run: "click",
             content: "Create a project from the template",
         },
@@ -43,12 +43,12 @@ registry.category("web_tour.tours").add("project_templates_tour", {
         },
         {
             content: "Click on New Button of List view",
-            trigger: "a.o_list_button_add",
+            trigger: ".o_list_button_add",
             run: "click",
         },
         {
             content: "Lets Create a second project from the template",
-            trigger: 'ul.dropdown-menu button.dropdown-item:contains("Project Template")',
+            trigger: '.dropdown-menu button.dropdown-item:contains("Project Template")',
             run: "click",
         },
         {
