@@ -188,7 +188,7 @@ class AccountChartTemplate(models.AbstractModel):
         if module:
             module.button_immediate_install()
             self.env.transaction.reset()  # clear the transaction with an old registry
-
+            self = self.env()['account.chart.template']  # noqa: PLW0642 create a new env with the new registry
         # To be able to use code translation we load everything in 'en_US'
         # The demo data is still loaded "normally" since code translations cannot be used for them reliably.
         # (Since we rely on the "@template functions" to determine the module to take the code translations from.)
