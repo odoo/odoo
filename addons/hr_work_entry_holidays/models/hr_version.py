@@ -2,7 +2,7 @@
 
 import pytz
 
-from odoo import models
+from odoo import api, models
 from odoo.fields import Domain
 
 
@@ -59,3 +59,8 @@ class HrVersion(models.Model):
     def _get_sub_leave_domain(self):
         # see https://github.com/odoo/enterprise/pull/15091
         return super()._get_sub_leave_domain() | Domain('holiday_id.employee_id', 'in', self.employee_id.ids)
+
+    @api.model
+    def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
+        res = super()._generate_work_entries_postprocess_adapt_to_calendar(vals)
+        return res or (not 'work_entry_type_id' not in vals and vals.get('leave_id'))
