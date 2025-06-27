@@ -28,8 +28,8 @@ test("should display started a call message with operator livechat username", as
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,

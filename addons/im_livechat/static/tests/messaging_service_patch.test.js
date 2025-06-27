@@ -35,8 +35,8 @@ test("push notifications are Odoo toaster on Android", async () => {
         name: "Livechat 1",
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
     });
     listenStoreFetch("init_messaging");
