@@ -767,8 +767,17 @@ class Website(models.Model):
         generic_steps = self.env['website.checkout.step'].sudo().search([
             ('website_id', '=', False),
         ])
+        is_extra_info_feature_enabled = self.env['ir.ui.view'].sudo().search([
+            ('key', '=', 'website_sale.extra_info'),
+            ('active', '=', True),
+            ('website_id', '=', self.id)
+        ], limit=1)
+        
         for step in generic_steps:
-            is_published = bool(step.step_href != '/shop/extra_info')
+            if is_extra_info_feature_enabled:
+                is_published = True
+            else:
+                is_published = bool(step.step_href != '/shop/extra_info')
             step.copy({'website_id': self.id, 'is_published': is_published})
 
     def _get_checkout_step(self, href):
