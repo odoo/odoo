@@ -508,7 +508,6 @@ class IrModelFields(models.Model):
     _allow_sudo_commands = False
 
     name = fields.Char(string='Field Name', default='x_', required=True, index=True)
-    complete_name = fields.Char(index=True)
     model = fields.Char(string='Model Name', required=True, index=True,
                         help="The technical name of the model this field belongs to")
     relation = fields.Char(string='Related Model',
