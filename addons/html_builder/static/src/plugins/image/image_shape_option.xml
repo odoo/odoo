@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ImageShapeOption">
+    <BuilderRow label.translate="Shape">
+        <div class="btn-group o-hb-button-group">
+            <div
+                class="o-hb-btn btn btn-secondary o-dropdown dropdown-toggle dropdown"
+                t-att-class="{'border-end-0 rounded-end-0': state.hasShape}"
+                role="button"
+                tabindex="0"
+                t-on-click="this.showImageShapes"
+                t-out="state.shapeLabel"
+            />
+            <BuilderButton
+                action="'setImageShape'"
+                actionValue=""
+                preview="false"
+                icon="'oi-close'"
+                className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'"
+                t-if="state.hasShape"/>
+        </div>
+    </BuilderRow>
+    <t t-if="this.state.hasShape">
+        <t t-set="enabledTabs" t-value="['solid', 'custom']" />
+        <BuilderRow label.translate="Colors" level="2">
+            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 0}" t-if="this.state.showImageShape0" enabledTabs="enabledTabs" />
+            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 1}" t-if="this.state.showImageShape1" enabledTabs="enabledTabs" />
+            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 2}" t-if="this.state.showImageShape2" enabledTabs="enabledTabs" />
+            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 3}" t-if="this.state.showImageShape3" enabledTabs="enabledTabs" />
+            <BuilderColorPicker action="'setImgShapeColor'" actionParam="{index: 4}" t-if="this.state.showImageShape4" enabledTabs="enabledTabs" />
+        </BuilderRow>
+
+        <BuilderRow label.translate="Transform" level="1" t-if="this.state.showImageShapeTransform" preview="false">
+            <BuilderButton title.translate="Horizontal mirror" icon="'oi-arrows-h'"
+                action="'flipImageShape'" actionParam="{axis: 'x'}"/>
+            <BuilderButton title.translate="Vertical mirror" icon="'oi-arrows-v'"
+                action="'flipImageShape'" actionParam="{axis: 'y'}"/>
+            <BuilderButton title.translate="Rotate left" icon="'fa-rotate-left'"
+                action="'rotateImageShape'" actionParam="{side: 'left'}" />
+            <BuilderButton title.translate="Rotate right" icon="'fa-rotate-right'"
+                action="'rotateImageShape'" actionParam="{side: 'right'}" />
+        </BuilderRow>
+
+        <BuilderRow label.translate="Speed" level="1" t-if="this.state.showImageShapeAnimation" preview="false">
+            <BuilderRange
+                action="'setImageShapeSpeed'"
+                min="-2"
+                max="2"
+                step="0.1"
+                displayRangeValue="true"
+                computedOutput="this.toRatio" />
+        </BuilderRow>
+
+        <BuilderRow label.translate="Stretch" level="1" t-if="this.state.togglableRatio" preview="false">
+            <BuilderCheckbox action="'toggleImageShapeRatio'" />
+        </BuilderRow>
+    </t>
+</t>
+
+</templates>
