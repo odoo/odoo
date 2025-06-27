@@ -29,6 +29,7 @@ export class MailGuest extends models.ServerModel {
                 data.write_date = guest.write_date;
             }
             if (fields.includes("im_status")) {
+                data.im_status = "offline";
                 data.im_status_access_token = guest.id;
             }
             store.add(this.browse(guest.id), data);
