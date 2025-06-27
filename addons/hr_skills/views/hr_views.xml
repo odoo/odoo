@@ -190,7 +190,7 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="hr.res_users_view_form_profile" />
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='contract_information']" position="before">
+            <xpath expr="//page[@name='personal_information']" position="before">
                 <page name="skills_resume" string="Resume">
                     <div class="row">
                         <field name="employee_id" invisible="1"/> <!-- For skills_one2many and resume_one2many -->

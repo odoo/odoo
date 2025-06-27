@@ -34,10 +34,8 @@ HR_WRITABLE_FIELDS = [
     'private_country_id',
     'private_phone',
     'private_email',
-    'address_id',
     'barcode',
     'category_ids',
-    'department_id',
     'display_name',
     'emergency_contact',
     'emergency_phone',
@@ -72,8 +70,6 @@ class ResUsers(models.Model):
     mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False, related_sudo=False)
     work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
-    department_id = fields.Many2one(related='employee_id.department_id')
-    address_id = fields.Many2one(related='employee_id.address_id', readonly=False, related_sudo=False)
     work_contact_id = fields.Many2one(related='employee_id.work_contact_id', readonly=False, related_sudo=False)
     work_location_id = fields.Many2one(related='employee_id.work_location_id')
     work_location_name = fields.Char(related="employee_id.work_location_name")

@@ -10,7 +10,6 @@ class ResUsers(models.Model):
     attendance_state = fields.Selection(related='employee_id.attendance_state')
     last_check_in = fields.Datetime(related='employee_id.last_attendance_id.check_in')
     last_check_out = fields.Datetime(related='employee_id.last_attendance_id.check_out')
-    attendance_manager_id = fields.Many2one(related='employee_id.attendance_manager_id', readonly=False)
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -18,13 +17,6 @@ class ResUsers(models.Model):
             'attendance_state',
             'last_check_in',
             'last_check_out',
-            'attendance_manager_id',
-        ]
-
-    @property
-    def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + [
-            'attendance_manager_id',
         ]
 
     def _clean_attendance_officers(self):
