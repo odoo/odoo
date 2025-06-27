@@ -2368,3 +2368,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 self.env['stock.warehouse.orderpoint']._fields['qty_to_order'],
                 self.env['stock.warehouse.orderpoint'].sudo().search(orderpoint_domain, order='id')
             )
+
+    def _break_mto_link(self, parent_move):
+        self.move_orig_ids = [Command.unlink(parent_move.id)]
+        self.procure_method = 'make_to_stock'
+        self._recompute_state()
