@@ -36,15 +36,18 @@ export class PortalComposer extends Interaction {
                 options[name] = parseInt(options[name]);
             }
         }
-        return Object.assign({
-            "allow_composer": true,
-            "display_composer": false,
-            "csrf_token": odoo.csrf_token,
-            "token": false,
-            "res_model": false,
-            "res_id": false,
-            "send_button_label": _t("Send"),
-        }, options || {});
+        return Object.assign(
+            {
+                allow_composer: true,
+                display_composer: false,
+                csrf_token: odoo.csrf_token,
+                token: false,
+                res_model: false,
+                res_id: false,
+                send_button_label: _t("Send"),
+            },
+            options || {}
+        );
     }
 
     setup() {
@@ -53,8 +56,12 @@ export class PortalComposer extends Interaction {
         this.attachmentButtonEl = this.el.querySelector(".o_portal_chatter_attachment_btn");
         this.fileInputEl = this.el.querySelector(".o_portal_chatter_file_input");
         this.sendButtonEl = this.el.querySelector(".o_portal_chatter_composer_btn");
-        this.attachmentsEl = this.el.querySelector(".o_portal_chatter_composer_input .o_portal_chatter_attachments");
-        this.inputTextareaEl = this.el.querySelector('.o_portal_chatter_composer_input textarea[name="message"]');
+        this.attachmentsEl = this.el.querySelector(
+            ".o_portal_chatter_composer_input .o_portal_chatter_attachments"
+        );
+        this.inputTextareaEl = this.el.querySelector(
+            '.o_portal_chatter_composer_input textarea[name="message"]'
+        );
     }
 
     start() {
@@ -72,16 +79,22 @@ export class PortalComposer extends Interaction {
     }
 
     async onAttachmentDeleteClick(ev, currentTargetEl) {
-        const attachmentId = parseInt(currentTargetEl.closest(".o_portal_chatter_attachment").dataset.id);
-        const accessToken = this.attachments.find(attachment => attachment.id === attachmentId).access_token;
+        const attachmentId = parseInt(
+            currentTargetEl.closest(".o_portal_chatter_attachment").dataset.id
+        );
+        const accessToken = this.attachments.find(
+            (attachment) => attachment.id === attachmentId
+        ).access_token;
 
         this.sendButtonEl.disabled = true;
 
-        await this.waitFor(rpc("/portal/attachment/remove", {
-            "attachment_id": attachmentId,
-            "access_token": accessToken,
-        }));
-        this.attachments = this.attachments.filter(attachment => attachment.id !== attachmentId);
+        await this.waitFor(
+            rpc("/portal/attachment/remove", {
+                attachment_id: attachmentId,
+                access_token: accessToken,
+            })
+        );
+        this.attachments = this.attachments.filter((attachment) => attachment.id !== attachmentId);
         this.updateAttachments();
         this.sendButtonEl.disabled = false;
     }
@@ -99,29 +112,39 @@ export class PortalComposer extends Interaction {
     async onFileInputChange() {
         this.sendButtonEl.disabled = true;
 
-        await this.waitFor(Promise.all([...this.fileInputEl.files].map((file) => {
-            return new Promise((resolve, reject) => {
-                const data = this.prepareAttachmentData(file);
-                if (odoo.csrf_token) {
-                    data.csrf_token = odoo.csrf_token;
-                }
-                this.waitFor(post("/mail/attachment/upload", data)).then((res) => {
-                    let attachment = res.data["ir.attachment"][0]
-                    attachment.state = "pending";
-                    this.attachments.push(attachment);
-                    this.updateAttachments();
-                    resolve();
-                }).catch((error) => {
-                    if (error instanceof RPCError) {
-                        this.services.notification.add(
-                            _t("Could not save file <strong>%s</strong>", escape(file.name)),
-                            { type: "warning", sticky: true }
-                        );
-                        resolve();
-                    }
-                });
-            });
-        })));
+        await this.waitFor(
+            Promise.all(
+                [...this.fileInputEl.files].map(
+                    (file) =>
+                        new Promise((resolve, reject) => {
+                            const data = this.prepareAttachmentData(file);
+                            if (odoo.csrf_token) {
+                                data.csrf_token = odoo.csrf_token;
+                            }
+                            this.waitFor(post("/mail/attachment/upload", data))
+                                .then((res) => {
+                                    const attachment = res.data["ir.attachment"][0];
+                                    attachment.state = "pending";
+                                    this.attachments.push(attachment);
+                                    this.updateAttachments();
+                                    resolve();
+                                })
+                                .catch((error) => {
+                                    if (error instanceof RPCError) {
+                                        this.services.notification.add(
+                                            _t(
+                                                "Could not save file <strong>%s</strong>",
+                                                escape(file.name)
+                                            ),
+                                            { type: "warning", sticky: true }
+                                        );
+                                        resolve();
+                                    }
+                                });
+                        })
+                )
+            )
+        );
         // ensures any selection triggers a change, even if the same files are selected again
         this.fileInputEl.value = null;
         this.sendButtonEl.disabled = false;
@@ -159,16 +182,22 @@ export class PortalComposer extends Interaction {
 
     onSubmitCheckContent() {
         if (!this.inputTextareaEl.value.trim() && !this.attachments.length) {
-            return _t("Some fields are required. Please make sure to write a message or attach a document");
-        };
+            return _t(
+                "Some fields are required. Please make sure to write a message or attach a document"
+            );
+        }
     }
 
     updateAttachments() {
         this.attachmentsEl.replaceChildren();
-        this.renderAt("portal.Chatter.Attachments", {
-            attachments: this.attachments,
-            showDelete: true,
-        }, this.attachmentsEl);
+        this.renderAt(
+            "portal.Chatter.Attachments",
+            {
+                attachments: this.attachments,
+                showDelete: true,
+            },
+            this.attachmentsEl
+        );
     }
 
     /**
@@ -184,6 +213,4 @@ export class PortalComposer extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("portal.portal_composer", PortalComposer);
+registry.category("public.interactions").add("portal.portal_composer", PortalComposer);
