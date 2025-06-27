@@ -67,6 +67,7 @@ export class LinkPopover extends Component {
                     .match(/btn(-[a-z0-9_-]*)(primary|secondary)/)
                     ?.pop() || "",
             isImage: this.props.isImage,
+            showLabel: !this.props.linkElement.childElementCount,
         });
 
         this.editingWrapper = useRef("editing-wrapper");

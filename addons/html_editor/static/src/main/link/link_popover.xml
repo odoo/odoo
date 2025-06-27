@@ -14,6 +14,7 @@
                         <div class="input-group mb-1">
                             <input t-ref="label"
                                 class="o_we_label_link form-control form-control-sm"
+                                t-att-class="{'d-none': !state.showLabel}"
                                 t-model="state.label"
                                 title="Label"
                                 placeholder="Add a label for your link"
