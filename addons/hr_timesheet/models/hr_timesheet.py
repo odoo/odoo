@@ -507,3 +507,12 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
         return self.env.user.employee_id._get_unusual_days(date_from, date_to)
+
+    @api.model
+    def get_import_templates(self):
+        if self.env.context.get('is_timesheet'):
+            return [{
+                'label': _('Import Template for Timesheets'),
+                'template': '/hr_timesheet/static/xls/timesheets_import_template.xlsx',
+            }]
+        return []
