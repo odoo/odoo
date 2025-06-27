@@ -413,7 +413,7 @@ export class LinkPlugin extends Plugin {
                 } else {
                     this.linkInDocument.removeAttribute("class");
                 }
-                if (cleanZWChars(this.linkInDocument.innerText) !== label) {
+                if (this.linkInDocument.childElementCount == 0 && cleanZWChars(this.linkInDocument.innerText) !== label) {
                     this.linkInDocument.innerText = label;
                     cursorsToRestore = null;
                 }
