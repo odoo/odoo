@@ -309,6 +309,7 @@
                             context="{'form_view_ref': 'base.view_partner_simple_form'}"
                             class="oe_inline"
                         />
+                        <field name="location" placeholder="Online Meeting" readonly="not user_can_edit"/>
                         <label for="videocall_location" class="opacity-100"/>
                         <div col="2">
                             <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar" force_save="1" readonly="videocall_source == 'discuss'"/>

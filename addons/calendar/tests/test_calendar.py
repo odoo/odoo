@@ -583,3 +583,16 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         duration = self.env['calendar.event'].with_company(second_company).get_default_duration()
         self.assertEqual(duration, 8, "Custom duration is 8 hours in the other company")
+
+    def test_videocall_location_set_when_sync_disabled_and_no_location(self):
+        """Testing that when the location is empty (online meeting) and sync is disabled, a new discuss videocall link is created"""
+
+        event = self.CalendarEvent.create({
+            'name': 'Test Meeting',
+            'start': '2025-07-08 10:00:00',
+            'stop': '2025-07-08 11:00:00',
+            'allday': False,
+        })
+
+        self.assertTrue(event.videocall_location, "Expected videocall_location to be set automatically.")
+        self.assertIn("/calendar/join_videocall/", event.videocall_location, "Expected discuss videocall link in videocall_location.")

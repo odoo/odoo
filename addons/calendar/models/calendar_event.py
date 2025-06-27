@@ -636,6 +636,10 @@ class CalendarEvent(models.Model):
 
         events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_invitation_emails()
 
+        if not self.env.user._has_any_active_synchronization():
+            for event in events.filtered(lambda event: not (event.location or event.videocall_location)):
+                event._set_discuss_videocall_location()
+
         # update activities based on calendar event data, unless already prepared
         # above manually. Heuristic: a new command (0, 0, vals) is considered as
         # complete
