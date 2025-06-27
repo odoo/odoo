@@ -146,34 +146,34 @@
         </we-button-group>
     </div>
 
-    <!-- <div data-js="table_row"
+    <div data-js="table_row"
         data-selector="tr:has(> .row), tr:has(> .col_mv)"
         data-exclude=".o_mail_no_options"
-        data-drop-near="tr:has(> .row), tr:has(> .col_mv)"/> -->
+        data-drop-near="tr:has(> .row), tr:has(> .col_mv)"/>
 
     <!-- <div data-js="table_column"
         data-selector=".col>td, .col>th"
         data-exclude=".o_mail_no_options"
         data-drop-near=".col>td, .col>th"/> -->
 
-    <!-- <div data-js="table_column_mv"
+    <div data-js="table_column_mv"
         data-selector=".col_mv, td, th"
         data-exclude=".o_mail_no_options"
-        data-drop-near=".col_mv, td, th"/> -->
+        data-drop-near=".col_mv, td, th"/>
 
-    <!-- <t t-set="mailing_content_selector" t-translation="off">.note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body</t> -->
-    <!-- <div data-js="content"
+    <t t-set="mailing_content_selector" t-translation="off">.note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body</t>
+    <div data-js="content"
         t-att-data-selector="mailing_content_selector"
         data-exclude=".o_mail_no_options"
         data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
-        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/> -->
+        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
 
-    <!-- <t t-set="so_snippet_addition_selector" t-translation="off">.o_mail_snippet_general</t> -->
+    <t t-set="so_snippet_addition_selector" t-translation="off">.o_mail_snippet_general</t>
     <!-- <div id="so_snippet_addition"
         t-att-data-selector="so_snippet_addition_selector"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/> -->
 
-    <!-- <t t-set="so_content_addition_selector" t-translation="off">.s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight</t> -->
+    <t t-set="so_content_addition_selector" t-translation="off">.s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight</t>
     <!-- <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
