@@ -117,7 +117,7 @@ test("Linked record rendering", async () => {
         res_model_id: modelId,
     });
     await mountView({ type: "calendar", resModel: "calendar.event", arch });
-    expect(".o_calendar_renderer .fc-view").toHaveCount(1);
+    expect(".o_calendar_renderer .o_calendar_current .fc-view").toHaveCount(1);
 
     await changeScale("week");
     await clickEvent(eventId);

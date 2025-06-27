@@ -75,6 +75,8 @@ export class CalendarModel extends Model {
         }
         browser.localStorage.setItem(this.storageKey, this.meta.scale);
         const data = { ...this.data };
+        // notify with basic data to render a simple calendar before updating them
+        this.notify();
         await this.keepLast.add(this.updateData(data));
         this.data = data;
         this.notify();
@@ -194,6 +196,18 @@ export class CalendarModel extends Model {
     }
     get defaultFilterLabel() {
         return _t("Undefined");
+    }
+    get visibleRange() {
+        if (this.meta.loadSurroundings) {
+            return {
+                start: this.rangeStart.plus({[`${this.scale}s`]: 1}),
+                end: this.rangeEnd.minus({[`${this.scale}s`]: 1}),
+            }
+        }
+        return {
+            start: this.rangeStart,
+            end: this.rangeEnd,
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -419,6 +433,12 @@ export class CalendarModel extends Model {
     async updateData(data) {
         data.range = this.computeRange();
         let unusualDaysProm;
+        if (this.meta.loadSurroundings) {
+            data.range = {
+                start: data.range.start.minus({[`${this.scale}s`]: 1}),
+                end: data.range.end.plus({[`${this.scale}s`]: 1}),
+            }
+        }
         if (this.meta.showUnusualDays) {
             unusualDaysProm = this.loadUnusualDays(data).then((unusualDays) => {
                 data.unusualDays = unusualDays;
