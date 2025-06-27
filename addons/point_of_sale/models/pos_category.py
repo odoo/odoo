@@ -41,8 +41,7 @@ class PosCategory(models.Model):
         limited_categories = data['pos.config'][0]['limit_categories']
         if limited_categories:
             available_category_ids = data['pos.config'][0]['iface_available_categ_ids']
-            category_ids = self.env['pos.category'].browse(available_category_ids)._get_descendants().ids
-            domain += [('id', 'in', category_ids)]
+            domain += [('id', 'in', available_category_ids)]
         return domain
 
     @api.model

@@ -2350,6 +2350,40 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(load_product_from_pos_stats['items']['orange'], 2, "Orange should have 2 pricelist items")
         self.assertEqual(load_product_from_pos_stats['items']['kiwi'], 1, "Kiwi should have 1 pricelist item")
 
+    def test_available_children_categories(self):
+        parent_categ = self.env['pos.category'].create({
+            'name': 'Parent Category',
+        })
+        children_categs = self.env['pos.category'].create([{
+            'name': 'Child Category 1',
+            'parent_id': parent_categ.id,
+        }, {
+            'name': 'Child Category 2',
+            'parent_id': parent_categ.id,
+        }])
+        self.env['product.product'].create([{
+            'name': 'parent product',
+            'pos_categ_ids': [(6, 0, [parent_categ.id])],
+            'available_in_pos': True,
+        }, {
+            'name': 'child product 1',
+            'pos_categ_ids': [(6, 0, [parent_categ.id, children_categs[0].id])],
+            'available_in_pos': True,
+        }, {
+            'name': 'child product 2',
+            'pos_categ_ids': [(6, 0, [parent_categ.id, children_categs[1].id])],
+            'available_in_pos': True,
+        }])
+        self.main_pos_config.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, [parent_categ.id, children_categs[1].id])],
+        })
+        self.main_pos_config.open_ui()
+        loaded_data = self.main_pos_config.current_session_id.load_data([])
+        category_id = [category['id'] for category in loaded_data['pos.category']]
+        self.assertNotIn(children_categs[0].id, category_id, "Child category is unavailable and shouldn't appear in the POS")
+        self.assertIn(children_categs[1].id, category_id, "Child category is available and should appear in the POS")
+
     def test_pos_order_shipping_date(self):
         self.main_pos_config.write({'ship_later': True})
         self.main_pos_config.with_user(self.pos_user).open_ui()
