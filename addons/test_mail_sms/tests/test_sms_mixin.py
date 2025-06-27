@@ -92,14 +92,16 @@ class TestSMSNoThread(SMSCommon, TestSMSRecipients):
                     self.assertTrue(composer.comment_single_recipient)
                     self.assertEqual(composer.composition_mode, 'comment')
                     if ctx.get('default_number_field_name') == 'mobile':
+                        stored_number = ''  # invalid field + single recipient -> no number
                         self.assertEqual(composer.recipient_valid_count, 0)
                         self.assertEqual(composer.recipient_invalid_count, 1)
                     else:
+                        stored_number = '+32455135790'
                         self.assertEqual(composer.recipient_valid_count, 1)
                         self.assertEqual(composer.recipient_invalid_count, 0)
                     self.assertEqual(composer.recipient_single_description, self.user_admin.name)
                     self.assertEqual(composer.recipient_single_number, '+32455135790')
-                    self.assertEqual(composer.recipient_single_number_itf, '+32455135790')
+                    self.assertEqual(composer.recipient_single_number_itf, stored_number)
                     self.assertTrue(composer.recipient_single_valid)
                     self.assertEqual(composer.number_field_name, ctx.get('default_number_field_name', 'phone'))
                     self.assertFalse(composer.numbers)
@@ -107,3 +109,6 @@ class TestSMSNoThread(SMSCommon, TestSMSRecipients):
 
                     with self.mockSMSGateway():
                         composer._action_send_sms()
+
+                    # even if the stored number is correct, fall back on the computed number
+                    self.assertSMS(self.env['res.partner'], '+32455135790', 'pending')
