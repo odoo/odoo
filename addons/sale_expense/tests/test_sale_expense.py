@@ -54,6 +54,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == self.company_data['product_delivery_cost'].id)
         self.assertEqual((sol.price_unit, sol.qty_delivered), (55.0, 11.3), 'Sale Expense: error when invoicing an expense at cost')
         self.assertEqual(so.amount_total, init_price + exp.total_amount, 'Sale Expense: price of so should be updated after adding expense')
+        self.assertEqual(sol.analytic_distribution, {str(analytic_account.id): 100})
 
         # create some expense and validate it (expense at sale price)
         init_price = so.amount_total
