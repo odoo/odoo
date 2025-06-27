@@ -111,7 +111,7 @@ test("formatText", () => {
     expect(formatText("value")).toBe("value");
     expect(formatText(1)).toBe("1");
     expect(formatText(1.5)).toBe("1.5");
-    expect(formatText(markup("<p>This is a Test</p>"))).toBe("<p>This is a Test</p>");
+    expect(formatText(markup`<p>This is a Test</p>`)).toBe("<p>This is a Test</p>");
     expect(formatText([1, 2, 3, 4, 5])).toBe("1,2,3,4,5");
     expect(formatText({ a: 1, b: 2 })).toBe("[object Object]");
 });

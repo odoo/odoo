@@ -7,7 +7,6 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
-import { escape } from "@web/core/utils/strings";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
@@ -100,7 +99,7 @@ export class StatusBarField extends Component {
                     fieldNames.push(foldField);
                 }
                 const value = record.data[fieldName];
-                let domain = getFieldDomain(record, fieldName, props.domain)
+                let domain = getFieldDomain(record, fieldName, props.domain);
                 domain = Domain.and([this.getDomain(), domain]).toList();
                 if (domain.length && value) {
                     domain = Domain.or([[["id", "=", value.id]], domain]).toList(
@@ -113,7 +112,7 @@ export class StatusBarField extends Component {
 
         // Command palette
         if (this.props.withCommand) {
-            const moveToCommandName = _t("Move to %s...", escape(this.field.string));
+            const moveToCommandName = _t("Move to %s...", this.field.string);
             useCommand(
                 moveToCommandName,
                 () => ({
@@ -313,7 +312,10 @@ export class StatusBarField extends Component {
      */
     async selectItem(item) {
         const { name, record } = this.props;
-        const value = this.field.type === "many2one" ? { id: item.value, display_name: item.label } : item.value;
+        const value =
+            this.field.type === "many2one"
+                ? { id: item.value, display_name: item.label }
+                : item.value;
         await record.update({ [name]: value });
         await record.save();
     }

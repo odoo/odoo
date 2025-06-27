@@ -3,7 +3,6 @@ import { isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
@@ -37,12 +36,11 @@ function shortCutsItem(env) {
         type: "item",
         id: "shortcuts",
         hide: env.isSmall,
-        description: markup(
-            `<div class="d-flex align-items-center justify-content-between p-0 w-100">
-                <span>${escape(_t("Shortcuts"))}</span>
+        description: markup`
+            <div class="d-flex align-items-center justify-content-between p-0 w-100">
+                <span>${_t("Shortcuts")}</span>
                 <span class="fw-bold">${isMacOS() ? "CMD" : "CTRL"}+K</span>
-            </div>`
-        ),
+            </div>`,
         callback: () => {
             env.services.command.openMainPalette({ FooterComponent: ShortcutsFooterComponent });
         },

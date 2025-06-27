@@ -1807,7 +1807,7 @@ describe("t-att and t-out", () => {
                     _root: {
                         "t-out": () => {
                             expect.step("t-out");
-                            return markup(this.tOut);
+                            return this.tOut;
                         },
                     },
                     span: {
@@ -1817,11 +1817,11 @@ describe("t-att and t-out", () => {
                     },
                 };
                 setup() {
-                    this.tOut = `<span class="old-inner">Hi</span>`;
+                    this.tOut = markup`<span class="old-inner">Hi</span>`;
                 }
                 start() {
                     this.waitForTimeout(() => {
-                        this.tOut = "<span class='inner'>Hello</span>";
+                        this.tOut = markup`<span class='inner'>Hello</span>`;
                     }, 1000);
                 }
             }

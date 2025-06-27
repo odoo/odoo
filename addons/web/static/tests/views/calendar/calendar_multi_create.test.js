@@ -770,7 +770,7 @@ test("multi_create: test required attribute in form", async () => {
     expect(".o_calendar_sidebar_container .o_form_view [name='name']").toHaveClass(
         "o_required_modifier"
     );
-    expect.verifySteps([markup("<ul><li>Name</li></ul>")]);
+    expect.verifySteps([markup`<ul><li>Name</li></ul>`]);
 
     await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
     await edit("Test required");

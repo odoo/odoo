@@ -1,5 +1,5 @@
 import { Component, useState, onWillRender } from "@odoo/owl";
-import { highlightText } from "@web/core/utils/strings";
+import { highlightText } from "@web/core/utils/html";
 
 export class HighlightText extends Component {
     static template = "web.HighlightText";

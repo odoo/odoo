@@ -1,5 +1,4 @@
 import { isObject } from "./objects";
-import { htmlEscape, markup } from "@odoo/owl";
 
 export const nbsp = "\u00a0";
 
@@ -116,55 +115,6 @@ export function sprintf(s, ...values) {
  */
 export function capitalize(s) {
     return s ? s[0].toUpperCase() + s.slice(1) : "";
-}
-
-/**
- * Format the text as follow:
- *      \*\*text\*\* => Put the text in bold.
- *      --text-- => Put the text in muted.
- *      \`text\` => Put the text in a rounded badge (bg-primary).
- *      \n => Insert a breakline.
- *      \t => Insert 4 spaces.
- *
- * @param {string} text **will be escaped**
- * @returns {ReturnType<markup>} the formatted text
- */
-export function odoomark(text) {
-    const boldEx = /\*\*(.+?)\*\*/g;
-    const textMutedEx = /--(.+?)--/g;
-    const tagEx = /&#x60;(.+?)&#x60;/g;
-    const brEx = /\n/g;
-    const tabEx = /\t/g;
-
-    return markup(
-        escape(text)
-            .replaceAll(boldEx, `<b>$1</b>`)
-            .replaceAll(textMutedEx, `<span class='text-muted'>$1</span>`)
-            .replaceAll(
-                tagEx,
-                `<span class="o_tag position-relative d-inline-flex align-items-center mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">$1</span>`
-            )
-            .replaceAll(brEx, `<br/>`)
-            .replaceAll(tabEx, `<span style="margin-left: 2em"></span>`)
-    );
-}
-
-/**
- * Returns a markuped version of the input text where
- * the query is highlighted using the input classes
- * if it is part of the text.
- *
- * @param {string} query
- * @param {string | ReturnType<markup>} text
- * @param {string} classes
- * @returns {string | ReturnType<markup>}
- */
-export function highlightText(query, text, classes) {
-    if (!query) {
-        return text;
-    }
-    const regex = new RegExp(`(${escapeRegExp(escape(query))})+(?=(?:[^>]*<[^<]*>)*[^<>]*$)`, "ig");
-    return markup(htmlEscape(text).replaceAll(regex, markup`<span class="${classes}">$1</span>`));
 }
 
 /**
