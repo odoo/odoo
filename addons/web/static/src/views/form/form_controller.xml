@@ -7,7 +7,7 @@
                 <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
                     <t t-set-slot="control-panel-create-button">
                         <t t-if="canCreate">
-                            <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
+                            <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
                         </t>
                     </t>
 
@@ -42,11 +42,6 @@
                     <t t-set-slot="control-panel-status-indicator">
                         <t t-if="canEdit">
                             <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" />
-                        </t>
-                    </t>
-                    <t t-set-slot="control-panel-create-button">
-                        <t t-if="canCreate">
-                            <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
                         </t>
                     </t>
                     <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" readonly="props.readonly" archInfo="archInfo" translateAlert="translateAlert" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
