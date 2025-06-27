@@ -2392,7 +2392,7 @@ test("do not restore after action button clicked", async () => {
     expect(".o_statusbar_buttons button[name=do_something]").toBeVisible();
 
     await contains(".o_statusbar_buttons button[name=do_something]").click();
-    expect(".o_form_buttons_view .o_form_button_save").not.toHaveCount();
+    expect(".o_control_panel_main_buttons .o_form_button_save").not.toHaveCount();
 });
 
 test("debugManager is active for views", async () => {

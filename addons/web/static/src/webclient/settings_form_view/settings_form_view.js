@@ -52,7 +52,6 @@ SettingModel.Record = SettingRecord;
 export const settingsFormView = {
     ...formView,
     display: {},
-    buttonTemplate: "web.SettingsFormView.Buttons",
     Model: SettingModel,
     ControlPanel: ControlPanel,
     Controller: SettingsFormController,

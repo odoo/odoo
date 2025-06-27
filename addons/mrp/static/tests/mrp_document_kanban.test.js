@@ -38,7 +38,7 @@ test("MRP documents kanban basic rendering", async () => {
     await contains("button[name='product_upload_document']");
     await contains(".o_kanban_renderer .o_kanban_record:not(.o_kanban_ghost)", { count: 3 });
     // check control panel buttons
-    await contains(".o_cp_buttons .btn-primary", { text: "Upload" });
+    await contains(".o_control_panel_main_buttons .btn-primary", { text: "Upload" });
 });
 
 test("mrp: upload multiple files", async () => {
