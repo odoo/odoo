@@ -27,6 +27,6 @@ export class FullscreenIndication extends Component {
     }
 
     get fullScreenIndicationText() {
-        return _t("Press %(key)s to exit full screen", { key: markup("<span>esc</span>") });
+        return _t("Press %(key)s to exit full screen", { key: markup`<span>esc</span>` });
     }
 }

@@ -8,7 +8,6 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { htmlJoin } from "@web/core/utils/html";
-import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
@@ -166,7 +165,9 @@ export class WebsiteForum extends Interaction {
     warnIfPublicUser() {
         if (session.is_website_user) {
             this.displayAccessDeniedNotification(
-                markup(`<a href='/web/login'>` + escape(_t("Oh no! Please sign in to perform this action")) + "</a>")
+                markup`<a href='/web/login'>${_t(
+                    "Oh no! Please sign in to perform this action"
+                )}</a>`
             );
             return true;
         }
@@ -261,8 +262,8 @@ export class WebsiteForum extends Interaction {
             message = htmlJoin(
                 message,
                 _t("%(link_start)sRead the guidelines to know how to gain karma.%(link_end)s", {
-                    link_start: markup(`<br><a class="alert-link" href="/forum/${forumId}/faq">`),
-                    link_end: markup("</a>"),
+                    link_start: markup`<br><a class="alert-link" href="/forum/${forumId}/faq">`,
+                    link_end: markup`</a>`,
                 })
             );
         }

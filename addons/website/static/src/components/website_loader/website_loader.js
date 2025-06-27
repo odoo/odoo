@@ -273,9 +273,7 @@ export class WebsiteLoader extends Component {
         const messagesList = websiteFeaturesMessages.filter((msg) => {
             if (filteredIds.includes(msg.id)) {
                 if (msg.name) {
-                    const highlight = sprintf(
-                        '<span class="o_website_loader_text_highlight">%s</span>', msg.name
-                    );
+                    const highlight = markup`<span class="o_website_loader_text_highlight">${msg.name}</span>`;
                     msg.description = markup(sprintf(msg.description, highlight));
                 }
                 return true;
