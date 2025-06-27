@@ -33,27 +33,27 @@ test("can shape an image", async () => {
     }
 
     await click(buttons["shape_rounded"]);
-    await animationFrame();
+    await waitFor(buttons["shape_rounded"] + ".active");
     expect(buttons["shape_rounded"]).toHaveClass("active");
     expect(img).toHaveClass("rounded");
 
     await click(buttons["shape_rounded"]);
-    await animationFrame();
+    await waitFor(buttons["shape_rounded"] + ":not(.active)");
     expect(buttons["shape_rounded"]).not.toHaveClass("active");
     expect(img).not.toHaveClass("rounded");
 
     await click(buttons["shape_circle"]);
-    await animationFrame();
+    await waitFor(buttons["shape_circle"] + ".active");
     expect(buttons["shape_circle"]).toHaveClass("active");
     expect(img).toHaveClass("rounded-circle");
 
     await click(buttons["shape_shadow"]);
-    await animationFrame();
+    await waitFor(buttons["shape_shadow"] + ".active");
     expect(buttons["shape_shadow"]).toHaveClass("active");
     expect(img).toHaveClass("shadow");
 
     await click(buttons["shape_thumbnail"]);
-    await animationFrame();
+    await waitFor(buttons["shape_thumbnail"] + ".active");
     expect(buttons["shape_thumbnail"]).toHaveClass("active");
     expect(img).toHaveClass("img-thumbnail");
 });
@@ -334,6 +334,7 @@ test("Image transformation disappears on backspace/delete", async () => {
     await expectElementCount(".transfo-container", 1);
     press("backspace");
     await expectElementCount(".transfo-container", 0);
+    await waitForNone(".o-we-toolbar[data-namespace='image']");
     undo(editor);
     click("img.test-image");
     await waitFor(".o-we-toolbar");

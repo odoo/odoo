@@ -45,6 +45,7 @@ import { insertText } from "./_helpers/user_actions";
 import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -129,6 +130,7 @@ test("toolbar buttons react to selection change", async () => {
 
     // click on toggle bold
     await contains(".btn[name='bold']").click();
+    await waitFor(".btn[name='bold'].active");
     expect(getContent(el)).toBe("<p><strong>[test]</strong> some text</p>");
     expect(".btn[name='bold']").toHaveClass("active");
     expect(".btn[name='remove_format']").not.toHaveAttribute("disabled");
@@ -1483,4 +1485,21 @@ describe("history", () => {
         expect(".btn[name='undo']").not.toHaveClass("disabled");
         expect(".btn[name='redo']").toHaveClass("disabled");
     });
+});
+
+test("toolbar update should be run only once", async () => {
+    let counter = 0;
+    patchWithCleanup(ToolbarPlugin.prototype, {
+        _updateToolbar(...args) {
+            super._updateToolbar(...args);
+            counter++;
+        },
+    });
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    counter = 0;
+    click(".o-we-toolbar .btn[name='bold']");
+    await animationFrame();
+    expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
+    expect(counter).toBe(1);
 });
