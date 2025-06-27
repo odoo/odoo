@@ -2,10 +2,10 @@
 
 from collections import defaultdict
 from contextlib import contextmanager
+from datetime import datetime, time
 from itertools import chain
 
 import pytz
-from dateutil.relativedelta import relativedelta
 from psycopg2 import OperationalError
 
 from odoo import _, api, fields, models
@@ -17,7 +17,7 @@ from odoo.tools.intervals import Intervals
 class HrWorkEntry(models.Model):
     _name = 'hr.work.entry'
     _description = 'HR Work Entry'
-    _order = 'conflict desc,state,date_start'
+    _order = 'conflict desc,state,date'
 
     name = fields.Char(required=True, compute='_compute_name', store=True, readonly=False, precompute=True)
     active = fields.Boolean(default=True)
@@ -97,56 +97,6 @@ class HrWorkEntry(models.Model):
         if version_id := res.get('version_id'):
             self.version_id = version_id
 
-    def _get_duration_is_valid(self):
-        return self.work_entry_type_id and self.work_entry_type_id.is_leave
-
-    def _get_duration_batch(self):
-        no_version_work_entries = self.env['hr.work.entry']
-        result = {}
-        # {(date_start, date_stop): {calendar: employees}}
-        mapped_periods = defaultdict(lambda: defaultdict(lambda: self.env['hr.employee']))
-        for work_entry in self:
-            if not work_entry.date_start or not work_entry.date_stop or not work_entry._is_duration_computed_from_calendar() or not work_entry.employee_id:
-                no_version_work_entries |= work_entry
-                continue
-            date_start = work_entry.date_start
-            date_stop = work_entry.date_stop
-            calendar = work_entry.version_id.resource_calendar_id
-            if not calendar:
-                result[work_entry.id] = 0.0
-                continue
-            employee = work_entry.version_id.employee_id
-            mapped_periods[date_start, date_stop][calendar] |= employee
-
-        # {(date_start, date_stop): {calendar: {'hours': foo}}}
-        mapped_contract_data = defaultdict(lambda: defaultdict(lambda: {'hours': 0.0}))
-        for (date_start, date_stop), employees_by_calendar in mapped_periods.items():
-            for calendar, employees in employees_by_calendar.items():
-                mapped_contract_data[date_start, date_stop][calendar] = employees._get_work_days_data_batch(
-                    date_start, date_stop, compute_leaves=False, calendar=calendar)
-
-        cached_periods = defaultdict(float)
-        for work_entry in no_version_work_entries:
-            date_start = work_entry.date_start
-            date_stop = work_entry.date_stop
-            if not date_start or not date_stop:
-                result[work_entry.id] = 0.0
-                continue
-            if (date_start, date_stop) in cached_periods:
-                result[work_entry.id] = cached_periods[date_start, date_stop]
-            else:
-                dt = date_stop - date_start
-                duration = round(dt.total_seconds()) / 3600  # Number of hours
-                cached_periods[date_start, date_stop] = duration
-                result[work_entry.id] = duration
-        for work_entry in self - no_version_work_entries:
-            date_start = work_entry.date_start
-            date_stop = work_entry.date_stop
-            calendar = work_entry.version_id.resource_calendar_id
-            employee = work_entry.version_id.employee_id
-            result[work_entry.id] = mapped_contract_data[date_start, date_stop][calendar][employee.id]['hours'] if calendar else 0.0
-        return result
-
     def _is_duration_computed_from_calendar(self):
         self.ensure_one()
         return self._get_duration_is_valid()
@@ -194,40 +144,38 @@ class HrWorkEntry(models.Model):
 
     def _mark_conflicting_work_entries(self, start, stop):
         """
-        Set `state` to `conflict` for overlapping work entries
-        between two dates.
-        If `self.ids` is truthy then check conflicts with the corresponding work entries.
-        Return True if overlapping work entries were detected.
+        Set `state` to `conflict` for work entries where, for the same employee and day,
+        the total duration exceeds 24 hours.
+        Return True if such entries are found.
         """
-        # Use the postgresql range type `tsrange` which is a range of timestamp
-        # It supports the intersection operator (&&) useful to detect overlap.
-        # use '()' to exlude the lower and upper bounds of the range.
-        # Filter on date_start and date_stop (both indexed) in the EXISTS clause to
-        # limit the resulting set size and fasten the query.
-
-        # YTI TODO: Probably to drop, or check if duration sum doesn't exceed 24h ?
-        return False
-        self.flush_model(['date_start', 'date_stop', 'employee_id', 'active'])
+        self.flush_model(['date', 'duration', 'employee_id', 'active'])
         query = """
-            SELECT b1.id,
-                   b2.id
-              FROM hr_work_entry b1
-              JOIN hr_work_entry b2
-                ON b1.employee_id = b2.employee_id
-               AND b1.id <> b2.id
-             WHERE b1.date_start <= %(stop)s
-               AND b1.date_stop >= %(start)s
-               AND b1.active = TRUE
-               AND b2.active = TRUE
-               AND tsrange(b1.date_start, b1.date_stop, '()') && tsrange(b2.date_start, b2.date_stop, '()')
-               AND {}
-        """.format("b2.id IN %(ids)s" if self.ids else "b2.date_start <= %(stop)s AND b2.date_stop >= %(start)s")
-        self.env.cr.execute(query, {"stop": stop, "start": start, "ids": tuple(self.ids)})
-        conflicts = set(chain.from_iterable(self.env.cr.fetchall()))
-        self.browse(conflicts).write({
-            'state': 'conflict',
+            WITH excessive_days AS (
+                SELECT employee_id, date
+                FROM hr_work_entry
+                WHERE active = TRUE
+                  AND date BETWEEN %(start)s AND %(stop)s
+                  {ids_filter}
+                GROUP BY employee_id, date
+                HAVING SUM(duration) > 24
+            )
+            SELECT we.id
+            FROM hr_work_entry we
+            JOIN excessive_days ed
+              ON we.employee_id = ed.employee_id
+             AND we.date = ed.date
+            WHERE we.active = TRUE
+        """.format(
+            ids_filter="AND id IN %(ids)s" if self.ids else ""
+        )
+        self.env.cr.execute(query, {
+            "start": start,
+            "stop": stop,
+            "ids": tuple(self.ids) if self.ids else (),
         })
-        return bool(conflicts)
+        conflict_ids = [row[0] for row in self.env.cr.fetchall()]
+        self.browse(conflict_ids).write({'state': 'conflict'})
+        return bool(conflict_ids)
 
     def _get_leaves_entries_outside_schedule(self):
         return self.filtered(lambda w: w.work_entry_type_id.is_leave and w.state not in ('validated', 'cancelled'))
@@ -246,8 +194,8 @@ class HrWorkEntry(models.Model):
 
         outside_entries = self.env['hr.work.entry']
         for calendar, entries in entries_by_calendar.items():
-            datetime_start = min(entries.mapped('date_start'))
-            datetime_stop = max(entries.mapped('date_stop'))
+            datetime_start = datetime.combine(min(entries.mapped('date')), time.min)
+            datetime_stop = datetime.combine(max(entries.mapped('date')), time.max)
 
             calendar_intervals = calendar._attendance_intervals_batch(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop))[False]
             entries_intervals = entries._to_intervals()
@@ -258,7 +206,7 @@ class HrWorkEntry(models.Model):
 
     def _to_intervals(self):
         return Intervals(
-            ((w.date_start.replace(tzinfo=pytz.utc), w.date_stop.replace(tzinfo=pytz.utc), w) for w in self),
+            ((datetime.combine(w.date, time.min).replace(tzinfo=pytz.utc), datetime.combine(w.date, time.max).replace(tzinfo=pytz.utc), w) for w in self),
             keep_distinct=True)
 
     @api.model

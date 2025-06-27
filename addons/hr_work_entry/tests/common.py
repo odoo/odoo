@@ -69,4 +69,5 @@ class TestWorkEntryBase(TransactionCase):
                 'employee_id': self.richard_emp.id,
                 'work_entry_type_id': work_entry_type.id,
             })
+        create_vals = self.env['hr.version']._generate_work_entries_postprocess(create_vals)
         return self.env['hr.work.entry'].create(create_vals)
