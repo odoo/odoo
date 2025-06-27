@@ -35,6 +35,7 @@ export class FieldSelectorField extends Component {
 
     get selectorProps() {
         return {
+            allowEmpty: !this.props.required,
             path: this.props.record.data[this.props.name],
             resModel: this.resModel,
             readonly: this.props.readonly,

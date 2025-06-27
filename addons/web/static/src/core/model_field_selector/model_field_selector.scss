@@ -6,7 +6,10 @@
     }
 
     > .o_model_field_selector_value {
-        min-height: 20px; // needed when there is no value in it and used standalone
+        // needed when there is no value in it and used standalone
+        min-width: 20px;
+        min-height: 20px;
+
         max-width: 100%;
         word-wrap: break-word;
         &:active, &:focus, &:active:focus {
