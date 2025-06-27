@@ -44,7 +44,9 @@
     <BuilderRow label.translate="Format">
         <BuilderButtonGroup>
             <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'header-font-size'" unit="'px'" saveUnit="'rem'"/>
-            <BuilderColorPicker action="'customizeWebsiteVariable'" actionParam="'header-text-color'"/>
+            <BuilderColorPicker action="'customizeWebsiteVariable'" actionParam="'header-text-color'"
+                enabledTabs="['solid', 'custom']"
+            />
             <BuilderSelect action="'websiteConfig'" t-if="!hasSomeViews(['website.template_header_sales_three', 'website.template_header_vertical'])" id="'header_alignment_opt'">
                 <BuilderSelectItem
                     actionParam="{
