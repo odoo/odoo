@@ -11,10 +11,10 @@
             />
         </BuilderRow>
         <BuilderRow label.translate="Code Injection" tooltip.translate="Enter code that will be added into every page of your site">
-            <button role="button" class="btn" t-on-click="() => this.openCustomCodeDialog()">&lt;head&gt; and &lt;/body&gt;</button>
+            <BuilderButton title.translate="&lt;Head&gt; and &lt;body&gt;" action="'editCustomCode'">&lt;head&gt; and &lt;/body&gt;</BuilderButton>
         </BuilderRow>
         <BuilderRow label.translate="Google Map">
-            <button role="button" class="btn" t-on-click="() => this.configureApiKey()">Custom Key</button>
+            <BuilderButton title.translate="Custom Key" action="'configureApiKey'">Custom Key</BuilderButton>
         </BuilderRow>
         <BuilderRow label.translate="Status Colors">
             <BuilderColorPicker title.translate="Success"

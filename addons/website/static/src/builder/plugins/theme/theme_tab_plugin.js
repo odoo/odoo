@@ -16,6 +16,7 @@ import {
 import { reactive } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
+import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 
 export const GRAY_PARAMS = {
     EXTRA_SATURATION: "gray-extra-saturation",
@@ -35,7 +36,6 @@ export const OPTION_POSITIONS = {
 
 export class ThemeTabPlugin extends Plugin {
     static id = "themeTab";
-    static dependencies = ["builderActions", "customizeWebsite", "googleMapsOption"];
     static shared = ["getGrayParams", "getGrays", "setGrays", "setGrayParams", "buildGray"];
     grayParams = {};
     grays = reactive({});
@@ -45,6 +45,8 @@ export class ThemeTabPlugin extends Plugin {
         builder_actions: {
             CustomizeGrayAction,
             ChangeColorPaletteAction,
+            EditCustomCodeAction,
+            ConfigureApiKeyAction,
         },
         theme_options: [
             withSequence(
@@ -95,7 +97,6 @@ export class ThemeTabPlugin extends Plugin {
                     OptionComponent: ThemeAdvancedOption,
                     props: {
                         grays: this.grays,
-                        configureGMapsAPI: this.dependencies.googleMapsOption.configureGMapsAPI,
                     },
                 })
             ),
@@ -284,6 +285,21 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
         }
         await super.apply(context);
         setBuilderCSSVariables();
+    }
+}
+
+export class EditCustomCodeAction extends BuilderAction {
+    static id = "editCustomCode";
+    apply() {
+        this.services.dialog.add(EditHeadBodyDialog);
+    }
+}
+
+export class ConfigureApiKeyAction extends BuilderAction {
+    static id = "configureApiKey";
+    static dependencies = ["googleMapsOption"];
+    apply() {
+        this.dependencies.googleMapsOption.configureGMapsAPI("", true);
     }
 }
 
