@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="project.project_update_view_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_updates']" position='after'>
-                    <filter string="My Team's Updates" name="my_team_updates" domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
+                    <filter string="My Team's Updates" name="my_team_updates" domain="[('user_id.employee_id.parent_id.user_id', '=', uid)]"/>
                     <filter string="My Department's Updates" name="my_department_updates" domain="[('user_id.employee_id.member_of_department', '=', True)]"/>
                 </xpath>
             </field>

@@ -13,7 +13,6 @@ HR_READABLE_FIELDS = [
     'child_ids',
     'employee_id',
     'employee_ids',
-    'employee_parent_id',
     'last_activity',
     'last_activity_time',
     'can_edit',
@@ -42,7 +41,6 @@ HR_WRITABLE_FIELDS = [
     'job_title',
     'km_home_work',
     'mobile_phone',
-    'employee_parent_id',
     'pin',
     'visa_expire',
     'work_email',
@@ -74,7 +72,6 @@ class ResUsers(models.Model):
     work_location_id = fields.Many2one(related='employee_id.work_location_id')
     work_location_name = fields.Char(related="employee_id.work_location_name")
     work_location_type = fields.Selection(related="employee_id.work_location_type")
-    employee_parent_id = fields.Many2one(related='employee_id.parent_id', readonly=False, related_sudo=False)
     private_street = fields.Char(related='employee_id.private_street', string="Private Street", readonly=False, related_sudo=False)
     private_street2 = fields.Char(related='employee_id.private_street2', string="Private Street2", readonly=False, related_sudo=False)
     private_city = fields.Char(related='employee_id.private_city', string="Private City", readonly=False, related_sudo=False)
