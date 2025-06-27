@@ -128,9 +128,14 @@ export class SnippetViewer extends Component {
                 ...getClasses(snippet),
             ]);
         }
-
-        return snippetStructures.filter(
+        const snippetsToReturn = snippetStructures.filter(
             (snippet) => snippet.groupName === this.props.state.groupSelected
         );
+        if (snippetsToReturn.length === 0) {
+            // If no snippets are found in the selected group, return all snippets
+            debugger;
+
+        }
+        return snippetsToReturn;
     }
 }
