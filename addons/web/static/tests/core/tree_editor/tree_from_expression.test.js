@@ -23,17 +23,20 @@ test("treeFromExpression", () => {
             if (name === "datetime_field") {
                 return { type: "datetime" };
             }
+            if (name === "integer") {
+                return { type: "integer" };
+            }
             return null;
         },
     };
     const toTest = [
         {
             expression: `not foo`,
-            result: condition("foo", "not_set", false),
+            result: condition("foo", "not set", false),
         },
         {
             expression: `foo == False`,
-            result: condition("foo", "not_set", false),
+            result: condition("foo", "not set", false),
         },
         {
             expression: `foo`,
@@ -56,73 +59,19 @@ test("treeFromExpression", () => {
             result: condition("foo", "set", false),
         },
         {
-            expression: `foo >= 1 and foo <= 3`,
-            result: condition("foo", "between", [1, 3]),
+            expression: `integer >= 1 and integer <= 3`,
+            result: condition("integer", "between", [1, 3]),
         },
         {
-            expression: `foo >= 1 and foo <= uid`,
-            result: condition("foo", "between", [1, expression("uid")]),
-        },
-        {
-            expression: `foo < 1 or foo > 3`,
-            result: condition("foo", "not_between", [1, 3]),
-        },
-        {
-            expression: `date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 1)).strftime("%Y-%m-%d")`,
-            result: condition("date_field", "next", [1, "years", "date"]),
-        },
-        {
-            expression: `date_field < context_today().strftime("%Y-%m-%d") or date_field > (context_today() + relativedelta(years = 1)).strftime("%Y-%m-%d")`,
-            result: condition("date_field", "not_next", [1, "years", "date"]),
-        },
-        {
-            expression: `datetime_field >= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and datetime_field <= datetime.datetime.combine(context_today() + relativedelta(years = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
-            result: condition("datetime_field", "next", [1, "years", "datetime"]),
-        },
-        {
-            // Case where the <= is first: this is not changed to a between, and so not changed to a within either
-            expression: `datetime_field <= datetime.datetime.combine(context_today() + relativedelta(years = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and datetime_field >= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
-            result: connector("&", [
-                condition(
-                    "datetime_field",
-                    "<=",
-                    expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(years = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-                condition(
-                    "datetime_field",
-                    ">=",
-                    expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
-                    )
-                ),
-            ]),
-        },
-        {
-            expression: `datetime_field >= datetime.datetime.combine(context_today() + relativedelta(years = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and datetime_field <= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
-            result: condition("datetime_field", "last", [-1, "years", "datetime"]),
-        },
-        {
-            expression: `(date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 1)).strftime("%Y-%m-%d")) and (date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 2)).strftime("%Y-%m-%d"))`,
-            result: connector("&", [
-                condition("date_field", "next", [1, "years", "date"]),
-                condition("date_field", "next", [2, "years", "date"]),
-            ]),
-        },
-        {
-            expression: `(date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 1)).strftime("%Y-%m-%d")) or (date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 2)).strftime("%Y-%m-%d"))`,
-            result: connector("|", [
-                condition("date_field", "next", [1, "years", "date"]),
-                condition("date_field", "next", [2, "years", "date"]),
-            ]),
+            expression: `integer >= 1 and integer <= uid`,
+            result: condition("integer", "between", [1, expression("uid")]),
         },
         {
             expression: `foo >= 1 if bar else foo <= uid`,
             result: connector("|", [
                 connector("&", [condition("bar", "set", false), condition("foo", ">=", 1)]),
                 connector("&", [
-                    condition("bar", "not_set", false),
+                    condition("bar", "not set", false),
                     condition("foo", "<=", expression("uid")),
                 ]),
             ]),
@@ -210,7 +159,7 @@ test("treeFromExpression", () => {
         },
         {
             expression: `not set(foo_ids).intersection()`,
-            result: condition("foo_ids", "not_set", false),
+            result: condition("foo_ids", "not set", false),
         },
         {
             expression: `not set(foo_ids).intersection([1, 2])`,

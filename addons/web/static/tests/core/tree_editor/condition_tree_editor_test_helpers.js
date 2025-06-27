@@ -2,9 +2,67 @@ import { queryAll, queryAllTexts, queryOne, queryText, queryValue } from "@odoo/
 import { contains, fields, models } from "@web/../tests/web_test_helpers";
 
 import { Domain } from "@web/core/domain";
+import { formatAST, parseExpr } from "@web/core/py_js/py";
+
+export function label(operator, fieldType) {
+    switch (operator) {
+        case "=":
+            if (["many2one", "many2many", "one2many"].includes(fieldType)) {
+                return "=";
+            }
+            return "is equal to";
+        case "!=":
+            if (["many2one", "many2many", "one2many"].includes(fieldType)) {
+                return "!=";
+            }
+            return "is not equal to";
+        case "in":
+            if (["many2one", "many2many", "one2many"].includes(fieldType)) {
+                return "is equal to";
+            }
+            return "is in";
+        case "not in":
+            if (["many2one", "many2many", "one2many"].includes(fieldType)) {
+                return "is not equal to";
+            }
+            return "is not in";
+        case ">":
+            if (["date", "datetime"].includes(fieldType)) {
+                return "after";
+            }
+            return "greater than";
+        case "<":
+            if (["date", "datetime"].includes(fieldType)) {
+                return "before";
+            }
+            return "lower than";
+        case "ilike":
+            return "contains";
+        case "not ilike":
+            return "does not contain";
+        case "<=":
+            return "lower or equal to";
+        case ">=":
+            return "greater or equal to";
+        case "set":
+            return "is set";
+        case "not set":
+            return "is not set";
+        case "in range":
+            return "is in";
+        case "between":
+            return "between";
+        case "starts with":
+            return "starts with";
+    }
+}
 
 export function formatDomain(str) {
     return new Domain(str).toString();
+}
+
+export function formatExpr(str) {
+    return formatAST(parseExpr(str));
 }
 
 /**
@@ -130,7 +188,7 @@ const CHILD_SELECTOR = ["connector", "condition", "complexCondition"]
     .map((k) => SELECTORS[k])
     .join(",");
 
-export function getTreeEditorContent(options = {}) {
+export function getTreeEditorContent() {
     const content = [];
     const nodes = queryAll(SELECTORS.node);
     const mapping = new Map();
@@ -147,9 +205,6 @@ export function getTreeEditorContent(options = {}) {
             nodeValue.value = getCurrentComplexCondition(0, node);
         } else {
             nodeValue.value = getCurrentCondition(0, node);
-        }
-        if (options.node) {
-            nodeValue.node = node;
         }
         content.push(nodeValue);
     }

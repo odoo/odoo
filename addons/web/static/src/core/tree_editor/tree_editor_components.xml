@@ -32,19 +32,21 @@
         </div>
     </t>
 
-    <t t-name="web.TreeEditor.Within">
-        <div class="d-flex align-items-center gap-2">
+    <t t-name="web.TreeEditor.InRange">
+        <div class="d-flex flex-column gap-2">
             <t t-call="web.TreeEditor.Editor">
                 <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
-                <t t-set="info" t-value="props.amountEditorInfo" />
-                <t t-set="value" t-value="props.value[0]" />
-                <t t-set="update" t-value="(val) => this.update(0, val)" />
-            </t>
-            <t t-call="web.TreeEditor.Editor">
-                <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
-                <t t-set="info" t-value="props.optionEditorInfo" />
+                <t t-set="info" t-value="props.valueTypeEditorInfo" />
                 <t t-set="value" t-value="props.value[1]" />
-                <t t-set="update" t-value="(val) => this.update(1, val)" />
+                <t t-set="update" t-value="(val) => this.updateValueType(val)" />
+            </t>
+            <t t-if="props.value[1] === 'custom range'">
+                <t t-call="web.TreeEditor.Editor">
+                    <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
+                    <t t-set="info" t-value="props.betweenEditorInfo" />
+                    <t t-set="value" t-value="props.value.slice(2)" />
+                    <t t-set="update" t-value="(val) => this.updateValues(val)" />
+                </t>
             </t>
         </div>
     </t>

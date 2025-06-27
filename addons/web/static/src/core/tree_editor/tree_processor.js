@@ -10,9 +10,9 @@ import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_edi
 import { unique, zip } from "@web/core/utils/arrays";
 import { condition, Expression, isTree, normalizeValue } from "./condition_tree";
 import { constructTreeFromDomain } from "./construct_tree_from_domain";
-import { Within } from "./tree_editor_components";
 import { disambiguate, getResModel, isId } from "./utils";
 import { introduceVirtualOperators } from "./virtual_operators";
+import { InRange } from "./tree_editor_components";
 
 /**
  * @param {import("@web/core/tree_editor/condition_tree").Value} val
@@ -214,8 +214,12 @@ export const treeProcessorService = {
             limit = 5
         ) {
             let { operator, negate, value, path } = node;
+            if (operator === "in range" && value[1] === "custom range") {
+                operator = "between";
+                value = value.slice(2);
+            }
             if (["=", "!="].includes(operator) && value === false) {
-                operator = operator === "=" ? "not_set" : "set";
+                operator = operator === "=" ? "not set" : "set";
             }
             const fieldDef = getFieldDef(path);
             const operatorLabel = getOperatorLabel(operator, fieldDef?.type, negate, (operator) => {
@@ -243,34 +247,35 @@ export const treeProcessorService = {
             if (isTree(node.value)) {
                 return description;
             }
-            if (["set", "not_set", "today", "not_today"].includes(operator)) {
+            if (["set", "not set"].includes(operator)) {
                 return description;
             }
 
             const coModeldisplayNames = displayNames[getResModel(fieldDef)];
             const dis = disambiguate(value, coModeldisplayNames);
-            const values = ["next", "not_next", "last", "not_last"].includes(operator)
-                ? [value[0], Within.options.find((option) => option[0] === value[1])[1]]
-                : (Array.isArray(value) ? value : [value])
-                      .slice(0, limit)
-                      .map((val, index) =>
-                          index < limit - 1
-                              ? formatValue(val, dis, fieldDef, coModeldisplayNames)
-                              : "..."
-                      );
+            let values;
+            if (operator === "in range") {
+                const valueType = value[1];
+                values = [InRange.options.find(([t]) => t === valueType)[1].toString()];
+            } else {
+                values = (Array.isArray(value) ? value : [value])
+                    .slice(0, limit)
+                    .map((val, index) =>
+                        index < limit - 1
+                            ? formatValue(val, dis, fieldDef, coModeldisplayNames)
+                            : "..."
+                    );
+            }
+
             let join;
             let addParenthesis = Array.isArray(value);
             switch (operator) {
-                case "not_between":
                 case "between":
                     join = _t("and");
                     addParenthesis = false;
                     break;
-                case "last":
-                case "not_last":
-                case "next":
-                case "not_next":
-                    join = " ";
+                case "in range":
+                    join = _t(" ");
                     addParenthesis = false;
                     break;
                 case "in":

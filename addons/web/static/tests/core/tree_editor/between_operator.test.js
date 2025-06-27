@@ -15,9 +15,6 @@ const options = {
         if (name === "m2o") {
             return { type: "many2one" };
         }
-        if (name === "m2o.datetime_2" || name === "datetime_1") {
-            return { type: "datetime" };
-        }
         if (name === "m2o.int_2" || name === "int_1") {
             return { type: "integer" };
         }
@@ -66,51 +63,6 @@ test("between operator: introduction/elimination", async () => {
                 true
             ),
             tree: condition("m2o", "any", condition("int_2", "between", [1, 2]), true),
-        },
-        {
-            tree_py: connector("&", [
-                condition("datetime_1", ">=", 1),
-                condition("datetime_1", "<=", 2),
-            ]),
-            tree: condition("datetime_1", "between", [1, 2]),
-        },
-        {
-            tree_py: connector(
-                "&",
-                [condition("datetime_1", ">=", 1), condition("datetime_1", "<=", 2)],
-                true
-            ),
-            tree: condition("datetime_1", "between", [1, 2], true),
-        },
-        {
-            tree_py: connector("&", [
-                condition("m2o.datetime_2", ">=", 1),
-                condition("m2o.datetime_2", "<=", 2),
-            ]),
-            tree: connector("&", [
-                condition("m2o.datetime_2", ">=", 1),
-                condition("m2o.datetime_2", "<=", 2),
-            ]),
-        },
-        {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [condition("datetime_2", ">=", 1), condition("datetime_2", "<=", 2)])
-            ),
-            tree: condition("m2o.datetime_2", "between", [1, 2]),
-        },
-        {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition("datetime_2", ">=", 1),
-                    condition("datetime_2", "<=", 2),
-                ]),
-                true
-            ),
-            tree: condition("m2o", "any", condition("datetime_2", "between", [1, 2]), true),
         },
         {
             tree_py: connector("&", [

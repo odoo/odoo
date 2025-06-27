@@ -31,20 +31,32 @@ export class Range extends Component {
     }
 }
 
-export class Within extends Component {
-    static props = ["value", "update", "amountEditorInfo", "optionEditorInfo"];
-    static template = "web.TreeEditor.Within";
-    static components = { Input, Select };
+export class InRange extends Component {
+    static props = ["value", "update", "valueTypeEditorInfo", "betweenEditorInfo"];
+    static template = "web.TreeEditor.InRange";
     static options = [
-        ["days", _t("days")],
-        ["weeks", _t("weeks")],
-        ["months", _t("months")],
-        ["years", _t("years")],
+        ["today", _t("Today")],
+        ["last 7 days", _t("Last 7 days")],
+        ["last 30 days", _t("Last 30 days")],
+        ["month to date", _t("Month to date")],
+        ["last month", _t("Last month")],
+        ["year to date", _t("Year to date")],
+        ["last 12 months", _t("Last 12 months")],
+        ["custom range", _t("Custom range")],
     ];
-    update(index, newValue) {
-        const result = [...this.props.value];
-        result[index] = newValue;
-        return this.props.update(result);
+    updateValueType(newValueType) {
+        const [fieldType, currentValueType] = this.props.value;
+        if (currentValueType !== newValueType) {
+            const values =
+                newValueType === "custom range"
+                    ? this.props.betweenEditorInfo.defaultValue()
+                    : [false, false];
+            return this.props.update([fieldType, newValueType, ...values]);
+        }
+    }
+    updateValues(values) {
+        const [fieldType, currentValueType] = this.props.value;
+        return this.props.update([fieldType, currentValueType, ...values]);
     }
 }
 
