@@ -175,7 +175,11 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
             Chrome.clickMenuOption("Close Register"),
             ProductScreen.closeWithCashAmount("25"),
             ProductScreen.cashDifferenceIs("0.00"),
-            Dialog.confirm("Close Register"),
+            {
+                trigger: ".modal .modal-footer .btn:contains(close register)",
+                run: "click",
+                expectUnloadPage: true,
+            },
             {
                 trigger: "button:contains(backend)",
                 run: "click",
