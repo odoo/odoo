@@ -683,3 +683,26 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout",
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_preset_timing_restaurant_dialog", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.selectPreset("Eat in", "Delivery"),
+            ProductScreen.clickCustomer("A simple PoS man!"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            Dialog.bodyIs("The selected customer needs an address."),
+            Dialog.confirm(),
+            PaymentScreen.clickBackToProductScreen(),
+            ProductScreen.selectPreset("Delivery", "Takeaway"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            Dialog.bodyIs("Please select a time slot before proceeding."),
+            Dialog.confirm(),
+        ].flat(),
+});
