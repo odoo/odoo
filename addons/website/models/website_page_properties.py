@@ -19,13 +19,23 @@ class WebsitePagePropertiesBase(models.TransientModel):
     def _selection_target_model_id(self):
         return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
 
+    def _get_menu_domain(self, url=None):
+        self.ensure_one()
+        target = self.target_model_id
+        domain = [('website_id', '=', self.website_id.id)]
+        url_to_check = url or self.url
+        # For website pages, rely primarily on page_id as it stays stable
+        # across URL changes. Fall back to URL for non-page targets.
+        if target and target._name == 'website.page' and target.id:
+            domain += ['|', ('page_id', '=', target.id), ('url', '=', url_to_check)]
+        else:
+            domain += [('url', '=', url_to_check)]
+        return domain
+
     @api.depends('url', 'website_id')
     def _compute_menu_ids(self):
         for record in self:
-            record.menu_ids = self.env['website.menu'].search([
-                ('website_id', '=', record.website_id.id),
-                ('url', '=', record.url),
-            ])
+            record.menu_ids = self.env['website.menu'].search(record._get_menu_domain())
 
     @api.depends('menu_ids')
     def _compute_is_in_menu(self):
@@ -34,19 +44,22 @@ class WebsitePagePropertiesBase(models.TransientModel):
 
     def _inverse_is_in_menu(self):
         self.ensure_one()
+        target = self.target_model_id
         if self.is_in_menu:
             if not self.menu_ids:
-                target = self.target_model_id
                 self.env['website.menu'].create({
-                    'name': self.target_model_id.name,
+                    'name': target.name,
                     'url': self.url,
                     'parent_id': self.website_id.menu_id.id,
                     'website_id': self.website_id.id,
-                    'page_id': target.id if target._name == 'website.page' else False,
+                    'page_id': target.id if (target and target._name == 'website.page') else False,
                 })
-        elif self.menu_ids:
-            # If the page is no longer in menu, that menu has to be removed
-            self.menu_ids.unlink()
+        else:
+            # If the page is no longer in menu, remove any relevant menu even
+            # if `menu_ids` is empty due to URL changes in the same save.
+            menus = self.menu_ids or self.env['website.menu'].search(self._get_menu_domain())
+            if menus:
+                menus.unlink()
 
     @api.depends('url', 'website_id.homepage_url')
     def _compute_is_homepage(self):

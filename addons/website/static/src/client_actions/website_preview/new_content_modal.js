@@ -21,8 +21,10 @@ export class NewContentModal extends Component {
         this.orm = useService("orm");
         this.dialogs = useService("dialog");
         this.website = useService("website");
-        // preload the new page templates so they are ready as soon as possible
-        rpc("/website/get_new_page_templates", { context: { website_id: this.website.currentWebsiteId}}, { cached: true, silent: true });
+        // Preload the new page templates so they are ready as soon as possible.
+        // Do not cache here to avoid stale results when templates change
+        // (e.g., toggling "Is a Template" in page properties during a session).
+        rpc("/website/get_new_page_templates", { context: { website_id: this.website.currentWebsiteId}}, { silent: true });
         this.action = useService("action");
         this.isSystem = user.isSystem;
         useActiveElement("modalRef");
