@@ -29,12 +29,20 @@
             <field name="arch" type="xml">
             <xpath expr="//button[@name='action_cancel']" position="after">
                 <button name="print_quotation_report"
-                        string="Imprimir PDF"
+                        string="Imprimir Presupuesto"
                         type="object"
                         class="btn btn-secondary"
-                        icon="fa-print"/>
+                        icon="fa-print"
+                        invisible="quotation_status == 'order_note'"/>
 
-                <!-- <button name="action_import_csv" string="Import from CSV"/> todo?: mover pq no es el boton de imprimir -->
+                <button name="print_ordernote_report" 
+                        string="Imprimir Nota de Pedido"
+                        type="object"
+                        class="btn btn-secondary"
+                        icon="fa-print"
+                        invisible="quotation_status != 'order_note'"
+                />
+                <field name="quotation_status"/>
             </xpath>
             </field>
         </record>
@@ -102,7 +110,12 @@
                     <strong>Fecha de Entrega:</strong>
                     <div t-field="doc.delivery_date"/>
                 </div>
+                <div>
+                    <strong>Lugar de entrega:</strong>
+                    <div t-field="doc.delivery_method"/>
+                </div>
             </xpath>
         </template>
+
     </data>
 </odoo>

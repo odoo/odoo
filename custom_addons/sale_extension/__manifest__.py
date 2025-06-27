@@ -10,7 +10,8 @@
         'views/res_partner_form_inherit.xml',
         'views/res_partner_list_extension.xml',
         'views/res_partner_kanban_extension.xml',
-        'views/sale_order_list_extension.xml'
+        'views/sale_order_list_extension.xml',
+        'views/sale_order_custom_templates.xml'
     ],
     'assets': {
         'web.assets_backend': [

@@ -14,6 +14,7 @@ class SaleOrderLine(models.Model):
             compute="_compute_item_delivery_date",
             store=False
             )
+    
 
     #custom cumpute
     @api.depends('product_id', 'product_uom_qty', 'product_uom', 'order_id.date_order')

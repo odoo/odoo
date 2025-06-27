@@ -14,7 +14,8 @@ class FileManager(models.Model):
 
     quotation_status = fields.Selection([
         ('draft', 'Draft'),
-        ('confirmed', 'Confirmed')
+        ('confirmed', 'Confirmed'),
+        ('order_note', 'Order_note')
     ], string="quotation status", default='draft' )
 
     def action_save_quotation(self):
@@ -26,11 +27,14 @@ class FileManager(models.Model):
     def action_confirm(self):
         res = super().action_confirm()
         for order in self:
+            order.quotation_status = 'order_note'
             order.sale_file_manager("sale_order")
         return res
 
     def sale_file_manager(self, status):
         files_folder = config.get('sales_folder')
+
+        pdf_content = None
 
         for order in self:
             try:
@@ -39,8 +43,12 @@ class FileManager(models.Model):
                     'no_report_file': False,
                     'lang': order.partner_id.lang or 'es_ES',
                 })
-                pdf_content = self.env['ir.actions.report'].with_context(ctx)._render_qweb_pdf(
+                quotation_content = self.env['ir.actions.report'].with_context(ctx)._render_qweb_pdf(
                     'sale.report_saleorder', [order.id]
+                )[0]
+
+                ordernote_content = self.env['ir.actions.report'].with_context(ctx)._render_qweb_pdf(
+                    'sale_extension.order_note_template', [order.id]
                 )[0]
 
 
@@ -54,7 +62,11 @@ class FileManager(models.Model):
                 filename = f'Presupuesto_{order.name}.pdf' if status == 'quotation' else f'Orden_de_venta_{order.name}.pdf'
                 full_path = os.path.join(output_dir, filename)
 
-
+                if(status == 'quotation'):
+                    pdf_content = quotation_content
+                else:
+                    pdf_content = ordernote_content
+                    
                 with open(full_path, 'wb') as f:
                     f.write(pdf_content)
 
