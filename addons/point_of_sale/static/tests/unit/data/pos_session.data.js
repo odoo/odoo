@@ -160,6 +160,14 @@ export class PosSession extends models.ServerModel {
         return [order_ref, sequence_num, tracking_prefix + String(sequence_num).padStart(3, "0")];
     }
 
+    try_cash_in_out() {
+        return true;
+    }
+
+    log_partner_message() {
+        return true;
+    }
+
     _records = [
         {
             id: 1,

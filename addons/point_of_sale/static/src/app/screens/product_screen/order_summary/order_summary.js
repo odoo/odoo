@@ -140,31 +140,35 @@ export class OrderSummary extends Component {
 
     _setValue(val) {
         const { numpadMode } = this.pos;
-        let selectedLine = this.currentOrder.getSelectedOrderline();
+        const selectedLine = this.currentOrder.getSelectedOrderline();
         if (selectedLine) {
             if (numpadMode === "quantity") {
-                if (selectedLine.combo_parent_id) {
-                    selectedLine = selectedLine.combo_parent_id;
-                }
-                if (val === "remove") {
-                    this.currentOrder.removeOrderline(selectedLine);
-                } else {
-                    const result = selectedLine.setQuantity(
-                        val,
-                        Boolean(selectedLine.combo_line_ids?.length)
-                    );
-                    for (const line of selectedLine.combo_line_ids) {
-                        line.setQuantity(val, true);
-                    }
-                    if (result !== true) {
-                        this.dialog.add(AlertDialog, result);
-                        this.numberBuffer.reset();
-                    }
-                }
+                this.setQuantity(selectedLine, val);
             } else if (numpadMode === "discount" && val !== "remove") {
                 this.pos.setDiscountFromUI(selectedLine, val);
             } else if (numpadMode === "price" && val !== "remove") {
                 this.setLinePrice(selectedLine, val);
+            }
+        }
+    }
+
+    setQuantity(selectedLine, quantity) {
+        if (selectedLine.combo_parent_id) {
+            selectedLine = selectedLine.combo_parent_id;
+        }
+        if (quantity === "remove") {
+            this.currentOrder.removeOrderline(selectedLine);
+        } else {
+            const result = selectedLine.setQuantity(
+                quantity,
+                Boolean(selectedLine.combo_line_ids?.length)
+            );
+            for (const line of selectedLine.combo_line_ids) {
+                line.setQuantity(quantity, true);
+            }
+            if (result !== true) {
+                this.dialog.add(AlertDialog, result);
+                this.numberBuffer.reset();
             }
         }
     }
@@ -189,7 +193,7 @@ export class OrderSummary extends Component {
             const selectedLine = this.currentOrder.getSelectedOrderline();
             const currentQuantity = selectedLine.getQuantity();
             if (newQuantity >= currentQuantity) {
-                selectedLine.setQuantity(newQuantity);
+                this.setQuantity(selectedLine, newQuantity);
             } else if (newQuantity >= selectedLine.uiState.savedQuantity) {
                 await this.handleDecreaseUnsavedLine(newQuantity);
             } else {

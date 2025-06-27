@@ -26,9 +26,6 @@ following:
         'point_of_sale._assets_pos': [
             'pos_razorpay/static/src/**/*',
         ],
-        'web.assets_unit_tests': [
-            'pos_razorpay/static/tests/unit/data/**/*'
-        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
