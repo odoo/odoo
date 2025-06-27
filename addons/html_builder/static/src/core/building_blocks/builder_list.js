@@ -4,7 +4,9 @@ import {
     useBuilderComponent,
     useInputBuilderComponent,
 } from "@html_builder/core/utils";
-import { Component, useRef } from "@odoo/owl";
+import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
@@ -30,6 +32,7 @@ export class BuilderList extends Component {
         default: { optional: true },
         sortable: { optional: true },
         hiddenProperties: { type: Array, optional: true },
+        records: { type: String, optional: true },
     };
     static defaultProps = {
         addItemTitle: _t("Add"),
@@ -37,12 +40,13 @@ export class BuilderList extends Component {
         default: { value: _t("Item") },
         sortable: true,
         hiddenProperties: [],
+        mode: "button",
     };
-    static components = { BuilderComponent };
+    static components = { BuilderComponent, Dropdown };
 
     setup() {
         this.validateProps();
-
+        this.dropdown = useDropdownState();
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
@@ -53,6 +57,11 @@ export class BuilderList extends Component {
         this.state = state;
         this.commit = commit;
         this.preview = preview;
+        this.allRecords = this.formatRawValue(this.props.records);
+
+        onWillUpdateProps((props) => {
+            this.allRecords = this.formatRawValue(props.records);
+        });
 
         if (this.props.sortable) {
             useSortable({
@@ -80,6 +89,13 @@ export class BuilderList extends Component {
         }
     }
 
+    get availableRecords() {
+        const items = this.formatRawValue(this.state.value);
+        return this.allRecords.filter(
+            (record) => !items.some((item) => item.id === Number(record.id))
+        );
+    }
+
     parseDisplayValue(displayValue) {
         return JSON.stringify(displayValue);
     }
@@ -94,9 +110,19 @@ export class BuilderList extends Component {
         return items;
     }
 
-    addItem() {
+    addItem(ev) {
         const items = this.formatRawValue(this.state.value);
-        items.push(this.makeDefaultItem());
+        if (!ev.currentTarget.dataset.id) {
+            items.push(this.makeDefaultItem());
+        } else {
+            const elementToAdd = this.allRecords.find(
+                (el) => el.id === Number(ev.currentTarget.dataset.id)
+            );
+            if (!items.some((item) => item.id === Number(ev.currentTarget.dataset.id))) {
+                items.push(elementToAdd);
+            }
+            this.dropdown.close();
+        }
         this.commit(items);
     }
 
