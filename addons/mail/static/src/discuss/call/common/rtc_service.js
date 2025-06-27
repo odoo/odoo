@@ -798,7 +798,7 @@ export class Rtc extends Record {
         if (this.serverInfo) {
             this.log(this.localSession, "loading sfu server", {
                 step: "loading sfu server",
-                serverInfo: this.serverInfo,
+                serverInfo: toRaw(this.serverInfo),
             });
             this.localSession.connectionState = "loading SFU assets";
             try {
