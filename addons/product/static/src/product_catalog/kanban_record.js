@@ -61,10 +61,18 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     async _updateQuantity() {
         const price = await this._updateQuantityAndGetPrice();
         this.productCatalogData.price = parseFloat(price);
+        const uom = await this._updateQuantityAndGetUom();
+        this.productCatalogData.uom.id = uom.product_uom_id;
+        this.productCatalogData.uom.display_name = uom.display_uom;
+        
     }
 
     _updateQuantityAndGetPrice() {
         return rpc("/product/catalog/update_order_line_info", this._getUpdateQuantityAndGetPriceParams());
+    }
+
+    _updateQuantityAndGetUom() {
+        return rpc("/product/catalog/update_order_line_uom", this._getUpdateQuantityAndGetPriceParams());
     }
 
     _getUpdateQuantityAndGetPriceParams() {
