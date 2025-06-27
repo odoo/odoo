@@ -25,7 +25,7 @@ export class FeedbackScreen extends Component {
     }
 
     scaleText() {
-        const containerWidth = this.containerRef.el.offsetWidth;
+        const containerWidth = this.containerRef.el.offsetWidth * 0.8; // 80% of the container width to have some space on the sides
         const textWidth = this.amountRef.el.scrollWidth;
 
         const scale = Math.min(1, containerWidth / textWidth);
@@ -42,7 +42,7 @@ export class FeedbackScreen extends Component {
     }
 
     onClick() {
-        // clearTimeout(this.timeout);
+        clearTimeout(this.timeout);
         this.goToNextScreen();
     }
 }
