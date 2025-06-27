@@ -19,11 +19,11 @@ registry.category("web_tour.tours").add("project_task_templates_tour", {
             content: "Wait for the kanban view to load",
         },
         {
-            trigger: "a.o-kanban-button-new",
+            trigger: ".o-kanban-button-new",
             run: "click",
         },
         {
-            trigger: 'ul.dropdown-menu button.dropdown-item:contains("Template")',
+            trigger: '.dropdown-menu button.dropdown-item:contains("Template")',
             run: "click",
             content: "Create a task with the template",
         },
