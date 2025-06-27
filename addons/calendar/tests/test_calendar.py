@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
 from odoo import fields, Command
 from odoo.tests import Form, new_test_user
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.addons.calendar.models.res_users import ResUsers
 
 import freezegun
 import pytz
@@ -560,3 +562,19 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         duration = self.env['calendar.event'].with_company(second_company).get_default_duration()
         self.assertEqual(duration, 8, "Custom duration is 8 hours in the other company")
+
+    @patch.object(ResUsers, '_has_any_active_synchronization')
+    def test_videocall_location_set_when_sync_disabled_and_no_location(self, mock_has_active_sync):
+        """Testing that when the location is empty (online meeting) and sync is disabled, a new discuss videocall link is created"""
+
+        mock_has_active_sync.return_value = False
+
+        event = self.CalendarEvent.create({
+            'name': 'Test Meeting',
+            'start': '2025-07-08 10:00:00',
+            'stop': '2025-07-08 11:00:00',
+            'allday': False,
+        })
+
+        self.assertTrue(event.videocall_location, "Expected videocall_location to be set automatically.")
+        self.assertIn("/calendar/join_videocall/", event.videocall_location, "Expected discuss videocall link in videocall_location.")
