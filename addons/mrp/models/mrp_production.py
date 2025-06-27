@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
@@ -10,11 +9,11 @@ from ast import literal_eval
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _, Command, SUPERUSER_ID
+from odoo import api, fields, models, _
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
-from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
+from odoo.fields import Command, Domain
+from odoo.tools import format_datetime
 from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby, topological_sort
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
@@ -728,7 +727,7 @@ class MrpProduction(models.Model):
 
     @api.model
     def _search_delay_alert_date(self, operator, value):
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
+        if Domain.is_negative_operator(operator):
             return NotImplemented
         late_stock_moves = self.env['stock.move'].search([('delay_alert_date', operator, value)])
         return ['|', ('move_raw_ids', 'in', late_stock_moves.ids), ('move_finished_ids', 'in', late_stock_moves.ids)]
@@ -834,7 +833,7 @@ class MrpProduction(models.Model):
         if operator != 'in':
             return NotImplemented
         dates = value
-        return expression.OR(
+        return Domain.OR(
             self.env['stock.picking'].date_category_to_domain('date_start', date)
             for date in dates
         )
@@ -2952,7 +2951,7 @@ class MrpProduction(models.Model):
         return self.env['product.product'].browse(product_id).standard_price
 
     def _get_product_catalog_domain(self):
-        return expression.AND([super()._get_product_catalog_domain(), [('id', '!=', self.product_id.id)]])
+        return Domain.AND([super()._get_product_catalog_domain(), [('id', '!=', self.product_id.id)]])
 
     def _update_catalog_line_quantity(self, line, quantity, **kwargs):
         line.product_uom_qty = quantity
@@ -2971,7 +2970,7 @@ class MrpProduction(models.Model):
         for production in self:
             orderpoint = production.orderpoint_id
             origin_production = production.move_dest_ids.raw_material_production_id
-            if orderpoint and orderpoint.create_uid.id == SUPERUSER_ID and orderpoint.trigger == 'manual':
+            if orderpoint and orderpoint.create_uid.id == api.SUPERUSER_ID and orderpoint.trigger == 'manual':
                 production.message_post(
                     body=_('This production order has been created from Replenishment Report.'),
                     message_type='comment',

@@ -7,12 +7,11 @@ from ast import literal_eval
 from datetime import date, timedelta
 from collections import defaultdict
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
 
@@ -302,12 +301,12 @@ class StockPickingType(models.Model):
     def _search_display_name(self, operator, value):
         # Try to reverse the `display_name` structure
         if operator == 'in':
-            return expression.OR(self._search_display_name('=', v) for v in value)
+            return Domain.OR(self._search_display_name('=', v) for v in value)
         if operator == 'not in':
             return NotImplemented
         parts = isinstance(value, str) and value.split(': ')
         if parts and len(parts) == 2:
-            return ['&', ('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
+            return Domain('warehouse_id.name', operator, parts[0]) & Domain('name', operator, parts[1])
         if operator == '=':
             operator = 'in'
             value = [value]
@@ -464,7 +463,7 @@ class StockPickingType(models.Model):
 
     def get_action_picking_type_moves_analysis(self):
         action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_move_action')
-        action['domain'] = expression.AND([
+        action['domain'] = Domain.AND([
             action['domain'] or [], [('picking_type_id', '=', self.id)]
         ])
         return action
@@ -745,7 +744,7 @@ class StockPicking(models.Model):
     def _search_date_category(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        return expression.OR(
+        return Domain.OR(
             self.date_category_to_domain('scheduled_date', item)
             for item in value
         )
@@ -1017,7 +1016,7 @@ class StockPicking(models.Model):
             return ['|', ('state', 'in', invalid_states), *self._search_products_availability_state('in', value - {False})]
         value = set(self._fields['products_availability_state'].get_values(self.env)) & value
         if not value:
-            return expression.FALSE_DOMAIN
+            return Domain.FALSE
 
         def _get_comparison_date(move):
             return move.picking_id.scheduled_date
@@ -1030,7 +1029,7 @@ class StockPicking(models.Model):
                 return False
 
         pickings = self.env['stock.picking'].search([('state', 'not in', invalid_states)], order='id').filtered(_filter_picking_moves)
-        return [('id', 'in', pickings.ids)]
+        return Domain('id', 'in', pickings.ids)
 
     def _get_show_allocation(self, picking_type_id):
         """ Helper method for computing "show_allocation" value.
