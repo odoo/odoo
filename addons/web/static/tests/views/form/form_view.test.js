@@ -7613,10 +7613,10 @@ test(`modifiers are considered on multiple <footer/> tags`, async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    expect(queryAllTexts`.modal-footer button:not(.d-none)`).toEqual(["Hello", "World"]);
+    expect(queryAllTexts`.modal-footer button:visible`).toEqual(["Hello", "World"]);
 
     await contains(`.o_field_boolean input`).click();
-    expect(queryAllTexts`.modal-footer button:not(.d-none)`).toEqual(["Foo"]);
+    expect(queryAllTexts`.modal-footer button:visible`).toEqual(["Foo"]);
 });
 
 test(`buttons in footer are moved to $buttons if necessary`, async () => {

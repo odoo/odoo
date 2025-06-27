@@ -152,7 +152,7 @@ describe("new", () => {
         expect(".o_technical_modal .modal-footer button.infooter").toHaveCount(1, {
             message: "the button should be in the footer",
         });
-        expect(".modal-footer button:not(.d-none)").toHaveCount(1, {
+        expect(".modal-footer button:visible").toHaveCount(1, {
             message: "the modal footer should only contain one visible button",
         });
     });
@@ -305,13 +305,13 @@ describe("new", () => {
         expect('.o_technical_modal .modal-body button[special="save"]').toHaveCount(0);
         expect(".o_technical_modal .modal-body button.infooter").toHaveCount(0);
         expect(".o_technical_modal .modal-footer button.infooter").toHaveCount(1);
-        expect(".o_technical_modal .modal-footer button:not(.d-none)").toHaveCount(1);
+        expect(".o_technical_modal .modal-footer button:visible").toHaveCount(1);
         await getService("action").doAction(25);
         expect(".o_technical_modal .modal-body button.infooter").toHaveCount(0);
         expect(".o_technical_modal .modal-footer button.infooter").toHaveCount(0);
         expect('.o_technical_modal .modal-body button[special="save"]').toHaveCount(0);
         expect('.o_technical_modal .modal-footer button[special="save"]').toHaveCount(1);
-        expect(".o_technical_modal .modal-footer button:not(.d-none)").toHaveCount(1);
+        expect(".o_technical_modal .modal-footer button:visible").toHaveCount(1);
     });
 
     test('button with confirm attribute in act_window action in target="new"', async () => {

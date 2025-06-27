@@ -79,7 +79,7 @@ test("formviewdialog buttons in footer are positioned properly", async () => {
     await animationFrame();
 
     expect(".modal-body button").toHaveCount(0, { message: "should not have any button in body" });
-    expect(".modal-footer button:not(.d-none)").toHaveCount(1, {
+    expect(".modal-footer button:visible").toHaveCount(1, {
         message: "should have only one button in footer",
     });
 });
@@ -105,13 +105,13 @@ test("modifiers are considered on multiple <footer/> tags", async () => {
 
     await animationFrame();
 
-    expect(queryAllTexts(".modal-footer button:not(.d-none)")).toEqual(["Hello", "World"], {
+    expect(queryAllTexts(".modal-footer button:visible")).toEqual(["Hello", "World"], {
         message: "only the first button section should be visible",
     });
 
     await click(".o_field_boolean input");
     await animationFrame();
-    expect(queryAllTexts(".modal-footer button:not(.d-none)")).toEqual(["Foo"], {
+    expect(queryAllTexts(".modal-footer button:visible")).toEqual(["Foo"], {
         message: "only the second button section should be visible",
     });
 });
