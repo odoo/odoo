@@ -105,14 +105,16 @@
         <!--templates-->
 
         <template id="report_saleorder_document_inherit_delivery_date" inherit_id="sale.report_saleorder_document">
-            <xpath expr="//div[@name='expiration_date']" position="after">
-                <div>
-                    <strong>Fecha de Entrega:</strong>
-                    <div t-field="doc.delivery_date"/>
-                </div>
-                <div>
-                    <strong>Lugar de entrega:</strong>
-                    <div t-field="doc.delivery_method"/>
+            <xpath expr="//div[@id='informations']" position="before">
+                <div class ="row">
+                    <div class="col-6">
+                        <strong>Fecha de Entrega:</strong>
+                        <div t-field="doc.delivery_date"/>
+                    </div>
+                    <div class="col-6">
+                        <strong>Lugar de entrega:</strong>
+                        <div t-field="doc.delivery_method"/>
+                    </div>
                 </div>
             </xpath>
         </template>
