@@ -7,16 +7,15 @@
             <BuilderCheckbox id="'toggle_card_img_opt'" preview="false" action="'toggleCardImg'"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Position" t-if="isActiveItem('toggle_card_img_opt')">
-            <BuilderButtonGroup level="1" applyTo="'.s_card'">
-                <BuilderButton title="Left" classAction="'flex-lg-row'" iconImg="'/html_builder/static/img/options/pos_left.svg'"/>
-                <BuilderButton title="Right" classAction="'flex-lg-row-reverse'" iconImg="'/html_builder/static/img/options/pos_right.svg'"/>
+        <BuilderRow label.translate="Position" level="1" t-if="isActiveItem('toggle_card_img_opt')">
+            <BuilderButtonGroup applyTo="'.s_card'">
+                <BuilderButton title.translate="Left" classAction="'flex-lg-row'" iconImg="'/html_builder/static/img/options/pos_left.svg'"/>
+                <BuilderButton title.translate="Right" classAction="'flex-lg-row-reverse'" iconImg="'/html_builder/static/img/options/pos_right.svg'"/>
             </BuilderButtonGroup>
         </BuilderRow>
 
-        <BuilderRow label.translate="Width" level="1" t-if="isActiveItem('toggle_card_img_opt')">
+        <BuilderRow label.translate="Width" tooltip.translate="Adjust the image width" level="1" t-if="isActiveItem('toggle_card_img_opt')">
             <BuilderRange
-                title.translate="Adjust the image width"
                 styleAction="'--card-img-size-h'"
                 min="10"
                 max="75"
@@ -25,9 +24,8 @@
                 unit="'%'"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Extra height">
+        <BuilderRow label.translate="Extra height" tooltip.translate="Add extra height to cards">
             <BuilderRange
-                title.translate="Add extra height to cards"
                 styleAction="'--CardBody-extra-height'"
                 min="0"
                 max="500"
