@@ -64,20 +64,14 @@ export class ResPartner extends mailModels.ResPartner {
      * @override
      * @type {typeof mailModels.ResPartner["prototype"]["_to_store"]}
      */
-    _to_store(ids, store, fields) {
-        const kwargs = getKwArgs(arguments, "id", "store", "fields");
+    _to_store(store, fields) {
+        const kwargs = getKwArgs(arguments, "store", "fields");
         fields = kwargs.fields;
-
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
 
         super._to_store(...arguments);
         if (fields && fields.includes("user_livechat_username")) {
-            super._to_store(
-                ResPartner.browse(ids)
-                    .filter((partner) => !partner.user_livechat_username)
-                    .map((partner) => partner.id),
-                store,
+            store._add_record_fields(
+                this.filter((partner) => !partner.user_livechat_username),
                 ["name"]
             );
         }

@@ -1,23 +1,15 @@
-import { fields, models, getKwArgs } from "@web/../tests/web_test_helpers";
+import { hrModels } from "@hr/../tests/hr_test_helpers";
+import { fields } from "@web/../tests/web_test_helpers";
 
-export class HrEmployee extends models.Model {
+export class HrEmployee extends hrModels.HrEmployee {
     _name = "hr.employee";
 
     name = fields.Char();
-    department_id = fields.Many2one({ relation: "hr.department" });
     leave_date_to = fields.Date();
     user_id = fields.Many2one({ relation: "res.users" });
 
-    _to_store(ids, store, fields) {
-        const kwargs = getKwArgs(arguments, "id", "store", "fields");
-        fields = kwargs.fields;
-        for (const employee of this.browse(ids)) {
-            const [data] = this._read_format(employee.id, fields);
-            if (fields.includes("department_id")) {
-                data.department_id = data.department_id[0];
-            }
-            store.add(this.browse(employee.id), data);
-        }
+    _get_store_avatar_card_fields() {
+        return [...super._get_store_avatar_card_fields(), "leave_date_to"];
     }
 
     _records = [

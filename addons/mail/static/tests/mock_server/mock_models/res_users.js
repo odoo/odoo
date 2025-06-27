@@ -1,12 +1,6 @@
 import { DISCUSS_ACTION_ID, mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import {
-    fields,
-    getKwArgs,
-    makeKwArgs,
-    serverState,
-    webModels,
-} from "@web/../tests/web_test_helpers";
+import { fields, makeKwArgs, serverState, webModels } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 
 export class ResUsers extends webModels.ResUsers {
@@ -199,19 +193,5 @@ export class ResUsers extends webModels.ResUsers {
 
     _get_store_avatar_card_fields() {
         return ["email", "im_status", "name", "partner_id", "phone", "share"];
-    }
-
-    /**
-     * @param {number[]} ids
-     * @returns {Record<string, ModelRecord>}
-     */
-    _to_store(ids, store, fields) {
-        const kwargs = getKwArgs(arguments, "id", "store", "fields");
-        fields = kwargs.fields;
-
-        for (const user of this.browse(ids)) {
-            const [data] = this._read_format(user.id, fields, false);
-            store.add(this.browse(user.id), data);
-        }
     }
 }

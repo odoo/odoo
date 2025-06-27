@@ -164,7 +164,7 @@ export class ResPartner extends webModels.ResPartner {
             store.add(this.browse(member.partner_id));
             store.add(
                 DiscussChannelMember.browse(member.id),
-                makeKwArgs({ fields: { channel: [], persona: [] } })
+                makeKwArgs({ fields: ["channel", "persona"] })
             );
         }
         for (const partnerId of partners) {
@@ -243,14 +243,11 @@ export class ResPartner extends webModels.ResPartner {
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}
      */
-    _to_store(ids, store, fields, extra_fields) {
-        const kwargs = getKwArgs(arguments, "id", "store", "fields", "extra_fields");
+    _to_store(store, fields, extra_fields) {
+        const kwargs = getKwArgs(arguments, "store", "fields", "extra_fields");
         fields = kwargs.fields;
         extra_fields = kwargs.extra_fields ?? [];
-        if (!fields) {
-            fields = ["avatar_128", "name", "email", "active", "im_status", "is_company", "user"];
-        }
-        fields = [...fields, extra_fields];
+        fields = fields.concat(extra_fields);
 
         /** @type {import("mock_models").ResCountry} */
         const ResCountry = this.env["res.country"];
@@ -258,22 +255,22 @@ export class ResPartner extends webModels.ResPartner {
         const ResUsers = this.env["res.users"];
 
         this._compute_main_user_id(); // compute not automatically triggering when necessary
-        for (const partner of this.browse(ids)) {
-            const [data] = this._read_format(
-                partner.id,
-                fields.filter(
-                    (field) =>
-                        ![
-                            "avatar_128",
-                            "country_id",
-                            "display_name",
-                            "is_admin",
-                            "notification_type",
-                            "user",
-                        ].includes(field)
-                ),
-                false
-            );
+        store._add_record_fields(
+            this,
+            fields.filter(
+                (field) =>
+                    ![
+                        "avatar_128",
+                        "country_id",
+                        "display_name",
+                        "is_admin",
+                        "notification_type",
+                        "user",
+                    ].includes(field)
+            )
+        );
+        for (const partner of this) {
+            const data = {};
             if (fields.includes("avatar_128")) {
                 data.avatar_128_access_token = partner.id;
                 data.write_date = partner.write_date;
@@ -292,30 +289,40 @@ export class ResPartner extends webModels.ResPartner {
             if (fields.includes("user")) {
                 data.main_user_id = partner.main_user_id;
                 if (partner.main_user_id) {
-                    store.add(
-                        ResUsers.browse(partner.main_user_id),
-                        makeKwArgs({ fields: ["share"] })
-                    );
+                    store._add_record_fields(ResUsers.browse(partner.main_user_id), ["share"]);
                 }
                 if (partner.main_user_id && fields.includes("is_admin")) {
                     const users = ResUsers.search([["login", "=", "admin"]]);
-                    store.add(ResUsers.browse(partner.main_user_id), {
+                    store._add_record_fields(ResUsers.browse(partner.main_user_id), {
                         is_admin:
-                            // HOOT weirdness: somehow sometimes [0] of search is record, sometimes it's already record id...
                             this.env.cookie.get("authenticated_user_sid") ===
                                 (Number.isInteger(users?.[0]) ? users?.[0] : users?.[0]?.id) ??
                             false,
-                    });
+                    }); // mock server simplification
                 }
                 if (partner.main_user_id && fields.includes("notification_type")) {
-                    store.add(
+                    store._add_record_fields(
                         ResUsers.browse(partner.main_user_id),
                         makeKwArgs({ fields: ["notification_type"] })
                     );
                 }
             }
-            store.add(this.browse(partner.id), data);
+            if (Object.keys(data).length) {
+                store._add_record_fields(this.browse(partner.id), data);
+            }
         }
+    }
+
+    get _to_store_defaults() {
+        return [
+            "avatar_128",
+            "name",
+            "email",
+            "active",
+            "im_status",
+            "is_company",
+            mailDataHelpers.Store.one("main_user_id", ["share"]),
+        ];
     }
 
     /**
