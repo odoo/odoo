@@ -18,6 +18,7 @@ import {
     getCurrentPath,
     getCurrentValue,
     getOperatorOptions,
+    label,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
@@ -31,8 +32,8 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { WebClient } from "@web/webclient/webclient";
 import { registry } from "@web/core/registry";
+import { WebClient } from "@web/webclient/webclient";
 
 class PartnerType extends models.Model {
     name = fields.Char({ string: "Partner Type" });
@@ -1194,12 +1195,12 @@ test("foldable domain, search_count delayed", async function () {
     expect(".o_domain_show_selection_button").toHaveCount(1);
 });
 
-test("folded domain field with withinh operator", async function () {
+test(`folded domain field with "in range" operator`, async function () {
     Partner._fields.company_id = fields.Many2one({ relation: "partner" });
     Partner._records[0].foo = `[
         "&",
         ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
-        ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(months = 2), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
+        ("datetime", "<", datetime.datetime.combine(context_today() + relativedelta(days=1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
     ]`;
     await mountView({
         type: "form",
@@ -1214,7 +1215,7 @@ test("folded domain field with withinh operator", async function () {
                 </sheet>
             </form>`,
     });
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Datetime next 2 months");
+    expect(`.o_field_domain .o_facet_values`).toHaveText(`Datetime ${label("in range")} Today`);
 });
 
 test("allow_expressions = true", async function () {
@@ -1287,7 +1288,7 @@ test("allow_expressions = false (default)", async function () {
     expect.verifySteps(["The domain should not involve non-literals"]);
 });
 
-test("hide today, last, next operators when allow_expressions = False", async function () {
+test(`hide "in range" operator when allow_expressions = False`, async function () {
     Partner._records[0].foo = `[("datetime", "=", False)]`;
 
     serverState.debug = "1";
@@ -1308,14 +1309,11 @@ test("hide today, last, next operators when allow_expressions = False", async fu
     });
 
     expect(getOperatorOptions()).toEqual([
-        "equals",
-        "not equals",
-        "greater",
-        "lower",
-        "between",
-        "not between",
-        "set",
-        "not set",
+        label("="),
+        "before",
+        "after",
+        label("set"),
+        label("not set"),
     ]);
 
     await contains(SELECTORS.debugArea).edit(
@@ -1325,8 +1323,7 @@ test("hide today, last, next operators when allow_expressions = False", async fu
     expect(".o_field_domain").toHaveClass("o_field_invalid");
     expect.verifySteps(["The domain should not involve non-literals"]);
 
-    await contains(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).edit("2");
-    await animationFrame();
+    await clearNotSupported();
     expect(".o_field_domain").not.toHaveClass("o_field_invalid"); // should we have class? We don't do it in other cases
     expect.verifySteps(["The domain should not involve non-literals"]);
 });

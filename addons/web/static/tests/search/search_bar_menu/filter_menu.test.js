@@ -6,9 +6,11 @@ import {
     clickOnButtonAddBranch,
     clickOnButtonAddRule,
     getCurrentPath,
+    label,
     openModelFieldSelectorPopover,
     selectOperator,
     SELECTORS,
+    selectValue,
     toggleConnector,
 } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
@@ -797,33 +799,22 @@ test("display of (not) set in facets", async () => {
         searchViewId: false,
         searchViewArch: `<search/>`,
     });
+
     expect(getFacetTexts()).toEqual([]);
     expect(searchBar.env.searchModel.domain).toEqual([]);
 
     await toggleSearchBarMenu();
     await openAddCustomFilterDialog();
-    await selectOperator("not_set");
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Id not set"]);
-    expect(searchBar.env.searchModel.domain).toEqual([["id", "=", false]]);
-
-    await contains(".o_searchview_facet_label").click();
-    await selectOperator("set");
-    await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Id set"]);
-    expect(searchBar.env.searchModel.domain).toEqual([["id", "!=", false]]);
-
-    await contains(".o_searchview_facet_label").click();
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_item_name:contains(Boolean)").click();
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Boolean set"]);
+    expect(getFacetTexts()).toEqual([`Boolean ${label("set")}`]);
     expect(searchBar.env.searchModel.domain).toEqual([["boolean", "!=", false]]);
 
     await contains(".o_searchview_facet_label").click();
-    await selectOperator("not_set");
+    await selectOperator("not set");
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Boolean not set"]);
+    expect(getFacetTexts()).toEqual([`Boolean ${label("not set")}`]);
     expect(searchBar.env.searchModel.domain).toEqual([["boolean", "=", false]]);
 });
 
@@ -877,7 +868,7 @@ test("display names in facets", async () => {
     expect(getFacetTexts()).toEqual([
         "Bar = John",
         "Bar = David or Inaccessible/missing record ID: 5555",
-        "Bar set",
+        `Bar ${label("set")}`,
         "Id = 2",
     ]);
     expect(searchBar.env.searchModel.domain).toEqual([
@@ -1041,4 +1032,35 @@ test("shorten descriptions of long lists", async function () {
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([`Id = ${values.slice(0, 4).join(" or ")} or ...`]);
     expect(searchBar.env.searchModel.domain).toEqual([["id", "in", values]]);
+});
+
+test(`"in range" facets`, async () => {
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search/>`,
+    });
+    await toggleSearchBarMenu();
+    await openAddCustomFilterDialog();
+    await openModelFieldSelectorPopover();
+    await contains(
+        ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:contains(Birthday)"
+    ).click();
+    await addNewRule();
+    await selectValue("custom range");
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual([
+        "Birthday between 03/11/2019 and 03/11/2019 or Birthday is in Today",
+    ]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "|",
+        "&",
+        ["birthday", ">=", "2019-03-11"],
+        ["birthday", "<=", "2019-03-11"],
+        "&",
+        ["birthday", ">=", "2019-03-11"],
+        ["birthday", "<", "2019-03-12"],
+    ]);
 });

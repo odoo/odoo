@@ -45,30 +45,6 @@ test("expressionFromTree", () => {
             result: `not ( foo >= 1 and foo <= uid )`,
         },
         {
-            expressionTree: condition("foo", "next", [1, "weeks", "date"]),
-            result: `foo >= context_today().strftime("%Y-%m-%d") and foo <= (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d")`,
-        },
-        {
-            expressionTree: condition("foo", "last", [1, "weeks", "date"]),
-            result: `foo >= (context_today() + relativedelta(weeks = -1)).strftime("%Y-%m-%d") and foo <= context_today().strftime("%Y-%m-%d")`,
-        },
-        {
-            expressionTree: condition("foo", "next", [1, "months", "datetime"]),
-            result: `foo >= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and foo <= datetime.datetime.combine(context_today() + relativedelta(months = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
-        },
-        {
-            expressionTree: condition("foo", "last", [1, "months", "datetime"]),
-            result: `foo >= datetime.datetime.combine(context_today() + relativedelta(months = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and foo <= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
-        },
-        {
-            expressionTree: condition("foo", "last", [expression("a"), "months", "datetime"]),
-            result: `foo >= datetime.datetime.combine(context_today() + relativedelta(months = a), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and foo <= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
-        },
-        {
-            expressionTree: condition("foo", "last", [1, "b", "datetime"]),
-            result: `foo >= datetime.datetime.combine(context_today() + relativedelta(b = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and foo <= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
-        },
-        {
             expressionTree: complexCondition("uid"),
             result: `uid`,
         },

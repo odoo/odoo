@@ -5,44 +5,75 @@ import { Select } from "@web/core/tree_editor/tree_editor_components";
 
 const OPERATOR_DESCRIPTIONS = {
     // valid operators (see TERM_OPERATORS in expression.py)
-    "=": _t("equals"),
-    "!=": _t("not equals"),
-    "<=": _t("lower or equal"),
-    "<": _t("lower"),
-    ">": _t("greater"),
-    ">=": _t("greater or equal"),
+    "=": (fieldDefType) => {
+        switch (fieldDefType) {
+            case "many2one":
+            case "many2many":
+            case "one2many":
+                return _t("=");
+            default:
+                return _t("is equal to");
+        }
+    },
+    "!=": (fieldDefType) => {
+        switch (fieldDefType) {
+            case "many2one":
+            case "many2many":
+            case "one2many":
+                return _t("!=");
+            default:
+                return _t("is not equal to");
+        }
+    },
+    "<=": _t("lower or equal to"),
+    "<": (fieldDefType) => {
+        switch (fieldDefType) {
+            case "date":
+            case "datetime":
+                return _t("before");
+            default:
+                return _t("lower than");
+        }
+    },
+    ">": (fieldDefType) => {
+        switch (fieldDefType) {
+            case "date":
+            case "datetime":
+                return _t("after");
+            default:
+                return _t("greater than");
+        }
+    },
+    ">=": _t("greater or equal to"),
     "=?": "=?",
     "=like": _t("=like"),
     "=ilike": _t("=ilike"),
     like: _t("like"),
     "not like": _t("not like"),
     ilike: _t("contains"),
-    "not ilike": _t("not contains"),
-    in: _t("is in"),
-    "not in": _t("is not in"),
+    "not ilike": _t("does not contain"),
+    in: (fieldDefType) => {
+        switch (fieldDefType) {
+            case "many2one":
+            case "many2many":
+            case "one2many":
+                return _t("is equal to");
+            default:
+                return _t("is in");
+        }
+    },
+    "not in": (fieldDefType) => {
+        switch (fieldDefType) {
+            case "many2one":
+            case "many2many":
+            case "one2many":
+                return _t("is not equal to");
+            default:
+                return _t("is not in");
+        }
+    },
     child_of: _t("child of"),
     parent_of: _t("parent of"),
-
-    // virtual operators (replace = and != in some cases)
-    set: _t("set"),
-    not_set: _t("not set"),
-
-    starts_with: _t("starts with"),
-    ends_with: _t("ends with"),
-
-    today: _t("today"),
-    not_today: _t("not today"),
-
-    // virtual operators (equivalent to a couple (>=,<=))
-    between: _t("between"),
-    last: _t("last"),
-    next: _t("next"),
-
-    // virtual operators (equivalent to a couple (<,>))
-    not_between: _t("not between"),
-    not_last: _t("not last"),
-    not_next: _t("not next"),
-
     any: (fieldDefType) => {
         switch (fieldDefType) {
             case "many2one":
@@ -59,6 +90,15 @@ const OPERATOR_DESCRIPTIONS = {
                 return _t("match none of");
         }
     },
+
+    // virtual operators
+    set: _t("is set"),
+    "not set": _t("is not set"),
+
+    "starts with": _t("starts with"),
+
+    between: _t("between"),
+    "in range": _t("is in"),
 };
 
 function toKey(operator, negate = false) {

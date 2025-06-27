@@ -8,20 +8,12 @@ import {
 } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { connector, Expression, formatValue, isTree } from "@web/core/tree_editor/condition_tree";
-import {
-    DATE_TODAY_STRING_EXPRESSION,
-    DATETIME_END_OF_TODAY_STRING_EXPRESSION,
-    DATETIME_TODAY_STRING_EXPRESSION,
-    isEndOfTodayExpr,
-    isTodayExpr,
-} from "@web/core/tree_editor/virtual_operators";
-
+import { connector, formatValue, isTree } from "@web/core/tree_editor/condition_tree";
 import {
     DomainSelectorAutocomplete,
     DomainSelectorSingleAutocomplete,
 } from "@web/core/tree_editor/tree_editor_autocomplete";
-import { Input, List, Range, Select, Within } from "@web/core/tree_editor/tree_editor_components";
+import { Input, InRange, List, Range, Select } from "@web/core/tree_editor/tree_editor_components";
 import { disambiguate, getResModel, isId } from "@web/core/tree_editor/utils";
 import { unique } from "@web/core/utils/arrays";
 
@@ -139,7 +131,7 @@ function isLitteralObject(value) {
 function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
     switch (operator) {
         case "set":
-        case "not_set":
+        case "not set":
             return {
                 component: null,
                 extractProps: null,
@@ -154,7 +146,6 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "ilike":
         case "not ilike":
             return STRING_EDITOR;
-        case "not_between":
         case "between": {
             const editorInfo = getValueEditorInfo(fieldDef, "=", params);
             const { defaultValue } = getValueEditorInfo(fieldDef, "=", {
@@ -177,29 +168,21 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     !editorInfo.isSupported(value[0]) || !editorInfo.isSupported(value[1]),
             };
         }
-        case "last":
-        case "not_last":
-        case "next":
-        case "not_next": {
+        case "in range": {
             return {
-                component: Within,
+                component: InRange,
                 extractProps: ({ value, update }) => ({
                     value,
                     update,
-                    amountEditorInfo: {
-                        ...getValueEditorInfo({ type: "integer" }, "=", params),
-                        isSupported: (value) => Number.isInteger(value) && value >= 0,
-                        message: _t("Positive integer expected"),
-                    },
-                    optionEditorInfo: makeSelectEditor(Within.options),
+                    valueTypeEditorInfo: makeSelectEditor(InRange.options, params),
+                    betweenEditorInfo: getValueEditorInfo(fieldDef, "between", params),
                 }),
                 isSupported: (value) =>
-                    Array.isArray(value) && value.length === 3 && value[2] === fieldDef.type,
-                defaultValue: () => [1, "months", fieldDef.type],
-                shouldResetValue: (value) =>
-                    !Number.isInteger(value[0]) ||
-                    value[0] < 0 ||
-                    !Within.options.some((o) => o[0] === value[1]),
+                    Array.isArray(value) &&
+                    value.length === 4 &&
+                    value[0] === fieldDef.type &&
+                    InRange.options.some(([t]) => t === value[1]),
+                defaultValue: () => [fieldDef.type, "today", false, false],
             };
         }
         case "in":
@@ -269,38 +252,12 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     placeholder: placeholderForInput(displayPlaceholder),
                 }),
                 isSupported: () => true,
-                defaultValue: () => (params.forBetween ? { start: 1, end: 1 } : 1),
+                defaultValue: () => 1,
                 shouldResetValue: (value) => parseValue(formatType, value) === value,
             };
         }
         case "date":
         case "datetime":
-            if (["today", "not_today"].includes(operator)) {
-                return {
-                    component: null,
-                    extractProps: null,
-                    isSupported: (value) => {
-                        if (type === "date") {
-                            return isTodayExpr(value, type);
-                        }
-                        return (
-                            Array.isArray(value) &&
-                            value.length === 2 &&
-                            isTodayExpr(value[0], type) &&
-                            isEndOfTodayExpr(value[1])
-                        );
-                    },
-                    defaultValue: () => {
-                        if (type === "date") {
-                            return new Expression(DATE_TODAY_STRING_EXPRESSION);
-                        }
-                        return [
-                            new Expression(DATETIME_TODAY_STRING_EXPRESSION),
-                            new Expression(DATETIME_END_OF_TODAY_STRING_EXPRESSION),
-                        ];
-                    },
-                };
-            }
             return {
                 component: DateTimeInput,
                 extractProps: ({ value, update, displayPlaceholder }) => ({
@@ -319,17 +276,18 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     placeholder: placeholderForSelect(displayPlaceholder),
                 }),
                 isSupported: (value) => typeof value === "string" && isParsable(type, value),
-                defaultValue: () => {
+                defaultValue: (operator) => {
                     const datetime = DateTime.local();
-                    const defaultValue = genericSerializeDate(type, datetime.startOf("day"));
-                    if (params.forBetween) {
-                        return {
-                            start: defaultValue,
-                            end: genericSerializeDate(type, datetime.endOf("day")),
-                        };
+                    if (operator === ">") {
+                        return genericSerializeDate(type, datetime.endOf("day"));
                     }
-                    return defaultValue;
+                    const start = genericSerializeDate(type, datetime.startOf("day"));
+                    if (params.forBetween) {
+                        return { start, end: genericSerializeDate(type, datetime.endOf("day")) };
+                    }
+                    return start;
                 },
+                shouldResetValue: () => true,
                 stringify: (value) => {
                     if (value === false) {
                         return _t("False");
@@ -413,7 +371,7 @@ export function getValueEditorInfo(fieldDef, operator, options = {}) {
 export function getDefaultValue(fieldDef, operator, value = null) {
     const { isSupported, shouldResetValue, defaultValue } = getValueEditorInfo(fieldDef, operator);
     if (value === null || !isSupported(value) || shouldResetValue?.(value)) {
-        return defaultValue();
+        return defaultValue(operator);
     }
     return value;
 }

@@ -1,8 +1,6 @@
 import { Domain } from "@web/core/domain";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
-import { Hole, upToHole } from "./hole";
-import { Just, Nothing } from "./maybe_monad";
 
 /** @typedef { import("@web/core/py_js/py_parser").AST } AST */
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
@@ -133,11 +131,9 @@ export function cloneTree(tree) {
     return clone;
 }
 
-const areEqualValues = upToHole(
-    (value, otherValue) => formatValue(value) === formatValue(otherValue)
-);
+const areEqualValues = (value, otherValue) => formatValue(value) === formatValue(otherValue);
 
-const areEqualArraysOfTrees = upToHole((array, otherArray) => {
+const areEqualArraysOfTrees = (array, otherArray) => {
     if (array.length !== otherArray.length) {
         return false;
     }
@@ -149,9 +145,9 @@ const areEqualArraysOfTrees = upToHole((array, otherArray) => {
         }
     }
     return true;
-});
+};
 
-export const areEqualTrees = upToHole((tree, otherTree) => {
+export const areEqualTrees = (tree, otherTree) => {
     if (tree.type !== otherTree.type) {
         return false;
     }
@@ -185,7 +181,7 @@ export const areEqualTrees = upToHole((tree, otherTree) => {
         return true;
     }
     return areEqualArraysOfTrees(tree.children, otherTree.children);
-});
+};
 
 /**
  * @param {import("@web/core/py_js/py_parser").AST} ast
@@ -232,7 +228,6 @@ export function isTree(value) {
         typeof value === "object" &&
         !(value instanceof Domain) &&
         !(value instanceof Expression) &&
-        !(value instanceof Hole) &&
         !Array.isArray(value) &&
         value !== null
     );
@@ -289,10 +284,6 @@ function makeOptions(path, options) {
     };
 }
 
-function getReplacement(v) {
-    return v instanceof Nothing ? null : v instanceof Just ? v.value : v;
-}
-
 /**
  * @param {Function} transformation
  * @param {Tree} tree
@@ -315,7 +306,7 @@ export function operate(
             ),
         };
         if (treeType === "connector") {
-            return normalizeConnector(getReplacement(transformation(newTree, options)) || newTree);
+            return normalizeConnector(transformation(newTree, options) || newTree);
         }
         return normalizeConnector(newTree);
     }
@@ -330,7 +321,7 @@ export function operate(
         );
     }
     if (treeType === tree.type) {
-        return getReplacement(transformation(clone, options)) || clone;
+        return transformation(clone, options) || clone;
     }
     return clone;
 }
@@ -343,9 +334,7 @@ export function rewriteNConsecutiveChildren(transformation, N = 2) {
             const NconsecutiveChildren = currentChildren.slice(i, i + N);
             let replacement = null;
             if (NconsecutiveChildren.length === N) {
-                replacement = getReplacement(
-                    transformation(connector(c.value, NconsecutiveChildren), options)
-                );
+                replacement = transformation(connector(c.value, NconsecutiveChildren), options);
             }
             if (replacement) {
                 children.push(replacement);
