@@ -488,6 +488,9 @@ patch(PosStore.prototype, {
     },
     getPotentialFreeProductRewards() {
         const order = this.get_order();
+        if (!order) {
+            return [];
+        }
         const allCouponPrograms = Object.values(order.uiState.couponPointChanges)
             .map((pe) => {
                 return {
