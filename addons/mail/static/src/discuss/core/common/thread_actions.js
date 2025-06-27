@@ -4,12 +4,13 @@ import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation"
 import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
 
-import { Component, xml, useComponent } from "@odoo/owl";
+import { Component, xml, useComponent, useChildSubEnv } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
+import { PinnedMessagesPanel } from "./pinned_messages_panel";
 
 class ChannelActionDialog extends Component {
     static props = ["title", "contentComponent", "contentProps", "close?"];
@@ -197,4 +198,33 @@ threadActionsRegistry
         partition: false,
         sidebarSequence: 10,
         sidebarSequenceGroup: 20,
+    })
+    .add("pinned-messages", {
+        component: PinnedMessagesPanel,
+        condition(component) {
+            return (
+                component.thread?.model === "discuss.channel" &&
+                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+            );
+        },
+        panelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
+        icon: "fa fa-fw fa-thumb-tack",
+        iconLarge: "fa fa-fw fa-lg fa-thumb-tack",
+        name: _t("Pinned Messages"),
+        nameActive: _t("Hide Pinned Messages"),
+        sequence: 20,
+        sequenceGroup: 10,
+        setup(action) {
+            useChildSubEnv({
+                pinMenu: {
+                    open: () => action.open(),
+                    close: () => {
+                        if (action.isActive) {
+                            action.close();
+                        }
+                    },
+                },
+            });
+        },
+        toggle: true,
     });

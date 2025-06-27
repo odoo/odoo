@@ -57,6 +57,12 @@ export class WebsiteBuilderClientAction extends Component {
         this.component = useComponent();
 
         this.onKeydownRefresh = this._onKeydownRefresh.bind(this);
+        this.env.services["mail.store"].isReady.then(() => {
+            Object.assign(this.env.services["mail.store"].websiteBuilder, {
+                on: true,
+                editing: false,
+            });
+        });
 
         onMounted(() => {
             // You can't wait for rendering because the Builder depends on the
@@ -125,6 +131,9 @@ export class WebsiteBuilderClientAction extends Component {
             websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
             this.websiteService.currentWebsiteId = null;
             websiteSystrayRegistry.trigger("EDIT-WEBSITE");
+            this.env.services["mail.store"].isReady.then(() => {
+                Object.assign(this.env.services["mail.store"].websiteBuilder, { on: false });
+            });
         });
 
         effect(
@@ -145,8 +154,14 @@ export class WebsiteBuilderClientAction extends Component {
                         websiteSystrayRegistry.trigger("EDIT-WEBSITE");
                         document.querySelector(".o_builder_open .o_main_navbar").classList.add("d-none");
                     }, 200);
+                    this.env.services["mail.store"].isReady.then(() => {
+                        Object.assign(this.env.services["mail.store"].websiteBuilder, { editing: true });
+                    });
                 } else {
                     document.querySelector(".o_main_navbar")?.classList.remove("d-none");
+                    this.env.services["mail.store"].isReady.then(() => {
+                        Object.assign(this.env.services["mail.store"].websiteBuilder, { editing: false });
+                    });
                 }
             },
             () => [this.state.isEditing]
@@ -264,6 +279,11 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     onIframeLoad(ev) {
+        this.env.services["mail.store"].isReady.then(() => {
+            Object.assign(this.env.services["mail.store"].websiteBuilder, {
+                iframeWindow: this.websiteContent.el.contentWindow,
+            });
+        });
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
         if (this.translation) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);

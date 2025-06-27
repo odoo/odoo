@@ -30,8 +30,11 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: serverState.partnerId }),
-                Command.create({ guest_id: guestId_1 }),
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,
@@ -44,8 +47,9 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
                     partner_id: serverState.partnerId,
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
+                    livechat_member_type: "agent",
                 }),
-                Command.create({ guest_id: guestId_2 }),
+                Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,
@@ -58,8 +62,9 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
                     partner_id: serverState.partnerId,
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-01 10:00:00",
+                    livechat_member_type: "agent",
                 }),
-                Command.create({ guest_id: guestId_3 }),
+                Command.create({ guest_id: guestId_3, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,
@@ -116,8 +121,9 @@ test("Tab livechat picks ended livechats last", async () => {
                 Command.create({
                     partner_id: serverState.partnerId,
                     last_interest_dt: `2021-01-02 10:00:0${idx}`,
+                    livechat_member_type: "agent",
                 }),
-                Command.create({ guest_id: guestId }),
+                Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
             ],
             livechat_channel_id: livechatChannelId,
             livechat_operator_id: serverState.partnerId,
@@ -242,8 +248,11 @@ test("switching to folded chat window unfolds it", async () => {
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: serverState.partnerId }),
-                Command.create({ guest_id: guestId_1 }),
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,
@@ -255,8 +264,9 @@ test("switching to folded chat window unfolds it", async () => {
                 Command.create({
                     partner_id: serverState.partnerId,
                     last_interest_dt: "2021-01-02 10:00:00",
+                    livechat_member_type: "agent",
                 }),
-                Command.create({ guest_id: guestId_2 }),
+                Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,
@@ -293,8 +303,11 @@ test("switching to hidden chat window unhides it", async () => {
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: serverState.partnerId }),
-                Command.create({ guest_id: guestId_1 }),
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,
@@ -306,8 +319,9 @@ test("switching to hidden chat window unhides it", async () => {
                 Command.create({
                     partner_id: serverState.partnerId,
                     last_interest_dt: "2021-01-02 10:00:00",
+                    livechat_member_type: "agent",
                 }),
-                Command.create({ guest_id: guestId_2 }),
+                Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,
@@ -346,8 +360,11 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: serverState.partnerId }),
-                Command.create({ guest_id: guestId_1 }),
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,
@@ -360,8 +377,9 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
                     partner_id: serverState.partnerId,
                     message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
+                    livechat_member_type: "agent",
                 }),
-                Command.create({ guest_id: guestId_2 }),
+                Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,
@@ -383,8 +401,11 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
-                Command.create({ partner_id: serverState.partnerId }),
-                Command.create({ guest_id: guestId_1 }),
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,
@@ -393,8 +414,11 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
         {
             anonymous_name: "Visitor 12",
             channel_member_ids: [
-                Command.create({ partner_id: serverState.partnerId }),
-                Command.create({ guest_id: guestId_2 }),
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
             livechat_operator_id: serverState.partnerId,

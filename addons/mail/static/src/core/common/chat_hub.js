@@ -67,6 +67,10 @@ export class ChatHub extends Component {
         return isMobileOS();
     }
 
+    get show() {
+        return true;
+    }
+
     onDrop({ top, left }) {
         this.position.bottom = "unset";
         this.position.right = "unset";

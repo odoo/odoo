@@ -21,6 +21,9 @@ class WebClient(WebclientController):
         super()._process_request_for_internal_user(store, name, params)
         if name == "im_livechat.channel":
             store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
+        if name == "init_livechat":
+            request.env.user._init_store_data(store)
+        super()._process_request_for_internal_user(store, name, params)
 
     @classmethod
     def _process_request_for_all(self, store: Store, name, params):
