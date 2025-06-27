@@ -176,6 +176,7 @@ class AccountMoveLine(models.Model):
             'product_uom_id': self.product_uom_id.id,
             'product_uom_qty': self.quantity,
             'is_expense': True,
+            'analytic_distribution': self.analytic_distribution,
         }
 
     def _sale_get_invoice_price(self, order):
