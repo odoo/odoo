@@ -2,7 +2,6 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { Reactive } from "@web/core/utils/reactive";
-import { escape } from "@web/core/utils/strings";
 import { AddSnippetDialog } from "./add_snippet_dialog";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -176,7 +175,7 @@ export class SnippetModel extends Reactive {
                     content: snippetEl.children[0],
                     viewId: parseInt(snippetEl.dataset.oeSnippetId),
                     key: snippetEl.dataset.oeSnippetKey,
-                    thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
+                    thumbnailSrc: snippetEl.dataset.oeThumbnail,
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
                     isCustom: false,
                     label: snippetEl.dataset.oLabel,
