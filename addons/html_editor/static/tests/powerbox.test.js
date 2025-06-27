@@ -55,6 +55,7 @@ test("in iframe, desktop: should open the Powerbox on type `/`", async () => {
 test.tags("iframe", "mobile");
 test("in iframe, mobile: should open the Powerbox on type `/`", async () => {
     const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
+    await waitFor(".o-we-toolbar");
     expect("iframe").toHaveCount(2);
     await expectElementCount(".o-we-powerbox", 0);
     expect(getContent(el)).toBe("<p>ab[]</p>");
