@@ -1,6 +1,6 @@
 import { KeepLast } from "@web/core/utils/concurrency";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { isImageSupportedForStyle } from "@website/builder/plugins/image/replace_media_option";
+import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_media_option";
 
 export class AnimateOption extends BaseOptionComponent {
     static template = "website.AnimateOption";

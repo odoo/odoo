@@ -19,6 +19,8 @@ import { BuilderMany2One } from "./building_blocks/builder_many2one";
 import { ModelMany2Many } from "./building_blocks/model_many2many";
 import { Plugin } from "@html_editor/plugin";
 import { Img } from "./img";
+import { BuilderUrlPicker } from "./building_blocks/builder_urlpicker";
+import { BuilderFontFamilyPicker } from "./building_blocks/builder_fontfamilypicker";
 
 export class BuilderComponentPlugin extends Plugin {
     static id = "builderComponents";
@@ -27,7 +29,9 @@ export class BuilderComponentPlugin extends Plugin {
     resources = {
         builder_components: {
             BuilderContext,
+            BuilderFontFamilyPicker,
             BuilderRow,
+            BuilderUrlPicker,
             Dropdown,
             DropdownItem,
             BuilderButtonGroup,
