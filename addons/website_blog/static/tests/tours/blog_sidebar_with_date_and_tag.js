@@ -57,6 +57,7 @@ registerWebsitePreviewTour(
             content: "Click on 'Add some' to navigate to the backend view of the blog post.",
             trigger: ":iframe #edit-in-backend[href*='/odoo/website/blog.post/']",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Verify that we are redirected to the backend blog post form view.",
