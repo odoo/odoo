@@ -7,6 +7,7 @@ import { useService } from '@web/core/utils/hooks';
 import { markup } from '@odoo/owl';
 import { escape } from '@web/core/utils/strings';
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
+import { applyHistorySteps } from "@html_editor/utils/sanitize";
 
 export const subTaskDeleteConfirmationMessage = _t(
     `Deleting a task will also delete its associated sub-tasks. \
@@ -81,7 +82,10 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
                         body: _t("Restoring will replace the current content with the selected version. Any unsaved changes will be lost."),
                         confirm: () => {
                             const restoredData = {};
-                            restoredData[versionedFieldName] = html;
+                            restoredData[versionedFieldName] = applyHistorySteps(
+                                html,
+                                record.data[versionedFieldName]
+                            );
                             record.update(restoredData);
                             close();
                         },

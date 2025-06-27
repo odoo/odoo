@@ -42,3 +42,18 @@ export function instanceofMarkup(value) {
     }
     return value instanceof Markup;
 }
+
+export function applyHistorySteps(content, versionedContent) {
+    const historyStepIdMatch = versionedContent.match(/data-last-history-steps\s*=\s*"([^"]+)"/);
+    const versionMatch = versionedContent.match(/data-oe-version\s*=\s*"([^"]+)"/);
+    const htmlContent = content.toString() || "<div></div>";
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, "text/html");
+    if (historyStepIdMatch?.[1]) {
+        doc.body.firstChild.setAttribute("data-last-history-steps", historyStepIdMatch[1]);
+    }
+    if (versionMatch?.[1]) {
+        doc.body.firstChild.setAttribute("data-oe-version", versionMatch[1]);
+    }
+    return doc.body.innerHTML;
+}
