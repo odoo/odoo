@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BuilderList">
     <BuilderComponent>
-        <div class="w-100">
+        <div class="w-100 p-2 py-0">
             <t t-if="state.value?.length > 2">
                 <div class="o_we_table_wrapper">
                     <table t-ref="table">
@@ -51,10 +51,39 @@
                     </table>
                 </div>
             </t>
-            <button type="button" class="builder_list_add_item o-hb-btn btn btn-success d-block mt-2 ms-auto"
-                    t-on-click="addItem">
-                <t t-out="props.addItemTitle"/>
-            </button>
+            <div class="o-hb-select-wrapper" t-if="this.allRecords and this.allRecords.length" >
+                <Dropdown state="this.dropdown" menuClass="'o-hb-select-dropdown mt-1'">
+                    <button class="bl-dropdown-toggle o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret w-100 mx-auto"
+                        t-att-disabled="!this.availableRecords.length">
+                        <span class="w-100"
+                            t-att-title="!this.availableRecords.length ? `You don't have any record to add` : ''"
+                            t-att-style="!this.availableRecords.length ? 'pointer-events: auto; display: inline-block;' : ''">
+                            <t t-out="props.addItemTitle" />
+                        </span>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="this.availableRecords" t-as="item" t-key="item.id">
+                                <t t-foreach="Object.entries(props.itemShape).filter(([key, value]) => !value.endsWith('boolean'))" t-as="entry" t-key="entry[0]">
+                                    <div class="o-hb-select-dropdown-item d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable w-100 mx-auto"
+                                        style="max-height: 50vh;"
+                                        t-att-type="entry[1]"
+                                        t-att-name="entry[0]"
+                                        t-att-data-id="item.id"
+                                        t-on-click="addItem"
+                                    >
+                                        <t t-out="item[entry[0]]" />
+                                    </div>
+                                </t>
+                            </t>
+                    </t>
+                </Dropdown>
+            </div>
+            <t t-else="">
+                <button type="button" class="builder_list_add_item o-hb-btn btn btn-success d-block mt-1 mx-auto w-100"
+                        t-on-click="addItem">
+                    <t t-out="props.addItemTitle"/>
+                </button>
+            </t>
         </div>
     </BuilderComponent>
 </t>

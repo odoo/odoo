@@ -213,13 +213,18 @@
             unit="'MB'"
         />
     </BuilderRow>
-    <BuilderRow t-if="state.valueList" label="state.valueList.label">
-        <BuilderList
-            action="'setFormCustomFieldValueList'"
-            addItemTitle="state.valueList.addItemTitle"
-            itemShape="{ display_name: 'text', selected: state.valueList.checkType }"
-            default="{ display_name: state.valueList.defaultItemName, selected: false }"
-        />
+    <BuilderRow t-if="state.valueList">
+        <div class="d-flex flex-column w-100">
+            <p class="hb-row-label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">
+                <t t-out="state.valueList.title" />
+            </p>
+            <BuilderList
+                action="'setFormCustomFieldValueList'"
+                addItemTitle="state.valueList.addItemTitle"
+                itemShape="{ display_name: 'text', selected: state.valueList.checkType }"
+                default="{ display_name: state.valueList.defaultItemName, selected: false }"
+                records="state.valueList.availableRecords" />
+        </div>
     </BuilderRow>
     <BuilderRow label.translate="Visibility">
         <BuilderSelect preview="false" action="'setVisibility'">
