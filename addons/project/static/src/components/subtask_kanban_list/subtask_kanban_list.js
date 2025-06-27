@@ -2,7 +2,6 @@ import { Component, useState, markup } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
@@ -90,13 +89,10 @@ export class SubtaskKanbanList extends Component {
 
     async _onSubtaskCreateNameChanged(name) {
         if (name.trim() === "") {
-            this.notification.add(
-                markup(`<ul><li>${escape(_t("Display Name"))}</li></ul>`),
-                {
-                    title: _t("Invalid fields: "),
-                    type: "danger",
-                }
-            );
+            this.notification.add(markup`<ul><li>${_t("Display Name")}</li></ul>`, {
+                title: _t("Invalid fields: "),
+                type: "danger",
+            });
         } else {
             await this.orm.create("project.task", [{
                 display_name: name,
