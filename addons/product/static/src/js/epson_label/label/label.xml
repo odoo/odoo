@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="product.print_label">
+        <div class="d-flex justify-content-center align-items-center"
+            style="font-size: 30px; color: #000000; width: 512px">
+            <div class="d-flex flex-column align-items-center border border-dark rounded p-2"
+                t-att-style="'width: ' + this.labelSize.width + 'px; height: ' + this.labelSize.height + 'px;'">
+                <div class="fw-bold text-center w-100" style="font-size: 24px;">
+                    <t t-out="this.props.product?.name"/>
+                </div>
+                <div t-if="this.props.product?.barcode" class="mt-1">
+                    <img t-att-src="'/report/barcode/Code128/'+this.props.product.barcode"
+                        t-att-style="'width: ' + this.barcodeSize.width + 'px; height: ' + this.barcodeSize.height + 'px;'"
+                        alt="Barcode"/>
+                    <div class="text-center" style="font-size: 24px;">
+                        <t t-out="this.props.product.barcode"/>
+                    </div>
+                </div>
+                <div class="text-end w-100 fw-bold" style="font-size: 24px;">
+                    <t t-out="this.props.product?.price  "/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

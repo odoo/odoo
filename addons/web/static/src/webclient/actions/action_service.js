@@ -1313,11 +1313,25 @@ export function makeActionManager(env, router = _router) {
      */
     async function _executeReportAction(action, options) {
         const handlers = registry.category("ir.actions.report handlers").getAll();
+        let closeActWindow = true;
+        let handlerExecuted = false;
         for (const handler of handlers) {
             const result = await handler(action, options, env);
-            if (result) {
-                return result;
+            if (!result) {
+                continue;
             }
+            const { reportHandler, close_on_report_handler } = result;
+            if (reportHandler) {
+                handlerExecuted = true;
+            }
+            if (close_on_report_handler === false) {
+                closeActWindow = false;
+            }
+        }
+        if (handlerExecuted) {
+            return closeActWindow
+                ? doAction({ type: "ir.actions.act_window_close" }, { onClose: options.onClose })
+                : "";
         }
         if (action.report_type === "qweb-html") {
             return _executeReportClientAction(action, options);
