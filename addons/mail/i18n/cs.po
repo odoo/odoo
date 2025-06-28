@@ -1810,6 +1810,8 @@ msgid ""
 "Batch log cannot support attachments or tracking values on more than 1 "
 "document"
 msgstr ""
+"Dávkový protokol nepodporuje přílohy ani sledovací hodnoty u více než 1 "
+"dokumentu."
 
 #. module: mail
 #. odoo-javascript
@@ -6050,6 +6052,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"Místní část e-mailu použitá pro funkci \"Odpovědět\" k zachycení odpovědí, "
+"např. \"catchall\" v „catchall@example.com“."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -6057,6 +6061,8 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"Místní část e-mailu používaná pro Return-Path, která se používá při vrácení "
+"e-mailů, např. „bounce“ v „bounce@example.com“."
 
 #. module: mail
 #. odoo-javascript
@@ -7864,7 +7870,7 @@ msgstr "Nadřazená"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__parent_channel_id
 msgid "Parent Channel"
-msgstr ""
+msgstr "Nadřazený kanál"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__parent_id
@@ -7886,7 +7892,7 @@ msgstr "ID vlákna nadřazeného záznamu"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__parent_channel_id
 msgid "Parent channel"
-msgstr ""
+msgstr "Nadřazený kanál"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -8230,6 +8236,8 @@ msgid ""
 "Posting a message should be done on a business document. Use message_notify "
 "to send a notification to an user."
 msgstr ""
+"Zprávu je třeba zveřejnit v obchodním dokumentu. K odeslání oznámení "
+"uživateli použijte message_notify."
 
 #. module: mail
 #. odoo-python
@@ -8238,6 +8246,8 @@ msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
+"Při odeslání zprávy by měly být přílohy přijaty jako seznam seznamů nebo "
+"n-tic (přijato %(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -8246,6 +8256,8 @@ msgid ""
 "Posting a message should receive attachments records as a list of IDs "
 "(received %(aids)s)"
 msgstr ""
+"Při odeslání zprávy by měly být záznamy příloh přijaty jako seznam ID "
+"(přijato %(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -8254,6 +8266,8 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received "
 "%(pids)s)"
 msgstr ""
+"Při odeslání zprávy by měly být partneři přijati jako seznam ID (přijato "
+"%(pids)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -9639,6 +9653,8 @@ msgid ""
 "Showing %(result_count)s results out of %(total_count)s. Narrow your search "
 "to see more choices."
 msgstr ""
+"Zobrazeno %(result_count)s výsledků z %(total_count)s. Zúžte vyhledávání a "
+"zobrazte více možností."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
@@ -9846,6 +9862,8 @@ msgid ""
 "String formatted to represent a key with modifiers following this pattern: "
 "shift.ctrl.alt.key, e.g: truthy.1.true.b"
 msgstr ""
+"Řetězec formátovaný tak, aby představoval klíč s modifikátory podle tohoto "
+"vzoru: shift.ctrl.alt.key, např.: truthy.1.true.b"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__body
@@ -10042,6 +10060,8 @@ msgid ""
 "Template rendering should only be called with a list of IDs. Received "
 "“%(res_ids)s” instead."
 msgstr ""
+"Renderování šablony by mělo být voláno pouze se seznamem ID. Místo toho bylo"
+" přijato \"%(res_ids)s\"."
 
 #. module: mail
 #. odoo-python
@@ -10050,6 +10070,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
+"Renderování šablon podporuje pouze inline_template, qweb nebo qweb_view "
+"(view nebo raw); místo toho bylo přijato %(engine)s."
 
 #. module: mail
 #. odoo-javascript
@@ -10110,6 +10132,8 @@ msgid ""
 "The 'To-Do' activity type is used to create reminders from the top bar menu "
 "and the command palette. Consequently, it cannot be archived or deleted."
 msgstr ""
+"Typ aktivity „Úkol“ se používá k vytváření připomenutí z horní lišty nabídky"
+" a palety příkazů. Nelze jej proto archivovat ani smazat."
 
 #. module: mail
 #. odoo-javascript
@@ -10125,6 +10149,9 @@ msgid ""
 "Push-to-Talk functionality outside of this tab, we recommend downloading our"
 " %(anchor_start)sextension%(anchor_end)s."
 msgstr ""
+"Funkce Push-to-Talk je dostupná pouze v rámci záložky. Chcete-li funkci "
+"Push-to-Talk povolit i mimo tuto záložku, doporučujeme stáhnout naše "
+"%(anchor_start)srozšíření%(anchor_end)s."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat
@@ -10151,6 +10178,8 @@ msgid ""
 " \"%(plan_name)s\" because it is limited to the model "
 "\"%(activity_type_model)s\"."
 msgstr ""
+"Typ aktivity \"%(activity_type_name)s\" není kompatibilní s plánem "
+"\"%(plan_name)s\", protože je omezen na model \"%(activity_type_model)s\"."
 
 #. module: mail
 #. odoo-python
@@ -10233,6 +10262,8 @@ msgid ""
 "The following email templates could not be reset because their related source files could not be found:\n"
 "- %s"
 msgstr ""
+"Následující šablony e-mailů nebylo možné resetovat, protože nebylo možné najít související zdrojové soubory:\n"
+"- %s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__user_id
@@ -10279,6 +10310,8 @@ msgid ""
 "The message scheduled on %(model)s(%(id)s) with the following content could "
 "not be sent:%(original_message)s"
 msgstr ""
+"Zpráva naplánovaná na %(model)s(%(id)s) s následujícím obsahem nemohla být "
+"odeslána: %(original_message)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
@@ -10341,6 +10374,11 @@ msgid ""
 "\n"
 "Records: %(records)s, User: %(user)s"
 msgstr ""
+"Požadovanou operaci nelze dokončit z důvodu bezpečnostního omezení. Obraťte se prosím na správce systému.\n"
+"\n"
+"(Typ dokumentu: %(type)s, Operace: %(operation)s)\n"
+"\n"
+"Záznamy: %(records)s, Uživatel: %(user)s"
 
 #. module: mail
 #. odoo-python
@@ -12019,6 +12057,10 @@ msgid ""
 "                <br/>\n"
 "                Please try again later."
 msgstr ""
+"protože jste ji\n"
+"                v několika posledních minutach kontaktovali příliš mnohokrát.\n"
+"                <br/>\n"
+"                Zkuste to prosím znovu později."
 
 #. module: mail
 #. odoo-javascript
