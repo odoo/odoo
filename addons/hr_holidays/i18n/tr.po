@@ -450,7 +450,7 @@ msgstr "Bugün İzinli"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Accrual (Future):"
-msgstr ""
+msgstr "Tahakkuk (İleri tarih):"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
@@ -553,7 +553,7 @@ msgstr "Aktif Çalışan"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 msgid "Active but on leave"
-msgstr ""
+msgstr "Aktif fakat izinli"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_ids
@@ -648,7 +648,7 @@ msgstr "Tüm gün"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Allocated ("
-msgstr ""
+msgstr "Tahsis edilmiş ("
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
@@ -736,12 +736,14 @@ msgid ""
 "Allocation must be confirmed \"To Approve\" or validated once \"Second "
 "Approval\" in order to approve it."
 msgstr ""
+"Tahsisin onaylanabilmesi için “Onaylanacak” seçeneği seçilmeli veya “İkinci "
+"Onay” seçeneği ile doğrulanmalıdır."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation of %(leave_type)s: %(amount).2f %(unit)s to %(target)s"
-msgstr ""
+msgstr "%(leave_type)stahsisi: %(amount).2f %(unit)s şu kişiye: %(target)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__week_day
@@ -755,12 +757,16 @@ msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
 msgstr ""
+"Tahsis talebi, reddedilebilmesi için onaylanmalı, ikinci kez onaylanmalı "
+"veya doğrulanmalıdır."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
 msgstr ""
+"“Onaylanacak” durumuna sıfırlanabilmesi için tahsis durumu “Reddedildi” "
+"olmalıdır."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -795,11 +801,16 @@ msgid ""
 "- By Department: all employees of the specified department\n"
 "- By Employee Tag: all employees of the specific employee group category"
 msgstr ""
+"Toplu stek oluşturmak için izin verin:\n"
+"- Çalışana göre: belirli bir çalışan için \n"
+"- Şirkete göre: belirtilen şirketin tüm çalışaları \n"
+"- Departmana göre: belirtilen departmanın tüm çalışanları \n"
+"- Çalışan etiketine göre: belirli çalışan grubu kategorisindeki tüm çalışanlar"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__already_accrued
 msgid "Already Accrued"
-msgstr ""
+msgstr "Zaten birikmiş olan"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
@@ -810,7 +821,7 @@ msgstr "Tutar"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "An employee already booked time off which overlaps with this period:%s"
-msgstr ""
+msgstr "Bir çalışan, bu dönemle çakışan bir izin talebinde bulunmuştur: %s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -915,22 +926,22 @@ msgstr "ok simgesi"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__allocation
 msgid "At the allocation date"
-msgstr ""
+msgstr "Tahsis edilme tarihinde"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__accrued_gain_time__end
 msgid "At the end of the accrual period"
-msgstr ""
+msgstr "Tahsis döneminin sonunda"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__accrued_gain_time__start
 msgid "At the start of the accrual period"
-msgstr ""
+msgstr "Tahsis döneminin başında"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__year_start
 msgid "At the start of the year"
-msgstr ""
+msgstr "Senenin başında"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
@@ -967,6 +978,8 @@ msgid ""
 "Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
+"Toplu oluşturma sırasında otomatik izin bölünmesi, saat cinsinden bildirilen çakışan izinler için yönetilmez. Çakışan izinler:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -979,7 +992,7 @@ msgstr "Uygun"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__remaining_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__remaining_leaves
 msgid "Available Time Off Days"
-msgstr ""
+msgstr "Kullanılabilir İzin Günleri"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1093,7 +1106,7 @@ msgstr "İptal Edebilir"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__can_modify_value_type
 msgid "Can Modify Value Type"
-msgstr ""
+msgstr "Değer Türü Değiştirilebilir"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_reset
@@ -1121,7 +1134,7 @@ msgstr "İzinleri İptal Et"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
 msgid "Cancel Time Off Wizard"
-msgstr ""
+msgstr "İzin Sihirbazını İptal Et"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__cancel
@@ -1167,7 +1180,7 @@ msgstr "Devredilen Günlerin Geçerliliği"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry over"
-msgstr ""
+msgstr "Taşıma"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__maximum
@@ -1177,7 +1190,7 @@ msgstr "Azami sınırla devir"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Carry over:"
-msgstr ""
+msgstr "Taşıma:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -1213,11 +1226,15 @@ msgid ""
 "in the future. Please review this employee's leaves and adjust their "
 "allocation accordingly."
 msgstr ""
+"Bu çalışma programının değiştirilmesi, etkilenen çalışanların gelecekte "
+"kullanacağı izinler için yeterli izin hakkına sahip olmamasına neden olur. "
+"Lütfen bu çalışanın izinlerini inceleyin ve izin haklarını buna göre "
+"ayarlayın."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
 msgid "Choose a cap for this accrual."
-msgstr ""
+msgstr "Bu tahakkuk için bir üst sınır seçin."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_ids
@@ -1225,6 +1242,8 @@ msgid ""
 "Choose the Time Off Officers who will be notified to approve allocation or "
 "Time Off Request. If empty, nobody will be notified"
 msgstr ""
+"Tahsisatı veya İzin Talebini onaylamak için bilgilendirilecek İzin "
+"Yetkililerini seçin. Boş bırakılırsa, kimse bilgilendirilmez."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1320,6 +1339,8 @@ msgid ""
 "Count of time off requests for this time off type (approved or waiting for "
 "approbation) with a start date in the current year."
 msgstr ""
+"Bu izin türünde (onaylanmış veya onay bekleyen) izin taleplerinin sayısı, "
+"başlangıç tarihi mevcut yıl içinde olanlar."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__country_id
@@ -1576,6 +1597,9 @@ msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
 msgstr ""
+"Küresel izin günlerinde yapılan değişiklik nedeniyle, tahsisatınızdan %s gün"
+" ekstra izin günü düşülmüştür. Değişiklik yapılması gerekiyorsa lütfen bu "
+"izni gözden geçirin."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1585,6 +1609,9 @@ msgid ""
 "amount of available allocation and has been set to refused. Please review "
 "this leave."
 msgstr ""
+"Küresel izinlerdeki değişiklik nedeniyle, bu izin artık gerekli miktarda "
+"kullanılabilir tahsisata sahip değildir ve reddedilmiştir. Lütfen bu izni "
+"gözden geçirin."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1724,6 +1751,9 @@ msgid ""
 "\n"
 "        Not Allowed: User cannot request an allocation."
 msgstr ""
+"Ekstra Gün Talebi İzin Verilir: Kullanıcı kendisi için tahsis talebinde bulunabilir.\n"
+"\n"
+"        İzin verilmez: Kullanıcı tahsis talebinde bulunamaz."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__feb
@@ -1809,6 +1839,9 @@ msgid ""
 "given to the employee, due to a previous start date, on the first run of the"
 " plan. This can be manually edited."
 msgstr ""
+"Bu alan, planın ilk çalıştırılmasında Tahakkuk Tahsisi için önceki başlangıç"
+" tarihi nedeniyle çalışana verilen teorik süreyi içerir. Bu, manuel olarak "
+"düzenlenebilir."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__frequency
@@ -1849,13 +1882,13 @@ msgstr "İzin Oluştur"
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Generate time off allocations for multiple employees"
-msgstr ""
+msgstr "Birden fazla çalışan için izin tahsisatı oluşturun"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate time off for multiple employees"
-msgstr ""
+msgstr "Birden fazla çalışan için izin oluşturun"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2033,6 +2066,8 @@ msgid ""
 "If checked, the accrual period will be calculated according to the work "
 "days, not calendar days."
 msgstr ""
+"İşaretlendiğinde, tahakkuk süresi takvim günlerine göre değil, iş günlerine "
+"göre hesaplanacaktır."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allows_negative
@@ -2040,6 +2075,8 @@ msgid ""
 "If checked, users request can exceed the allocated days and balance can go "
 "in negative."
 msgstr ""
+"İşaretlendiğinde, kullanıcıların talepleri tahsis edilen gün sayısını "
+"aşabilir ve bakiye eksiye düşebilir."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__active_employee
@@ -2183,7 +2220,7 @@ msgstr "Ayrıl"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_increases_duration
 msgid "Leave Type Increases Duration"
-msgstr ""
+msgstr "İzin Türü Süreyi Artırır"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__left
@@ -2296,7 +2333,7 @@ msgstr "Maksimum Alınabilir"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
 msgid "Maximum Excess Amount"
-msgstr ""
+msgstr "Azami Fazla Meblağ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -2438,7 +2475,7 @@ msgstr "Takımım"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
 msgid "My Time"
-msgstr ""
+msgstr "İzinlerim"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
@@ -2570,7 +2607,7 @@ msgstr "Bu tahakkuk planı için herhangi bir kural oluşturulmamıştır."
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Nobody will be notified"
-msgstr ""
+msgstr "Kimseye haber verilmez"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__show_on_dashboard
@@ -2590,7 +2627,7 @@ msgstr "Hiçbiri"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
 msgid "None. Accrued time reset to 0"
-msgstr ""
+msgstr "Yok. Birikmiş izin sıfırlandı."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__no
@@ -2600,7 +2637,7 @@ msgstr "İzin verilmedi"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
 msgid "Notified Time Off Officer"
-msgstr ""
+msgstr "İzin Yöneticisi Bilgilendirildi"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__nov
@@ -2641,7 +2678,7 @@ msgstr "İzin Adedi"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
 msgid "Number of days of the time off request. Used in the calculation."
-msgstr ""
+msgstr "İzin talebinin gün sayısı. Hesaplamada kullanılır."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -2652,7 +2689,7 @@ msgstr "Hata adedi"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours
 msgid "Number of hours of the time off request. Used in the calculation."
-msgstr ""
+msgstr "İzin talebinin saat sayısı. Hesaplamada kullanılır."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
@@ -2681,7 +2718,7 @@ msgstr "Bugün İzinli"
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
 msgid "Officer: Manage all requests"
-msgstr ""
+msgstr "Yetkili: Tüm talepleri yönet"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2719,6 +2756,8 @@ msgid ""
 "Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
 " can approve or refuse allocation requests."
 msgstr ""
+"Yalnızca %s'in İzin Onaylayıcısı, izin memuru/sorumlusu veya yönetici tahsis"
+" taleplerini onaylayabilir veya reddedebilir."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2745,18 +2784,20 @@ msgstr ""
 msgid ""
 "Only a Time Off Officer or Manager can approve/refuse its own requests."
 msgstr ""
+"Yalnızca İzin Memuru veya Yönetici kendi taleplerini "
+"onaylayabilir/reddedebilir."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a manager can modify a canceled leave."
-msgstr ""
+msgstr "İptal edilen bir izni yalnızca yönetici değiştirebilir."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a time off Administrator can approve their own requests."
-msgstr ""
+msgstr "Yalnızca izin Yöneticisi kendi taleplerini onaylayabilir."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2765,6 +2806,8 @@ msgid ""
 "Only a time off Officer/Responsible or Administrator can approve or refuse "
 "allocation requests."
 msgstr ""
+"Yalnızca İzin Sorumlusu/Yöneticisi tahsis taleplerini onaylayabilir veya "
+"reddedebilir."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2839,7 +2882,7 @@ msgstr "Yazdır"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to cancel an approved time off"
-msgstr ""
+msgstr "Onaylanmış izin süresini iptal etmek için bir neden belirtin"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -2865,6 +2908,7 @@ msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
 msgstr ""
+"İzin başvurusu yaparken izin süresine resmi tatiller de dahil edilmelidir."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3110,13 +3154,13 @@ msgstr "İkinci Ay Gün Görüntüleme"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Second approval request for %(allocation_type)s"
-msgstr ""
+msgstr "%(allocation_type)s için ikinci onay talebi"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Second approval request for %(leave_type)s"
-msgstr ""
+msgstr "%(leave_type)s için ikinci onay talebi"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3159,6 +3203,8 @@ msgid ""
 "Select the user responsible for approving \"Time Off\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
+"Bu çalışanın “İzin”ini onaylamaktan sorumlu kullanıcıyı seçin.\n"
+"Boş ise, onaylama işlemi bir Yönetici veya Onaylayıcı tarafından yapılır (ayarlar/kullanıcılar bölümünde belirlenir)."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__sep
@@ -3212,6 +3258,7 @@ msgstr "Hastalık İzni"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Some leaves cannot be linked to any allocation. To see those leaves,"
 msgstr ""
+"Bazı izinler hiçbir tahsisatla ilişkilendirilemez. Bu izinleri görmek için "
 
 #. module: hr_holidays
 #. odoo-python
@@ -3229,6 +3276,8 @@ msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
 "                Leave empty if this accrual plan can be used with any Time Off Type."
 msgstr ""
+"Bu tahakkuk planının yalnızca bu İzin Türü ile mi kullanılabileceğini belirtin.\n"
+"                Bu tahakkuk planı herhangi bir İzin Türü ile kullanılabiliyorsa boş bırakın."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__transition_mode
@@ -3371,6 +3420,7 @@ msgstr ""
 msgid ""
 "The Start Date of the Validity Period must be anterior to the End Date."
 msgstr ""
+"Geçerlilik Süresinin Başlangıç Tarihi, Bitiş Tarihinden önce olmalıdır."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
@@ -3379,6 +3429,9 @@ msgid ""
 "This field defines the number of days, months or years after which accrual "
 "is used."
 msgstr ""
+"Tahakkuk, tahsis başlangıç tarihinden itibaren belirli bir süre sonra "
+"başlar. Bu alan, tahakkukun kullanılacağı gün, ay veya yıl sayısını "
+"tanımlar."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3387,6 +3440,8 @@ msgid ""
 "The allocation requirement of a time off type cannot be changed once leaves "
 "of that type have been taken. You should create a new time off type instead."
 msgstr ""
+"Bir izin türünün tahsis gereksinimi, o türden izinler kullanıldıktan sonra "
+"değiştirilemez. Bunun yerine yeni bir izin türü oluşturmalısınız."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3407,6 +3462,8 @@ msgid ""
 "The distinction between working time (ex. Attendance) and absence (ex. "
 "Training) will be used in the computation of Accrual's plan rate."
 msgstr ""
+"Çalışma süresi (ör. İşe devam) ile devamsızlık (ör. Eğitim) arasındaki "
+"ayrım, Tahakkuk'un plan oranının hesaplanmasında kullanılacaktır."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_duration_check
@@ -3417,7 +3474,7 @@ msgstr "Süre 0'dan büyük olmalıdır."
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
 msgid "The employee no longer works in the company"
-msgstr ""
+msgstr "Söz konusu çalışan artık şirkette çalışmamaktadır"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3436,6 +3493,8 @@ msgid ""
 "The leaves planned in the future are exceeding the maximum value of the allocation.\n"
 "                It will not be possible to take all of them."
 msgstr ""
+"Geleceğe yönelik olarak planlanan izinler, tahsisatın azami değerini aşıyor.\n"
+"                Hepsini almak mümkün olmayacak."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_type_check_negative
@@ -3452,6 +3511,7 @@ msgid ""
 "The number of carried over days that will expire on "
 "carried_over_days_expiration_date"
 msgstr ""
+"Taşınan günlerin, taşınan_günler_sona_erme_tarihinde sona erecek olan sayısı"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3465,6 +3525,8 @@ msgstr "Belirtilen İzin türüne her dönem eklenecek saat/gün sayısı"
 msgid ""
 "The request start date must be before or equal to the request end date."
 msgstr ""
+"Talep başlangıç tarihi, talep bitiş tarihinden önce veya aynı tarih "
+"olmalıdır."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_mandatory_day_date_from_after_day_to
@@ -3475,6 +3537,8 @@ msgstr "Başlangıç tarihi, bitiş tarihinden daha önce olmalıdır."
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
 msgid "The start date must be before or equal to the end date."
 msgstr ""
+"Başlangıç tarihi, bitiş tarihinden önce veya bitiş tarihi ile aynı "
+"olmalıdır."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
@@ -3483,6 +3547,9 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"Bir tahsis talebi oluşturlduğunda, durum 'Onaylanacak' olarak görünür. \n"
+"Bir tahsis talebi yönetici tarafından reddedildiğinde, durum 'Reddedildi' olarak görünür.\n"
+"Bir tahsis talebi yönetici tarafından onaylandığında, durum 'Onaylandı' olarak görünür."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
@@ -3492,6 +3559,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
+"Bir izin talebi oluşturulduğunda, durum 'Gönderilecek' olarak görünür.\n"
+"İzin talebi kullanıcı tarafından onaylandığında, durum 'Onaylanacak' olarak görünür.\n"
+"İzin talebi yönetici tarafından reddedildiğinde, durum 'Reddedildi' olarak görünür.\n"
+"İzin talebi yönetici tarafından kabul edildiğinde, durum 'Onaylandı' olarak görünür."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3503,7 +3574,7 @@ msgstr "İzin otomatik olarak onaylandı"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "The time off has been cancelled: %s"
-msgstr ""
+msgstr "İzin iptal edildi: %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -3526,7 +3597,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "There is no valid allocation to cover that request."
-msgstr ""
+msgstr "Bu talebi karşılayacak geçerli bir tahsisat yoktur."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3536,6 +3607,10 @@ msgid ""
 "to the days allocated to the employee. If you need to change the "
 "configuration of the allocation, delete and create a new one."
 msgstr ""
+"Bu tahsisat zaten bir kez gerçekleştirilmiş olduğundan, herhangi bir "
+"değişiklik çalışana tahsis edilen günlere etki etmeyecektir. Tahsisatın "
+"yapılandırmasını değiştirmeniz gerekiyorsa, silin ve yeni bir tane "
+"oluşturun."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -3550,6 +3625,8 @@ msgid ""
 "This area is automatically filled by the user who validate the time off with"
 " second level (If time off type need second validation)"
 msgstr ""
+"Bu alan, ikinci düzeyde izin onaylayan kullanıcı tarafından otomatik olarak "
+"doldurulur (izin türü ikinci onay gerektiriyorsa)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
@@ -3564,11 +3641,13 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
 msgstr ""
+"Bu alan, ikinci düzeyde izin onaylayan kullanıcı tarafından otomatik olarak "
+"doldurulur (izin türü ikinci onay gerektiriyorsa)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
-msgstr ""
+msgstr "Bu alan, tahakkukun sona erdiği zaman birimini tanımlar."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -3591,7 +3670,7 @@ msgstr "Mevcut durumda bu değişikliğe izin verilmez."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "This time off cannot be cancelled."
-msgstr ""
+msgstr "Bu izin iptal edilemez."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3695,6 +3774,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
+"İzinden Sorumlu Yetkililer, çalışanlara izin günleri tahsis eder (örn. ücretli izin).<br>\n"
+"                Çalışanlar, İzinden Sorumlu Yetkililerden tahsisat talep eder (örneğin, dinlenme günleri)."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3860,6 +3941,8 @@ msgid ""
 "Time off request state must be \"Refused\" or \"Cancelled\" in order to be "
 "reset to \"Confirmed\"."
 msgstr ""
+"İzin talebi durumunun “Onaylandı” olarak sıfırlanabilmesi için ‘Reddedildi’ "
+"veya 'İptal Edildi' durumunda olması gerekir."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz
@@ -3953,6 +4036,8 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
+"Birkaç kayıt eklemeyi deneyin veya arama çubuğunda etkin bir filtre "
+"olmadığından emin olun."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__tue
@@ -4092,6 +4177,8 @@ msgid ""
 "Validity End date has been updated because Employee no longer works in the "
 "company"
 msgstr ""
+"Söz konusu çalışan artık şirkette çalışmadığından geçerlilik bitiş tarihi "
+"güncellenmiştir."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -4189,6 +4276,8 @@ msgid ""
 "When the field is checked the total amount accrued each year will be capped "
 "at the specified amount"
 msgstr ""
+"Bu alan işaretlendiğinde her yıl tahakkuk eden toplam tutar, belirtilen "
+"tutarla sınırlandırılacaktır."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -4242,6 +4331,9 @@ msgid ""
 "\n"
 "              No Limit: Time Off requests can be taken without any prior allocation."
 msgstr ""
+"Evet: İzin taleplerinin geçerli bir tahsisi olması gerekir.\n"
+"\n"
+"              Sınır Yok: İzin talepleri önceden tahsis gerekmeksizin kabul edilebilir."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4254,7 +4346,7 @@ msgstr "Zorunlu Çalışma Günleri'nde izin istemenize müsaade edilmez"
 msgid ""
 "You can define a period of time where the days carried over will be "
 "available"
-msgstr ""
+msgstr "Devreden günlerin kullanılabileceği bir süre tanımlayabilirsiniz"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4310,14 +4402,14 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 msgid ""
 "You cannot have a cap on accrued time without setting a maximum amount."
-msgstr ""
+msgstr "Azami miktar belirlenmeden birikmiş izinlere sınır konulamaz."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_valid_yearly_cap_value
 msgid ""
 "You cannot have a cap on yearly accrued time without setting a maximum "
 "amount."
-msgstr ""
+msgstr "Azami miktar belirlenmeden yıllık birikmiş izinlere sınır konulamaz."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4328,6 +4420,10 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
+"Bu izin türünde bir veya daha fazla izin günü resmi tatillerle"
+"                        çakıştığı için ‘Resmi Tatil Dahil’ ayarını "
+"değiştiremezsiniz, çünkü bu değişiklik söz konusu çalışanların izin "
+"bakiyelerini etkileyecektir."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4335,7 +4431,7 @@ msgstr ""
 msgid ""
 "You cannot reduce the duration below the duration of leaves already taken by"
 " the employee."
-msgstr ""
+msgstr "Çalışanın halihazırda kullandığı izin süresinin altına inemezsiniz."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4344,6 +4440,9 @@ msgid ""
 "You cannot refuse this allocation request since the employee has already "
 "taken leaves for it. Please refuse or delete those leaves first."
 msgstr ""
+"Çalışan bu izin talebine bağlı olarak zaten izin kullanmış olduğundan, bu "
+"tahsis talebini reddedemezsiniz. Lütfen önce söz konusu izinleri reddedin "
+"veya silin."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4365,6 +4464,8 @@ msgid ""
 "You must be either %s's Time Off Approver or Time off Administrator to "
 "validate this allocation request."
 msgstr ""
+"Bu tahsis talebini onaylamak için %s'nin İzin Onayı Sorumlusu veya İzin "
+"Yöneticisi olmanız gerekir."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4408,6 +4509,9 @@ msgid ""
 "%s\n"
 "Attempting to double-book your time off won't magically make your vacation 2x better!\n"
 msgstr ""
+"Önceden bu dönemle çakışan bir izin talebinde bulunmuşsunuz:\n"
+"%s\n"
+"Aynı dönem için iki kez izin almaya çalışmak tatilinizi sihirli bir şekilde iki kat daha iyi hale getirmeyecektir!\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4431,7 +4535,7 @@ msgstr "İzinleriniz"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 msgid "Your time off has been cancelled."
-msgstr ""
+msgstr "İzniniz iptal edilmiştir."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4479,7 +4583,7 @@ msgstr "Türe göre"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "can be used before the allocation expires."
-msgstr ""
+msgstr "tahsis süresi dolmadan önce kullanılabilir."
 
 #. module: hr_holidays
 #. odoo-javascript

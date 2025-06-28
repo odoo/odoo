@@ -501,6 +501,16 @@ msgid ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    שלום <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"   אני צמח להודיע כי סיימנו את הפרויקט בהצלחהt \"<strong t-out=\"object.name or ''\"> שדרוגים</strong>\".\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">קיבלת את המייל הזה מאחר והפרויקט עבר לשלב  <b t-out=\"object.stage_id.name or ''\"> בוצע</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -519,6 +529,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    שלום<t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
+"   תודה שפנית אילינו. אנחנו מודים לך על ההתענינות  במוצר/שירות שלנו.<br/>\n"
+"   הצוות שלנו לומד את בקשתך וישלח לך מענה לכתובת המייל במהירה.<br/>\n"
+"    עד למענה אם יש לך שאילות נוספות או התיחסות, אל תהסס לפנות אילינו. אנחנו כאן לשירותך.<br/><br/>\n"
+"    אנחנו מודים לך על ההמתנה.<br/>\n"
+"    בברכה,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -649,6 +672,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">בקשה למשוב תישלח מיד עם המעבר המשימה לשלב שהוגדר תבנית מייל למשוב \".</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">בקשות למשוב ישלחו כל עוד המשימה נמצאת בשלב שהגדר תבנית מייל למשוב .</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -820,6 +848,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"תוכניות פעילות משמשות להקצאת רשימת פעילויות בכמה קליקים בלבד\n"
+"                    (לדוגמה: \"דוח התקדמות\", \"פגישת תיאום קצרה (יומית)\" וכד)."
 
 #. module: project
 #. odoo-javascript
@@ -866,6 +896,8 @@ msgid ""
 "Add project-specific property fields on tasks to customize your project "
 "management process."
 msgstr ""
+"הוסף למשימות מאפיינים ייחודיים לפרויקט כדי להתאים אותן לאופן ניהול הפרויקט "
+"שלך."
 
 #. module: project
 #. odoo-javascript
@@ -1181,6 +1213,9 @@ msgid ""
 " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
 msgstr ""
+"שנה את המצב אוטומטית כאשר הלקוח משיב למשוב על שלב זה.\n"
+" * משוב חיובי יעדכן אתהמצב \"מאושר\" ' (נקודה ירוקה).\n"
+" * משוב ניטרלי או גרוע יעביר את מצב הקנבן ל- ,בקשת שינוי\"' (נקודה צהובה).\n"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -1188,6 +1223,8 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
+"כאשר משימה מגיעה לשלב מסוים בפרויקט, מייל יישלח ללקוחות באופן אוטומטי, "
+"באמצעות הגדרת התבנית בשלב הזה"
 
 #. module: project
 #. odoo-javascript
@@ -1329,6 +1366,8 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"בחר<b>שם</b>לפרויקט שלך.<i>זה יכול להיות כל מה שתרצו: שם של לקוח,\n"
+"של מוצר, של צוות, של אתר בנייה וכו'.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1357,7 +1396,7 @@ msgstr "סגור את רשימת תתי המשימות "
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_depend_on_count
 msgid "Closed Depending on Tasks"
-msgstr ""
+msgstr "סגור משימות תלויות"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1409,6 +1448,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
+"אסוף משוב מהלקוחות על ידי שליחת בקשת משוב כשהמשימה מגיעה לשלב מסוים. לשם כך, הגדר תבנית מייל משוב בשלב המתאים .\n"
+"דירוג בעת שינוי שלב: מייל יישלח אוטומטית כאשר המשימה מגיעה לשלב שבו מוגדרת תבנית מייל המשוב. \n"
+"משוב תקופתי: מייל יישלח אוטומטית במרווחי זמן קבועים, כל עוד המשימה נשארת בשלב שבו מוגדרת תבנית מייל המשוב."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1422,6 +1464,8 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
+"תקשר עם הלקוחות דרך המשימה באמצעות שער הדוא\"ל. צרף עיצובים של לוגו למשימה, כדי שהמידע יעבור בצורה רציפה מ־\n"
+"     המעצבים לעובדים שמדפיסים את החולצה."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -1540,7 +1584,7 @@ msgstr "צור פרויקט"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "צור  משימות לתוכנית פעילות "
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -2017,6 +2061,8 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
+"לכל משתמש צריך להיות לפחות שלב אישי אחד.צור שלב חדש שאליו ניתן להעביר משימות"
+" לאחר שהמשימות שנבחרו יימחקו."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit
@@ -3684,7 +3730,7 @@ msgstr ""
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
 msgid "Project status - {{ object.name }}"
-msgstr ""
+msgstr "סטטוס הפרויקט - {{ object.name }}"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -4254,7 +4300,7 @@ msgstr "שתף משימה"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__show_display_in_project
 msgid "Show Display In Project"
-msgstr ""
+msgstr "איך מידע מוצג בפרויקט"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4311,6 +4357,9 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"מיין את המשימות שלך לפי ספרינטים (פרקי זמן קצרים) באמצעות אבני דרך, תגיות או"
+" מאפיין ייעודי.בסיום כל ספרינט, בחר את המשימות שנותרו ברשימה והעבר את כולן "
+"לספרינט הבא על ידי עריכת אבן הדרך, התגית או המאפיין."
 
 #. module: project
 #. odoo-javascript
@@ -4352,7 +4401,7 @@ msgstr "שלב"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Stage (Burndown Chart)"
-msgstr ""
+msgstr "שלב (Burndown גרף)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -4378,7 +4427,7 @@ msgstr "שלב :%s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Starred Tasks"
-msgstr ""
+msgstr "משימות מסומנות בכוכב"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
@@ -4397,7 +4446,7 @@ msgstr "סטטוס"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_stage_state_selection/project_task_stage_with_state_selection.js:0
 msgid "State readonly"
-msgstr ""
+msgstr "מצב לקריאה בלבד"
 
 #. module: project
 #. odoo-javascript
