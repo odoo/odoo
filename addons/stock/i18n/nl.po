@@ -693,7 +693,7 @@ msgstr "<span class=\"o_stat_text\">Volgende verplaatsing</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">On Hand</span>"
-msgstr "<span class=\"o_stat_text\">Beschikbare voorraad</span>"
+msgstr "<span class=\"o_stat_text\">Aanwezige voorraad</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -747,7 +747,7 @@ msgstr "<span>OBTRETU</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span>On Hand: </span>"
-msgstr "<span>Beschikbare voorraad: </span>"
+msgstr "<span>Aanwezige voorraad: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -3530,7 +3530,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Verwachte aantal (berekend als: Fysiek beschikbare voorraad - Uitgaand + Inkomend). \n"
+"Verwachte aantal (berekend als: Fysiek aanwezige voorraad - Uitgaand + Inkomend). \n"
 "Bij gebruik van een enkele voorraadlocatie, omvat dit de goederen opgeslagen in deze locatie, of één van de onderliggende locaties. \n"
 "Bij gebruik van een enkel magazijn, omvat dit de goederen die in de voorraadlocatie van dit magazijn zijn opgeslagen, of één van de onderliggende locaties. \n"
 "Anders omvat dit goederen die zijn opgeslagen in een andere voorraadlocatie van het type 'intern'."
@@ -4547,7 +4547,7 @@ msgstr "Voorraadbeheer"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Inventory On Hand"
-msgstr "Beschikbare voorraad"
+msgstr "Aanwezige voorraad"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
@@ -5631,7 +5631,7 @@ msgstr "Nieuwe beweging: %(product)s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__new_quantity
 msgid "New Quantity on Hand"
-msgstr "Nieuwe beschikbare voorraad"
+msgstr "Nieuwe aanwezige voorraad"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
@@ -5676,7 +5676,7 @@ msgstr "Volgende overdrachten"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
 msgid "Next date the On Hand Quantity should be counted."
-msgstr "De volgende datum waarop de beschikbare voorraad moet worden geteld."
+msgstr "De volgende datum waarop de aanwezige voorraad moet worden geteld."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -5708,7 +5708,7 @@ msgstr "Geen bericht"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "No Stock On Hand"
-msgstr "Geen beschikbare voorraad"
+msgstr "Geen aanwezige voorraad"
 
 #. module: stock
 #. odoo-javascript
@@ -5946,14 +5946,14 @@ msgstr "Kantoorstoel"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
 msgid "On Hand"
-msgstr "Beschikbare voorraad"
+msgstr "Aanwezige voorraad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__product_qty
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
-msgstr "Beschikbare voorraad"
+msgstr "Aanwezige voorraad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -5966,13 +5966,13 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
-"Beschikbare voorraad die niet is gereserveerd op een overdracht, in de "
+"Aanwezige voorraad die niet is gereserveerd op een overdracht, in de "
 "standaard maateenheid van het product"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "On hand:"
-msgstr "Beschikbare voorraad:"
+msgstr "Aanwezige voorraad:"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
@@ -7283,7 +7283,7 @@ msgstr "Veelvoud van aantal"
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity On Hand"
-msgstr "Beschikbare voorraad"
+msgstr "Aanwezige voorraad"
 
 #. module: stock
 #. odoo-javascript
@@ -9088,9 +9088,9 @@ msgid ""
 "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
 "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location.If there is no stock available, the system will try to find a  rule to bring the products in the source location."
 msgstr ""
-"Uit voorraad nemen: de producten worden uit de beschikbare voorraad van de bronlocatie gehaald.\n"
-"Een andere regel activeren: het systeem zal proberen een voorraadregel te vinden om de producten naar de bronlocatie te brengen. De beschikbare voorraad wordt genegeerd.\n"
-"Uit voorraad nemen, indien niet beschikbaar, een andere regel activeren: de producten worden uit de beschikbare voorraad van de bronlocatie genomen. Als er geen voorraad beschikbaar is, probeert het systeem een regel te vinden om de producten naar de bronlocatie te brengen."
+"Uit voorraad nemen: de producten worden uit de aanwezige voorraad van de bronlocatie gehaald.\n"
+"Een andere regel activeren: het systeem zal proberen een voorraadregel te vinden om de producten naar de bronlocatie te brengen. De aanwezige voorraad wordt genegeerd.\n"
+"Uit voorraad nemen, indien niet beschikbaar, een andere regel activeren: de producten worden uit de aanwezige voorraad van de bronlocatie genomen. Als er geen voorraad beschikbaar is, probeert het systeem een regel te vinden om de producten naar de bronlocatie te brengen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_allocation
