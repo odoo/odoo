@@ -42,7 +42,7 @@ class TestWebsiteSaleStockReorderFromPortal(HttpCase, WebsiteSaleStockCommon):
         order.message_subscribe(user_admin.partner_id.ids)
 
         cls._add_product_qty_to_wh(cls.available_product.id, 10, 8)
-        cls._add_product_qty_to_wh(cls.partially_available_product.id, 1.0, 8)
+        cls._add_product_qty_to_wh(cls.partially_available_product.id, 3, 8)
 
     def test_website_sale_stock_reorder_from_portal_stock(self):
         self.start_tour("/", 'website_sale_stock_reorder_from_portal', login='admin')
