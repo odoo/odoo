@@ -14,7 +14,10 @@
     'installable': True,
     'assets': {
         'point_of_sale._assets_pos': [
-            'pos_stripe/static/**/*',
+            'pos_stripe/static/src/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'pos_stripe/static/tests/unit/data/**/*'
         ],
     },
     'author': 'Odoo S.A.',

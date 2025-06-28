@@ -1,225 +1,214 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { createRelatedModels } from "@point_of_sale/app/models/related_models";
+import { getRelatedModelsInstance } from "../data/get_model_definitions";
+import { makeMockServer } from "@web/../tests/web_test_helpers";
 
 describe("models with backlinks", () => {
     describe("many2one and one2many field relations to other models", () => {
-        const getModels = () =>
-            createRelatedModels({
-                "product.product": {
-                    category_id: { type: "many2one", relation: "product.category" },
-                },
-                "product.category": {
-                    product_ids: {
-                        type: "one2many",
-                        relation: "product.product",
-                        inverse_name: "category_id",
-                    },
-                },
-            }).models;
-
-        test("create operation", () => {
-            const models = getModels();
-            const category = models["product.category"].create({});
-            const product = models["product.product"].create({ category_id: category });
-            expect(product.category_id).toBe(category);
-            expect(category.product_ids).toInclude(product);
+        test("create operation", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const category = models["pos.category"].create({});
+            const product = models["product.template"].create({ pos_categ_ids: [category] });
+            expect(product.pos_categ_ids).toInclude(category);
+            expect(category.backLink("product.template.pos_categ_ids")).toInclude(product);
         });
-        test("read operation 1", () => {
-            const models = getModels();
-            const c1 = models["product.category"].create({});
-            const c2 = models["product.category"].create({});
-            const p1 = models["product.product"].create({ category_id: c1 });
-            const p2 = models["product.product"].create({ category_id: c1 });
-            const p3 = models["product.product"].create({ category_id: c2 });
+        test("read operation 1", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({});
+            const p1 = models["product.template"].create({ pos_categ_ids: [c1] });
+            const p2 = models["product.template"].create({ pos_categ_ids: [c1] });
+            const p3 = models["product.template"].create({ pos_categ_ids: [c2] });
 
             // Test reading back the categories directly
-            const readC1 = models["product.category"].read(c1.id);
+            const readC1 = models["pos.category"].read(c1.id);
             expect(readC1).toEqual(c1);
 
-            const readP1 = models["product.product"].read(p1.id);
+            const readP1 = models["product.template"].read(p1.id);
             expect(readP1).toEqual(p1);
 
-            // Test the one2many relationship from category to products
-            expect(readC1.product_ids).toInclude(p1);
-            expect(readC1.product_ids).toInclude(p2);
-
             // Test the many2one relationship from products to category
-            expect(readP1.category_id).toEqual(c1);
+            expect(readP1.pos_categ_ids).toEqual([c1]);
 
             // Additional checks for completeness
-            const readMany = models["product.product"].readMany([p2.id, p3.id]);
+            const readMany = models["product.template"].readMany([p2.id, p3.id]);
             expect(readMany).toEqual([p2, p3]);
 
-            const readNonExistent = models["product.product"].read(9999);
+            const readNonExistent = models["product.template"].read(9999);
             expect(readNonExistent).toBe(undefined);
 
-            const readNonExistentC = models["product.category"].read(9999);
+            const readNonExistentC = models["pos.category"].read(9999);
             expect(readNonExistentC).toBe(undefined);
         });
 
-        test("update operation, many2one", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const p2 = models["product.product"].create({});
+        test("update operation, many2one", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const p1 = models["product.template"].create({});
             const c1 = models["product.category"].create({});
 
-            p1.update({ category_id: c1 });
-            expect(p1.category_id).toBe(c1);
-            expect(c1.product_ids).toInclude(p1);
-            expect(c1.product_ids).not.toInclude(p2);
+            p1.update({ categ_id: c1 });
+            expect(p1.categ_id).toBe(c1);
         });
 
-        test("update operation, one2many", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const p2 = models["product.product"].create({});
-            const c1 = models["product.category"].create({});
+        test("update operation, one2many", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const l1 = models["pos.order.line"].create({});
+            const l2 = models["pos.order.line"].create({});
+            const order1 = models["pos.order"].create({});
 
-            c1.update({ product_ids: [["link", p1, p2]] });
-            expect(c1.product_ids).toInclude(p1);
-            expect(c1.product_ids).toInclude(p2);
-            expect(p1.category_id).toBe(c1);
+            order1.update({ lines: [["link", l1, l2]] });
+            expect(order1.lines).toInclude(l1);
+            expect(order1.lines).toInclude(l2);
+            expect(l1.order_id).toBe(order1);
         });
 
-        test("update operation, unlink many2one", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({ category_id: {} });
-            const c1 = p1.category_id;
+        test("update operation, unlink many2one", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const o1 = models["pos.order"].create({ lines: [] });
+            const l1 = models["pos.order.line"].create({
+                order_id: o1,
+            });
 
-            expect(c1.product_ids).toEqual([p1]);
+            expect(l1.order_id).toEqual(o1);
 
-            p1.update({ category_id: undefined });
-            expect(p1.category_id).toBe(undefined);
-            expect(c1.product_ids).not.toInclude(p1);
+            o1.update({ lines: [] });
+            expect(l1.order_id).toBe(undefined);
         });
 
-        test("update operation, unlink one2many", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const c1 = models["product.category"].create({});
+        test("update operation, unlink one2many", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const o1 = models["pos.order"].create({ lines: [] });
+            const l1 = models["pos.order.line"].create({
+                order_id: o1,
+            });
 
-            c1.update({ product_ids: [["link", p1]] });
-            expect(c1.product_ids).toInclude(p1);
-            expect(p1.category_id).toBe(c1);
+            o1.update({ lines: [["link", l1]] });
+            expect(o1.lines).toInclude(l1);
+            expect(l1.order_id).toBe(o1);
 
-            c1.update({ product_ids: [["unlink", p1]] });
-            expect(c1.product_ids).not.toInclude(p1);
-            expect(p1.category_id).toBe(undefined);
+            o1.update({ lines: [["unlink", l1]] });
+            expect(o1.lines).not.toInclude(l1);
+            expect(l1.order_id).toBe(undefined);
         });
 
-        test("update operation, Clear one2many", () => {
-            const models = getModels();
-            const category = models["product.category"].create({});
-            models["product.product"].create({ name: "Product 1", category_id: category });
-            models["product.product"].create({ name: "Product 2", category_id: category });
+        test("update operation, Clear one2many", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const o1 = models["pos.order"].create({});
+            const l1 = models["pos.order.line"].create({
+                order_id: o1,
+            });
+            o1.update({ lines: [["link", l1]] });
+            expect(o1.lines).toInclude(l1);
+            expect(l1.order_id).toBe(o1);
 
-            models["product.category"].update(category, { product_ids: [["clear"]] });
-            const updatedCategory = models["product.category"].read(category.id);
-            expect(updatedCategory.product_ids).toHaveLength(0);
+            o1.update({ lines: [["unlink", l1]] });
+            expect(o1.lines).not.toInclude(l1);
+            expect(l1.order_id).toBe(undefined);
         });
 
-        test("update operation, Clear many2one", () => {
-            const models = getModels();
-            const category = models["product.category"].create({});
-            const product = models["product.product"].create({ category_id: category });
+        test("update operation, Clear many2one", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const o1 = models["pos.order"].create({ lines: [] });
+            models["pos.order.line"].create({
+                order_id: o1,
+            });
 
-            models["product.product"].update(product, { category_id: undefined });
-            const updatedCategory = models["product.category"].read(category.id);
-            expect(updatedCategory.product_ids).toHaveLength(0);
+            models["pos.order"].update(o1, { lines: [] });
+            expect(o1.lines).toHaveLength(0);
         });
 
-        test("delete operation, one2many item", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const p2 = models["product.product"].create({});
-            const c1 = models["product.category"].create({});
+        test("delete operation, one2many item", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const l1 = models["pos.order.line"].create({});
+            const l2 = models["pos.order.line"].create({});
+            const o1 = models["pos.order"].create({});
 
-            c1.update({ product_ids: [["link", p1, p2]] });
-            expect(c1.product_ids).toInclude(p1);
+            o1.update({ lines: [["link", l1, l2]] });
+            expect(o1.lines).toInclude(l1);
 
-            p1.delete();
-            expect(models["product.product"].read(p1.id)).toBe(undefined);
-            expect(c1.product_ids).not.toInclude(p1);
+            l1.delete();
+            expect(models["pos.order.line"].read(l1.id)).toBe(undefined);
+            expect(o1.lines).not.toInclude(l1);
         });
 
-        test("delete operation, many2one item", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const c1 = models["product.category"].create({});
+        test("delete operation, many2one item", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const o1 = models["pos.order"].create({});
+            const l1 = models["pos.order.line"].create({});
 
-            p1.update({ category_id: c1 });
-            expect(c1.product_ids).toInclude(p1);
+            o1.update({ lines: [["link", l1]] });
+            expect(l1.order_id).toBe(o1);
 
-            c1.delete();
-            expect(models["product.category"].read(c1.id)).toBe(undefined);
-            expect(p1.category_id).toBe(undefined);
+            l1.delete();
+            expect(models["pos.order.line"].read(l1.id)).toBe(undefined);
+            expect(o1.lines).not.toInclude(l1);
         });
     });
     describe("many2one/one2many field relations to own model", () => {
-        const getModels = () =>
-            createRelatedModels({
-                "product.category": {
-                    parent_id: { type: "many2one", relation: "product.category" },
-                    child_ids: {
-                        type: "one2many",
-                        relation: "product.category",
-                        inverse_name: "parent_id",
-                    },
-                },
-            }).models;
+        test("create operation", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const o1 = models["pos.order"].create({});
+            const l2 = models["pos.order.line"].create({ order_id: o1 });
 
-        test("create operation", () => {
-            const models = getModels();
-            const c1 = models["product.category"].create({});
-            const c2 = models["product.category"].create({ parent_id: c1 });
-
-            expect(c2.parent_id).toBe(c1);
-            expect(c1.child_ids).toInclude(c2);
+            expect(l2.order_id).toBe(o1);
+            expect(o1.lines).toInclude(l2);
         });
 
-        test("read operation 2", () => {
-            const models = getModels();
-            const c1 = models["product.category"].create({});
-            const c2 = models["product.category"].create({ parent_id: c1 });
+        test("read operation 2", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({ parent_id: c1 });
 
-            const readC1 = models["product.category"].read(c1.id);
+            const readC1 = models["pos.category"].read(c1.id);
             expect(readC1.child_ids).toEqual([c2]);
 
-            const readC2 = models["product.category"].read(c2.id);
+            const readC2 = models["pos.category"].read(c2.id);
             expect(readC2.parent_id).toEqual(c1);
 
-            const readMany = models["product.category"].readMany([c1.id, c2.id]);
+            const readMany = models["pos.category"].readMany([c1.id, c2.id]);
             expect(readMany).toEqual([c1, c2]);
         });
 
-        test("update operation, many2one", () => {
-            const models = getModels();
-            const c1 = models["product.category"].create({});
-            const c2 = models["product.category"].create({});
-            const c3 = models["product.category"].create({ parent_id: c1 });
+        test("update operation, many2one", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const o1 = models["pos.order"].create({});
+            const l1 = models["pos.order.line"].create({});
+            const l2 = models["pos.order.line"].create({ order_id: o1 });
 
-            expect(c3.parent_id).toBe(c1);
-            c3.update({ parent_id: c2 });
-            expect(c3.parent_id).toBe(c2);
-            expect(c2.child_ids).toInclude(c3);
-            expect(c1.child_ids).not.toInclude(c3);
+            expect(l2.order_id).toBe(o1);
+            o1.update({ lines: [l1] });
+            expect(o1.lines).not.toInclude(l2);
         });
 
-        test("update operation, one2many", () => {
-            const models = getModels();
-            const c1 = models["product.category"].create({});
-            const c2 = models["product.category"].create({});
+        test("update operation, one2many", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const o1 = models["pos.order"].create({});
+            const l1 = models["pos.order.line"].create({ order_id: o1 });
+            const l2 = models["pos.order.line"].create({});
 
-            expect(c1.parent_id).toBe(undefined);
-            c1.update({ child_ids: [["link", c2]] });
-            expect(c1.child_ids).toInclude(c2);
-            expect(c2.parent_id).toBe(c1);
+            expect(o1.lines).toInclude(l1);
+            l2.update({ order_id: o1 });
+            expect(o1.lines).toInclude(l2);
         });
 
-        test("update operation, unlink many2one", () => {
-            const models = getModels();
-            const c1 = models["product.category"].create({});
-            const c2 = models["product.category"].create({});
+        test("update operation, unlink many2one", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({});
 
             c2.update({ parent_id: c1 });
             expect(c2.parent_id).toBe(c1);
@@ -229,10 +218,11 @@ describe("models with backlinks", () => {
             expect(c1.child_ids).not.toInclude(c2);
         });
 
-        test("update operation, unlink one2many", () => {
-            const models = getModels();
-            const c1 = models["product.category"].create({});
-            const c2 = models["product.category"].create({ parent_id: c1 });
+        test("update operation, unlink one2many", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({ parent_id: c1 });
 
             expect(c1.child_ids).toInclude(c2);
 
@@ -241,283 +231,257 @@ describe("models with backlinks", () => {
             expect(c2.parent_id).toBe(undefined);
         });
 
-        test("update operation, Clear one2many", () => {
-            const models = getModels();
-            const category = models["product.category"].create({});
-            models["product.category"].create({ parent_id: category });
-            models["product.category"].create({ parent_id: category });
+        test("update operation, Clear one2many", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const category = models["pos.category"].create({});
+            models["pos.category"].create({ parent_id: category });
+            models["pos.category"].create({ parent_id: category });
 
             expect(category.child_ids).toHaveLength(2);
-            models["product.category"].update(category, { child_ids: [["clear"]] });
+            models["pos.category"].update(category, { child_ids: [["clear"]] });
             expect(category.child_ids).toHaveLength(0);
         });
 
-        test("update operation, Clear many2one", () => {
-            const models = getModels();
-            const category = models["product.category"].create({});
-            const category1 = models["product.category"].create({ parent_id: category });
+        test("update operation, Clear many2one", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const category = models["pos.category"].create({});
+            const category1 = models["pos.category"].create({ parent_id: category });
 
             expect(category.child_ids).toInclude(category1);
-            models["product.category"].update(category1, { parent_id: undefined });
+            models["pos.category"].update(category1, { parent_id: undefined });
             expect(category.child_ids).not.toInclude(category1);
         });
 
-        test("delete operation, one2many item", () => {
-            const models = getModels();
-            const c1 = models["product.category"].create({});
-            const c2 = models["product.category"].create({ parent_id: c1 });
+        test("delete operation, one2many item", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({ parent_id: c1 });
 
             expect(c1.child_ids).toInclude(c2);
 
             c2.delete();
-            expect(models["product.category"].read(c2.id)).toBe(undefined);
+            expect(models["pos.category"].read(c2.id)).toBe(undefined);
             expect(c1.child_ids).not.toInclude(c2);
         });
 
-        test("delete operation, many2one item", () => {
-            const models = getModels();
-            const c1 = models["product.category"].create({});
-            const c2 = models["product.category"].create({ parent_id: c1 });
+        test("delete operation, many2one item", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({ parent_id: c1 });
 
             expect(c1.child_ids).toInclude(c2);
 
             c1.delete();
-            expect(models["product.category"].read(c1.id)).toBe(undefined);
+            expect(models["pos.category"].read(c1.id)).toBe(undefined);
             expect(c2.parent_id).toBe(undefined);
         });
     });
     describe("many2many field relations to other models", () => {
-        const getModels = () =>
-            createRelatedModels({
-                "product.product": {
-                    name: { type: "char" },
-                    tag_ids: {
-                        type: "many2many",
-                        relation: "product.tag",
-                        relation_table: "product_tag_product_product_rel",
-                    },
-                },
-                "product.tag": {
-                    name: { type: "char" },
-                    product_ids: {
-                        type: "many2many",
-                        relation: "product.product",
-                        relation_table: "product_tag_product_product_rel",
-                    },
-                },
-            }).models;
-        test("create operation, create", () => {
-            const models = getModels();
-            const tag1 = { name: "Electronics" };
-            const tag2 = { name: "New" };
-            const product = models["product.product"].create({
+        test("create operation, create", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const line1 = { id: 2 };
+            const line2 = { name: 4 };
+            const product = models["pos.order"].create({
                 name: "Smartphone",
-                tag_ids: [["create", tag1, tag2]],
+                lines: [["create", line1, line2]],
             });
-            expect(product.tag_ids[0].name).toBe(tag1.name);
+            expect(product.lines).toHaveLength(2);
         });
 
-        test("create operation, link", () => {
-            const models = getModels();
-            const tag1 = models["product.tag"].create({ name: "Electronics" });
-            const tag2 = models["product.tag"].create({ name: "New" });
-            const product = models["product.product"].create({
+        test("create operation, link", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const line1 = models["pos.order.line"].create({ id: 1 });
+            const line2 = models["pos.order.line"].create({ id: 2 });
+            const product = models["pos.order"].create({
                 name: "Smartphone",
-                tag_ids: [["link", tag1, tag2]],
+                lines: [["link", line1, line2]],
             });
-            expect(product.tag_ids).toInclude(tag1);
-            expect(tag1.product_ids).toInclude(product);
+            expect(product.lines).toInclude(line1);
+            expect(product.lines).toInclude(line2);
         });
 
-        test("read operation 3", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const p2 = models["product.product"].create({});
-            const p3 = models["product.product"].create({});
-            const t1 = models["product.tag"].create({ product_ids: [["link", p1, p2, p3]] });
-            const t2 = models["product.tag"].create({ product_ids: [["link", p1, p2]] });
+        test("read operation 3", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({});
+            const c3 = models["pos.category"].create({});
+            const t1 = models["product.template"].create({ pos_categ_ids: [["link", c1, c2, c3]] });
+            const t2 = models["product.template"].create({ pos_categ_ids: [["link", c1, c2]] });
 
-            const readT1 = models["product.tag"].read(t1.id);
+            const readT1 = models["product.template"].read(t1.id);
             expect(readT1).toEqual(t1);
-            const readP1 = models["product.product"].read(p1.id);
-            expect(readP1).toEqual(p1);
+            const readP1 = models["product.template"].read(t2.id);
+            expect(readP1).toEqual(t2);
 
-            expect(readT1.product_ids).toInclude(p1);
-            expect(readT1.product_ids).toInclude(p2);
-            expect(readT1.product_ids).toInclude(p3);
-            expect(readP1.tag_ids).toInclude(t1);
-            expect(readP1.tag_ids).toInclude(t2);
+            expect(readT1.pos_categ_ids).toInclude(c1);
+            expect(readT1.pos_categ_ids).toInclude(c2);
+            expect(readT1.pos_categ_ids).toInclude(c3);
+            expect(readP1.pos_categ_ids).toInclude(c1);
+            expect(readP1.pos_categ_ids).toInclude(c2);
 
-            const readMany = models["product.product"].readMany([p2.id, p3.id]);
-            expect(readMany[0]).toBe(p2);
-            expect(readMany[1]).toBe(p3);
+            const readMany = models["product.template"].readMany([t1.id, t2.id]);
+            expect(readMany[0]).toBe(t1);
+            expect(readMany[1]).toBe(t2);
         });
 
-        test("update operation, many2many", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const p2 = models["product.product"].create({});
-            const t1 = models["product.tag"].create({});
-            expect(p1.tag_ids).not.toInclude(t1);
+        test("update operation, many2many", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({});
+            const t1 = models["product.template"].create({ pos_categ_ids: [] });
+            expect(t1.pos_categ_ids).not.toInclude(c1);
 
-            p1.update({ tag_ids: [["link", t1]] });
-            expect(p1.tag_ids).toInclude(t1);
-            expect(t1.product_ids).toInclude(p1);
-            expect(t1.product_ids).not.toInclude(p2);
+            t1.update({ pos_categ_ids: [["link", c1]] });
+            expect(t1.pos_categ_ids).toInclude(c1);
+            expect(t1.pos_categ_ids).not.toInclude(c2);
 
-            t1.update({ product_ids: [["link", p2]] });
-            expect(t1.product_ids).toInclude(p2);
+            t1.update({ pos_categ_ids: [["link", c2]] });
+            expect(t1.pos_categ_ids).toInclude(c2);
         });
 
-        test("update operation, unlink many2many", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const t1 = models["product.tag"].create({});
+        test("update operation, unlink many2many", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const t1 = models["product.template"].create({ pos_categ_ids: [] });
 
-            t1.update({ product_ids: [["link", p1]] });
-            expect(t1.product_ids).toInclude(p1);
-            expect(p1.tag_ids).toInclude(t1);
+            t1.update({ pos_categ_ids: [["link", c1]] });
+            expect(t1.pos_categ_ids).toInclude(c1);
 
-            t1.update({ product_ids: [["unlink", p1]] });
-            expect(t1.product_ids).not.toInclude(p1);
-            expect(p1.tag_ids).toHaveLength(0);
+            t1.update({ pos_categ_ids: [["unlink", c1]] });
+            expect(t1.pos_categ_ids).not.toInclude(c1);
         });
 
-        test("update operation, Clear many2many", () => {
-            const models = getModels();
-            const tag1 = models["product.tag"].create({});
-            const tag2 = models["product.tag"].create({});
-            const product = models["product.product"].create({ tag_ids: [["link", tag1, tag2]] });
+        test("update operation, Clear many2many", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({});
+            const t1 = models["product.template"].create({ pos_categ_ids: [c1, c2] });
 
-            expect(product.tag_ids).toHaveLength(2);
+            expect(t1.pos_categ_ids).toHaveLength(2);
 
-            product.update({ tag_ids: [["clear"]] });
-            expect(product.tag_ids).toHaveLength(0);
+            t1.update({ pos_categ_ids: [["clear"]] });
+            expect(t1.pos_categ_ids).toHaveLength(0);
         });
 
-        test("delete operation, many2many item", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const p2 = models["product.product"].create({});
-            const t1 = models["product.tag"].create({});
-            t1.update({ product_ids: [["link", p1, p2]] });
+        test("delete operation, many2many item", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({});
+            const t1 = models["product.template"].create({ pos_categ_ids: [] });
+            t1.update({ pos_categ_ids: [["link", c1, c2]] });
 
-            expect(t1.product_ids).toInclude(p1);
+            expect(t1.pos_categ_ids).toInclude(c1);
 
-            p1.delete();
-            expect(models["product.product"].read(p1.id)).toBe(undefined);
-            expect(t1.product_ids).not.toInclude(p1);
+            c1.delete();
+            expect(models["pos.category"].read(c1.id)).toBe(undefined);
+            expect(t1.pos_categ_ids).not.toInclude(c1);
+            expect(t1.pos_categ_ids).toInclude(c2);
         });
 
         describe("many2many field relations to own model", () => {
-            const getModels = () =>
-                createRelatedModels({
-                    "note.note": {
-                        name: { type: "char" },
-                        parent_ids: {
-                            type: "many2many",
-                            relation: "note.note",
-                            relation_table: "note_note_rel",
-                        },
-                        child_ids: {
-                            type: "many2many",
-                            relation: "note.note",
-                            relation_table: "note_note_rel",
-                        },
-                    },
-                }).models;
-
-            test("create operation, link", () => {
-                const models = getModels();
-                const note1 = models["note.note"].create({ name: "Emergency" });
-                const note2 = models["note.note"].create({ name: "New" });
-                const note = models["note.note"].create({
-                    name: "To Serve",
-                    child_ids: [["link", note1, note2]],
-                });
-                expect(note.child_ids).toInclude(note1);
-                expect(note1.parent_ids).toInclude(note);
+            test("create operation, link", async () => {
+                await makeMockServer();
+                const models = getRelatedModelsInstance(false);
+                const l1 = models["pos.order.line"].create({ id: 1 });
+                const l2 = models["pos.order.line"].create({ id: 2, combo_parent_id: l1 });
+                expect(l1.combo_line_ids).toInclude(l2);
+                expect(l2.combo_parent_id).toBe(l1);
             });
 
-            test("read operation 4", () => {
-                const models = getModels();
-                const n1 = models["note.note"].create({});
-                const n2 = models["note.note"].create({});
-                const n3 = models["note.note"].create({});
-                const n4 = models["note.note"].create({ parent_ids: [["link", n1, n2, n3]] });
-                const n5 = models["note.note"].create({ parent_ids: [["link", n1, n2]] });
+            test("read operation 4", async () => {
+                await makeMockServer();
+                const models = getRelatedModelsInstance(false);
+                const l1 = models["pos.order.line"].create({});
+                const l2 = models["pos.order.line"].create({});
+                const l3 = models["pos.order.line"].create({});
+                const l4 = models["pos.order.line"].create({ combo_line_ids: [l1, l2, l3] });
 
-                const readN1 = models["note.note"].read(n1.id);
-                expect(readN1).toEqual(n1);
+                const readL1 = models["pos.order.line"].read(l1.id);
+                expect(readL1).toEqual(l1);
 
-                const readN4 = models["note.note"].read(n4.id);
-                expect(readN4).toEqual(n4);
+                const readL4 = models["pos.order.line"].read(l4.id);
+                expect(readL4).toEqual(l4);
 
-                expect([n1, n2, n3].every((n) => readN4.parent_ids.includes(n))).toBe(true);
-                expect([n4, n5].every((n) => readN1.child_ids.includes(n))).toBe(true);
+                expect([l1, l2, l3].every((n) => readL4.combo_line_ids.includes(n))).toBe(true);
 
-                const readMany = models["note.note"].readMany([n2.id, n3.id]);
-                expect(readMany[0]).toBe(n2);
-                expect(readMany[1]).toBe(n3);
+                const readMany = models["pos.order.line"].readMany([l2.id, l3.id]);
+                expect(readMany[0]).toBe(l2);
+                expect(readMany[1]).toBe(l3);
             });
 
-            test("update operation, many2many", () => {
-                const models = getModels();
-                const n1 = models["note.note"].create({});
-                const n2 = models["note.note"].create({});
-                const n3 = models["note.note"].create({});
-                n1.update({ parent_ids: [["link", n3]] });
-                expect(n1.parent_ids).toInclude(n3);
-                expect(n3.child_ids).toInclude(n1);
+            test("update operation, many2many", async () => {
+                await makeMockServer();
+                const models = getRelatedModelsInstance(false);
+                const l1 = models["pos.order.line"].create({});
+                const l2 = models["pos.order.line"].create({});
+                const l3 = models["pos.order.line"].create({});
+                l1.update({ combo_line_ids: [["link", l3]] });
+                expect(l1.combo_line_ids).toInclude(l3);
+                expect(l3.combo_parent_id).toBe(l1);
 
-                n3.update({ parent_ids: [["link", n2]] });
-                expect(n3.parent_ids).toInclude(n2);
+                l3.update({ combo_line_ids: [["link", l2]] });
+                expect(l3.combo_line_ids).toInclude(l2);
 
-                n3.update({ parent_ids: [["unlink", n2]] });
-                expect(n3.parent_ids).not.toInclude(n2);
-                expect(n2.child_ids).not.toInclude(n3);
+                l3.update({ combo_line_ids: [["unlink", l2]] });
+                expect(l3.combo_line_ids).not.toInclude(l2);
+                expect(l2.combo_line_ids).not.toInclude(l3);
             });
 
-            test("update operation, unlink many2many", () => {
-                const models = getModels();
-                const n1 = models["note.note"].create({});
-                const n2 = models["note.note"].create({});
+            test("update operation, unlink many2many", async () => {
+                await makeMockServer();
+                const models = getRelatedModelsInstance(false);
+                const l1 = models["pos.order.line"].create({});
+                const l2 = models["pos.order.line"].create({});
 
-                n2.update({ parent_ids: [["link", n1]] });
-                expect(n2.parent_ids).toInclude(n1);
-                expect(n1.child_ids).toInclude(n2);
+                l2.update({ combo_line_ids: [["link", l1]] });
+                expect(l2.combo_line_ids).toInclude(l1);
+                expect(l1.combo_parent_id).toBe(l2);
 
-                n2.update({ parent_ids: [["unlink", n1]] });
-                expect(n2.parent_ids).not.toInclude(n1);
-                expect(n1.child_ids).toHaveLength(0);
+                l2.update({ combo_line_ids: [["unlink", l1]] });
+                expect(l2.combo_line_ids).not.toInclude(l1);
+                expect(l1.combo_parent_id).toBeEmpty();
             });
 
-            test("update operation, Clear many2many", () => {
-                const models = getModels();
-                const note = models["note.note"].create({});
-                const note2 = models["note.note"].create({});
-                const note3 = models["note.note"].create({ parent_ids: [["link", note, note2]] });
+            test("update operation, Clear many2many", async () => {
+                await makeMockServer();
+                const models = getRelatedModelsInstance(false);
+                const l1 = models["pos.order.line"].create({});
+                const l2 = models["pos.order.line"].create({});
+                const l3 = models["pos.order.line"].create({});
+                const l4 = models["pos.order.line"].create({ combo_line_ids: [l1, l2, l3] });
 
-                expect(note3.parent_ids).toHaveLength(2);
+                expect(l4.combo_line_ids).toHaveLength(3);
 
-                models["note.note"].update(note3, { parent_ids: [["clear"]] });
+                models["pos.order.line"].update(l4, { combo_line_ids: [["clear"]] });
 
-                expect(note3.parent_ids).toHaveLength(0);
-                expect(note.child_ids).toHaveLength(0);
+                expect(l4.combo_line_ids).toHaveLength(0);
+                expect(l1.combo_parent_id).toBeEmpty();
             });
 
-            test("delete operation, many2many item", () => {
-                const models = getModels();
-                const n1 = models["note.note"].create({});
-                const n2 = models["note.note"].create({});
-                const n3 = models["note.note"].create({});
-                n3.update({ parent_ids: [["link", n1, n2]] });
+            test("delete operation, many2many item", async () => {
+                await makeMockServer();
+                const models = getRelatedModelsInstance(false);
+                const l1 = models["pos.order.line"].create({});
+                const l2 = models["pos.order.line"].create({});
+                const l3 = models["pos.order.line"].create({});
+                l3.update({ combo_line_ids: [["link", l1, l2]] });
 
-                expect([n1, n2].every((n) => n3.parent_ids.includes(n))).toBe(true);
+                expect([l1, l2].every((n) => l3.combo_line_ids.includes(n))).toBe(true);
 
-                n1.delete();
-                expect(models["note.note"].read(n1.id)).toBe(undefined);
-                expect(n3.parent_ids).not.toInclude(n1);
+                l1.delete();
+                expect(models["pos.order.line"].read(l1.id)).toBe(undefined);
+                expect(l3.combo_line_ids).not.toInclude(l1);
             });
         });
     });
@@ -525,187 +489,172 @@ describe("models with backlinks", () => {
 
 describe("models without backlinks", () => {
     describe("many2one and one2many field relations to other models", () => {
-        const getModels = () =>
-            createRelatedModels({
-                "product.product": {
-                    category_id: { type: "many2one", relation: "product.category" },
-                },
-                "product.category": {},
-            }).models;
-
-        test("create operation", () => {
-            const models = getModels();
-            const category = models["product.category"].create({});
-            const product = models["product.product"].create({ category_id: category });
-            expect(product.category_id).toBe(category);
-            expect(category.backLink("<-product.product.category_id")).toEqual([product]);
+        test("create operation", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const category = models["pos.category"].create({ id: 1 });
+            const product = models["product.template"].create({ pos_categ_ids: [category] });
+            expect(product.pos_categ_ids).toEqual([category]);
+            expect(category.backLink("<-product.template.pos_categ_ids")).toEqual([product]);
         });
 
-        test("read operation 5", () => {
-            const models = getModels();
-            const c1 = models["product.category"].create({});
-            const p1 = models["product.product"].create({ category_id: c1 });
-            const p2 = models["product.product"].create({ category_id: c1 });
+        test("read operation 5", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const p1 = models["product.template"].create({ pos_categ_ids: [c1] });
+            const p2 = models["product.template"].create({ pos_categ_ids: [c1] });
 
-            const readC1 = models["product.category"].read(c1.id);
+            const readC1 = models["pos.category"].read(c1.id);
             expect(readC1).toEqual(c1);
 
-            const readP1 = models["product.product"].read(p1.id);
+            const readP1 = models["product.template"].read(p1.id);
             expect(readP1).toEqual(p1);
 
-            expect(readC1.backLink("product.product.category_id")).toEqual([p1, p2]);
+            expect(readC1.backLink("product.template.pos_categ_ids")).toEqual([p1, p2]);
 
-            expect(readP1.category_id).toEqual(c1);
+            expect(readP1.pos_categ_ids).toEqual([c1]);
         });
 
-        test("update operation, many2one", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const c1 = models["product.category"].create({});
+        test("update operation, many2one", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const p1 = models["product.template"].create({});
+            const c1 = models["pos.category"].create({});
 
-            expect(p1.category_id).toBe(undefined);
-            p1.update({ category_id: c1 });
-            expect(p1.category_id).toBe(c1);
-            expect(c1.backLink("product.product.category_id")).toEqual([p1]);
+            p1.update({ pos_categ_ids: [c1] });
+            expect(p1.pos_categ_ids).toInclude(c1);
         });
 
-        test("update operation, unlink many2one", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({ category_id: {} });
-            const c1 = p1.category_id;
+        test("update operation, unlink many2one", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const categ = models["pos.category"].create({});
+            const p1 = models["product.template"].create({ pos_categ_ids: [categ] });
 
-            expect(c1.backLink("product.product.category_id")).toEqual([p1]);
-
-            p1.update({ category_id: undefined });
-            expect(p1.category_id).toBe(undefined);
-            expect(c1.backLink("product.product.category_id")).toHaveLength(0);
+            p1.update({ pos_categ_ids: [] });
+            expect(p1.pos_categ_ids).toHaveLength(0);
+            expect(categ.backLink("product.template.pos_categ_ids")).toHaveLength(0);
         });
 
-        test("delete operation, many2one item", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const c1 = models["product.category"].create({});
+        test("delete operation, many2one item", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const p1 = models["product.template"].create({});
+            const c1 = models["pos.category"].create({});
 
-            p1.update({ category_id: c1 });
-            expect(c1.backLink("<-product.product.category_id")).toEqual([p1]);
+            p1.update({ pos_categ_ids: [c1] });
+            expect(c1.backLink("<-product.template.pos_categ_ids")).toEqual([p1]);
 
             c1.delete();
-            expect(models["product.category"].read(c1.id)).toBe(undefined);
-            expect(p1.category_id).toBe(undefined);
+            expect(models["pos.category"].read(c1.id)).toBe(undefined);
+            expect(p1.pos_categ_ids).toHaveLength(0);
         });
     });
 
     describe("many2many relations", () => {
-        const getModels = () =>
-            createRelatedModels({
-                "product.product": {
-                    tag_ids: {
-                        type: "many2many",
-                        relation: "product.tag",
-                        relation_table: "product_tag_product_product_rel",
-                    },
-                },
-                "product.tag": {},
-            }).models;
-
-        test("create operation, link", () => {
-            const models = getModels();
-            const tag1 = models["product.tag"].create({ name: "Electronics" });
-            const tag2 = models["product.tag"].create({ name: "New" });
-            const product = models["product.product"].create({
-                name: "Smartphone",
-                tag_ids: [["link", tag1, tag2]],
+        test("create operation, link", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const l1 = models["pos.order.line"].create({});
+            const l2 = models["pos.order.line"].create({});
+            const l3 = models["pos.order.line"].create({});
+            const o1 = models["pos.order"].create({
+                lines: [["link", l1, l2, l3]],
             });
 
-            expect(product.tag_ids).toInclude(tag1);
-            expect(tag1.backLink("product.product.tag_ids")).toInclude(product);
+            expect(o1.lines).toInclude(l1);
         });
 
-        test("read operation 6", () => {
-            const models = getModels();
-            const t1 = models["product.tag"].create({});
-            const t2 = models["product.tag"].create({});
-            const p1 = models["product.product"].create({ tag_ids: [["link", t1, t2]] });
-            const p2 = models["product.product"].create({ tag_ids: [["link", t1, t2]] });
-            const p3 = models["product.product"].create({ tag_ids: [["link", t1]] });
+        test("read operation 6", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const c1 = models["pos.category"].create({});
+            const c2 = models["pos.category"].create({});
+            const p1 = models["product.template"].create({
+                pos_categ_ids: [["link", c1, c2]],
+            });
+            const p2 = models["product.template"].create({
+                pos_categ_ids: [["link", c1, c2]],
+            });
+            const p3 = models["product.template"].create({ pos_categ_ids: [["link", c1]] });
 
-            const readT1 = models["product.tag"].read(t1.id);
-            expect(readT1).toEqual(t1);
+            const readT1 = models["product.template"].read(p1.id);
+            expect(readT1).toEqual(p1);
 
-            const readP1 = models["product.product"].read(p1.id);
-            expect(readP1).toEqual(p1);
+            const readP1 = models["product.template"].read(p2.id);
+            expect(readP1).toEqual(p2);
 
-            expect(
-                [p1, p2, p3].every((p) => t1.backLink("<-product.product.tag_ids").includes(p))
-            ).toBe(true);
-            expect([t1, t2].every((t) => p1.tag_ids.includes(t))).toBe(true);
-
-            const readMany = models["product.product"].readMany([p2.id, p3.id]);
+            const readMany = models["product.template"].readMany([p2.id, p3.id]);
             expect(readMany).toEqual([p2, p3]);
         });
 
-        test("update operation, link", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const p2 = models["product.product"].create({});
-            const t1 = models["product.tag"].create({});
+        test("update operation, link", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const p1 = models["product.template"].create({});
+            const p2 = models["product.template"].create({});
+            const t1 = models["pos.category"].create({});
 
-            p1.update({ tag_ids: [["link", t1]] });
-            expect(p1.tag_ids).toInclude(t1);
-            expect(t1.backLink("<-product.product.tag_ids")).toInclude(p1);
-            expect(t1.backLink("<-product.product.tag_ids")).not.toInclude(p2);
+            p1.update({ pos_categ_ids: [["link", t1]] });
+            expect(p1.pos_categ_ids).toInclude(t1);
+            expect(t1.backLink("<-product.template.pos_categ_ids")).toInclude(p1);
+            expect(t1.backLink("<-product.template.pos_categ_ids")).not.toInclude(p2);
 
-            p2.update({ tag_ids: [["link", t1]] });
-            expect(t1.backLink("<-product.product.tag_ids")).toInclude(p2);
+            p2.update({ pos_categ_ids: [["link", t1]] });
+            expect(t1.backLink("<-product.template.pos_categ_ids")).toInclude(p2);
         });
 
-        test("update operation, unlink", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const t1 = models["product.tag"].create({});
+        test("update operation, unlink", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const p1 = models["product.template"].create({});
+            const t1 = models["pos.category"].create({});
 
-            p1.update({ tag_ids: [["link", t1]] });
-            expect(t1.backLink("<-product.product.tag_ids")).toInclude(p1);
-            expect(p1.tag_ids).toInclude(t1);
+            p1.update({ pos_categ_ids: [["link", t1]] });
+            expect(t1.backLink("<-product.template.pos_categ_ids")).toInclude(p1);
+            expect(p1.pos_categ_ids).toInclude(t1);
 
-            p1.update({ tag_ids: [["unlink", t1]] });
-            expect(t1.backLink("<-product.product.tag_ids")).not.toInclude(p1);
-            expect(p1.tag_ids).toHaveLength(0);
+            p1.update({ pos_categ_ids: [["unlink", t1]] });
+            expect(t1.backLink("<-product.template.pos_categ_ids")).not.toInclude(p1);
+            expect(p1.pos_categ_ids).toHaveLength(0);
         });
 
-        test("update operation, Clear", () => {
-            const models = getModels();
-            const tag1 = models["product.tag"].create({});
-            const tag2 = models["product.tag"].create({});
-            const product = models["product.product"].create({ tag_ids: [tag1, tag2] });
-            models["product.product"].update(product, { tag_ids: [["clear"]] });
-            const updatedProduct = models["product.product"].read(product.id);
-            expect(updatedProduct.tag_ids).toHaveLength(0);
+        test("update operation, Clear", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const tag1 = models["pos.category"].create({});
+            const tag2 = models["pos.category"].create({});
+            const product = models["product.template"].create({ pos_categ_ids: [tag1, tag2] });
+            models["product.template"].update(product, { pos_categ_ids: [["clear"]] });
+            const updatedProduct = models["product.template"].read(product.id);
+            expect(updatedProduct.pos_categ_ids).toHaveLength(0);
 
-            models["product.product"].update(product, { tag_ids: [["link", tag1, tag2]] });
-            expect([tag1, tag2].every((t) => product.tag_ids.includes(t))).toBe(true);
-            models["product.product"].update(product, { tag_ids: [["clear"]] });
-            expect(tag1.backLink("<-product.product.tag_ids")).not.toInclude(product);
+            models["product.template"].update(product, { pos_categ_ids: [["link", tag1, tag2]] });
+            expect([tag1, tag2].every((t) => product.pos_categ_ids.includes(t))).toBe(true);
+            models["product.template"].update(product, { pos_categ_ids: [["clear"]] });
+            expect(tag1.backLink("<-product.template.pos_categ_ids")).not.toInclude(product);
         });
 
-        test("delete operation", () => {
-            const models = getModels();
-            const p1 = models["product.product"].create({});
-            const p2 = models["product.product"].create({});
-            const t1 = models["product.tag"].create({});
+        test("delete operation", async () => {
+            await makeMockServer();
+            const models = getRelatedModelsInstance(false);
+            const p1 = models["product.template"].create({});
+            const p2 = models["product.template"].create({});
+            const t1 = models["pos.category"].create({});
 
-            p1.update({ tag_ids: [["link", t1]] });
-            p2.update({ tag_ids: [["link", t1]] });
+            p1.update({ pos_categ_ids: [["link", t1]] });
+            p2.update({ pos_categ_ids: [["link", t1]] });
 
-            expect(t1.backLink("<-product.product.tag_ids")).toInclude(p1);
+            expect(t1.backLink("<-product.template.pos_categ_ids")).toInclude(p1);
 
             p1.delete();
-            expect(models["product.product"].read(p1.id)).toBe(undefined);
-            expect(t1.backLink("<-product.product.tag_ids")).not.toInclude(p1);
+            expect(models["product.template"].read(p1.id)).toBe(undefined);
+            expect(t1.backLink("<-product.template.pos_categ_ids")).not.toInclude(p1);
 
             t1.delete();
-            expect(models["product.tag"].read(t1.id)).toBe(undefined);
-            expect(p1.tag_ids).toHaveLength(0);
+            expect(models["pos.category"].read(t1.id)).toBe(undefined);
+            expect(p1.pos_categ_ids).toHaveLength(0);
         });
     });
 });
