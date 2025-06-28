@@ -53,6 +53,21 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    Jos useilla tuotteilla on sama etuliite, ne jakavat saman järjestysnumeron. Muuten numerointi on tuotekohtainen..\n"
+"\n"
+"    * Selitteet (etuliite):\n"
+"    - Kuluva vuosi ja vuosituhannes: %(year)s\n"
+"    - Kuluva vuosi ilman vuosituhannetta: %(y)s\n"
+"    - Kuukausi: %(month)s\n"
+"    - Päivä: %(day)s\n"
+"    - Vuodenpäivä: %(doy)s\n"
+"    - Vuoden viikko: %(woy)s\n"
+"    - Viikonpäivä (0:maanantai): %(weekday)s\n"
+"    - Tunti 00->24: %(h24)s\n"
+"    - Tunti 00->12: %(h12)s\n"
+"    - Minuutti: %(min)s\n"
+"    - Sekuntti: %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -677,7 +692,7 @@ msgstr "<span class=\"o_stat_text\">Erä/sarjanumerot</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Erät/Sarjanumerot</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -757,11 +772,13 @@ msgid ""
 "<span class=\"text-muted small\"> Available</span>\n"
 "                            <span> / </span>"
 msgstr ""
+"<span class=\"text-muted small\">Saatavilla</span>\n"
+"                            <span> / </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">Käytettävissä</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -864,7 +881,7 @@ msgstr "<strong>Lähtöpaikka</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Instructions:</strong>"
-msgstr ""
+msgstr "<strong>Ohjeet:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -2484,7 +2501,7 @@ msgstr "Mukautettu"
 #: model:ir.model.fields,field_description:stock.field_product_template__serial_prefix_format
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Custom Lot/Serial"
-msgstr ""
+msgstr "Räätälöi erä/sarja"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -3240,6 +3257,8 @@ msgstr "Näytä sarja- ja eränumero toimituslomakkeella"
 msgid ""
 "Display instructions tailored to the customer or vendor on stock operations."
 msgstr ""
+"Näytä asiakkaalle tai toimittajalle räätälöidyt varastotoimenpiteiden "
+"ohjeet."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_tree_view_picking
@@ -4417,7 +4436,7 @@ msgstr "Asenna viivakoodi"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Instructions on the Stock Operations"
-msgstr ""
+msgstr "Ohjeet varastotoimenpiteiden suorittamiseen"
 
 #. module: stock
 #. odoo-python
@@ -4489,6 +4508,7 @@ msgid ""
 "Internal instructions for the partner or its parent company as set by the "
 "user."
 msgstr ""
+"Käyttäjän määrittämät sisäiset ohjeet kumppanille tai sen emoyhtiölle."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_internal_location_ids
@@ -5702,7 +5722,7 @@ msgstr "Seuraava odotettu"
 #: model:ir.model.fields,field_description:stock.field_product_product__next_serial
 #: model:ir.model.fields,field_description:stock.field_product_template__next_serial
 msgid "Next Serial"
-msgstr ""
+msgstr "Seuraava sarjanumero"
 
 #. module: stock
 #. odoo-python
@@ -5742,6 +5762,8 @@ msgid ""
 "No Stock On Hand. This analysis gives you an overview of the current stock "
 "level of your products."
 msgstr ""
+"Ei varastossa olevia tuotteita. Tämä analyysi tarjoaa yleiskuvan tuotteidesi"
+" nykyisestä varastotasosta."
 
 #. module: stock
 #. odoo-javascript
@@ -6588,7 +6610,7 @@ msgstr "Kumppanin osoite"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Partner-Specific Instructions"
-msgstr ""
+msgstr "Kumppanikohtaiset ohjeet"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
@@ -6640,7 +6662,7 @@ msgstr "Keräily"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_warning_text
 msgid "Picking Instructions"
-msgstr ""
+msgstr "Keräilyohjeet"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -8391,7 +8413,7 @@ msgstr "Sarjanumerot"
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_sequence_id
 #: model:ir.model.fields,field_description:stock.field_product_template__lot_sequence_id
 msgid "Serial/Lot Numbers Sequence"
-msgstr ""
+msgstr "Sarja-/eränumeroiden sekvenssi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -9109,6 +9131,8 @@ msgid ""
 "Technical Field: The Ir.Sequence record that is used to generate serial/lot "
 "numbers for this product"
 msgstr ""
+"Tekninen kenttä: Ir.Sequence -tietue, jota käytetään tämän tuotteen "
+"sarja-/eränumeroiden luontiin"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -11519,7 +11543,7 @@ msgstr "esim. varavarasto"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "e.g. The delivery area is at the back of the building."
-msgstr ""
+msgstr "esim. Toimitusalue sijaitsee rakennuksen takana."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view

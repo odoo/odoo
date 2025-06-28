@@ -87,6 +87,32 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or ''\"/>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or ''\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hei <t t-out=\"client_name\">Asiakkaan nimi</t>,</t>\n"
+"                        <t t-else=\"\">Hei,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Tilauksesi <t t-out=\"object.tracking_number\">...</t>, jonka summa on <t t-out=\"object.amount_total\">$xx.xx</t>, on vahvistettu. <span t-if=\"object.preset_time or client.street\">Se on valmis</span> <span t-if=\"object.preset_time\">klo. <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00</t></span>, <span t-if=\"client.street\">osoitteessa <t t-out=\"street\">kadun nimi</t>, <t t-out=\"state\">osavaltio/kunta</t>, <t t-out=\"client.zip or ''\">postinumero</t>, <t t-out=\"city\">kaupunki</t>, <t t-out=\"country\">maa</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Kiitos,</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>Löydät kuittisi liitteistä</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Myymälän nimi</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -112,6 +138,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hei <t t-out=\"client_name\">Asiakkaan nimi</t>,</t>\n"
+"                        <t t-else=\"\">Hei,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Tilauksesi <t t-out=\"object.tracking_number\">...</t>, jonka summa on <t t-out=\"object.amount_total\">$xx.xx</t>, on vahvistettu. <span t-if=\"object.preset_time\">Se on valmis klo. <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Kiitos,</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>Löydät kuittisi liitteistä</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Myymälän nimi</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -433,7 +479,7 @@ msgstr "Toimitus"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.delivery_email_template
 msgid "Delivery: Confirmation order for self"
-msgstr ""
+msgstr "Toimitus: Vahvista oma tilauksesi"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
@@ -635,7 +681,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Image to be displayed in the background"
-msgstr ""
+msgstr "Taustalla näytettävä kuva"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -806,7 +852,7 @@ msgstr "Ei"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/out_of_paper_popup/out_of_paper_popup.xml:0
 msgid "No more paper in the printer, please remember your order number:"
-msgstr ""
+msgstr "Tulostimessa ei ole enää paperia, muistathan tilausnumerosi:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -818,7 +864,7 @@ msgstr "Tilauksia ei löytynyt"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "No, thanks"
-msgstr ""
+msgstr "Ei kiitos"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -897,7 +943,7 @@ msgstr "Maksa jälkeen"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Personalize the Kiosk background"
-msgstr ""
+msgstr "Personoi kioskin taustakuvaa"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1138,7 +1184,7 @@ msgstr "Valinta"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Self Order"
-msgstr ""
+msgstr "Itsepalvelutilaus"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -1224,13 +1270,13 @@ msgstr "Pöytiintarjoilu"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Session Inactive"
-msgstr ""
+msgstr "Passiivinen istunto"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Set background image"
-msgstr ""
+msgstr "Aseta taustakuva"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1295,12 +1341,12 @@ msgstr "Pöytä:"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Take a tracker and enter its number"
-msgstr ""
+msgstr "Ota seurantalaitteesi ja syötä sen numero"
 
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.takeout_email_template
 msgid "Takeout: Confirmation order for self"
-msgstr ""
+msgstr "Nouto: Vahvista oma tilausksesi"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1385,7 +1431,7 @@ msgstr "Luokittelematon"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Validate your selection"
-msgstr ""
+msgstr "Vahvista valintasi"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
@@ -1432,13 +1478,13 @@ msgstr "Milloin haluaisit vastaanottaa tilauksesi?"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Where do you want to eat?"
-msgstr ""
+msgstr "Missä haluat syödä?"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Would you like to continue?"
-msgstr ""
+msgstr "Haluatko jatkaa?"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1504,7 +1550,7 @@ msgstr "Postinumero"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "at the counter"
-msgstr ""
+msgstr "tiskillä"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1532,7 +1578,7 @@ msgstr "https://odoo.com"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "included"
-msgstr ""
+msgstr "sisältyy"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree

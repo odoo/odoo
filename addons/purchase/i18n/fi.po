@@ -307,6 +307,8 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                        Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                        Lukittu"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -702,13 +704,13 @@ msgstr "Kaikki myöhässä olevat ostoehdotukset"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Late Receipt POs"
-msgstr ""
+msgstr "Kaikki myöhästyneet ostotilausten kuitit"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Not Acknowledged POs"
-msgstr ""
+msgstr "Kaikki vahvistamattomat ostotilaukset"
 
 #. module: purchase
 #. odoo-javascript
@@ -1571,7 +1573,7 @@ msgstr "Ilmoita haluamasi tuotemäärä."
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,help:purchase.field_purchase_order__purchase_warning_text
 msgid "Internal warning for the partner or the products as set by the user."
-msgstr ""
+msgstr "Käyttäjän asttama sisäinen varoitus kumppanista tai tuotteista."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
@@ -1738,7 +1740,7 @@ msgstr "Lukittu"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__locked
 msgid "Locked Purchase Orders cannot be modified."
-msgstr ""
+msgstr "Lukittuja ostotilauksia ei voi muokata."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1874,13 +1876,13 @@ msgstr "Omat myöhässä oleva ostoehdotukset"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Late Receipt POs"
-msgstr ""
+msgstr "Omat myöhästyneet ostotilausten kuitit"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Not Acknowledged POs"
-msgstr ""
+msgstr "Omat vahvistamattomat ostotilaukset"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2474,7 +2476,7 @@ msgstr "Ostoraportti"
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__purchase_warning_text
 msgid "Purchase Warning"
-msgstr ""
+msgstr "Ostovaroitus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2579,7 +2581,7 @@ msgstr "Laskutettava määrä"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
 msgid "Qty to invoice"
-msgstr ""
+msgstr "Laskutettava määrä"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -3314,6 +3316,7 @@ msgstr "Avaa lukitus"
 msgid ""
 "Unlocking the order is not allowed as 'Lock Confirmed Orders' is enabled."
 msgstr ""
+"Tilausta ei voi avata, koska \"Lukitse vahvistetut tilaukset\" on käytössä."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3336,7 +3339,7 @@ msgstr "Veroton summa"
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.xml:0
 msgid "Upload Bill"
-msgstr ""
+msgstr "Lataa lasku"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3472,12 +3475,12 @@ msgstr "Haluatko tuoda tämän asiakirjan Odoohon?"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning on Purchase Orders"
-msgstr ""
+msgstr "Varoitus ostotilauksissa"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on Purchase Orders and Bills"
-msgstr ""
+msgstr "Varoitus ostotilauksissa ja -laskuissa"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3539,7 +3542,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "You can only upload a bill for a single partner at a time."
-msgstr ""
+msgstr "Voit ladata laskun vain yhdelle kumppanille kerrallaan."
 
 #. module: purchase
 #. odoo-python
@@ -3609,12 +3612,12 @@ msgstr "päivä(ä) ennen"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "e.g. There is a newer version of this product."
-msgstr ""
+msgstr "esim. Tästä tuotteesta on saatavilla uudempi versio."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "e.g. This vendor is on vacation until the end of August."
-msgstr ""
+msgstr "esim. Tämä toimittaja on lomalla elokuun loppuun saakka."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form

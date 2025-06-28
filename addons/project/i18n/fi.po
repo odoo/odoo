@@ -235,6 +235,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"           <t t-if=\"partner.name\">\n"
+"                Hei <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"           </t>\n"
+"           <t t-else=\"\">\n"
+"                Hei,<br/><br/>\n"
+"           </t>\n"
+"            Ota hetki aikaa ja arvioi <strong t-out=\"object.name or ''\">suunnittelu- ja budjettitehtävään</strong> liittyviä palveluitamme\n"
+"           <t t-if=\"object._rating_get_operator().name\">\n"
+"               <strong t-out=\"object._rating_get_operator().name or ''\">mitchell Admin</strong>.<br/>\n"
+"           </t>\n"
+"           <t t-else=\"\">\n"
+"                .<br/>\n"
+"           </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>Kerro meille, mitä mieltä olet palveluistamme</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(klikkaa yhtä näistä hymiöistä)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Arvostamme palautettasi. Se auttaa meitä parantamaan palveluitamme.\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Tämä tyytyväisyyskysely on lähetetty, koska tehtäväsi on siirretty vaiheeseen <b t-out=\"object.stage_id.name or ''\">kesken</b>.</span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Tämä tyytyväisyyskysely lähetetään <b t-out=\"object.project_id.rating_status_period or ''\">viikoittain</b> niin kauan kuin tehtävä on vaiheessa <b t-out=\"object.stage_id.name or ''\">kesken</b>.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br/>Ystävällisin terveisin,</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">Yrityksesi</t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -446,7 +521,7 @@ msgstr "<strong>Virstanpylväs:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Priority:</strong>"
-msgstr ""
+msgstr "<strong>Prioriteetti:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -615,7 +690,7 @@ msgstr "Lisää Välitavoitteita"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
-msgstr ""
+msgstr "Lisää alitehtävä"
 
 #. module: project
 #. odoo-javascript
@@ -1241,7 +1316,7 @@ msgstr "Yritys"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__done
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__done
 msgid "Complete"
-msgstr ""
+msgstr "Valmis"
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -1321,7 +1396,7 @@ msgstr "Muunna tehtäväksi / alitehtäväksi"
 #. module: project
 #: model:ir.actions.server,name:project.action_server_convert_to_template
 msgid "Convert to Template"
-msgstr ""
+msgstr "Muunna mallipohjaksi"
 
 #. module: project
 #. odoo-javascript
@@ -2008,7 +2083,7 @@ msgstr "Seuraa"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comment on tasks in your projects"
-msgstr ""
+msgstr "Seuraa ja kommentoi projekteissasi olevia tehtäviä"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2974,7 +3049,7 @@ msgstr "Ei tunnisteita. Luodaan uusi tunniste!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_task_templates_action
 msgid "No task templates found. Let's create one!"
-msgstr ""
+msgstr "Tehtävämalleja ei löytynyt. Luodaan sellainen!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3364,7 +3439,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Private tasks cannot be converted into templates"
-msgstr ""
+msgstr "Yksityisiä tehtäviä ei voi muuntaa mallipohjiksi"
 
 #. module: project
 #. odoo-javascript
@@ -3534,13 +3609,13 @@ msgstr "Projektin tehtävät"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Project: %(project_name)s"
-msgstr ""
+msgstr "Projekti: %(project_name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Project: %(project_name)s, Stage: %(stage_name)s"
-msgstr ""
+msgstr "Projekti: %(project_name)s, vaihe: %(stage_name)s"
 
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
@@ -3939,6 +4014,8 @@ msgid ""
 "Save time by using task templates with pre-filled details.<br>\n"
 "                    Standardize workflows and ensure consistency across tasks."
 msgstr ""
+"Säästä aikaa käyttämällä tehtävämalleja, joissa on esitäytetyt tiedot.<br>\n"
+"                     Standardisoi työnkulut ja varmista tehtävien yhdenmukaisuus."
 
 #. module: project
 #. odoo-javascript
@@ -4457,7 +4534,7 @@ msgstr "Tehtävän vaiheet"
 #: model:ir.actions.act_window,name:project.project_task_templates_action
 #: model:ir.ui.menu,name:project.project_menu_config_task_templates
 msgid "Task Templates"
-msgstr ""
+msgstr "Tehtävämallipohjat"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4503,7 +4580,7 @@ msgstr "Tehtävä peruutettu"
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/actions/client_actions.js:0
 msgid "Task converted to template"
-msgstr ""
+msgstr "Tehtävä muunnettu mallipohjaksi"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -4593,7 +4670,7 @@ msgstr "Malli"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Template converted back to regular task"
-msgstr ""
+msgstr "Mallipohja muunnettu takaisin tavalliseksi tehtäväksi"
 
 #. module: project
 #. odoo-javascript
@@ -4884,6 +4961,8 @@ msgid ""
 "This task is already a template. Do you want to convert it back to a regular"
 " task?"
 msgstr ""
+"Tämä tehtävä on jo mallipohja. Haluatko muuntaa sen takaisin tavalliseksi "
+"tehtäväksi?"
 
 #. module: project
 #. odoo-javascript
@@ -5421,7 +5500,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 msgid "Write a task name"
-msgstr ""
+msgstr "Kirjoita tehtävän nimi"
 
 #. module: project
 #. odoo-javascript
@@ -5788,7 +5867,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "{{0}} Milestones reached out of {{1}}"
-msgstr ""
+msgstr "{{0}} Välitavoitetta saavutettu määrästä {{1}}"
 
 #. module: project
 #. odoo-python

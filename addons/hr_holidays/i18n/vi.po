@@ -316,6 +316,8 @@ msgid ""
 "<span class=\"mx-2\" invisible=\"request_unit == 'hour'\">days</span>\n"
 "                                    <span class=\"mx-2\" invisible=\"request_unit != 'hour'\">hours</span>"
 msgstr ""
+"<span class=\"mx-2\" invisible=\"request_unit == 'hour'\">ngày</span>\n"
+"                                    <span class=\"mx-2\" invisible=\"request_unit != 'hour'\">giờ</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -383,6 +385,12 @@ msgid ""
 "                    from taking days off during critical periods.\n"
 "                </span>"
 msgstr ""
+"<span>\n"
+"                    Đặt ngày bắt buộc để ngăn nhân viên\n"
+"                </span>\n"
+"                <span>\n"
+"                    nghỉ vào các giai đoạn quan trọng.\n"
+"                </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -433,6 +441,8 @@ msgid ""
 "A great way to keep track on employee’s time off, sick days, and approval "
 "status."
 msgstr ""
+"Một cách tuyệt vời để theo dõi ngày nghỉ, ngày nghỉ ốm và trạng thái phê "
+"duyệt của nhân viên."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -821,6 +831,7 @@ msgstr "Loại phân bổ"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be \"To Approve\" in order to approve it."
 msgstr ""
+"Phân bổ phải ở trạng thái \"Cần phê duyệt\" thì mới có thể được phê duyệt."
 
 #. module: hr_holidays
 #. odoo-python
@@ -906,7 +917,7 @@ msgstr "Số tiền"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "An employee already booked time off which overlaps with this period:"
-msgstr ""
+msgstr "Một nhân viên đã đăng ký ngày nghỉ trùng với khoảng thời gian này:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1342,12 +1353,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_leave_report
 msgid "Check back later to overview all time off requests"
-msgstr ""
+msgstr "Quay lại sau để xem tổng quan tất cả các đơn nghỉ phép"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
 msgid "Check back later to review all your employees' time off"
-msgstr ""
+msgstr "Quay lại sau để xem lại tất cả ngày nghỉ của nhân viên."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -2920,6 +2931,8 @@ msgid ""
 "Nobody here ? All of the people you're looking for will be working at that "
 "time."
 msgstr ""
+"Không có ai ở đây? Tất cả những người bạn đang tìm đều sẽ làm việc vào thời "
+"điểm đó."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2952,6 +2965,8 @@ msgstr "Không. Thời gian đã tích lũy được đặt lại về 0"
 msgid ""
 "Not possible state. State Approve is only used for leave needed 2 approvals"
 msgstr ""
+"Trạng thái không hợp lệ. Trạng thái Phê duyệt chỉ được sử dụng cho các đơn "
+"nghỉ phép cần hai cấp phê duyệt."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
@@ -3081,6 +3096,8 @@ msgstr "Chỉ"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Officer can change the state of a leave in the past."
 msgstr ""
+"Chỉ Người phụ trách ngày nghỉ mới có thể thay đổi trạng thái của một đợt "
+"nghỉ phép đã qua."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3129,6 +3146,8 @@ msgstr "Chỉ quản lý mới có thể điều chỉnh đơn nghỉ phép đã
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a time off Administrator can approve/refuse their own requests."
 msgstr ""
+"Chỉ Quản trị viên ngày nghỉ mới có thể phê duyệt hoặc từ chối yêu cầu của "
+"chính mình."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3136,6 +3155,8 @@ msgstr ""
 msgid ""
 "Oops! %(state)s Time-Off requests can only be deleted by Administrators."
 msgstr ""
+"Rất tiếc! Chỉ Quản trị viên mới có thể xoá đơn nghỉ phép ở trạng thái "
+"%(state)s."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__other
@@ -3214,6 +3235,8 @@ msgstr "Ngày lễ"
 msgid ""
 "Public Holidays are non-working days that don't impact employees' balances"
 msgstr ""
+"Ngày nghỉ lễ là những ngày không làm việc và không ảnh hưởng đến số dư ngày "
+"nghỉ của nhân viên."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
@@ -3825,7 +3848,7 @@ msgstr "Nhân viên sẽ rời công ty vào %(departure_date)s."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 msgid "The first day must be lower than the second day."
-msgstr ""
+msgstr "Ngày đầu tiên phải trước ngày thứ hai."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4441,6 +4464,8 @@ msgid ""
 "Use accrual plans to give determined amount of time following the rules you "
 "define"
 msgstr ""
+"Sử dụng kế hoạch tích lũy để cấp một số ngày nghỉ nhất định theo các quy tắc"
+" bạn thiết lập."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_users
@@ -4639,7 +4664,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Why do you want to cancel this approved time off ?"
-msgstr ""
+msgstr "Tại sao bạn muốn hủy ngày nghỉ đã được phê duyệt này?"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_work_accident
@@ -4712,6 +4737,8 @@ msgid ""
 "You can create a new allocation or follow the approval status of the current"
 " ones."
 msgstr ""
+"Bạn có thể tạo một phân bổ mới hoặc theo dõi trạng thái phê duyệt của các "
+"phân bổ hiện tại."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
@@ -4742,6 +4769,8 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can only validate a leave with validation by Time Off Manager."
 msgstr ""
+"Bạn chỉ có thể xác thực một đơn nghỉ phép khi có phê duyệt từ Quản lý ngày "
+"nghỉ."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4749,12 +4778,13 @@ msgstr ""
 msgid ""
 "You can only validate an allocation with validation by Time Off Manager."
 msgstr ""
+"Bạn chỉ có thể xác thực một phân bổ khi có phê duyệt từ Quản lý ngày nghỉ."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "You can select the period you need to take off"
-msgstr ""
+msgstr "Bạn có thể chọn khoảng thời gian bạn muốn nghỉ"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4792,18 +4822,23 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't refuse a leave with validation by Time Off Officer."
 msgstr ""
+"Bạn không thể từ chối một đơn nghỉ phép được Người phụ trách ngày nghỉ phê "
+"duyệt."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "You can't refuse an allocation with validation by Time Off Officer."
 msgstr ""
+"Bạn không thể từ chối một phân bổ được Người phụ trách ngày nghỉ phê duyệt."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You can't reset a leave. Cancel/delete this one and create an other"
 msgstr ""
+"Bạn không thể đặt lại một đơn nghỉ phép. Hãy hủy hoặc xóa đơn nghỉ phép này "
+"và tạo một đơn khác."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4811,6 +4846,8 @@ msgstr ""
 msgid ""
 "You can't reset an allocation. Cancel/delete this one and create an other"
 msgstr ""
+"Bạn không thể đặt lại một phân bổ. Hãy hủy hoặc xóa phân bổ này và tạo một "
+"phân bổ khác."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4929,7 +4966,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You've already booked time off which overlaps with this period:"
-msgstr ""
+msgstr "Bạn đã đăng ký ngày nghỉ trùng với khoảng thời gian này:"
 
 #. module: hr_holidays
 #. odoo-python

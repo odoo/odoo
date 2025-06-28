@@ -58,12 +58,12 @@ msgstr "'. Näytetään tulokset  '"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "- All products"
-msgstr ""
+msgstr "- Kaikki tuotteet"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "1 Column"
-msgstr ""
+msgstr "1 sarake"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__100_pc
@@ -78,7 +78,7 @@ msgstr "100 prosenttia"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "2 Columns"
-msgstr ""
+msgstr "2 saraketta"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__50_pc
@@ -107,6 +107,9 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"<a href=\"/terms\" class=\"text-muted o_translate_inline\"><u>Ehdot ja edellytykset</u></a><br/>\n"
+"                  30 päivän rahat takaisin takuu<br/>\n"
+"                  Toimitus: 2-3 arkipäivää"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -114,6 +117,8 @@ msgid ""
 "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()\" class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
 "                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
+"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()\" class=\"btn btn-primary o_translate_inline\">Luo tili</a>\n"
+"                 <span class=\"align-middle\">seurataksesi tilaustasi.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -135,12 +140,12 @@ msgstr "<b>Viite: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "<b>Deliver to pickup point</b>"
-msgstr ""
+msgstr "<b>Toimitus noutopisteeseen</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "<b>Delivery</b>"
-msgstr ""
+msgstr "<b>Toimitus</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
@@ -164,6 +169,8 @@ msgid ""
 "<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
 "                                <span class=\"d-none d-md-inline\">Add to cart</span>"
 msgstr ""
+"<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
+"                                <span class=\"d-none d-md-inline\">Lisää ostoskoriin</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -180,6 +187,8 @@ msgid ""
 "<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
 "                    Continue shopping"
 msgstr ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                    Jatka ostosten tekoa"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -217,7 +226,7 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>Muokkaa"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
 msgid "<i class=\"fa fa-pencil me-1\"/>Want an invoice?"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>Haluatko laskun?"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -294,11 +303,13 @@ msgid ""
 "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
 "                                        <i class=\"oi oi-close\" role=\"presentation\"/>"
 msgstr ""
+"<small class=\"mx-auto\"><b>Nollaa suodattimet</b></small>\n"
+"                                                   <i class=\"oi oi-close\" role=\"presentation\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
-msgstr ""
+msgstr "<span class=\"align-middle\">Onko sinulla jo tili?</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -403,17 +414,17 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">Search results for </span>'"
-msgstr ""
+msgstr "<span class=\"text-muted\">Hae tuloksia haulle</span> '"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">Searching</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Haetaan</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">in</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">kohteessa</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
@@ -458,6 +469,9 @@ msgid ""
 "                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge\">Click here</a>\n"
 "                            </strong> if you want to merge your previous cart into current cart."
 msgstr ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge\">Klikkaa tästä</a>,\n"
+"                            </strong> jos haluat yhdistää aiemman ostoskorisi nykyisen kanssa."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -466,6 +480,9 @@ msgid ""
 "                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash\">Click here</a>\n"
 "                            </strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart."
 msgstr ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash\">Klikkaa tästä</a>,\n"
+"                            </strong>jos haluat palauttaa aiemman ostoskorisi. Nykyinen ostoskorisi korvataan aiemmalla."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
@@ -529,6 +546,48 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">OSTOSKORISSASI ON JOTAKIN.</h1>\n"
+"                    Haluaisitko viimeistellä ostoksesi?<br/><br/>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Työpöytäsetti</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Työpöytäsetti, työpöytäsetti, mustaruskea: tuoli + työpöytä + vetolaatikko.</t>\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom_id.name or ''\">kpl</t>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <hr/>\n"
+"                    </t>\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" target=\"_blank\" t-attf-style=\"background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
+"                            Jatka tilauksen tekemistä\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>Kiitos, kun teet ostoksesi kanssamme <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</strong></div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -805,7 +864,7 @@ msgstr "Vaihtoehtoiset tuotteet"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Always Fill the box"
-msgstr ""
+msgstr "Täytä aika ruutu"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
@@ -874,12 +933,12 @@ msgstr "Keskimääräinen arvio"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__back_button_label
 msgid "Back Button Label"
-msgstr ""
+msgstr "Takaisin-painikkeen teksti"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_delivery
 msgid "Back to address"
-msgstr ""
+msgstr "Takaisin osoitteeseen"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_cart
@@ -889,7 +948,7 @@ msgstr "Takaisin ostoskoriin"
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
 msgid "Back to extra info"
-msgstr ""
+msgstr "Takaisin lisätietoihin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1099,7 +1158,7 @@ msgstr "Ostoskorin palautussähköposti on jo lähetettty"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Catalog of products"
-msgstr ""
+msgstr "Tuoteluettelo"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1219,7 +1278,7 @@ msgstr "Klassinen"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Classic Grid"
-msgstr ""
+msgstr "Perinteinen ruudukko"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -1230,7 +1289,7 @@ msgstr "Nollaa suotimet"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Clear search for this category"
-msgstr ""
+msgstr "Tyhjennä tämän kategorian haku"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_collect
@@ -1290,7 +1349,7 @@ msgstr "Sulje kategoriat alitasoineen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Collapse sidebar sections"
-msgstr ""
+msgstr "Pienennä sivupalkin osiot"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_collapsible
@@ -1325,7 +1384,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Compact List"
-msgstr ""
+msgstr "Tiivis lista"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
@@ -1446,6 +1505,7 @@ msgstr "Vahvistetut tilaukset"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Connect your eCommerce to Google Merchant Center via a product file."
 msgstr ""
+"Yhdistä verkkokauppasi Google Merchant Centeriin tuotetiedoston avulla."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
@@ -1465,7 +1525,7 @@ msgstr "Ota yhteyttä -painikkeen URL-osoite"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Contain within the box"
-msgstr ""
+msgstr "Sijoita ruudun sisälle"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1491,7 +1551,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Copy file link"
-msgstr ""
+msgstr "Kopioi tiedoston linkki"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -1679,7 +1739,7 @@ msgstr "Toimitus"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "Delivery &amp; Billing"
-msgstr ""
+msgstr "Toimitus &amp; laskutus"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__amount_delivery
@@ -1705,7 +1765,7 @@ msgstr "Toimitus ja asennus"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "Delivery method"
-msgstr ""
+msgstr "Toimitustapa"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1753,7 +1813,7 @@ msgstr "Pöydät"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Detailed List"
-msgstr ""
+msgstr "Yksityiskohtainen lista"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1918,6 +1978,8 @@ msgid ""
 "Drag building blocks here to customize the header for\n"
 "                                        \""
 msgstr ""
+"Raahaa rakennuselementtejä tähän räätälöidäksesi ylätunnisteen kohteelle\n"
+"                                      \""
 
 #. module: website_sale
 #. odoo-python
@@ -2000,7 +2062,7 @@ msgstr "Muokkaa"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Edit address"
-msgstr ""
+msgstr "Muokkaa osoitetta"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2121,7 +2183,7 @@ msgstr "Arkistolaatikot"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Filmstrip - default"
-msgstr ""
+msgstr "Filmstrip – oletus"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -2140,18 +2202,18 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Floating"
-msgstr ""
+msgstr "Leijuva"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Floating sticky Toolbar"
-msgstr ""
+msgstr "Leijuva kiinnittyvä työkalupalkki"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Focused"
-msgstr ""
+msgstr "Keskitetty"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_foldable
@@ -2218,7 +2280,7 @@ msgstr "Lasipöydät"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__gmc_xml_url
 msgid "Gmc Xml Url"
-msgstr ""
+msgstr "Gmc Xml Url"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2231,7 +2293,7 @@ msgstr "Siirry ostoskoriin"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_gmc_src
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_gmc_src
 msgid "Google Merchant Center Data Source"
-msgstr ""
+msgstr "Google Merchant Center tietolähde"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__grid
@@ -2280,7 +2342,7 @@ msgstr "Piilota 'Lisää ostoskoriin' kun hinta = 0"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Hide all filters"
-msgstr ""
+msgstr "Piilota kaikki suodattimet"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2290,7 +2352,7 @@ msgstr "Tuntia."
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
 msgid "Href"
-msgstr ""
+msgstr "Href"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -2415,7 +2477,7 @@ msgstr "Kuva 512"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Image Grid"
-msgstr ""
+msgstr "Kuvaruudukko"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2440,7 +2502,7 @@ msgstr "Kuvan zoomaus"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Images Fill"
-msgstr ""
+msgstr "Kuvan täyttö"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2574,7 +2636,7 @@ msgstr "Maisema (4/3)"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Large Image"
-msgstr ""
+msgstr "Suuri kuva"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2679,7 +2741,7 @@ msgstr "Linjan osamaksujen veronäyttö"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "List of products"
-msgstr ""
+msgstr "Tuotelista"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2724,11 +2786,14 @@ msgid ""
 "Mail only sent to signed in customers with items available for sale in carts"
 " created after the feature activation."
 msgstr ""
+"Sähköpostit lähetetään vain kirjautuneille asiakkaille, joilla on "
+"ostoskorissa tuotteita, joita on myynnissä, ja jotka on luotu ominaisuuden "
+"aktivoinnin jälkeen."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__main_button_label
 msgid "Main Button Label"
-msgstr ""
+msgstr "Pääpainikkeen teksti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2798,7 +2863,7 @@ msgstr "Matkapuhelin"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Modern Showcase"
-msgstr ""
+msgstr "Moderni esittely"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2884,7 +2949,7 @@ msgstr "Uusi tuote"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "New address"
-msgstr ""
+msgstr "Uusi osoite"
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.new_ribbon
@@ -3049,7 +3114,7 @@ msgstr "Odoo-valikko"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Off-screen Menu"
-msgstr ""
+msgstr "Näytön ulkopuolinen valikko"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_office
@@ -3059,7 +3124,7 @@ msgstr "Toimistopöydät"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
 msgid "On the website original price is crossed out."
-msgstr ""
+msgstr "Alkuperäinen hinta on yliviivattu verkkosivulla."
 
 #. module: website_sale
 #. odoo-python
@@ -3092,7 +3157,7 @@ msgstr "Verkkokauppamyynnin analyysi"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Online catalog"
-msgstr ""
+msgstr "Tuoteluettelo verkossa"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -3167,7 +3232,7 @@ msgstr "Tilausrivit jotka näytetään verkkosivuilla"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Order summary"
-msgstr ""
+msgstr "Tilauksen yhteenveto"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -3669,7 +3734,7 @@ msgstr "Määrä"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Quick Browse Grid"
-msgstr ""
+msgstr "Pikakatseluruudukko"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3744,7 +3809,7 @@ msgstr "Äskettäin myydyt tuotteet"
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products (per user)"
-msgstr ""
+msgstr "Äskettäin katsotut tuotteet (käyttäjäkohtainen)"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_recliners
@@ -3804,7 +3869,7 @@ msgstr "Poista yksi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Render a button to show the Off-screen Menu"
-msgstr ""
+msgstr "Näytä painike, joka avaa näytön ulkopuolisen valikon"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_repair_and_maintenance
@@ -3969,18 +4034,18 @@ msgstr "Etsi tuotteita"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search globally"
-msgstr ""
+msgstr "Hae yleisesti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search in"
-msgstr ""
+msgstr "Hae kohteessa"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search {{0}} globally"
-msgstr ""
+msgstr "Hae {{0}} yleisesti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4139,17 +4204,17 @@ msgstr "Näytä tyhjä"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show a filmstrip navigation at the Top"
-msgstr ""
+msgstr "Näytä filmstrip-navigointi ylhäällä"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show filters into Sidebar"
-msgstr ""
+msgstr "Näytä suodattimet sivupalkissa"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show into Sidebar"
-msgstr ""
+msgstr "Näytä sivupalkissa"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_search
@@ -4175,7 +4240,7 @@ msgstr "Sivupalkki"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Sidebar Grid"
-msgstr ""
+msgstr "Sivupalkin ruudukko"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -4382,6 +4447,7 @@ msgstr "Pääsytunniste on virheellinen."
 msgid ""
 "The building block will remain empty until the user visits a product page."
 msgstr ""
+"Designelementti pysyy tyhjänä, kunnes käyttäjä vierailee tuotesivulla."
 
 #. module: website_sale
 #. odoo-python
@@ -4605,6 +4671,8 @@ msgstr "Pienoiskuvat"
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email_activation_time
 msgid "Time when the 'Send abandoned cart email' feature was activated."
 msgstr ""
+"Aika, jolloin \"Lähetä hylätty ostoskori -sähköposti\" -toiminto "
+"aktivoitiin."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4620,7 +4688,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Toolbar"
-msgstr ""
+msgstr "Työkalupalkki"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4758,7 +4826,7 @@ msgstr "Videon URL"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
 msgid "View More"
-msgstr ""
+msgstr "Näytä lisää"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
@@ -4898,7 +4966,7 @@ msgstr "Verkkosivun luokka"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_step
 msgid "Website Checkout Step"
-msgstr ""
+msgstr "Verkkosivun kassavaihe"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
@@ -5014,6 +5082,12 @@ msgid ""
 "                    In these cases, the calculated/fixed price is set as the unit price with 0% discount\n"
 "                    in the order."
 msgstr ""
+"Kun hinnat lasketaan kaavalla tai ovat kiinteitä, alkuperäistä hintaa \n"
+"             ei yleensä näytetä myyntitilauksen riveillä tai kassalla. Tietyissä \n"
+"             kaavapohjaisissa hinnoittelusäännöissä alennus voidaan näyttää kaupan\n"
+"             sivulla (esim. tuotesivuilla ja konfiguraattoreissa), mutta ei ostoskorissa tai kassalla. \n"
+"             Näissä tapauksissa laskettu/kiinteä hinta asetetaan yksikköhinnaksi 0%:n alennuksella \n"
+"             tilauksessa."
 
 #. module: website_sale
 #. odoo-python
@@ -5046,7 +5120,7 @@ msgstr "Kolmella jalalla"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Wrong format: got `pricelist=%s`, expected an integer"
-msgstr ""
+msgstr "Väärä muoto: saatiin `pricelist=%s`, odotettiin kokonaislukua"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5062,6 +5136,10 @@ msgid ""
 "                            If you want to modify your billing address, create a\n"
 "                            <a class=\"o_translate_inline\" href=\"/shop/address?address_type=billing\">new address</a>."
 msgstr ""
+"Olet muokkaamassa <b>toimitus- ja laskusutosoitteita</b>\n"
+"                          samaan aikaan!<br/>\n"
+"                          Jos haluat muokata laskutusosoitetta, luo\n"
+"                         <a class=\"o_translate_inline\" href=\"/shop/address?address_type=billing\">uusi osoite</a>."
 
 #. module: website_sale
 #. odoo-python
@@ -5223,6 +5301,8 @@ msgid ""
 "eCommerce must be accessible to all users for Google Merchant Center to "
 "operate properly."
 msgstr ""
+"Verkkokaupan on oltava saatavilla kaikille käyttäjille, jotta Google "
+"Merchant Center toimii oikein."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
