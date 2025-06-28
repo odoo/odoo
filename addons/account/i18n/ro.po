@@ -1635,6 +1635,7 @@ msgstr ""
 #, python-format
 msgid "Account %s is of payable type, but is used in a sale operation."
 msgstr ""
+"Cont %s este de tip de plată, dar este folosit într-o operațiune de vânzare."
 
 #. module: account
 #. odoo-python
@@ -1642,6 +1643,8 @@ msgstr ""
 #, python-format
 msgid "Account %s is of receivable type, but is used in a purchase operation."
 msgstr ""
+"Cont %s este de tip de încasare, dar este folosit într-o operațiune de "
+"cumpărare."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -3694,6 +3697,8 @@ msgstr "Nu se poate crea un document de vânzare într-un jurnal fără vânzare
 #, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
+"Nu se poate crea o înregistrare de provizion pentru comenzi în valute "
+"diferite."
 
 #. module: account
 #. odoo-python
@@ -4510,12 +4515,12 @@ msgstr "Intrări contrapartidă"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Counterpart buttons"
-msgstr ""
+msgstr "Butoane corespondente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Counterpart rules"
-msgstr ""
+msgstr "Reguli corespondente"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
@@ -5829,14 +5834,14 @@ msgstr "Suma reducerii în valută"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Discount of %(amount)s if paid today"
-msgstr ""
+msgstr "Reducere de %(amount)s dacă se plătește astăzi"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Discount of %(amount)s if paid within %(days)s days"
-msgstr ""
+msgstr "Reducere de %(amount)s dacă se plătește în %(days)s zile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -5956,7 +5961,7 @@ msgstr "Distribuție"
 #: model:ir.model.fields,field_description:account.field_account_move_line__distribution_analytic_account_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Cont analitic de distribuție"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -6434,7 +6439,7 @@ msgstr "Nume intrare"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr ""
+msgstr "Epd nevalidat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
@@ -7075,6 +7080,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"Formulă de forma line_code.expression_label. Aceasta permite setarea țintei "
+"transferului pentru această expresie (pe o expresie etichetată "
+"_carryover_*), dacă este diferită de linia părinte."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8091,6 +8099,7 @@ msgstr ""
 msgid ""
 "Internal field to shorten expression_ids creation for the tax_tags engine"
 msgstr ""
+"Câmp intern pentru a scurta crearea expression_ids pentru motorul tax_tags"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -8123,6 +8132,9 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
 " for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"Interval poștal invalid, trebuie să configurați atât valorile „De la”, cât "
+"și „Până la” pentru intervalul poștal, iar „Până la” trebuie să fie mai mare"
+" decât „De la”."
 
 #. module: account
 #. odoo-python
@@ -8526,7 +8538,7 @@ msgstr "Între"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "Este instalat planul de conturi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -8633,7 +8645,7 @@ msgstr "A fost anterior '%(previous)s' și acum este '%(current)s'."
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Items With Missing Analytic Distribution"
-msgstr ""
+msgstr "Elemente cu distribuție analitică lipsă"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -9860,7 +9872,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "Nearest"
-msgstr ""
+msgstr "Cel mai apropiat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -9898,7 +9910,7 @@ msgstr "Valoarea negativă a câmpului sumă dacă tipul de plată este de ieși
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
-msgstr ""
+msgstr "Grupuri de taxe imbricate nu sunt permise."
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -10817,7 +10829,7 @@ msgstr "Conturi P&L"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "PAY001"
-msgstr ""
+msgstr "PLT001"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_pdf_report_id
@@ -12478,7 +12490,7 @@ msgstr "Eroare livrare SMS"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "SO123"
-msgstr ""
+msgstr "SO123"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -12740,7 +12752,7 @@ msgstr "Vedeți toate activitățile"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "See items"
-msgstr ""
+msgstr "Vezi elemente"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -13108,6 +13120,8 @@ msgstr "Stabiliți un preț"
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Setează o valoare mai mare decât 0.0 pentru a activa verificarea limitei de "
+"credit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13871,7 +13885,7 @@ msgstr "Etichete fiscale"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
 msgid "Tax Tags Formula Shortcut"
-msgstr ""
+msgstr "Scurtătură formulă etichete fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
@@ -14405,6 +14419,7 @@ msgid ""
 "The country code of the foreign VAT number does not match any country in the"
 " group."
 msgstr ""
+"Codul de țară al codului TVA străin nu se potrivește cu nicio țară din grup."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -15598,7 +15613,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This specific error occurred during the import:"
-msgstr ""
+msgstr "Această eroare specifică a apărut în timpul importului:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15606,6 +15621,8 @@ msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
 msgstr ""
+"Aceasta va actualiza toate taxele și conturile pe baza poziției fiscale "
+"selectate."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15934,6 +15951,9 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Declanșați alerte la crearea facturilor și comenzilor de vânzare pentru "
+"partenerii cu o sumă totală de încasat ce depășește o limită. Setați o "
+"valoare mai mare decât 0.0 pentru a activa verificarea limitei de credit."
 
 #. module: account
 #. odoo-python
@@ -16060,7 +16080,7 @@ msgstr "Unitatea de măsură"
 #: code:addons/account/models/template_generic_coa.py:0
 #, python-format
 msgid "United States of America (Generic)"
-msgstr ""
+msgstr "Statele Unite ale Americii (Generic)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16567,6 +16587,10 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
+"Facturile furnizorilor pot fi pre-generate pe baza comenzilor de achiziție\n"
+"sau a recepțiilor. Acest lucru vă permite să controlați facturile\n"
+"pe care le primiți de la furnizor în funcție de documentul de ciornă\n"
+"din Odoo."
 
 #. module: account
 #. odoo-javascript

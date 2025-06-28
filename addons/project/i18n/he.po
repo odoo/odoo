@@ -475,6 +475,11 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible=\"rating_status == 'periodic'\">בקשה למשוב תישלח מיד עם המעבר המשימה לשלב שהוגדר תבנית מייל למשוב \".</span>\n"
+"                                                    <span invisible=\"rating_status == 'stage'\">בקשות למשוב ישלחו כל עוד המשימה נמצאת בשלב שהגדר תבנית מייל למשוב .</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1005,6 +1010,9 @@ msgid ""
 " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
 msgstr ""
+"שנה את המצב אוטומטית כאשר הלקוח משיב למשוב על שלב זה.\n"
+" * משוב חיובי יעדכן אתהמצב \"מאושר\" ' (נקודה ירוקה).\n"
+" * משוב ניטרלי או גרוע יעביר את מצב הקנבן ל- ,בקשת שינוי\"' (נקודה צהובה).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1155,6 +1163,8 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"בחר<b>שם</b>לפרויקט שלך.<i>זה יכול להיות כל מה שתרצו: שם של לקוח,\n"
+"של מוצר, של צוות, של אתר בנייה וכו'.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1229,6 +1239,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
+"אסוף משוב מהלקוחות על ידי שליחת בקשת משוב כשהמשימה מגיעה לשלב מסוים. לשם כך, הגדר תבנית מייל משוב בשלב המתאים .\n"
+"דירוג בעת שינוי שלב: מייל יישלח אוטומטית כאשר המשימה מגיעה לשלב שבו מוגדרת תבנית מייל המשוב. \n"
+"משוב תקופתי: מייל יישלח אוטומטית במרווחי זמן קבועים, כל עוד המשימה נשארת בשלב שבו מוגדרת תבנית מייל המשוב."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1250,6 +1263,8 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
+"תקשר עם הלקוחות דרך המשימה באמצעות שער הדוא\"ל. צרף עיצובים של לוגו למשימה, כדי שהמידע יעבור בצורה רציפה מ־\n"
+"     המעצבים לעובדים שמדפיסים את החולצה."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -1881,6 +1896,8 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
+"לכל משתמש צריך להיות לפחות שלב אישי אחד.צור שלב חדש שאליו ניתן להעביר משימות"
+" לאחר שהמשימות שנבחרו יימחקו."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
@@ -3626,7 +3643,7 @@ msgstr "תיאור פרויקט..."
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
 msgid "Project status - {{ object.name }}"
-msgstr ""
+msgstr "סטטוס הפרויקט - {{ object.name }}"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -4329,7 +4346,7 @@ msgstr "שלבים למחיקה"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Starred Tasks"
-msgstr ""
+msgstr "משימות מסומנות בכוכב"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
