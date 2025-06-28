@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="payment_demo.token_form" inherit_id="payment.token_form">
+    </template>
+
+    <template id="payment_demo.payment_method_form" inherit_id="payment.method_form">
+    </template>
+
+    <template id="inline_form">
+        <div t-attf-id="demo-container-{{provider_id}}">
+            <t t-call="payment_demo.payment_details"/>
+        </div>
+    </template>
+
+    <template id="token_inline_form">
+        <div t-attf-id="demo-token-container-{{token_sudo.id}}">
+            <div class="alert alert-warning mb-0">
+                <span t-if="token_sudo.demo_simulated_state=='pending'">
+                    Payments made with this payment method will remain <b>pending</b>.
+                </span>
+                <span t-elif="token_sudo.demo_simulated_state=='done'">
+                    Payments made with this payment method will be <b>successful</b>.
+                </span>
+                <span t-elif="token_sudo.demo_simulated_state=='cancel'">
+                    Payments made with this payment method will be automatically <b>canceled</b>.
+                </span>
+                <span t-else="">
+                    Payments made with this payment method will simulate a processing <b>error</b>.
+                </span>
+            </div>
+        </div>
+    </template>
+
+    <template id="express_checkout_form">
+        <div name="o_express_checkout_container"
+             t-attf-id="o_demo_express_checkout_container_{{provider_sudo.id}}"
+             t-att-data-provider-id="provider_sudo.id"
+             t-att-data-provider-code="provider_sudo.code"
+        >
+            <button type="button"
+                    class="btn btn-primary mt-2 w-100"
+                    data-bs-toggle="modal"
+                    t-attf-data-bs-target="#o_payment_demo_modal_{{provider_sudo.id}}"
+            >
+                    Pay with Demo
+                    <span t-if="not provider_sudo.is_published"
+                          class="badge rounded-pill text-bg-danger ms-1"
+                    >
+                          Unpublished
+                    </span>
+            </button>
+            <div t-attf-id="o_payment_demo_modal_{{provider_sudo.id}}"
+                 class="modal fade mt-5"
+                 tabindex="-1"
+                 aria-labelledby="o_payment_demo_modal_label"
+                 aria-hidden="true"
+            >
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="o_payment_demo_modal_label">
+                                Demo Express Checkout
+                            </h5>
+                            <span t-if="provider_sudo.state == 'test'"
+                                  class="badge rounded-pill text-bg-warning ms-1"
+                            >
+                                Test Mode
+                            </span>
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                            />
+                        </div>
+                        <div class="modal-body">
+                            <t t-call="payment_demo.express_inline_form">
+                                <t t-set="provider_id" t-value="provider_sudo.id"/>
+                            </t>
+                            <div class="float-end mt-2" t-att-data-provider-id="provider_sudo.id">
+                                <t t-call="payment.submit_button">
+                                    <t t-set="submit_button_label">Pay</t>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="express_inline_form">
+        <div>
+            <t t-call="payment_demo.payment_details"/>
+            <div t-if="shipping_info_required"
+                 t-attf-id="o_payment_demo_shipping_info_{{provider_id}}"
+            >
+                <t t-set="customer" t-value="request.env.user.partner_id"/>
+                <div class="row mt-0">
+                    <div class="col mb-0">
+                        <label for="o_payment_demo_shipping_name" class=" mt-0">
+                            <small><b>Name</b></small>
+                        </label>
+                        <input type="text"
+                               id="o_payment_demo_shipping_name"
+                               class="form-control"
+                               t-att-value="customer.name"
+                               readonly="1"
+                               required=""
+                        />
+                    </div>
+                    <div class="col mb-0">
+                        <label for="o_payment_demo_shipping_email" class=" mt-0">
+                            <small>Email</small>
+                        </label>
+                        <input type="text"
+                               id="o_payment_demo_shipping_email"
+                               class="form-control"
+                               t-att-value="customer.email or 'example@example.com'"
+                               readonly="1"
+                        />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-0">
+                        <label for="o_payment_demo_shipping_address" class="mt-1">
+                            <small><b>Street and Number</b></small>
+                        </label>
+                        <input type="text"
+                               id="o_payment_demo_shipping_address"
+                               class="form-control"
+                               required=""
+                               t-att-value="customer.street or 'Rue des Bourlottes 9'"
+                               readonly="1"
+                        />
+                    </div>
+                    <div class="col mb-0">
+                        <label for="o_payment_demo_shipping_address2" class="mt-1">
+                            <small>Street 2</small>
+                        </label>
+                        <input type="text"
+                               id="o_payment_demo_shipping_address2"
+                               class="form-control"
+                               t-att-value="customer.street2"
+                               readonly="1"
+                        />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-0">
+                        <label for="o_payment_demo_shipping_zip" class="mt-1">
+                            <small><b>Zip Code</b></small>
+                        </label>
+                        <input type="text"
+                               id="o_payment_demo_shipping_zip"
+                               class="form-control"
+                               required=""
+                               t-att-value="customer.zip or '1367'"
+                               readonly="1"
+                        />
+                    </div>
+                    <div class="col mb-0">
+                        <label for="o_payment_demo_shipping_city" class="mt-1">
+                            <small><b>City</b></small>
+                        </label>
+                        <input type="text"
+                               id="o_payment_demo_shipping_city"
+                               class="form-control"
+                               t-att-value="customer.city or 'Ramillies'"
+                               readonly="1"
+                               required=""
+                        />
+                    </div>
+                    <div class="col mb-0">
+                        <label for="o_payment_demo_shipping_country" class="mt-1">
+                            <small><b>Country</b></small>
+                        </label>
+                        <select id="o_payment_demo_shipping_country"
+                                class="form-select"
+                                disabled="true"
+                        >
+                            <option t-att-value="customer.country_id.code or 'BE'"
+                                    t-out="customer.country_id.name or 'Belgium'"
+                            />
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="payment_details">
+        <div class="row gap2 gap-md-0">
+            <input name="provider_id" type="hidden" id="provider_id" t-att-value="id"/>
+            <input name="partner_id" type="hidden" t-att-value="partner_id"/>
+            <div class="col-12 col-md mt-0 mb-0">
+                <label for="customer_input" class="mt-0">
+                    <small>Payment Details (test data)</small>
+                </label>
+                <input type="text"
+                       name="customer_input"
+                       id="customer_input"
+                       class="form-control"
+                       placeholder="XXXX XXXX XXXX XXXX"/>
+            </div>
+            <div class="col-12 col-md mb-0">
+                <label for="simulated_payment_state" class="mt-0 text-muted">
+                    <small>Payment Status</small>
+                </label>
+                <select id="simulated_payment_state" class="form-select">
+                    <option value="done" title="Successful payment">
+                        Successful
+                    </option>
+                    <option value="pending" title="Payment processing">
+                        Pending
+                    </option>
+                    <option value="cancel" title="Payment canceled by customer">
+                        Canceled
+                    </option>
+                    <option value="error" title="Processing error">
+                        Error
+                    </option>
+                </select>
+            </div>
+        </div>
+    </template>
+
+</odoo>

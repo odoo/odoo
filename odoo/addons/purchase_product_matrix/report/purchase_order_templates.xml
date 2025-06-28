@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="grid_purchaseorder_inherit" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//div[@id='informations']" position="after">
+            <t t-call="product_matrix.matrix">
+                <t t-set="order" t-value="o"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

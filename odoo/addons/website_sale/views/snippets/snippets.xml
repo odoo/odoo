@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippets" inherit_id="website.snippets" name="e-commerce snippets">
+    <xpath expr="//t[@id='sale_products_hook']" position="replace">
+        <t t-snippet="website_sale.s_dynamic_snippet_products" string="Products" t-thumbnail="/website_sale/static/src/img/snippets_thumbs/s_dynamic_products.svg"/>
+    </xpath>
+    <xpath expr="//t[@id='snippet_add_to_cart_hook']" position="replace">
+        <t t-snippet="website_sale.s_add_to_cart" string="Add to Cart Button"  t-thumbnail="/website/static/src/img/snippets_thumbs/s_add_to_cart.svg"/>
+    </xpath>
+</template>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
+    <xpath expr="." position="inside">
+        <!-- All products page -->
+        <div data-js="WebsiteSaleGridLayout" data-page-options="true" groups="website.group_website_designer" data-selector="main:has(.o_wsale_products_page)" data-no-check="true"
+            string="Products Page" data-target="#products_grid .o_wsale_products_grid_table_wrapper > table">
+            <we-select string="Layout" data-no-preview="true" data-reload="/">
+                <we-button data-customize-website-views="" data-name="grid_view_opt">Grid</we-button>
+                <we-button data-customize-website-views="website_sale.products_list_view">List</we-button>
+            </we-select>
+            <we-row string="Size" class="o_we_sublevel_1">
+                <we-input data-set-ppg="" data-step="1" data-no-preview="true" data-reload="/"/>
+                <span class="mx-2 o_wsale_ppr_by">by</span>
+                <we-select class="o_wsale_ppr_submenu" data-dependencies="grid_view_opt" data-no-preview="true" data-reload="/">
+                    <we-button data-set-ppr="2">2</we-button>
+                    <we-button data-set-ppr="3">3</we-button>
+                    <we-button data-set-ppr="4">4</we-button>
+                </we-select>
+            </we-row>
+            <we-select string="Style" class="o_we_sublevel_1">
+                <we-button data-select-class=""
+                           data-customize-website-views="">
+                           Default
+                </we-button>
+                <we-button data-select-class="o_wsale_design_cards"
+                           data-customize-website-views="website_sale.products_design_card">
+                           Cards
+                </we-button>
+                <we-button data-select-class="o_wsale_design_thumbs"
+                           data-customize-website-views="website_sale.products_design_thumbs">
+                           Thumbnails
+                </we-button>
+                <we-button data-select-class="o_wsale_design_grid"
+                           data-customize-website-views="website_sale.products_design_grid">
+                           Grid
+                </we-button>
+            </we-select>
+            <we-select string="Images Size" class="o_we_sublevel_1">
+                <we-button data-select-class="o_wsale_context_thumb_4_3"
+                           data-customize-website-views="website_sale.products_thumb_4_3">
+                           Landscape (4/3)
+                </we-button>
+                <we-button data-select-class=""
+                           data-customize-website-views="">
+                           Default (1/1)
+                </we-button>
+                <we-button data-select-class="o_wsale_context_thumb_4_5"
+                           data-customize-website-views="website_sale.products_thumb_4_5">
+                           Portrait (4/5)
+                </we-button>
+                <we-button data-select-class="o_wsale_context_thumb_2_3"
+                           data-customize-website-views="website_sale.products_thumb_2_3">
+                           Vertical (2/3)
+                </we-button>
+            </we-select>
+            <we-button-group string="Fill" class="o_we_sublevel_2" data-variable="thumb_size">
+                <we-button data-select-class=""
+                           data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
+                           data-customize-website-views="">
+                </we-button>
+                <we-button data-select-class="o_wsale_context_thumb_cover"
+                           data-name="thumb_cover"
+                           data-variable="thumb_cover"
+                           data-img="/website/static/src/img/snippets_options/content_width_full.svg"
+                           data-customize-website-views="website_sale.products_thumb_cover">
+                </we-button>
+            </we-button-group>
+            <we-checkbox string="Search bar"
+                         data-customize-website-views="website_sale.search"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Prod. Desc."
+                         data-customize-website-views="website_sale.products_description"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-row id="o_wsale_grid_left_panel" string="Categories" data-variable="filmstrip">
+                <we-button string="Left"
+                           data-customize-website-views="website_sale.products_categories"
+                           data-name="categories_opt"
+                           data-no-preview="true"
+                           data-reload="/"/>
+                <we-button string="Top"
+                           data-customize-website-views="website_sale.products_categories_top"
+                           data-name="categories_opt_top"
+                           data-no-preview="true"
+                           data-reload="/"/>
+            </we-row>
+            <we-checkbox id="collapse_category_recursive" string="Collapse Category Recursive"
+                         class="o_we_sublevel_1"
+                         data-customize-website-views="website_sale.option_collapse_products_categories"
+                         data-dependencies="categories_opt"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-row string="Attributes" class="o_we_full_row">
+                <we-button string="Left"
+                           data-customize-website-views="website_sale.products_attributes"
+                           data-name="attributes_opt"
+                           data-no-preview="true"
+                           data-reload="/"/>
+                <we-button string="Top"
+                           data-customize-website-views="website_sale.products_attributes_top"
+                           data-name="attributes_opt_top"
+                           data-no-preview="true"
+                           data-reload="/"/>
+            </we-row>
+            <we-checkbox string="Price Filter"
+                         class="o_we_sublevel_1"
+                         data-customize-website-views="website_sale.filter_products_price"
+                         data-dependencies="attributes_opt, attributes_opt_top"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Product Tags Filter"
+                         class="o_we_sublevel_1"
+                         data-customize-website-views="website_sale.filter_products_tags"
+                         data-dependencies="attributes_opt, attributes_opt_top"
+                         data-no-preview="true"
+                         data-reload="/"
+            />
+            <we-row string="Top Bar" class="o_we_full_row">
+                <we-button string="Sort by"
+                           data-customize-website-views="website_sale.sort"
+                           data-no-preview="true"
+                           data-reload="/"/>
+                <we-button string="Layout"
+                           data-customize-website-views="website_sale.add_grid_or_list_option"
+                           data-no-preview="true"
+                           data-reload="/"/>
+            </we-row>
+            <we-select string="Default Sort" class="o_wsale_sort_submenu" data-no-preview="true" data-reload="/">
+                <t t-foreach="request.env['website']._get_product_sort_mapping()" t-as="query_and_label">
+                    <we-button t-att-data-set-default-sort="query_and_label[0]"><t t-esc="query_and_label[1]"/></we-button>
+                </t>
+            </we-select>
+            <we-row string="Buttons" class="o_we_full_row">
+                <we-button title="Add to Cart" class="fa fa-fw fa-shopping-cart o_we_add_to_cart_btn"
+                           data-customize-website-views="website_sale.products_add_to_cart"
+                           data-no-preview="true"
+                           data-reload="/"/>
+            </we-row>
+        </div>
+        <!-- Product -->
+        <div data-js="WebsiteSaleProductsItem"
+            data-selector="#products_grid .oe_product"
+            data-no-check="true">
+            <div class="o_wsale_soptions_menu_sizes">
+                <we-row string="Size">
+                    <table>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                    </table>
+                </we-row>
+            </div>
+
+            <we-row string="Re-order" data-no-preview="true">
+                <we-button title="Push to top" data-change-sequence="top" class="fa fa-fw fa-angle-double-left"/>
+                <we-button title="Push up" data-change-sequence="up" class="fa fa-fw fa-angle-left"/>
+                <we-button title="Push down" data-change-sequence="down" class="fa fa-fw fa-angle-right"/>
+                <we-button title="Push to bottom" data-change-sequence="bottom" class="fa fa-fw fa-angle-double-right"/>
+            </we-row>
+
+            <we-row>
+                <we-select string="Badge" class="o_wsale_ribbon_select">
+                    <we-button data-set-ribbon="" data-name="no_ribbon_opt">None</we-button>
+                    <!-- Ribbons are filled in JS -->
+                </we-select>
+                <we-button data-edit-ribbon="" title="Edit" class="fa fa-edit" data-no-preview="true" data-dependencies="!no_ribbon_opt"/>
+                <we-button data-create-ribbon="" data-name="create_ribbon_opt" title="Create" class="fa fa-plus text-success" data-no-preview="true"/>
+            </we-row>
+            <div class="d-none" data-name="ribbon_customize_opt">
+                <we-input string="Content" class="o_we_sublevel_1 o_we_large"
+                          data-set-ribbon-html="Badge Text" data-apply-to=".o_ribbon"/>
+                <we-colorpicker string="Background" class="o_we_sublevel_1"
+                                title="" data-select-style="" data-css-property="background-color" data-color-prefix="text-bg-" data-apply-to=".o_ribbon"/>
+                <we-colorpicker string="Text" class="o_we_sublevel_1"
+                                title="" data-select-style="" data-css-property="color" data-apply-to=".o_ribbon"/>
+                <we-select string="Style" class="o_we_sublevel_1">
+                    <we-button data-set-ribbon-mode="ribbon">Slanted</we-button>
+                    <we-button data-set-ribbon-mode="tag">Tag</we-button>
+                </we-select>
+                <we-select string="Position" class="o_we_sublevel_1">
+                    <we-button data-set-ribbon-position="left">Left</we-button>
+                    <we-button data-set-ribbon-position="right">Right</we-button>
+                </we-select>
+                <we-row string=" ">
+                    <we-button class="o_we_bg_danger" data-delete-ribbon="" data-no-preview="true">Delete Badge</we-button>
+                </we-row>
+            </div>
+        </div>
+        <div data-selector="#wrapwrap > header"
+            data-no-check="true"
+            groups="website.group_website_designer">
+            <we-row string="Show Empty" class="o_we_full_row">
+                <div class="d-flex gap-1 mb-1 w-100">
+                    <we-button title="Show/hide shopping cart" class="o_btn_show_empty_cart fa fa-shopping-cart d-flex justify-content-center flex-grow-1"
+                            data-customize-website-views="website_sale.header_hide_empty_cart_link|"
+                            data-no-preview="true"
+                            data-reload="/"/>
+                </div>
+            </we-row>
+        </div>
+        <!-- Product image -->
+        <div data-js="WebsiteSaleProductAttribute" data-selector="#product_detail .o_wsale_product_attribute" data-no-check="true">
+            <we-select string="Display Type" data-no-preview="true">
+                <we-button data-set-display-type="radio">Radio</we-button>
+                <we-button data-set-display-type="pills">Pills</we-button>
+                <we-button data-set-display-type="select">Select</we-button>
+                <we-button data-set-display-type="color">Color</we-button>
+            </we-select>
+        </div>
+        <!-- Product page -->
+        <div data-js="WebsiteSaleProductPage" data-selector="main:has(.o_wsale_product_page)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Product Page">
+            <we-row string="Customers" class="o_we_full_row">
+                <we-button string="Rating"
+                           data-customize-website-views="website_sale.product_comment"
+                           data-no-preview="true"
+                           data-reload="/"/>
+                <we-button string="Share"
+                           data-name="attributes_opt"
+                           data-customize-website-views="website_sale.product_share_buttons"
+                           data-no-preview="true"
+                           data-reload="/"/>
+            </we-row>
+            <we-checkbox string="Select Quantity"
+                         data-customize-website-views="website_sale.product_quantity"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Tax Indication"
+                         data-customize-website-views="website_sale.tax_indication"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-select data-name="variants_opt" groups="product.group_product_variant" string="Variants" data-no-preview="true" data-reload="/">
+                <we-button data-name="variants_options_opt" data-customize-website-views="">Options</we-button>
+                <we-button data-name="variants_products_list_opt" data-customize-website-views="website_sale.product_variants">Products List</we-button>
+            </we-select>
+            <we-checkbox string="Product Tags"
+                         data-customize-website-views="website_sale.product_tags"
+                         data-no-preview="true"
+                         data-reload="/"
+            />
+            <we-row string="Cart" class="o_we_full_row" data-name="o_wsale_buy_now_opt">
+                <we-button title="Buy Now" class="o_we_buy_now_btn"
+                           data-customize-website-views="website_sale.product_buy_now"
+                           data-no-preview="true"
+                           data-reload="/">
+                    <i class="fa fa-fw fa-bolt"/>
+                    Buy Now
+                </we-button>
+            </we-row>
+            <!-- Image config -->
+            <we-button-group string="Images Width" data-no-preview="true" data-reload="/">
+                <we-button data-set-image-width="none" data-img="/website_sale/static/src/img/snippet_options/image-width-none.svg" title="None"/>
+                <we-button data-set-image-width="50_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-50.svg" title="50 percent"/>
+                <we-button data-set-image-width="66_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-66.svg" title="66 percent"/>
+                <we-button data-set-image-width="100_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-100.svg" title="100 percent"/>
+            </we-button-group>
+            <we-select string="Layout" data-name="o_wsale_image_layout" data-no-preview="true" data-reload="/">
+                <we-button data-set-image-layout="carousel">Carousel</we-button>
+                <we-button data-set-image-layout="grid">Grid</we-button>
+            </we-select>
+            <we-select string="Image Zoom" class="o_we_sublevel_1" data-name="o_wsale_zoom_mode" data-no-preview="true" data-reload="/">
+                <we-button data-name="o_wsale_zoom_hover" data-customize-website-views="website_sale.product_picture_magnify_hover">Magnifier on hover</we-button>
+                <we-button data-name="o_wsale_zoom_click" data-customize-website-views="website_sale.product_picture_magnify_click">Pop-up on Click</we-button>
+                <we-button data-name="o_wsale_zoom_both" data-customize-website-views="website_sale.product_picture_magnify_both">Both</we-button>
+                <we-button data-name="o_wsale_zoom_none" data-customize-website-views="">None</we-button>
+            </we-select>
+            <!-- Carousel config -->
+            <we-button-group string="Thumbnails" class="o_we_sublevel_1" data-name="o_wsale_thumbnail_pos" data-no-preview="true" data-reload="/">
+                <we-button class="fa fa-fw fa-long-arrow-left" title="Left" data-customize-website-views="website_sale.carousel_product_indicators_left"/>
+                <we-button class="fa fa-fw fa-long-arrow-down" title="Bottom" data-customize-website-views="website_sale.carousel_product_indicators_bottom"/>
+            </we-button-group>
+            <!-- Grid config -->
+            <we-range string="Image Spacing" class="o_we_sublevel_1" data-name="o_wsale_grid_spacing" data-no-preview="true" data-reload="/" data-max="3" data-step="1" data-set-spacing=""/>
+            <we-select string="Columns" class="o_we_sublevel_1" data-name="o_wsale_grid_columns"  data-no-preview="true" data-reload="/">
+                <we-button data-set-columns="1">1</we-button>
+                <we-button data-set-columns="2">2</we-button>
+                <we-button data-set-columns="3">3</we-button>
+            </we-select>
+            <we-row string="Main image">
+                <we-button class="o_we_bg_success" data-name="o_wsale_replace_main_image" data-replace-main-image="true" data-no-preview="true">Replace</we-button>
+            </we-row>
+            <we-row string="Extra Images">
+                <we-button class="o_we_bg_success" data-name="o_wsale_add_extra_images" data-add-images="true" data-no-preview="true">Add</we-button>
+                <we-button class="o_we_bg_danger" data-name="o_wsale_clear_extra_images" data-clear-images="true" data-no-preview="true">Remove all</we-button>
+            </we-row>
+        </div>
+        <!-- Checkout page  -->
+        <div data-selector="main:has(.oe_website_sale .o_wizard)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Checkout Pages">
+            <we-checkbox string="Extra Step"
+                         data-customize-website-views="website_sale.extra_info"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Suggested Accessories"
+                         data-customize-website-views="website_sale.suggested_products_list"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Promo Code"
+                         data-customize-website-views="website_sale.reduction_code"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Accept Terms &amp; Conditions"
+                         data-customize-website-views="website_sale.accept_terms_and_conditions"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Show b2b Fields"
+                         data-customize-website-views="website_sale.address_b2b"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+    </xpath>
+</template>
+
+<template id="snippets_options_web_editor" inherit_id="web_editor.snippet_options" name="e-commerce base snippet options">
+    <xpath expr="//div[@data-js='ReplaceMedia']" position="inside">
+        <we-row string="Re-order">
+            <we-button class="fa fa-fw fa-angle-double-left" data-no-preview="true" title="Move to first" data-set-position="first" data-name="media_wsale_resequence"/>
+            <we-button class="fa fa-fw fa-angle-left" data-no-preview="true" title="Move to previous" data-set-position="left" data-name="media_wsale_resequence"/>
+            <we-button class="fa fa-fw fa-angle-right" data-no-preview="true" title="Move to next" data-set-position="right" data-name="media_wsale_resequence"/>
+            <we-button class="fa fa-fw fa-angle-double-right" data-no-preview="true" title="Move to last" data-set-position="last" data-name="media_wsale_resequence"/>
+        </we-row>
+    </xpath>
+    <xpath expr="//div[@data-js='ReplaceMedia']/we-row" position="inside">
+        <we-button class="o_we_bg_danger" data-remove-media="true" data-no-preview="true" data-name="media_wsale_remove">Remove</we-button>
+    </xpath>
+</template>
+
+<template id="product_searchbar_input_snippet_options" inherit_id="website.searchbar_input_snippet_options" name="product search bar snippet options">
+    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='scope_opt']" position="inside">
+        <we-button data-set-search-type="products" data-select-data-attribute="products" data-name="search_products_opt" data-form-action="/shop">Products</we-button>
+    </xpath>
+    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='order_opt']" position="inside">
+        <t t-foreach="request.env['website']._get_product_sort_mapping()" t-as="query_and_label">
+            <!-- name asc is already part of the general sorting methods of this snippet. -->
+            <we-button t-if="query_and_label[0] != 'name asc'" t-att-data-set-order-by="query_and_label[0]" t-att-data-select-data-attribute="query_and_label[0]" data-dependencies="search_products_opt"><t t-out="query_and_label[1]"/></we-button>
+        </t>
+    </xpath>
+    <xpath expr="//div[@data-js='SearchBar']/div[@data-dependencies='limit_opt']" position="inside">
+        <we-checkbox string="Description" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
+            data-apply-to=".search-query"/>
+        <we-checkbox string="Category" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayExtraLink"
+            data-apply-to=".search-query"/>
+        <we-checkbox string="Price" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayDetail"
+            data-apply-to=".search-query"/>
+        <we-checkbox string="Image" data-dependencies="search_products_opt" data-select-data-attribute="true" data-attribute-name="displayImage"
+            data-apply-to=".search-query"/>
+    </xpath>
+</template>
+
+</odoo>

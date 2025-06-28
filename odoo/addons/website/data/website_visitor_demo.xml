@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_visitor_0" model="website.visitor">
+        <field name="country_id" ref="base.nl"/>
+        <field name="page_ids" eval="[(4, ref('website.homepage_page'))]"/>
+        <field name="website_track_ids" eval="[(0, 0, {'page_id': ref('website.homepage_page'), 'url': '/'})]"/>
+        <field name="access_token" ref="base.res_partner_address_5"/>
+    </record>
+    <record id="website_visitor_1" model="website.visitor">
+        <field name="country_id" ref="base.us"/>
+        <field name="page_ids" eval="[(4, ref('website.contactus_page'))]"/>
+        <field name="website_track_ids" eval="[(0, 0, {'page_id': ref('website.contactus_page'), 'url': '/contactus'})]"/>
+        <field name="access_token" ref="base.res_partner_address_11"/>
+    </record>
+    <record id="website_visitor_2" model="website.visitor">
+        <field name="country_id" ref="base.be"/>
+        <field name="page_ids" eval="[(4, ref('website.homepage_page'))]"/>
+        <field name="website_track_ids" eval="[(0, 0, {'page_id': ref('website.homepage_page'), 'url': '/'})]"/>
+        <field name="access_token">f9d24e459528093a790f38e5cc989a8d</field>
+    </record>
+
+</odoo>

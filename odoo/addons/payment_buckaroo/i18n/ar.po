@@ -1,0 +1,102 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_buckaroo
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"An error occurred during processing of your payment (code %s). Please try "
+"again."
+msgstr "حدث خطأ أثناء معالجة هذا الدفع (الكود %s). يرجى المحاولة مجدداً. "
+
+#. module: payment_buckaroo
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_provider__code__buckaroo
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_secret_key
+msgid "Buckaroo Secret Key"
+msgstr "المفتاح السري لـ Buckaroo "
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__code
+msgid "Code"
+msgstr "رمز "
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "لم يتم العثور على معاملة تطابق المرجع %s. "
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_payment_provider
+msgid "Payment Provider"
+msgstr "مزود الدفع "
+
+#. module: payment_buckaroo
+#: model:ir.model,name:payment_buckaroo.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة السداد"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing transaction keys"
+msgstr "تم استلام البيانات دون مفاتيح المعاملة "
+
+#. module: payment_buckaroo
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_provider_form
+msgid "Secret Key"
+msgstr "المفتاح السري "
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__buckaroo_website_key
+msgid "The key solely used to identify the website with Buckaroo"
+msgstr "المفتاح مُستخدم فقط لتعريف الموقع الإلكتروني مع Buckaroo "
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "الكود التقني لمزود الدفع هذا. "
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Unknown status code: %s"
+msgstr "كود الحالة غير المعروفة: %s "
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_website_key
+msgid "Website Key"
+msgstr "مفتاح الموقع الإلكتروني "
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+#, python-format
+msgid "Your payment was refused (code %s). Please try again."
+msgstr "لقد تم رفض الدفع (الكود %s). يرجى المحاولة مجدداً. "

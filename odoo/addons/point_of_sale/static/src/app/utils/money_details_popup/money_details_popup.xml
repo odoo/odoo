@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.MoneyDetailsPopup">
+        <div class="popup money-details">
+            <div class="modal-header">
+                <h4 class="modal-title">Coins/Bills</h4>
+            </div>
+            <main class="modal-body">
+                <t t-set="bills" t-value="Object.keys(state.moneyDetails).sort((a, b) => b - a)"/>
+                <div t-attf-style="display: grid; grid-template-rows: repeat(calc({{bills.length}}/2) ,auto); grid-auto-flow: column;">
+                    <div t-foreach="bills" t-as="moneyValue" t-key="moneyValue" class="d-flex align-items-center justify-content-center my-1 ">
+                        <NumericInput class="'mx-2 w-50'" tModel="[state.moneyDetails, moneyValue]" min="0"/>
+                        <label class="oe_link_icon w-25 text-end">
+                            <span class="mx-1" t-esc="env.utils.formatCurrency(_parseFloat(moneyValue))"/>
+                        </label>
+                    </div>
+                </div>
+                <h4 class="total-section rounded py-2">
+                    Total 
+                    <t t-esc="env.utils.formatCurrency(computeTotal())"/>
+                </h4>
+            </main>
+            <footer class="footer footer-flex modal-footer">
+                <div class="button highlight btn btn-lg btn-primary" t-on-click="confirm">Confirm</div>
+                <div class="button btn btn-lg btn-secondary" t-on-click="cancel">Discard</div>
+            </footer>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,5 @@
+.o_lunch_widget_lines{
+    //calculation to display the number of lines to show before scrolling
+    $-entry-height: calc(#{$font-size-base * $line-height-base} + (#{map-get($spacers, 1)} * 2));
+    max-height: calc(#{$-entry-height} * 4.5); // if we want 4 entries with the 5th row visible
+}

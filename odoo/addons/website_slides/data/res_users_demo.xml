@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="website_slides.group_website_slides_officer" model="res.groups">
+            <field name="users" eval="[(4, ref('base.user_demo'))]"/>
+        </record>
+
+        <record id="website_slides.group_website_slides_manager" model="res.groups">
+            <field name="users" eval="[(4, ref('base.user_admin')), (4, ref('base.user_root'))]"/>
+        </record>
+    </data>
+</odoo>

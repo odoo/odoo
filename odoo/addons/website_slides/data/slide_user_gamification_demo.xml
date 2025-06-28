@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Completion of Quiz and Karma Generation -->
+        <record id="slide_slide_1_4_partner_admin" model="slide.slide.partner">
+            <field name="slide_id" ref="website_slides.slide_slide_demo_1_4"/>
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="quiz_attempts_count">1</field>
+            <field name="completed" eval="True"/>
+        </record>
+        <function model="res.users" name="_add_karma">
+            <value eval="[ref('base.user_admin')]"/>
+            <value eval="20"/>
+            <value model="slide.slide" eval="obj().env.ref('website_slides.slide_slide_demo_1_4')"/>
+            <value>Quiz completed</value>
+        </function>
+        <!-- Completion of Course (Karma Generation Triggered in Python) -->
+        <record id="slide_slide_1_3_partner_admin" model="slide.slide.partner">
+            <field name="slide_id" ref="website_slides.slide_slide_demo_1_3"/>
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="completed" eval="True"/>
+        </record>
+        <record id="slide_slide_1_5_partner_admin" model="slide.slide.partner">
+            <field name="slide_id" ref="website_slides.slide_slide_demo_1_5"/>
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="completed" eval="True"/>
+        </record>
+        <!-- Demo join and leave a course -->
+        <function model="res.users" name="_add_karma">
+            <value eval="[ref('base.user_demo')]"/>
+            <value eval="30"/>
+            <value model="slide.channel" eval="obj().env.ref('website_slides.slide_channel_demo_1_gard1')"/>
+            <value>Course Completed</value>
+        </function>
+        <function model="res.users" name="_add_karma">
+            <value eval="[ref('base.user_demo')]"/>
+            <value eval="-30"/>
+            <value model="slide.channel" eval="obj().env.ref('website_slides.slide_channel_demo_1_gard1')"/>
+            <value>Membership Removed</value>
+        </function>
+    </data>
+</odoo>

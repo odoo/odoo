@@ -1,0 +1,17 @@
+<odoo>
+
+    <record id="view_account_journal_tree" model="ir.ui.view">
+        <field name="name">account.journal.tree</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account_check_printing.view_account_journal_form_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='check_sequence_id']/.." position="after">
+                <group string="Checks Management" name="check_management"
+                    invisible="',check_printing,'.lower() not in (selected_payment_method_codes or '').lower() or type != 'bank'">
+                    <field name="l10n_latam_manual_checks"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

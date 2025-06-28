@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ColorField">
+        <div class="o_field_color d-flex" t-att-class="{ 'o_field_cursor_disabled': props.readonly }" t-attf-style="background: #{color or 'url(/web/static/img/transparent.png)'}">
+            <input t-on-click.stop="" class="w-100 h-100 opacity-0" type="color" t-att-value="color" t-att-disabled="props.readonly" t-on-input="(ev) => this.color = ev.target.value" t-on-change="(ev) => this.props.record.update({ [this.props.name]: ev.target.value })" />
+        </div>
+    </t>
+
+</templates>

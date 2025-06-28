@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.RadioField">
+        <div
+            role="radiogroup"
+            t-attf-class="o_{{ props.orientation }}"
+            t-att-aria-label="props.label"
+        >
+            <t t-foreach="items" t-as="item" t-key="item[0]">
+                <div class="form-check o_radio_item" aria-atomic="true">
+                    <input
+                        type="radio"
+                        class="form-check-input o_radio_input"
+                        t-att-checked="item[0] === value"
+                        t-att-disabled="props.readonly"
+                        t-att-name="id"
+                        t-att-data-value="item[0]"
+                        t-att-data-index="item_index"
+                        t-att-id="`${id}_${item[0]}`"
+                        t-on-change="() => this.onChange(item)"
+                    />
+                    <label class="form-check-label o_form_label" t-att-for="`${id}_${item[0]}`" t-esc="item[1]" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

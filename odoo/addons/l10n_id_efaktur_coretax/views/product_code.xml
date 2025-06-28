@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="produc_code_list" model="ir.ui.view">
+        <field name="name">product.code.list</field>
+        <field name="model">l10n_id_efaktur_coretax.product.code</field>
+        <field name="arch" type="xml">
+            <tree string="Product Codes">
+                <field name="code" />
+                <field name="description" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

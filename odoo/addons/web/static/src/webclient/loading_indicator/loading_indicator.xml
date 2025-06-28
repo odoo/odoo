@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.LoadingIndicator">
+        <Transition visible="state.show" name="'o-fade'" t-slot-scope="transition" leaveDuration="400">
+            <span class="o_loading_indicator" t-att-class="transition.className">Loading<t t-if="env.debug" t-esc="' (' + state.count + ')'" /></span>
+        </Transition>
+    </t>
+
+</templates>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_form_view_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">product.template.common.form.l10n_hu_edi</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting']" position="inside">
+                <group name="l10n_hu_edi" string="Hungary" invisible="'HU' not in fiscal_country_codes">
+                    <label for="l10n_hu_product_code_type" string="Product Code"/>
+                    <div class="d-flex">
+                        <field name="l10n_hu_product_code_type"/>
+                        <span class="oe_inline o_form_label mx-3"> : </span>
+                        <field name="l10n_hu_product_code" required="l10n_hu_product_code_type"/>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

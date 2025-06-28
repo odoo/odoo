@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="holiday_status_extra_hours" model="hr.leave.type">
+            <field name="name">Extra Hours</field>
+            <field name="request_unit">hour</field>
+            <field name="requires_allocation">no</field>
+            <field name="leave_validation_type">manager</field>
+            <field name="overtime_deductible" eval="True"/>
+            <field name="active" eval="False"/>
+            <field name="company_id" eval="False"/>
+            <field name="icon_id" ref="hr_holidays.icon_9"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <!-- The record above should be archived if no company has overtime counting enabled, otherwise enabled -->
+        <function model="res.company" name="_check_extra_hours_time_off"/>
+    </data>
+</odoo>

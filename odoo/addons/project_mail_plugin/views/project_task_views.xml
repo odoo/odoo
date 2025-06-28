@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- action used by the mail plugins in order to redirect the user to the newly created task in edit mode-->
+    <record id="project_task_action_form_edit" model="ir.actions.act_window">
+      <field name="name">Task: redirect to form in edit mode</field>
+      <field name="res_model">project.task</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="project.view_task_form2"/>
+    </record>
+</odoo>

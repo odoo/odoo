@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TreeEditor">
+        <div class="o_tree_editor w-100" aria-atomic="true" t-att-class="className">
+            <div t-attf-class="o_tree_editor_node d-flex flex-column #{props.readonly ? 'gap-2' : 'gap-1'}">
+                <t t-set="node" t-value="tree" />
+                <div class="o_tree_editor_row d-flex align-items-center">
+                    <div class="o_tree_editor_connector d-flex flex-grow-1 align-items-center">
+                        <t t-if="node.children.length">
+                            <span>Match</span>
+                            <t t-if="node.children.length > 1">
+                                <t t-call="web.TreeEditor.connector.dropdown" />
+                            </t>
+                            <t t-else="">
+                                <span class="px-1">
+                                    <t t-call="web.TreeEditor.connector.title" />
+                                </span>
+                            </t>
+                            <span>of the following rules:</span>
+                        </t>
+                        <t t-else="">
+                            <span>Match <strong>all records</strong></span>
+                        </t>
+                    </div>
+                    <t t-slot="default"/>
+                </div>
+                <t t-if="node.children.length" t-call="web.TreeEditor.connector.children" />
+                <t t-if="!props.readonly">
+                    <div class="o_tree_editor_row d-flex align-items-center">
+                        <a href="#" role="button" t-on-click="() => this.insertRootLeaf(node)">New Rule</a>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.controls">
+        <div class="o_tree_editor_node_control_panel d-flex" role="toolbar" aria-label="Domain node">
+            <button
+                class="btn px-2 fs-4"
+                role="button"
+                title="Add New Rule"
+                aria-label="Add New Rule"
+                t-on-click="() => this.insertLeaf(parent, node)"
+                t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
+                t-on-mouseleave="(ev) => this.highlightNode(ev.target, false)"
+            >
+                <i class="fa fa-plus" />
+            </button>
+            <button
+                class="btn px-2 fs-4"
+                role="button"
+                title="Add branch"
+                aria-label="Add branch"
+                t-on-click="() => this.insertBranch(parent, node)"
+                t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
+                t-on-mouseleave="(ev) => this.highlightNode(ev.target, false)"
+            >
+                <i class="fa fa-sitemap" />
+            </button>
+            <button
+                class="btn btn-link px-2 text-danger fs-4"
+                role="button"
+                title="Delete node"
+                aria-label="Delete node"
+                t-on-click="() => this.delete(parent, node)"
+                t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
+                t-on-mouseleave="(ev) => this.highlightNode(ev.target, false)"
+            >
+                <i class="fa fa-trash" />
+            </button>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.connector.title">
+        <t t-set="title">
+            <t t-if="node.value === '|'">
+                <t t-if="node.negate">none</t>
+                <t t-else="">any</t>
+            </t>
+            <t t-else="">
+                <t t-if="node.negate">not all</t>
+                <t t-else="">all</t>
+            </t>
+        </t>
+        <t t-esc="title" />
+    </t>
+
+    <t t-name="web.TreeEditor.connector.dropdown">
+        <t t-if="props.readonly">
+            <strong class="px-1">
+                <t t-call="web.TreeEditor.connector.title" />
+            </strong>
+        </t>
+        <t t-else="">
+            <div aria-atomic="true">
+                <Dropdown togglerClass="'btn btn-link btn-primary py-0 px-1'" showCaret="true">
+                    <t t-set-slot="toggler">
+                        <t t-call="web.TreeEditor.connector.title" />
+                    </t>
+                    <DropdownItem onSelected="() => this.updateConnector(node, '&amp;')">all</DropdownItem>
+                    <DropdownItem onSelected="() => this.updateConnector(node, '|')">any</DropdownItem>
+                </Dropdown>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="web.TreeEditor.connector.children">
+        <t t-foreach="node.children" t-as="child" t-key="child.type + '_' + child_index">
+            <div class="o_tree_editor_node" t-att-class="{ 'ps-4': addPadding }">
+                <t t-call="web.TreeEditor.{{ child.type }}">
+                    <t t-set="parent" t-value="node" />
+                    <t t-set="node" t-value="child" />
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="web.TreeEditor.connector">
+        <div class="o_tree_editor_row d-flex align-items-center">
+            <div class="o_tree_editor_connector d-flex flex-grow-1">
+                <t t-call="web.TreeEditor.connector.dropdown" />
+                <span>of:</span>
+            </div>
+            <t t-if="!props.readonly">
+                <t t-call="web.TreeEditor.controls" />
+            </t>
+        </div>
+        <t t-call="web.TreeEditor.connector.children">
+            <t t-set="addPadding" t-value="true" />
+        </t>
+    </t>
+
+    <t t-name="web.TreeEditor.condition">
+        <div class="o_tree_editor_row d-flex align-items-center">
+            <t t-if="props.readonly">
+                <t t-call="web.TreeEditor.condition:readonly" />
+            </t>
+            <t t-else="">
+                <t t-call="web.TreeEditor.condition:editable" />
+                <t t-call="web.TreeEditor.controls" />
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.condition:readonly">
+        <t t-set="description" t-value="getDescription(node)" />
+        <div class="o_tree_editor_condition d-flex gap-1 px-2 border bg-100">
+            <ModelFieldSelector path="node.path" resModel="props.resModel" readonly="true" />
+            <span class="fst-italic" t-esc="description.operatorDescription" />
+            <t t-if="description.valueDescription">
+                <t t-set="values" t-value="description.valueDescription.values" />
+                <t t-set="join" t-value="description.valueDescription.join" />
+                <t t-set="addParenthesis" t-value="description.valueDescription.addParenthesis" />
+                <t t-if="addParenthesis">( </t>
+                <t t-foreach="values" t-as="val" t-key="val_index">
+                    <span class="text-primary fw-bolder"><t t-esc="val" /></span>
+                    <t t-if="!val_last"> <t t-esc="join" /> </t>
+                </t>
+                <t t-if="addParenthesis"> )</t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.Editor">
+        <t t-if="!info.isSupported(value)">
+            <div t-attf-class="o_tree_editor_editor #{_classes}">
+                <div class="o_input d-flex align-items-center">
+                    <span class="flex-grow-1 text-truncate" t-esc="info.stringify(value)" />
+                    <i role="alert" class="fa fa-exclamation-triangle text-warning mx-2" t-att-title="(typeof info.message === 'function') ? info.message(value) : info.message" />
+                    <i class="fa fa-times" title="Clear" t-on-click="() => update(info.defaultValue())" />
+                </div>
+            </div>
+        </t>
+        <t t-elif="info.component">
+            <div t-attf-class="o_tree_editor_editor #{_classes}">
+                <t t-component="info.component" t-props="info.extractProps({ update, value })" />
+            </div>
+        </t>
+    </t>
+
+    <t t-name="web.TreeEditor.condition:editable">
+        <div class="o_tree_editor_condition d-flex flex-grow-1 align-items-end gap-2">
+            <t t-call="web.TreeEditor.Editor">
+                <t t-set="_classes" t-value="'col col-md-4 pe-0'" />
+                <t t-set="info" t-value="props.getPathEditorInfo(node)" />
+                <t t-set="value" t-value="node.path" />
+                <t t-set="update" t-value="(path) => this.updatePath(node, path)" />
+            </t>
+            <t t-call="web.TreeEditor.Editor">
+                <t t-set="_classes" t-value="'col col-md-2 px-3'" />
+                <t t-set="info" t-value="props.getOperatorEditorInfo(node)" />
+                <t t-set="value" t-value="[node.operator, node.negate]" />
+                <t t-set="update" t-value="(operator, negate) => this.updateLeafOperator(node, operator, negate)" />
+            </t>
+            <t t-call="web.TreeEditor.Editor">
+                <t t-set="_classes" t-value="'col ps-0 overflow-hidden'" />
+                <t t-set="info" t-value="getValueEditorInfo(node)" />
+                <t t-set="value" t-value="node.value" />
+                <t t-set="update" t-value="(value) => this.updateLeafValue(node, value)" />
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.complex_condition">
+        <div class="o_tree_editor_row d-flex align-items-center">
+            <div class="o_tree_editor_complex_condition flex-grow-1">
+                <input class="o_input w-100" t-att-value="node.value" t-att-readonly="props.readonly or !isDebugMode" t-on-change="(ev) => this.updateComplexCondition(node, ev.target.value)" />
+            </div>
+            <t t-call="web.TreeEditor.controls" />
+        </div>
+    </t>
+
+
+</templates>

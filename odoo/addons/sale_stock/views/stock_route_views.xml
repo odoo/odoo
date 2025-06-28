@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_location_route_view_form_inherit_sale_stock" model="ir.ui.view">
+        <field name="name">stock.route.form</field>
+        <field name="model">stock.route</field>
+        <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='route_selector']/group[last()]" position="inside">
+                <field name="sale_selectable" string="Sales Order Lines"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

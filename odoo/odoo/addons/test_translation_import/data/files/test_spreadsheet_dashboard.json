@@ -1,0 +1,175 @@
+{
+    "version": 12,
+    "sheets": [
+        {
+            "id": "Sheet1",
+            "name": "Sheet1",
+            "colNumber": 26,
+            "rowNumber": 100,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "content": "not exported"
+                },
+                "A2": {
+                    "content": "=_t(\"exported 1\")"
+                },
+                "A3": {
+                    "content": "=_t(\"exported 2\") + _t(\"exported 3\")"
+                },
+                "A4": {
+                    "content": "[link label](https://odoo.com)"
+                },
+                "A5": {
+                    "content": "_t(\"not a formula\")"
+                },
+                "A6": {
+                    "content": "=\"_t(\\\"inside an escaped string literal\\\")\""
+                },
+                "A7": {
+                    "content": "=\"_t(\"inside a string literal\")\""
+                },
+                "A8": {
+                    "content": "=_t(\"aa (\\\"inside\\\") bb\")"
+                },
+                "A9": {
+                    "content": "=CONCATENATE(\"a\", \"b\")"
+                },
+                "A10": {
+                    "content": "=_t( \"with spaces\" )"
+                },
+                "A11": {
+                    "content": ""
+                },
+                "A12": {
+                    "content": "=_t(\"123\")"
+                },
+                "A13": {
+                    "content": "=_t(456)"
+                },
+                "A14": {
+                    "content": "=_t(A1)"
+                },
+                "A15": {
+                    "content": "=_t(now())"
+                },
+                "A16": {
+                    "content": "=_t(\"hello \\\"world\\\"\")"
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "1",
+                    "x": 0,
+                    "y": 0,
+                    "width": 100,
+                    "height": 100,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "background": "#FFFFFF",
+                        "dataSets": [
+                            "A4"
+                        ],
+                        "legendPosition": "none",
+                        "verticalAxisPosition": "left",
+                        "title": "Bar chart title",
+                        "stackedBar": false
+                    }
+                },
+                {
+                    "id": "2",
+                    "x": 0,
+                    "y": 0,
+                    "width": 100,
+                    "height": 100,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": "",
+                        "type": "scorecard",
+                        "background": "#FFFFFF",
+                        "keyValue": "A5"
+                    }
+                },
+                {
+                    "id": "2",
+                    "x": 0,
+                    "y": 0,
+                    "width": 100,
+                    "height": 100,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": "Scorecard chart",
+                        "type": "scorecard",
+                        "background": "#FFFFFF",
+                        "baselineDescr": "Scorecard description",
+                        "keyValue": "A6"
+                    }
+                },
+                {
+                    "id": "3",
+                    "x": 541,
+                    "y": 61,
+                    "width": 536,
+                    "height": 335,
+                    "tag": "chart",
+                    "data": {
+                        "title": "Opportunities",
+                        "id": "3",
+                        "background": "#FFFFFF",
+                        "legendPosition": "top",
+                        "metaData": {
+                            "groupBy": [],
+                            "measure": "__count",
+                            "resModel": "crm.lead"
+                        },
+                        "searchParams": {
+                            "comparison": null,
+                            "domain": [],
+                            "groupBy": [],
+                            "orderBy": []
+                        },
+                        "type": "odoo_bar",
+                        "verticalAxisPosition": "left",
+                        "stacked": true
+                    }
+                }
+            ],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        }
+    ],
+    "odooVersion": 4,
+    "lists": {
+        "1": {
+            "columns": [],
+            "domain": [],
+            "model": "crm.lead",
+            "orderBy": [],
+            "id": "1",
+            "name": "Pipeline"
+        }
+    },
+    "pivots": {
+        "1": {
+            "colGroupBys": [],
+            "domain": [],
+            "id": "1",
+            "measures": [],
+            "model": "crm.lead",
+            "rowGroupBys": [],
+            "name": "Pipeline Analysis",
+            "sortedColumn": null
+        }
+    }
+}

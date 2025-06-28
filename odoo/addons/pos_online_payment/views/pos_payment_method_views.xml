@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_online_payment" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.pos_online_payment</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <field name="has_an_online_payment_provider" invisible="1"/>
+                <div class="alert alert-danger" role="alert" invisible="not is_online_payment or has_an_online_payment_provider">
+                    You have not activated any <bold><a type="action" name="%(payment.action_payment_provider)d" class="alert-link" role="button">payment provider</a></bold> to allow online payments.
+                </div>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='split_transactions']" position="before">
+                <field name="is_online_payment"/>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='split_transactions']" position="attributes">
+                <attribute name="invisible">is_online_payment</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='journal_id']" position="attributes">
+                <attribute name="invisible">is_online_payment</attribute>
+                <attribute name="required">not is_online_payment and not split_transactions</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group/group/field[@name='receivable_account_id']" position="attributes">
+                <attribute name="invisible">is_online_payment or split_transactions</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group[@name='Payment methods']/group" position="after">
+                <group invisible="not is_online_payment">
+                    <div colspan="2">
+                        <label for="online_payment_provider_ids"/>
+                        <field name="online_payment_provider_ids" widget="many2many_tags" options="{'no_create': True}" placeholder="All available providers" />
+                        <button name="%(payment.action_payment_provider)d" icon="fa-arrow-right" type="action" string="Payment Providers" class="btn-link" />
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pos_payment_method_view_tree_inherit_pos_online_payment" model="ir.ui.view">
+        <field name="name">pos.payment.method.tree.inherit.pos_online_payment</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-danger">is_online_payment and not has_an_online_payment_provider</attribute>
+            </xpath>
+            <xpath expr="//tree" position="inside">
+                <field name="is_online_payment" optional="hide"/>
+                <field name="has_an_online_payment_provider" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

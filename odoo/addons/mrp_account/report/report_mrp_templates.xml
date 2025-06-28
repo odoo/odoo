@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="mrp_account.report_wip">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row mt8">
+                        <div class="col-lg-12">
+                            <h2>
+                                <span>WIP Report for
+                                    <t t-out="', '.join(docs.account_id.mapped('name'))">Acme Corp.</t>
+                                </span>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                    <div class="row mt8">
+                            <div class="col-12">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-start align-middle"><span>Date</span></th>
+                                            <th class="text-start align-middle"><span>Ref.</span></th>
+                                            <th class="text-start align-middle"><span>Product</span></th>
+                                            <th class="text-start align-middle"><span>Quantity</span></th>
+                                            <th class="text-start align-middle"><span>Unit of Measure</span></th>
+                                            <th class="text-end"><span>Amount</span></th>
+                                        </tr>
+                                   </thead>
+                                   <tbody>
+                                        <tr t-foreach="docs" t-as="line" t-att-style="'background-color: #F1F1F1;' if line_index % 2 == 0 else ''">
+                                            <td class="align-middle">
+                                               <span t-field="line.date">2023-08-15</span>
+                                            </td>
+                                            <td class="align-middle">
+                                               <span t-field="line.ref">REF123</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span t-field="line.product_id">Laptop</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span t-field="line.unit_amount">5</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span t-field="line.product_uom_id">Units</span>
+                                            </td>
+                                            <td class="text-end align-middle">
+                                                <span t-field="line.amount">$1000</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-end" t-attf-colspan="6">
+                                                <strong>
+                                                    <span style="margin-right: 15px;">Total</span>
+                                                    <span t-out="sum(docs.mapped('amount'))">$5000</span>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="wip_report" model="ir.actions.report">
+        <field name="name">WIP report</field>
+        <field name="model">account.analytic.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">mrp_account.report_wip</field>
+        <field name="report_file">report_wip</field>
+        <field name="binding_model_id" ref="model_account_analytic_line"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

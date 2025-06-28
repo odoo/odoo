@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="product_pricelist_item_view_search">
+        <field name="name">product.pricelist.item.search</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="arch" type="xml">
+            <search string="Products Price Rules Search">
+                <filter name="Product Rule" domain="[('applied_on', '=', '1_product')]"/>
+                <filter name="Variant Rule" domain="[('applied_on', '=', '0_product_variant')]" groups="product.group_product_variant"/>
+                <separator/>
+                <field name="pricelist_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <filter string="Active" name="visible" domain="[('pricelist_id.active', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
+                    <filter string="Variant"
+                      name="groupby_product_variant"
+                      domain="[('applied_on', '=', '0_product_variant')]"
+                      context="{'group_by': 'product_id'}"
+                      groups="product.group_product_variant"/>
+                    <filter string="Pricelist"
+                      name="groupby_vendor"
+                      domain="[]"
+                      context="{'group_by': 'pricelist_id'}"
+                      groups="product.group_product_pricelist"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_pricelist_item_tree_view" model="ir.ui.view">
+      <field name="name">product.pricelist.item.tree</field>
+      <field name="model">product.pricelist.item</field>
+      <field name="priority">10</field>
+      <field name="arch" type="xml">
+        <tree string="Price Rules">
+          <field name="pricelist_id"/>
+          <field name="name" string="Applied On"/>
+          <field name="price"/>
+          <field name="min_quantity" colspan="4"/>
+          <field name="date_start" optional="hide"/>
+          <field name="date_end" optional="hide"/>
+          <field name="company_id" groups="base.group_multi_company" optional="show"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="product_pricelist_item_tree_view_from_product" model="ir.ui.view">
+        <!-- Access and edit price rules from a given product/product variant -->
+        <field name="name">product.pricelist.item.tree</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <tree string="Pricelist Rules" editable="bottom">
+                <!-- Scope = coming from a product/product template -->
+                <field name="pricelist_id" string="Pricelist" options="{'no_create_edit':1, 'no_open': 1}"/>
+                <field name="name" string="Applied On"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="categ_id" column_invisible="True"/>
+                <field name="product_tmpl_id"
+                  column_invisible="context.get('active_model') != 'product.category'"
+                  required="applied_on == '1_product'"
+                  domain="[('categ_id', '=', context.get('default_categ_id', True)), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                  options="{'no_create_edit':1, 'no_open': 1}"/>
+                <field name="product_id"
+                  groups="product.group_product_variant"
+                  readonly="context.get('active_model') == 'product.product'"
+                  column_invisible="context.get('product_without_variants', False)"
+                  required="applied_on == '0_product_variant'"
+                  domain="['|', '|',
+                    ('id', '=', context.get('default_product_id', 0)),
+                    ('product_tmpl_id', '=', context.get('default_product_tmpl_id', 0)),
+                    ('categ_id', '=', context.get('default_categ_id', 0)), '|', ('company_id', '=', company_id), ('company_id', '=', False)
+                  ]"
+                  options="{'no_create_edit':1, 'no_open': 1}"/>
+                <field name="min_quantity" colspan="4"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="fixed_price" string="Price" required='1'/>
+                <field name="date_start" optional="show"/>
+                <field name="date_end" optional="show"/>
+                <field name="applied_on" column_invisible="True"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show" options="{'no_create':1, 'no_open': 1}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_pricelist_item_form_view" model="ir.ui.view">
+        <field name="name">product.pricelist.item.form</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="arch" type="xml">
+            <form string="Pricelist Rule">
+                <sheet>
+                    <field name="name" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <group name="pricelist_rule_computation" groups="product.group_sale_pricelist" string="Price Computation">
+                        <group name="pricelist_rule_method">
+                            <field name="compute_price" string="Computation" widget="radio"/>
+                        </group>
+                        <div class="alert alert-info" role="alert" groups="uom.group_uom">
+                            The computed price is expressed in the default Unit of Measure of the product.
+                        </div>
+                    </group>
+                    <group name="pricelist_rule_base" groups="product.group_sale_pricelist">
+                        <group>
+                            <field name="price" invisible="1"/>
+                            <field name="fixed_price"
+                                widget="monetary"
+                                invisible="compute_price != 'fixed'"
+                                options="{'field_digits': True}"/>
+                            <label for="percent_price" string="Discount" invisible="compute_price != 'percentage'"/>
+                            <div class="o_row" invisible="compute_price != 'percentage'">
+                                <field name="percent_price" class="oe_inline" invisible="compute_price != 'percentage'"/>%
+                            </div>
+                            <field name="base" invisible="compute_price != 'formula'"/>
+                            <field name="base_pricelist_id" invisible="compute_price != 'formula' or base != 'pricelist'" readonly="base != 'pricelist'" required="compute_price == 'formula' and base == 'pricelist'"/>
+                            <label for="price_discount" string="Discount" invisible="compute_price != 'formula'"/>
+                            <div class="o_row" invisible="compute_price != 'formula'">
+                                <field name="price_discount"/>
+                                <span>%</span>
+                            </div>
+                            <field name="price_surcharge" widget="monetary" string="Extra Fee" invisible="compute_price != 'formula'"/>
+                            <field name="price_round" string="Rounding Method" invisible="compute_price != 'formula'"/>
+                            <label string="Margins" for="price_min_margin" invisible="compute_price != 'formula'"/>
+                            <div class="o_row" invisible="compute_price != 'formula'">
+                                <field name="price_min_margin"
+                                    string="Min. Margin"
+                                    class="oe_inline"
+                                    widget="monetary"
+                                    nolabel="1"
+                                    options="{'field_digits': True}"/>
+                                <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                                <field name="price_max_margin"
+                                    string="Max. Margin"
+                                    class="oe_inline"
+                                    widget="monetary"
+                                    nolabel="1"
+                                    options="{'field_digits': True}"/>
+                            </div>
+                        </group>
+                        <div class="alert alert-info" role="alert" style="white-space: pre;" invisible="compute_price != 'formula'">
+                            <field name="rule_tip"/>
+                        </div>
+                    </group>
+
+                    <group string="Conditions">
+                        <group name="pricelist_rule_target">
+                            <field name="applied_on" widget="radio"/>
+                            <field name="categ_id" options="{'no_create':1}" invisible="applied_on != '2_product_category'" required="applied_on == '2_product_category'"/>
+                            <field name="product_tmpl_id" options="{'no_create':1}" invisible="applied_on != '1_product'" required="applied_on == '1_product'"/>
+                            <field name="product_id" options="{'no_create':1}" invisible="applied_on != '0_product_variant'" required="applied_on == '0_product_variant'"/>
+                        </group>
+                        <group name="pricelist_rule_limits">
+                            <field name="min_quantity"/>
+                            <field name="date_start" string="Validity" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                            <field name="date_end" invisible="1" />
+                        </group>
+                        <group name="pricelist_rule_related" groups="base.group_no_one">
+                            <field name="pricelist_id" invisible="1"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

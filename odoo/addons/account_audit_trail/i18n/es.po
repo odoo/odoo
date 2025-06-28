@@ -1,0 +1,228 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_audit_trail
+# 
+# Translators:
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2023-12-23 23:00+0000\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_account_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_account_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_display_name
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_display_name
+msgid "Account Audit Log Display Name"
+msgstr "Nombre mostrado del registro de auditoría"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Activate Audit Trail"
+msgstr "Activar la pista de auditoría"
+
+#. module: account_audit_trail
+#: model:ir.actions.act_window,name:account_audit_trail.action_account_audit_trail_report
+#: model:ir.model.fields,field_description:account_audit_trail.field_res_company__check_account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_res_config_settings__check_account_audit_trail
+#: model:ir.ui.menu,name:account_audit_trail.account_audit_trail_menu
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Audit Trail"
+msgstr "Pista de auditoría"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Línea de extracto bancario"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/res_config_settings.py:0
+#, python-format
+msgid "Can't disable audit trail when there are existing records."
+msgstr ""
+"No puede deshabilitar la pista de auditoría cuando hay registros existentes."
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Changed"
+msgstr "Cambiado"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Company"
+msgstr "Compañía"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_company_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_company_id
+msgid "Company "
+msgstr "Compañía "
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Create Only"
+msgstr "Solo crear"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Date"
+msgstr "Fecha"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_preview
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_preview
+msgid "Description"
+msgstr "Descripción"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Go to Audit Trail"
+msgstr "Ir a la pista de auditoría"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_move
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_move_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_move_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_tracking_value
+msgid "Mail Tracking Value"
+msgstr "Valor de seguimiento de correo"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Asistente de fusión de contactos"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_message
+msgid "Message"
+msgstr "Mensaje"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Messages Search"
+msgstr "Búsqueda de mensajes"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log
+msgid "Name"
+msgstr "Nombre"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Operación no admitida"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_partner_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_partner_id
+msgid "Partner"
+msgstr "Contacto"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Partners"
+msgstr "Contactos"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Record"
+msgstr "Registro"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__show_audit_log
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__show_audit_log
+msgid "Show Audit Log"
+msgstr "Mostrar registro de auditoría"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_tax_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_tax_id
+msgid "Tax"
+msgstr "Impuesto"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Taxes"
+msgstr "Impuestos"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/account_move.py:0
+#, python-format
+msgid ""
+"To keep the audit trail, you can not delete journal entries once they have been posted.\n"
+"Instead, you can cancel the journal entry."
+msgstr ""
+"Para mantener la pista de auditoría, no puede eliminar los asientos contables una vez que los haya registrado.\n"
+"En su lugar, puede cancelar el asiento contable."
+
+#. module: account_audit_trail
+#: model_terms:ir.actions.act_window,help:account_audit_trail.action_account_audit_trail_report
+msgid ""
+"To see the audit log you have to enable the audit trail option from settings"
+msgstr ""
+"Para ver el registro de auditoría, debe habilitar la opción de pista de "
+"auditoría desde los ajustes"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Update Only"
+msgstr "Solo actualizar"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Updated"
+msgstr "Actualizado"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "You cannot remove parts of the audit trail."
+msgstr "No puede eliminar partes de la pista de auditoría."

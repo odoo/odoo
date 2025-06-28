@@ -1,0 +1,78 @@
+:root {
+    --secondary-active-background: #{mix($o-action, $o-white, 10%)};
+    --secondary-active-border: #{$o-action};
+
+    --btn-group-gap: 0;
+
+    // Target 4K devices
+    @media #{screen and (min-width: 3839px), (min-height: 3839px)} {
+        --root-font-size: #{$o-so-font-size-4k};
+    }
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+small {
+    font-size: .875em;
+}
+
+.o-so-tabular-nums {
+    font-variant: tabular-nums;
+}
+
+.o-so-product-details {
+    .o-so-product-details-image {
+        max-width: clamp(3rem, 25%, o-to-rem(170));
+    }
+
+    .o-so-product-details-description {
+        max-width: o-to-rem(750);
+    }
+}
+
+.o-so-products-row {
+    @include make-row();
+
+    --gutter-y: 8vw;
+
+    > * {
+        @include make-col-ready();
+    }
+
+    @include row-cols(1);
+
+    @include media-breakpoint-up(sm) {
+        @include row-cols(2);
+    }
+
+    @include media-breakpoint-up(md) {
+        @include row-cols(4);
+
+        --gutter-y: 2vw;
+    }
+
+    @include media-breakpoint-up(xl) {
+        @include o-so-landscape() {
+            @include row-cols(6);
+        }
+
+        @include o-so-portrait() {
+            @include row-cols(4);
+        }
+    }
+}
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+li {
+    list-style-type: none;
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormStatusIndicator">
+        <div class="o_form_status_indicator d-md-flex align-items-center align-self-md-end me-auto" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isNew }">
+            <div class="o_form_status_indicator_buttons d-flex" t-att-class="{ invisible: !(props.model.root.isNew or displayButtons) }">
+                <button
+                    type="button"
+                    class="o_form_button_save btn btn-light border-0 px-1 py-0 lh-sm"
+                    data-hotkey="s"
+                    t-on-click.stop="save"
+                    data-tooltip="Save manually"
+                    aria-label="Save manually"
+                    t-ref="save">
+                    <i class="fa fa-cloud-upload fa-fw" />
+                </button>
+                <button
+                    type="button"
+                    class="o_form_button_cancel btn btn-light border-0 px-1 py-0 lh-sm"
+                    data-hotkey="j"
+                    t-on-click.stop="discard"
+                    data-tooltip="Discard changes"
+                    aria-label="Discard changes">
+                    <i class="fa fa-undo fa-fw" />
+                </button>
+            </div>
+            <span
+                t-if="!props.model.root.isNew and indicatorMode === 'invalid'"
+                class="text-danger small ms-2"
+                data-tooltip="Unable to save. Correct the issue or discard changes">
+                <i class="fa fa-warning" />
+            </span>
+        </div>
+    </t>
+</templates>

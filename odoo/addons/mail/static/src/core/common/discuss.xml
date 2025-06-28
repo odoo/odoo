@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Discuss">
+    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'border-top': !store.inPublicPage and !ui.isSmall, 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
+        <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
+        <div t-if="thread and (store.inPublicPage or !(ui.isSmall and ['chat', 'channel'].includes(store.discuss.activeTab)))" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-ref="content">
+            <div class="o-mail-Discuss-header px-3 bg-view border-bottom d-flex flex-shrink-0 align-items-center">
+                <div t-if="thread and ['channel', 'group', 'chat'].includes(thread.type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
+                    <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
+                    <FileUploader t-if="thread.is_editable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded="(data) => this.onFileUploaded(data)">
+                        <t t-set-slot="toggler">
+                            <a href="#" class="position-absolute z-index-1 h-100 w-100 rounded start-0 bottom-0" title="Upload Avatar">
+                                <i class="position-absolute top-50 start-50 fa fa-sm fa-pencil text-white"/>
+                            </a>
+                        </t>
+                    </FileUploader>
+                </div>
+                <t t-else="">
+                    <ThreadIcon className="'me-2 align-self-center'" thread="thread"/>
+                </t>
+                <ImStatus t-if="thread and thread.type === 'chat' and thread.chatPartner" className="'me-1'" persona="thread.chatPartner" thread="thread" />
+                <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
+                    <AutoresizeInput
+                        className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark py-0'"
+                        enabled="thread.is_editable or thread.type === 'chat'"
+                        onValidate.bind="renameThread"
+                        value="thread.displayName"
+                    />
+                    <t t-if="thread.allowDescription and (thread.is_editable or (!thread.is_editable and thread.description))">
+                        <div class="flex-shrink-0 mx-2 py-2 border-start"/>
+                        <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
+                        <AutoresizeInput
+                            className="'o-mail-Discuss-threadDescription flex-shrink-1 py-1'"
+                            enabled="thread.is_editable"
+                            onValidate.bind="updateThreadDescription"
+                            placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
+                            value="thread.description or ''"
+                        />
+                    </t>
+                </div>
+                <div class="flex-shrink-0 d-flex align-items-center ms-1">
+                    <t t-foreach="threadActions.actions" t-as="action" t-key="action.id">
+                        <button class="btn px-2" t-attf-class="{{ action.isActive ? 'o-isActive' : '' }}" t-att-disabled="action.disabledCondition" t-att-title="action.name" t-att-name="action.id" t-on-click="() => action.onSelect()">
+                            <i t-if="action.iconLarge" t-att-class="action.iconLarge"/> <span t-if="action.text" t-esc="action.text"/>
+                        </button>
+                    </t>
+                    <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
+                        <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="threadService.avatarUrl(store.self, thread)"/>
+                        <div class="lead fw-bold flex-shrink-1 text-dark">
+                            <t t-if="store.user" t-esc="store.user.name"/>
+                            <t t-else="">
+                                <AutoresizeInput
+                                    className="'py-1'"
+                                    onValidate.bind="renameGuest"
+                                    value="store.guest.name"
+                                />
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-auto bg-view d-flex flex-grow-1" t-ref="core">
+                <div class="d-flex flex-column flex-grow-1">
+                    <Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
+                    <Composer t-if="thread.type !== 'mailbox' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
+                </div>
+                <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="h-100 border-start o-mail-Discuss-inspector">
+                    <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
+                </div>
+            </div>
+        </div>
+        <div t-if="!thread and (!ui.isSmall or store.discuss.activeTab === 'main') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+            <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.Discuss.mobileTopbar">
+    <div class="btn-group d-flex w-100 p-1">
+        <t t-call="mail.MobileMailbox" >
+            <t t-set="mailbox" t-value="store.discuss.inbox"/>
+        </t>
+        <t t-call="mail.MobileMailbox">
+            <t t-set="mailbox" t-value="store.discuss.starred"/>
+        </t>
+        <t t-call="mail.MobileMailbox">
+            <t t-set="mailbox" t-value="store.discuss.history"/>
+        </t>
+    </div>
+</t>
+
+<t t-name="mail.MobileMailbox">
+    <button class="btn btn-secondary flex-grow-1 p-2"
+        t-att-class="{
+            'active o-active shadow-none': mailbox.eq(store.discuss.thread),
+        }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-esc="mailbox.name"
+    />
+</t>
+
+</templates>

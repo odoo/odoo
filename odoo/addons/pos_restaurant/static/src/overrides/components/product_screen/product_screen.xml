@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
+        <!-- add a showOrderButton here (using the computeOrderChange method) -->
+        <xpath expr="//button[hasclass('pay-button')]" position="replace">
+            <button
+                t-if="this.swapButton"
+                class="btn-switchpane btn flex-fill rounded-0 fw-bolder"
+                t-on-click="submitOrder"
+                t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-secondary' }}">
+                <!-- Replace the payment button by the order button -->
+                <span class="fs-1 d-block">Order</span>
+                <span><t t-esc="nbrOfChanges"/> changes</span>
+            </button>
+            <t t-else="">
+                <button
+                    class="btn-switchpane btn flex-fill rounded-0 fw-bolder"
+                    t-attf-class="{{ primaryPayButton ? 'btn-primary' : 'btn-secondary' }}"
+                    t-on-click="() => currentOrder.pay()">
+                    <span class="fs-1 d-block">Pay</span>
+                    <span><t t-esc="total" /></span>
+                </button>
+            </t>
+        </xpath>
+        <xpath expr="//button[hasclass('review-button')]" position="replace">
+            <button class="btn-switchpane btn w-50 rounded-0 fw-bolder review-button" t-attf-class="{{ primaryReviewButton ? 'btn-primary' : 'btn-secondary' }}" t-on-click="switchPane">
+                <span class="fs-1 d-block">Payment</span>
+                <span t-if="this.swapButton"><t t-esc="total" /></span>
+                <span t-else=""><t t-esc="items"/> items</span>
+            </button>
+        </xpath>
+        <xpath expr="//Orderline" position="attributes">
+            <attribute name="t-on-dblclick">
+                () => line.toggleSkipChange()
+            </attribute>
+        </xpath>
+    </t>
+</templates>

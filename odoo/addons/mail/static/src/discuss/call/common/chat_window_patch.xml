@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//Thread" position="before">
+            <Call t-if="thread.rtcSessions.length > 0" thread="thread" compact="true"/>
+        </xpath>
+    </t>
+</templates>

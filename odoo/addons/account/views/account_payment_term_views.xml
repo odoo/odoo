@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_payment_term_search" model="ir.ui.view">
+            <field name="name">account.payment.term.search</field>
+            <field name="model">account.payment.term</field>
+            <field name="arch" type="xml">
+                <search string="Payment Terms">
+                    <field name="name" string="Payment Terms"/>
+                    <field name="active"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_payment_term_tree" model="ir.ui.view">
+            <field name="name">account.payment.term.tree</field>
+            <field name="model">account.payment.term</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Terms">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_payment_term_form" model="ir.ui.view">
+            <field name="name">account.payment.term.form</field>
+            <field name="model">account.payment.term</field>
+            <field name="arch" type="xml">
+                <form string="Payment Terms">
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <field name="fiscal_country_codes" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="oe_title">
+                            <label for="name" string="Payment Terms"/>
+                            <h1><field name="name" nolabel="1" placeholder="e.g. 30 days"/></h1>
+                        </div>
+                        <group>
+                            <field name="company_id" options="{'no_create': True}" class="w-25" groups="base.group_multi_company"/>
+                            <label for="early_discount"/>
+                            <div class="o_field_highlight">
+                                <field name="early_discount"/>
+                                <field name="discount_percentage"
+                                       class="text-end o_field_highlight o_input oe_inline"
+                                       invisible="not early_discount"/>
+                                <span invisible="not early_discount"> % if paid within </span>
+                                <field name="discount_days"
+                                       class="text-end o_field_highlight o_input oe_inline"
+                                       invisible="not early_discount"/>
+                                <span invisible="not early_discount"> days</span>
+                                <div invisible="not early_discount">
+                                    <span> Reduced tax:
+                                        <field name="early_pay_discount_computation" class="w-auto"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </group>
+                        <group>
+                            <group string="Due Terms">
+                                <field name="line_ids" widget="payment_term_line_ids" nolabel="1" colspan="2">
+                                    <tree string="Payment Terms" editable="bottom" no_open="True">
+                                        <field name="value_amount"/>
+                                        <field name="value" nolabel="1"/>
+                                        <field name="nb_days" string="After"/>
+                                        <field name="delay_type" nolabel="1"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Preview">
+                                <field name="currency_id" invisible="1"/>
+                                <div class="d-flex gap-2" colspan="2" col="4">
+                                    Example:
+                                    <field name="example_amount" class="oe_inline"/>
+                                    on
+                                    <field name="example_date" class="fw-bold border-bottom o_example_date"/>
+                                </div>
+                                <div colspan="2" class="py-1 bg-secondary">
+                                    <field name="note" placeholder="e.g. Payment terms: 30 days after invoice date" class="border-bottom o_example_note"/>
+                                    <field name="example_preview_discount" class="ps-2"
+                                           invisible="not early_discount or not display_on_invoice"/>
+                                    <field name="example_preview" class="ps-2"
+                                           invisible="not display_on_invoice"/>
+                                </div>
+                                <div colspan="2">
+                                    <field name="display_on_invoice" nolabel="1"/>
+                                    <label for="display_on_invoice"/>
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_payment_term_kanban" model="ir.ui.view">
+            <field name="name">account.payment.term.kanban</field>
+            <field name="model">account.payment.term</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="note"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div><strong class="o_kanban_record_title"><t t-out="record.name.value"/></strong></div>
+                                <div t-if="!widget.isHtmlEmpty(record.note.raw_value)"><t t-out="record.note.value"/></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_payment_term_form" model="ir.actions.act_window">
+            <field name="name">Payment Terms</field>
+            <field name="res_model">account.payment.term</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="view_payment_term_search"/>
+        </record>
+
+    </data>
+</odoo>

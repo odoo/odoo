@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <tr t-name="mrp.BomOverviewLine">
+        <td name="td_mrp_bom">
+            <div class="text-truncate" t-attf-style="margin-left: {{ marginMultiplicator * 20 }}px">
+                <t t-if="data.level > 0 &amp;&amp; hasComponents">
+                    <button t-on-click="() => this.props.toggleFolded(identifier)" class="o_mrp_bom_unfoldable btn btn-light p-0" t-attf-aria-label="{{ props.isFolded ? 'Unfold' : 'Fold' }}" t-attf-title="{{ props.isFolded ? 'Unfold' : 'Fold' }}" style="margin-right: 1px">
+                        <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
+                    </button>
+                </t>
+                <a href="#" t-on-click.prevent="() => this.goToAction(data.link_id, data.link_model)" t-esc="data.name"/>
+                <t t-if="data.phantom_bom">
+                    <div class="fa fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
+                </t>
+            </div>
+        </td>
+        <td class="text-end">
+            <t t-if="data.type == 'operation'" t-esc="formatFloatTime(data.quantity)"/>
+            <t t-else="" t-esc="formatFloat(data.quantity, {'digits': [false, precision]})"/>
+        </td>
+        <td t-if="showUom" class="text-start" t-esc="data.uom_name"/>
+        <td t-if="showAvailabilities" class="text-end">
+            <t t-if="data.hasOwnProperty('producible_qty')" t-esc="data.producible_qty"/>
+        </td>
+        <td t-if="showAvailabilities" class="text-end">
+            <t t-if="hasQuantity">
+                <t t-esc="formatFloat(data.quantity_available, {'digits': [false, precision]})"/> /
+                <t t-esc="formatFloat(data.quantity_on_hand, {'digits': [false, precision]})"/>
+            </t>
+        </td>
+        <td t-if="showAvailabilities" class="text-center">
+            <t t-if="data.hasOwnProperty('availability_state')">
+                <span t-attf-class="{{availabilityColorClass}}" t-esc="data.availability_display"/>
+                <a href="#" role="button" t-on-click.prevent="goToForecast" title="Forecast Report" t-attf-class="fa fa-fw fa-area-chart o_mrp_bom_forecast ms-1 {{availabilityColorClass}}"/>
+            </t>
+        </td>
+        <td t-if="showLeadTimes" class="text-end">
+            <span t-if="hasLeadTime"><t t-esc="data.lead_time"/> Days</span>
+        </td>
+        <td t-if="showLeadTimes">
+            <div t-if="data.route_name">
+                <span t-attf-class="{{ data.route_alert ? 'text-danger' : '' }}"><t t-esc="data.route_name"/>: </span>
+                <a href="#" t-on-click.prevent="() => this.goToRoute(data.route_type)" t-esc="data.route_detail"/>
+            </div>
+        </td>
+        <td t-if="showCosts" t-attf-class="text-end {{ data.type == 'component' ? 'opacity-50' : '' }}" t-esc="formatMonetary(data.bom_cost)"/>
+        <td t-if="showCosts" class="text-end">
+            <span t-if="data.hasOwnProperty('prod_cost')" t-esc="formatMonetary(data.prod_cost)"/>
+        </td>
+        <td t-if="showAttachments" class="text-center">
+            <span t-if="!!data.attachment_ids &amp;&amp; data.attachment_ids.length > 0">
+                <a href="#" role="button" t-on-click.prevent="goToAttachment" class="fa fa-fw o_button_icon fa-files-o"/>
+            </span>
+        </td>
+    </tr>
+
+</templates>

@@ -1,0 +1,115 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_paypal
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__code
+msgid "Code"
+msgstr "Code"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
+msgid "Email"
+msgstr "E-mail"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "How to configure your paypal account?"
+msgstr "Hoe uw Paypal account te configureren?"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
+msgstr ""
+"Ontbrekende waarde voor txn_id (%(txn_id)s) of txn_type (%(txn_type)s)."
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_pdt_token
+msgid "PDT Identity Token"
+msgstr "PDT identiteitstoken"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
+msgid "PayPal Transaction Type"
+msgstr "PayPal-transactietype"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_provider
+msgid "Payment Provider"
+msgstr "Betaalprovider"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Betalingstransactie"
+
+#. module: payment_paypal
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr "Gegevens ontvangen met ongeldige betalingsstatus: %s"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "The customer left the payment page."
+msgstr "De klant heeft de betaalpagina verlaten."
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
+msgid ""
+"The public business email solely used to identify the account with PayPal"
+msgstr ""
+"Het openbare zakelijke e-mailadres dat uitsluitend wordt gebruikt om het "
+"account bij PayPal te identificeren"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"The status of transaction with reference %(ref)s was not synchronized "
+"because the 'Payment data transfer' option is not enabled on the PayPal "
+"dashboard."
+msgstr ""
+"De status van de transactie met referentie %(ref)s werd niet "
+"gesynchroniseerd omdat de optie 'Betalingsgegevens overdracht' niet "
+"ingeschakeld is op het PayPal dashboard."
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "De technische code van deze betaalprovider."
