@@ -33,6 +33,9 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
         'web.assets_tests': [
             'pos_sale/static/tests/tours/**/*',
         ],
+        'web.assets_unit_tests': [
+            'pos_sale/static/tests/unit/data/**/*'
+        ],
     },
     'post_init_hook': '_pos_sale_post_init',
     'author': 'Odoo S.A.',
