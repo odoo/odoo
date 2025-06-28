@@ -35,6 +35,9 @@
         'web.assets_tests': [
             'pos_loyalty/static/tests/tours/**/*',
         ],
+        'web.assets_unit_tests': [
+            'pos_loyalty/static/tests/unit/data/**/*'
+        ],
     },
     'uninstall_hook': 'uninstall_hook',
     'author': 'Odoo S.A.',

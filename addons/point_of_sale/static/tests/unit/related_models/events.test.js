@@ -1,38 +1,39 @@
 import { expect, test, describe } from "@odoo/hoot";
-import { createRelatedModels } from "@point_of_sale/app/models/related_models";
-import { MODEL_DEF as modelDefs, MODEL_OPTS as modelOpts } from "./utils";
+import { getRelatedModelsInstance } from "../data/get_model_definitions";
+import { makeMockServer } from "@web/../tests/web_test_helpers";
 
 describe(`Related models Events`, () => {
-    test("Connecting multiple records must fire update once", () => {
-        const { models } = createRelatedModels(modelDefs, {}, modelOpts);
-
+    test("Connecting multiple records must fire update once", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
+        const order = models["pos.order"].create({});
+        const line1 = models["pos.order.line"].create({});
+        const line2 = models["pos.order.line"].create({});
         const orderUpdates = [];
+        const linesUpdates = [];
+
         models["pos.order"].addEventListener("update", (data) => {
             orderUpdates.push(data);
         });
 
-        const linesUpdates = [];
         models["pos.order.line"].addEventListener("update", (data) => {
             linesUpdates.push(data);
         });
 
-        const order = models["pos.order"].create({});
-        const line1 = models["pos.order.line"].create({});
-        const line2 = models["pos.order.line"].create({});
         expect(orderUpdates.length).toBe(0);
 
-        order.update({ lines: [line1, line2], total: 10 });
+        order.update({ lines: [line1, line2], amount_total: 10 });
         expect(orderUpdates.length).toBe(1);
         expect(orderUpdates[0].id).toEqual(order.id);
-        expect(orderUpdates[0].fields).toEqual(["lines", "total"]);
+        expect(orderUpdates[0].fields).toEqual(["lines", "amount_total"]);
 
         expect(linesUpdates.length).toBe(2);
         expect(linesUpdates[0].fields).toEqual(["order_id"]);
     });
 
-    test("Loading data", () => {
-        const { models } = createRelatedModels(modelDefs, {}, modelOpts);
-
+    test("Loading data", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
         let orderCreates = [];
         let orderUpdates = [];
 
@@ -40,11 +41,11 @@ describe(`Related models Events`, () => {
             orderCreates.push(data);
         });
 
+        const order1 = models["pos.order"].create({});
         models["pos.order"].addEventListener("update", (data) => {
             orderUpdates.push(data);
         });
 
-        const order1 = models["pos.order"].create({});
         expect(orderUpdates.length).toBe(0);
         expect(orderCreates.length).toBe(1);
         expect(orderCreates[0].ids).toEqual([order1.id]);
@@ -72,9 +73,10 @@ describe(`Related models Events`, () => {
         expect(orderCreates[0].ids).toEqual([2, 3]);
     });
 
-    test("Connecting new data", () => {
-        const { models } = createRelatedModels(modelDefs, {}, modelOpts);
-
+    test("Connecting new data", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
+        const order1 = models["pos.order"].create({ id: 3333 });
         const orderUpdates = [];
         const lineUpdates = [];
         const lineCreates = [];
@@ -91,8 +93,6 @@ describe(`Related models Events`, () => {
             lineUpdates.push(data);
         });
 
-        const order1 = models["pos.order"].create({ id: 3333 });
-
         models.connectNewData({
             "pos.order.line": [
                 {
@@ -107,11 +107,13 @@ describe(`Related models Events`, () => {
         expect(lineCreates.length).toBe(1);
     });
 
-    test("Delete record", () => {
-        const { models } = createRelatedModels(modelDefs, {}, modelOpts);
-
+    test("Delete record", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
         let orderUpdates = [];
         const orderDeletes = [];
+        const order = models["pos.order"].create({});
+
         models["pos.order"].addEventListener("update", (data) => {
             orderUpdates.push(data);
         });
@@ -121,13 +123,12 @@ describe(`Related models Events`, () => {
         });
 
         const linesUpdates = [];
+        models["pos.order.line"].create({ order_id: order.id });
+        models["pos.order.line"].create({ order_id: order.id });
         models["pos.order.line"].addEventListener("update", (data) => {
             linesUpdates.push(data);
         });
 
-        const order = models["pos.order"].create({});
-        models["pos.order.line"].create({ order_id: order.id });
-        models["pos.order.line"].create({ order_id: order.id });
         expect(orderUpdates.length).toBe(2); // connecting lines to order
         expect(orderDeletes.length).toBe(0);
         expect(linesUpdates.length).toBe(0);

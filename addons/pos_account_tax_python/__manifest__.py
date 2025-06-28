@@ -10,6 +10,9 @@
         'point_of_sale._assets_pos': [
             'account_tax_python/static/src/helpers/*.js',
         ],
+        'web.assets_unit_tests': [
+            'pos_account_tax_python/static/tests/unit/data/**/*'
+        ],
     },
     'auto_install': True,
     'author': 'Odoo S.A.',
