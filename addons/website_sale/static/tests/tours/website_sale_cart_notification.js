@@ -6,7 +6,10 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
 registry.category("web_tour.tours").add("website_sale_cart_notification", {
     url: "/shop",
     steps: () => [
-        ...tourUtils.addToCart({ productName: "website_sale_cart_notification_product_1" }),
+        ...tourUtils.addToCart({
+            productName: "website_sale_cart_notification_product_1",
+            expectUnloadPage: true,
+        }),
         {
             content: "check that 1 website_sale_cart_notification_product_1 was added",
             trigger: '.toast-body span:contains("1 x website_sale_cart_notification_product_1")',
@@ -29,13 +32,7 @@ registry.category("web_tour.tours").add("website_sale_cart_notification", {
                 }
             },
         },
-        ...tourUtils.searchProduct("website_sale_cart_notification_product_2"),
-        {
-            content: "select website_sale_cart_notification_product_2",
-            trigger:
-                '.oe_product_cart:first a:contains("website_sale_cart_notification_product_2")',
-            run: "click",
-        },
+        ...tourUtils.searchProduct("website_sale_cart_notification_product_2", { select: true }),
         {
             trigger: "#product_detail",
         },
@@ -65,6 +62,7 @@ registry.category("web_tour.tours").add("website_sale_cart_notification", {
             content: "Go To Cart",
             trigger: '.toast-body a:contains("View cart")',
             run: "click",
+            expectUnloadPage: true,
         },
         tourUtils.assertCartContains({
             productName: "website_sale_cart_notification_product_1",

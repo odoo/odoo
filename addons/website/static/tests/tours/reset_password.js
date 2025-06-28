@@ -18,6 +18,7 @@ registry.category("web_tour.tours").add('website_reset_password', {
         content: "submit reset password form",
         trigger: '.oe_reset_password_form button[type="submit"]',
         run: "click",
+        expectUnloadPage: true,
     },
     {
         content: "check that we're logged in",

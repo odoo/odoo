@@ -37,6 +37,7 @@ const StepSchema = {
         },
     },
     trigger: { type: String },
+    expectUnloadPage: { type: Boolean, optional: true },
     //ONLY IN DEBUG MODE
     pause: { type: Boolean, optional: true },
     break: { type: Boolean, optional: true },

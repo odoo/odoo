@@ -951,6 +951,17 @@ describe("links with inline image", () => {
             `<p>ab<a href="#">c</a>]d<img src="${base64Img}">exxf<img src="${base64Img}">g[<a href="#">h</a>i</p>`
         );
     });
+    test("link elelment should be removed and popover should close when image is deleted from a image link ", async () => {
+        const { el } = await setupEditor(`<p>ab<a href="#"><img src="${base64Img}">[]</a>c</p>`);
+        await click("img");
+        await waitFor(".o-we-toolbar");
+        await waitFor(".o-we-linkpopover");
+
+        await click("button[name='image_delete']");
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+
+        expect(cleanLinkArtifacts(getContent(el))).toBe(`<p>ab[]c</p>`);
+    });
 });
 
 describe("readonly mode", () => {
@@ -1036,5 +1047,18 @@ describe("upload file via link popover", () => {
         );
         const favIcon = await waitFor(".o_we_preview_favicon span.o_image");
         expect(favIcon).toHaveAttribute("data-mimetype", "text/plain");
+    });
+
+    describe("hidden label field", () => {
+        test("label field should be hidden if <a> content is not text only", async () => {
+            await setupEditor(`<a href="http://test.com/"><img src="${base64Img}">te[]xt</a>`);
+            await waitFor(".o-we-linkpopover");
+            expect(".o-we-linkpopover").toHaveCount(1);
+            // open edit mode and check if label input is hidden
+            await click(".o_we_edit_link");
+            await waitFor(".input-group");
+            expect(".o_we_label_link").not.toBeVisible();
+            expect(".o_we_href_input_link").toHaveValue("http://test.com/");
+        });
     });
 });

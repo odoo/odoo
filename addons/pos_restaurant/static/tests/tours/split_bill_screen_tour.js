@@ -143,7 +143,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             // Check if there is still water in the order
             ProductScreen.isShown(),
             ProductScreen.orderLineHas("Water", "1.0"),
-            ProductScreen.clickPayButton(true),
+            ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             // Check if there is no more order to continue

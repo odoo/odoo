@@ -744,7 +744,8 @@ class PurchaseOrder(models.Model):
                 # Merge RFQs into the oldest purchase order
                 rfqs -= oldest_rfq
                 for rfq_line in rfqs.order_line:
-                    existing_line = oldest_rfq.order_line.filtered(lambda l: l.product_id == rfq_line.product_id and
+                    existing_line = oldest_rfq.order_line.filtered(lambda l: l.display_type not in ['line_note', 'line_section'] and
+                                                                                l.product_id == rfq_line.product_id and
                                                                                 l.product_uom == rfq_line.product_uom and
                                                                                 l.product_packaging_id == rfq_line.product_packaging_id and
                                                                                 l.product_packaging_qty == rfq_line.product_packaging_qty and

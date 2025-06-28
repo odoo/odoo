@@ -77,6 +77,7 @@ export class LinkPopover extends Component {
             buttonSize: this.props.linkEl.className.match(/btn-(sm|lg)/)?.[1] || "",
             buttonStyle: this.initButtonStyle(this.props.linkEl.className),
             isImage: this.props.isImage,
+            showLabel: !this.props.linkEl.childElementCount,
         });
 
         this.editingWrapper = useRef("editing-wrapper");

@@ -7,7 +7,7 @@ import { redirect } from "@web/core/utils/urls";
 registry.category("web_tour.tours").add('shop_mail', {
     url: '/shop?search=Acoustic Bloc Screens',
     steps: () => [
-        ...tourUtils.addToCart({productName: 'Acoustic Bloc Screens', search: false}),
+        ...tourUtils.addToCart({productName: 'Acoustic Bloc Screens', search: false, expectUnloadPage: true}),
         tourUtils.goToCart(),
     {
         content: "check product is in cart, get cart id, go to backend",
@@ -16,6 +16,7 @@ registry.category("web_tour.tours").add('shop_mail', {
             const orderId = document.querySelector(".my_cart_quantity").dataset["orderId"];
             redirect("/odoo/action-sale.action_orders/" + orderId);
         },
+        expectUnloadPage: true,
     },
     {
         content: "click confirm",

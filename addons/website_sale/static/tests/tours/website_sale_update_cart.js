@@ -6,12 +6,7 @@ import * as tourUtils from '@website_sale/js/tours/tour_utils';
 registry.category('web_tour.tours').add('shop_update_cart', {
     url: '/shop',
     steps: () => [
-        ...tourUtils.searchProduct("conference chair"),
-        {
-            content: "select conference chair",
-            trigger: '.oe_product_cart:first a:contains("Conference Chair")',
-            run: "click",
-        },
+        ...tourUtils.searchProduct("conference chair", { select: true }),
         {
             trigger: "#product_detail",
         },
@@ -40,6 +35,7 @@ registry.category('web_tour.tours').add('shop_update_cart', {
             content: "click in modal on 'Proceed to checkout' button",
             trigger: 'button:contains("Proceed to Checkout")',
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "add suggested",

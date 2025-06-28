@@ -242,6 +242,7 @@ export class LinkPlugin extends Plugin {
         /** Overrides */
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
+        delete_image_overrides: this.deleteImageLink.bind(this),
     };
     setup() {
         this.overlay = this.dependencies.overlay.createOverlay(LinkPopover, {}, { sequence: 50 });
@@ -378,6 +379,14 @@ export class LinkPlugin extends Plugin {
                 newFont.append(...childNodes);
                 anchorEl.appendChild(newFont);
                 this.dependencies.color.colorElement(newFont, color, "color");
+            }
+
+            // When a link contains unsupported element (like an iframe or a link),
+            // we remove the link. Cases can happen when a image link is replaced
+            // by a document or a video
+            const hasUnsupportedMedia = anchorEl.querySelector("a, iframe");
+            if (hasUnsupportedMedia) {
+                this.removeLink(anchorEl);
             }
         }
     }
@@ -520,7 +529,10 @@ export class LinkPlugin extends Plugin {
                         if (attachmentId) {
                             this.linkElement.dataset.attachmentId = attachmentId;
                         }
-                        if (cleanZWChars(this.linkElement.innerText) === label) {
+                        if (
+                            cleanZWChars(this.linkElement.innerText) === label ||
+                            !!this.linkElement.childElementCount
+                        ) {
                             this.overlay.close();
                             this.dependencies.selection.setSelection(
                                 this.dependencies.selection.getEditableSelection()
@@ -635,8 +647,7 @@ export class LinkPlugin extends Plugin {
     /**
      * Remove the link from the collapsed selection
      */
-    removeLink() {
-        const link = this.linkElement;
+    removeLink(link = this.linkElement) {
         const cursors = this.dependencies.selection.preserveSelection();
         if (link && link.isContentEditable) {
             cursors.update(callbacksForCursorUpdate.unwrap(link));
@@ -835,6 +846,18 @@ export class LinkPlugin extends Plugin {
     onPasteNormalizeLink() {
         this.updateCurrentLinkSyncState();
         this.onInputDeleteNormalizeLink();
+    }
+
+    deleteImageLink(imageToDelete) {
+        if (imageToDelete.parentElement.tagName === "A") {
+            // If the link is empty after removing the image, remove it.
+            imageToDelete.remove();
+            this.overlay.close();
+            this.removeCurrentLinkIfEmtpy();
+            this.dependencies.history.addStep();
+            return true;
+        }
+        return false;
     }
 
     /**

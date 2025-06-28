@@ -210,6 +210,7 @@ class SaleOrderLine(models.Model):
         # create the project or duplicate one
         return {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
+            'account_id': self.env.context.get('project_account_id') or self.order_id.project_account_id.id or self.env['account.analytic.account'].create(self.order_id._prepare_analytic_account_data()).id,
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
             'active': True,
@@ -373,18 +374,15 @@ class SaleOrderLine(models.Model):
             if so_line.product_id.service_tracking in ['project_only', 'task_in_project']:
                 project = so_line.project_id
             if not project and _can_create_project(so_line):
-                project = so_line._timesheet_create_project()
-
-                # If the SO generates projects on confirmation and the project's SO is not set, set it to the project's SOL with the lowest (sequence, id)
-                if not so_line.order_id.project_id:
-                    so_line.order_id.project_id = project
                 # If no reference analytic account exists, set the account of the generated project to the account of the project's SO or create a new one
                 account = map_account_per_so.get(so_line.order_id.id)
                 if not account:
                     account = so_line.order_id.project_account_id or self.env['account.analytic.account'].create(so_line.order_id._prepare_analytic_account_data())
                     map_account_per_so[so_line.order_id.id] = account
-                project.account_id = account
-
+                project = so_line.with_context(project_account_id=account.id)._timesheet_create_project()
+                # If the SO generates projects on confirmation and the project's SO is not set, set it to the project's SOL with the lowest (sequence, id)
+                if not so_line.order_id.project_id:
+                    so_line.order_id.project_id = project
                 if so_line.product_id.project_template_id:
                     map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)] = project
                 else:

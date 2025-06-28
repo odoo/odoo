@@ -10,10 +10,12 @@
         content: 'Go on "Online Reveal" page',
         trigger: 'a[href*="/event"]:contains("Online Reveal"):first',
         run: "click",
+        expectUnloadPage: true,
     }, {
         content: 'Browse Booths',
         trigger: 'a:contains("Get A Booth")',
         run: "click",
+        expectUnloadPage: true,
     }, {
         content: 'Wait for the first item to be properly selected before proceeding',
         trigger: 'label.d-block:has(input:checked) h5[name=booth_category_name]',
@@ -29,6 +31,7 @@
         content: "Validate attendees details",
         trigger: 'button:enabled:contains("Book my Booth(s)")',
         run: 'click',
+        expectUnloadPage: true,
     }, {
         content: "Fill booth details",
         trigger: 'form[id="o_wbooth_contact_details_form"]',

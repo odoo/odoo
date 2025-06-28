@@ -3,8 +3,11 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo import fields
 from odoo.tests import Form, tagged
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
+from freezegun import freeze_time
+import time
 
 
 class TestStockValuationLCCommon(TestStockLandedCostsCommon):
@@ -662,3 +665,91 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         lc.button_validate()
 
         self.assertEqual(lc.cost_lines.price_unit, 10)
+
+
+@tagged('-at_install', 'post_install')
+class TestAccountInvoicingWithCOA(TestStockValuationLCCommon):
+    def setUp(self):
+        self.usd = self.env.ref('base.USD')
+        self.eur = self.env.ref('base.EUR')
+        self.env.company.currency_id = self.usd
+        self.env['res.currency.rate'].search([]).unlink()
+
+    def create_rate(self, inv_rate):
+        return self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y-%m-%d'),
+            'inverse_company_rate': inv_rate,
+            'currency_id': self.eur.id,
+            'company_id': self.env.company.id,
+        })
+
+    def _bill(self, po, qty=None, price=None):
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.invoice_date = fields.Date.today()
+        if qty is not None:
+            bill.invoice_line_ids.quantity = qty
+        if price is not None:
+            bill.invoice_line_ids.price_unit = price
+        bill.action_post()
+        return bill
+
+    def _return(self, picking, qty):
+        wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=picking.ids, active_id=picking.id, active_model='stock.picking'))
+        wizard = wizard_form.save()
+        wizard.product_return_moves.quantity = qty
+        return_picking = wizard._create_return()
+        return_picking.move_ids.quantity = qty
+        return_picking.button_validate()
+        return return_picking
+
+    def _purchase_receipt(self, product, qty, price, curr):
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.env['res.partner'].browse(self.supplier_id)
+        po_form.currency_id = curr
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_qty = qty
+            po_line.price_unit = price
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = qty
+        receipt.button_validate()
+
+        return po, receipt
+
+    def test_fifo_return_twice_and_bill_with_landed_cost_and_multi_currency(self):
+        """This check ensure that the landed cost does not prevent '_generate_price_difference_vals' to compute
+        the correct 'quantity already out' when handling a Return of a Return of a Receipt.
+        An inccorect value of 'quantity already out' would generate COGS lines in the vendor bill.
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.eur.active = True
+
+        with freeze_time('2025-01-01'):
+            self.create_rate(1.0)
+            po1, _ = self._purchase_receipt(self.product1, 5, 10, self.eur)
+            self._bill(po1)
+
+        with freeze_time('2025-01-02'):
+            self.create_rate(1.5)
+            po2, receipt02 = self._purchase_receipt(self.product1, 10, 10, self.eur)
+            self._make_lc(receipt02.move_ids, 10)
+            receipt_return = self._return(receipt02, 10)
+            self._return(receipt_return, 10)
+
+        with freeze_time('2025-01-03'):
+            self.create_rate(2.0)
+            bill2 = self._bill(po2)
+
+        in_acc_id = self.company_data['default_account_stock_in'].id
+        tax_acc_id = self.company_data['default_account_tax_purchase'].id
+        payable_acc_id = self.company_data['default_account_payable'].id
+        self.assertRecordValues(bill2.line_ids, [
+            {'account_id': in_acc_id, 'balance': 200.0, 'amount_currency': 100},
+            {'account_id': tax_acc_id, 'balance': 30.0, 'amount_currency': 15},
+            {'account_id': payable_acc_id, 'balance': -230.0, 'amount_currency': -115},
+        ])

@@ -500,9 +500,14 @@ class View(models.Model):
     @api.model
     def _get_allowed_root_attrs(self):
         # Related to these options:
-        # background-video, background-shapes, parallax
+        # background-video, background-shapes, parallax, visibility
         return super()._get_allowed_root_attrs() + [
             'data-bg-video-src', 'data-shape', 'data-scroll-background-ratio',
+            'data-visibility', 'data-visibility-id', 'data-visibility-selectors',
+        ] + [
+            'data-visibility-value-' + param + suffix
+            for param in ('country', 'lang', 'logged', 'utm-campaign', 'utm-medium', 'utm-source')
+            for suffix in ('', '-rule')
         ]
 
     def _get_combined_arch(self):

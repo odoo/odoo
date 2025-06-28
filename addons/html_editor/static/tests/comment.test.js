@@ -6,4 +6,8 @@ test("should remove comment node inside editable content during sanitize", async
         contentBefore: "<p>ab<!-- comment -->cd</p>",
         contentAfter: "<p>abcd</p>",
     });
+    await testEditor({
+        contentBefore: "<p>ab<!-- comment -->cd<!-- Another comment --></p>",
+        contentAfter: "<p>abcd</p>",
+    });
 });
