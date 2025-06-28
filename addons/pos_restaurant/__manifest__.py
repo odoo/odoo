@@ -42,6 +42,9 @@ This module adds several features to the Point of Sale that are specific to rest
         'web.assets_tests': [
             'pos_restaurant/static/tests/tours/**/*',
         ],
+        'web.assets_unit_tests': [
+            'pos_restaurant/static/tests/unit/data/**/*'
+        ],
         'point_of_sale.assets_debug': [
             'pos_restaurant/static/tests/tours/**/*',
         ],

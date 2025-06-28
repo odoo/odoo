@@ -91,14 +91,14 @@
             'point_of_sale/static/tests/pos/tours/**/*',
             'point_of_sale/static/tests/generic_helpers/**/*',
             'point_of_sale/static/tests/customer_display/**/*',
-            'point_of_sale/static/src/utils.js'
+            'point_of_sale/static/src/utils.js',
         ],
         'web.assets_unit_tests': [
-            # for the related_models.test.js
-            'point_of_sale/static/src/app/models/related_models/**/*',
+            # Load it first to be sure models registry is loaded
+            'point_of_sale/static/src/app/models/**/*',
+            'point_of_sale/static/tests/unit/**/*',
+
             # for the data_service.test.js
-            'point_of_sale/static/src/app/models/utils/indexed_db.js',
-            'point_of_sale/static/src/app/models/data_service_options.js',
             'point_of_sale/static/src/utils.js',
             'point_of_sale/static/src/proxy_trap.js',
             'point_of_sale/static/src/lazy_getter.js',
@@ -107,7 +107,6 @@
 
             'point_of_sale/static/src/app/utils/html-to-image.js',
             'point_of_sale/static/src/app/services/render_service.js',
-            'point_of_sale/static/tests/unit/**/*',
 
             'point_of_sale/static/src/app/components/odoo_logo/*',
             'point_of_sale/static/src/app/components/centered_icon/*',

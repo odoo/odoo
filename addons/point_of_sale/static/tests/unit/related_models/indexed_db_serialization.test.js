@@ -1,86 +1,25 @@
 import { expect, test, describe } from "@odoo/hoot";
-import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { SERIALIZED_UI_STATE_PROP } from "@point_of_sale/app/models/related_models/utils";
-
-const getModels = () =>
-    createRelatedModels(
-        {
-            "pos.order": {
-                lines: {
-                    name: "lines",
-                    model: "pos.order",
-                    relation: "pos.order.line",
-                    type: "one2many",
-                    inverse_name: "order_id",
-                },
-
-                total: {
-                    name: "total",
-                    type: "float",
-                },
-
-                uuid: { type: "char" },
-            },
-            "pos.order.line": {
-                order_id: {
-                    name: "order_id",
-                    model: "pos.order.line",
-                    relation: "pos.order",
-                    type: "many2one",
-                    ondelete: "cascade",
-                },
-
-                attribute_ids: {
-                    name: "attribute_ids",
-                    model: "pos.order.line",
-                    relation: "product.attribute",
-                    type: "many2many",
-                },
-
-                quantity: {
-                    name: "quantity",
-                    type: "float",
-                },
-
-                uuid: { type: "char" },
-            },
-
-            "product.attribute": {},
-        },
-        {},
-        {
-            dynamicModels: ["pos.order", "pos.order.line"],
-            databaseIndex: {
-                "pos.order": ["uuid"],
-                "pos.order.line": ["uuid"],
-            },
-            databaseTable: {
-                "pos.order": { key: "uuid" },
-                "pos.order.line": { key: "uuid" },
-            },
-        }
-    ).models;
+import { getRelatedModelsInstance } from "../data/get_model_definitions";
+import { makeMockServer } from "@web/../tests/web_test_helpers";
 
 describe("IndexedDB serialization", () => {
-    test("newly created record", () => {
-        const models = getModels();
-        const att1 = models["product.attribute"].create({ id: 99 });
-        const att2 = models["product.attribute"].create({ id: 999 });
-        const order = models["pos.order"].create({ total: 10 });
+    test("newly created record", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
+        const order = models["pos.order"].create({ amount_total: 10 });
         const line1 = models["pos.order.line"].create({
             order_id: order,
-            quantity: 1,
-            attribute_ids: [att1],
+            qty: 1,
         });
         const line2 = models["pos.order.line"].create({
             order_id: order,
-            quantity: 2,
-            attribute_ids: [att2],
+            qty: 2,
         });
         {
             const result = order.serializeForIndexedDB();
             expect(result.id).toBe(order.id);
-            expect(result.total).toBe(order.total);
+            expect(result.amount_total).toBe(order.amount_total);
             expect(Array.isArray(result.lines)).toBe(true);
             expect(result.lines.length).toBe(2);
             expect(result.lines[0]).toBe(line1.id);
@@ -91,26 +30,27 @@ describe("IndexedDB serialization", () => {
         {
             const result = line1.serializeForIndexedDB();
             expect(result.id).toBe(line1.id);
-            expect(result.quantity).toBe(1);
-            expect(result.attribute_ids).toEqual([99]);
+            expect(result.qty).toBe(1);
             expect(result[SERIALIZED_UI_STATE_PROP]).toBeEmpty();
         }
     });
 
-    test("UIState serialization", () => {
-        const models = getModels();
-        const order = models["pos.order"].create({ total: 10 });
+    test("UIState serialization", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
+        const order = models["pos.order"].create({ amount_total: 10 });
         order.uiState = { demoValue: 99 };
 
         const result = order.serializeForIndexedDB();
         expect(result.id).toBe(order.id);
-        expect(result.total).toBe(10);
+        expect(result.amount_total).toBe(10);
         expect(result[SERIALIZED_UI_STATE_PROP]).not.toBeEmpty();
         expect(typeof result[SERIALIZED_UI_STATE_PROP]).toBe("string");
     });
 
-    test("Restore serialized data", () => {
-        const models = getModels();
+    test("Restore serialized data", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance();
         const storedData = {
             "pos.order": [
                 {

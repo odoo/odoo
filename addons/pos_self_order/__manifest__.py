@@ -28,6 +28,9 @@
     ],
     "assets": {
         # Assets
+        'web.assets_unit_tests': [
+            'pos_self_order/static/tests/unit/data/**/*'
+        ],
         'point_of_sale._assets_pos': [
             'pos_self_order/static/src/overrides/**/*',
         ],
@@ -88,7 +91,7 @@
         # Assets tests
         "pos_self_order.assets_tests": [
             ("include", "point_of_sale.base_tests"),
-            "pos_self_order/static/tests/**/*",
+            "pos_self_order/static/tests/tours/**/*",
             "point_of_sale/static/tests/generic_helpers/numpad_util.js",
         ],
     },
