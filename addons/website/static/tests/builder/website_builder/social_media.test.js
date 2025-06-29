@@ -9,7 +9,8 @@ test("add social medias", async () => {
     onRpc("website", "read", ({ args }) => {
         expect(args[0]).toEqual([1]);
         expect(args[1]).toInclude("social_facebook");
-        return [{ id: 1, social_facebook: "https://fb.com/odoo" }];
+        expect(args[1]).toInclude("social_twitter");
+        return [{ id: 1, social_facebook: "https://fb.com/odoo", social_twitter: false }];
     });
 
     await setupWebsiteBuilder(`<div class="s_social_media"><h4>Social Media</h4></div>`);
@@ -31,6 +32,8 @@ test("add social medias", async () => {
     expect(exampleLinkSelector).toHaveCount(1);
     await contains("button[data-action-id='deleteSocialMediaLink']").click();
     expect(exampleLinkSelector).toHaveCount(0);
+
+    expect("td:has([data-action-param='twitter'])").toHaveCount(1);
 });
 
 test("reorder social medias", async () => {
