@@ -94,7 +94,7 @@ class StockWarehouse(models.Model):
             'subcontracting_mto_pull_id': {
                 'depends': ['subcontracting_to_resupply'],
                 'create_values': {
-                    'procure_method': 'make_to_order',
+                    'procure_method': 'mts_else_mto',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
