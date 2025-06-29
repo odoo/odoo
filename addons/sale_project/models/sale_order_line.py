@@ -277,24 +277,16 @@ class SaleOrderLine(models.Model):
         if self.product_id.service_type != 'milestones':
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
-        products_inside_template_line_with_name = self.order_id.sale_order_template_id.sale_order_template_line_ids.filtered(
-            lambda line: line.product_id and line.name).product_id
-        if self.product_id in products_inside_template_line_with_name:
-            title = self.product_id.name
-            description = '<br/>'.join(sale_line_name_parts)
-        else:
-            default_name = self.with_context(
-                lang=self.order_id._get_lang(),
-            )._get_sale_order_line_multiline_description_sale()
-            if (
-                self.name != default_name
-                and len(sale_line_name_parts) > 1
-                and sale_line_name_parts[1]
-            ):
-                # if there's a custom line description, skip the product name part when possible
-                sale_line_name_parts.pop(0)
+
+        if sale_line_name_parts and sale_line_name_parts[0] == self.product_id.display_name:
+            sale_line_name_parts.pop(0)
+
+        if len(sale_line_name_parts) == 1 and sale_line_name_parts[0]:
             title = sale_line_name_parts[0]
-            description = '<br/>'.join(sale_line_name_parts[1:])
+            description = ''
+        else:
+            title = self.product_id.display_name
+            description = '<br/>'.join(sale_line_name_parts)
 
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
