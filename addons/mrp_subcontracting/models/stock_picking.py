@@ -90,7 +90,7 @@ class StockPicking(models.Model):
             productions_to_done = productions_to_done.sudo()
             production_ids_backorder = []
             if not self.env.context.get('cancel_backorder'):
-                production_ids_backorder = productions_to_done.filtered(lambda mo: mo.state == "progress").ids
+                production_ids_backorder = productions_to_done._subcontracting_filter_to_backorder().ids
             productions_to_done.with_context(mo_ids_to_backorder=production_ids_backorder).button_mark_done()
             # For concistency, set the date on production move before the date
             # on picking. (Traceability report + Product Moves menu item)
