@@ -378,8 +378,8 @@ class TestSaleOrder(SaleCommon):
 
         self.assertEqual(
             sol1.display_name,
-            f"{self.sale_order.name} - OK THANK YOU ({self.partner.name})",
-            "Product line with a custom description should display the first line of description",
+            f"{self.sale_order.name} - {sol1.product_id.display_name} ({self.partner.name})",
+            "Product line with a custom multi-line description should display the product name",
         )
         self.assertEqual(
             sol2.display_name,
