@@ -1,11 +1,10 @@
-import { Component, onMounted, onWillStart, useSubEnv } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import {
     basicContainerBuilderComponentProps,
     useVisibilityObserver,
     useApplyVisibility,
-    useSelectableComponent,
 } from "@html_builder/core/utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { BuilderSelect } from "@html_builder/core/building_blocks/builder_select";
@@ -26,30 +25,11 @@ export class BuilderFontFamilyPicker extends Component {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
         useVisibilityObserver("content", useApplyVisibility("root"));
-        useSelectableComponent(this.props.id, {
-            /*
-            onItemChange(item) {
-                currentLabel = item.getLabel();
-                updateCurrentLabel();
-            },
-            */
-        });
-        onMounted(() => {});
-        useSubEnv({
-            /*
-            onSelectItem: () => {
-                this.dropdown.close();
-            },
-            */
-        });
         this.fonts = [];
         onWillStart(async () => {
             const fontsData = await this.env.editor.shared.websiteFont.getFontsData();
             this.fonts = fontsData._fonts;
         });
-    }
-    getAllClasses() {
-        return "TODO";
     }
     forwardProps(fontValue) {
         const result = Object.assign({}, this.props, {
