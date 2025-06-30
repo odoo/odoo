@@ -160,7 +160,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             return response
 
         url = r.path_url
-        body = json.loads(r.body)
+        body = json.loads(r.body) if r.body else None
         if url == '/api/peppol/1/send_document':
             if not body['params']['documents']:
                 raise UserError('No documents were provided')
@@ -491,6 +491,62 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             wizard.action_send_and_print()
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         self.assertEqual(move_1.peppol_move_state, 'error')
+
+    def test_peppol_branch_company_send(self):
+        branch_spoiled, branch_independent = self.env['res.company'].create([
+            {
+                'name': 'BE Spoiled Kid',
+                'country_id': self.env.ref('base.be').id,
+                'parent_id': self.env.company.id,
+                'peppol_eas': '0208',
+                'peppol_endpoint': '0477472701',
+                'account_peppol_proxy_state': 'receiver',
+            },
+            {
+                'name': 'BE Independent Kid',
+                'country_id': self.env.ref('base.be').id,
+                'parent_id': self.env.company.id,
+                'peppol_eas': '0208',
+                'peppol_endpoint': '0477471111',
+                'account_peppol_proxy_state': 'receiver',
+            },
+        ])
+        self.cr.precommit.run()  # load the COA
+        self.valid_partner.button_account_peppol_check_partner_endpoint()
+        self.env['account_edi_proxy_client.user'].create([
+            {
+                'company_id': branch_spoiled.id,
+                'id_client': ID_CLIENT.replace('x', 'a'),
+                'proxy_type': 'peppol',
+                'edi_mode': 'test',
+                'edi_identification': self.env['account_edi_proxy_client.user']._get_proxy_identification(branch_spoiled, 'peppol'),
+                'private_key_id': self.private_key.id,
+                'refresh_token': FAKE_UUID[1],
+            },
+            {
+                'company_id': branch_independent.id,
+                'id_client': ID_CLIENT.replace('x', 'b'),
+                'proxy_type': 'peppol',
+                'edi_mode': 'test',
+                'edi_identification': self.env['account_edi_proxy_client.user']._get_proxy_identification(branch_independent, 'peppol'),
+                'private_key_id': self.private_key.id,
+                'refresh_token': FAKE_UUID[1],
+            }
+        ])
+
+        # Branch uses parent's active peppol connection
+        spoiled_move = self.create_move(self.valid_partner, company=branch_spoiled)
+        spoiled_move.action_post()
+        wizard = self.create_send_and_print(spoiled_move, sending_methods=['peppol'])
+        wizard.action_send_and_print()
+        self.assertEqual(spoiled_move.peppol_move_state, 'processing')
+
+        # Branch uses peppol configuration independent of their parent
+        independent_move = self.create_move(self.valid_partner, company=branch_independent)
+        independent_move.action_post()
+        wizard = self.create_send_and_print(independent_move, sending_methods=['peppol'])
+        wizard.action_send_and_print()
+        self.assertEqual(independent_move.peppol_move_state, 'processing')
 
     def test_compute_available_peppol_eas_multi_partner(self):
         """Check _compute_available_peppol_eas works with multiple partners"""

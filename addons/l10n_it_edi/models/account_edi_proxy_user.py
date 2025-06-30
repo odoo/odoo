@@ -13,6 +13,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     proxy_type = fields.Selection(selection_add=[('l10n_it_edi', 'Italian EDI')], ondelete={'l10n_it_edi': 'cascade'})
 
+    _unique_identification_l10n_it_edi = models.UniqueIndex(
+        "(edi_identification, proxy_type, edi_mode) WHERE (active AND proxy_type = 'l10n_it_edi')",
+        "This edi identification is already assigned to an active user",
+    )
+
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
         urls['l10n_it_edi'] = {

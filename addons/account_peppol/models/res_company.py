@@ -75,6 +75,10 @@ class ResCompany(models.Model):
         ],
         string='PEPPOL status', required=True, default='not_registered',
     )
+    account_peppol_edi_user = fields.Many2one(
+        comodel_name='account_edi_proxy_client.user',
+        compute='_compute_account_peppol_edi_user',
+    )
     peppol_eas = fields.Selection(related='partner_id.peppol_eas', readonly=False)
     peppol_endpoint = fields.Char(related='partner_id.peppol_endpoint', readonly=False)
     peppol_purchase_journal_id = fields.Many2one(
@@ -88,10 +92,54 @@ class ResCompany(models.Model):
     )
     peppol_external_provider = fields.Char(tracking=True)
     peppol_can_send = fields.Boolean(compute='_compute_peppol_can_send')
+    peppol_parent_company_id = fields.Many2one(comodel_name='res.company', compute='_compute_peppol_parent_company_id')
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
+
+    def _get_active_peppol_parent_company(self):
+        """
+        Gets the closest parent company (relative from the current)
+        that has an active peppol connection.
+        :return: res.company record: containing single company if found, empty if not.
+        """
+        self.ensure_one()
+
+        for parent_company in self.sudo().parent_ids[::-1][1:]:  # loop through parent companies starting from the closest parent
+            if parent_company.sudo().peppol_can_send:
+                return parent_company
+
+        return self.env['res.company']
+
+    def _have_unauthorized_peppol_parent_company(self):
+        """
+        Returns True if the company is using the active peppol connection of the parent company
+        but the user does not have access to that parent company.
+        """
+        self.ensure_one()
+        parent_company = self.peppol_parent_company_id
+        return parent_company and parent_company not in self.env.user.company_ids
+
+    def _reset_peppol_configuration(self):
+        """
+        Reset all peppol configuration fields to their default value before registering.
+        The EAS, endpoint, email, and phone number will be recomputed so that branch companies that uses
+        their parent configuration can have their default values back
+        (as these fields will be overwritten for them when they register as parent).
+        """
+        self.account_peppol_proxy_state = 'not_registered'
+        self.account_peppol_migration_key = False
+        self.peppol_external_provider = False
+        self.peppol_eas = False
+        self.peppol_endpoint = False
+        self.account_peppol_contact_email = False
+        self.account_peppol_phone_number = False
+
+        self.partner_id._compute_peppol_eas()
+        self.partner_id._compute_peppol_endpoint()
+        self._compute_account_peppol_contact_email()
+        self._compute_account_peppol_phone_number()
 
     @api.model
     def _check_phonenumbers_import(self):
@@ -157,6 +205,25 @@ class ResCompany(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('account_edi_proxy_client_ids')
+    def _compute_account_peppol_edi_user(self):
+        for company in self:
+            company.account_peppol_edi_user = company.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+
+    @api.depends('peppol_eas', 'peppol_endpoint')
+    def _compute_peppol_parent_company_id(self):
+        self.peppol_parent_company_id = False
+        for company in self:
+            for parent_company in company.parent_ids[::-1][1:]:
+                if all((
+                    company.peppol_eas,
+                    company.peppol_endpoint,
+                    company.peppol_eas == parent_company.peppol_eas,
+                    company.peppol_endpoint == parent_company.peppol_endpoint,
+                )):
+                    company.peppol_parent_company_id = parent_company
+                    break
 
     @api.depends('account_peppol_proxy_state')
     def _compute_peppol_purchase_journal_id(self):

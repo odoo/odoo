@@ -20,6 +20,11 @@ class AccountEdiProxyClientUser(models.Model):
 
     proxy_type = fields.Selection(selection_add=[('l10n_my_edi', 'Malaysian EDI')], ondelete={'l10n_my_edi': 'cascade'})
 
+    _unique_identification_l10n_my_edi = models.UniqueIndex(
+        "(edi_identification, proxy_type, edi_mode) WHERE (active AND proxy_type = 'l10n_my_edi')",
+        "This edi identification is already assigned to an active user",
+    )
+
     # -----------------------
     # CRUD, inherited methods
     # -----------------------
