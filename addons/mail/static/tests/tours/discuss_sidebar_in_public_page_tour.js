@@ -36,5 +36,14 @@ registry.category("web_tour.tours").add("sidebar_in_public_page_tour", {
         {
             trigger: ".o-mail-DiscussSidebarChannel:contains(Channel 2).o-active",
         },
+        {
+            content: "Open channel actions",
+            trigger: ".o-mail-DiscussSidebarChannel:contains(Channel 2).o-active",
+            run: "hover && click [title='Channel Actions']",
+        },
+        {
+            trigger: ".o-dropdown-item:contains('Invite People')",
+            run: "click",
+        },
     ],
 });
