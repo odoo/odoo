@@ -1618,7 +1618,6 @@ test(`render popover: inside fullcalendar popover`, async () => {
         },
     });
 
-    onRpc("get_formview_id", () => false);
     await mountView({
         resModel: "event",
         type: "calendar",
@@ -2136,7 +2135,7 @@ test(`open form view`, async () => {
         },
     });
 
-    onRpc("get_formview_id", () => "A view");
+    onRpc("get_formview_id", () => expect.step("get_formview_id")); // should not be called
     await mountView({
         resModel: "event",
         type: "calendar",
@@ -2147,7 +2146,7 @@ test(`open form view`, async () => {
         type: "ir.actions.act_window",
         res_id: 4,
         res_model: "event",
-        views: [["A view", "form"]],
+        views: [[false, "form"]],
         target: "current",
         context: {},
     };
@@ -2275,7 +2274,6 @@ test(`readonly date_start field`, async () => {
         },
     });
 
-    onRpc("get_formview_id", () => false);
     await mountView({
         resModel: "event",
         type: "calendar",
@@ -2327,7 +2325,6 @@ test(`readonly calendar view`, async () => {
         },
     });
 
-    onRpc("get_formview_id", () => false);
     await mountView({
         resModel: "event",
         type: "calendar",

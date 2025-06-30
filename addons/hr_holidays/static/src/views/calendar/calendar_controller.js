@@ -31,10 +31,9 @@ export class TimeOffCalendarController extends CalendarController {
 
     newTimeOffRequest() {
         const context = {};
-        if (this.props.context.active_id && this.props.context.active_model === 'hr.employee') {
+        if (this.props.context.active_id && this.props.context.active_model === "hr.employee") {
             context["default_employee_id"] = this.props.context.active_id;
-        }
-        else if (this.employeeId) {
+        } else if (this.employeeId) {
             context["default_employee_id"] = this.employeeId;
         }
         if (this.model.meta.scale == "day") {
@@ -103,7 +102,8 @@ export class TimeOffCalendarController extends CalendarController {
                     title: _t("Time Off Request"),
                     viewId: this.model.formViewId,
                     onRecordSaved: onDialogClosed,
-                    onRecordDeleted: (record) => this._deleteRecord(record.resId, record.data.can_cancel),
+                    onRecordDeleted: (record) =>
+                        this._deleteRecord(record.resId, record.data.can_cancel),
                     onLeaveCancelled: onDialogClosed,
                     size: "md",
                 },
@@ -112,13 +112,13 @@ export class TimeOffCalendarController extends CalendarController {
         });
     }
 
-    async editRecord(record, context = {}, shouldFetchFormViewId = true) {
-        return this._editRecord(record, context)
+    async editRecord(record, context = {}) {
+        return this._editRecord(record, context);
     }
 }
 
 export class TimeOffReportCalendarController extends TimeOffCalendarController {
-    async editRecord(record, context = {}, shouldFetchFormViewId = true) {
-        return this._editRecord(record, context, {canExpand: false})
+    async editRecord(record, context = {}) {
+        return this._editRecord(record, context, { canExpand: false });
     }
 }

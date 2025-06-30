@@ -11,7 +11,7 @@ patch(AttendeeCalendarController.prototype, {
         this.action = useService("action");
         this._baseRendererProps.openWorkLocationWizard = this.openWorkLocationWizard.bind(this);
     },
-    async editRecord(record, context = {}, shouldFetchFormViewId = true) {
+    async editRecord(record) {
         if (record.homeworking && 'start' in record) {
             return this.action.doAction('hr_homeworking_calendar.set_location_wizard_action', {
                 additionalContext: {

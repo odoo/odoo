@@ -12,12 +12,7 @@ defineProjectModels();
 test("check 'Edit' and 'View Tasks' buttons are in Project Calendar Popover", async () => {
     mockDate("2024-01-03 12:00:00", 0);
     onRpc(({ method, model, args }) => {
-        if (method === "get_formview_id") {
-            expect(model).toBe("project.project");
-            expect(args[0]).toEqual([1]);
-            expect.step("Edit");
-            return false;
-        } else if (model === "project.project" && method === "action_view_tasks") {
+        if (model === "project.project" && method === "action_view_tasks") {
             expect.step("view tasks");
             return false;
         } else if (method === "has_access") {
@@ -44,5 +39,5 @@ test("check 'Edit' and 'View Tasks' buttons are in Project Calendar Popover", as
 
     await click(".o_popover .card-footer a:contains(View Tasks)");
     await click(".o_popover .card-footer a:contains(Edit)");
-    expect.verifySteps(["view tasks", "Edit"]);
+    expect.verifySteps(["view tasks"]);
 });
