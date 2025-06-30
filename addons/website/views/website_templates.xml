@@ -2802,7 +2802,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 </t>
                 <h1 class="mt24 h3-fs">Search Results</h1>
                 <t t-if="not results">
-                    <div class="alert alert-warning mt8" role="alert">
+                    <div class="d-flex flex-column w-100 justify-content-center align-items-center">
+                        <img src="/website/static/src/img/empty_search.svg" class="mt-5 mb-3" role="img"/>
                         <t t-if="search">
                             Your search '<t t-esc="search" />' did not match anything.
                         </t>
@@ -2812,7 +2813,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </div>
                 </t>
                 <t t-elif="fuzzy_search">
-                    <div class="alert alert-warning mt8" role="alert">
+                    <div class="d-flex flex-column w-100 justify-content-center align-items-center">
+                        <img src="/website/static/src/img/empty_search.svg" class="mt-5 mb-3" role="img"/>
                         Your search '<t t-esc="search" />' did not match anything.
                         Results are displayed for '<t t-esc="fuzzy_search"/>'.
                     </div>

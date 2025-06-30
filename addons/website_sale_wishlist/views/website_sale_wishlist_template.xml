@@ -122,14 +122,14 @@
            t-nocache-_text="_text">
             <t t-set="wishcount" t-value="len(request.env['product.wishlist'].current())"/>
             <t t-set="show_wishes" t-value="website.has_ecommerce_access()"/>
-            <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
+            <li t-attf-class="o_wsale_my_wish #{_item_class}">
                 <a href="/shop/wishlist" t-attf-class="#{_link_class}">
                     <div t-attf-class="#{_icon_wrap_class}">
                         <i t-if="_icon" class="fa fa-1x fa-heart fa-stack"/>
                         <sup
                             t-out="wishcount"
                             t-attf-class="my_wish_quantity o_animate_blink badge bg-primary
-                                          #{_badge_class} #{'d-none' if (wishcount == 0) else ''}"
+                                          #{_badge_class}"
                         />
                     </div>
                     <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
@@ -140,7 +140,7 @@
 
     <template id="header_hide_empty_wishlist_link" inherit_id="website_sale_wishlist.header_wishlist_link">
         <xpath expr="//t[@t-set='show_wishes']" position="after">
-            <t t-set="show_wishes" t-value="show_wishes and wishcount > 0"/>
+            <t t-set="show_wishes" t-value="show_wishes"/>
         </xpath>
         <xpath expr="//li[contains(@t-attf-class, 'o_wsale_my_wish')]" position="attributes">
             <attribute name="t-attf-class" add="o_wsale_my_wish_hide_empty" separator=" "/>
@@ -284,6 +284,17 @@
                         <h3>My Wishlist</h3>
                         <div class="checkbox">
                             <label class='text-muted'><input type="checkbox" id='b2b_wish' value="1" class="mr8"/>Add product to my cart but keep it in my wishlist</label>
+                        </div>
+                        <div id="empty-wishlist-message" t-attf-class="d-flex flex-column justify-content-center align-items-center w-100 #{'d-none' if wishes else ''}">
+                            <img src="/website/static/src/img/empty_wishlist.svg" class="mt-5 mb-3" role="img"/>
+                            <div class="d-flex flex-column align-items-center">
+                                <h5 class="mb-3">
+                                Your wishlist is empty !
+                                </h5>
+                                <a href="/shop" class="btn btn-primary">
+                                Shop
+                                </a>
+                            </div>
                         </div>
                         <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator " style="table-layout:auto" id="o_comparelist_table">
                             <body>
