@@ -10,6 +10,7 @@ import {
     openLinkPopup,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registerWebsitePreviewTour('edit_menus', {
     url: '/',
@@ -57,9 +58,7 @@ registerWebsitePreviewTour('edit_menus', {
     {
         trigger: "body:not(:has(.oe_menu_editor))",
     },
-    {
-        trigger: ":iframe body:contains(welcome to your)",
-    },
+    stepUtils.waitIframeIsReady(),
     clickOnExtraMenuItem({}, true),
     {
         content: "There should be a new megamenu item.",
@@ -156,6 +155,17 @@ registerWebsitePreviewTour('edit_menus', {
     // Edit the menu item from the "edit menu" popover button
     ...clickOnEditAndWaitEditMode(),
     clickOnExtraMenuItem({}, true),
+    {
+        content: "Wait for linkpopovers to initialize",
+        trigger: ":iframe .top_menu .nav-item a:contains('Modnar')",
+        run: async function() {
+            // Add a delay to ensure linkpopover listeners are attached before
+            // opening it.
+            // Only required when opening linkpopover immediately after entering
+            // edit mode.
+            await delay(1000);
+        }
+    },
     ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar"),
     {
         content: "Click on the popover Edit Menu button",
@@ -189,6 +199,7 @@ registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     // Drag a block to be able to scroll later.
+    stepUtils.waitIframeIsReady(),
     goBackToBlocks(),
     ...insertSnippet({ id: "s_media_list", name: "Media List", groupName: "Content" }),
     ...clickOnSave(),
