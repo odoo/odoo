@@ -665,7 +665,6 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        const el = this.ref.el;
         const attachments = this.props.composer.attachments;
         if (attachments.some(({ uploading }) => uploading)) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
@@ -686,7 +685,7 @@ export class Composer extends Component {
             }
             this.clear();
             this.state.active = true;
-            el.focus();
+            this.ref.el?.focus();
         }
     }
 
