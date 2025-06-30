@@ -78,7 +78,7 @@ class ProductProduct(models.Model):
             url = product.product_tmpl_id.website_url
             if pavs := product.product_template_attribute_value_ids.product_attribute_value_id:
                 pav_ids = [str(pav.id) for pav in pavs]
-                url = f'{url}#attribute_values={",".join(pav_ids)}'
+                url = f'{url}?attribute_values={",".join(pav_ids)}'
             product.website_url = url
 
     #=== CONSTRAINT METHODS ===#
