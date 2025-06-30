@@ -135,7 +135,6 @@ class HrEmployee(models.Model):
     has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user")
     work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
     work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name', groups="hr.group_hr_user")
-    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
     certificate = fields.Selection(selection='_get_certificate_selection', string='Certificate Level', groups="hr.group_hr_user", tracking=True)
     study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
