@@ -10,6 +10,25 @@ import { Tag } from "./tag";
  * @typedef {T | PromiseLike<T>} MaybePromise
  */
 
+//-----------------------------------------------------------------------------
+// Global
+//-----------------------------------------------------------------------------
+
+const {
+    Object: { freeze: $freeze },
+} = globalThis;
+
+//-----------------------------------------------------------------------------
+// Internal
+//-----------------------------------------------------------------------------
+
+const SHARED_LOGS = $freeze({});
+const SHARED_RESULTS = $freeze([]);
+
+//-----------------------------------------------------------------------------
+// Exports
+//-----------------------------------------------------------------------------
+
 /**
  * @param {Pick<Test, "name" | "parent">} test
  * @returns {HootError}
@@ -105,6 +124,15 @@ export class Test extends Job {
         }
 
         return lines.join("\n");
+    }
+
+    minimize() {
+        super.minimize();
+
+        this.setRunFn(null);
+        this.runFnString = "";
+        this.logs = SHARED_LOGS;
+        this.results = SHARED_RESULTS;
     }
 
     reset() {
