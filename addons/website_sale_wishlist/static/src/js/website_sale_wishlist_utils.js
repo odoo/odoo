@@ -56,6 +56,12 @@ function updateWishlistNavBar() {
     wishlistQuantity.classList.toggle('d-none', !wishlistProductIds.length);
 }
 
+function updateWishlistView() {
+    const wishlistProductIDs = getWishlistProductIds();
+    const wishlistEmptyEl = document.getElementById('empty-wishlist-message');
+    wishlistEmptyEl.classList.toggle('d-none', wishlistProductIDs.length > 0);
+}
+
 /**
  * Update the disabled/enabled state of an element.
  *
@@ -74,4 +80,5 @@ export default {
     removeWishlistProduct: removeWishlistProduct,
     updateWishlistNavBar: updateWishlistNavBar,
     updateDisabled: updateDisabled,
+    updateWishlistView: updateWishlistView,
 };

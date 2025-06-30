@@ -2802,7 +2802,8 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                 </t>
                 <h1 class="mt24 h3-fs">Search Results</h1>
                 <t t-if="not results">
-                    <div class="alert alert-warning mt8" role="alert">
+                    <div class="text-center">
+                        <div t-call="website.empty_search_svg" class="mt-5 mb-3"/>
                         <t t-if="search">
                             Your search '<t t-out="search" />' did not match anything.
                         </t>

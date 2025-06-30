@@ -17,7 +17,7 @@ export class ProductWishlist extends Interaction {
      * @param {Event} ev
      */
     async removeProduct(ev) {
-        await this._removeProduct(ev.currentTarget, '/shop');
+        await this._removeProduct(ev.currentTarget);
     }
 
     /**
@@ -64,7 +64,8 @@ export class ProductWishlist extends Interaction {
         article.style.display = 'none';
 
         wishlistUtils.removeWishlistProduct(productId);
-        if (!wishlistUtils.getWishlistProductIds().length) {
+        wishlistUtils.updateWishlistView();
+        if (!wishlistUtils.getWishlistProductIds().length && emptyRedirectUrl) {
             redirect(emptyRedirectUrl);
         }
         wishlistUtils.updateWishlistNavBar();
