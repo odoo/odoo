@@ -46,7 +46,6 @@ class IrRule(models.Model):
         # independent from the context
         return {
             'user': self.env.user.with_context({}),
-            'time': time,
             'company_ids': self.env.companies.ids,
             'company_id': self.env.company.id,
         }

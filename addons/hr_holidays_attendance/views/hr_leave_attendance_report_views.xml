@@ -95,7 +95,7 @@
                 <separator/>
                 <filter name="date" string="Date" date="date"/>
                 <filter string="Last 2 Months" name="last_two_months" invisible="1"
-                    domain="[('date', '>', (context_today() - relativedelta(months=2) + relativedelta(day=1)))]"/>
+                    domain="[('date', '&gt;', '-2m =1d')]"/>
                 <separator/>
                 <filter string="Archived Employees" name="archived_employees"
                     domain="[('active', '=', False)]"/>

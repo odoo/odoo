@@ -269,10 +269,10 @@
                     <filter name="filter_my_expertise" string="My Expertise" domain="[('livechat_matches_self_expertise', '=', True)]"/>
                     <separator />
                     <filter name="filter_session_date" date="create_date" string="Session Date">
-                        <filter name="created_on_last_24_hours" string="Last 24 Hours" domain="[('create_date', '&gt;', (datetime.datetime.now() - datetime.timedelta(hours=24)).to_utc())]"/>
-                        <filter name="created_on_last_7_days" string="Last 7 Days" domain="[('create_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=7), datetime.time(23, 59, 59)).to_utc())]"/>
-                        <filter name="created_on_last_30_days" string="Last 30 Days" domain="[('create_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=30), datetime.time(23, 59, 59)).to_utc())]"/>
-                        <filter name="created_on_last_365_days" string="Last 365 Days" domain="[('create_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
+                        <filter name="created_on_last_24_hours" string="Last 24 Hours" domain="[('create_date', '&gt;', '-24H')]"/>
+                        <filter name="created_on_last_7_days" string="Last 7 Days" domain="[('create_date', '&gt;=', 'today -7d +1d')]"/>
+                        <filter name="created_on_last_30_days" string="Last 30 Days" domain="[('create_date', '&gt;=', 'today -30d +1d')]"/>
+                        <filter name="created_on_last_365_days" string="Last 365 Days" domain="[('create_date', '&gt;=', 'today -365d +1d')]"/>
                     </filter>
                     <separator/>
                     <group>
