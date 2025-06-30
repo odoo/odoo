@@ -99,6 +99,33 @@ class HrLeave(models.Model):
         start = datetime.combine(min(start_dates) - relativedelta(days=1), time.min)
         stop = datetime.combine(max(stop_dates) + relativedelta(days=1), time.max)
         with self.env['hr.work.entry']._error_checking(start=start, stop=stop, skip=skip_check, employee_ids=employee_ids):
+            # Any change in dates/time-off type in approved(validate) stage by leave officer -> regenerate work entry
+            recalc_keys = [
+                'holiday_status_id',
+                'request_unit_hours',
+                'request_unit_half',
+                'request_date_from',
+                'request_hour_from',
+                'request_date_to',
+                'request_hour_to',
+                'request_date_from_period',
+            ]
+            if 'state' not in vals and any(key in vals for key in recalc_keys):
+                emp_ids = self.filtered(lambda leave: leave.state == 'validate').mapped('employee_id.id')
+                res = super().write(vals)
+                if emp_ids:
+                    regen_work_entry_wiz = self.env['hr.work.entry.regeneration.wizard'].sudo().create({
+                        'employee_ids': emp_ids,
+                        'date_from': datetime.min.date(),
+                        'date_to': datetime.max.date(),
+                    })
+                    regen_work_entry_wiz.write({
+                        'date_from': regen_work_entry_wiz.earliest_available_date,
+                        'date_to': regen_work_entry_wiz.latest_available_date,
+                    })
+                    if regen_work_entry_wiz.valid:
+                        regen_work_entry_wiz.regenerate_work_entries()
+                return res
             return super().write(vals)
 
     @api.model_create_multi
