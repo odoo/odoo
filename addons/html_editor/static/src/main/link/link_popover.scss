@@ -20,6 +20,30 @@
     }
 }
 
+.o_seo_option_child {
+    padding-left: 20px;
+    position: relative;
+
+    &::before, &::after {
+        content: "";
+        position: absolute;
+        left: 6px;
+        background: #999;
+    }
+
+    &::before {
+        top: 0;
+        height: calc(100% - 14px);
+        width: 1px;
+    }
+
+    &::after {
+        top: 16px;
+        width: 10px;
+        height: 1px;
+    }
+}
+
 .custom-border {
     @include o-input-number-no-arrows();
 
