@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare
+from odoo.tools.misc import clean_context
 from dateutil.relativedelta import relativedelta
 
 
@@ -191,7 +192,8 @@ class StockPicking(models.Model):
             all_mo.update(grouped_mo.ids)
 
         all_mo = self.env['mrp.production'].browse(sorted(all_mo))
-        all_mo.with_context(self._get_subcontract_mo_confirmation_ctx()).action_confirm()
+        ctx = {**clean_context(self._context), **self._get_subcontract_mo_confirmation_ctx()}
+        all_mo.with_context(ctx).action_confirm()
 
         for mo in all_mo:
             move = group_move[mo.procurement_group_id.id][0]
