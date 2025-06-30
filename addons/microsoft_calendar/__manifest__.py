@@ -20,9 +20,8 @@
             'microsoft_calendar/static/src/scss/microsoft_calendar.scss',
             'microsoft_calendar/static/src/views/**/*',
         ],
-        'web.qunit_suite_tests': [
-            'microsoft_calendar/static/tests/microsoft_calendar_mock_server.js',
-            'microsoft_calendar/static/tests/microsoft_calendar_tests.js',
+        'web.assets_unit_tests': [
+            'microsoft_calendar/static/tests/**/*',
         ],
     },
     'author': 'Odoo S.A.',
