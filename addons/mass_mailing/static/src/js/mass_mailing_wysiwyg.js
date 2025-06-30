@@ -206,7 +206,7 @@ export class MassMailingWysiwyg extends Wysiwyg {
             ...options,
             autoActivateContentEditable: false,
             allowCommandVideo: false,
-            powerboxItems,
+            powerboxItems: [...(options.powerboxItems || []), ...powerboxItems],
             powerboxCategories,
         };
         return finalOptions;

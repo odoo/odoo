@@ -79,3 +79,6 @@ class TestMailingUi(MassMailCommon, HttpCaseWithUserDemo):
 
     def test_mass_mailing_code_view_tour(self):
         self.start_tour("/odoo?debug=tests", 'mass_mailing_code_view_tour', login="demo")
+
+    def test_mass_mailing_dynamic_placeholder_tour(self):
+        self.start_tour("/odoo", 'mass_mailing_dynamic_placeholder_tour', login="demo")
