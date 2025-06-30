@@ -2438,3 +2438,26 @@ class TestBoM(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(comp, location, 3.0)
         # With 3 components on hand, 1.5 products could be created, rounded down to 1.0 due to the integer uom
         self.assertEqual(prod.qty_available, 1.0)
+
+    def test_copy_bom_with_operations(self):
+        """
+        Check that copying a bom with operations reassign the component and by
+        product lines to the appropirate operations.
+        """
+        bom = self.bom_2
+        bom.bom_line_ids.operation_id = bom.operation_ids
+        bom.byproduct_ids = [Command.create({
+            'product_id': self.product_2.id,
+            'product_qty': 1,
+            'operation_id': bom.operation_ids.id,
+        })]
+        copied_bom = bom.copy()
+        # check that a new operation was created and linked to th copied lines
+        copied_operation = copied_bom.operation_ids
+        self.assertEqual(len(copied_operation), 1)
+        self.assertNotEqual(bom.operation_ids, copied_operation)
+        self.assertEqual(copied_bom.bom_line_ids.operation_id, copied_operation)
+        self.assertEqual(copied_bom.byproduct_ids.operation_id, copied_operation)
+        # Archive the operation of the copied bom and check that the operation linked are removed
+        copied_operation.action_archive()
+        self.assertFalse(copied_bom.bom_line_ids.operation_id | copied_bom.byproduct_ids.operation_id)
