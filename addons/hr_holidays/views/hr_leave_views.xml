@@ -290,6 +290,7 @@
             <header>
                 <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or not id"/>
                 <button string="Validate" name="action_approve" invisible="not can_validate or can_approve or not id" type="object" class="oe_highlight"/>
+                <button string="Back to Approval" name="action_back_to_approval" type="object" invisible="not can_back_to_approve or not id"/>
                 <button string="Refuse" name="action_refuse" type="object" invisible="not can_refuse or not id"/>
                 <button string="Cancel" name="action_cancel" type="object" invisible="not can_cancel or not id" />
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate,validate1" invisible="validation_type != 'both'"/>
