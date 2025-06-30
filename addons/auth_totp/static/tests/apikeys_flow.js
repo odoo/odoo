@@ -7,7 +7,7 @@ const openUserPreferenceSecurity = () => [{
     run: 'click',
 }, {
     content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
+    trigger: '[data-menu=preferences]',
     run: 'click',
 }, {
     content: "Switch to security tab",
@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     trigger: '.o_user_menu .dropdown-toggle',
     run: "click",
 }, {
-    trigger: '[data-menu=settings]',
+    trigger: '[data-menu=preferences]',
     run: "click",
 }, {
     content: "Switch to security tab",
@@ -101,7 +101,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     trigger: '.o_user_menu .dropdown-toggle',
     run: "click",
 }, {
-    trigger: '[data-menu=settings]',
+    trigger: '[data-menu=preferences]',
     run: "click",
 }, {
     content: "Switch to security tab",

@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
         },
         {
             content: "Open preferences / profile screen",
-            trigger: "[data-menu=settings]",
+            trigger: "[data-menu=preferences]",
             run: "click",
         },
         {

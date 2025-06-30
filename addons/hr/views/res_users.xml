@@ -3,9 +3,9 @@
     <data>
 
         <!-- Inherit the preference view to remove title, image and footer -->
-        <!-- This view is meant to be included in the employee profile view -->
+        <!-- This view is meant to be included in the employee preferences view -->
         <!-- It ensures that if the 'normal' Preferences view is changed, it's
-            also reflected in the employee's profile -->
+            also reflected in the employee's preferences -->
         <record id="res_users_view_form_simple_modif" model="ir.ui.view">
             <field name="name">res.users.preferences.form.simplified.inherit</field>
             <field name="model">res.users</field>
@@ -35,7 +35,7 @@
             </field>
         </record>
 
-        <record id="res_users_view_form_profile" model="ir.ui.view">
+        <record id="res_users_view_form_preferences" model="ir.ui.view">
             <field name="name">res.users.preferences.form.inherit</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="res_users_view_form_simple_modif"/>
@@ -43,7 +43,7 @@
                 <form position="attributes">
                     <attribute name="create">false</attribute>
                     <attribute name="delete">false</attribute>
-                    <attribute name="js_class">hr_employee_profile_form</attribute>
+                    <attribute name="js_class">hr_user_preferences_form</attribute>
                 </form>
                 <xpath expr="//field[@name='name']" position="attributes">
                     <attribute name="placeholder">Employee's Name</attribute>
@@ -151,7 +151,7 @@
             <field name="res_model">res.users</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="view_id" ref="hr.res_users_view_form_profile"/>
+            <field name="view_id" ref="hr.res_users_view_form_preferences"/>
         </record>
 
         <record id="res_users_view_form" model="ir.ui.view">

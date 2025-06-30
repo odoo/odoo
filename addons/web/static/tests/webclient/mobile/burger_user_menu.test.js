@@ -106,10 +106,10 @@ test("can execute the callback of settings", async () => {
             return true;
         },
     });
-    userMenuRegistry.add("profile", preferencesItem);
+    userMenuRegistry.add("preferences", preferencesItem);
     await mountWithCleanup(BurgerUserMenu);
     expect("a").toHaveCount(1);
-    expect("a").toHaveText("Preferences");
+    expect("a").toHaveText("My Preferences");
     await click("a");
     await expect.waitForSteps([7, "Change My Preferences"]);
 });
