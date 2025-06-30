@@ -58,8 +58,8 @@ function separator() {
 export function preferencesItem(env) {
     return {
         type: "item",
-        id: "settings",
-        description: _t("Preferences"),
+        id: "preferences",
+        description: _t("My Preferences"),
         callback: async function () {
             const actionDescription = await env.services.orm.call("res.users", "action_get");
             actionDescription.res_id = user.userId;
@@ -139,7 +139,7 @@ registry
     .add("support", supportItem)
     .add("shortcuts", shortCutsItem)
     .add("separator", separator)
-    .add("profile", preferencesItem)
+    .add("preferences", preferencesItem)
     .add("odoo_account", odooAccountItem)
     .add("install_pwa", installPWAItem)
     .add("log_out", logOutItem);

@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add('passkeys_tour_delete', {
             run: 'click',
         }, {
             content: "Open preferences / profile screen",
-            trigger: '[data-menu=settings]',
+            trigger: '[data-menu=preferences]',
             run: 'click',
         }, {
             content: "Switch to security tab",
@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add('passkeys_tour_delete', {
             run: 'click',
         }, {
             content: "Open preferences / profile screen",
-            trigger: '[data-menu=settings]',
+            trigger: '[data-menu=preferences]',
             run: 'click',
         }, {
             // The HR module causes the switch to security tab to trigger on the old DOM, before the new one is loaded

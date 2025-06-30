@@ -21,7 +21,7 @@
         <record id="res_useurs_view_form_profile" model="ir.ui.view">
             <field name="name">res.users.preferences.form.inherit</field>
             <field name="model">res.users</field>
-            <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+            <field name="inherit_id" ref="hr.res_users_view_form_preferences"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
                     <field name="monday_location_id"  placeholder="Unspecified"/>

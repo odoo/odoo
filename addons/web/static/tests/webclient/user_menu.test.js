@@ -141,11 +141,11 @@ test("can execute the callback of settings", async () => {
         },
     });
 
-    userMenuRegistry.add("profile", preferencesItem);
+    userMenuRegistry.add("preferences", preferencesItem);
     await mountWithCleanup(UserMenu);
     await contains("button.dropdown-toggle").click();
     expect(".dropdown-menu .dropdown-item").toHaveCount(1);
-    expect(".dropdown-menu .dropdown-item").toHaveText("Preferences");
+    expect(".dropdown-menu .dropdown-item").toHaveText("My Preferences");
     await contains(".dropdown-menu .dropdown-item").click();
     expect.verifySteps(["7", "Change My Preferences"]);
 });
