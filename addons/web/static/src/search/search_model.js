@@ -1097,7 +1097,7 @@ export class SearchModel extends EventBus {
                         selection: definition.selection,
                         sortable: true,
                         store: true,
-                        string: `${definition.string} (${definitionRecordName})`,
+                        string: definition.string,
                         type: definition.type,
                         relatedPropertyField: field,
                     };
