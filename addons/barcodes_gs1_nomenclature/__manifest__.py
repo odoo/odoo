@@ -16,7 +16,7 @@
             'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
         ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'barcodes_gs1_nomenclature/static/src/js/tests/**/*',
         ],
     },
