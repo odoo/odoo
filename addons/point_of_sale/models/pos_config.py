@@ -932,7 +932,7 @@ class PosConfig(models.Model):
             **cash_journal_vals,
         }
 
-        default_cash_account = self.env['account.account'].search([
+        default_cash_account = self.env['account.account'].with_context(lang='en_US').search([
             ('account_type', '=', 'asset_cash'),
             ('name', '=', 'Cash'),
             ('company_ids', 'in', self.env.company.root_id.id)
