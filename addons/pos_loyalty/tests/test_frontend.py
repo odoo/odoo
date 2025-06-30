@@ -2825,6 +2825,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         Tests that when settling an order that has been partially paid, it does not give the loyalty
         points again. All of them should be given during the first transaction.
         """
+        if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
+            self.skipTest("pos_settle_due module is required for this test")
         if self.main_pos_config.current_session_id:
             self.main_pos_config.current_session_id.action_pos_session_closing_control()
         LoyaltyProgram = self.env['loyalty.program']
