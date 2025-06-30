@@ -175,6 +175,78 @@ describe("popover should switch UI depending on editing state", () => {
             '<p>this is a <a href="http://test.com/">linkABCD[]</a></p>'
         );
     });
+    test("should open seo advanced popup when gear icon is clicked", async () => {
+        await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_href_input_link");
+        await click(".o_we_href_input_link");
+        await click(".o-we-linkpopover .fa-gear");
+        await expectElementCount(".o_advance_option_panel", 1);
+        expect(".o_advance_option_panel .o_seo_option_row").toHaveCount(4);
+    });
+    test("should add rel='nofollow' when checkbox is selected and applied", async () => {
+        const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_href_input_link");
+        await click(".o_we_href_input_link");
+        await click(".o-we-linkpopover .fa-gear");
+        await expectElementCount(".o_advance_option_panel", 1);
+        await contains(".o_seo_option_row:nth-of-type(1) input[type='checkbox']").click();
+        await click(".o_advance_option_panel .fa-angle-left");
+        await waitFor(".o-we-linkpopover");
+        await contains(".o_we_apply_link").click();
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.com/" rel="nofollow">li[]nk</a></p>'
+        );
+    });
+    test("should add and remove relAttribute in anchor tag when checkbox is selected and applied", async () => {
+        const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_href_input_link");
+        await click(".o_we_href_input_link");
+        await click(".o-we-linkpopover .fa-gear");
+        await expectElementCount(".o_advance_option_panel", 1);
+        await contains(".o_seo_option_row:nth-of-type(1) input[type='checkbox']").click();
+        await contains(".o_seo_option_row:nth-of-type(2) input[type='checkbox']").click();
+        await contains(".o_seo_option_row:nth-of-type(3) input[type='checkbox']").click();
+        await click(".o_advance_option_panel .fa-angle-left");
+        await waitFor(".o-we-linkpopover");
+        await contains(".o_we_apply_link").click();
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.com/" rel="nofollow noreferrer sponsored">li[]nk</a></p>'
+        );
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_href_input_link");
+        await click(".o_we_href_input_link");
+        await click(".o-we-linkpopover .fa-gear");
+        await contains(".o_seo_option_row:nth-of-type(1) input[type='checkbox']").click();
+        await click(".o_advance_option_panel .fa-angle-left");
+        await waitFor(".o-we-linkpopover");
+        await contains(".o_we_apply_link").click();
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.com/" rel="noreferrer sponsored">li[]nk</a></p>'
+        );
+    });
+    test("should add _blank attribute on open in a new window is checked", async () => {
+        const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await waitFor(".o_we_href_input_link");
+        await click(".o_we_href_input_link");
+        await click(".o-we-linkpopover .fa-gear");
+        await expectElementCount(".o_advance_option_panel", 1);
+        await contains(".o_advance_option_panel .target-blank-option").click();
+        await contains(".o_seo_option_row:nth-of-type(5) input[type='checkbox']").click();
+        await click(".o_advance_option_panel .fa-angle-left");
+        await waitFor(".o-we-linkpopover");
+        await contains(".o_we_apply_link").click();
+        expect (cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.com/" rel="noopener" target="_blank">li[]nk</a></p>'
+        );
+    });
 });
 
 describe("popover should edit,copy,remove the link", () => {
