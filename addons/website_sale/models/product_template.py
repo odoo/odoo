@@ -3,11 +3,13 @@
 import logging
 from collections import defaultdict
 
+from werkzeug import urls
+
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import float_is_zero, is_html_empty
-from odoo.tools.sql import create_column, column_exists, SQL
+from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
@@ -336,7 +338,7 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
 
-    def _get_previewed_attribute_values(self):
+    def _get_previewed_attribute_values(self, category=None, product_query_params=None):
         """Compute previewed product attribute values for each product in the recordset.
 
         :return: the previewed attribute values per product
@@ -357,9 +359,14 @@ class ProductTemplate(models.Model):
                     previewed_ptavs_data = []
                     for ptav in previewed_ptavs[:show_count]:
                         matching_variant = ptav.ptav_product_variant_ids.sorted('id')[0]
+                        variant_query_params = {
+                            **(product_query_params or {}),
+                            'attribute_values': str(ptav.product_attribute_value_id.id)
+                        }
                         previewed_ptavs_data.append({
                             'ptav': ptav,
                             'variant_image_url': self.env['website'].image_url(matching_variant, 'image_512'),
+                            'variant_url': template._get_product_url(category, variant_query_params),
                         })
                     res[template.id] = {
                         'ptavs_data': previewed_ptavs_data,
@@ -1073,3 +1080,10 @@ class ProductTemplate(models.Model):
     @api.model
     def _allow_publish_rating_stats(self):
         return True
+
+    def _get_product_url(self, category=None, query_params=None):
+        self.ensure_one()
+        slug = self.env['ir.http']._slug
+        base_url = (category and f"/shop/{slug(category)}/{slug(self)}") or self.website_url
+        query_string = (query_params and urls.url_encode(query_params)) or ''
+        return (query_string and f"{base_url}?{query_string}") or base_url

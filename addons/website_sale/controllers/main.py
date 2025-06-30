@@ -3,7 +3,6 @@
 import base64
 import itertools
 import json
-
 from datetime import datetime
 
 from werkzeug import urls
@@ -16,7 +15,7 @@ from odoo.fields import Command, Domain
 from odoo.http import request, route
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.tools.translate import _, LazyTranslate
+from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
@@ -57,7 +56,7 @@ def handle_product_params_error(exc, product, category=None, **kwargs):
         return request.redirect(WebsiteSale._get_shop_path(category))
 
     if not category and product and product.has_access('read'):
-        return request.redirect(WebsiteSale._get_product_path(product))
+        return request.redirect(product._get_product_url())
 
     return NotFound.code  # 404
 
@@ -268,9 +267,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """ Hook to update values used for rendering website_sale.products template """
         return {}
 
-    def _get_product_query_string(self, **kwargs):
-        """ Hook to set the product page URL's query string. """
-        return ''
+    def _get_product_query_params(self, **kwargs):
+        """Allow to configure the product page URL's query string."""
+        return {}
 
     @route(
         [
@@ -452,17 +451,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             layout_mode = 'grid'
 
         products_prices = lazy(lambda: products._get_sales_prices(website))
+        product_query_params = self._get_product_query_params(**post)
 
-        attributes_values = request.env['product.attribute.value'].browse(attribute_value_ids)
-        sorted_attributes_values = attributes_values.sorted('sequence')
-        multi_attributes_values = sorted_attributes_values.filtered(lambda av: av.display_type == 'multi')
-        single_attributes_values = sorted_attributes_values - multi_attributes_values
-        grouped_attributes_values = list(groupby(single_attributes_values, lambda av: av.attribute_id.id))
-        grouped_attributes_values.extend([(av.attribute_id.id, [av]) for av in multi_attributes_values])
-
-        selected_attributes_hash = grouped_attributes_values and "#attribute_values=%s" % (
-            ','.join(str(v[0].id) for k, v in grouped_attributes_values)
-        ) or ''
+        attributes_values = request.env['product.attribute.value'].browse(
+            attribute_value_ids
+        ).sorted()
+        if attributes_values:
+            product_query_params['attribute_values'] = ','.join(str(i) for i in attributes_values.ids)
 
         values = {
             'auto_assign_ribbons': lazy(
@@ -485,15 +480,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'categories': categs,
             'attributes': attributes,
             'keep': keep,
-            'selected_attributes_hash': selected_attributes_hash,
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
             'products_prices': products_prices,
             'get_product_prices': lambda product: lazy(lambda: products_prices[product.id]),
             'float_round': float_round,
             'shop_path': SHOP_PATH,
-            'product_query_string': self._get_product_query_string(**post),
-            'previewed_attribute_values': lazy(products._get_previewed_attribute_values),
+            'product_query_params': product_query_params,
+            'previewed_attribute_values': lazy(
+                lambda: products._get_previewed_attribute_values(category, product_query_params),
+            ),
         }
         if filter_by_price_enabled:
             values['min_price'] = min_price or available_min_price
@@ -543,16 +539,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
             category
             and not product.filtered_domain([('public_categ_ids', 'child_of', category.id)])
         ):
-            return request.redirect(f'{self._get_product_path(product)}?{query}', code=301)
+            return request.redirect(f'{product._get_product_url()}?{query}', code=301)
         # If the category is provided as a query parameter (which is deprecated), we redirect to the
         # "correct" shop URL, where the category has been removed from the query parameters and
         # added to the path.
         if is_category_in_query:
             return request.redirect(
-                f'{self._get_product_path(product, category)}?{query}', code=301
+                f'{product._get_product_url(category)}?{query}', code=301
             )
         return request.render(
-            'website_sale.product', self._prepare_product_values(product, category, **kwargs)
+            'website_sale.product',
+            self._prepare_product_values(
+                # request context must be given to ensure context updates in overrides are correctly
+                # forwarded to `_get_combination_info` call
+                product.with_context(request.env.context), category, **kwargs,
+            )
         )
 
     @route(
@@ -596,7 +597,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         query = self._get_filtered_query_string(
             request.httprequest.query_string.decode(), keys_to_remove=['category']
         )
-        return request.redirect(f'{self._get_product_path(product, category)}?{query}', code=301)
+        return request.redirect(f'{product._get_product_url(category)}?{query}', code=301)
 
     @route(['/shop/product/extra-media'], type='jsonrpc', auth='user', website=True)
     def add_product_media(self, media, type, product_product_id, product_template_id, combination_ids=None):
@@ -766,7 +767,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductCategory = request.env['product.public.category']
         product_markup_data = [product._to_markup_data(request.website)]
         category = (
-            category and ProductCategory.browse(int(category)).exists()
+            (category and ProductCategory.browse(int(category)).exists())
             or product.public_categ_ids[:1]
         )
         if category:
@@ -774,23 +775,44 @@ class WebsiteSale(payment_portal.PaymentPortal):
             product_markup_data.append(self._prepare_breadcrumb_markup_data(
                 request.website.get_base_url(), category, product.name
             ))
-        keep = QueryURL(
-            self._get_shop_path(category),
-            attribute_values=request.session.get('attribute_values', [])
-        )
+
+        if (last_attributes_search := request.session.get('attribute_values', [])):
+            keep = QueryURL(
+                self._get_shop_path(category),
+                attribute_values=last_attributes_search
+            )
+        else:
+            keep = QueryURL(self._get_shop_path(category))
+
+        if attribute_values := kwargs.get('attribute_values', ''):
+            attribute_value_ids = {int(i) for i in attribute_values.split(',')}
+            combination = product.attribute_line_ids.mapped(
+                lambda ptal: (
+                    ptal.product_template_value_ids.filtered(
+                        lambda ptav: (
+                            ptav.ptav_active
+                            and ptav.product_attribute_value_id.id in attribute_value_ids
+                        )
+                    )[:1]
+                ) or ptal.product_template_value_ids[:1]
+            )
+            combination_info = product._get_combination_info(
+                combination=request.env['product.template.attribute.value'].concat(combination)
+            )
+        else:
+            combination_info = product._get_combination_info()
 
         # Needed to trigger the recently viewed product rpc
         view_track = request.website.viewref("website_sale.product").track
 
         return {
-            'category': category,
-            'keep': keep,
             'categories': ProductCategory.search([('parent_id', '=', False)]),
+            'category': category,
+            'combination_info': combination_info,
+            'keep': keep,
             'main_object': product,
-            'optional_product_ids': [
-                p.with_context(active_id=p.id) for p in product.optional_product_ids
-            ],
             'product': product,
+            'product_variant': request.env['product.product'].browse(combination_info['product_id']),
             'view_track': view_track,
             'product_markup_data': json_scriptsafe.dumps(product_markup_data, indent=2),
             'shop_path': SHOP_PATH,
@@ -1895,15 +1917,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             path += f'/category/{slug(category)}'
         if page:
             path += f'/page/{page}'
-        return path
-
-    @staticmethod
-    def _get_product_path(product, category=None):
-        slug = request.env['ir.http']._slug
-        path = SHOP_PATH
-        if category:
-            path += f'/{slug(category)}'
-        path += f'/{slug(product)}'
         return path
 
     @staticmethod

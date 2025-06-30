@@ -365,16 +365,11 @@
         >
             <t t-foreach="product_ptavs" t-as="previewed_ptav">
                 <t t-set="ptav" t-value="previewed_ptav['ptav']"/>
-                <t t-set="selected_attribute_value"
-                    t-value="ptav.product_attribute_value_id.id"/>
-                <t
-                    t-set="variant_href"
-                    t-value="product_href.split('#')[0] + '#attribute_values=%s' % (selected_attribute_value)"
-                />
+                <t t-set="selected_attribute_value" t-value="ptav.product_attribute_value_id.id"/>
                 <a
                     class="o_product_variant_preview d-none z-2"
                     t-att-data-variant-image="previewed_ptav['variant_image_url']"
-                    t-att-href="variant_href"
+                    t-att-href="previewed_ptav['variant_url']"
                 >
                     <div
                         t-if="ptav.attribute_id.is_thumbnail_visible"
@@ -808,6 +803,10 @@
                                                             <t
                                                                 t-set="design_field"
                                                                 t-value="website.shop_opt_products_design_classes"
+                                                            />
+                                                            <t
+                                                                t-set="product_href"
+                                                                t-value="product._get_product_url(category, product_query_params)"
                                                             />
                                                         </t>
                                                     </div>
@@ -1949,16 +1948,11 @@
          / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>
     </template>
 
-    <template id="product" name="Product" track="1">
+    <template id="website_sale.product" name="Product" track="1">
         <!-- Qweb variable defining the class suffix for navbar items.
              Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
         <t t-set="navClass" t-valuef="light"/>
 
-        <t t-set="combination_info" t-value="product._get_combination_info()"/>
-        <t
-            t-set="product_variant"
-            t-value="product.env['product.product'].browse(combination_info['product_id'])"
-        />
         <t
             t-set="is_fullwidth_content"
             t-value="website.product_page_image_width in ['none', '100_pc']"

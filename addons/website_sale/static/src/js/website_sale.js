@@ -1,5 +1,6 @@
 import { hasTouch, isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
+import { url } from "@web/core/utils/urls";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
@@ -47,7 +48,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     start() {
         const def = this._super(...arguments);
 
-        this._applyHash();
+        this._applySearch();
 
         // This has to be triggered to compute the "out of stock" feature and the hash variant changes
         this.triggerVariantChange(this.$el);
@@ -56,7 +57,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
         // Triggered when selecting a variant of a product in a carousel element
         window.addEventListener("hashchange", (ev) => {
-            this._applyHash();
+            this._applySearch();
             this.triggerVariantChange(this.$el);
         });
 
@@ -117,23 +118,34 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             ev.preventDefault();
         }
     },
-    _applyHash: function () {
-        const params = new URLSearchParams(window.location.hash.substring(1));
-        if (params.get("attribute_values")) {
-            const attributeValueIds = params.get("attribute_values").split(',');
+    _applySearch: function () {
+        let params = new URLSearchParams(window.location.search);
+        let attribute_values = params.get("attribute_values")
+        if (!attribute_values) {
+            // TODO remove in 20 (or later): hash support of attribute values
+            params = new URLSearchParams(window.location.hash.substring(1));
+            attribute_values = params.get("attribute_values")
+        }
+        if (attribute_values) {
+            const attributeValueIds = attribute_values.split(',');
             const inputs = document.querySelectorAll(
                 'input.js_variant_change, select.js_variant_change option'
             );
+            let combination_changed = false;
             inputs.forEach((element) => {
                 if (attributeValueIds.includes(element.dataset.attributeValueId)) {
-                    if (element.tagName === "INPUT") {
+                    if (element.tagName === "INPUT" && !element.checked) {
                         element.checked = true;
-                    } else if (element.tagName === "OPTION") {
+                        combination_changed = true;
+                    } else if (element.tagName === "OPTION" && !element.selected) {
                         element.selected = true;
+                        combination_changed = true;
                     }
                 }
             });
-            this._changeAttribute(['.css_attribute_color', '[name="o_wsale_attribute_image_selector"]', '.o_variant_pills']);
+            if (combination_changed) {
+                this._changeAttribute(['.css_attribute_color', '[name="o_wsale_attribute_image_selector"]', '.o_variant_pills']);
+            }
         }
     },
 
@@ -149,8 +161,10 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         let attributeIds = [];
         inputs.forEach((element) => attributeIds.push(element.dataset.attributeValueId));
         if (attributeIds.length > 0) {
+            const params = new URLSearchParams(window.location.search);
+            params.set('attribute_values', attributeIds.join(','))
             // Avoid adding new entries in session history by replacing the current one
-            history.replaceState(null, '', '#attribute_values=' + attributeIds.join(','));
+            history.replaceState(null, '', url(window.location.pathname, Object.fromEntries(params)));
         }
     },
     /**
