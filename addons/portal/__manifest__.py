@@ -110,6 +110,9 @@ a dependency towards website editing and customization capabilities.""",
             ("remove", "mail/static/src/**/*.dark.scss"),
             "portal/static/src/chatter/scss/shadow.scss",
         ],
+        'website.inside_builder_style': [
+            'portal/static/src/scss/portal.inside.scss'
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
