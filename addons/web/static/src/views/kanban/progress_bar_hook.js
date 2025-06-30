@@ -156,14 +156,21 @@ class ProgressBarState {
                     this.activeBars[group.serverValue]?.aggregates[aggregateField.name];
             }
         }
-        value ??= false;
-        if (value && aggregateField.type === "monetary" && aggregateField.currency_field) {
-            const currencyId = group.aggregates[aggregateField.currency_field][0];
-            if (currencyId) {
+        value ||= 0;
+        if (aggregateField.type === "monetary" && aggregateField.currency_field) {
+            const currencies = group.aggregates?.[aggregateField.currency_field];
+            if (currencies?.length > 1) {
+                return {
+                    title: `${title}: ${_t("different currencies cannot be aggregated")}`,
+                    value,
+                    currency: false,
+                };
+            }
+            if (currencies?.[0]) {
                 return {
                     title,
                     value,
-                    currency: getCurrency(currencyId),
+                    currency: getCurrency(currencies[0]),
                 };
             }
         }

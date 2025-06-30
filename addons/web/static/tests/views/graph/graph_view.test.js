@@ -3041,15 +3041,15 @@ test("monetary chart rendering", async () => {
     checkDatasets(view, ["backgroundColor", "borderColor", "data", "label"], {
         backgroundColor: "#4EA7F2",
         borderColor: undefined,
-        data: [false, 1000],
+        data: [1200, 1000],
         label: "Amount",
     });
     checkLegend(view, "Amount");
-    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "" }] }, 0);
+    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "1,200.00?" }] }, 0);
     checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "$ 1,000.00" }] }, 1);
     expect(".o_graph_alert").toHaveCount(1);
     expect(".o_graph_alert").toHaveText(
-        "The graph is hiding data due to mixing several currencies. Select one of them to perform an accurate analysis: EUR - USD"
+        "The graph is mixing several currencies. Select one of them to perform an accurate analysis: EUR - USD"
     );
     await contains(".o_graph_alert a:first").click();
     checkDatasets(view, ["backgroundColor", "borderColor", "data", "label"], {

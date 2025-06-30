@@ -93,20 +93,9 @@ const {
  * @param {Iterable<AggregatedField>} aggregatedFields
  * @param {ModelRecordGroup} group
  * @param {ModelRecord[]} records
- * @param {Record<string, FieldDefinition>} fields
  */
-function aggregateFields(aggregatedFields, group, records, fields) {
+function aggregateFields(aggregatedFields, group, records) {
     for (const { fieldName, func, name } of aggregatedFields) {
-        if (fields[fieldName]?.currency_field) {
-            // Do not aggregate monetary fields with multiple currencies
-            const [firstCurrencyId, ...currencyIds] = records.map(
-                (record) => record[fields[fieldName].currency_field]
-            );
-            if (currencyIds.length && currencyIds.some((id) => id !== firstCurrencyId)) {
-                group[name] = false;
-                continue;
-            }
-        }
         group[name] = AGGREGATOR_FUNCTIONS[func](records, fieldName);
     }
 }
@@ -1850,7 +1839,7 @@ export class Model extends Array {
 
         if (!groupby.length) {
             const group = { __extra_domain: [] };
-            aggregateFields(aggregatedFields, group, records, this._fields);
+            aggregateFields(aggregatedFields, group, records);
             return [group];
         }
 
@@ -1981,7 +1970,7 @@ export class Model extends Array {
                     group.__extra_domain = [[fieldName, "=", value], ...group.__extra_domain];
                 }
             }
-            aggregateFields(aggregatedFields, group, groupRecords, this._fields);
+            aggregateFields(aggregatedFields, group, groupRecords);
             readGroupResult.push(group);
         }
 
