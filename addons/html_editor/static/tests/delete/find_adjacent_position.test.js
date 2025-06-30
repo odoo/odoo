@@ -92,6 +92,15 @@ describe("findAdjacentPosition method", () => {
                 const { editor } = await setupEditor(previous);
                 assertAdjacentPositions(editor, previous, next);
             });
+            test("Should find position before filebox", async () => {
+                const content = `<div>\ufeff<span contenteditable="false" class="o_file_box"></span>\ufeff[]</div>`;
+                const { editor, el } = await setupEditor(content);
+                const [node, offset] = findAdjacentPosition(editor, "backward");
+                setSelection({ anchorNode: node, anchorOffset: offset });
+                expect(getContent(el)).toBe(
+                    `<div class="o-paragraph o-we-hint" placeholder='Type "/" for commands'>\ufeff[]<span contenteditable="false" class="o_file_box"></span>\ufeff<br></div>`
+                );
+            });
         });
         describe("Blocks", () => {
             test("Should find position after the div", async () => {
