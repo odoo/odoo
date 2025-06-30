@@ -31,7 +31,7 @@ class TestBarcodeGS1Nomenclature(TransactionCase):
         barcode_nomenclature = self.env['barcode.nomenclature'].browse(self.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature'))
         # (01)94019097685457(10)33650100138(3102)002004(15)131018
         code128 = "\x1D01940190976854571033650100138\x1D310200200415131018"
-        res = barcode_nomenclature.gs1_decompose_extanded(code128)
+        res = barcode_nomenclature.gs1_decompose_extended(code128)
         self.assertEqual(len(res), 4)
         self.assertEqual(res[0]["ai"], "01")
 
@@ -47,7 +47,7 @@ class TestBarcodeGS1Nomenclature(TransactionCase):
 
         # (01)94019097685457(13)170119(30)17
         code128 = "0194019097685457131701193017"
-        res = barcode_nomenclature.gs1_decompose_extanded(code128)
+        res = barcode_nomenclature.gs1_decompose_extended(code128)
         self.assertEqual(len(res), 3)
         self.assertEqual(res[0]["ai"], "01")
 
@@ -88,33 +88,33 @@ class TestBarcodeGS1Nomenclature(TransactionCase):
         })
 
         # Checks barcodes without decimals.
-        res = barcode_nomenclature.gs1_decompose_extanded('30000000')
+        res = barcode_nomenclature.gs1_decompose_extended('30000000')
         self.assertEqual(len(res), 1)
         self.assertEqual(res[0]['string_value'], '00000')
         self.assertEqual(res[0]['value'], 0)
 
-        res = barcode_nomenclature.gs1_decompose_extanded('30018789')
+        res = barcode_nomenclature.gs1_decompose_extended('30018789')
         self.assertEqual(len(res), 1)
         self.assertEqual(res[0]['string_value'], '18789')
         self.assertEqual(res[0]['value'], 18789)
 
-        res = barcode_nomenclature.gs1_decompose_extanded('3001515000')
+        res = barcode_nomenclature.gs1_decompose_extended('3001515000')
         self.assertEqual(len(res), 1)
         self.assertEqual(res[0]['string_value'], '1515000')
         self.assertEqual(res[0]['value'], 1515000)
 
         # Checks barcodes with decimals.
-        res = barcode_nomenclature.gs1_decompose_extanded('30400000')
+        res = barcode_nomenclature.gs1_decompose_extended('30400000')
         self.assertEqual(len(res), 1)
         self.assertEqual(res[0]['string_value'], '00000')
         self.assertEqual(res[0]['value'], 0.0)
 
-        res = barcode_nomenclature.gs1_decompose_extanded('30418789')
+        res = barcode_nomenclature.gs1_decompose_extended('30418789')
         self.assertEqual(len(res), 1)
         self.assertEqual(res[0]['string_value'], '18789')
         self.assertEqual(res[0]['value'], 1.8789)
 
-        res = barcode_nomenclature.gs1_decompose_extanded('3041515000')
+        res = barcode_nomenclature.gs1_decompose_extended('3041515000')
         self.assertEqual(len(res), 1)
         self.assertEqual(res[0]['string_value'], '1515000')
         self.assertEqual(res[0]['value'], 151.5)
@@ -123,12 +123,12 @@ class TestBarcodeGS1Nomenclature(TransactionCase):
         barcode_rule_decimal.pattern = r'()(\d{0,4})'
         # Barcode rule uses decimals but AI doesn't precise what is the decimal position.
         with self.assertRaises(ValidationError):
-            res = barcode_nomenclature.gs1_decompose_extanded('1234')
+            res = barcode_nomenclature.gs1_decompose_extended('1234')
 
         # The pattern is too permissive and can catch something which can't be casted as measurement
         barcode_rule.pattern = r'(300)(.*)'
         with self.assertRaises(ValidationError):
-            res = barcode_nomenclature.gs1_decompose_extanded('300bilou4000')
+            res = barcode_nomenclature.gs1_decompose_extended('300bilou4000')
 
     def test_preprocess_gs1_search_args_product(self):
         company = self.env.company
