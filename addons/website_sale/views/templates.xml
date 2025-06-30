@@ -826,25 +826,41 @@
                             </div>
                             <div t-else="" class="text-center text-muted mt128 mb256">
                                 <t t-if="not search">
-                                    <h3 class="mt8">No product defined</h3>
-                                    <p t-if="category">No product defined in this category.</p>
+                                    <div t-call="website.empty_search_svg" class="mt-5 mb-3"/>
+                                    <h3
+                                        class="mt8"
+                                        style="text-align: center;"
+                                    >
+                                        No product defined
+                                    </h3>
+                                    <p
+                                        t-if="category"
+                                        style="text-align: center;"
+                                    >
+                                        No product defined in this category.
+                                    </p>
                                 </t>
                                 <t t-else="">
-                                    <h3 class="mt8">No results</h3>
-                                    <p>No results for "<strong t-out='search'/>"<t t-if="category"> in category "<strong t-out="category.display_name"/>"</t>.</p>
-                                    <a
-                                        t-if="category"
-                                        t-att-href="keep(shop_path, search=search)"
-                                        t-attf-title="Search {{search}} globally"
-                                        class="d-block pb-5"
-                                    >
-                                        Search globally
-                                    </a>
+                                    <div t-call="website.empty_search_svg" class="mt-5 mb-3"/>
+                                    <h3 class="mt8" style="text-align: center;">No results</h3>
+                                    <p style="text-align: center;">
+                                        No results for "<strong t-out='search'/>"<t t-if="category"> in category "<strong t-out="category.display_name"/>"</t>.
+                                    </p>
+                                    <p style="text-align: center;">
+                                        <a
+                                            t-if="category"
+                                            t-att-href="keep(shop_path, search=search)"
+                                            t-attf-title="Search {{search}} globally"
+                                            class="d-block pb-5"
+                                        >
+                                            Search globally
+                                        </a>
+                                    </p>
                                 </t>
                                 <div
                                     t-ignore="true"
                                     groups="sales_team.group_sale_manager"
-                                    class="alert alert-info d-inline-block mx-auto"
+                                    class="alert alert-info d-inline-block mx-auto text-center"
                                 >
                                     Click <i>'New'</i> in the top-right corner to create your first product.
                                 </div>
@@ -2760,7 +2776,7 @@
                             <div class="s_website_form_submit s_website_form_no_submit_option d-flex flex-column flex-lg-row align-items-lg-center pt-4">
                                 <a role="button"
                                    name="website_sale_main_button"
-                                   class="s_website_form_send btn btn-primary order-lg-3 w-100 w-lg-auto ms-lg-auto"
+                                   class="s_website_form_send btn btn-primary order-lg-3 w-lg-auto ms-lg-auto w-100"
                                    href="/shop/payment">
                                     Continue checkout
                                     <i class="fa fa-angle-right ms-2 fw-light"/>
@@ -2817,8 +2833,19 @@
 
     <!-- Lines that show items in the cart. Called in `website_sale.cart`. -->
     <template id="cart_lines" name="Shopping Cart Lines">
-        <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines alert alert-info">
-            Your cart is empty!
+        <div
+            t-if="not website_sale_order or not website_sale_order.website_order_line"
+            class="js_cart_lines w-100"
+        >
+            <div t-call="website_sale.empty_cart_svg" class="mt-5 mb-3"/>
+            <h5 class="mb-3" style="text-align: center;">
+                Your cart is empty!
+            </h5>
+            <p style="text-align: center;">
+                <a href="/shop" class="btn btn-primary">
+                    Shop
+                </a>
+            </p>
         </div>
         <t t-if='website_sale_order'>
             <div t-if='website_sale_order._get_shop_warning(clear=False)' class="alert alert-warning js_cart_lines" role="alert">
@@ -3755,9 +3782,12 @@
                             <t t-call="website_sale.wizard_checkout"/>
                         </div>
                         <!-- Checkout Page Content | Left Column -->
-                        <div class="oe_clear_stucture oe_cart col-12 col-lg-7">
+                        <div
+                            t-attf-class="oe_clear_stucture oe_cart col-12 #{'col-lg-7' if website_sale_order and website_sale_order.website_order_line else ''}"
+                        >
                             <t t-out="0"/>
                         </div>
+
                         <!-- Short Checkout Summary displayed on /cart | Right Column -->
                         <div
                             t-if="show_shorter_cart_summary"

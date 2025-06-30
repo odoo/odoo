@@ -146,8 +146,7 @@
                         <i t-if="_icon" class="fa fa-1x fa-heart fa-stack"/>
                         <sup
                             t-out="wishcount"
-                            t-attf-class="my_wish_quantity o_animate_blink badge bg-primary
-                                          #{_badge_class} #{'d-none' if (wishcount == 0) else ''}"
+                            t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class} #{'d-none' if (wishcount == 0) else ''}"
                         />
                     </div>
                     <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
@@ -300,6 +299,24 @@
                 <div class="container oe_website_sale pt-4">
                     <section class="container wishlist-section pb-5">
                         <h1 class="h4-fs mb-3">My Wishlist</h1>
+                        <div
+                            id="empty-wishlist-message"
+                            t-attf-class="w-100 #{'d-none' if wishes else ''}"
+                        >
+                            <div
+                                t-call="website_sale_wishlist.empty_wishlist_svg"
+                                class="mt-5 mb-3"
+                            />
+                            <h5 class="mb-3" style="text-align: center;">
+                                Your wishlist is empty!
+                            </h5>
+                            <p style="text-align: center;">
+                                <a href="/shop" class="btn btn-primary">
+                                    Shop
+                                </a>
+                            </p>
+                        </div>
+
                         <div
                             id="o_comparelist_table"
                             style="--o-wsale-products-grid-gap: 16px;"

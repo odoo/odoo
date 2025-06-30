@@ -33,6 +33,7 @@
         'views/delivery_form_templates.xml',
         'views/gmc_templates.xml',
         'views/templates.xml',
+        'views/templates_svg.xml',
 
         # Model views.
         'views/account_move_views.xml',

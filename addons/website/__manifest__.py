@@ -213,6 +213,7 @@
         'wizard/website_robots.xml',
         # Replaces a post_init_hook that should be run on upgrade too.
         'data/update_theme_images.xml',
+        'views/website_templates_svg.xml',
     ],
     'demo': [
         'data/website_demo.xml',
