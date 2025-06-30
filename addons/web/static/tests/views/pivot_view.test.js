@@ -3947,8 +3947,8 @@ test("pivot view with monetary", async () => {
         groupBy: ["currency_id"],
     });
     expect(".o_pivot table tbody tr").toHaveCount(3);
-    expect(".o_pivot table tbody tr:first").toHaveText("Total \n—");
-    expect(".o_pivot table tbody tr:first .o_value b").toHaveAttribute(
+    expect(".o_pivot table tbody tr:first").toHaveText("Total \n1,400.00?");
+    expect(".o_pivot table tbody tr:first .o_value span").toHaveAttribute(
         "data-tooltip",
         "Different currencies cannot be aggregated"
     );

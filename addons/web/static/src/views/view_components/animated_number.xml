@@ -7,6 +7,7 @@
             <b t-if="props.currency and props.currency.position === 'before'" t-esc="props.currency.symbol" class="me-1"/>
             <b t-esc="format(state.value)" />
             <b t-if="props.currency and props.currency.position === 'after'" t-esc="props.currency.symbol" class="ms-1"/>
+            <sup t-elif="props.currency === false" class="ms-1 fw-bolder text-info">?</sup>
         </div>
     </t>
 
