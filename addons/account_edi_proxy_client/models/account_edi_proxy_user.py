@@ -55,10 +55,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     )
 
     _unique_id_client = models.Constraint('unique(id_client)', "This id_client is already used on another user.")
-    _unique_active_edi_identification = models.UniqueIndex(
-        '(edi_identification, proxy_type, edi_mode) WHERE (active IS TRUE)',
-        "This edi identification is already assigned to an active user",
-    )
     _unique_active_company_proxy = models.UniqueIndex(
         '(company_id, proxy_type, edi_mode) WHERE (active IS TRUE)',
         "This company has an active user already created for this EDI type",
