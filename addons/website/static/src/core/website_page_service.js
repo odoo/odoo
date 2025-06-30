@@ -5,7 +5,8 @@ import { user } from "@web/core/user";
 registry.category("services").add("website_page", {
     start() {
         const htmlEl = document.querySelector("html");
-        const match = htmlEl.dataset.mainObject?.match(/(.+)\((\d+),(.*)\)/);
+        // TODO this is duplicated in website_service.js at least... to share
+        const match = htmlEl.dataset.mainObject?.match(/(.+)\((-?\d+),(.*)\)/);
 
         return {
             context: {
