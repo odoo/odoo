@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import {
     ICON_SELECTOR,
     isIconElement,
+    isMediaElement,
     isProtected,
     isProtecting,
 } from "@html_editor/utils/dom_info";
@@ -67,6 +68,7 @@ export class MediaPlugin extends Plugin {
         unsplittable_node_predicates: isIconElement, // avoid merge
         clipboard_content_processors: this.clean.bind(this),
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
+        functional_empty_node_predicates: isMediaElement,
 
         selectors_for_feff_providers: () => ICON_SELECTOR,
     };
