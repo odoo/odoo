@@ -6,26 +6,46 @@
         <field name="group_ids" eval="[Command.link(ref('account.group_account_manager'))]"/>
         <field name="arch" type="xml">
             <form class="form_peppol_registration">
-                <field name="company_id" invisible="1"/>
                 <sheet>
-                    <div class="m-0" name="warnings" invisible="not peppol_warnings or account_peppol_proxy_state != 'not_registered'">
+                    <div class="m-0" name="warnings" invisible="not peppol_warnings">
                         <field name="peppol_warnings" class="o_field_html" widget="actionable_errors"/>
                     </div>
 
-                    <div name="peppol_registration" invisible="account_peppol_proxy_state not in ('not_registered', 'in_verification')">
-                        <p class="text-muted">Send electronic invoices, and receive bills automatically via Peppol</p>
+                    <div name="peppol_registration">
+                        <p class="text-muted" invisible="not use_parent_connection">
+                            This branch company will use the active Peppol connection found on
+                            <field name="active_parent_company_name" class="oe_inline o_form_label" readonly="1"/>
+                            and send invoices via Peppol on their behalf.
+                        </p>
+                        <p class="text-muted" invisible="use_parent_connection">
+                            Send electronic invoices, and receive bills automatically via Peppol.
+                        </p>
+
+                        <div class="mb-3" invisible="not is_branch_company">
+                            <field name="use_parent_connection_selection" widget="radio" readonly="not can_use_parent_connection"/>
+                        </div>
+
                         <group col="1">
                             <group>
                                 <field name="peppol_eas"
                                        placeholder="Peppol ID"
                                        nolabel="1"
+                                       readonly="use_parent_connection"
                                        class="o_field_peppol_eas_selection"/>
-                                <field name="peppol_endpoint" nolabel="1" placeholder="Your endpoint"/>
-                                <field name="contact_email" string="Email"/>
-                                <field name="phone_number" required="edi_mode not in ('demo', 'test')" string="Phone"/>
+                                <field name="peppol_endpoint"
+                                       nolabel="1"
+                                       readonly="use_parent_connection"
+                                       placeholder="Your endpoint"/>
+                                <field name="contact_email"
+                                       readonly="use_parent_connection"
+                                       string="Email"/>
+                                <field name="phone_number"
+                                       required="edi_mode not in ('demo', 'test')"
+                                       readonly="use_parent_connection"
+                                       string="Phone"/>
                             </group>
 
-                            <group invisible="account_peppol_proxy_state != 'not_registered'">
+                            <group>
                                 <div class="text-muted col" invisible="edi_mode != 'prod'">
                                     By clicking the button below I accept that Odoo may process my e-invoices.
                                 </div>

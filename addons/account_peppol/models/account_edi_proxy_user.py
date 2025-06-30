@@ -410,9 +410,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if self.company_id.account_peppol_proxy_state != 'not_registered':
             self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
 
-        self.company_id.account_peppol_proxy_state = 'not_registered'
-        self.company_id.account_peppol_migration_key = False
-        self.company_id.peppol_external_provider = None
+        self.company_id._reset_peppol_configuration()
         self.unlink()
 
     @api.model
