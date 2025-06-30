@@ -1203,7 +1203,11 @@ export function lookup(parsedQuery, items, property = "key") {
             }
         }
         if (isPartial) {
-            result.sort((a, b) => fuzzyScoreMap[b[property]] - fuzzyScoreMap[a[property]]);
+            result.sort(
+                (a, b) =>
+                    fuzzyScoreMap[b[property].toLowerCase()] -
+                    fuzzyScoreMap[a[property].toLowerCase()]
+            );
         }
         items = result;
     }
