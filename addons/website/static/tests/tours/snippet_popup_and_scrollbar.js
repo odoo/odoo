@@ -62,6 +62,9 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         trigger: ":iframe .o_add_snippets_preview [data-snippet='s_media_list']",
         run: "click",
     },
+    {
+        trigger: ":iframe:not(:has(.o_loading_screen))",
+    },
     checkScrollbar(false),
     {
         content: "Select the Media List snippet in the Popup.",
@@ -109,6 +112,9 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         trigger: ":iframe .o_add_snippets_preview [data-snippet='s_media_list']",
         run: "click",
     },
+    {
+        trigger: ":iframe:not(:has(.o_loading_screen))",
+    },
     /* task-4185877
     checkScrollbar(true), // The popup backdrop is activated so there should be a scrollbar
     */
@@ -137,6 +143,9 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         content: "Click on the s_media_list snippet.",
         trigger: ":iframe .o_add_snippets_preview [data-snippet='s_media_list']",
         run: "click",
+    },
+    {
+        trigger: ":iframe:not(:has(.o_loading_screen))",
     },
     {
         content: "Select the Media List snippet in the Cookies Bar.",
