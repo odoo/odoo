@@ -178,7 +178,7 @@ class HrAttendance(models.Model):
         """ verifies if check_in is earlier than check_out. """
         for attendance in self:
             if attendance.check_in and attendance.check_out:
-                if attendance.check_out < attendance.check_in:
+                if attendance.check_out <= attendance.check_in:
                     raise exceptions.ValidationError(_('"Check Out" time cannot be earlier than "Check In" time.'))
 
     @api.constrains('check_in', 'check_out', 'employee_id')

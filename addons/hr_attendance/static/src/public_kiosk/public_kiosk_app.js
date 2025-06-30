@@ -9,6 +9,7 @@ import { isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useService, useBus } from "@web/core/utils/hooks";
+import { debounce } from "@web/core/utils/timing";
 import { url } from "@web/core/utils/urls";
 import {KioskGreetings} from "@hr_attendance/components/greetings/greetings";
 import {KioskPinCode} from "@hr_attendance/components/pin_code/pin_code";
@@ -50,6 +51,7 @@ class kioskAttendanceApp extends Component{
             this.manualKioskMode = true
             this.state = useState({active_display: "manual"});
         }
+        this.onManualSelection = debounce(this.onManualSelection, 1000, true);
     }
 
     switchDisplay(screen) {
