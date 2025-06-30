@@ -464,12 +464,25 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
 
-        const applyCallback = (url, label, classes, customStyle, linkTarget, attachmentId) => {
+        const applyCallback = (
+            url,
+            label,
+            classes,
+            customStyle,
+            linkTarget,
+            attachmentId,
+            relValue
+        ) => {
             if (this.linkInDocument) {
                 if (url) {
                     this.linkInDocument.href = url;
                 } else {
                     this.linkInDocument.removeAttribute("href");
+                }
+                if (relValue) {
+                    this.linkInDocument.setAttribute("rel", relValue);
+                } else {
+                    this.linkInDocument.removeAttribute("rel");
                 }
                 if (linkTarget) {
                     this.linkInDocument.setAttribute("target", linkTarget);
@@ -509,6 +522,9 @@ export class LinkPlugin extends Plugin {
                             (FONT_SIZE_CLASSES.some((cls) => el.classList.contains(cls)) ||
                                 el.style?.fontSize)
                     );
+                    if (relValue) {
+                        link.setAttribute("rel", relValue);
+                    }
                     const image = isImage && findInSelection(selection, "img");
                     const figure =
                         image?.parentElement?.matches("figure[contenteditable=false]") &&
