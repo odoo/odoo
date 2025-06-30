@@ -1770,6 +1770,9 @@ QUnit.module("ActionManager", (hooks) => {
                     setItem(k, value) {
                         assert.deepEqual(JSON.parse(value), expectedAction);
                     },
+                    getItem(k) {
+                        return null;
+                    },
                 }),
             });
             const webClient = await createWebClient({ serverData });
