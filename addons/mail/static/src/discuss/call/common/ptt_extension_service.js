@@ -12,8 +12,9 @@ export const pttExtensionHookService = {
         // https://chromewebstore.google.com/detail/discuss-push-to-talk/mdiacebcbkmjjlpclnbcgiepgifcnpmg
         const EXT_ID = "mdiacebcbkmjjlpclnbcgiepgifcnpmg";
         const versionPromise =
-            window.chrome?.runtime?.sendMessage(EXT_ID, { type: "ask-version" }) ??
-            Promise.resolve("1.0.0.0");
+            window.chrome?.runtime
+                ?.sendMessage(EXT_ID, { type: "ask-version" })
+                .catch(() => "1.0.0.0") ?? Promise.resolve("1.0.0.0");
         const self = reactive({
             isEnabled: undefined,
             voiceActivated: undefined,
