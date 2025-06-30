@@ -272,8 +272,9 @@ class DocController(http.Controller):
             for parent_class in reversed(type(model).mro())
             if hasattr(parent_class, method_name)
         )
+        introducing_method = getattr(introducing_class, method_name)
 
-        signature = parse_signature(method)
+        signature = parse_signature(introducing_method)
         return signature.as_dict() | {
             'model': introducing_class._name or 'core',
             'module': introducing_class._module or 'core',
