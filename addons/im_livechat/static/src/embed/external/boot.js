@@ -2,17 +2,17 @@ import { makeRoot, makeShadow } from "@im_livechat/embed/common/boot_helpers";
 
 import { mount, whenReady } from "@odoo/owl";
 
+import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getTemplate } from "@web/core/templates";
-import { Deferred } from "@web/core/utils/concurrency";
 import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
-import { loadBundle } from "@web/core/assets";
-
-odoo.livechatReady = new Deferred();
 
 (async function boot() {
+    if (!session.livechatData.can_load_livechat) {
+        return;
+    }
     session.origin = session.livechatData.serverUrl;
     await whenReady();
     if (session.test_mode) {
@@ -28,5 +28,4 @@ odoo.livechatReady = new Deferred();
         translateFn: _t,
         dev: env.debug,
     });
-    odoo.livechatReady.resolve();
 })();

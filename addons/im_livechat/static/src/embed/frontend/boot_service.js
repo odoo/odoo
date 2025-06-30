@@ -18,7 +18,7 @@ export const livechatBootService = {
     },
 
     start(env) {
-        if (!session.livechatData?.isAvailable) {
+        if (!session.livechatData?.can_load_livechat) {
             return;
         }
         const target = this.getTarget();
