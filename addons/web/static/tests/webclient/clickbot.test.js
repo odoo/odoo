@@ -442,7 +442,6 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             exceptionName: "odoo.exceptions.Programming error",
             subType: "server",
             message: "This is a server Error, it should be displayed in an error dialog",
-            id: null,
             model: "foo",
             errorEvent: { isTrusted: true },
         },
