@@ -1,47 +1,37 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { rpc } from "@web/core/network/rpc"; // La importación es la misma
+import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.NotifyButton = publicWidget.Widget.extend({
   selector: ".notify-button",
+
   events: {
-    click: "_onClickNotify",
+    click: "_onClickNotifyButton",
   },
 
-  _onClickNotify: function (ev) {
-    ev.preventDefault();
-    const modalElement = $("#notify_absence_modal");
-    modalElement.modal("show");
+  _onClickNotifyButton: function () {
+    const $modal = $("#notify_absence_modal");
+    if (!$modal.length) return;
 
-    modalElement
-      .find("#confirm_notify_btn")
-      .off("click")
-      .one("click", () => {
-        const $button = modalElement.find("#confirm_notify_btn");
-        $button.prop("disabled", true).text("Enviando...");
+    $modal.modal("show");
 
-        rpc("/notify/absence", {})
-          .then(function (result) {
-            if (result && result.error) {
-              alert("Error: " + result.error);
-            } else if (result && result.message) {
-              alert(result.message);
-              modalElement.modal("hide");
-            } else {
-              alert(
-                "Este feature estara habilitado proximamente."
-              );
-            }
-          })
-          .catch(function () {
-            alert("Error de comunicación. Por favor, intenta de nuevo.");
-          })
-          .finally(function () {
-            $button
-              .prop("disabled", false)
-              .text("Confirmar y Enviar Notificación");
-          });
-      });
+    const $confirmBtn = $modal.find("#confirm_notify_btn");
+    $confirmBtn.off("click").one("click", () => {
+      rpc("/notify/absence", {})
+        .then((result) => {
+          if (result?.success) {
+            alert(result.message);
+            $modal.modal("hide");
+          } else if (result?.error) {
+            alert("Error: " + result.error);
+          } else {
+            alert("Error desconocido al enviar la notificación.");
+          }
+        })
+        .catch(() => {
+          alert("Error de comunicación con el servidor.");
+        });
+    });
   },
 });

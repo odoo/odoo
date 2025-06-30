@@ -1,0 +1,19 @@
+<odoo>
+    <!-- Registro explícito del modelo para usarlo con ref="model_news_article" -->
+    <record id="model_news_article" model="ir.model">
+        <field name="name">news.article</field>
+        <field name="model">news.article</field>
+        <field name="state">base</field>
+    </record>
+
+    <!-- Acción programada para actualizar noticias externas -->
+    <record id="ir_cron_news_feed_loader" model="ir.cron">
+        <field name="name">Actualizar Noticias Externas</field>
+        <field name="model_id" ref="model_news_article"/>
+        <field name="state">code</field>
+        <field name="code">env['news.article'].load_external_news()</field>
+        <field name="interval_number">24</field>
+        <field name="interval_type">hours</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

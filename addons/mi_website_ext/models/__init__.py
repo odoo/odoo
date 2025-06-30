@@ -5,3 +5,4 @@ from . import publication_interaction
 from . import website_gallery
 from . import publication_view_log
 from . import res_company
+from . import news_article

@@ -1,5 +1,5 @@
 <odoo>
-    <template id="custom_sidebar" name="Custom Sidebar" inherit_id="website.layout">
+    <template id="custom_sidebar" name="Home" inherit_id="website.layout">
         <xpath expr="//head" position="inside">
             <link rel="stylesheet" type="text/css" href="/mi_website_ext/static/src/css/sidebar.css" crossOrigin="anonymous"/>
             <link rel="stylesheet" type="text/css"
@@ -74,9 +74,8 @@
                                     </div>
                                     <hr class="divider" />
                                     <div class="card-items-button">
-                                        <button class="notify-button emergency-button">
-                                            <img
-                                    src="/mi_website_ext/static/src/img/Sick.svg" alt="Grupo" class="sick-img" />
+                                        <button class="notify-button emergency-button" title="Notificar Ausencia">
+                                            <img src="/mi_website_ext/static/src/img/Sick.svg" alt="Notificar ausencia" class="sick-img" />
                                         </button>
                                     </div>
                                 </div>
@@ -224,7 +223,12 @@
                                                         <t t-else="">Bienvenidos</t>
     a la familia Calengs
                                                     </h3>
-                                                    <img src="/mi_website_ext/static/src/img/Welcome.svg" alt="Grupo" />
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img src="/mi_website_ext/static/src/img/Welcome.svg" alt="Grupo" />
+                                                    </t>
+                                                    <t t-if="user.company_id.id == 2">
+                                                        <img src="/mi_website_ext/static/src/img/Welcome2.svg" alt="Grupo" />
+                                                    </t>
                                                 </div>
                                                 <div class="welcome-body">
                                                     <t t-foreach="sorted_new_hires_list" t-as="new_hire_data_item">
@@ -244,6 +248,9 @@
                                                                 <h4>
                                                                     <t t-esc="new_hire_data_item['employee_name']"/>
                                                                 </h4>
+                                                                <p>
+                                                                    <t t-esc="new_hire_data_item['employee_obj'].department_id.name"/>
+                                                                </p>
                                                                 <p>
                                                                     <t t-esc="new_hire_data_item['company_name']"/>
                                                                 </p>
@@ -278,8 +285,14 @@
                                             <div class="birthday-card">
                                                 <div class="birthday-title">
                                                     <h3>Cumpleaños del mes</h3>
-                                                    <img src="/mi_website_ext/static/src/img/birthday.svg"
-                                            alt="Grupo" />
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img t-att-src="'/mi_website_ext/static/src/img/birthday.svg'"
+                                        alt="Sol" />
+                                                    </t>
+                                                    <t t-elif="user.company_id.id == 2">
+                                                        <img t-att-src="'/mi_website_ext/static/src/img/birthday2.svg'"
+                                        alt="Sol" />
+                                                    </t>
                                                 </div>
                                                 <div class="birthday-body">
                                                     <t t-foreach="sorted_employees" t-as="employee">
@@ -354,8 +367,13 @@
                                         <t t-if="recent_activities">
                                             <div class="activity-card">
                                                 <div class="activity-title">
-                                                    <h3>Actividades del mes</h3>
-                                                    <img src="/mi_website_ext/static/src/img/Activity.svg" alt="Grupo" />
+                                                    <h3>Actividades</h3>
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img src="/mi_website_ext/static/src/img/Activity.svg" alt="Grupo" />
+                                                    </t>
+                                                    <t t-elif="user.company_id.id == 2">
+                                                        <img src="/mi_website_ext/static/src/img/Activity2.svg" alt="Grupo" />
+                                                    </t>
                                                 </div>
                                                 <div class="activity-body">
                                                     <div class="activity-list">
@@ -415,7 +433,12 @@
                                             <div class="anniversary-card">
                                                 <div class="anniversary-title">
                                                     <h3>Aniversarios del mes</h3>
-                                                    <img src="/mi_website_ext/static/src/img/Time.svg" alt="Grupo" />
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img src="/mi_website_ext/static/src/img/Time.svg" alt="Grupo" />
+                                                    </t>
+                                                    <t t-elif="user.company_id.id == 2">
+                                                        <img src="/mi_website_ext/static/src/img/Time2.svg" alt="Grupo" />
+                                                    </t>
                                                 </div>
                                                 <div class="anniversary-body">
                                                     <t t-foreach="sorted_anniversary_list_final" t-as="anniversary_item_data">
@@ -435,6 +458,12 @@
                                                                 <h4>
                                                                     <t t-esc="employee_to_display.name"/>
                                                                 </h4>
+                                                                <p>
+                                                                    <t t-esc="anniversary_item_data['years_in_company_val']"/>
+                                                                    <t t-if="anniversary_item_data['years_in_company_val'] == 1">año</t>
+                                                                    <t t-else="">años</t>
+                                                                            en la empresa
+                                                                </p>
                                                                 <p t-if="employee_to_display.company_id">
                                                                     <t t-esc="employee_to_display.company_id.name"/>
                                                                 </p>
@@ -510,7 +539,12 @@
                                     <div class="winner-card">
                                         <div class="winner-title">
                                             <h3>Ganadores del mes</h3>
-                                            <img src="/mi_website_ext/static/src/img/Win.svg" alt="Grupo" />
+                                            <t t-if="user.company_id.id == 1">
+                                                <img src="/mi_website_ext/static/src/img/Win.svg" alt="Grupo" />
+                                            </t>
+                                            <t t-elif="user.company_id.id == 2">
+                                                <img src="/mi_website_ext/static/src/img/Win2.svg" alt="Grupo" />
+                                            </t>
                                         </div>
                                         <div class="winner-body1">
                                             <t t-foreach="monthly_winners" t-as="winner_pub">
@@ -532,7 +566,14 @@
                                                             <t t-esc="winner_pub.employee_id.company_id.name"/>
                                                         </p>
                                                     </div>
-                                                    <img src="/mi_website_ext/static/src/img/Trophy.svg" alt="Trofeo" class="trophy" />
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img t-att-src="'/mi_website_ext/static/src/img/Trophy.svg'"
+                                        alt="Sol" />
+                                                    </t>
+                                                    <t t-elif="user.company_id.id == 2">
+                                                        <img t-att-src="'/mi_website_ext/static/src/img/Trophy2.svg'"
+                                        alt="Sol" />
+                                                    </t>
                                                 </div>
                                             </t>
                                         </div>
@@ -608,8 +649,14 @@
                                                 <p class="vacation_text">
                                                     <t t-esc="user.x_days_until_vacation_display" />
                                                 </p>
-                                                <img t-att-src="'/mi_website_ext/static/src/img/vacation.svg'"
+                                                <t t-if="user.company_id.id == 1">
+                                                    <img t-att-src="'/mi_website_ext/static/src/img/vacation.svg'"
                                         alt="Sol" />
+                                                </t>
+                                                <t t-elif="user.company_id.id == 2">
+                                                    <img t-att-src="'/mi_website_ext/static/src/img/vacation2.svg'"
+                                        alt="Sol" />
+                                                </t>
                                             </div>
                                         </div>
                                         <div class="card">
@@ -618,8 +665,14 @@
                                                 <p class="permiso_text">
                                                     <t t-esc="user.x_available_remunerated_permission_hours" />
                                                 </p>
-                                                <img t-att-src="'/mi_website_ext/static/src/img/Hours.svg'"
+                                                <t t-if="user.company_id.id == 1">
+                                                    <img t-att-src="'/mi_website_ext/static/src/img/Hours.svg'"
                                         alt="Sol" />
+                                                </t>
+                                                <t t-elif="user.company_id.id == 2">
+                                                    <img t-att-src="'/mi_website_ext/static/src/img/Hours2.svg'"
+                                        alt="Sol" />
+                                                </t>
                                             </div>
                                         </div>
                                     </div>

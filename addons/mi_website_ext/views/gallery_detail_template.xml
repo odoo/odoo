@@ -15,6 +15,13 @@
                         <div class="masonry-gallery">
                             <t t-if="photos">
                                 <t t-foreach="photos" t-as="photo">
+                                    <t t-if="photo.is_video and photo.video_file">
+                                        <video autoplay="autoplay" muted="muted" controls="controls"
+             class="img img-fluid"
+             style="width: 100%; height: auto;"
+             t-att-src="'/web/content/website.gallery.photo/%d/video_file/%s' % (photo.id, photo.video_filename or 'video.mp4')">
+      </video>
+                                    </t>
                                     <t t-if="photo.image_1920">
                                         <div class="masonry-item">
                                             <a t-attf-href="/web/image/website.gallery.photo/#{photo.id}/image_1920"

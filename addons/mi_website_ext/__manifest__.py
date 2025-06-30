@@ -75,6 +75,7 @@
         'views/res_company_views.xml',
         "views/my_profile_template.xml",
         'views/my_account_menu.xml',
+        "data/ir_cron.xml",
     ],
     "installable": True,
     "application": True,

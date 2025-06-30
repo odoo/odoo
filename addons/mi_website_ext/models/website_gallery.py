@@ -27,4 +27,8 @@ class WebsiteGalleryPhoto(models.Model):
     sequence = fields.Integer(string="Secuencia", default=10)
     album_id = fields.Many2one('website.gallery.album', string="Álbum", required=True, ondelete='cascade')
 
+    is_video = fields.Boolean(string="¿Es un video?", default=False)
+    video_file = fields.Binary(string="Archivo de Video")
+    video_filename = fields.Char(string="Nombre del Video")
+
     # La imagen de la foto se guardará en el campo image_1920 heredado de image.mixin

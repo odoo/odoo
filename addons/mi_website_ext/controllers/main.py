@@ -246,10 +246,19 @@ class WebsiteCustom(http.Controller):
         website=True,
     )
     def render_anniversary(self, employee, **kwargs):
+        years_in_company = 0
+        if employee and employee.contract_ids:
+            first_contract = employee.contract_ids.sorted(lambda c: c.date_start or fields.Date.today())[0]
+            if first_contract.date_start:
+                hire_year = first_contract.date_start.year
+                current_year = fields.Date.today().year
+                if fields.Date.today().month == first_contract.date_start.month:
+                    years_in_company = current_year - hire_year
         values = {
             "employee": employee,
             "main_object": employee,
             "hide_sidebar": True,
+            "years_in_company": years_in_company,
         }
         return request.render("mi_website_ext.anniversary_single_template", values)
 
@@ -349,83 +358,80 @@ class WebsiteCustom(http.Controller):
             )
         return event_list
 
-    # En mi_website_ext/controllers/main.py
-    # (Tus otras importaciones y rutas se quedan igual)
-
-    # En mi_website_ext/controllers/main.py
-    # (Tus otras importaciones y rutas se quedan igual)
 
     @http.route("/notify/absence", type="json", auth="user", methods=["POST"], website=True)
     def notify_absence(self, **kwargs):
-        _logger.warning("✅ Se llamó correctamente a /notify/absence desde: %s", request.env.user.name)
-
         user = request.env.user
         employee = user.employee_id
 
         if not employee:
-            return {
-                "error": "Tu usuario no está vinculado a un empleado."
-            }
+            _logger.warning("⚠️ Usuario sin empleado vinculado: %s", user.name)
+            return {"error": "Tu usuario no está vinculado a un empleado."}
 
         try:
-            Leave = request.env["hr.leave"].sudo()
-            today = fields.Date.context_today(self)
+            _logger.warning("✅ Iniciando proceso de notificación para %s", employee.name)
 
+            # 1. Obtener tipo de ausencia por ID
             leave_type = request.env['hr.leave.type'].sudo().browse(2).exists()
             if not leave_type:
-                leave_type = request.env['hr.leave.type'].sudo().search([
-                    ('name', '=', 'Ausencias por enfermedad')
-                ], limit=1)
+                _logger.warning("❌ No se encontró el tipo de ausencia con ID 2.")
+                return {"error": "No se encontró el tipo de ausencia por enfermedad."}
+            _logger.warning("✅ Tipo de ausencia obtenido: %s", leave_type.name)
 
-            if not leave_type or not leave_type.exists():
-                return {"error": "No se encontró el tipo de ausencia por ID=2."}
+            today = fields.Date.today()
+            _logger.warning("📅 Fecha de hoy: %s", today)
 
-            # Crear solicitud de ausencia
-            Leave.create({
-                "name": f"Ausencia por enfermedad - notificada por {employee.name}",
+            # 2. Crear ausencia
+            leave = request.env['hr.leave'].sudo().create({
+                "name": f"Ausencia por enfermedad - {employee.name}",
                 "employee_id": employee.id,
                 "holiday_status_id": leave_type.id,
                 "request_date_from": today,
                 "request_date_to": today,
                 "number_of_days": 1,
             })
+            _logger.warning("✅ Ausencia creada con ID: %s", leave.id)
 
-            # Notificar en canal de Discuss
-            channel_name = "rrhh-notificaciones-ausencia"
-            channel = request.env["discuss.channel"].sudo().search([
+            # 3. Obtener o crear canal de RRHH
+            channel_name = "Notificaciones por Enfermedad"
+            channel = request.env['discuss.channel'].sudo().search([
                 ("name", "=", channel_name)
             ], limit=1)
 
             if not channel:
-                channel = request.env["discuss.channel"].sudo().create({
+                _logger.warning("ℹ️ Canal no existe. Creando canal de RRHH.")
+                channel = request.env['discuss.channel'].sudo().create({
                     "name": channel_name,
                     "channel_type": "channel",
-                    "public": "groups",
-                    "group_ids": [(6, 0, [request.env.ref('base.group_hr_user').id])],
+                    "group_ids": [(6, 0, [request.env.ref('hr.group_hr_user').id])],
+                    "channel_partner_ids": [] 
                 })
+            _logger.warning("✅ Canal RRHH disponible: %s", channel.name)
 
-            message_body = (
-                f"<p>El colaborador <strong>{employee.name}</strong> ha notificado una ausencia por enfermedad para hoy.</p>"
-            )
-
+            # 4. Publicar mensaje en canal
+            message = f"📢 El colaborador {employee.name.upper()} ha notificado una AUSENCIA POR ENFERMEDAD para hoy ({today})."
             channel.message_post(
-                body=message_body,
+                body=message,
                 message_type="comment",
-                subtype_xmlid="mail.mt_note",
+                subtype_xmlid="mail.mt_note"
             )
+            _logger.warning("✅ Mensaje publicado en canal.")
 
             return {
                 "success": True,
-                "message": "Notificación y solicitud de ausencia creadas correctamente.",
+                "message": "✅ Notificación de ausencia enviada correctamente."
             }
 
         except Exception as e:
             import traceback
-            _logger.error("Error completo:\n%s", traceback.format_exc())
-            return {
-                "Este feature estara habilitado proximamente."
-            }
+            _logger.error("❌ Error completo en notify_absence:\n%s", traceback.format_exc())
+            return {"error": "No se pudo procesar la solicitud."}
 
+
+    @http.route("/prueba/ping", type="json", auth="user", methods=["POST"], website=True)
+    def prueba_ping(self, **kwargs):
+        return {"pong": True}
+    
     @http.route("/get_popup_announcements", type="json", auth="user", website=True)
     def get_popup_announcements(self, **kwargs):
         announcements = request.env["website.publication"].search(
@@ -545,3 +551,20 @@ class WebsiteCustom(http.Controller):
                 'image_1920': base64.b64encode(avatar.read())
             })
         return request.redirect('/my/profile')
+    
+    @http.route("/news", type="http", auth="public", website=True)
+    def render_news(self, **kwargs):
+        articles = request.env["news.article"].sudo().search([], order="published_date desc", limit=5)
+        values = { "news_articles": articles, "hide_sidebar": True}
+        
+        return request.render("mi_website_ext.news_template", values)
+        
+    @http.route('/', type='http', auth='user', website=True)
+    def render_home(self, **kwargs):
+        user = request.env.user
+        user._compute_remunerated_permission_hours()
+        return request.render('mi_website_ext.custom_sidebar', {
+            'user': user,
+        })
+    
+    
