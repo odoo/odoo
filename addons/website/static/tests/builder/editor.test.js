@@ -209,4 +209,11 @@ describe("toolbar dropdowns", () => {
         await animationFrame();
         expect(p.firstChild).toHaveClass("test-font-size");
     });
+
+    test("font selector dropdown should not have normal as an option", async () => {
+        await setup();
+        click(".o-we-toolbar .btn[name='font']");
+        await animationFrame();
+        expect(".o_font_selector_menu .o-dropdown-item[name='div']").toHaveCount(0);
+    });
 });
