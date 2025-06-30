@@ -172,7 +172,14 @@ class AccountChartTemplate(models.AbstractModel):
         if not self.env.is_system():
             raise AccessError(_("Only administrators can install chart templates"))
 
-        chart_template_mapping = self._get_chart_template_mapping()[template_code]
+        template_info = self._get_chart_template_mapping()
+        if template_code not in template_info:
+            raise UserError(_(
+                "The chart template code '%s' is not available. "
+                "Please ensure the correct localization module is installed."
+            ) % template_code)
+
+        chart_template_mapping = template_info[template_code]
         if not company.country_id:
             company.country_id = chart_template_mapping.get('country_id')
 
