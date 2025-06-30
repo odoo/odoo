@@ -38,6 +38,29 @@ class PosConfig(models.Model):
             ('type', '=', 'sale'),
         ], limit=1)
 
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        PosPaymentMethod = self.env['pos.payment.method']
+        available_cash_pms = PosPaymentMethod.search([
+            ('is_cash_count', '=', True),
+            ('config_ids', '=', False),
+            *PosPaymentMethod._check_company_domain(self.env.company),
+        ])
+        for pos, vals in zip(self, vals_list):
+            if 'name' not in default:
+                vals['name'] = _("%s (copy)", pos.name)
+            if available_cash_pms:
+                cash_pm = available_cash_pms[0]
+                available_cash_pms -= cash_pm
+            else:
+                _dummy, payment_methods = pos._create_journal_and_payment_methods()
+                cash_pm = PosPaymentMethod.browse(payment_methods).filtered(
+                    lambda pm: pm.is_cash_count
+                )
+            vals['payment_method_ids'] = [Command.set([cash_pm.id])]
+        return vals_list
+
     def _default_payment_methods(self):
         """ Should only default to payment methods that are compatible to this config's company and currency.
         """
@@ -419,7 +442,7 @@ class PosConfig(models.Model):
     @api.constrains('payment_method_ids')
     def _check_payment_method_ids_journal(self):
         for cash_method in self.payment_method_ids.filtered(lambda m: m.journal_id.type == 'cash'):
-            if self.env['pos.config'].search_count([('id', '!=', self.id), ('payment_method_ids', 'in', cash_method.ids)], limit=1):
+            if self.env['pos.config'].search_count([('id', 'not in', self.ids), ('payment_method_ids', 'in', cash_method.ids)], limit=1):
                 raise ValidationError(_("This cash payment method is already used in another Point of Sale.\n"
                                         "A new cash payment method should be created for this Point of Sale."))
             if len(cash_method.journal_id.pos_payment_method_ids) > 1:
