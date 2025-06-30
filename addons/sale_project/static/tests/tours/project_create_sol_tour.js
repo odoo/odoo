@@ -44,6 +44,7 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         run: "click",
     },
     {
+<<<<<<< a49d34be83f3ce6d10d4d95ecae21fea71bf5075
         trigger: "div[name='product_id'] input",
         content: "Select the product for the Sales Order Item",
         run: "click",
@@ -58,6 +59,23 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         run: "click",
     },
     {
+||||||| 8c6aefc4de5d4203d9fa20d3f7ac5860dbafbd3d
+        trigger: "div[name='product_id'] input",
+        content: "Select the product for the Sales Order Item",
+        run: "click",
+    }, {
+        trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
+        content: "Select the product in the autocomplete dropdown",
+        run: "click",
+    }, 
+    {
+        trigger: ".modal button:contains(save & close)",
+        content: "Save the Sales Order Item",
+        run: "click",
+    },
+    {
+=======
+>>>>>>> 60521b429f64a8d059d95cd6ae46c4eb9798362a
         trigger: "body:not(:has(.modal))",
     },
     {
