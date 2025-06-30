@@ -8,6 +8,14 @@ BTREE_INDEX_PY_DEFS = (True, '1', 'btree', 'btree_not_null')
 BTREE_INDEX_IGNORE_MODELS = {  # model._name
     'res.company',
     'stock.warehouse',
+    'event.type',
+    'event.type.mail',
+    'event.type.ticket',
+    'ir.sequence',
+    'ir.sequence.date_range',
+    'ir.module.module',
+    'ir.module.module.dependency',
+    'ir.module.module.exclusion',
 }
 BTREE_INDEX_IGNORE_FIELDS = {  # str(field)  (fully-qualified field name)
     'mail.message.res_id',                              # covered by _model_res_id_idx, should always be accessed via a domain adding the model
@@ -28,7 +36,7 @@ BTREE_INDEX_IGNORE_FIELDS = {  # str(field)  (fully-qualified field name)
 }
 
 @common.tagged('post_install', '-at_install')
-class TestOne2manyInverseIndexing(common.TransactionCase):
+class TestIndex(common.TransactionCase):
 
     def test_enforce_index_on_one2many_inverse(self):
         """Ensure btree indexes are enforced on the stored inverse fields of One2many relations."""
@@ -45,9 +53,13 @@ class TestOne2manyInverseIndexing(common.TransactionCase):
                 return True  # the m2o field is in the field ignore list
             if m2o_field.index in BTREE_INDEX_PY_DEFS:
                 return True  # the field is already indexed in the definition
-            if all('test' in model_data.module
-                   for model_data in self.env['ir.model.data'].search([('model', '=', comodel._name)])):
-                return True  # skip model if it's exclusively used in testing modules
+            ir_model_id = self.env['ir.model']._get_id(comodel._name)
+            modules = self.env['ir.model.data'].search_fetch([
+                ('model', '=', 'ir.model'), ('res_id', '=', ir_model_id)
+            ], ['module']).mapped('module')
+            # ruff: noqa: SIM103
+            if modules and all('test' in module for module in modules):
+                return True  # skip model if it's in a test module
             return False
 
         fields_to_index = set()
