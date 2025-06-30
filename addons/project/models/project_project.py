@@ -291,7 +291,12 @@ class ProjectProject(models.Model):
         """
         for project in self:
             account = project.account_id
-            if project.partner_id and project.partner_id.company_id and project.company_id != project.partner_id.company_id:
+            if (
+                project.partner_id
+                and project.partner_id.company_id
+                and project.company_id
+                and project.company_id != project.partner_id.company_id
+            ):
                 raise UserError(_('The project and the associated partner must be linked to the same company.'))
             if not account or not account.company_id:
                 continue
@@ -299,7 +304,7 @@ class ProjectProject(models.Model):
             if (account.project_count > 1 or account.line_ids) and project.company_id != account.company_id:
                 raise UserError(
                     _("The project's company cannot be changed if its analytic account has analytic lines or if more than one project is linked to it."))
-            account.company_id = project.company_id
+            account.company_id = project.company_id or project.partner_id.company_id
 
     @api.depends('rating_status', 'rating_status_period')
     def _compute_rating_request_deadline(self):
