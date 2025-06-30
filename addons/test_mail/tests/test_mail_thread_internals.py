@@ -8,7 +8,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tests import Form, tagged, users
+from odoo.tests import Form, users, warmup, tagged
 from odoo.tools import mute_logger
 
 
@@ -61,6 +61,11 @@ class ThreadRecipients(MailCommon, TestRecipients):
                 'alias_domain_id': cls.mail_alias_domain.id,
                 'alias_model_id': cls.env['ir.model']._get_id('mail.test.ticket.mc'),
                 'alias_name': 'test.alias.partner',
+            }, {
+                'alias_domain_id': cls.mail_alias_domain.id,
+                'alias_incoming_local': True,
+                'alias_model_id': cls.env['ir.model']._get_id('mail.test.ticket.mc'),
+                'alias_name': 'test.alias.free.local',
             }
         ])
         cls.test_partner_alias = cls.env['res.partner'].create({
@@ -372,6 +377,7 @@ class TestAPI(ThreadRecipients):
         self.assertEqual(partner.phone, '+32455998877')
 
     @users('employee')
+    @warmup
     def test_message_get_default_recipients(self):
         void_partner = self.env['res.partner'].sudo().create({'name': 'No Email'})
         test_records = self.env['mail.test.recipients'].create([
@@ -481,6 +487,11 @@ class TestAPI(ThreadRecipients):
                 'email_from': self.test_aliases[0].alias_full_name,
                 'name': 'Alias email',
             },
+            # do not propose alias email (left-part pre-17 support)
+            {
+                'email_from': f'{self.test_aliases[2].alias_name}@other.domain',
+                'name': 'Alias email (left-part compat)',
+            },
             # do not propose alias email (even if linked to a partner)
             {
                 'email_from': self.test_aliases[1].alias_full_name,
@@ -507,6 +518,8 @@ class TestAPI(ThreadRecipients):
             # partner with alias email is not ok
             {'email_cc': '', 'email_to': '', 'partner_ids': []},
             # alias email is not ok
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
+            # left-part compat alias email is not ok
             {'email_cc': '', 'email_to': '', 'partner_ids': []},
             # alias email is not ok even if linked to partner
             {'email_cc': '', 'email_to': '', 'partner_ids': []},
