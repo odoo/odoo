@@ -75,6 +75,11 @@ class ResCompany(models.Model):
         ],
         string='PEPPOL status', required=True, default='not_registered',
     )
+    account_peppol_edi_user = fields.Many2one(
+        comodel_name='account_edi_proxy_client.user',
+        string='EDI user',
+        compute='_compute_account_peppol_edi_user',
+    )
     peppol_eas = fields.Selection(related='partner_id.peppol_eas', readonly=False)
     peppol_endpoint = fields.Char(related='partner_id.peppol_endpoint', readonly=False)
     peppol_purchase_journal_id = fields.Many2one(
@@ -88,10 +93,28 @@ class ResCompany(models.Model):
     )
     peppol_external_provider = fields.Char(tracking=True)
     peppol_can_send = fields.Boolean(compute='_compute_peppol_can_send')
+    peppol_parent_company_id = fields.Many2one(comodel_name='res.company')
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
+
+    def _get_peppol_company(self):
+        self.ensure_one()
+        return self.peppol_parent_company_id or self
+
+    def _get_active_peppol_parent_company(self):
+        """
+        Recursively search for parent company (relative from environment company)
+        that has an active peppol connection.
+        :return: res.company record: containing single company if found, empty if not.
+        """
+        parent_company = self.parent_id
+
+        while parent_company and parent_company.account_peppol_proxy_state in ('not_registered', 'rejected'):
+            parent_company = parent_company.parent_id
+
+        return parent_company
 
     @api.model
     def _check_phonenumbers_import(self):
@@ -154,9 +177,24 @@ class ResCompany(models.Model):
             if company.peppol_purchase_journal_id and company.peppol_purchase_journal_id.type != 'purchase':
                 raise ValidationError(_("A purchase journal must be used to receive Peppol documents."))
 
+    @api.constrains('peppol_parent_company_id')
+    def _check_peppol_parent_company_id(self):
+        for company in self:
+            if company.peppol_parent_company_id and company.peppol_parent_company_id != company._get_active_peppol_parent_company():
+                raise ValidationError(_("The parent peppol company must be within the branch family tree "
+                                        "and have an active peppol connection."))
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('peppol_parent_company_id')
+    def _compute_account_peppol_edi_user(self):
+        for company in self:
+            company.account_peppol_edi_user = company \
+                ._get_peppol_company() \
+                .account_edi_proxy_client_ids \
+                .filtered(lambda u: u.proxy_type == 'peppol')
 
     @api.depends('account_peppol_proxy_state')
     def _compute_peppol_purchase_journal_id(self):
@@ -202,7 +240,7 @@ class ResCompany(models.Model):
     def _compute_peppol_can_send(self):
         can_send_domain = self.env['account_edi_proxy_client.user']._get_can_send_domain()
         for company in self:
-            company.peppol_can_send = company.account_peppol_proxy_state in can_send_domain
+            company.peppol_can_send = company._get_peppol_company().account_peppol_proxy_state in can_send_domain
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS

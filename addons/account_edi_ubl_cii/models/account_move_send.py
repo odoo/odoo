@@ -25,7 +25,14 @@ class AccountMoveSend(models.AbstractModel):
 
         peppol_formats = set(self.env['res.partner']._get_peppol_formats())
         if peppol_format_moves := moves.filtered(lambda m: moves_data[m]['invoice_edi_format'] in peppol_formats):
-            not_configured_company_partners = peppol_format_moves.company_id.partner_id.filtered(
+            peppol_company = peppol_format_moves.company_id
+            if 'peppol_parent_company_id' in self.env['res.company']._fields:
+                peppol_companies = self.env['res.company']
+                for company in peppol_company:
+                    peppol_companies |= company._get_peppol_company()
+                peppol_company = peppol_companies
+
+            not_configured_company_partners = peppol_company.partner_id.filtered(
                 lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
             )
             if not_configured_company_partners:
