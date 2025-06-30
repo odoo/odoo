@@ -14,6 +14,7 @@ import {
 import { commandService } from "@web/core/commands/command_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { fieldService } from "@web/core/field_service";
+import { treeProcessorService } from "@web/core/tree_editor/tree_processor";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { ormService } from "@web/core/orm_service";
@@ -35,6 +36,7 @@ export function setupControlPanelServiceRegistry() {
     serviceRegistry.add("action", actionService);
     serviceRegistry.add("dialog", dialogService);
     serviceRegistry.add("field", fieldService);
+    serviceRegistry.add("tree_processor", treeProcessorService);
     serviceRegistry.add("hotkey", hotkeyService);
     serviceRegistry.add("name", nameService);
     serviceRegistry.add("notification", notificationService);

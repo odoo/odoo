@@ -5,24 +5,27 @@ import { makeMockEnv } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { condition, expression } from "@web/core/tree_editor/condition_tree";
+import { constructDomainFromTree } from "@web/core/tree_editor/construct_domain_from_tree";
+import { constructExpressionFromTree } from "@web/core/tree_editor/construct_expression_from_tree";
+import { constructTreeFromDomain } from "@web/core/tree_editor/construct_tree_from_domain";
+import { constructTreeFromExpression } from "@web/core/tree_editor/construct_tree_from_expression";
 import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
 import { expressionFromTree } from "@web/core/tree_editor/expression_from_tree";
-import { treeFromDomain } from "@web/core/tree_editor/tree_from_domain";
 import { treeFromExpression } from "@web/core/tree_editor/tree_from_expression";
 
-function expressionFromDomain(domain, options = {}) {
-    const tree = treeFromDomain(domain, options);
-    return expressionFromTree(tree, options);
+function expressionFromDomain(domain, options) {
+    const tree = constructTreeFromDomain(domain);
+    return constructExpressionFromTree(tree, options);
 }
 
-function domainFromExpression(expression, options = {}) {
-    const tree = treeFromExpression(expression, options);
-    return domainFromTree(tree);
+function domainFromExpression(expression, options) {
+    const tree = constructTreeFromExpression(expression, options);
+    return constructDomainFromTree(tree);
 }
 
 describe.current.tags("headless");
 
-test("domainFromTree . treeFromDomain", async () => {
+test("constructDomainFromTree . constructTreeFromDomain", async () => {
     await makeMockEnv();
     const toTest = [
         {
@@ -65,7 +68,7 @@ test("domainFromTree . treeFromDomain", async () => {
         },
     ];
     for (const { domain, result } of toTest) {
-        expect(domainFromTree(treeFromDomain(domain))).toBe(result || domain);
+        expect(constructDomainFromTree(constructTreeFromDomain(domain))).toBe(result || domain);
     }
 });
 
