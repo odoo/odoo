@@ -51,7 +51,7 @@ export class ChannelInvitation extends Component {
         useEffect(
             () => {
                 if (this.props.autofocus) {
-                    this.inputRef.el.focus();
+                    this.inputRef.el?.focus();
                 }
             },
             () => [this.props.autofocus]
