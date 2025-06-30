@@ -450,12 +450,17 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
 
-        const applyCallback = (url, label, classes, customStyle, linkTarget, attachmentId) => {
+        const applyCallback = (url, label, classes, customStyle, linkTarget, attachmentId, relvalue) => {
             if (this.linkInDocument) {
                 if (url) {
                     this.linkInDocument.href = url;
                 } else {
                     this.linkInDocument.removeAttribute("href");
+                }
+                if (relvalue){
+                    this.linkInDocument.setAttribute("rel", relvalue);
+                } else {
+                    this.linkInDocument.removeAttribute("rel");
                 }
                 if (linkTarget) {
                     this.linkInDocument.setAttribute("target", linkTarget);
@@ -489,6 +494,9 @@ export class LinkPlugin extends Plugin {
                     const link = this.createLink(url);
                     if (classes) {
                         link.className = classes;
+                    }
+                    if(relvalue){
+                        link.setAttribute("rel", relvalue);
                     }
                     const image = isImage && findInSelection(selection, "img");
                     const figure =
