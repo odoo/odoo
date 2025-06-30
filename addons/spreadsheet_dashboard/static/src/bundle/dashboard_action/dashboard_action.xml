@@ -37,6 +37,7 @@
                                 t-on-click="() => this.openDashboard(dashboard.id)"
                                 t-esc="dashboard.displayName"
                                 t-att-data-name="dashboard.displayName"
+                                t-att-title="dashboard.displayName"
                                 class="o_search_panel_category_value list-group-item cursor-pointer border-0"
                                 t-att-class="{'active': dashboard.id === state.activeDashboard.id}"/>
                         </ul>
