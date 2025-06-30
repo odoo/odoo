@@ -5,7 +5,6 @@ import {
     formatDateTime,
 } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
-import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
 import {
     condition,
     Expression,
@@ -80,7 +79,6 @@ export function disambiguate(value, displayNames) {
 
 export function useMakeGetFieldDef(fieldService) {
     fieldService ||= useService("field");
-    const loadFieldInfo = useLoadFieldInfo(fieldService);
     return async (resModel, tree, additionalsPath = []) => {
         const pathsInTree = getPathsInTree(tree, true);
         const paths = new Set([...pathsInTree, ...additionalsPath]);
@@ -88,7 +86,7 @@ export function useMakeGetFieldDef(fieldService) {
         const fieldDefs = {};
         for (const path of paths) {
             promises.push(
-                loadFieldInfo(resModel, path).then(({ fieldDef }) => {
+                fieldService.loadFieldInfo(resModel, path).then(({ fieldDef }) => {
                     fieldDefs[path] = fieldDef;
                 })
             );
@@ -105,14 +103,13 @@ export function useMakeGetFieldDef(fieldService) {
 
 function useGetTreePathDescription(fieldService) {
     fieldService ||= useService("field");
-    const loadPathDescription = useLoadPathDescription(fieldService);
     return async (resModel, tree) => {
         const paths = getPathsInTree(tree);
         const promises = [];
         const pathDescriptions = new Map();
         for (const path of paths) {
             promises.push(
-                loadPathDescription(resModel, path).then(({ displayNames }) => {
+                fieldService.loadPathDescription(resModel, path).then(({ displayNames }) => {
                     pathDescriptions.set(path, displayNames.join(" \u2794 "));
                 })
             );

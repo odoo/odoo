@@ -19,7 +19,13 @@ function getRelation(fieldDef, followRelationalProperties = false) {
 
 export const fieldService = {
     dependencies: ["orm"],
-    async: ["loadFields", "loadPath", "loadPropertyDefinitions"],
+    async: [
+        "loadFieldInfo",
+        "loadFields",
+        "loadPath",
+        "loadPropertyDefinitions",
+        "loadPathDescription",
+    ],
     start(env, { orm }) {
         /**
          * @param {string} resModel
@@ -154,7 +160,63 @@ export const fieldService = {
             return _loadPath(resModel, fieldDefs, path.split("."), followRelationalProperties);
         }
 
-        return { loadFields, loadPath, loadPropertyDefinitions };
+        /**
+         * @param {string} resModel
+         * @param {string} path
+         * @returns {Promise<Object>}
+         */
+        async function loadFieldInfo(resModel, path) {
+            if (typeof path !== "string" || !path || path === "*") {
+                return { resModel, fieldDef: null };
+            }
+            const { isInvalid, names, modelsInfo } = await loadPath(resModel, path);
+            if (isInvalid) {
+                return { resModel, fieldDef: null };
+            }
+            const name = names.at(-1);
+            const modelInfo = modelsInfo.at(-1);
+            return { resModel: modelInfo.resModel, fieldDef: modelInfo.fieldDefs[name] };
+        }
+
+        function makeString(value) {
+            return String(value ?? "-");
+        }
+
+        async function loadPathDescription(resModel, path, allowEmpty) {
+            if ([0, 1].includes(path)) {
+                return { isInvalid: false, displayNames: [makeString(path)] };
+            }
+            if (allowEmpty && !path) {
+                return { isInvalid: false, displayNames: [] };
+            }
+            if (typeof path !== "string" || !path || path === "*") {
+                return { isInvalid: true, displayNames: [makeString()] };
+            }
+            const { isInvalid, modelsInfo, names } = await loadPath(resModel, path);
+            const result = { isInvalid: !!isInvalid, displayNames: [] };
+            if (!isInvalid) {
+                const lastName = names.at(-1);
+                const lastFieldDef = modelsInfo.at(-1).fieldDefs[lastName];
+                if (["properties", "properties_definition"].includes(lastFieldDef.type)) {
+                    // there is no known case where we want to select a 'properties' field directly
+                    result.isInvalid = true;
+                }
+            }
+            for (let index = 0; index < names.length; index++) {
+                const name = names[index];
+                const fieldDef = modelsInfo[index]?.fieldDefs[name];
+                result.displayNames.push(fieldDef?.string || makeString(name));
+            }
+            return result;
+        }
+
+        return {
+            loadFieldInfo,
+            loadFields,
+            loadPath,
+            loadPathDescription,
+            loadPropertyDefinitions,
+        };
     },
 };
 
