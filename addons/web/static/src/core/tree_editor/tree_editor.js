@@ -1,7 +1,6 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import { cloneTree, connector, isTree, TRUE_TREE } from "@web/core/tree_editor/condition_tree";
 import {
     getDefaultValue,
@@ -49,7 +48,6 @@ export class TreeEditor extends Component {
         this.isTree = isTree;
         this.fieldService = useService("field");
         this.nameService = useService("name");
-        this.loadFieldInfo = useLoadFieldInfo(this.fieldService);
         this.makeGetFieldDef = useMakeGetFieldDef(this.fieldService);
         this.makeGetConditionDescription = useMakeGetConditionDescription(
             this.fieldService,
@@ -197,7 +195,7 @@ export class TreeEditor extends Component {
     }
 
     async _updatePath(node, path) {
-        const { fieldDef } = await this.loadFieldInfo(this.props.resModel, path);
+        const { fieldDef } = await this.fieldService.loadFieldInfo(this.props.resModel, path);
         node.path = path;
         node.negate = false;
         node.operator = this.props.getDefaultOperator(fieldDef);
