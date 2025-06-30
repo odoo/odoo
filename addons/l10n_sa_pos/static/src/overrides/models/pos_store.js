@@ -1,5 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { computeSAQRCode } from "@l10n_sa_pos/app/utils/qr";
 
 patch(PosStore.prototype, {
     getReceiptHeaderData(order) {
@@ -9,7 +10,7 @@ patch(PosStore.prototype, {
             result.is_settlement = order.is_settlement();
             if (!result.is_settlement) {
                 const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
-                const qr_values = order.compute_sa_qr_code(
+                const qr_values = computeSAQRCode(
                     company.name,
                     company.vat,
                     order.date_order,
