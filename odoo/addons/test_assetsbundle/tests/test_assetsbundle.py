@@ -292,6 +292,35 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.assertEqual(len(self._any_ira_for_bundle('js')), 0,
                          "there shouldn't be any non-minified assets created in normal mode")
 
+    def test_06_defer_assets_loading(self):
+        """ The main purpose of this test is to check the defer attribute does
+            not end up being added *again* on an asset which is lazy-loaded as
+            this is not W3C-valid.
+        """
+        nodes = self.env['ir.qweb']._get_asset_nodes(self.jsbundle_name)
+        self.assertEqual(len(nodes), 1, "there should be one node generated")
+        self.assertEqual(nodes[0][0], 'script', "the node should be a script")
+        attrs = nodes[0][1]
+        self.assertIn('src', attrs, "there should be a src on the script")
+        self.assertNotIn('data-src', attrs, "there should not be a fake src on the script")
+        self.assertNotIn('defer', attrs, "the script should not have defer loading")
+
+        nodes = self.env['ir.qweb']._get_asset_nodes(self.jsbundle_name, defer_load=True)
+        self.assertEqual(len(nodes), 1, "there should be one node generated")
+        self.assertEqual(nodes[0][0], 'script', "the node should be a script")
+        attrs = nodes[0][1]
+        self.assertIn('src', attrs, "there should be a src on the script")
+        self.assertNotIn('data-src', attrs, "there should not be a fake src on the script")
+        self.assertIn('defer', attrs, "the script should have defer loading")
+
+        nodes = self.env['ir.qweb']._get_asset_nodes(self.jsbundle_name, lazy_load=True)
+        self.assertEqual(len(nodes), 1, "there should be one node generated")
+        self.assertEqual(nodes[0][0], 'script', "the node should be a script")
+        attrs = nodes[0][1]
+        self.assertNotIn('src', attrs, "there should not be a src on the script")
+        self.assertIn('data-src', attrs, "there should be a fake src on the script")
+        self.assertNotIn('defer', attrs, "the script should not have defer loading, this is not valid without src")
+
     def test_07_debug_assets(self):
         """ Checks that a bundle rendered in debug assets mode outputs non-minified assets
             and create an non-minified ir.attachment at the .
@@ -1430,7 +1459,7 @@ class TestAssetsManifest(AddonManifestPatched):
 
         self.assertRegex(content, '.display-flex{display: -webkit-box; display: -webkit-flex; display: flex;}')
         self.assertRegex(content, '.display-inline-flex{display: -webkit-inline-box; display: -webkit-inline-flex; display: inline-flex;}')
-        self.assertRegex(content, '.display-inline{display: inline;}')        
+        self.assertRegex(content, '.display-inline{display: inline;}')
         self.assertRegex(content, '.display-var-flex{--dummy-display: flex;}')
         self.assertRegex(content, '.display-var-inline-flex{--dummy-display: inline-flex;}')
         self.assertRegex(content, '.display-var-inline{--dummy-display: inline;}')
@@ -1439,11 +1468,11 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertRegex(content, '.flex-flow-column-wrap{-webkit-flex-flow: column wrap; flex-flow: column wrap;}')
         self.assertRegex(content, '.flex-flow-column-reverse-wrap-reverse{flex-flow: column-reverse wrap-reverse;}')
         self.assertRegex(content, '.flex-flow-row{flex-flow: row;}')
-        
+
         self.assertRegex(content, '.flex-direction-column{-webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; flex-direction: column;}')
         self.assertRegex(content, '.flex-direction-column-reverse{flex-direction: column-reverse;}')
         self.assertRegex(content, '.flex-direction-row{flex-direction: row;}')
-        
+
         self.assertRegex(content, '.flex-wrap-wrap{-webkit-flex-wrap: wrap; flex-wrap: wrap;}')
         self.assertRegex(content, '.flex-wrap-nowrap{-webkit-flex-wrap: nowrap; flex-wrap: nowrap;}')
         self.assertRegex(content, '.flex-wrap-wrap-reverse{flex-wrap: wrap-reverse;}')

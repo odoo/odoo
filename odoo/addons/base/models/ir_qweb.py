@@ -2793,8 +2793,6 @@ class IrQweb(models.AbstractModel):
         is_js = ext in SCRIPT_EXTENSIONS
         is_xml = ext in TEMPLATE_EXTENSIONS
         is_css = ext in STYLE_EXTENSIONS
-        if not is_js and not is_xml and not is_css:
-            return
 
         if is_js:
             is_asset_bundle = path and path.startswith('/web/assets/')
@@ -2802,7 +2800,10 @@ class IrQweb(models.AbstractModel):
                 'type': 'text/javascript',
             }
 
-            if (defer_load or lazy_load):
+            if defer_load:
+                # Note that "lazy_load" will lead to "defer" being added in JS,
+                # not here, otherwise this is not W3C valid (defer is probably
+                # not even needed there anyways). See LAZY_LOAD_DEFER.
                 attributes['defer'] = 'defer'
             if path:
                 if lazy_load:
@@ -2814,7 +2815,6 @@ class IrQweb(models.AbstractModel):
                 attributes['onerror'] = "__odooAssetError=1"
 
             return ('script', attributes)
-
 
         if is_css:
             attributes = {
@@ -2833,6 +2833,8 @@ class IrQweb(models.AbstractModel):
                 'data-src': path,
                 }
             return ('script', attributes)
+
+        return None
 
     def _generate_asset_links(self, bundle, css=True, js=True, debug_assets=False, assets_params=None, rtl=False, autoprefix=False):
         asset_bundle = self._get_asset_bundle(bundle, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params, autoprefix=autoprefix)

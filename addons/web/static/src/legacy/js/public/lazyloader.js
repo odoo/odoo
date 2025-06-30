@@ -166,7 +166,7 @@ function _loadScripts(scripts, index) {
     }
     const script = scripts[index];
     script.addEventListener('load', _loadScripts.bind(this, scripts, index + 1));
-    script.setAttribute('defer', 'defer');
+    script.setAttribute('defer', 'defer'); // See LAZY_LOAD_DEFER
     script.src = script.dataset.src;
     script.removeAttribute('data-src');
 }
