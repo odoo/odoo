@@ -74,6 +74,46 @@ test("can execute act_window actions from db ID in a new window", async () => {
     expect.verifySteps(["open: /odoo/action-1"]);
 });
 
+test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for window action", async () => {
+    const webClient = await mountWithCleanup(WebClient);
+    webClient.env.bus.addEventListener("CLEAR-UNCOMMITTED-CHANGES", () => {
+        expect.step("CLEAR-UNCOMMITTED-CHANGES");
+    });
+
+    await getService("action").doAction(1, { newWindow: true });
+    expect.verifySteps(["open: /odoo/action-1"]);
+});
+
+test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for client actions", async () => {
+    class ClientAction extends Component {
+        static template = xml`<div class="o_client_action_test">Hello World</div>`;
+        static props = ["*"];
+    }
+    registry.category("actions").add("my_action", ClientAction);
+
+    const webClient = await mountWithCleanup(WebClient);
+    webClient.env.bus.addEventListener("CLEAR-UNCOMMITTED-CHANGES", () => {
+        expect.step("CLEAR-UNCOMMITTED-CHANGES");
+    });
+
+    await getService("action").doAction("my_action", { newWindow: true });
+    expect.verifySteps(["open: /odoo/my_action"]);
+});
+
+test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for switchView", async () => {
+    const webClient = await mountWithCleanup(WebClient);
+    webClient.env.bus.addEventListener("CLEAR-UNCOMMITTED-CHANGES", () => {
+        expect.step("CLEAR-UNCOMMITTED-CHANGES");
+    });
+
+    await getService("action").doAction(1);
+    await getService("action").switchView("kanban", {}, { newWindow: true });
+    expect.verifySteps([
+        "CLEAR-UNCOMMITTED-CHANGES", // The first do action clear uncommitted changes as expected. The second one doesn't
+        "open: /odoo/action-1",
+    ]);
+});
+
 test("can execute dynamic act_window actions in a new window", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(
