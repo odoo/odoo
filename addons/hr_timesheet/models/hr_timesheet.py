@@ -168,7 +168,7 @@ class AccountAnalyticLine(models.Model):
         # If it's a basic user then check if the timesheet is his own.
         if (
             not (self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver') or self.env.su)
-            and any(analytic_line.user_id != self.env.user for analytic_line in self)
+            and any(analytic_line.user_id != self.env.user and analytic_line.project_id for analytic_line in self)
         ):
             raise AccessError(_("You cannot access timesheets that are not yours."))
 

@@ -764,3 +764,25 @@ class TestTimesheet(TestCommonTimesheet):
                 'project_id': self.project_customer.id,
                 'employee_id': self.empl_employee.id,
             })
+
+    def test_restrict_write_on_timesheet_only(self):
+        """Test that a non-manager user can only update their own analytic
+        account line if it is a timesheet entry. """
+        # Create a new analytic account line
+        analytic_account_line = self.env['account.analytic.line'].create({
+            'name': 'Test Timesheet',
+            'unit_amount': 1,
+            'employee_id': self.empl_employee2.id,
+        })
+        self.assertFalse(analytic_account_line.project_id)
+        # Check that the user can write on an analytic account line that is not a timesheet
+        analytic_account_line.with_user(self.user_employee).name = "test AAL timesheet"
+
+        # Set a project on the analytic account line, making it a timesheet
+        analytic_account_line.project_id = self.project_customer
+        # Check that the user cannot write on the timesheet if they are not a manager or the assigned employee
+        with self.assertRaises(AccessError):
+            analytic_account_line.with_user(self.user_employee).name = "test AAL timesheet 2"
+        # Check that the manager can write on the timesheet
+        analytic_account_line.with_user(self.user_manager).name = "test AAL timesheet 3"
+        self.assertEqual(analytic_account_line.name, "test AAL timesheet 3")
