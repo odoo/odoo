@@ -686,39 +686,32 @@ export class ListRenderer extends Component {
                     column.options.currency_field ||
                     this.fields[fieldName].currency_field ||
                     "currency_id";
-                if (!(currencyField in this.props.list.activeFields)) {
-                    aggregates[fieldName] = {
-                        help: _t("No currency provided"),
-                        value: "—",
-                    };
-                    continue;
-                }
-                if (this.props.list.isGrouped) {
-                    currencyId = values.find((v) => v[currencyField]?.length)?.[currencyField][0];
-                } else {
-                    currencyId = values[0][currencyField] && values[0][currencyField].id;
-                }
-                if (currencyId && func) {
-                    let sameCurrency;
-                    if (this.props.list.isGrouped) {
-                        sameCurrency = values.every(
-                            (value) =>
-                                !value[currencyField] ||
-                                value[currencyField].length === 0 ||
-                                (value[currencyField].length === 1 &&
-                                    currencyId === value[currencyField][0])
-                        );
+                if (currencyField in this.props.list.activeFields) {
+                    if (this.props.list.isGrouped && !this.props.list.selection.length) {
+                        currencyId = values.find((v) => v[currencyField]?.length)?.[
+                            currencyField
+                        ][0];
                     } else {
-                        sameCurrency = values.every(
-                            (value) => currencyId === value[currencyField]?.id
-                        );
+                        currencyId = values[0][currencyField] && values[0][currencyField].id;
                     }
-                    if (!sameCurrency) {
-                        aggregates[fieldName] = {
-                            help: _t("Different currencies cannot be aggregated"),
-                            value: "—",
-                        };
-                        continue;
+                    if (currencyId && func) {
+                        let sameCurrency;
+                        if (this.props.list.isGrouped && !this.props.list.selection.length) {
+                            sameCurrency = values.every(
+                                (value) =>
+                                    !value[currencyField] ||
+                                    value[currencyField].length === 0 ||
+                                    (value[currencyField].length === 1 &&
+                                        currencyId === value[currencyField][0])
+                            );
+                        } else {
+                            sameCurrency = values.every(
+                                (value) => currencyId === value[currencyField]?.id
+                            );
+                        }
+                        if (!sameCurrency) {
+                            currencyId = false;
+                        }
                     }
                 }
             }
@@ -732,10 +725,22 @@ export class ListRenderer extends Component {
                 if (currencyId) {
                     formatOptions.currencyId = currencyId;
                 }
-                aggregates[fieldName] = {
-                    help: attrs[func],
-                    value: formatter ? formatter(aggregatedValue, formatOptions) : aggregatedValue,
-                };
+                if (currencyId === false) {
+                    aggregates[fieldName] = {
+                        help: _t("Different currencies cannot be aggregated"),
+                        value: formatter
+                            ? formatter(aggregatedValue, formatOptions)
+                            : aggregatedValue,
+                        warning: true,
+                    };
+                } else {
+                    aggregates[fieldName] = {
+                        help: attrs[func],
+                        value: formatter
+                            ? formatter(aggregatedValue, formatOptions)
+                            : aggregatedValue,
+                    };
+                }
             }
         }
         return aggregates;
@@ -772,10 +777,11 @@ export class ListRenderer extends Component {
         };
         if (field.type === "monetary") {
             const currencies = group.aggregates[field.currency_field];
-            if (currencies.length > 1) {
+            if (currencies.length > 1 && aggregateValue !== false) {
                 return {
                     help: _t("Different currencies cannot be aggregated"),
-                    value: "—",
+                    value: formatter ? formatter(aggregateValue, formatOptions) : aggregateValue,
+                    warning: true,
                 };
             }
             formatOptions.currencyId = currencies[0];

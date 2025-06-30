@@ -47,12 +47,12 @@
                                         <div t-elif="model.metaData.measures[cell.measure].type === 'boolean'" class="o_value">
                                             <CheckBox disabled="true" value="cell.value" />
                                         </div>
-                                        <div t-else="1" class="o_value">
+                                        <div t-else="" class="o_value">
                                             <t t-set="formattedValue" t-value="getFormattedValue(cell)"/>
-                                            <t t-if="formattedValue === false">
-                                                <b t-att-data-tooltip="invalidValueTooltip">—</b>
-                                            </t>
-                                            <t t-else="" t-esc="formattedValue"/>
+                                            <span t-att-data-tooltip="formattedValue.help">
+                                                <t t-esc="formattedValue.value"/>
+                                                <sup t-if="formattedValue.warning" class="ms-1 fw-bolder text-info">?</sup>
+                                            </span>
                                         </div>
                                     </t>
                                 </td>

@@ -4,7 +4,7 @@
         <xpath expr="//div[hasclass('o_column_progress')]" position="attributes">
             <attribute name="class" remove="w-75" add="w-50" separator=" "/>
         </xpath>
-        <b t-else="" position="after">
+        <AnimatedNumber position="after">
             <t t-if="showRecurringRevenue">
                 <t t-set="rrmAggregate" t-value="getRecurringRevenueGroupAggregate(props.group)"/>
                 <AnimatedNumber
@@ -19,6 +19,6 @@
                     </t>
                 </AnimatedNumber>
             </t>
-        </b>
+        </AnimatedNumber>
     </t>
 </templates>
