@@ -39,6 +39,9 @@ export class TourAutomatic {
                         if (this.debugMode) {
                             console.groupCollapsed(step.describeMe);
                             console.log(step.stringify);
+                            if (stepDelay > 0) {
+                                await hootDom.delay(stepDelay);
+                            }
                             if (step.break) {
                                 // eslint-disable-next-line no-debugger
                                 debugger;
@@ -49,9 +52,6 @@ export class TourAutomatic {
                         // This delay is important for making the current set of tour tests pass.
                         // IMPROVEMENT: Find a way to remove this delay.
                         await new Promise((resolve) => requestAnimationFrame(resolve));
-                        if (stepDelay > 0) {
-                            await hootDom.delay(stepDelay);
-                        }
                     },
                 },
                 {
