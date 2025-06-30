@@ -6,6 +6,26 @@ import { withSequence } from "@html_editor/utils/resource";
 import { Deferred } from "@web/core/utils/concurrency";
 import { toggleClass } from "@html_editor/utils/dom";
 
+function toStringNode(node) {
+    if (node.tagName) {
+        return `\nNode(${node.tagName}, ${JSON.stringify(
+            node.attributes
+        )}") \n Children: ${node.children.map(toStringNode).join(", ")}`;
+    }
+    return `\nNode(${node.textContent}")`;
+}
+function toStringMutation(m) {
+    if (m.type === "characterData") {
+        return `\n CharacterData(${m.id}, "${m.text}", "${m.oldValue}")`;
+    }
+    if (m.type === "add") {
+        return `\n Add(${toStringNode(m.node)}`;
+    }
+    if (m.type === "remove") {
+        return `\n Remove(${toStringNode(m.node)}`;
+    }
+}
+
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
  *
@@ -1374,6 +1394,15 @@ export class HistoryPlugin extends Plugin {
         if (this.ignoreIsCurrentStepModified) {
             return false;
         }
+        const mutations = this.currentStep.mutations.filter((m) =>
+            ["characterData", "remove", "add"].includes(m.type)
+        );
+        if (mutations.length) {
+            for (const m of mutations) {
+                console.warn(toStringMutation(m));
+            }
+        }
+
         return this.currentStep.mutations.find((m) =>
             ["characterData", "remove", "add"].includes(m.type)
         );
