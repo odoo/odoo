@@ -27,4 +27,3 @@ mount --bind / /root_bypass_ramdisks
 
 # allow to cups server to save configuration file of printers
 mount --bind /root_bypass_ramdisks/etc/cups /root_bypass_ramdisks/etc/cups
-mount -o remount,rw /root_bypass_ramdisks/etc/cups /root_bypass_ramdisks/etc/cups
