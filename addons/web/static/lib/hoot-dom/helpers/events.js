@@ -136,6 +136,7 @@ const {
     Event,
     File,
     FocusEvent,
+    HashChangeEvent,
     KeyboardEvent,
     Math: { ceil: $ceil, max: $max, min: $min },
     MouseEvent,
@@ -535,6 +536,10 @@ function getEventConstructor(eventType) {
             return [Event, mapEvent, CANCELABLE];
         case "unload":
             return [Event, mapEvent];
+
+        // URL events
+        case "hashchange":
+            return [HashChangeEvent, mapEvent];
 
         // Default: base Event constructor
         default:
