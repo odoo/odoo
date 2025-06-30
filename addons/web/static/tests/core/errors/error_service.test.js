@@ -48,7 +48,6 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
     error.message = "Some strange error occured";
     error.data = { debug: "somewhere" };
     error.subType = "strange_error";
-    error.id = 12;
     error.model = "some model";
 
     mockService("dialog", {
@@ -64,7 +63,6 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
                 subType: "strange_error",
                 message: "Some strange error occured",
                 exceptionName: null,
-                id: 12,
                 model: "some model",
             });
             expect(props.traceback).toMatch(/RPC_ERROR/);
@@ -88,7 +86,6 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
     const error = new RPCError();
     error.code = 701;
     error.message = "Some strange error occured";
-    error.id = 12;
     error.model = "some model";
     const errorData = {
         context: { exception_class: "strange_error" },
@@ -107,7 +104,6 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
                 subType: null,
                 message: "Some strange error occured",
                 exceptionName: null,
-                id: 12,
                 model: "some model",
             });
             expect(props.traceback).toMatch(/RPC_ERROR/);
@@ -142,7 +138,6 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     };
     error.exceptionName = "normal_error";
     error.data = errorData;
-    error.id = 12;
     error.model = "some model";
     mockService("dialog", {
         add(dialogClass, props) {
@@ -155,7 +150,6 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
                 subType: null,
                 message: "A normal error occured",
                 exceptionName: "normal_error",
-                id: 12,
                 model: "some model",
             });
             expect(props.traceback).toMatch(/RPC_ERROR/);
