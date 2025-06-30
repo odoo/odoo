@@ -2512,6 +2512,21 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         with self.assertQueries([]):
             Model.search([('active', 'not in', [True, False])])
 
+    def test_54_not_null_id_query(self):
+        # Test at post_install since not_null_fields is only loaded at the end of the registry
+        Model = self.env['test_orm.model_active_field'].with_context(active_test=False)
+
+        self.patch(self.env.registry, 'not_null_fields', {Model._fields['id']})
+
+        with self.assertQueries(["""
+            SELECT "test_orm_model_active_field"."id"
+            FROM "test_orm_model_active_field"
+            WHERE "test_orm_model_active_field"."id" NOT IN %s
+            ORDER BY "test_orm_model_active_field"."id"
+        """]):
+            Model.search([('id', '!=', 1)])
+            Model.search([('id', '=', False)])  # No query
+
     def test_60_one2many_domain(self):
         """ test the cache consistency of a one2many field with a domain """
         discussion = self.env.ref('test_orm.discussion_0')
@@ -5217,20 +5232,3 @@ class TestModifiedPerformance(TransactionCase):
         self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
         self.assertEqual(self.modified_line_a.total_price_quantity, 35)
         self.assertEqual(self.modified_line_a.total_price, 7)
-
-
-@tagged('post_install', '-at_install')
-class PostInstallQueryResult(TransactionCase):
-
-    def test_not_null_id_query(self):
-        # Test at post_install since not_null_fields is only loaded at the end of the registry
-        Model = self.env['test_orm.model_active_field'].with_context(active_test=False)
-
-        with self.assertQueries(["""
-            SELECT "test_orm_model_active_field"."id"
-            FROM "test_orm_model_active_field"
-            WHERE "test_orm_model_active_field"."id" NOT IN %s
-            ORDER BY "test_orm_model_active_field"."id"
-        """]):
-            Model.search([('id', '!=', 1)])
-            Model.search([('id', '=', False)])  # No query
