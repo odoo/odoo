@@ -11,7 +11,7 @@ from odoo.http import _request_stack
 from odoo.service import common as auth
 from odoo.service import model
 from odoo.tests import common
-from odoo.tools import DotDict
+from odoo.tests.common import DotDict
 
 
 class TestExternalAPI(SavepointCaseWithUserDemo):

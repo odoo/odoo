@@ -62,7 +62,7 @@ from odoo.fields import Command
 from odoo.modules.registry import Registry, DummyRLock
 from odoo.service import security
 from odoo.sql_db import Cursor, Savepoint
-from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
+from odoo.tools import config, float_compare, mute_logger, profiler, SQL
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
@@ -245,6 +245,19 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 
 def loaded_demo_data(env):
     return bool(env.ref('base.user_demo', raise_if_not_found=False))
+
+
+class DotDict(dict):
+    """Helper for dot.notation access to dictionary attributes
+
+        E.g.
+          foo = DotDict({'bar': False})
+          return foo.bar
+    """
+    def __getattr__(self, attrib):
+        val = self.get(attrib)
+        return DotDict(val) if isinstance(val, dict) else val
+
 
 class RecordCapturer:
     def __init__(self, model, domain):

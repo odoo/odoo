@@ -7,7 +7,8 @@ from werkzeug.test import EnvironBuilder
 
 import odoo.http
 from odoo.tests import HOST, HttpCase
-from odoo.tools import DotDict, config, frozendict
+from odoo.tests.common import DotDict
+from odoo.tools import config, frozendict
 
 
 @contextlib.contextmanager
