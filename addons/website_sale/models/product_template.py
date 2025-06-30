@@ -594,11 +594,12 @@ class ProductTemplate(models.Model):
         })
 
         if self.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price'):
+            price_per_product_uom = uom._compute_price(
+                price=combination_info['price'], to_unit=self.uom_id
+            )
             combination_info.update({
                 'base_unit_name': product_or_template.base_unit_name,
-                'base_unit_price': product_or_template._get_base_unit_price(
-                    combination_info['price']
-                ),
+                'base_unit_price': product_or_template._get_base_unit_price(price_per_product_uom),
             })
 
         if combination_info['prevent_zero_price_sale']:
