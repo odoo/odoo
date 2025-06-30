@@ -351,6 +351,7 @@ export class WebsiteBuilderClientAction extends Component {
         // If we detect that behavior, we reload the iframe with a new query
         // parameter, so that it's not cached for Chrome.
         const iframe = this.websiteContent.el;
+        iframe.contentDocument.body.setAttribute("is-ready", "false");
         if (isBrowserChrome() && !iframe.src.includes("iframe_reload")) {
             try {
                 /* eslint-disable no-unused-expressions */
@@ -492,7 +493,7 @@ export class WebsiteBuilderClientAction extends Component {
                 resolve();
             } else {
                 const observer = new MutationObserver(() => {
-                    if (doc.body.hasAttribute("is-ready")) {
+                    if (doc.body.getAttribute("is-ready") === "true") {
                         observer.disconnect();
                         resolve();
                     }
