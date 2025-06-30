@@ -48,6 +48,45 @@ class ResCompany(models.Model):
                 ('tax_payable_account_id', '!=', False)], limit=1)
             default_oss_payable_account = self.env['account.account']
 
+            eu_vat_country_group_id = self.env.ref('account.europe_vat').id
+            eu_b2c_fp = self.env['account.fiscal.position'].search([
+                ('company_id', '=', company.id),
+                ('country_group_id', '=', eu_vat_country_group_id),
+                ('auto_apply', '=', True),
+                ('vat_required', '=', False),
+            ], limit=1)
+            offset = 1
+            if eu_b2c_fp:
+                # oss fp must come before eu b2c fp
+                oss_fp_sequence = eu_b2c_fp.sequence
+                to_bump = eu_b2c_fp | self.env['account.fiscal.position'].search([
+                    ('company_id', '=', company.id),
+                    ('sequence', '>', oss_fp_sequence),
+                ])
+            else:
+                eu_b2b_fp = self.env['account.fiscal.position'].search([
+                    ('company_id', '=', company.id),
+                    ('country_group_id', '=', eu_vat_country_group_id),
+                    ('auto_apply', '=', True),
+                    ('vat_required', '=', True),
+                ], limit=1)
+                if eu_b2b_fp:
+                    # oss fp must come after eu b2b fp
+                    oss_fp_sequence = eu_b2b_fp.sequence + 1
+                    offset = 2
+                    to_bump = self.env['account.fiscal.position'].search([
+                        ('company_id', '=', company.id),
+                        ('sequence', '>', eu_b2b_fp.sequence),
+                    ])
+                else:
+                    oss_fp_sequence = self.env['account.fiscal.position'].search([
+                        ('company_id', '=', company.id)],
+                        limit=1, order='sequence desc',
+                    ).sequence + 1
+                    to_bump = []
+            for fp in to_bump:
+                fp.sequence += offset
+
             for destination_country in oss_countries:
                 mapping = []
                 fpos = self.env['account.fiscal.position'].search([
@@ -62,6 +101,7 @@ class ResCompany(models.Model):
                         'country_id': destination_country.id,
                         'company_id': company.id,
                         'auto_apply': True,
+                        'sequence': oss_fp_sequence,
                     })
 
                 foreign_taxes = {tax.amount: tax for tax in fpos.tax_ids if tax.amount_type == 'percent'}

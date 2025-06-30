@@ -50,19 +50,17 @@ class TestFiscalPosition(common.TransactionCase):
                                          name="BE-NAT",
                                          auto_apply=True,
                                          country_id=be.id,
-                                         vat_required=False,
                                          sequence=10))
-        cls.fr_b2c = cls.fp.create(dict(
-                                         name="EU-VAT-FR-B2C",
-                                         auto_apply=True,
-                                         country_id=fr.id,
-                                         vat_required=False,
-                                         sequence=40))
         cls.fr_b2b = cls.fp.create(dict(
                                          name="EU-VAT-FR-B2B",
                                          auto_apply=True,
                                          country_id=fr.id,
                                          vat_required=True,
+                                         sequence=40))
+        cls.fr_b2c = cls.fp.create(dict(
+                                         name="EU-VAT-FR-B2C",
+                                         auto_apply=True,
+                                         country_id=fr.id,
                                          sequence=50))
 
     def test_10_fp_country(self):
@@ -72,68 +70,27 @@ class TestFiscalPosition(common.TransactionCase):
                 expected_pos.id,
                 message)
 
-        george, jc, ben, alberto = self.george, self.jc, self.ben, self.alberto
-
-        # B2B has precedence over B2C for same country even when sequence gives lower precedence
-        self.assertGreater(self.fr_b2b.sequence, self.fr_b2c.sequence)
-        assert_fp(george, self.fr_b2b, "FR-B2B should have precedence over FR-B2C")
-        self.fr_b2b.auto_apply = False
-        assert_fp(george, self.fr_b2c, "FR-B2C should match now")
-        self.fr_b2b.auto_apply = True
-
-        # Create positions matching on Country Group and on NO country at all
-        self.eu_intra_b2b = self.fp.create(dict(
-                                         name="EU-INTRA B2B",
-                                         auto_apply=True,
-                                         country_group_id=self.eu.id,
-                                         vat_required=True,
-                                         sequence=20))
-        self.world = self.fp.create(dict(
-                                         name="WORLD-EXTRA",
-                                         auto_apply=True,
-                                         vat_required=False,
-                                         sequence=30))
-
-        # Country match has higher precedence than group match or sequence
-        self.assertGreater(self.fr_b2b.sequence, self.eu_intra_b2b.sequence)
-        assert_fp(george, self.fr_b2b, "FR-B2B should have precedence over EU-INTRA B2B")
-
-        # B2B has precedence regardless of country or group match
-        self.assertGreater(self.eu_intra_b2b.sequence, self.be_nat.sequence)
-        assert_fp(jc, self.eu_intra_b2b, "EU-INTRA B2B should match before BE-NAT")
-
         # Lower sequence = higher precedence if country/group and VAT matches
-        self.assertFalse(ben.vat) # No VAT set
-        assert_fp(ben, self.be_nat, "BE-NAT should match before EU-INTRA due to lower sequence")
-
-        # Remove BE from EU group, now BE-NAT should be the fallback match before the wildcard WORLD
-        self.be.write({'country_group_ids': [(3, self.eu.id)]})
-        self.assertTrue(jc.vat) # VAT set
-        assert_fp(jc, self.be_nat, "BE-NAT should match as fallback even w/o VAT match")
-
-        # No country = wildcard match only if nothing else matches
-        self.assertTrue(alberto.vat) # with VAT
-        assert_fp(alberto, self.world, "WORLD-EXTRA should match anything else (1)")
-        alberto.vat = False          # or without
-        assert_fp(alberto, self.world, "WORLD-EXTRA should match anything else (2)")
+        self.assertFalse(self.ben.vat)  # No VAT set
+        assert_fp(self.ben, self.be_nat, "BE-NAT should match before EU-INTRA due to lower sequence")
 
         # Zip range
-        self.fr_b2b_zip100 = self.fr_b2b.copy(dict(zip_from=0, zip_to=5000, sequence=60))
-        george.zip = 6000
-        assert_fp(george, self.fr_b2b, "FR-B2B with wrong zip range should not match")
-        george.zip = 3000
-        assert_fp(george, self.fr_b2b_zip100, "FR-B2B with zip range should have precedence")
+        fr_b2b_zip100 = self.fr_b2b.copy(dict(zip_from=0, zip_to=5000, sequence=1))
+        self.george.zip = 6000
+        assert_fp(self.george, self.fr_b2b, "FR-B2B with wrong zip range should not match")
+        self.george.zip = 1234
+        assert_fp(self.george, fr_b2b_zip100, "FR-B2B with ok zip range should match")
+        self.george.zip = None
 
         # States
-        self.fr_b2b_state = self.fr_b2b.copy(dict(state_ids=[(4, self.state_fr.id)], sequence=70))
-        george.state_id = self.state_fr
-        assert_fp(george, self.fr_b2b_zip100, "FR-B2B with zip should have precedence over states")
-        george.zip = False
-        assert_fp(george, self.fr_b2b_state, "FR-B2B with states should have precedence")
+        fr_b2b_state = self.fr_b2b.copy(dict(state_ids=[(4, self.state_fr.id)], sequence=1))
+        assert_fp(self.george, self.fr_b2b, "FR-B2B with states should not match")
+        self.george.state_id = self.state_fr
+        assert_fp(self.george, fr_b2b_state, "FR-B2B with states should match")
 
         # Dedicated position has max precedence
-        george.property_account_position_id = self.be_nat
-        assert_fp(george, self.be_nat, "Forced position has max precedence")
+        self.george.property_account_position_id = self.be_nat
+        assert_fp(self.george, self.be_nat, "Forced position has max precedence")
 
 
     def test_20_fp_one_tax_2m(self):
@@ -170,24 +127,22 @@ class TestFiscalPosition(common.TransactionCase):
             'vat_required': True,
             'sequence': 10,
         })
-        fp_eu_priv = self.env['account.fiscal.position'].create({
-            'name': 'EU privé',
-            'auto_apply': True,
-            'country_group_id': self.eu.id,
-            'vat_required': False,
-            'sequence': 20,
-        })
         fp_eu_intra = self.env['account.fiscal.position'].create({
             'name': 'Régime Intra-Communautaire',
             'auto_apply': True,
             'country_group_id': self.eu.id,
             'vat_required': True,
+            'sequence': 20,
+        })
+        fp_eu_priv = self.env['account.fiscal.position'].create({
+            'name': 'EU privé',
+            'auto_apply': True,
+            'country_group_id': self.eu.id,
             'sequence': 30,
         })
         fp_eu_extra = self.env['account.fiscal.position'].create({
             'name': 'Régime Extra-Communautaire',
             'auto_apply': True,
-            'vat_required': False,
             'sequence': 40,
         })
 
