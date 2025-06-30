@@ -7,9 +7,9 @@ export function hrPreferencesItem(env)  {
         {}, 
         preferencesItem(env),
         {
-            description: _t('My Profile'),
+            description: _t('My Preferences'),
         }
     );
 }
 
-registry.category("user_menuitems").add('profile', hrPreferencesItem, { force: true })
+registry.category("user_menuitems").add('preferences', hrPreferencesItem, { force: true })

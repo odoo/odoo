@@ -17,14 +17,14 @@ function openRoot() {
         trigger: 'body:not(.wait)',
     }];
 }
-function openUserProfileAtSecurityTab() {
+function openUserPreferencesAtSecurityTab() {
     return [{
         content: 'Open user account menu',
         trigger: '.o_user_menu .dropdown-toggle',
         run: 'click',
     }, {
-        content: "Open preferences / profile screen",
-        trigger: '[data-menu=settings]',
+        content: "Open My Preferences",
+        trigger: '[data-menu=preferences]',
         run: 'click',
     }, {
         content: "Switch to security tab",
@@ -35,12 +35,12 @@ function openUserProfileAtSecurityTab() {
 
 /**
  * Checks that the TOTP button is in the specified state (true = enabled =
- * can disable, false = disabled = can enable), then closes the profile dialog
+ * can disable, false = disabled = can enable), then closes the preferences dialog
  * if it's one (= hr not installed).
  *
  * If no totp state is provided, just checks that the toggle exists.
  */
-function closeProfileDialog({content, totp_state}) {
+function closePreferencesDialog({content, totp_state}) {
     let trigger;
     switch (totp_state) {
     case true: trigger = 'button[name=action_totp_disable]'; break;
@@ -75,7 +75,7 @@ function closeProfileDialog({content, totp_state}) {
 
 registry.category("web_tour.tours").add('totp_tour_setup', {
     url: '/odoo',
-    steps: () => [...openUserProfileAtSecurityTab(), {
+    steps: () => [...openUserPreferencesAtSecurityTab(), {
     content: "Open totp wizard",
     //TODO: remove when PIPU macro PR is merged: https://github.com/odoo/odoo/pull/194508
     trigger: 'a[role=tab]:contains("Security").active',
@@ -129,8 +129,8 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     trigger: 'body.got-token',
 },
 ...openRoot(),
-...openUserProfileAtSecurityTab(),
-...closeProfileDialog({
+...openUserPreferencesAtSecurityTab(),
+...closePreferencesDialog({
     content: "Check that the button has changed",
     totp_state: true,
 }),
@@ -283,7 +283,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 // now go and disable two-factor authentication would be annoying to do in a separate tour
 // because we'd need to login & totp again as HttpCase.authenticate can't
 // succeed w/ totp enabled
-...openUserProfileAtSecurityTab(),
+...openUserPreferencesAtSecurityTab(),
 {
     content: "Open totp wizard",
     trigger: 'a[role=tab]:contains("Security").active',
@@ -308,8 +308,8 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: "body:not(:has(.modal))",
 },
 ...openRoot(),
-...openUserProfileAtSecurityTab(),
-...closeProfileDialog({
+...openUserPreferencesAtSecurityTab(),
+...closePreferencesDialog({
     content: "Check that the button has changed",
     totp_state: false
 }),
@@ -339,11 +339,11 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
 },
 // normally we'd end the tour here as it's all we care about but there are a
 // bunch of ongoing queries from the loading of the web client which cause
-// issues, so go and open the preferences / profile screen to make sure
+// issues, so go and open the preferences screen to make sure
 // everything settles down
-...openUserProfileAtSecurityTab(),
+...openUserPreferencesAtSecurityTab(),
 // close the dialog if that makes sense
-...closeProfileDialog({})
+...closePreferencesDialog({})
 ]});
 
 const columns = {};
