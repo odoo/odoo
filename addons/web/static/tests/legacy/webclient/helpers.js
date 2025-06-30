@@ -30,6 +30,7 @@ import { Component, onMounted, xml } from "@odoo/owl";
 import { fieldService } from "@web/core/field_service";
 import { nameService } from "@web/core/name_service";
 import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
+import { treeProcessorService } from "@web/core/tree_editor/tree_processor";
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");
@@ -61,6 +62,7 @@ export function setupWebClientRegistries() {
         dialog: () => dialogService,
         effect: () => effectService,
         field: () => fieldService,
+        tree_processor: () => treeProcessorService,
         hotkey: () => hotkeyService,
         http: () => makeFakeHTTPService(),
         pwa: () => makeFakePwaService(),

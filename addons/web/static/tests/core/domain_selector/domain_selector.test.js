@@ -171,6 +171,7 @@ test("building a domain with a datetime", async () => {
     await contains(".o_datetime_input").click();
     await contains(getPickerCell("26", true)).click();
     await press("enter");
+    await animationFrame();
 
     // The input field should display the date and time in the user's timezone
     expect(".o_datetime_input").toHaveValue("03/26/2017 16:42");

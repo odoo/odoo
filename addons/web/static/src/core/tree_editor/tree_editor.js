@@ -6,11 +6,7 @@ import {
     getDefaultValue,
     getValueEditorInfo,
 } from "@web/core/tree_editor/tree_editor_value_editors";
-import {
-    getResModel,
-    useMakeGetConditionDescription,
-    useMakeGetFieldDef,
-} from "@web/core/tree_editor/utils";
+import { getResModel } from "@web/core/tree_editor/utils";
 import { areEquivalentTrees } from "@web/core/tree_editor/virtual_operators";
 import { useService } from "@web/core/utils/hooks";
 import { shallowEqual } from "@web/core/utils/objects";
@@ -47,12 +43,7 @@ export class TreeEditor extends Component {
     setup() {
         this.isTree = isTree;
         this.fieldService = useService("field");
-        this.nameService = useService("name");
-        this.makeGetFieldDef = useMakeGetFieldDef(this.fieldService);
-        this.makeGetConditionDescription = useMakeGetConditionDescription(
-            this.fieldService,
-            this.nameService
-        );
+        this.treeProcessor = useService("tree_processor");
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
     }
@@ -79,16 +70,15 @@ export class TreeEditor extends Component {
     async prepareInfo(props) {
         const [fieldDefs, getFieldDef] = await Promise.all([
             this.fieldService.loadFields(props.resModel),
-            this.makeGetFieldDef(props.resModel, this.tree),
+            this.treeProcessor.makeGetFieldDef(props.resModel, this.tree),
         ]);
         this.getFieldDef = getFieldDef;
         this.defaultCondition = props.getDefaultCondition(fieldDefs);
 
         if (props.readonly) {
-            this.getConditionDescription = await this.makeGetConditionDescription(
+            this.getConditionDescription = await this.treeProcessor.makeGetConditionDescription(
                 props.resModel,
-                this.tree,
-                this.getFieldDef
+                this.tree
             );
         }
     }

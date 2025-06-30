@@ -1,5 +1,5 @@
 import { Expression, isTree } from "./condition_tree";
-import { treeFromDomain } from "./tree_from_domain";
+import { constructTreeFromDomain } from "./construct_tree_from_domain";
 
 function treeContainsExpressions(tree) {
     if (tree.type === "condition") {
@@ -24,7 +24,7 @@ function treeContainsExpressions(tree) {
 export function domainContainsExpressions(domain) {
     let tree;
     try {
-        tree = treeFromDomain(domain);
+        tree = constructTreeFromDomain(domain);
     } catch {
         return null;
     }
