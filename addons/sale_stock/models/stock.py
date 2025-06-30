@@ -64,7 +64,7 @@ class StockMove(models.Model):
                 # No unit price if the product is invoiced on the ordered qty.
                 so_line_vals['price_unit'] = 0
             # New lines should be added at the bottom of the SO (higher sequence number)
-            if not so_line:
+            if not so_line and sale_order.order_line:
                 so_line_vals['sequence'] = max(sale_order.order_line.mapped('sequence')) + len(sale_order_lines_vals) + 1
             sale_order_lines_vals.append(so_line_vals)
 

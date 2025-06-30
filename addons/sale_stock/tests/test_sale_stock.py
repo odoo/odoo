@@ -2133,3 +2133,30 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return_pick = self.env['stock.picking'].browse(res['res_id'])
         return_pick.button_validate()
         self.assertEqual(sale_order.order_line.mapped('sequence'), [42, 43, 44])
+
+    def test_return_product_without_so(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {'product_id': self.product_a.id, 'product_uom_qty': 2, 'sequence': 42}),
+            ],
+        })
+        sale_order.action_confirm()
+        sale_order.action_cancel()
+        sale_order.action_draft()
+        sale_order.order_line.unlink()
+        self.assertFalse(sale_order.order_line)
+
+        picking = sale_order.picking_ids
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=picking.id, active_model='stock.picking'))
+        with return_picking_form.product_return_moves.new() as line:
+            line.product_id = self.new_product
+            line.quantity = 1
+        return_wizard = return_picking_form.save()
+        res = return_wizard.action_create_returns()
+        self.assertEqual(sale_order.order_line.mapped('sequence'), [])
+
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.button_validate()
+        self.assertEqual(sale_order.order_line.mapped('sequence'), [10])
