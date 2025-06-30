@@ -64,10 +64,8 @@ export class ProductWishlist extends Interaction {
         tr.style.display = 'none';
 
         wishlistUtils.removeWishlistProduct(productId);
-        if (!wishlistUtils.getWishlistProductIds().length) {
-            redirect(emptyRedirectUrl);
-        }
         wishlistUtils.updateWishlistNavBar();
+        wishlistUtils.updateWishlistView();
     }
 }
 
