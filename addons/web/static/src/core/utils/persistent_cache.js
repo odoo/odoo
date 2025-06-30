@@ -1,5 +1,6 @@
 import { Deferred } from "@web/core/utils/concurrency";
 import { IndexedDB } from "@web/core/utils/indexed_db";
+import { deepCopy } from "./objects";
 
 const CRYPTO_ALGO = "AES-GCM";
 
@@ -84,10 +85,6 @@ class RamCache {
     }
 }
 
-function compareValues(value1, value2) {
-    return JSON.stringify(value1) === JSON.stringify(value2);
-}
-
 export class PersistentCache {
     constructor(name, version, secret) {
         this.crypto = new Crypto(secret);
@@ -106,8 +103,8 @@ export class PersistentCache {
         const prom = fallback()
             .then((result) => {
                 def.resolve(result);
-                this.ramCache.write(table, key, Promise.resolve(result));
-                if (onUpdate && fromCacheValue && !compareValues(fromCacheValue, result)) {
+                this.ramCache.write(table, key, Promise.resolve(deepCopy(result)));
+                if (onUpdate && fromCacheValue && fromCacheValue !== JSON.stringify(result)) {
                     onUpdate(result);
                 }
                 this.crypto.encrypt(result).then((encryptedResult) => {
@@ -127,7 +124,7 @@ export class PersistentCache {
         if (ramValue) {
             ramValue.then((value) => {
                 def.resolve(value);
-                fromCacheValue = value;
+                fromCacheValue = JSON.stringify(value);
                 fromCache.resolve();
             });
         } else {
@@ -145,7 +142,7 @@ export class PersistentCache {
                     }
                     def.resolve(decrypted);
                     this.ramCache.write(table, key, Promise.resolve(decrypted));
-                    fromCacheValue = decrypted;
+                    fromCacheValue = JSON.stringify(decrypted);
                 }
                 fromCache.resolve();
             });
