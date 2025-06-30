@@ -317,36 +317,7 @@ export class WebsiteBuilderClientAction extends Component {
                 return;
             }
 
-            const { href, target /*, classList*/ } = linkEl;
-            /* TODO ? If to be done, most likely in a plugin
-            if (classList.contains('o_add_language')) {
-                ev.preventDefault();
-                const searchParams = new URLSearchParams(href);
-                this.action.doAction('base.action_view_base_language_install', {
-                    target: 'new',
-                    additionalContext: {
-                        params: {
-                            website_id: this.websiteId,
-                            url_return: searchParams.get("url_return"),
-                        },
-                    },
-                });
-            } else if (classList.contains('js_change_lang') && isEditing) {
-                ev.preventDefault();
-                const lang = linkEl.dataset['url_code'];
-                // The "edit_translations" search param coming from keep_query
-                // is removed, and the hash is added.
-                const destinationUrl = new URL(href, window.location);
-                destinationUrl.searchParams.delete('edit_translations');
-                destinationUrl.hash = this.websiteService.contentWindow.location.hash;
-                this.websiteService.bus.trigger('LEAVE-EDIT-MODE', {
-                    onLeave: () => {
-                        this.websiteService.goToWebsite({ path: destinationUrl.toString(), lang });
-                    },
-                    reloadIframe: false,
-                });
-            } else
-            */
+            const { href, target } = linkEl;
             if (href && target !== "_blank" && !this.state.isEditing) {
                 if (isTopWindowURL(linkEl)) {
                     ev.preventDefault();
