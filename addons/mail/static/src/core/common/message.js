@@ -36,11 +36,11 @@ import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
-import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
+import { session } from "@web/session";
 
 /**
  * @typedef {Object} Props
@@ -132,7 +132,7 @@ export class Message extends Component {
         onMounted(() => {
             if (this.shadowBody.el) {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
-                const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
+                const color = session.color_scheme === "dark" ? "white" : "black";
                 const shadowStyle = document.createElement("style");
                 shadowStyle.textContent = `
                     * {
@@ -149,7 +149,7 @@ export class Message extends Component {
                         background: ${this.constructor.SHADOW_HIGHLIGHT_COLOR} !important;
                     }
                 `;
-                if (cookie.get("color_scheme") === "dark") {
+                if (session.color_scheme === "dark") {
                     this.shadowRoot.appendChild(shadowStyle);
                 }
                 const ellipsisStyle = document.createElement("style");
