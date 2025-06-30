@@ -19,7 +19,7 @@ class SkillsTestUI(HttpCase):
         skill_type.save()
 
         with Form(self.env['hr.skill.type']) as skill_type:
-            skill_type.name = 'Certification'
+            skill_type.name = 'Music Certification'
             skill_type.is_certification = True
             with skill_type.skill_ids.new() as skill:
                 skill.name = 'Piano'
