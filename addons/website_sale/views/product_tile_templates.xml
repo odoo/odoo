@@ -14,17 +14,6 @@
     <t t-set="show_variations" t-value="True if show_variations is None else show_variations"/>
     <t t-set="show_ribbons" t-value="True if show_ribbons is None else show_ribbons"/>
 
-    <!-- URLs -->
-    <t t-if="not product_href">
-        <t
-            t-set="product_path"
-            t-value="'%s/%s/%s' % (shop_path, slug(category), slug(product)) if category else '%s/%s' % (shop_path, slug(product))"
-        />
-        <t
-            t-set="product_href"
-            t-value="product_path + (product_query_string and '?' + product_query_string) + selected_attributes_hash"
-        />
-    </t>
     <!-- Variations/Attributes -->
     <t t-if="show_variations">
         <t
