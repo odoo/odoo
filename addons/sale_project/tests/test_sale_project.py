@@ -1502,3 +1502,23 @@ class TestSaleProject(TestSaleProjectCommon):
             {str(so.project_id.account_id.id): 100},
             "The analytic distribution of `sol_2` should be set to the reference AA of the SO.",
         )
+
+    def test_so_with_project_template(self):
+        """ Test that a SO with a product using a project template creates the project
+            and the task on SO confirmation, and set project's company to the product's template company.
+        """
+        product_with_project_template = self.env['product.product'].create({
+            'name': 'product with template',
+            'list_price': 1,
+            'type': 'service',
+            'service_tracking': 'project_only',
+            'project_template_id': self.project_template.id,
+        })
+        partner = self.env['res.partner'].create({'name': 'Test Partner', 'company_id': self.env.company.id})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [Command.create({'product_id': product_with_project_template.id})],
+        })
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.project_ids[0].company_id, self.project_template.company_id)
+        self.assertEqual(sale_order.project_ids[0].account_id.company_id, partner.company_id)
