@@ -7,7 +7,6 @@ except ImportError:
 
 from odoo import _, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
-
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 
@@ -15,10 +14,30 @@ class PeppolRegistration(models.TransientModel):
     _name = 'peppol.registration'
     _description = "Peppol Registration"
 
-    company_id = fields.Many2one(
+    is_branch_company = fields.Boolean(
+        default=lambda self: bool(self.env.company.parent_id),
+    )
+    active_parent_company = fields.Many2one(
+        comodel_name='res.company',
+        default=lambda self: self.env.company._get_active_peppol_parent_company(),
+    )
+    active_parent_company_name = fields.Char(related='active_parent_company.name')
+    use_parent_connection_selection = fields.Selection(
+        selection=[
+            ('use_parent', "Use active peppol connection from parent company"),
+            ('use_self', "Create different config for this branch"),
+        ],
+        default=lambda self:
+            'use_parent'
+            if ((parent_company := self.env.company._get_active_peppol_parent_company())
+                and parent_company in self.env.user.company_ids)
+            else 'use_self',
+    )
+    use_parent_connection = fields.Boolean(compute='_compute_use_parent_connection')
+    selected_company_id = fields.Many2one(
         comodel_name='res.company',
         required=True,
-        default=lambda self: self.env.company,
+        compute='_compute_selected_company_id',
     )
     edi_mode = fields.Selection(
         string='EDI mode',
@@ -30,19 +49,19 @@ class PeppolRegistration(models.TransientModel):
         string='EDI user',
         compute='_compute_edi_user_id',
     )
-    account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state')
+    account_peppol_proxy_state = fields.Selection(related='selected_company_id.account_peppol_proxy_state')
     peppol_warnings = fields.Json(
         string="Peppol warnings",
         compute="_compute_peppol_warnings",
     )
     contact_email = fields.Char(
-        related='company_id.account_peppol_contact_email',
+        related='selected_company_id.account_peppol_contact_email',
         readonly=False,
         required=True,
     )
-    phone_number = fields.Char(related='company_id.account_peppol_phone_number', readonly=False)
-    peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False, required=True)
-    peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', readonly=False, required=True)
+    phone_number = fields.Char(related='selected_company_id.account_peppol_phone_number', readonly=False)
+    peppol_eas = fields.Selection(related='selected_company_id.peppol_eas', readonly=False, required=True)
+    peppol_endpoint = fields.Char(related='selected_company_id.peppol_endpoint', readonly=False, required=True)
     smp_registration = fields.Boolean(  # you're registering to SMP when you register as a sender+receiver
         string='Register as a receiver',
         compute='_compute_smp_registration_external_provider'
@@ -68,7 +87,7 @@ class PeppolRegistration(models.TransientModel):
                 with contextlib.suppress(phonenumbers.NumberParseException):
                     parsed_phone_number = phonenumbers.parse(
                         wizard.phone_number,
-                        region=wizard.company_id.country_code,
+                        region=wizard.selected_company_id.country_code,
                     )
                     wizard.phone_number = phonenumbers.format_number(
                         parsed_phone_number,
@@ -79,44 +98,74 @@ class PeppolRegistration(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('company_id.account_edi_proxy_client_ids')
+    @api.depends('use_parent_connection_selection')
+    def _compute_use_parent_connection(self):
+        for wizard in self:
+            wizard.use_parent_connection = wizard.use_parent_connection_selection == 'use_parent'
+
+    @api.depends('use_parent_connection', 'active_parent_company')
+    @api.depends_context('company')
+    def _compute_selected_company_id(self):
+        for wizard in self:
+            if wizard.use_parent_connection and wizard.active_parent_company:
+                wizard.selected_company_id = wizard.active_parent_company
+            else:
+                wizard.selected_company_id = self.env.company
+
+    @api.depends('selected_company_id.account_edi_proxy_client_ids')
     def _compute_edi_user_id(self):
         for wizard in self:
-            wizard.edi_user_id = wizard.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')[:1]
+            wizard.edi_user_id = wizard.selected_company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')[:1]
 
-    @api.depends('peppol_eas', 'peppol_endpoint', 'smp_registration', 'peppol_external_provider')
+    @api.depends('selected_company_id', 'peppol_eas', 'peppol_endpoint', 'smp_registration', 'peppol_external_provider', 'use_parent_connection')
     def _compute_peppol_warnings(self):
         for wizard in self:
             peppol_warnings = {}
-            if (
-                wizard.peppol_eas
-                and wizard.peppol_endpoint
-                and not wizard.company_id._check_peppol_endpoint_number(warning=True)
-            ):
+            if all((
+                wizard.peppol_eas,
+                wizard.peppol_endpoint,
+                not wizard.selected_company_id._check_peppol_endpoint_number(warning=True),
+            )):
                 peppol_warnings['company_peppol_endpoint_warning'] = {
                     'message': _("The endpoint number might not be correct. "
-                                "Please check if you entered the right identification number."),
+                                 "Please check if you entered the right identification number."),
                 }
-            if not wizard.smp_registration:
+            if all((
+                not wizard.use_parent_connection,
+                wizard.peppol_eas,
+                wizard.peppol_endpoint,
+                not wizard.smp_registration,
+            )):
                 peppol_warnings['company_already_on_smp'] = {
                     'message': _("Your company is already registered on an Access Point (%s) for receiving invoices. "
                                  "We will register you on Odoo as a sender only.", wizard.peppol_external_provider)
                 }
+            if wizard.use_parent_connection:
+                peppol_warnings['use_parent_connection_info'] = {
+                    'level': 'info',
+                    'message': _("This branch company will use the active peppol connection found on %s.",
+                                 wizard.active_parent_company.name),
+                }
+            if wizard._branch_with_same_address():
+                peppol_warnings['branch_same_address'] = {
+                    'message': _("Your Peppol EAS and Endpoint must be different from the address found on %s.",
+                                 wizard.active_parent_company.name),
+                }
             wizard.peppol_warnings = peppol_warnings or False
 
-    @api.depends('company_id', 'edi_user_id', 'peppol_eas')
+    @api.depends('selected_company_id', 'edi_user_id', 'peppol_eas')
     def _compute_edi_mode(self):
         for wizard in self:
-            wizard.edi_mode = wizard.company_id._get_peppol_edi_mode(temporary_eas=wizard.peppol_eas)
+            wizard.edi_mode = wizard.selected_company_id._get_peppol_edi_mode(temporary_eas=wizard.peppol_eas)
 
-    @api.depends('peppol_eas', 'peppol_endpoint')
+    @api.depends('selected_company_id', 'peppol_eas', 'peppol_endpoint')
     def _compute_smp_registration_external_provider(self):
         for wizard in self:
             is_company_on_peppol = True
             external_provider = None
             if wizard.peppol_eas and wizard.peppol_endpoint:
                 edi_identification = f'{wizard.peppol_eas}:{wizard.peppol_endpoint}'
-                peppol_info = wizard.company_id._get_company_info_on_peppol(edi_identification)
+                peppol_info = wizard.selected_company_id._get_company_info_on_peppol(edi_identification)
                 is_company_on_peppol = peppol_info['is_on_peppol']
                 external_provider = peppol_info['external_provider']
             wizard.smp_registration = not is_company_on_peppol  # Register on smp if not on Peppol
@@ -126,11 +175,24 @@ class PeppolRegistration(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
+    def _branch_with_same_address(self):
+        self.ensure_one()
+        return all((
+            self.is_branch_company,
+            self.active_parent_company,
+            not self.use_parent_connection,
+            f"{self.peppol_eas}:{self.peppol_endpoint}" == f"{self.active_parent_company.peppol_eas}:{self.active_parent_company.peppol_endpoint}",
+        ))
+
     def _ensure_mandatory_fields(self):
+        if self.use_parent_connection:
+            return
         if not self.contact_email or not self.phone_number:
             raise ValidationError(_("Contact email and phone number are required."))
         if not self.peppol_eas or not self.peppol_endpoint:
             raise ValidationError(_("Peppol Address should be provided."))
+        if self._branch_with_same_address():
+            raise ValidationError(_("Peppol ID should be different from main company."))
 
     def _action_open_peppol_form(self, reopen=True):
         action_dict = {
@@ -174,11 +236,18 @@ class PeppolRegistration(models.TransientModel):
         self.ensure_one()
         self._ensure_mandatory_fields()
 
-        if self.account_peppol_proxy_state in ('smp_registration', 'receiver', 'rejected'):
+        if self.use_parent_connection:
+            self.env.company.peppol_parent_company_id = self.selected_company_id
+            return self._action_send_notification(
+                title=None,
+                message=_("You can now send electronic invoices via Peppol on behalf of %s.", self.selected_company_id.name),
+            )
+
+        if not self.is_branch_company and self.account_peppol_proxy_state in ('smp_registration', 'receiver', 'rejected'):
             raise UserError(
                 _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
 
-        edi_user = self.edi_user_id or self.env['account_edi_proxy_client.user']._register_proxy_user(self.company_id, 'peppol', self.edi_mode)
+        edi_user = self.edi_user_id or self.env['account_edi_proxy_client.user']._register_proxy_user(self.selected_company_id, 'peppol', self.edi_mode)
 
         # if there is an error when activating the participant below,
         # the client side is rolled back and the edi user is deleted on the client side
@@ -213,12 +282,12 @@ class PeppolRegistration(models.TransientModel):
                 'message': _('Your registration has been rejected. Please contact the support for further assistance.'),
             },
         }
-        state = self.company_id.account_peppol_proxy_state
+        state = self.selected_company_id.account_peppol_proxy_state
 
         if state == 'sender':
             # if user asked to register as a receiver, state would've been 'smp_registration'
             # so this is the final registration state for sender-only registration
-            self.company_id._account_peppol_send_welcome_email()
+            self.selected_company_id._account_peppol_send_welcome_email()
 
         return self._action_send_notification(
             title=None,

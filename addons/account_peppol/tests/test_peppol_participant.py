@@ -1,12 +1,14 @@
 import json
+from base64 import b64encode
 from contextlib import contextmanager
 from requests import Session, PreparedRequest, Response
 from psycopg2 import IntegrityError
 from unittest.mock import patch
 
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.tests.common import tagged, TransactionCase, freeze_time
 from odoo.tools import mute_logger
+from odoo.tools.misc import file_open
 
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 FAKE_UUID = 'yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'
@@ -20,6 +22,10 @@ class TestPeppolParticipant(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
+        cls.private_key = cls.env['certificate.key'].create([{
+            'name': 'Test key PEPPOL',
+            'content': b64encode(file_open('account_peppol/tests/assets/private_key.pem', 'rb').read()),
+        }])
 
     @classmethod
     def _get_mock_responses(cls):
@@ -64,7 +70,7 @@ class TestPeppolParticipant(TransactionCase):
             return response
 
         url = r.path_url
-        body = json.loads(r.body)
+        body = json.loads(r.body) if r.body else None
         responses = cls._get_mock_responses()
         if (
             url == '/api/peppol/2/register_participant'
@@ -204,3 +210,123 @@ class TestPeppolParticipant(TransactionCase):
             config_wizard.button_sync_form_with_peppol_proxy()
             args = {'endpoint': '/api/peppol/1/update_user', 'params': {'update_data': {'peppol_contact_email': 'another@email.be'}}}
             mocked_patch.assert_called_once_with(**args)
+
+    def test_peppol_branch_company_registration(self):
+        """Branch company behavior when registering & unregistering their peppol connection.
+        """
+        parent_company = self.env.company
+        wizard = self.env['peppol.registration'].create([self._get_participant_vals()])
+        wizard.button_register_peppol_participant()
+
+        branch_spoiled, branch_independent = self.env['res.company'].create([
+            {
+                'name': 'BE Spoiled Kid',
+                'country_id': self.env.ref('base.be').id,
+                'parent_id': parent_company.id,
+            },
+            {
+                'name': 'BE Independent Kid',
+                'country_id': self.env.ref('base.be').id,
+                'parent_id': parent_company.id,
+            },
+        ])
+        wizard_independent_values = {
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477471111',
+            'contact_email': 'branchindependent@odoo.com',
+            'phone_number': '+32123456789',
+        }
+        self.cr.precommit.run()  # load the COA
+
+        # register branch_spoiled to use parent connection
+        wizard_spoiled = self.env['peppol.registration'].with_company(branch_spoiled).create([{}])
+        self.assertRecordValues(wizard_spoiled, [{
+            'active_parent_company': parent_company.id,
+            'active_parent_company_name': parent_company.name,
+            'is_branch_company': True,
+            'selected_company_id': parent_company.id,
+            'peppol_eas': parent_company.peppol_eas,
+            'peppol_endpoint': parent_company.peppol_endpoint,
+            'contact_email': parent_company.account_peppol_contact_email,
+            'phone_number': parent_company.account_peppol_phone_number,
+        }])
+        wizard_spoiled.button_register_peppol_participant()
+        self.assertRecordValues(branch_spoiled, [{
+            'peppol_parent_company_id': parent_company.id,
+            'peppol_eas': '0208',
+            'peppol_endpoint': False,
+            'account_peppol_contact_email': False,
+            'account_peppol_phone_number': False,
+        }])
+
+        # register branch_independent to use their own new connection
+        wizard_independent = self.env['peppol.registration'].with_company(branch_independent).create([{
+            'use_parent_connection_selection': 'use_self',
+        }])
+        self.assertRecordValues(wizard_independent, [{
+            'active_parent_company': parent_company.id,
+            'active_parent_company_name': parent_company.name,
+            'is_branch_company': True,
+            'selected_company_id': branch_independent.id,
+            'peppol_eas': '0208',  # default peppol_eas for belgian company
+            'peppol_endpoint': False,
+            'contact_email': False,
+            'phone_number': False,
+        }])
+        with patch('odoo.addons.account_peppol.models.res_company.ResCompany._sanitize_peppol_phone_number'):
+            # prevent raising from setting bad/fake phone numbers; just for testing
+            wizard_independent.write(wizard_independent_values)
+
+        with patch(
+            # use different ID client to avoid unique error when creating the new EDI user
+            'odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user.Account_Edi_Proxy_ClientUser._register_proxy_user',
+            lambda edi_user, company, proxy_type, edi_mode: edi_user.create([{
+                'id_client': ID_CLIENT.replace('x', 'a'),
+                'company_id': company.id,
+                'proxy_type': proxy_type,
+                'edi_mode': edi_mode,
+                'edi_identification': '0208:0477471111',
+                'private_key_id': self.private_key.id,
+                'refresh_token': FAKE_UUID,
+            }])
+        ):
+            wizard_independent.button_register_peppol_participant()
+
+        self.assertRecordValues(branch_independent, [{
+            'peppol_parent_company_id': False,
+            'peppol_eas': wizard_independent['peppol_eas'],
+            'peppol_endpoint': wizard_independent['peppol_endpoint'],
+            'account_peppol_contact_email': wizard_independent['contact_email'],
+            'account_peppol_phone_number': wizard_independent['phone_number'],
+        }])
+
+        # branch_spoiled should be able to disconnect/reconnect freely
+        settings_spoiled = self.env['res.config.settings'].with_company(branch_spoiled).create([{}])
+        settings_spoiled.button_peppol_disconnect_branch_from_parent()
+        self.assertFalse(branch_spoiled.peppol_parent_company_id)
+        wizard_spoiled = self.env['peppol.registration'].with_company(branch_spoiled).create([{}])
+        wizard_spoiled.button_register_peppol_participant()
+        self.assertTrue(branch_spoiled.peppol_parent_company_id)
+
+        # user with access to the branch but not the parent should not be able to use the parent peppol connection
+        poor_user = self.env['res.users'].create([{
+            'name': "Poor User",
+            'login': 'poor_user',
+            'company_id': branch_spoiled.id,
+            'company_ids': [(6, 0, [branch_spoiled.id])],
+        }])
+        wizard_spoiled = self.env['peppol.registration'].with_company(branch_spoiled).with_user(poor_user).sudo().create([{}])
+        self.assertEqual(wizard_spoiled.use_parent_connection_selection, 'use_self')
+        with self.assertRaises(AccessError):
+            # Should never happen as the `use_parent_connection` field will be readonly, but in case it happen, it should raise an AccessError
+            wizard_spoiled.use_parent_connection_selection = 'use_parent'
+            wizard_spoiled.with_user(poor_user).button_register_peppol_participant()
+
+        # when unregistering the parent company, the child that uses the parent's connection should also disconnect automatically
+        config_wizard_parent = self.env['peppol.config.wizard'].new({})
+        with (
+            patch('odoo.addons.account_peppol.models.account_edi_proxy_user.Account_Edi_Proxy_ClientUser._cron_peppol_get_message_status'),
+            patch('odoo.addons.account_peppol.models.account_edi_proxy_user.Account_Edi_Proxy_ClientUser._cron_peppol_get_new_documents'),
+        ):  # prevent external request from the CRONs
+            config_wizard_parent.button_peppol_unregister()
+        self.assertFalse(branch_spoiled.peppol_parent_company_id)

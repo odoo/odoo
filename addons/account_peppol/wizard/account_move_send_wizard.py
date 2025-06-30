@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
+
 
 class AccountMoveSendWizard(models.TransientModel):
     _inherit = 'account.move.send.wizard'
@@ -51,6 +52,8 @@ class AccountMoveSendWizard(models.TransientModel):
         if self.sending_methods and 'peppol' in self.sending_methods:
             if self.move_id.partner_id.commercial_partner_id.peppol_verification_state != 'valid':
                 raise UserError(_("Partner doesn't have a valid Peppol configuration."))
+            if (parent_company := self.move_id.company_id.peppol_parent_company_id) and parent_company not in self.env.user.company_ids:
+                raise AccessError(_("You are not allowed to send invoice on behalf of %s.", parent_company.sudo().name))
             if registration_action := self._do_peppol_pre_send(self.move_id):
                 return registration_action
         return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)

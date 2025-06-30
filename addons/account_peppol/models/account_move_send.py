@@ -63,7 +63,7 @@ class AccountMoveSend(models.AbstractModel):
         info_always_on_countries = {'BE', 'FI', 'LU', 'LV', 'NL', 'NO', 'SE'}
         any_moves_not_sent_peppol = any(move.peppol_move_state not in ('processing', 'done') for move in moves)
         always_on_companies = moves.company_id.filtered(
-            lambda c: c.country_code in info_always_on_countries and not c.peppol_can_send
+            lambda c: c.country_code in info_always_on_countries and not c.sudo().peppol_can_send  # sudo in case the user does not have access to the company
         )
         if always_on_companies and any_moves_not_sent_peppol and not filter_peppol_state(moves, ['not_valid', 'not_verified']):
             alerts.pop('account_edi_ubl_cii_configure_company', False)
@@ -190,8 +190,7 @@ class AccountMoveSend(models.AbstractModel):
         if not params['documents']:
             return
 
-        edi_user = next(iter(invoices_data)).company_id.account_edi_proxy_client_ids.filtered(
-            lambda u: u.proxy_type == 'peppol')
+        edi_user = next(iter(invoices_data)).company_id.account_peppol_edi_user
 
         try:
             response = edi_user._call_peppol_proxy(
@@ -225,7 +224,7 @@ class AccountMoveSend(models.AbstractModel):
 
     def action_what_is_peppol_activate(self, moves):
         companies = moves.company_id
-        if len(companies) == 1 and not companies.peppol_can_send:
+        if len(companies) == 1 and not companies.sudo().peppol_can_send:  # sudo in case the user does not have access to the company
             action = self.env['peppol.registration']._action_open_peppol_form()
             action['context'] = {
                 'active_model': "account.move",
