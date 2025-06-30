@@ -92,11 +92,9 @@ registry.category('web_tour.tours').add('donation_snippet_use', {
             expectUnloadPage: true,
         },
         {
-            trigger: "body:contains(Your payment has been successfully processed.)",
-        },
-        {
             content: "Verify that the amount displayed is 67",
-            trigger: 'span.oe_currency_value:contains("67.00")',
+            trigger:
+                'body:contains(Your payment has been successfully processed.) span.oe_currency_value:contains("67.00")',
             expectUnloadPage: true,
         },
         {
