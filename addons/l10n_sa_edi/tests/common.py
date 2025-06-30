@@ -196,6 +196,12 @@ class TestSaEdiCommon(AccountEdiTestCommon):
                 </xpath>
                 '''
 
+        cls.branch = cls.env['res.company'].create({
+            'name': 'SA Branch',
+            'parent_id': cls.company.id,
+            'country_id': cls.company.country_id.id,
+        })
+
     def _create_invoice(self, **kwargs):
         vals = {
             'name': kwargs['name'],
@@ -214,7 +220,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             ],
         }
         move = self.env['account.move'].create(vals)
-        move.state = 'posted'
+        move.state = kwargs.get('state') or 'posted'
         move.l10n_sa_confirmation_datetime = datetime.now()
         # move.payment_reference = move.name
         return move
