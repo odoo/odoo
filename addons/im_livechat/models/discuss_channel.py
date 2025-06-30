@@ -223,6 +223,16 @@ class DiscussChannel(models.Model):
     def _search_livechat_agent_history_ids(self, operator, value):
         if operator not in ("any", "in"):
             return NotImplemented
+        if operator == "in" and len(value) == 1 and not next(iter(value)):
+            return [
+                (
+                    "id",
+                    "not in",
+                    self.env["im_livechat.channel.member.history"]
+                    ._search([("livechat_member_type", "=", "agent")])
+                    .subselect("channel_id"),
+                ),
+            ]
         query = (
             self.env["im_livechat.channel.member.history"]._search(value)
             if isinstance(value, fields.Domain)
