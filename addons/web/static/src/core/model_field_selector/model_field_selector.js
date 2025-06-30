@@ -1,8 +1,8 @@
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
-import { KeepLast } from "@web/core/utils/concurrency";
-import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
-import { useLoadFieldInfo, useLoadPathDescription } from "./utils";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { useService } from "@web/core/utils/hooks";
+import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
 
 export class ModelFieldSelector extends Component {
     static template = "web._ModelFieldSelector";
@@ -33,13 +33,15 @@ export class ModelFieldSelector extends Component {
     };
 
     setup() {
-        this.loadPathDescription = useLoadPathDescription();
-        const loadFieldInfo = useLoadFieldInfo();
+        this.fieldService = useService("field");
         this.popover = usePopover(this.constructor.components.Popover, {
             popoverClass: "o_popover_field_selector",
             onClose: async () => {
                 if (this.newPath !== null) {
-                    const fieldInfo = await loadFieldInfo(this.props.resModel, this.newPath);
+                    const fieldInfo = await this.fieldService.loadFieldInfo(
+                        this.props.resModel,
+                        this.newPath
+                    );
                     this.props.update(this.newPath, fieldInfo);
                 }
             },
@@ -76,7 +78,7 @@ export class ModelFieldSelector extends Component {
 
     async updateState(params, isConcurrent) {
         const { resModel, path, allowEmpty } = params;
-        let prom = this.loadPathDescription(resModel, path, allowEmpty);
+        let prom = this.fieldService.loadPathDescription(resModel, path, allowEmpty);
         if (isConcurrent) {
             prom = this.keepLast.add(prom);
         }
