@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, email_split, html2plaintext, plaintext2html
 
@@ -743,3 +743,10 @@ class DiscussChannel(models.Model):
                     },
                 )
             )
+
+    def _create_or_update_discuss_channel(self, channel_info, channel_vals):
+        channel = self.env['discuss.channel'].with_context(
+            mail_create_nosubscribe=False,
+            lang=self.env['chatbot.script']._get_chatbot_language()
+        ).sudo().create(channel_vals)
+        return channel

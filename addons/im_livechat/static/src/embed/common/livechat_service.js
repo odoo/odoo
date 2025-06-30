@@ -52,8 +52,8 @@ export class LivechatService {
      *
      * @returns {Promise<import("models").Thread|undefined>}
      */
-    async open(persist=false) {
-        const thread = await this._createThread({ persist: persist });
+    async open(livechatThreadOptions={}) {
+        const thread = await this._createThread(livechatThreadOptions);
         await thread?.openChatWindow({ focus: true });
         return thread;
     }
@@ -109,17 +109,17 @@ export class LivechatService {
      * @param {import("models").Thread} [param0.originThread]
      * @returns {Promise<import("models").Thread>}
      */
-    async _createThread({ originThread, persist = false, close_old_livechat_thread: closeOldLivechatThread = true }) {
-        const operator_params = this.getOperatorParams(originThread)
-        const channelInfo = this.getChannelInfo();
-        channelInfo['close_old_livechat_thread'] = closeOldLivechatThread
+    async _createThread(livechatThreadOptions = { persist: false }) {
+        // this.setLivechatThreadDefaultOptions(livechatThreadOptions)
+        const operator_params = this.getOperatorParams(livechatThreadOptions)
+        const channelInfo = this.getChannelInfo(livechatThreadOptions);
         const { store_data, channel_id } = await rpc(
             "/im_livechat/get_session",
             {
                 channel_info: channelInfo,
                 anonymous_name: this.options.default_username ?? _t("Visitor"),
                 operator_params: operator_params,
-                persisted: persist,
+                persisted: this.isPersisted(livechatThreadOptions),
             },
             { shadow: true }
         );
@@ -128,6 +128,7 @@ export class LivechatService {
             return;
         }
         this.store.insert(store_data);
+        debugger;
         const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
         const ONE_DAY_TTL = 60 * 60 * 24;
         expirableStorage.setItem(
@@ -137,15 +138,26 @@ export class LivechatService {
         );
         return thread;
     }
+    
+    // setLivechatThreadDefaultOptions(livechatThreadOptions){
+    //     const defaultOptions = {
+    //         persist:false,
+    //     }
+    //     livechatThreadOptions = {...defaultValues, livechatThreadOptions} 
+    // }
 
-    getOperatorParams(originThread){
-        const chatbot_script_id = originThread?.chatbot?.script.id ?? this.store.livechat_rule?.chatbot_script_id?.id // ?? this.store.test_chatbot_script_id;
+    getOperatorParams(livechatThreadOptions){
+        const chatbot_script_id = livechatThreadOptions.originThread?.chatbot?.script.id ?? this.store.livechat_rule?.chatbot_script_id?.id // ?? this.store.test_chatbot_script_id;
         const previous_operator_id = expirableStorage.getItem(OPERATOR_STORAGE_KEY)
         return { chatbot_script_id, previous_operator_id }
     }
 
-    getChannelInfo() {
+    getChannelInfo(livechatThreadOptions) {
         return { channel_id: this.options.channel_id }
+    }
+
+    isPersisted(livechatThreadOptions){
+        return Boolean(livechatThreadOptions.persist);
     }
 
     get options() {

@@ -85,7 +85,6 @@ class LivechatController(http.Controller):
         channel = request.env["discuss.channel"]
         guest = request.env["mail.guest"]
         channel_id = channel_info.get("channel_id")
-        discuss_channel_id = channel_info.get("discuss_channel_id")
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
             user_id = request.env.user.id
@@ -123,8 +122,8 @@ class LivechatController(http.Controller):
         if not channel_vals:
             return False
 
-        channel_id = -1  # only one temporary thread at a time, id does not matter.
-        if not persisted and not discuss_channel_id:
+        channel_id = -1  # only one temporary thread at a time, id does not matter
+        if not persisted:
             chatbot_data = None
             if chatbot_script:
                 welcome_steps = chatbot_script._get_welcome_steps()
@@ -149,18 +148,7 @@ class LivechatController(http.Controller):
             }
             store.add_model_values("discuss.channel", channel_info)
         else:
-            if discuss_channel_id:
-                channel = request.env['discuss.channel'].browse(discuss_channel_id)
-                channel_vals['channel_member_ids'].insert(0, Command.clear())
-                channel.with_context(
-                    mail_create_nosubscribe=False,
-                    lang=request.env['chatbot.script']._get_chatbot_language()
-                ).sudo().write(channel_vals)
-            else:
-                channel = request.env['discuss.channel'].with_context(
-                    mail_create_nosubscribe=False,
-                    lang=request.env['chatbot.script']._get_chatbot_language()
-                ).sudo().create(channel_vals)
+            channel = request.env['discuss.channel']._create_or_update_discuss_channel(channel_info, channel_vals)
             channel_id = channel.id
             if chatbot_script:
                 chatbot_script._post_welcome_steps(channel.sudo())
