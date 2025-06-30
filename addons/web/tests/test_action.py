@@ -14,7 +14,7 @@ class TestLoadBreadcrumbs(HttpCase):
         # Create a user in order to have a fixed name in local and on the runbot
         cls.env = cls.env(user=cls.env.ref('base.user_admin'))
         cls.partner = cls.env['res.partner'].create({
-            'name': 'Test Partner'
+            'name': 'Test Partner',
         })
 
         cls.window_action = cls.env['ir.actions.act_window'].create({
@@ -186,13 +186,13 @@ class TestLoadBreadcrumbs(HttpCase):
                     'actions': [
                         {
                             'action': self.client_action.id,
-                            'resId': 1,
+                            'resId': self.partner.id,
                         },
                     ],
                 },
             }),
         )
-        self.assertEqual(resp.json()['result'][0]['display_name'], 'My Company')
+        self.assertEqual(resp.json()['result'][0]['display_name'], 'Test Partner')
 
     def test_breadcrumbs_server_action_without_res_model(self):
         self.authenticate("admin", "admin")
