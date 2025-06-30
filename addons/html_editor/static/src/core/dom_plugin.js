@@ -26,6 +26,7 @@ import {
     isTangible,
     isUnprotecting,
     listElementSelector,
+    isEditorTab,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -76,6 +77,7 @@ export class DomPlugin extends Plugin {
             this.removeEmptyClassAndStyleAttributes(root);
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
+        functional_empty_node_predicates: [isSelfClosingElement, isEditorTab],
     };
     contentEditableToRemove = new Set();
 
