@@ -47,7 +47,7 @@ export class EmbeddedComponentInteraction extends Interaction {
                     for (const node of [...host.childNodes]) {
                         // Ensure that only OWL renderings are kept inside
                         // the host when the component is alive.
-                        if (node.nodeName !== "OWL-COMPONENT") {
+                        if (node.nodeName !== "OWL-ROOT") {
                             if (node.nodeType === Node.ELEMENT_NODE) {
                                 interactionsService.stopInteractions(node);
                             }

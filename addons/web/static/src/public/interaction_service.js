@@ -74,8 +74,8 @@ class InteractionService {
         const root = this.owlApp.createRoot(C, { props, env: this.env });
         const rootEl = document.createElement("owl-root");
         rootEl.setAttribute("contenteditable", "false");
-        rootEl.style.display = "contents";
         rootEl.dataset.oeProtected = "true";
+        rootEl.style.display = "contents";
         el.appendChild(rootEl);
         return {
             C,
