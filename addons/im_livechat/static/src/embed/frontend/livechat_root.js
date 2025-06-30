@@ -19,7 +19,5 @@ export class LivechatRoot extends Component {
     setup() {
         useSubEnv({ embedLivechat: true });
         this.overlayService = useService("overlay");
-        this.store = useService("mail.store");
-        this.store.embedLivechat = true;
     }
 }

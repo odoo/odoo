@@ -146,10 +146,6 @@ export class ChatHub extends Record {
         );
     }
 
-    get show() {
-        return true;
-    }
-
     showConversations = fields.Attr(false, {
         compute() {
             return this.canShowOpened.length + this.canShowFolded.length > 0;
