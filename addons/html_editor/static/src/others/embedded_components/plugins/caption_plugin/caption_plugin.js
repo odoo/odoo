@@ -49,6 +49,7 @@ export class CaptionPlugin extends Plugin {
         ],
         image_name_predicates: [this.getImageName.bind(this)],
         link_compatible_selection_predicates: [this.isLinkAllowedOnSelection.bind(this)],
+        move_node_whitelist_selectors: "figure",
     };
 
     setup() {
