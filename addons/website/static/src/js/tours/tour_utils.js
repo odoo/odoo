@@ -246,7 +246,7 @@ export function clickOnEditAndWaitEditMode(position = "bottom") {
         run: "click",
     }, {
         content: "Check that we are in edit mode",
-        trigger: ".o_builder_sidebar_open",
+        trigger: ":iframe .editor_enable",
     }];
 }
 
@@ -654,6 +654,7 @@ export function openLinkPopup(
                 const sel = el.ownerDocument.getSelection();
                 sel.collapse(el.childNodes[focusNodeIndex], 1);
                 el.focus();
+                console.log("tried opening linkpopup");
             },
         },
         {
