@@ -10,7 +10,7 @@ class EventMailRegistration(models.Model):
 
     event_slot_id = fields.Many2one('event.slot', 'Slot', ondelete='cascade', required=True)
     scheduled_date = fields.Datetime('Schedule Date', compute='_compute_scheduled_date', store=True)
-    scheduler_id = fields.Many2one('event.mail', 'Mail Scheduler', ondelete='cascade', required=True)
+    scheduler_id = fields.Many2one('event.mail', 'Mail Scheduler', ondelete='cascade', required=True, index=True)
     # contact and status
     last_registration_id = fields.Many2one('event.registration', 'Last Attendee')
     mail_count_done = fields.Integer('# Sent', copy=False, readonly=True)

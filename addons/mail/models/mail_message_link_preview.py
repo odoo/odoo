@@ -10,7 +10,7 @@ class MessageMailLinkPreview(models.Model):
     _description = "Link between link previews and messages"
     _order = "sequence, id"
 
-    message_id = fields.Many2one("mail.message", required=True, ondelete="cascade")
+    message_id = fields.Many2one("mail.message", required=True, index=True, ondelete="cascade")
     link_preview_id = fields.Many2one(
         "mail.link.preview", index=True, required=True, ondelete="cascade"
     )

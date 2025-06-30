@@ -12,7 +12,7 @@ class DiscussCallHistory(models.Model):
     duration_hour = fields.Float(compute="_compute_duration_hour")
     start_dt = fields.Datetime(index=True, required=True)
     end_dt = fields.Datetime()
-    start_call_message_id = fields.Many2one("mail.message")
+    start_call_message_id = fields.Many2one("mail.message", index=True)
 
     _channel_id_not_null_constraint = models.Constraint(
         "CHECK (channel_id IS NOT NULL)", "Call history must have a channel"

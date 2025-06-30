@@ -17,7 +17,7 @@ class EventSlot(models.Model):
     _description = "Event Slot"
     _order = "event_id, date, start_hour, end_hour, id"
 
-    event_id = fields.Many2one("event.event", "Event", required=True, ondelete="cascade")
+    event_id = fields.Many2one("event.event", "Event", required=True, ondelete="cascade", index=True)
     color = fields.Integer("Color", default=0)
     date = fields.Date("Date", required=True)
     date_tz = fields.Selection(related="event_id.date_tz")
