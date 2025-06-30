@@ -58,6 +58,7 @@ export class WithSearch extends Component {
                 field: useService("field"),
                 name: useService("name"),
                 dialog: useService("dialog"),
+                treeProcessor: useService("tree_processor"),
             },
             this.props.searchModelArgs
         );
@@ -69,11 +70,9 @@ export class WithSearch extends Component {
 
         useBus(this.searchModel, "update", this.render);
         useSetupAction({
-            getGlobalState: () => {
-                return {
-                    searchModel: JSON.stringify(this.searchModel.exportState()),
-                };
-            },
+            getGlobalState: () => ({
+                searchModel: JSON.stringify(this.searchModel.exportState()),
+            }),
         });
 
         onWillStart(async () => {
