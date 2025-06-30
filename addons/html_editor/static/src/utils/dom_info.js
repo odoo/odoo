@@ -329,6 +329,10 @@ export function isMediaElement(node) {
     );
 }
 
+export function isFilebox(node) {
+    return node && node.nodeName === "SPAN" && node.classList.contains("o_file_box");
+}
+
 // See https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
 const phrasingTagNames = new Set([
     "ABBR",

@@ -3,6 +3,7 @@ import {
     renderStaticFileBox,
 } from "@html_editor/main/media/media_dialog/document_selector";
 import { Plugin } from "@html_editor/plugin";
+import { isFilebox } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
@@ -34,6 +35,7 @@ export class FilePlugin extends Plugin {
             },
         }),
         selectors_for_feff_providers: () => ".o_file_box",
+        functional_empty_node_predicates: isFilebox,
     };
 
     get recordInfo() {
