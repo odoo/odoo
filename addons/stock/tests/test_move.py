@@ -3057,7 +3057,10 @@ class StockMove(TransactionCase):
         self.assertEqual(backordered_move.quantity, 0)
 
         # force the serial number and validate
-        lot3 = self.env['stock.lot'].search([('name', '=', "lot3")])
+        lot3 = self.env['stock.lot'].search([
+            ('name', '=', "lot3"),
+            ('product_id', '=', self.product_serial.id),
+        ])
         backorder.write({'move_line_ids': [(0, 0, {
             'product_id': self.product_serial.id,
             'product_uom_id': self.uom_unit.id,
@@ -5629,6 +5632,39 @@ class StockMove(TransactionCase):
         move2._action_cancel()
         with self.assertRaises(UserError):
             self.product.detailed_type = 'consu'
+
+    def test_update_done_quantity_1(self):
+        lot1, lot2 = self.env['stock.lot'].create([{
+            'name': name,
+            'product_id': self.product_lot.id,
+            'company_id': self.env.company.id,
+        } for name in ['lot1', 'lot2']])
+        self.env['stock.quant']._update_available_quantity(self.product_lot, self.stock_location, 10, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(self.product_lot, self.stock_location, 10, lot_id=lot2)
+
+        move1 = self.env['stock.move'].create({
+            'name': 'test_out_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product_lot.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 15.0,
+        })
+        move1._action_confirm()
+        move1._do_unreserve()
+        move1.quantity = 10
+        self.assertEqual(len(move1.move_line_ids), 1)
+        self.assertEqual(move1.move_line_ids.quantity, 10)
+        self.assertEqual(move1.move_line_ids.lot_id, lot1)
+        move1.quantity = 15
+        self.assertEqual(len(move1.move_line_ids), 2)
+        self.assertEqual(move1.move_line_ids.mapped('quantity'), [10, 5])
+        # The 5 extra quantity should be set without any lot
+        move1.quantity = 25
+        self.assertEqual(len(move1.move_line_ids), 3)
+        self.assertEqual(move1.move_line_ids.mapped('quantity'), [10, 10, 5])
+        self.assertEqual(move1.move_line_ids.lot_id, lot1 | lot2)
+        self.assertFalse(move1.move_line_ids[2].lot_id)
 
     def test_edit_done_picking_1(self):
         """ Add a new move line in a done picking should generate an
