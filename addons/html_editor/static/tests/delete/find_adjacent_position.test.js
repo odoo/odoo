@@ -2,6 +2,8 @@ import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
 import { unformat } from "../_helpers/format";
+import { FilePlugin } from "@html_editor/main/media/file_plugin";
+import { CORE_PLUGINS } from "@html_editor/plugin_sets";
 
 function findAdjacentPosition(editor, direction) {
     const deletePlugin = editor.plugins.find((p) => p.constructor.id === "delete");
@@ -91,6 +93,17 @@ describe("findAdjacentPosition method", () => {
                 const next = '<div><p>a</p>[]<span contenteditable="false">b</span></div>';
                 const { editor } = await setupEditor(previous);
                 assertAdjacentPositions(editor, previous, next);
+            });
+            test("Should find position before filebox", async () => {
+                const content = `<div>\ufeff<span contenteditable="false" class="o_file_box"></span>\ufeff[]</div>`;
+                const { editor, el } = await setupEditor(content, {
+                    config: { Plugins: [...CORE_PLUGINS, FilePlugin] },
+                });
+                const [node, offset] = findAdjacentPosition(editor, "backward");
+                setSelection({ anchorNode: node, anchorOffset: offset });
+                expect(getContent(el)).toBe(
+                    `<div class="o-paragraph">\ufeff[]<span contenteditable="false" class="o_file_box"></span>\ufeff<br></div>`
+                );
             });
         });
         describe("Blocks", () => {
