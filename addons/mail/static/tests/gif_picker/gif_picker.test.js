@@ -312,3 +312,17 @@ test("Show help when no favorite GIF", async () => {
     await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
     await contains("span", { text: "So uhh... maybe go favorite some GIFs?" });
 });
+
+test("Clicking GIF preview does not raise an error", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    onRpc("/discuss/gif/categories", () => rpc.categories);
+    onRpc("/discuss/gif/search", () => rpc.search);
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add GIFs']");
+    await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
+    await click("img[data-src='https://media.tenor.com/np49Y1vrJO8AAAAM/crying-cry.gif']:eq(0)");
+    await click(".o-mail-LinkPreviewImage img");
+    await contains(".o-mail-Message");
+});
