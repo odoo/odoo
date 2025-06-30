@@ -623,7 +623,8 @@ class AccountEdiFormat(models.Model):
     def _has_oss_taxes(self, invoice):
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
         lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note'))
-        return bool(oss_tag and oss_tag in lines.tax_ids.invoice_repartition_line_ids.tag_ids)
+        tags = (lines.tax_ids.invoice_repartition_line_ids | lines.tax_ids.refund_repartition_line_ids).tag_ids
+        return bool(oss_tag and oss_tag in tags)
 
     # -------------------------------------------------------------------------
     # EDI OVERRIDDEN METHODS
