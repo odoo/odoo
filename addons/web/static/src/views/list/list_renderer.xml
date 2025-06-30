@@ -117,7 +117,10 @@
                             </div>
                         </td>
                         <td t-foreach="getAggregateColumns()" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
-                            <span t-if="column.type === 'field' and aggregates[column.name]" t-esc="aggregates[column.name].value" t-att-data-tooltip="aggregates[column.name].help"/>
+                            <span t-if="column.type === 'field' and aggregates[column.name]" t-att-data-tooltip="aggregates[column.name].help">
+                                <t t-esc="aggregates[column.name].value"/>
+                                <sup t-if="aggregates[column.name].warning" class="ms-1 fw-bolder text-info">?</sup>
+                            </span>
                         </td>
                         <td t-if="hasOpenFormViewColumn" class="w-print-0 p-print-0"/>
                         <td t-if="displayOptionalFields or activeActions.onDelete" class="w-print-0 p-print-0" />
@@ -240,7 +243,10 @@
             <td t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
                 <t t-if="column.type === 'field'">
                     <t t-set="groupAggregate" t-value="formatGroupAggregate(group, column)"/>
-                    <span t-esc="groupAggregate.value" t-att-data-tooltip="groupAggregate.help || ''"/>
+                    <span t-att-data-tooltip="groupAggregate.help || ''">
+                        <t t-esc="groupAggregate.value"/>
+                        <sup t-if="groupAggregate.warning" class="ms-1 fw-bolder text-info">?</sup>
+                    </span>
                 </t>
             </td>
             <t t-set="groupPagerColspan" t-value="getGroupPagerCellColspan(group)"/>

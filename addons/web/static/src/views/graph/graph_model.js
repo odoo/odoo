@@ -206,14 +206,14 @@ export class GraphModel extends Model {
                     trueLabels: labels.slice(0, dataLength),
                     domains: new Array(dataLength).fill([]),
                     identifiers: new Set(),
-                    currencyIds: new Array(dataLength).fill(false),
+                    currencyIds: new Array(dataLength).fill(),
                 });
             }
             dataset.data[labelIndex] = value;
             dataset.domains[labelIndex] = domain;
             dataset.trueLabels[labelIndex] = trueLabel;
             dataset.identifiers.add(identifier);
-            dataset.currencyIds[labelIndex] = currencyId || false;
+            dataset.currencyIds[labelIndex] = currencyId;
         }
         // sort by origin
         const datasets = sortBy(Object.values(datasetsTmp), "originIndex");
@@ -474,10 +474,7 @@ export class GraphModel extends Model {
                 if (measures.length > 2) {
                     const currencies = group[measures[1]];
                     currencyState.currencies = unique(currencyState.currencies.concat(currencies));
-                    dataPoint.currencyId = currencies.length === 1 ? currencies[0] : false;
-                    if (currencies.length !== 1) {
-                        dataPoint.value = false;
-                    }
+                    dataPoint.currencyId = currencies.length > 1 ? false : currencies[0];
                 }
                 dataPoints.push(dataPoint);
             }

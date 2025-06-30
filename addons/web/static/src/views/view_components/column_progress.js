@@ -1,6 +1,5 @@
 import { Component } from "@odoo/owl";
 import { AnimatedNumber } from "./animated_number";
-import { _t } from "@web/core/l10n/translation";
 
 export class ColumnProgress extends Component {
     static components = {
@@ -19,9 +18,5 @@ export class ColumnProgress extends Component {
 
     async onBarClick(bar) {
         await this.props.onBarClicked(bar);
-    }
-
-    get invalidAggregateTooltip() {
-        return _t("Different currencies cannot be aggregated");
     }
 }
