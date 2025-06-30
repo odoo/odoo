@@ -136,6 +136,7 @@ export class Builder extends Component {
                 allowTargetBlank: true,
                 dropImageAsAttachment: true,
                 getAnimateTextConfig: () => ({ editor: this.editor, editorBus: this.editorBus }),
+                baseContainers: ["P"],
             },
             this.env.services
         );

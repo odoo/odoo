@@ -18,6 +18,9 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 export class BaseContainerPlugin extends Plugin {
     static id = "baseContainer";
     static shared = ["createBaseContainer", "getDefaultNodeName", "isCandidateForBaseContainer"];
+    static defaultConfig = {
+        baseContainers: ["P", "DIV"],
+    };
     /**
      * Register one of the predicates for `invalid_for_base_container_predicates`
      * as a property for optimization, see variants of `isCandidateForBaseContainer`.
@@ -62,7 +65,7 @@ export class BaseContainerPlugin extends Plugin {
     }
 
     getDefaultNodeName() {
-        return this.config.baseContainer || "P";
+        return this.config.baseContainers[0];
     }
 
     /**

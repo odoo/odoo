@@ -1,5 +1,5 @@
 import { MAIN_PLUGINS } from "./plugin_sets";
-import { createBaseContainer } from "./utils/base_container";
+import { createBaseContainer, SUPPORTED_BASE_CONTAINER_NAMES } from "./utils/base_container";
 import { fillShrunkPhrasingParent, removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
 import { resourceSequenceSymbol, withSequence } from "./utils/resource";
@@ -24,7 +24,7 @@ import { setElementContent } from "@web/core/utils/html";
  * @typedef { Object } EditorConfig
  * @property { string } [content]
  * @property { boolean } [allowInlineAtRoot]
- * @property { string } [baseContainer]
+ * @property { string[] } [baseContainers]
  * @property { PluginConstructor[] } [Plugins]
  * @property { string[] } [classList]
  * @property { Object } [localOverlayContainers]
@@ -99,7 +99,10 @@ export class Editor {
         if (this.config.content) {
             setElementContent(editable, fixInvalidHTML(this.config.content));
             if (isEmpty(editable)) {
-                const baseContainer = createBaseContainer(this.config.baseContainer, this.document);
+                const baseContainer = createBaseContainer(
+                    this.config.baseContainers[0],
+                    this.document
+                );
                 fillShrunkPhrasingParent(baseContainer);
                 editable.replaceChildren(baseContainer);
             }
@@ -113,6 +116,17 @@ export class Editor {
         }
         if (this.config.height) {
             editable.style.height = this.config.height;
+        }
+        if (
+            !this.config.baseContainers.every((name) =>
+                SUPPORTED_BASE_CONTAINER_NAMES.includes(name)
+            )
+        ) {
+            throw new Error(
+                `Invalid baseContainers: ${this.config.baseContainers.join(
+                    ", "
+                )}. Supported: ${SUPPORTED_BASE_CONTAINER_NAMES.join(", ")}`
+            );
         }
         this.startPlugins();
         this.isReady = true;

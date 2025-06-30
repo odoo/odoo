@@ -27,7 +27,10 @@ import {
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
 import { FontSelector } from "./font_selector";
-import { getBaseContainerSelector } from "@html_editor/utils/base_container";
+import {
+    getBaseContainerSelector,
+    SUPPORTED_BASE_CONTAINER_NAMES,
+} from "@html_editor/utils/base_container";
 import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
 import { FontSizeSelector } from "./font_size_selector";
@@ -186,7 +189,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Select font style"),
                 Component: FontSelector,
                 props: {
-                    getItems: () => fontItems,
+                    getItems: () => this.availableFontItems,
                     getDisplay: () => this.font,
                     onSelected: (item) => {
                         this.dependencies.dom.setTag({
@@ -313,6 +316,14 @@ export class FontPlugin extends Plugin {
         }
     }
 
+    get availableFontItems() {
+        return fontItems.filter(
+            ({ tagName }) =>
+                !SUPPORTED_BASE_CONTAINER_NAMES.includes(tagName.toUpperCase()) ||
+                this.config.baseContainers.includes(tagName.toUpperCase())
+        );
+    }
+
     get fontName() {
         const sel = this.dependencies.selection.getSelectionData().deepEditableSelection;
         // if (!sel) {
@@ -322,7 +333,7 @@ export class FontPlugin extends Plugin {
         const block = closestBlock(anchorNode);
         const tagName = block.tagName.toLowerCase();
 
-        const matchingItems = fontItems.filter((item) =>
+        const matchingItems = this.availableFontItems.filter((item) =>
             item.selector ? block.matches(item.selector) : item.tagName === tagName
         );
 
