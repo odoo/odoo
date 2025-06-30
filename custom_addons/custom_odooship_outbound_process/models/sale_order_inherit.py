@@ -25,6 +25,7 @@ class SaleOrder(models.Model):
         ('merge','Merge')
     ], string="Automation/Manual Order", compute="_compute_process_type_selection", store=True)
     slsu = fields.Boolean(string="Manual SLSU", compute="_compute_slsu", store=True)
+    docs = fields.Char(string='Docs URL')
 
     @api.depends('automation_manual_order', 'order_line.product_uom_qty', 'order_line', 'discrete_pick')
     def _compute_slsu(self):
@@ -45,7 +46,6 @@ class SaleOrder(models.Model):
             # If discrete, clear the process type selection
             if order.discrete_pick:
                 order.automation_manual_order = 'merge'
-                print("\n\n\n\ discrete=====", order.discrete_pick, order.automation_manual_order)
                 continue
             # Gather all process types from the order line routes
             process_types = set(order.order_line.mapped('route_id.routes_process_selection_types'))
@@ -53,7 +53,6 @@ class SaleOrder(models.Model):
             if len(process_types) == 1:
                 order.automation_manual_order = process_types.pop()
             else:
-                print("\n\n\n else  confition-=====")
                 order.automation_manual_order = False  # Ambiguous or missing
 
     @api.model

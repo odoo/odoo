@@ -407,9 +407,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         # 1. Search product by barcode or default_code WITH tenant match
         product = self.env['product.product'].search([
             ('tenant_id', '=', tenant),
-            # '|',
+             '|',
             ('barcode', '=', scanned_input),
-            # ('default_code', '=', scanned_input)
+            ('default_code', '=', scanned_input)
         ], limit=1)
 
         # 2. If not found, search in product.barcode.multi
@@ -1083,6 +1083,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         #  Send to OneTraker and print label
         label_url, con_id = self.send_payload_and_print_label(payload, main_picking.name)
 
+        # Print all docs attached to the sale order, if any, after OneTraker success
+        if getattr(sale, "docs", None):
+            self.print_all_docs_from_sale_order(sale)
 
         if (sale.carrier).upper() == "COURIERSPLEASE":
             tracking_url = f'https://www.couriersplease.com.au/tools-track?no={con_id}'
@@ -1383,7 +1386,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if is_production:
             api_url = f"https://shiperoo-wes.prod.automation.shiperoo.com/printers/printUrl/{printer_id}"
         else:
-            api_url = f"https://shiperoo-wes.uat.automation.shiperoo.com/printers/printUrl/{printer_id}"
+            api_url = f"https://shiperoo-wes.prod.automation.shiperoo.com/printers/printUrl/{printer_id}"
         payload = {"url": label_url}
         headers = {"Content-Type": "application/json"}
         try:
@@ -1394,6 +1397,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         except Exception as e:
             _logger.error(f"[PRINT API][FAIL] Could not send label to print API for printer {printer_id}: {str(e)}")
             # raise UserError(_(f"Failed to send label to print API: {str(e)}"))
+
+
 
     def print_label_via_pack_bench(self, label_url):
         self.ensure_one()
@@ -1613,6 +1618,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             else:
                 tracking_url = f'https://auspost.com.au/mypost/track/details/{con_id}'
             picking.write({'current_state': 'pack'})
+            # --- Print all attached docs, if present ---
+            if getattr(sale, "docs", None):
+                self.print_all_docs_from_sale_order(sale)
             sale.write({
                 'carrier': carrier,
                 'pick_status': 'packed',
@@ -1691,6 +1699,53 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.info(f"[ZEBRA][ASYNC] Label sent successfully to printer {printer_ip}")
         except Exception as e:
             _logger.warning(f"[ZEBRA][ASYNC FAIL] Could not send label to {printer_ip}: {str(e)}")
+
+    def print_all_docs_from_sale_order(self, sale_order):
+        """
+        For each doc URL attached to the sale order,
+        send the URL directly to the print API (bench/printer) and do nothing else.
+        """
+        import json
+
+        if not sale_order.docs:
+            _logger.info(f"No docs found for sale order {sale_order.name}")
+            #return
+        try:
+            # Try to load as JSON list or string
+            urls = json.loads(sale_order.docs)
+            if isinstance(urls, str):
+                urls = [urls]
+            elif not isinstance(urls, list):
+                urls = []
+        except Exception:
+            # fallback: treat as single URL string
+            urls = [sale_order.docs]
+
+        printer_id = self.pack_bench_id.printer_name
+        if not printer_id:
+            raise UserError("Pack Bench is missing printer name (printerId). Please configure it.")
+
+        is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
+        api_url = (
+            f"https://shiperoo-wes.prod.automation.shiperoo.com/printers/printUrl/{printer_id}"
+            # if is_production
+            # else f"https://shiperoo-wes.prod.automation.shiperoo.com/printers/printUrl/{printer_id}"
+        )
+        headers = {"Content-Type": "application/json"}
+
+        for url in urls:
+            url = url.strip()
+            if not url:
+                continue
+            try:
+                payload = {"url": url}
+                # Fire-and-forget POST to print API
+                requests.post(api_url, headers=headers, json=payload, timeout=8)
+                _logger.info(f"[PRINT API] Sent doc label URL to {printer_id}: {url}")
+            except Exception as e:
+                _logger.warning(
+                    f"[PRINT API][FAIL] Could not send doc label URL to printer {printer_id}: {url} :: {str(e)}"
+                )
 
 
 class PackDeliveryReceiptWizardLine(models.TransientModel):
