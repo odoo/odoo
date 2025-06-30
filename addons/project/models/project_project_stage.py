@@ -15,8 +15,8 @@ class ProjectProjectStage(models.Model):
     name = fields.Char(required=True, translate=True)
     mail_template_id = fields.Many2one('mail.template', string='Email Template', domain=[('model', '=', 'project.project')],
         help="If set, an email will be automatically sent to the customer when the project reaches this stage.")
-    fold = fields.Boolean('Folded in Kanban',
-        help="If enabled, this stage will be displayed as folded in the Kanban view of your projects. Projects in a folded stage are considered as closed.")
+    fold = fields.Boolean('Folded',
+        help="If enabled, this stage will be displayed as folded in the Kanban and List views of your projects. Projects in a folded stage are considered as closed.")
     company_id = fields.Many2one('res.company', string="Company")
     color = fields.Integer(string='Color', export_string_translation=False)
 
