@@ -18,7 +18,7 @@ from odoo.http import request
 from odoo.modules.module import MANIFEST_NAMES, Manifest
 from odoo.release import major_version
 from odoo.tools import convert_file, exception_to_unicode
-from odoo.tools import file_open, file_open_temporary_directory, ormcache
+from odoo.tools import file_open, file_path, file_open_temporary_directory, ormcache
 from odoo.tools.misc import topological_sort
 
 _logger = logging.getLogger(__name__)
@@ -77,6 +77,12 @@ class IrModuleModule(models.Model):
         if not terp:
             return False
         values = self.get_values_from_terp(terp)
+        try:
+            icon_path = terp.manifest_cached.get('icon') or opj(terp.name, 'static/description/icon.png')
+            file_path(icon_path, env=self.env, check_exists=True)
+            values['icon'] = '/' + icon_path
+        except OSError:
+            pass  # keep the default icon
         values['latest_version'] = terp.version
         if self.env.context.get('data_module'):
             values['module_type'] = 'industries'
