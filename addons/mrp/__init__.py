@@ -9,10 +9,11 @@ from . import controller
 
 def _pre_init_mrp(env):
     """ Allow installing MRP in databases with large stock.move table (>1M records)
-        - Creating the computed+stored field stock_move.unit_factor is terribly
-        slow with the ORM and leads to "Out of Memory" crashes
+        - Creating the computed stored fields `stock_move` `unit_factor` and `manual_consumption`
+        is terribly slow with the ORM and leads to "Out of Memory" crashes.
     """
     env.cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "unit_factor" double precision NOT NULL DEFAULT 1;""")
+    env.cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "manual_consumption" boolean NOT NULL DEFAULT FALSE;""")
 
 def _create_warehouse_data(env):
     """ This hook is used to add a default manufacture_pull_id, manufacture
