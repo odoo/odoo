@@ -38,7 +38,13 @@ export class MailNotification extends models.ServerModel {
         for (const notification of this.browse(ids)) {
             const [data] = this._read_format(
                 notification.id,
-                ["failure_type", "mail_message_id", "notification_status", "notification_type"],
+                [
+                    "mail_email_address",
+                    "failure_type",
+                    "mail_message_id",
+                    "notification_status",
+                    "notification_type",
+                ],
                 false
             );
             data.res_partner_id = mailDataHelpers.Store.one(

@@ -21,6 +21,10 @@ class MailMail(models.Model):
             f'mail/track/{self.id}/{token}/blank.gif'
         )
 
+    def _postprocess_sent_message_filter_notif_mails(self):
+        """Mailing emails will use traces and don't need to be postprocessed."""
+        return self - self.filtered('mailing_id')
+
     @api.model
     def _generate_mail_recipient_token(self, mail_id):
         return tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', mail_id)

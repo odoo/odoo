@@ -235,6 +235,9 @@ class MailMail(models.Model):
 
         return res
 
+    def _postprocess_sent_message_filter_notif_mails(self):
+        return self
+
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
@@ -243,7 +246,7 @@ class MailMail(models.Model):
 
         :return: True
         """
-        notif_mails_ids = [mail.id for mail in self if mail.is_notification]
+        notif_mails_ids = self._postprocess_sent_message_filter_notif_mails().ids
         if notif_mails_ids:
             notifications = self.env['mail.notification'].search([
                 ('notification_type', '=', 'email'),
