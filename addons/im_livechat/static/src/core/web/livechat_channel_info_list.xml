@@ -8,6 +8,7 @@
                     <t t-set="livechatThread" t-value="props.thread"/>
                 </t>
             </div>
+            <t t-name="extra_infos"/>
             <div class="d-flex flex-column bg-inherit gap-1">
                 <h3 class="pt-3">Notes</h3>
                 <textarea class="form-control" rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
