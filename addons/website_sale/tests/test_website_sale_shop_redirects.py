@@ -40,6 +40,16 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
         )
 
         response = self.url_open(
+            f'/shop/product/{slug(test_product)}?category=test&some-key=some-value',
+            allow_redirects=False,
+        )
+        self.assertEqual(response.status_code, 301)
+        self.assertURLEqual(
+            response.headers.get('Location'),
+            f'/shop/{slug(test_product)}?some-key=some-value'
+        )
+
+        response = self.url_open(
             f'/shop/{slug(category_b)}/{slug(test_product)}?some-key=some-value',
             allow_redirects=False,
         )

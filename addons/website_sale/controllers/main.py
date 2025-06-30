@@ -547,6 +547,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Compatibility pre-v14
         # Redirect to the "correct" product URL, which doesn't include `/product`, and where the
         # category has been removed from the query parameters and added to the path.
+        category = int(category) if str(category).isdigit() else False
         category = self._validate_and_get_category(category)
         query = self._get_filtered_query_string(
             request.httprequest.query_string.decode(), keys_to_remove=['category']
