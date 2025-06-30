@@ -123,7 +123,7 @@ registry.category("web_tour.tours").add("hr_skills_tour", {
         },
         {
             content: "Select Certification",
-            trigger: ".o_field_widget[name='skill_type_id'] span:contains('Certification')",
+            trigger: ".o_field_widget[name='skill_type_id'] span:contains('Music Certification')",
             run: "click",
         },
         {
