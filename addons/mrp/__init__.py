@@ -12,9 +12,7 @@ def _pre_init_mrp(env):
         - Creating the computed+stored field stock_move.unit_factor is terribly
         slow with the ORM and leads to "Out of Memory" crashes
     """
-    env.cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "unit_factor" double precision;""")
-    env.cr.execute("""UPDATE stock_move
-                     SET unit_factor=1;""")
+    env.cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "unit_factor" double precision NOT NULL DEFAULT 1;""")
 
 def _create_warehouse_data(env):
     """ This hook is used to add a default manufacture_pull_id, manufacture
