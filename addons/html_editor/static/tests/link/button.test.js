@@ -88,16 +88,6 @@ describe("Custom button style", () => {
         expect(optionsvalues).toInclude("Button Secondary");
         expect(optionsvalues).toInclude("Custom");
     });
-    test("Editor allow target blank style if config is active", async () => {
-        await setupEditor(
-            '<p><a href="https://test.com/">link[]Label</a></p>',
-            allowTargetBlankOpt
-        );
-        await waitFor(".o-we-linkpopover");
-        await click(".o_we_edit_link");
-        await animationFrame();
-        await waitFor(".target-blank-option");
-    });
     test("The link popover should load the current custom format correctly", async () => {
         await setupEditor(
             '<p><a href="https://test.com/" class="btn btn-custom" style="color: rgb(0, 255, 0); background-color: rgb(0, 0, 255); border-width: 4px; border-color: rgb(255, 0, 0); border-style: dotted;">link[]Label</a></p>',
@@ -172,8 +162,11 @@ describe("Custom button style", () => {
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/", {
             confirm: false,
         });
+        await click(".o-we-linkpopover .fa-gear");
+        await contains(".o_advance_option_panel .target-blank-option").click();
+        await click(".o_advance_option_panel .fa-angle-left");
+        await waitFor(".o-we-linkpopover");
 
-        await click(".target-blank-option input[type='checkbox']");
         await animationFrame();
         await click(".o_we_apply_link");
         await animationFrame();
