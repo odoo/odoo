@@ -772,7 +772,9 @@ class Website(models.Model):
             ('website_id', '=', False),
         ])
         for step in generic_steps:
-            is_published = bool(step.step_href != '/shop/extra_info')
+            is_published = True
+            if step.step_href == '/shop/extra_info':
+                is_published = self.with_context(website_id=self.id).viewref('website_sale.extra_info').active
             step.copy({'website_id': self.id, 'is_published': is_published})
 
     def _get_checkout_step(self, href):
