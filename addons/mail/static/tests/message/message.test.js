@@ -19,6 +19,7 @@ import { animationFrame, leave, press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
+    contains as webContains,
     Command,
     mockService,
     onRpc,
@@ -187,25 +188,28 @@ test("Can edit message comment in chatter", async () => {
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
+    await contains(".o-mail-Message .o-mail-Composer.o-focused");
+    await webContains(".o-mail-Message .o-mail-Composer-input").edit("edited message");
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message-content", { text: "edited message (edited)" });
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await contains(".o-mail-Message:contains('Escape to cancel, CTRL-Enter to save')");
-    await insertText(".o-mail-Message .o-mail-Composer-input", "edited again", { replace: true });
-    await press("Enter");
+    await contains(".o-mail-Message .o-mail-Composer.o-focused");
+    await webContains(".o-mail-Message .o-mail-Composer-input").edit("edited again");
+    await webContains(".o-mail-Message .o-mail-Composer-input").press("Enter");
     await animationFrame();
     await contains(".o-mail-Message .o-mail-Composer-input"); // still editing message
     await contains(".o-mail-Message .o-mail-Composer-input:value('edited again')"); // FIXME: even though value has trailing '\n', HOOT selector doesn't see it on the node
-    await triggerHotkey("control+Enter"); // somehow press doesn't work :(
+    await webContains(".o-mail-Message .o-mail-Composer-input").press(["Control", "Enter"]);
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
     // save without change should keep (edited)
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer.o-focused");
     await contains(".o-mail-Message .o-mail-Composer-input:value('edited again')");
     await contains(".o-mail-Message:contains('Escape to cancel, CTRL-Enter to save')");
-    await triggerHotkey("control+Enter"); // somehow press doesn't work :(
+    await webContains(".o-mail-Message .o-mail-Composer-input").press(["Control", "Enter"]);
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
 });
 
