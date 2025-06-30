@@ -210,6 +210,8 @@ class IrAsset(models.Model):
             return
         if can_aggregate(path_def):
             paths = self._get_paths(path_def, installed)
+            if paths is None:
+                return
         else:
             paths = [(path_def, EXTERNAL_ASSET, -1)]  # external urls
 
