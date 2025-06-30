@@ -1528,3 +1528,32 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 expected_days,
                 f"{data['name']} should have {expected_days} days duration"
             )
+
+    @freeze_time('2011-12-24 10:00:00')
+    def test_validated_leave_back_to_approval(self):
+        """
+        =====================================================================================================================
+        | case 1: An approved leave can be moved back to confirm state if user has group `group_hr_holidays_user`           |
+        | case 2: An approved leave can't be moved back to confirm state if user doesn't have group `group_hr_holidays_user`|
+        =====================================================================================================================
+        """
+        sick_leave_type = self.env['hr.leave.type'].create({
+            'name': 'leave in days',
+            'request_unit': 'day',
+            'leave_validation_type': 'both',
+        })
+        sick_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'leave for 3 days',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': sick_leave_type.id,
+            'request_date_from': '2011-12-23',
+            'request_date_to': '2011-12-25',
+        })
+
+        sick_leave.with_user(self.user_hruser_id).action_approve()
+        sick_leave.with_user(self.user_hruser_id).action_back_to_approval()
+        self.assertEqual(sick_leave.state, 'confirm')
+
+        sick_leave.with_user(self.user_hruser_id).action_approve()
+        sick_leave.with_user(self.user_employee_id).action_back_to_approval()
+        self.assertEqual(sick_leave.state, 'validate')

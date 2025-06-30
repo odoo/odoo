@@ -198,6 +198,7 @@ class HrLeave(models.Model):
     can_validate = fields.Boolean(compute='_compute_can_validate', export_string_translation=False)
     can_refuse = fields.Boolean(compute='_compute_can_refuse', export_string_translation=False)
     can_cancel = fields.Boolean(compute='_compute_can_cancel', export_string_translation=False)
+    can_back_to_approve = fields.Boolean(compute='_compute_can_back_to_approve', export_string_translation=False)
 
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string="Attachments")
     # To display in form view
@@ -648,6 +649,11 @@ Versions:
             holiday.can_approve = holiday._check_approval_update('validate1', raise_if_not_possible=False)
 
     @api.depends('state', 'employee_id', 'department_id')
+    def _compute_can_back_to_approve(self):
+        for holiday in self:
+            holiday.can_back_to_approve = holiday.state == 'validate' and holiday._check_approval_update('confirm', raise_if_not_possible=False)
+
+    @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_validate(self):
         for holiday in self:
             holiday.can_validate = holiday._check_approval_update('validate', raise_if_not_possible=False)
@@ -1051,6 +1057,15 @@ Versions:
         if not self.env.context.get('leave_fast_create'):
             self.activity_update()
         return True
+
+    def action_back_to_approval(self):
+        self.filtered(lambda l: l.can_back_to_approve)._move_validate_leave_to_confirm()
+        return True
+
+    def _move_validate_leave_to_confirm(self):
+        self.write({'state': 'confirm'})
+        self.activity_update()
+        self._post_leave_cancel()
 
     def _get_leaves_on_public_holiday(self):
         return self.filtered(lambda l: l.employee_id and not l.number_of_days)
