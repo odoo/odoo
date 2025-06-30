@@ -305,16 +305,12 @@ export class WebsiteBuilderClientAction extends Component {
                 // Forward clicks to close backend client action's navbar
                 // dropdowns.
                 this.websiteContent.el.dispatchEvent(new MouseEvent("click", ev));
-                /* TODO ?
             } else {
                 // When in edit mode, prevent the default behaviours of clicks
                 // as to avoid DOM changes not handled by the editor.
                 // (Such as clicking on a link that triggers navigating to
                 // another page.)
-                if (!ev.target.closest("#oe_manipulators")) {
-                    ev.preventDefault();
-                }
-                */
+                ev.preventDefault();
             }
             const linkEl = ev.target.closest("[href]");
             if (!linkEl) {
