@@ -287,7 +287,7 @@ export class CalendarController extends Component {
             return this.editRecordInCreation(record);
         }
     }
-    async editRecord(record, context = {}, shouldFetchFormViewId = true) {
+    async editRecord(record, context = {}) {
         if (this.model.hasEditDialog) {
             return new Promise((resolve) => {
                 this.displayDialog(
@@ -306,19 +306,10 @@ export class CalendarController extends Component {
                 );
             });
         } else {
-            let formViewId = this.model.formViewId;
-            if (shouldFetchFormViewId) {
-                formViewId = await this.orm.call(
-                    this.model.resModel,
-                    "get_formview_id",
-                    [[record.id]],
-                    context
-                );
-            }
             const action = {
                 type: "ir.actions.act_window",
                 res_model: this.model.resModel,
-                views: [[formViewId || false, "form"]],
+                views: [[this.model.formViewId || false, "form"]],
                 target: "current",
                 context,
             };
@@ -331,7 +322,7 @@ export class CalendarController extends Component {
     editRecordInCreation(record) {
         const rawRecord = this.model.buildRawRecord(record);
         const context = this.model.makeContextDefaults(rawRecord);
-        return this.editRecord(record, context, false);
+        return this.editRecord(record, context);
     }
 
     deleteConfirmationDialogProps(record) {
