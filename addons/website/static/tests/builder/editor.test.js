@@ -107,10 +107,10 @@ test("should preserve iframe in the toolbar's font size input", async () => {
     // Get the font size selector input.
     let iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     let inputEl = iframeEl.contentWindow.document?.querySelector("input");
-    // Change the font style from paragraph to paragraph.
+    // Change the font style from normal to normal.
     await contains(".o-we-toolbar .btn[name='font'].dropdown-toggle").click();
     await waitFor(".btn[name='font'].dropdown-toggle.show");
-    await contains(".dropdown-menu [name='p']").click();
+    await contains(".o_font_selector_menu .dropdown-item:contains('Normal')").click();
     iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     let newInputEl = iframeEl.contentWindow.document?.querySelector("input");
     expect(newInputEl).toBe(inputEl); // The input shouldn't have been changed.
@@ -208,5 +208,12 @@ describe("toolbar dropdowns", () => {
         await focusAndClick(".dropdown-menu .dropdown-item");
         await animationFrame();
         expect(p.firstChild).toHaveClass("test-font-size");
+    });
+
+    test("font selector dropdown should not have paragraph as an option", async () => {
+        await setup();
+        click(".o-we-toolbar .btn[name='font']");
+        await animationFrame();
+        expect(".o_font_selector_menu .o-dropdown-item[name='p']").toHaveCount(0);
     });
 });
