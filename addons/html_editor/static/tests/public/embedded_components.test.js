@@ -45,21 +45,21 @@ describe("Mount and Destroy embedded components", () => {
         await animationFrame();
         expect(queryOne("#wrapwrap")).toHaveInnerHTML(
             `<div data-embedded="wrapper">
-                <owl-component contenteditable="false" data-oe-protected="true">
+                <owl-root contenteditable="false" data-oe-protected="true" style="display: contents;">
                     <div class="deep">
                         <div data-embedded-editable="deep">
                             <div data-embedded="wrapper">
-                                <owl-component contenteditable="false" data-oe-protected="true">
+                                <owl-root contenteditable="false" data-oe-protected="true" style="display: contents;">
                                     <div class="deep">
                                         <div data-embedded-editable="deep">
                                             <p>deep</p>
                                         </div>
                                     </div>
-                                </owl-component>
+                                </owl-root>
                             </div>
                         </div>
                     </div>
-                </owl-component>
+                </owl-root>
             </div>`
         );
         core.stopInteractions();
@@ -95,10 +95,10 @@ describe("Mount and Destroy embedded components", () => {
                         <div data-embedded-editable="deep">
                             <p>deep</p>
                         </div>
-                        <owl-component contenteditable="false" data-oe-protected="true"></owl-component>
+                        <owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root>
                     </div>
                 </div>
-                <owl-component contenteditable="false" data-oe-protected="true"></owl-component>
+                <owl-root contenteditable="false" data-oe-protected="true" style="display: contents;"></owl-root>
             </div>`
         );
     });
