@@ -138,7 +138,8 @@ class SaleOrder(models.Model):
                 project = order.project_ids[0]
                 for sol in order.order_line:
                     if project == sol.project_id and (project_template := sol.product_template_id.project_template_id):
-                        project.sudo().company_id = project_template.sudo().company_id
+                        # If the template doesn't have a company and project's partner has a company, use that company
+                        project.sudo().company_id = project_template.sudo().company_id or project.sudo().partner_id.company_id
                         break
         return super()._action_confirm()
 
