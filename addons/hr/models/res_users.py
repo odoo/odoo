@@ -46,7 +46,6 @@ HR_WRITABLE_FIELDS = [
     'work_email',
     'work_location_id',
     'work_phone',
-    'employee_type',
 ]
 
 
@@ -92,7 +91,6 @@ class ResUsers(models.Model):
     employee_count = fields.Integer(compute='_compute_employee_count')
     last_activity = fields.Date(related='employee_id.last_activity')
     last_activity_time = fields.Char(related='employee_id.last_activity_time')
-    employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
     bank_account_id = fields.Many2one(related="employee_id.bank_account_id")
 
