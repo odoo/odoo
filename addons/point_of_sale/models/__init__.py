@@ -30,6 +30,7 @@ from . import res_config_settings
 from . import ir_http
 from . import ir_module_module
 from . import stock_picking
+from . import stock_reference
 from . import stock_warehouse
 from . import pos_payment
 from . import pos_payment_method

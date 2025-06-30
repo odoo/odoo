@@ -130,9 +130,8 @@ class TestWarehouseMrp(common.TestMrpCommon):
         ]
 
         # Create a procurement to resupply the Stock, taking from the Freezer.
-        pgroup = self.env['procurement.group'].create({'name': 'test-manu-to-freeze'})
-        self.env['procurement.group'].run([
-            pgroup.Procurement(
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
                 self.product_4,
                 5.0,
                 self.product_4.uom_id,
@@ -142,7 +141,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
                 self.warehouse_1.company_id,
                 {
                     'warehouse_id': self.warehouse_1,
-                    'group_id': pgroup,
                 }
             )
         ])
@@ -175,10 +173,9 @@ class TestWarehouseMrp(common.TestMrpCommon):
             self.route_mto.id,
         ])]
         warehouse_2.resupply_route_ids.rule_ids.procure_method = 'make_to_order'
-        pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mto'})
 
-        self.env['procurement.group'].run([
-            pg.Procurement(
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
                 self.product_6,
                 5.0,
                 self.product_6.uom_id,
@@ -188,7 +185,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
                 self.warehouse_1.company_id,
                 {
                     'warehouse_id': self.warehouse_1,
-                    'group_id': pg,
                 },
             ),
         ])

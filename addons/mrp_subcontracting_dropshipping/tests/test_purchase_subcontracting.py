@@ -358,7 +358,6 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         supplier to each subcontractor.
         """
         dropship_subcontractor_route = self.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping')
-        dropship_subcontractor_route.rule_ids.filtered(lambda r: r.action == 'buy').group_propagation_option = 'none'
 
         subcontractor01, subcontractor02, component_supplier = self.env['res.partner'].create([{
             'name': 'Super Partner %d' % i
@@ -489,7 +488,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
             'product_min_qty': 2,
             'product_max_qty': 2,
         })
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
         delivery = self.env["stock.move"].search([("product_id", "=", self.comp1.id)]).picking_id
         self.assertEqual(delivery.partner_id, p1)
 
@@ -562,6 +561,6 @@ class TestSubcontractingDropshippingPortal(TestSubcontractingPortal):
         }])
         # Check that the initial MO has been splitted in 2
         self.assertTrue("-001" in mo.name)
-        self.assertRecordValues(mo.procurement_group_id.mrp_production_ids - mo, [{
+        self.assertRecordValues(mo.production_group_id.production_ids - mo, [{
             'qty_producing': 1.0, 'lot_producing_id': False, 'state': 'to_close',
         }])

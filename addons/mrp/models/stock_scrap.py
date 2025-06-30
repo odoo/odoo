@@ -85,8 +85,8 @@ class StockScrap(models.Model):
     def do_replenish(self, values=False):
         self.ensure_one()
         values = values or {}
-        if self.production_id and self.production_id.procurement_group_id:
+        if self.production_id and self.production_id.reference_ids:
             values.update({
-                'group_id': self.production_id.procurement_group_id,
+                'reference_ids': self.production_id.reference_ids,
             })
         super().do_replenish(values)

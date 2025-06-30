@@ -158,8 +158,8 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint.route_id = route_id[0].id
         return super()._set_default_route_id()
 
-    def _prepare_procurement_values(self, date=False, group=False):
-        values = super()._prepare_procurement_values(date=date, group=group)
+    def _prepare_procurement_values(self, date=False):
+        values = super()._prepare_procurement_values(date=date)
         values['bom_id'] = self.bom_id
         return values
 

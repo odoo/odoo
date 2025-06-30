@@ -143,13 +143,15 @@ class StockPicking(models.Model):
         for picking in self:
             picking.has_kits = any(picking.move_ids.mapped('bom_line_id'))
 
-    @api.depends('group_id')
     def _compute_mrp_production_ids(self):
         for picking in self:
-            production_ids = picking.group_id.mrp_production_ids | picking.move_ids.move_dest_ids.raw_material_production_id
-            # Filter out unwanted MO types
-            picking.production_ids = production_ids.filtered(lambda p: p.picking_type_id.active)
-            picking.production_count = len(picking.production_ids)
+            # TODO later with production fields
+            picking.production_ids = self.env['mrp.production']
+            picking.production_count = 0
+            # production_ids = picking.group_id.mrp_production_ids | picking.move_ids.move_dest_ids.raw_material_production_id
+            # # Filter out unwanted MO types
+            # picking.production_ids = production_ids.filtered(lambda p: p.picking_type_id.active)
+            # picking.production_count = len(picking.production_ids)
 
     def action_detailed_operations(self):
         action = super().action_detailed_operations()
