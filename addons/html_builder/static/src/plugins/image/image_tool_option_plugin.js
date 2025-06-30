@@ -196,8 +196,8 @@ export class TransformImageAction extends BuilderAction {
     isApplied({ editingElement }) {
         return editingElement.matches(`[style*="transform"]`);
     }
-    apply({ editingElement }) {
-        return this.dependencies.userCommand.getCommand("transformImage").run(editingElement);
+    apply() {
+        return this.dependencies.userCommand.getCommand("transformImage").run();
     }
 }
 export class ResetTransformImageAction extends BuilderAction {
