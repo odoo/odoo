@@ -90,8 +90,8 @@ class BarcodeNomenclature(models.Model):
             result['value'] = match.group(2)
         return result
 
-    def gs1_decompose_extanded(self, barcode):
-        """Try to decompose the gs1 extanded barcode into several unit of information using gs1 rules.
+    def gs1_decompose_extended(self, barcode):
+        """Try to decompose the gs1 extended barcode into several unit of information using gs1 rules.
 
         Return a ordered list of dict
         """
@@ -130,7 +130,7 @@ class BarcodeNomenclature(models.Model):
 
     def parse_nomenclature_barcode(self, barcode):
         if self.is_gs1_nomenclature:
-            return self.gs1_decompose_extanded(barcode)
+            return self.gs1_decompose_extended(barcode)
         return super().parse_nomenclature_barcode(barcode)
 
     @api.model
