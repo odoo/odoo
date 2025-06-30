@@ -39,6 +39,12 @@
                         <separator orientation="vertical"/>
                         <filter name="group_by_month" string="Session Date" domain="[]" context="{'group_by':'create_date:month'}"/>
                     </group>
+                    <group>
+                        <filter name="escalated" string="Escalated" domain="[('livechat_is_escalated', '=', True)]" invisible="1"/>
+                        <filter name="handled_by_agent" string="Handled by Agent" domain="[('livechat_agent_history_ids', '!=', False)]" invisible="1"/>
+                        <filter name="handled_by_bot" string="Handled by Bot" domain="[('livechat_channel_member_history_ids.livechat_member_type', '=', 'bot'), ('livechat_agent_history_ids', '=', False)]" invisible="1"/>
+                        <filter name="in_call" string="In Call" domain="[('livechat_agent_history_ids.call_history_ids.end_dt', '=', False)]" invisible="1"/>
+                    </group>
                 </search>
             </field>
         </record>
