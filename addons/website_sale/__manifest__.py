@@ -34,6 +34,7 @@
         'views/gmc_templates.xml',
         'views/sale_portal_templates.xml',
         'views/templates.xml',
+        'views/templates_svg.xml',
 
         # Model views.
         'views/account_move_views.xml',
