@@ -76,6 +76,7 @@ export class MediaPlugin extends Plugin {
         is_node_editable_predicates: this.isEditableMediaElement.bind(this),
         clipboard_content_processors: this.clean.bind(this),
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
+        functional_empty_node_predicates: isMediaElement,
 
         selectors_for_feff_providers: () => ICON_SELECTOR,
         before_save_handlers: this.savePendingImages.bind(this),
