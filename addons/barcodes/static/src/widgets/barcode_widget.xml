@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="barcodes.barcode_image">
+        <img
+            t-if="this.barcode_src"
+            loading="lazy"
+            class="img img-fluid"
+            t-att-alt="this.string"
+            t-att-src="this.barcode_src"
+            t-att-height="90"
+            t-att-data-tooltip-template="this.hasZoom and this.zoomAttributes.template"
+            t-att-data-tooltip-info="this.hasZoom and this.zoomAttributes.info"
+            t-att-data-tooltip-delay="this.hasZoom and this.props.zoomDelay"
+        />
+    </t>
+
+    <t t-name="barcodes.BarcodeField">
+        <t >
+            <div class="d-inline-flex w-100" name="barcode_field_input">
+                <t t-if="this.props.readonly">
+                    <span t-if="this.props.barcodeDisplay != 'image'" name="barcode_field_readonly" t-out="string" t-att-raw-value="value" />
+                </t>
+                <t t-else="">
+                    <input
+                        t-if="this.props.barcodeDisplay != 'image'"
+                        class="o_input"
+                        t-att-id="this.props.id"
+                        type="text"
+                        autocomplete="off"
+                        t-att-placeholder="this.props.placeholder"
+                        t-on-blur="this.onBlur"
+                        t-custom-ref="input"
+                        t-att-required="this.props.required"
+                    />
+                    <a t-on-click="this.onBarcodeBtnClick" class="ms-3 d-inline-flex align-items-center" tabindex="-1" data-tooltip="Open Barcode Scan">
+                        <i t-att-class="this.icon_class"/>
+                    </a>
+                </t>
+                <a t-if="this.value" t-att-href="this.barcode_src" class="ms-3 d-inline-flex align-items-center" target="_blank">
+                    <i class="fa fa-globe" data-tooltip="Open Barcode Image"></i>
+                </a>
+            </div>
+        </t>
+        <t t-if="this.props.barcodeDisplay != 'text' &amp;&amp; this.value" t-call="barcodes.barcode_image"/>
+    </t>
+</templates>
