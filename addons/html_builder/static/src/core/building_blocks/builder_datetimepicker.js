@@ -38,9 +38,6 @@ export class BuilderDateTimePicker extends Component {
             parseDisplayValue: this.parseDisplayValue.bind(this),
         });
         this.state = state;
-        if (!this.state.value) {
-            this.state.value = this.getDefaultValue();
-        }
         this.oldValue = this.state.value;
 
         this.commit = (userInputValue) => {
