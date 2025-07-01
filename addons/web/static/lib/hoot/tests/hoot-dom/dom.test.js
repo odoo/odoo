@@ -2,9 +2,6 @@
 
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import {
-    $,
-    $$,
-    $1,
     animationFrame,
     click,
     formatXml,
@@ -17,8 +14,11 @@ import {
     isFocusable,
     isInDOM,
     isVisible,
+    queryAll,
     queryAllRects,
     queryAllTexts,
+    queryFirst,
+    queryOne,
     queryRect,
     waitFor,
     waitForNone,
@@ -26,6 +26,10 @@ import {
 import { mockTouch } from "@odoo/hoot-mock";
 import { getParentFrame } from "@web/../lib/hoot-dom/helpers/dom";
 import { mountForTest, parseUrl } from "../local_helpers";
+
+const $ = queryFirst;
+const $1 = queryOne;
+const $$ = queryAll;
 
 /**
  * @param {...string} queryAllSelectors

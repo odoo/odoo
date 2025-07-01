@@ -156,11 +156,13 @@ class SaleOrderLine(models.Model):
         # We don't try to be too smart and keep a simple approach: we use the quantity of entire
         # kits that are currently in delivery
         bom = self.env['mrp.bom'].sudo()._bom_find(self.product_id, bom_type='phantom', company_id=self.company_id.id)[self.product_id]
-        if bom:
+        if bom and self.move_ids:
             moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped)
             filters = self._get_incoming_outgoing_moves_filter()
             order_qty = previous_product_uom_qty.get(self.id, 0) if previous_product_uom_qty else self.product_uom_qty
             order_qty = self.product_uom._compute_quantity(order_qty, bom.product_uom_id)
             qty = moves._compute_kit_quantities(self.product_id, order_qty, bom, filters)
             return bom.product_uom_id._compute_quantity(qty, self.product_uom)
+        elif bom and previous_product_uom_qty:
+            return previous_product_uom_qty.get(self.id)
         return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)

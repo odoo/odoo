@@ -5,7 +5,6 @@
 # Translators:
 # Wil Odoo, 2024
 # Geoffrey_GMF <gmf@odoo.com>, 2024
-# Jolien De Paepe, 2024
 # Manon Rondou, 2025
 # 
 msgid ""
@@ -364,13 +363,13 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Bonjour <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
-"                            Bienvenue à <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
-"                            Je suis ravi de vous rencontrer ! Maintenant que vous faites partie de l'aventure, vous découvrirez ce que <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> a à offrir. Je m'appelle <t t-out=\"object.user_id.name or ''\">Marc Demo</t> et je vous aiderai à tirer le meilleur parti d'Odoo. Pourrions-nous planifier une démonstration rapidement ?<br/>\n"
+"                            Bienvenue chez <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
+"                            Je suis ravi de vous rencontrer ! Maintenant que vous faites partie de l'aventure, vous allez découvrir tout ce que <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> peut vous offrir. Je m'appelle <t t-out=\"object.user_id.name or ''\">Marc Demo</t> et je serai votre interlocuteur pour vous aider à tirer pleinement parti de votre expérience avec Odoo. Pourrions-nous planifier une démonstration rapidement ?<br/>\n"
 "                            N'hésitez pas à me contacter !<br/><br/>\n"
 "                            Cordialement,<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br/>Email : <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>E-mail : <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
 "                                <br/>Téléphone : <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"

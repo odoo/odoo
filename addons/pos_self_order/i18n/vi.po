@@ -408,7 +408,7 @@ msgid ""
 "                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
 msgstr ""
 "Mỗi bàn trong sơ đồ tầng của bạn được gán một mã QR duy nhất theo cách bạn cấu hình. Vì lý do bảo mật,\n"
-"                     cả tên máy tính tiền và tên bàn đều được mã hóa trong URL được tạo, như trong ví dụ dưới đây:"
+"                     cả tên POS và tên bàn đều được mã hóa trong URL được tạo, như trong ví dụ dưới đây:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -822,27 +822,27 @@ msgstr "Mixin tải dữ liệu POS"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_category
 msgid "Point of Sale Category"
-msgstr "Danh mục máy tính tiền"
+msgstr "Danh mục POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Cấu hình máy tính tiền"
+msgstr "Cấu hình POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Chi tiết đơn hàng máy tính tiền"
+msgstr "Chi tiết đơn hàng POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Đơn hàng máy tính tiền"
+msgstr "Đơn hàng POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Phương thức thanh toán máy tính tiền"
+msgstr "Phương thức thanh toán POS"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_session
@@ -852,12 +852,12 @@ msgstr "Phiên POS"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Point of sale:"
-msgstr "Máy tính tiền:"
+msgstr "POS:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid "Points of Sale"
-msgstr "Máy tính tiền"
+msgstr "POS"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
@@ -997,9 +997,8 @@ msgid ""
 "to display it for all points of sale. You have to select among the points of"
 " sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
-"Chọn máy tính tiền mà bạn muốn hiển thị liên kết này. Để trống để hiển thị "
-"trên tất cả máy tính tiền. Bạn phải chọn trong số các máy tính tiền có bật "
-"tính năng 'Menu mã QR'."
+"Chọn POS mà bạn muốn hiển thị liên kết này. Để trống để hiển thị trên tất cả"
+" POS. Bạn phải chọn trong số các POS có bật tính năng 'Menu mã QR'."
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand

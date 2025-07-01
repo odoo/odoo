@@ -11,6 +11,7 @@
 # İlknur Gözütok, 2024
 # Buket Şeker <buket_skr@hotmail.com>, 2024
 # abc Def <hdogan1974@gmail.com>, 2024
+# Ayhan Kızıltan, 2024
 # emre oktem, 2024
 # Sinem Cil, 2024
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2024
@@ -38,7 +39,6 @@
 # Ediz Duman <neps1192@gmail.com>, 2025
 # Cengiz Cokay Global Nonwoven, 2025
 # Hakan Türkün, 2025
-# Ayhan Kızıltan, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
@@ -371,13 +371,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
-"* Satıcı Konumu: Tedarikçilerinizden gelen ürünler için kaynak konumu temsil eden sanal konum\n"
-"* Görünüm: Deponuz için hiyerarşik yapılar oluşturmak için kullanılan sanal konum, alt konumlarını bir araya getirir; doğrudan ürün içeremez\n"
-"* Dahili Konum: Kendi depolarınızdaki fiziksel yerleri,\n"
-"* Müşteri Konumu: Müşterilerinize gönderilen ürünler için hedef konumu temsil eden sanal konum\n"
-"* Envanter Kaybı: Stok seviyelerini düzeltmek için kullanılan envanter işlemleri için muadil olarak sunulan sanal konum (Fiziksel envanterler)\n"
-"* Üretim: Üretim operasyonları için sanal karşı konum: bu konum bileşenleri tüketir ve bitmiş ürünler üretir\n"
-"* Transit Konumu: Şirketler arası veya depolar arası operasyonlarda kullanılması gereken karşı taraf konumu"
+"* Tedarikçi Konumu: Tedarikçilerden gelen ürünler için kaynak konumu olarak kullanılan sanal konum\n"
+"* Görünüm: Depo için hiyerarşik yapılar oluşturmak amacıyla kullanılan sanal konum. Alt konumları gruplayarak yapıyı oluşturur; doğrudan ürün içeremez\n"
+"* Dahili Konum: Kendi depolarınız içerisindeki fiziksel konumlar,\n"
+"* Müşteri Konumu: Kendi depolarınız içerisindeki fiziksel konumlar\n"
+"* Envanter Kaybı: Stok seviyelerini düzeltmek için yapılan envanter işlemlerinde karşıt konum olarak kullanılan sanal konum (fiziksel envanter sayımı gibi) \n"
+"* Üretim: Üretim işlemleri için sanal karşıt konum: Bu konum bileşenleri tüketir ve bitmiş ürünleri üretir\n"
+"* Transfer Konumu: Şirket içi veya depo arası işlemlerde kullanılmak üzere tasarlanmış karşıt konum"
 
 #. module: stock
 #. odoo-python
@@ -1714,12 +1714,12 @@ msgid ""
 "(Chicago) in its entirety and does not include any costs relating to the "
 "legislation of the country in which the client is located."
 msgstr ""
-"Bazı ülkeler, yasalarına uygun olarak kaynaktaki fatura tutarı üzerinden "
-"stopaj uygular. Kaynakta yapılacak her türlü kesinti müşteri tarafından "
-"vergi dairesine ödenecektir. Hiçbir koşulda Şirketim (Şikago) bir ülkenin "
-"yasalarından doğan maliyetlerle ilişkilendirilemez. Dolayısıyla fatura "
-"bedelinin tamamı Şirketim (Şikago)'ya ödenecek olup müşterinin bulunduğu "
-"ülkedeki yasalardan kaynaklanan maliyetleri içermez."
+"Bazı ülkeler, iç mevzuatlarına uygun olarak fatura tutarları üzerinden "
+"kaynakta stopaj uygular. Kaynakta stopaj, müşteri tarafından vergi dairesine"
+" ödenir. Hiçbir koşulda My Company (Chicago), bir ülkenin mevzuatıyla ilgili"
+" masraflara dahil olamaz. Bu nedenle fatura tutarının tamamı My Company "
+"(Chicago) tarafından tahsil edilecek olup, müşterinin bulunduğu ülkenin "
+"mevzuatıyla ilgili masraflar dahil değildir."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_change_product_quantity
@@ -9506,6 +9506,10 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"Bu sıra önek, başka bir işlem türü tarafından zaten kullanılmaktadır. "
+"Sorunların ve/veya tekrarlanan referans değerlerinin önlenmesi için "
+"benzersiz bir önek seçmeniz veya mevcut referans sırasını bu işlem türüne "
+"atamanız önerilir."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
