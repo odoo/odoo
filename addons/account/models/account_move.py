@@ -5634,7 +5634,28 @@ class AccountMove(models.Model):
             self.env['ir.cron']._commit_progress(len(moves))
             return
         except UserError:  # if at least one move cannot be posted, handle moves one by one
+<<<<<<< 5ba13a81ec2991bf5dc907290366b7698d11336b
             self.env.cr.rollback()
+||||||| f6bf657c7d2962ce2e051415fce128d3bdab669d
+            for move in moves:
+                try:
+                    with self.env.cr.savepoint():
+                        move._post()
+                except UserError as e:
+                    move.checked = False
+                    msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
+                    move.message_post(body=msg, message_type='comment')
+=======
+            for move in moves:
+                try:
+                    with self.env.cr.savepoint():
+                        move._post()
+                except UserError as e:
+                    move.checked = False
+                    move.auto_post = 'no'
+                    msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
+                    move.message_post(body=msg, message_type='comment')
+>>>>>>> 8e03c066d92f9cce4b5c6a6a1de5d71de12bc7c0
 
         for move in moves:
             try:
