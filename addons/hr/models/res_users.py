@@ -130,7 +130,7 @@ class ResUsers(models.Model):
 
     @api.model
     def get_views(self, views, options=None):
-        # Requests the My Profile form view as last.
+        # Requests the My Preferences form view as last.
         # Otherwise the fields of the 'search' view will take precedence
         # and will omit the fields that are requested as SUPERUSER
         # in `get_view()`.
