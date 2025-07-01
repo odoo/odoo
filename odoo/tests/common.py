@@ -2430,6 +2430,8 @@ class HttpCase(TransactionCase):
         ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
         timeout = kwargs.pop('timeout', 60)
 
+        if step_delay is not None:
+            self._logger.warning('step_delay is only suitable for local testing')
         if options["delayToCheckUndeterminisms"] > 0:
             timeout = timeout + 1000 * options["delayToCheckUndeterminisms"]
             _logger.runbot("Tour %s is launched with mode: check for undeterminisms.", tour_name)

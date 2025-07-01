@@ -71,4 +71,4 @@ class TestHrLeaveTypeTour(HttpCase):
             'requires_allocation': False,
             'leave_validation_type': 'hr'
         })
-        self.start_tour('/web', 'hr_leave_type_tour', login="admin", step_delay=500)
+        self.start_tour('/web', 'hr_leave_type_tour', login="admin")

@@ -28,4 +28,4 @@ class TestImLivechatSessionHistoryOpen(TestImLivechatCommon):
         )
         channel1.message_post(body="Test Channel 1 Msg", message_type="comment", subtype_xmlid="mail.mt_comment")
         channel2.message_post(body="Test Channel 2 Msg", message_type="comment", subtype_xmlid="mail.mt_comment")
-        self.start_tour("/web", "im_livechat_session_history_open", login="operator", step_delay=25)
+        self.start_tour("/web", "im_livechat_session_history_open", login="operator")
