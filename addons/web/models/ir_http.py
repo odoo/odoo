@@ -145,7 +145,7 @@ class IrHttp(models.AbstractModel):
                             'id': comp.id,
                             'name': comp.name,
                             'sequence': comp.sequence,
-                            'child_ids': (comp.child_ids & user_companies).ids,
+                            'child_ids': (comp.child_ids & all_companies_in_hierarchy_sudo).ids,
                             'parent_id': comp.parent_id.id,
                         } for comp in user_companies
                     },
