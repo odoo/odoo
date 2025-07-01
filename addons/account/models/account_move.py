@@ -838,6 +838,7 @@ class AccountMove(models.Model):
         for move in self:
             move.made_sequence_hole = move.id in made_sequence_hole
 
+    @api.depends_context('lang')
     @api.depends('move_type')
     def _compute_type_name(self):
         type_name_mapping = dict(
