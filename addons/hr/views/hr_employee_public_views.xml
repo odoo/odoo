@@ -36,6 +36,7 @@
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
                 <form string="Employee" create="0" write="0" js_class="hr_employee_form">
+                    <field name="work_contact_id" invisible="1" />
                     <header/>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -126,6 +127,7 @@
                 <kanban class="o_hr_employee_kanban" sample="1">
                     <field name="show_hr_icon_display"/>
                     <field name="image_128" />
+                    <field name="work_contact_id" invisible="1" />
                     <templates>
                         <t t-name="card" class="flex-row">
                             <aside class="o_kanban_aside_full">

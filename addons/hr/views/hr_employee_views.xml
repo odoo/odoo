@@ -85,6 +85,7 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <form string="Employee" js_class="hr_employee_form" duplicate="false">
+                    <field name="work_contact_id" invisible="1" />
                     <header groups="hr.group_hr_user">
                         <button string="Create User" name="action_create_user" type="object"
                                 class="btn btn-primary" invisible="user_id" groups="hr.group_hr_user"
@@ -438,6 +439,7 @@
                     <field name="show_hr_icon_display"/>
                     <field name="image_128" />
                     <field name="company_id"/>
+                    <field name="work_contact_id" invisible="1" />
                     <templates>
                         <t t-name="card" class="flex-row">
                             <aside class="o_kanban_aside_full">
