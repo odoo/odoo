@@ -14,8 +14,8 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _l10n_ec_setup_location_accounts(self, companies):
         parent_location = self.env.ref('stock.stock_location_locations_virtual', raise_if_not_found=False)
-        loss_locs = dict(self.env['stock.location']._read_group(domain=[('location_id', '=', parent_location.id), ('usage', '=', 'inventory'), ('scrap_location', '=', False)], groupby=['company_id', 'id'])) if parent_location else {}
-        prod_locs = dict(self.env['stock.location']._read_group(domain=[('location_id', '=', parent_location.id), ('usage', '=', 'production'), ('scrap_location', '=', False)], groupby=['company_id', 'id'])) if parent_location else {}
+        loss_locs = dict(self.env['stock.location']._read_group(domain=[('location_id', '=', parent_location.id), ('usage', '=', 'inventory')], groupby=['company_id', 'id'])) if parent_location else {}
+        prod_locs = dict(self.env['stock.location']._read_group(domain=[('location_id', '=', parent_location.id), ('usage', '=', 'production')], groupby=['company_id', 'id'])) if parent_location else {}
         for company in companies:
             # get template data
             Template = self.env['account.chart.template'].with_company(company)
