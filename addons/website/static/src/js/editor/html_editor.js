@@ -3,8 +3,9 @@ import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { patch } from "@web/core/utils/patch";
-import { useAutofocus, useChildRef } from "@web/core/utils/hooks";
+import { useChildRef } from "@web/core/utils/hooks";
 import wUtils from "@website/js/utils";
+import { useEffect } from "@odoo/owl";
 
 /**
  * The goal of this patch is to handle the URL autocomplete in the LinkPopover
@@ -111,10 +112,14 @@ patch(LinkPopover.prototype, {
     setup() {
         super.setup();
         this.urlRef = useChildRef();
-        useAutofocus({
-            refName: this.state.isImage || this.state.label !== "" ? this.urlRef.name : "label",
-            mobile: true,
-        });
+        useEffect(
+            (el) => {
+                if (el) {
+                    el.focus();
+                }
+            },
+            () => [this.urlRef.el]
+        );
     },
 
     get sources() {
